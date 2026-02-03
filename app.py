@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="Consistent Storyboard Generator", layout="wide")
+st.set_page_config(page_title="Natural Storyboard Generator", layout="wide")
 
 st.title("📸 Natural Storyboard Generator")
 st.info("Isi detail adegan, tentukan waktunya, lalu klik **'BUAT PROMPT'** untuk melihat hasilnya.")
@@ -19,9 +19,10 @@ with st.sidebar:
 
     st.divider()
     st.subheader("👥 Nama Tokoh")
-    char_a_name = st.text_input("Nama Karakter A", value="Udin")
-    char_b_name = st.text_input("Nama Karakter B", value="Tung")
-    char_c_name = st.text_input("Nama Karakter C", value="Wati")
+    # Bagian Default Nama dikosongkan agar Anda bisa isi manual
+    char_a_name = st.text_input("Nama Karakter A", value="", placeholder="Isi Nama Karakter A")
+    char_b_name = st.text_input("Nama Karakter B", value="", placeholder="Isi Nama Karakter B")
+    char_c_name = st.text_input("Nama Karakter C", value="", placeholder="Isi Nama Karakter C")
 
 # --- PARAMETER KUALITAS NATURAL ---
 img_quality = (
@@ -41,22 +42,21 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Menambahkan kolom Waktu (Pagi, Siang, Sore, Malam)
         col_desc, col_time, col_diag_a, col_diag_b, col_diag_c = st.columns([2, 1, 1, 1, 1])
         
         with col_desc:
             user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100)
         
         with col_time:
-            # Fitur baru: Form Waktu
             scene_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
         
         with col_diag_a:
-            diag_a = st.text_input(f"Dialog {char_a_name}", key=f"diag_a_{i}")
+            # Label input dinamis mengikuti apa yang diketik di sidebar
+            diag_a = st.text_input(f"Dialog {char_a_name if char_a_name else 'A'}", key=f"diag_a_{i}")
         with col_diag_b:
-            diag_b = st.text_input(f"Dialog {char_b_name}", key=f"diag_b_{i}")
+            diag_b = st.text_input(f"Dialog {char_b_name if char_b_name else 'B'}", key=f"diag_b_{i}")
         with col_diag_c:
-            diag_c = st.text_input(f"Dialog {char_c_name}", key=f"diag_c_{i}")
+            diag_c = st.text_input(f"Dialog {char_c_name if char_c_name else 'C'}", key=f"diag_c_{i}")
         
         scene_data.append({
             "num": i, 
@@ -78,7 +78,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     for scene in scene_data:
         i = scene["num"]
         
-        # Logika waktu ke dalam bahasa Inggris untuk dipahami AI
+        # Mapping cahaya
         time_map = {
             "Pagi hari": "morning golden hour light",
             "Siang hari": "bright midday natural sunlight",
@@ -100,9 +100,14 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
 
         # --- LOGIKA PROMPT VIDEO ---
         dialogs = []
-        if scene["da"]: dialogs.append(f"{char_a_name}: \"{scene['da']}\"")
-        if scene["db"]: dialogs.append(f"{char_b_name}: \"{scene['db']}\"")
-        if scene["dc"]: dialogs.append(f"{char_c_name}: \"{scene['dc']}\"")
+        # Menggunakan nama yang diketik user atau inisial jika kosong
+        name_a = char_a_name if char_a_name else "Character A"
+        name_b = char_b_name if char_b_name else "Character B"
+        name_c = char_c_name if char_c_name else "Character C"
+
+        if scene["da"]: dialogs.append(f"{name_a}: \"{scene['da']}\"")
+        if scene["db"]: dialogs.append(f"{name_b}: \"{scene['db']}\"")
+        if scene["dc"]: dialogs.append(f"{name_c}: \"{scene['dc']}\"")
         
         dialog_part = ""
         if dialogs:
