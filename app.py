@@ -13,16 +13,37 @@ with st.sidebar:
     st.divider()
     st.subheader("👥 Identitas & Fisik Tokoh")
     
-    # Menentukan jumlah karakter secara manual
-    num_chars = st.number_input("Jumlah Karakter", min_value=1, max_value=5, value=2)
-    
+    # List untuk menampung data karakter
     characters = []
-    for j in range(num_chars):
-        st.markdown(f"**Karakter {j+1}**")
-        c_name = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}", placeholder=f"Contoh: Tokoh {j+1}")
-        c_desc = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
-        characters.append({"name": c_name, "desc": c_desc})
-        st.divider()
+
+    # Karakter 1 (Selalu Ada)
+    st.markdown("**Karakter 1**")
+    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: Udin")
+    c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
+    characters.append({"name": c1_name, "desc": c1_desc})
+    
+    st.divider()
+
+    # Karakter 2 (Selalu Ada)
+    st.markdown("**Karakter 2**")
+    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: Tung")
+    c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
+    characters.append({"name": c2_name, "desc": c2_desc})
+
+    st.divider()
+
+    # Poin Utama: Form Jumlah Karakter diletakkan di bawah Karakter 2
+    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2, 
+                                help="Ubah angka ini jika ingin menambah Karakter 3, 4, atau 5")
+
+    # Loop untuk karakter tambahan (mulai dari indeks ke-2/Karakter 3)
+    if num_chars > 2:
+        for j in range(2, num_chars):
+            st.divider()
+            st.markdown(f"**Karakter {j+1}**")
+            c_name = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}", placeholder=f"Contoh: Tokoh {j+1}")
+            c_desc = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
+            characters.append({"name": c_name, "desc": c_desc})
 
 # --- PARAMETER KUALITAS NATURAL ---
 img_quality = (
@@ -36,15 +57,14 @@ vid_quality = (
     "clear high definition, real-life footage style, NO animation, NO CGI"
 )
 
-# --- FORM INPUT ---
+# --- FORM INPUT ADEGAN ---
 st.subheader("📝 Detail Adegan")
 scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Membuat kolom dinamis untuk dialog berdasarkan jumlah karakter
-        # Deskripsi (2 unit) + Waktu (1 unit) + Dialog (sebanyak num_chars)
-        col_setup = [2, 1] + [1] * num_chars
+        # Layout kolom dinamis: Visual (2) + Waktu (1) + Dialog (1 per karakter)
+        col_setup = [2, 1] + [1] * len(characters)
         cols = st.columns(col_setup)
         
         with cols[0]:
@@ -73,7 +93,6 @@ st.divider()
 if st.button("🚀 BUAT PROMPT", type="primary"):
     st.header("📋 Hasil Prompt")
     
-    # Menggabungkan deskripsi fisik semua karakter
     all_char_refs = []
     for char in characters:
         if char['name'] and char['desc']:
