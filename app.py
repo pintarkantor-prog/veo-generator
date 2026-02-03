@@ -1,47 +1,44 @@
 import streamlit as st
 from PIL import Image
 
-st.set_page_config(page_title="Veo 3 Storyboard Pro", layout="wide")
+st.set_page_config(page_title="Veo 3 Pro Storyboard", layout="wide")
 
-st.title("🎬 Veo 3: Storyboard Generator with Character Ref")
+st.title("🎬 Veo 3 Smart Storyboarder")
+st.markdown("Generator ini membagi cerita menjadi 3 babak sinematik untuk hasil yang lebih dinamis.")
 
-# --- BAGIAN UPLOAD GAMBAR ---
-st.sidebar.header("👤 Character Reference")
+# --- SIDEBAR: REFERENSI ---
+st.sidebar.header("👤 Karakter & Gaya")
 uploaded_file = st.sidebar.file_uploader("Upload Foto Karakter", type=['png', 'jpg', 'jpeg'])
+char_desc = st.sidebar.text_area("Detail Fisik Karakter:", "Contoh: Pria paruh baya, jubah kulit cokelat, pedang bercahaya biru")
+visual_style = st.sidebar.selectbox("Gaya Visual:", ["Dark Fantasy", "Hyper-Realistic", "Cyberpunk 2077 Style", "Studio Ghibli Inspired"])
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.sidebar.image(image, caption="Karakter Referensi Kamu", use_container_width=True)
-    st.sidebar.success("Gambar berhasil diunggah! Gunakan deskripsi gambar ini di setiap prompt.")
+# --- INPUT UTAMA ---
+story_concept = st.text_area("Masukkan Ide Cerita Besar (Shorts/Long Form):", 
+                             placeholder="Contoh: Perjalanan robot tua mencari bunga terakhir di bumi yang gersang.")
 
-# --- INPUT CERITA ---
-st.subheader("📝 Alur Cerita & Konsep")
-story_concept = st.text_area("Tulis Sinopsis Cerita (untuk 15 adegan):", 
-                             placeholder="Contoh: Petualangan gadis di hutan neon...")
+if st.button("🚀 Bangun 15 Adegan Efektif"):
+    if story_concept and char_desc:
+        scenes_data = [
+            {"babak": "BABAK I: PENGENALAN (Adegan 1-5)", "cams": "Wide Shot, Slow Pan", "vibe": "Melancholic"},
+            {"babak": "BABAK II: KONFLIK (Adegan 6-10)", "cams": "Close-up, Shaky Cam, Fast Cuts", "vibe": "Tense/Action"},
+            {"babak": "BABAK III: RESOLUSI (Adegan 11-15)", "cams": "Low Angle, Tracking Shot", "vibe": "Epic/Grand"}
+        ]
+        
+        count = 1
+        for section in scenes_data:
+            st.header(section["babak"])
+            for j in range(5):
+                with st.expander(f"Adegan {count}: {'Mulai' if count==1 else 'Transisi' if count<11 else 'Puncak'}"):
+                    prompt = f"""
+**PROMPT VIDEO:** A {visual_style} video. Subject: {char_desc}. 
+Scene Action: [Adegan {count}: Fokus pada {section['vibe']}]. 
+Context: {story_concept[:100]}. 
+Camera: {section['cams']}. 4k, Cinematic lighting.
 
-col1, col2 = st.columns(2)
-with col1:
-    char_description = st.text_input("Deskripsi Fisik Karakter (PENTING):", 
-                                    placeholder="Contoh: Rambut biru, jaket kulit hitam, mata kuning")
-with col2:
-    global_style = st.selectbox("Gaya Visual", ["Cinematic", "Anime", "3D Animation", "Cyberpunk"])
-
-# --- GENERATOR ---
-if st.button("🚀 Generate 15 Detailed Scene Prompts"):
-    if story_concept and char_description:
-        st.divider()
-        for i in range(1, 16):
-            with st.expander(f"🎬 ADEGAN {i}"):
-                # Prompt otomatis yang menyisipkan deskripsi karakter di SETIAP adegan
-                full_prompt = f"""
-**VIDEO:** Scene {i}/15. Character: {char_description}. 
-Action: [Deskripsi aksi spesifik untuk adegan {i} berdasarkan alur: {story_concept[:40]}...]. 
-Style: {global_style}. Reference: Consistent with uploaded character image.
-
-**AUDIO:** High-quality foley. 
-Sound: [Ambient sound for Scene {i}].
-                """
-                st.code(full_prompt, language="text")
-                st.caption(f"Salin ke Veo dan gunakan gambar yang diupload sebagai 'Image Reference'")
+**PROMPT AUDIO:** SFX: {section['vibe']} atmosphere, matching the {section['cams']}. 
+Audio: Synchronized footsteps and ambient noise.
+                    """
+                    st.code(prompt, language="text")
+                    count += 1
     else:
-        st.warning("Mohon isi Konsep Cerita dan Deskripsi Fisik Karakter terlebih dahulu.")
+        st.error("Lengkapi Deskripsi Karakter dan Ide Cerita agar hasilnya tajam!")
