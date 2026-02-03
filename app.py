@@ -2,105 +2,88 @@ import streamlit as st
 from PIL import Image
 
 # Konfigurasi Halaman
-st.set_page_config(page_title="Veo 3 Image & Video Director", layout="wide")
+st.set_page_config(page_title="Veo 3 Pro: Character & Scene Director", layout="wide")
 
-# Custom CSS untuk tampilan yang lebih profesional
-st.markdown("""
-    <style>
-    .stTextArea textarea { font-size: 14px; }
-    .stCodeBlock { border: 1px solid #444; }
-    </style>
-    """, unsafe_allow_html=True)
+st.title("🎬 Veo 3: Manual Character & Scene Director")
+st.markdown("Fokus pada Konsistensi Karakter dari Gambar Referensi. (Tanpa Backsound)")
 
-st.title("🎬 Veo 3: Gambar & Video Prompt Generator")
-st.markdown("Hasilkan prompt terpisah untuk gambar statis dan video dinamis dengan detail 8K.")
-
-# --- SIDEBAR: REFERENSI KARAKTER & VISUAL ---
-st.sidebar.header("👤 Global Character Reference")
-uploaded_file = st.sidebar.file_uploader("Upload Foto Karakter", type=['png', 'jpg', 'jpeg'])
+# --- SIDEBAR: REFERENSI KARAKTER ---
+st.sidebar.header("👤 Character Reference")
+uploaded_file = st.sidebar.file_uploader("Upload Foto Karakter Utama", type=['png', 'jpg', 'jpeg'])
 
 if uploaded_file:
-    st.sidebar.image(Image.open(uploaded_file), caption="Target Visual", use_container_width=True)
+    st.sidebar.image(Image.open(uploaded_file), caption="REFERENSI UTAMA", use_container_width=True)
+    st.sidebar.success("Gambar ini akan digunakan sebagai referensi visual utama untuk SEMUA adegan.")
 
-char_desc = st.sidebar.text_area("Deskripsi Fisik Karakter (Tetap):", 
-                                 placeholder="Contoh: Pria umur 30-an, wajah simetris, kulit detail, memakai kemeja linen putih.")
+char_desc = st.sidebar.text_area("Detail Fisik Karakter (PENTING):", 
+                                 placeholder="Sebutkan detail dari foto: warna rambut, pakaian, ciri wajah, dll.")
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Tips Kualitas:** Setiap prompt akan dioptimalkan untuk kualitas 8K, foto-realistis, dan kamera profesional.")
+st.sidebar.warning("🔇 **Mode No Backsound:** Semua prompt akan dikonfigurasi tanpa musik latar.")
 
 # --- MAIN FORM: 15 SCENES ---
-st.subheader("📑 Storyboard & Dialog (15 Adegan)")
+st.subheader("📑 Storyboard Adegan (15 Slots)")
 
 all_scenes_data = []
 
-# Definisi Parameter Kamera Pro untuk VIDEO
-video_camera_presets = {
-    "Extreme Close-up (ARRI Alexa 35)": "Extreme close-up shot, shot on ARRI Alexa 35 with Zeiss Master Prime lenses, cinematic motion, dynamic lighting, smooth camera movement, 8k resolution, ultra-photorealistic, impeccable facial detail, macro cinematography, sharp focus on eyes, 4:4:4 color depth.",
-    "Medium Shot (Panavision DXL2)": "Medium cinematic shot, shot on Panavision Millennium DXL2, fluid camera motion, natural light transitions, 8k UHD, lifelike textures, professional color grading, high dynamic range, sharp edges, zero noise, IMAX quality.",
-    "Wide Angle (RED V-Raptor 8k)": "Grand wide-angle panoramic shot, shot on RED V-Raptor XL in 8k, smooth crane shot, deep depth of field, hyper-realistic environment, sharp focus from foreground to background, realistic atmospheric effects.",
-    "Over-the-shoulder (Cinema Glass)": "Over-the-shoulder shot, subtle camera sway, shallow depth of field, 8k resolution, cinematic bokeh, realistic skin tones, high-end film production quality."
+# Preset Kamera 8K Realistis
+camera_presets = {
+    "Extreme Close-up (ARRI Alexa 8k)": "Extreme close-up shot, shot on ARRI Alexa 35, 8k resolution, macro cinematography, sharp focus on eyes, ultra-photorealistic skin textures.",
+    "Medium Shot (Panavision 8k)": "Medium cinematic shot, shot on Panavision Millennium DXL2, 8k UHD, realistic fabric weave, lifelike textures, sharp edges.",
+    "Wide Angle (RED V-Raptor 8k)": "Grand wide-angle panoramic shot, RED V-Raptor XL 8k, sharp focus foreground to background, hyper-realistic environment.",
+    "Over-the-shoulder (Cinema Glass)": "Over-the-shoulder shot, 8k resolution, cinematic bokeh, realistic skin tones, high-end film production quality."
 }
 
-# Loop untuk membuat 15 Form Adegan
 for i in range(1, 16):
     with st.expander(f"📍 ADEGAN {i}", expanded=(i == 1)):
         col1, col2 = st.columns([1, 1])
-        
         with col1:
-            action = st.text_area(f"Aksi Visual Adegan {i}", key=f"act_{i}", 
-                                  placeholder="Contoh: Karakter berjalan perlahan mendekati jendela sambil menatap hujan.")
-        
+            action_context = st.text_area(f"Aksi & Latar Adegan {i}", key=f"act_{i}", 
+                                         placeholder="Contoh: Berdiri di bawah lampu jalan kota tua yang berkabut.")
         with col2:
-            dialogue = st.text_area(f"Dialog/Percakapan Adegan {i}", key=f"dial_{i}", 
-                                    placeholder="Apa yang diucapkan? (Kosongkan jika tidak ada)")
-            cam_choice = st.selectbox(f"Setting Kamera Adegan {i}", list(video_camera_presets.keys()), key=f"cam_{i}")
+            dialogue = st.text_area(f"Dialog {i}", key=f"dial_{i}", placeholder="Isi ucapan karakter (jika ada)...")
+            cam_choice = st.selectbox(f"Sudut Kamera {i}", list(camera_presets.keys()), key=f"cam_{i}")
 
         all_scenes_data.append({
-            "id": i,
-            "action": action,
-            "dialogue": dialogue,
-            "camera_video_tech": video_camera_presets[cam_choice]
+            "id": i, "action": action_context, "dialogue": dialogue, "camera": camera_presets[cam_choice]
         })
 
 st.divider()
 
-# --- GENERATE BUTTON ---
-if st.button("🚀 GENERATE ALL IMAGE & VIDEO PROMPTS"):
-    if not char_desc:
-        st.error("Mohon isi 'Deskripsi Fisik Karakter' di sidebar terlebih dahulu agar visual konsisten!")
+# --- GENERATE OUTPUT ---
+if st.button("🚀 BUILD DUAL PROMPTS (IMAGE & VIDEO)"):
+    if not char_desc or not uploaded_file:
+        st.error("Pastikan Anda sudah UPLOAD GAMBAR dan ISI DESKRIPSI KARAKTER di sidebar!")
     else:
-        st.header("📋 Daftar Prompt (Gambar & Video)")
+        st.header("📋 Hasil Prompt (Gunakan Gambar Referensi Anda)")
         
         for scene in all_scenes_data:
-            if scene["action"] or scene["dialogue"]:
+            if scene["action"]:
                 st.subheader(f"Adegan {scene['id']}")
                 
-                # --- PROMPT GAMBAR (STATIC) ---
-                st.markdown("**1. Prompt Gambar (Untuk Thumbnail/Referensi):**")
-                image_prompt = f"""
-Ultra-realistic 8K photograph of {char_desc}.
-CAMERA: Professional studio photography, incredibly detailed, perfect lighting.
-ACTION: {scene['action']}.
-MOOD: Cinematic, high-resolution, static image.
-"""
-                st.code(image_prompt, language="text")
+                res_col1, res_col2 = st.columns(2)
+                
+                # --- PROMPT GAMBAR (STATIC REFERENCE) ---
+                with res_col1:
+                    st.info("🖼️ Prompt Gambar (Static)")
+                    img_p = f"""(Strict Character Consistency: Follow the uploaded reference image of {char_desc}). 
+Photo-realistic 8k, highly detailed textures. 
+Scene & Environment: {scene['action']}. 
+Visual: Cinematic photography, professional studio lighting, realistic as real life, zero noise."""
+                    st.code(img_p, language="text")
+                
+                # --- PROMPT VIDEO (VEO 3 MOTION) ---
+                with res_col2:
+                    st.success("📹 Prompt Video (Veo 3)")
+                    vid_p = f"""VIDEO PROMPT: 
+A cinematic 8k video featuring the EXACT SAME character from the reference image: {char_desc}. 
+CAMERA: {scene['camera']}
+ACTION: {scene['action']}. 
 
-                # --- PROMPT VIDEO (MOTION) ---
-                st.markdown("**2. Prompt Video (Untuk Veo 3):**")
-                video_prompt = f"""
-VIDEO PROMPT:
-A hyper-realistic cinematic video of {char_desc}.
-CAMERA: {scene['camera_video_tech']}
-ACTION: {scene['action']}.
-
-DIALOGUE/SPEECH:
-Character says: "{scene['dialogue'] if scene['dialogue'] else 'No dialogue'}"
-Note: Perfect lip-syncing and natural facial muscle movement required. 8k, highly detailed, realistic as real life.
-"""
-                st.code(video_prompt, language="text")
-
-            else:
-                st.caption(f"Adegan {scene['id']} dilewati karena kosong.")
-
-st.markdown("---")
-st.caption("Veo 3 Advanced Generator v1.1 | Fokus: Gambar & Video Profesional")
+AUDIO: 
+No background music. No score. 
+Dialogue: "{scene['dialogue'] if scene['dialogue'] else 'No dialogue'}". 
+Only natural ambient sounds matching the scene environment. 
+Sync: Lip-sync and facial muscles must be perfect."""
+                    st.code(vid_p, language="text")
+                st.divider()
