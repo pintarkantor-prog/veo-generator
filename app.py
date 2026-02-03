@@ -11,25 +11,18 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("🖼️ Referensi Visual")
-    uploaded_file = st.file_uploader("Unggah Gambar Referensi", type=["jpg", "jpeg", "png"])
-    
-    st.divider()
     st.subheader("👥 Identitas & Fisik Tokoh")
     
-    # Form Karakter A
-    char_a_name = st.text_input("Nama Karakter A", value="", placeholder="Contoh: Udin")
-    char_a_desc = st.text_area("Deskripsi Fisik Karakter A", placeholder="Contoh: Pria, kaos oranye, topi caping.", height=68)
+    # Menentukan jumlah karakter secara manual
+    num_chars = st.number_input("Jumlah Karakter", min_value=1, max_value=5, value=2)
     
-    st.divider()
-    # Form Karakter B
-    char_b_name = st.text_input("Nama Karakter B", value="", placeholder="Contoh: Tung")
-    char_b_desc = st.text_area("Deskripsi Fisik Karakter B", placeholder="Contoh: Pria, kepala kayu, jaket kulit.", height=68)
-    
-    st.divider()
-    # Form Karakter C
-    char_c_name = st.text_input("Nama Karakter C", value="", placeholder="Contoh: Wati")
-    char_c_desc = st.text_area("Deskripsi Fisik Karakter C", placeholder="Contoh: Wanita, kerudung biru, baju batik.", height=68)
+    characters = []
+    for j in range(num_chars):
+        st.markdown(f"**Karakter {j+1}**")
+        c_name = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}", placeholder=f"Contoh: Tokoh {j+1}")
+        c_desc = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
+        characters.append({"name": c_name, "desc": c_desc})
+        st.divider()
 
 # --- PARAMETER KUALITAS NATURAL ---
 img_quality = (
@@ -49,28 +42,29 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        col_desc, col_time, col_diag_a, col_diag_b, col_diag_c = st.columns([2, 1, 1, 1, 1])
+        # Membuat kolom dinamis untuk dialog berdasarkan jumlah karakter
+        # Deskripsi (2 unit) + Waktu (1 unit) + Dialog (sebanyak num_chars)
+        col_setup = [2, 1] + [1] * num_chars
+        cols = st.columns(col_setup)
         
-        with col_desc:
+        with cols[0]:
             user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100)
         
-        with col_time:
+        with cols[1]:
             scene_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
         
-        with col_diag_a:
-            diag_a = st.text_input(f"Dialog {char_a_name if char_a_name else 'A'}", key=f"diag_a_{i}")
-        with col_diag_b:
-            diag_b = st.text_input(f"Dialog {char_b_name if char_b_name else 'B'}", key=f"diag_b_{i}")
-        with col_diag_c:
-            diag_c = st.text_input(f"Dialog {char_c_name if char_c_name else 'C'}", key=f"diag_c_{i}")
+        scene_dialogs = []
+        for idx, char in enumerate(characters):
+            with cols[idx + 2]:
+                char_label = char['name'] if char['name'] else f"Karakter {idx+1}"
+                d_input = st.text_input(f"Dialog {char_label}", key=f"diag_{idx}_{i}")
+                scene_dialogs.append({"name": char_label, "text": d_input})
         
         scene_data.append({
             "num": i, 
             "desc": user_desc, 
             "time": scene_time,
-            "da": diag_a, 
-            "db": diag_b, 
-            "dc": diag_c
+            "dialogs": scene_dialogs
         })
 
 st.divider()
@@ -79,18 +73,17 @@ st.divider()
 if st.button("🚀 BUAT PROMPT", type="primary"):
     st.header("📋 Hasil Prompt")
     
-    # Menggabungkan deskripsi fisik semua karakter untuk referensi global setiap adegan
+    # Menggabungkan deskripsi fisik semua karakter
     all_char_refs = []
-    if char_a_name and char_a_desc: all_char_refs.append(f"{char_a_name} ({char_a_desc})")
-    if char_b_name and char_b_desc: all_char_refs.append(f"{char_b_name} ({char_b_desc})")
-    if char_c_name and char_c_desc: all_char_refs.append(f"{char_c_name} ({char_c_desc})")
+    for char in characters:
+        if char['name'] and char['desc']:
+            all_char_refs.append(f"{char['name']} ({char['desc']})")
     
     combined_physique = "Characters Appearance: " + ", ".join(all_char_refs) + ". " if all_char_refs else ""
     
     for scene in scene_data:
         i = scene["num"]
         
-        # Mapping cahaya
         time_map = {
             "Pagi hari": "morning golden hour light",
             "Siang hari": "bright midday natural sunlight",
@@ -111,18 +104,8 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         )
 
         # --- LOGIKA PROMPT VIDEO ---
-        dialogs = []
-        name_a = char_a_name if char_a_name else "Character A"
-        name_b = char_b_name if char_b_name else "Character B"
-        name_c = char_c_name if char_c_name else "Character C"
-
-        if scene["da"]: dialogs.append(f"{name_a}: \"{scene['da']}\"")
-        if scene["db"]: dialogs.append(f"{name_b}: \"{scene['db']}\"")
-        if scene["dc"]: dialogs.append(f"{name_c}: \"{scene['dc']}\"")
-        
-        dialog_part = ""
-        if dialogs:
-            dialog_part = f"\n\nDialog:\n" + "\n".join(dialogs)
+        dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
+        dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
         final_vid = (
             f"Generate a realistic natural video for Scene {i}. \n"
