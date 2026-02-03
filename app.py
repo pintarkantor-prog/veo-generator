@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 
 # Konfigurasi Halaman
-st.set_page_config(page_title="Veo 3 Ultra-Real Director", layout="wide")
+st.set_page_config(page_title="Veo 3 Image & Video Director", layout="wide")
 
 # Custom CSS untuk tampilan yang lebih profesional
 st.markdown("""
@@ -12,8 +12,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🎬 Veo 3: 15-Scene Cinema Studio")
-st.markdown("Generator Naskah & Visual 8k dengan Fokus Dialog dan Kualitas Kamera Terbaik.")
+st.title("🎬 Veo 3: Gambar & Video Prompt Generator")
+st.markdown("Hasilkan prompt terpisah untuk gambar statis dan video dinamis dengan detail 8K.")
 
 # --- SIDEBAR: REFERENSI KARAKTER & VISUAL ---
 st.sidebar.header("👤 Global Character Reference")
@@ -26,19 +26,19 @@ char_desc = st.sidebar.text_area("Deskripsi Fisik Karakter (Tetap):",
                                  placeholder="Contoh: Pria umur 30-an, wajah simetris, kulit detail, memakai kemeja linen putih.")
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Tips Kualitas:** Kode ini secara otomatis menambahkan parameter ARRI/RED 8k ke setiap prompt kamera yang kamu pilih.")
+st.sidebar.info("💡 **Tips Kualitas:** Setiap prompt akan dioptimalkan untuk kualitas 8K, foto-realistis, dan kamera profesional.")
 
 # --- MAIN FORM: 15 SCENES ---
 st.subheader("📑 Storyboard & Dialog (15 Adegan)")
 
 all_scenes_data = []
 
-# Definisi Parameter Kamera Pro
-camera_presets = {
-    "Extreme Close-up (ARRI Alexa 35)": "Extreme close-up shot, shot on ARRI Alexa 35 with Zeiss Master Prime lenses, 8k resolution, ultra-photorealistic, impeccable facial detail, macro cinematography, sharp focus on eyes, 4:4:4 color depth.",
-    "Medium Shot (Panavision DXL2)": "Medium cinematic shot, shot on Panavision Millennium DXL2, 8k UHD, lifelike textures, natural lighting, professional color grading, high dynamic range, sharp edges.",
-    "Wide Angle (RED V-Raptor 8k)": "Grand wide-angle panoramic shot, shot on RED V-Raptor XL in 8k, deep depth of field, hyper-realistic environment, sharp focus from foreground to background, realistic atmosphere.",
-    "Over-the-shoulder (Cinema Glass)": "Over-the-shoulder shot, shallow depth of field, 8k resolution, cinematic bokeh, realistic skin tones, high-end film production quality."
+# Definisi Parameter Kamera Pro untuk VIDEO
+video_camera_presets = {
+    "Extreme Close-up (ARRI Alexa 35)": "Extreme close-up shot, shot on ARRI Alexa 35 with Zeiss Master Prime lenses, cinematic motion, dynamic lighting, smooth camera movement, 8k resolution, ultra-photorealistic, impeccable facial detail, macro cinematography, sharp focus on eyes, 4:4:4 color depth.",
+    "Medium Shot (Panavision DXL2)": "Medium cinematic shot, shot on Panavision Millennium DXL2, fluid camera motion, natural light transitions, 8k UHD, lifelike textures, professional color grading, high dynamic range, sharp edges, zero noise, IMAX quality.",
+    "Wide Angle (RED V-Raptor 8k)": "Grand wide-angle panoramic shot, shot on RED V-Raptor XL in 8k, smooth crane shot, deep depth of field, hyper-realistic environment, sharp focus from foreground to background, realistic atmospheric effects.",
+    "Over-the-shoulder (Cinema Glass)": "Over-the-shoulder shot, subtle camera sway, shallow depth of field, 8k resolution, cinematic bokeh, realistic skin tones, high-end film production quality."
 }
 
 # Loop untuk membuat 15 Form Adegan
@@ -53,41 +53,54 @@ for i in range(1, 16):
         with col2:
             dialogue = st.text_area(f"Dialog/Percakapan Adegan {i}", key=f"dial_{i}", 
                                     placeholder="Apa yang diucapkan? (Kosongkan jika tidak ada)")
-            cam_choice = st.selectbox(f"Setting Kamera Adegan {i}", list(camera_presets.keys()), key=f"cam_{i}")
+            cam_choice = st.selectbox(f"Setting Kamera Adegan {i}", list(video_camera_presets.keys()), key=f"cam_{i}")
 
         all_scenes_data.append({
             "id": i,
             "action": action,
             "dialogue": dialogue,
-            "camera_tech": camera_presets[cam_choice]
+            "camera_video_tech": video_camera_presets[cam_choice]
         })
 
 st.divider()
 
 # --- GENERATE BUTTON ---
-if st.button("🚀 GENERATE ALL 8K PROMPTS"):
+if st.button("🚀 GENERATE ALL IMAGE & VIDEO PROMPTS"):
     if not char_desc:
         st.error("Mohon isi 'Deskripsi Fisik Karakter' di sidebar terlebih dahulu agar visual konsisten!")
     else:
-        st.header("📋 Daftar Prompt Veo (Siap Copy)")
+        st.header("📋 Daftar Prompt (Gambar & Video)")
         
         for scene in all_scenes_data:
             if scene["action"] or scene["dialogue"]:
                 st.subheader(f"Adegan {scene['id']}")
                 
-                # Penggabungan Prompt Final
-                final_prompt = f"""VIDEO PROMPT:
+                # --- PROMPT GAMBAR (STATIC) ---
+                st.markdown("**1. Prompt Gambar (Untuk Thumbnail/Referensi):**")
+                image_prompt = f"""
+Ultra-realistic 8K photograph of {char_desc}.
+CAMERA: Professional studio photography, incredibly detailed, perfect lighting.
+ACTION: {scene['action']}.
+MOOD: Cinematic, high-resolution, static image.
+"""
+                st.code(image_prompt, language="text")
+
+                # --- PROMPT VIDEO (MOTION) ---
+                st.markdown("**2. Prompt Video (Untuk Veo 3):**")
+                video_prompt = f"""
+VIDEO PROMPT:
 A hyper-realistic cinematic video of {char_desc}.
-CAMERA: {scene['camera_tech']}
+CAMERA: {scene['camera_video_tech']}
 ACTION: {scene['action']}.
 
 DIALOGUE/SPEECH:
 Character says: "{scene['dialogue'] if scene['dialogue'] else 'No dialogue'}"
 Note: Perfect lip-syncing and natural facial muscle movement required. 8k, highly detailed, realistic as real life.
 """
-                st.code(final_prompt, language="text")
+                st.code(video_prompt, language="text")
+
             else:
                 st.caption(f"Adegan {scene['id']} dilewati karena kosong.")
 
 st.markdown("---")
-st.caption("Veo 3 Advanced Generator v1.0 | Fokus: Visual & Dialog")
+st.caption("Veo 3 Advanced Generator v1.1 | Fokus: Gambar & Video Profesional")
