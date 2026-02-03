@@ -1,18 +1,35 @@
 import streamlit as st
 
-# --- KONFIGURASI HALAMAN ---
+# --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Natural Storyboard Generator", layout="wide")
 
-st.title("📸 Natural Storyboard Generator")
-st.info("""
-**Logika Otomatis Aktif:**
-1. Hanya adegan yang diisi **Visual Adegan**-nya yang akan diproses.
-2. Deskripsi fisik tokoh hanya muncul jika namanya disebutkan dalam teks **Visual Adegan**.
-3. Dialog hanya muncul di **Prompt Video**.
-4. Instruksi khusus konsistensi hanya muncul di **Prompt Gambar**.
-""")
+# --- 2. CUSTOM CSS (TOMBOL COPY HIJAU & TAMPILAN) ---
+st.markdown("""
+    <style>
+    /* Mengubah tombol copy bawaan menjadi Hijau Terang agar mudah terlihat */
+    button[title="Copy to clipboard"] {
+        background-color: #28a745 !important;
+        color: white !important;
+        opacity: 1 !important; /* Selalu muncul tanpa perlu di-hover */
+        border-radius: 6px !important;
+        border: 1px solid #ffffff !important;
+        transform: scale(1.1); /* Sedikit diperbesar agar jelas */
+    }
+    /* Warna saat tombol diklik */
+    button[title="Copy to clipboard"]:active {
+        background-color: #1e7e34 !important;
+    }
+    /* Styling kotak input agar rapi */
+    .stTextArea textarea {
+        font-size: 14px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-# --- SIDEBAR: PENGATURAN GLOBAL ---
+st.title("📸 Natural Storyboard Generator")
+st.info("Tombol **Copy** di pojok kanan hasil prompt kini berwarna **Hijau** agar selalu terlihat jelas.")
+
+# --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
     st.header("⚙️ Konfigurasi")
     num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
@@ -20,27 +37,27 @@ with st.sidebar:
     st.divider()
     st.subheader("👥 Identitas & Fisik Tokoh")
     
-    # Karakter 1 & 2 (Selalu Ada)
     characters = []
-    
+
+    # Karakter 1 (Wajib)
     st.markdown("**Karakter 1**")
     c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
     c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c1_name, "desc": c1_desc})
     
     st.divider()
-    
+
+    # Karakter 2 (Wajib)
     st.markdown("**Karakter 2**")
     c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
     c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
     st.divider()
-    
-    # Input Jumlah Karakter diletakkan di bawah Karakter 2
-    num_chars = st.number_input("Total Karakter (Minimal 2)", min_value=2, max_value=5, value=2)
 
-    # Karakter Tambahan (3, 4, 5) jika num_chars > 2
+    # Form Jumlah Karakter (Manual di bawah Karakter 2)
+    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2)
+
     if num_chars > 2:
         for j in range(2, int(num_chars)):
             st.divider()
@@ -49,7 +66,7 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- PARAMETER KUALITAS NATURAL (Tanpa kata 'Realistic') ---
+# --- 4. PARAMETER KUALITAS NATURAL (Tanpa kata 'Realistic') ---
 img_quality = (
     "natural photography, raw photo style, captured on 35mm lens, f/8 aperture, "
     "high resolution, sharp details, authentic skin texture, natural colors, "
@@ -62,13 +79,13 @@ vid_quality = (
     "clear high definition, raw footage style, NO animation, NO CGI, life-like movement"
 )
 
-# --- FORM INPUT ADEGAN ---
+# --- 5. FORM INPUT ADEGAN ---
 st.subheader("📝 Detail Adegan")
 scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog per karakter (1)
+        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog Tokoh (1 per karakter)
         col_setup = [2, 1] + [1] * len(characters)
         cols = st.columns(col_setup)
         
@@ -94,68 +111,67 @@ for i in range(1, int(num_scenes) + 1):
 
 st.divider()
 
-# --- TOMBOL GENERATE ---
+# --- 6. TOMBOL GENERATE (LOGIKA PROMPT) ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
-    # Filter: Hanya adegan yang deskripsinya tidak kosong
+    # Filter: Hanya memproses adegan yang ada isi visualnya
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
     if not filled_scenes:
-        st.warning("Silakan isi kolom 'Visual Adegan' pada setidaknya satu form sebelum membuat prompt.")
+        st.warning("Silakan isi kolom 'Visual Adegan' pada adegan yang ingin dibuat.")
     else:
         st.header("📋 Hasil Prompt")
         
         for scene in filled_scenes:
             i = scene["num"]
-            visual_input = scene["desc"]
+            v_input = scene["desc"]
             
-            # --- LOGIKA DETEKSI KARAKTER (Smart Trigger) ---
-            # Deskripsi karakter hanya muncul jika namanya tertulis di 'Visual Adegan'
-            detected_char_descs = []
+            # Deteksi Nama Tokoh dalam Visual Adegan (Trigger Deskripsi Fisik)
+            detected_physique = []
             for char in characters:
-                if char['name'] and char['name'].lower() in visual_input.lower():
-                    detected_char_descs.append(f"{char['name']} ({char['desc']})")
+                if char['name'] and char['name'].lower() in v_input.lower():
+                    detected_physique.append(f"{char['name']} ({char['desc']})")
             
-            char_ref_text = "Characters Appearance: " + ", ".join(detected_char_descs) + ". " if detected_char_descs else ""
+            char_ref = "Characters Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # --- LOGIKA WAKTU (Mapping ke Inggris) ---
+            # Waktu Mapping
             time_map = {
                 "Pagi hari": "morning golden hour light",
                 "Siang hari": "bright midday natural sunlight",
                 "Sore hari": "late afternoon warm sunset lighting",
                 "Malam hari": "ambient night lighting, dark environment"
             }
-            english_time = time_map.get(scene["time"], "natural lighting")
+            eng_time = time_map.get(scene["time"], "natural lighting")
             
-            # --- LOGIKA PROMPT GAMBAR (Poin 3: Bahasa Indonesia & Tanpa Dialog) ---
-            ref_text = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
-            mandatory_text = "saya ingin membuat gambar secara konsisten adegan per adegan. "
-            scene_num_text = f"buatkan saya sebuah gambar adegan ke {i}. "
+            # --- PROMPT GAMBAR (Instruksi Indo + No Dialog) ---
+            ref_t = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
+            mand_t = "saya ingin membuat gambar secara konsisten adegan per adegan. "
+            sc_num_t = f"buatkan saya sebuah gambar adegan ke {i}. "
             
             final_img = (
-                f"{ref_text}{mandatory_text}{scene_num_text}\n"
-                f"Visual: {char_ref_text}{visual_input}. Waktu: {scene['time']}. "
-                f"Lighting: {english_time}. {img_quality}"
+                f"{ref_t}{mand_t}{sc_num_t}\n"
+                f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
+                f"Lighting: {eng_time}. {img_quality}"
             )
 
-            # --- LOGIKA PROMPT VIDEO (Poin 4: Ada Dialog & Bahasa Inggris) ---
+            # --- PROMPT VIDEO (Dialog + No Instruksi Indo) ---
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
                 f"Generate a natural video for Scene {i}. \n"
-                f"Visual: {char_ref_text}{visual_input}. Time context: {english_time}. {vid_quality}.{dialog_part}"
+                f"Visual: {char_ref}{v_input}. Time context: {eng_time}. {vid_quality}.{dialog_part}"
             )
 
-            # --- TAMPILAN HASIL ---
+            # --- TAMPILAN OUTPUT ---
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Nano Banana)")
+                st.caption(f"📸 PROMPT GAMBAR (Adegan {i})")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Veo 3)")
+                st.caption(f"🎥 PROMPT VIDEO (Adegan {i})")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Dibuat untuk kebutuhan konten konsisten.")
+st.sidebar.caption("Sistem Storyboard Pintar v3.0")
