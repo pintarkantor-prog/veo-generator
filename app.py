@@ -1,7 +1,7 @@
 import streamlit as st
 
 # --- 1. KONFIGURASI HALAMAN ---
-st.set_page_config(page_title="Natural Storyboard Generator", layout="wide")
+st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
 # --- 2. CUSTOM CSS (TOMBOL COPY HIJAU & TAMPILAN) ---
 st.markdown("""
@@ -26,8 +26,9 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("📸 Natural Storyboard Generator")
-st.info("Tombol **Copy** di pojok kanan hasil prompt kini berwarna **Hijau** agar selalu terlihat jelas.")
+# Judul Utama & Pesan Penyemangat
+st.title("📸 PINTAR MEDIA")
+st.info("semangat buat alur cerita nya guys ❤️❤️❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -39,7 +40,7 @@ with st.sidebar:
     
     characters = []
 
-    # Karakter 1 (Wajib)
+    # Karakter 1
     st.markdown("**Karakter 1**")
     c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
     c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
@@ -47,7 +48,7 @@ with st.sidebar:
     
     st.divider()
 
-    # Karakter 2 (Wajib)
+    # Karakter 2
     st.markdown("**Karakter 2**")
     c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
     c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
@@ -85,7 +86,7 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog Tokoh (1 per karakter)
+        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog per karakter (1)
         col_setup = [2, 1] + [1] * len(characters)
         cols = st.columns(col_setup)
         
@@ -111,13 +112,13 @@ for i in range(1, int(num_scenes) + 1):
 
 st.divider()
 
-# --- 6. TOMBOL GENERATE (LOGIKA PROMPT) ---
+# --- 6. TOMBOL GENERATE (BUAT PROMPT) ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
-    # Filter: Hanya memproses adegan yang ada isi visualnya
+    # Filter: Hanya memproses adegan yang visualnya tidak kosong
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
     if not filled_scenes:
-        st.warning("Silakan isi kolom 'Visual Adegan' pada adegan yang ingin dibuat.")
+        st.warning("Silakan isi kolom 'Visual Adegan' pada adegan yang ingin diproses.")
     else:
         st.header("📋 Hasil Prompt")
         
@@ -125,7 +126,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             i = scene["num"]
             v_input = scene["desc"]
             
-            # Deteksi Nama Tokoh dalam Visual Adegan (Trigger Deskripsi Fisik)
+            # Deteksi Nama Tokoh dalam Visual Adegan (Smart Trigger)
             detected_physique = []
             for char in characters:
                 if char['name'] and char['name'].lower() in v_input.lower():
@@ -142,7 +143,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             }
             eng_time = time_map.get(scene["time"], "natural lighting")
             
-            # --- PROMPT GAMBAR (Instruksi Indo + No Dialog) ---
+            # --- PROMPT GAMBAR (Instruksi Indo & No Dialog) ---
             ref_t = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
             mand_t = "saya ingin membuat gambar secara konsisten adegan per adegan. "
             sc_num_t = f"buatkan saya sebuah gambar adegan ke {i}. "
@@ -153,7 +154,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                 f"Lighting: {eng_time}. {img_quality}"
             )
 
-            # --- PROMPT VIDEO (Dialog + No Instruksi Indo) ---
+            # --- PROMPT VIDEO (Dialog & No Instruksi Indo) ---
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
@@ -162,16 +163,16 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                 f"Visual: {char_ref}{v_input}. Time context: {eng_time}. {vid_quality}.{dialog_part}"
             )
 
-            # --- TAMPILAN OUTPUT ---
+            # Tampilan Output
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Adegan {i})")
+                st.caption(f"📸 PROMPT GAMBAR")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Adegan {i})")
+                st.caption(f"🎥 PROMPT VIDEO")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Sistem Storyboard Pintar v3.0")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.0")
