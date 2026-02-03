@@ -1,95 +1,70 @@
 import streamlit as st
-from PIL import Image
 
-# Konfigurasi Halaman
-st.set_page_config(page_title="Veo 3 Pro: Consistent Character", layout="wide")
+st.set_page_config(page_title="AI Storyboard Generator", layout="wide")
 
-st.title("🎬 Veo 3: Professional Image & Video Suite")
-st.markdown("Fokus pada Konsistensi Karakter Berbasis Referensi Gambar (Tanpa Backsound).")
+st.title("🎬 High-End Storyboard Prompt Generator")
+st.markdown("Generator ini dirancang untuk hasil **Ultra-Realistic** (Bukan Kartun) dengan konsistensi antar adegan.")
 
-# --- SIDEBAR: REFERENSI KARAKTER ---
-st.sidebar.header("👤 Character Reference")
-uploaded_file = st.sidebar.file_uploader("Upload Foto Karakter Utama", type=['png', 'jpg', 'jpeg'])
+# --- SIDEBAR CONFIGURATION ---
+with st.sidebar:
+    st.header("Pengaturan Global")
+    num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
+    
+    st.divider()
+    st.subheader("Dialog Karakter")
+    char_a_name = st.text_input("Nama Karakter A", value="Karakter A")
+    char_b_name = st.text_input("Nama Karakter B", value="Karakter B")
 
-if uploaded_file:
-    st.sidebar.image(Image.open(uploaded_file), caption="REFERENSI UTAMA", use_container_width=True)
+# --- MAIN FORM ---
+st.subheader("Konfigurasi Adegan")
 
-char_desc = st.sidebar.text_area("Detail Fisik Karakter (PENTING):", 
-                                 placeholder="Sebutkan detail dari foto: warna rambut, pakaian, ciri wajah, dll.")
+# Template Kualitas Realistis (Bahasa Inggris agar AI paham teknis kamera)
+# Namun instruksi khusus tetap dalam Bahasa Indonesia sesuai permintaan Anda.
+quality_tags = (
+    "ultra-realistic photography, cinematic lighting, shot on 8k RED V-Raptor XL, "
+    "35mm lens, f/1.8, highly detailed skin texture, sharp focus, hyper-realistic, "
+    "no cartoon, no 3D render, photorealistic, professional cinematography"
+)
 
-st.sidebar.divider()
-st.sidebar.warning("🔇 **Mode No Backsound:** Aktif.")
+all_prompts = []
 
-# --- MAIN FORM: 15 SCENES ---
-st.subheader("📑 Storyboard Adegan (15 Slot)")
-
-all_scenes_data = []
-
-# Preset Kamera 8K Realistis
-camera_presets = {
-    "Extreme Close-up (ARRI Alexa 8k)": "Extreme close-up shot, shot on ARRI Alexa 35, 8k resolution, macro cinematography, sharp focus on eyes, ultra-photorealistic skin textures.",
-    "Medium Shot (Panavision 8k)": "Medium cinematic shot, shot on Panavision Millennium DXL2, 8k UHD, lifelike textures, natural lighting.",
-    "Wide Angle (RED V-Raptor 8k)": "Grand wide-angle panoramic shot, RED V-Raptor XL 8k, sharp focus foreground to background, hyper-realistic environment.",
-    "Over-the-shoulder (Cinema Glass)": "Over-the-shoulder shot, 8k resolution, cinematic bokeh, realistic skin tones."
-}
-
-for i in range(1, 16):
-    with st.expander(f"📍 ADEGAN {i}", expanded=(i == 1)):
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            action_context = st.text_area(f"Aksi & Latar Adegan {i}", key=f"act_{i}", 
-                                         placeholder="Contoh: Berjalan di tengah hutan bambu yang berkabut.")
-        with col2:
-            dialogue = st.text_area(f"Dialog {i}", key=f"dial_{i}", placeholder="Isi ucapan karakter (jika ada)...")
-            cam_choice = st.selectbox(f"Sudut Kamera {i}", list(camera_presets.keys()), key=f"cam_{i}")
-
-        all_scenes_data.append({
-            "id": i, "action": action_context, "dialogue": dialogue, "camera": camera_presets[cam_choice]
-        })
-
-st.divider()
-
-# --- GENERATE OUTPUT ---
-if st.button("🚀 BUILD ALL PROMPTS"):
-    if not char_desc or not uploaded_file:
-        st.error("Pastikan Anda sudah UPLOAD GAMBAR dan ISI DESKRIPSI KARAKTER di sidebar!")
-    else:
-        st.header("📋 Hasil Prompt Terstruktur")
+for i in range(1, int(num_scenes) + 1):
+    with st.expander(f"Adegan Ke-{i}", expanded=(i == 1)):
+        col1, col2 = st.columns(2)
         
-        for scene in all_scenes_data:
-            if scene["action"]:
-                st.subheader(f"Adegan {scene['id']}")
-                
-                res_col1, res_col2 = st.columns(2)
-                
-                # --- PROMPT GAMBAR (KALIMAT BAHASA INDONESIA TETAP) ---
-                with res_col1:
-                    st.info("🖼️ Prompt Gambar (Static)")
-                    
-                    if scene["id"] == 1:
-                        default_txt = "ini adalah referensi gambar karakter saya"
-                    else:
-                        default_txt = "saya ingin membuat beberapa adegan secara konsisten, menggunakan referensi gambar yang saya kirim"
-                    
-                    img_p = f"""{default_txt}.
-Detail Karakter: {char_desc}.
-Photo-realistic 8k, highly detailed.
-Scene & Environment: {scene['action']}.
-Style: Cinematic photography, professional lighting, realistic as real life."""
-                    st.code(img_p, language="text")
-                
-                # --- PROMPT VIDEO (TANPA BACKSOUND) ---
-                with res_col2:
-                    st.success("📹 Prompt Video (Veo 3)")
-                    vid_p = f"""VIDEO PROMPT:
-A cinematic 8k video featuring the EXACT SAME character from the reference image: {char_desc}.
-CAMERA: {scene['camera']}
-ACTION: {scene['action']}.
+        with col1:
+            desc = st.text_area(f"Deskripsi Visual Adegan {i}", placeholder="Sedang apa? Di mana?", key=f"desc_{i}")
+        
+        with col2:
+            diag_a = st.text_input(f"Dialog {char_a_name}", key=f"diag_a_{i}")
+            diag_b = st.text_input(f"Dialog {char_b_name}", key=f"diag_b_{i}")
 
-AUDIO:
-No background music. No score.
-Dialogue: "{scene['dialogue'] if scene['dialogue'] else 'No dialogue'}".
-Only natural ambient sounds matching the environment.
-Sync: Lip-sync and facial muscles must be perfect."""
-                    st.code(vid_p, language="text")
-                st.divider()
+        # LOGIKA FORMULASI PROMPT
+        ref_sentence = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
+        consistent_sentence = "saya ingin membuat gambar secara konsisten adegan per adegan. "
+        scene_sentence = f"buatkan saya sebuah gambar adegan ke {i}. "
+        
+        # Penggabungan Dialog
+        dialogue_part = ""
+        if diag_a or diag_b:
+            dialogue_part = f"\nDialog: [{char_a_name}: '{diag_a}'] | [{char_b_name}: '{diag_b}']"
+
+        # Hasil Akhir Prompt per Adegan
+        full_prompt = (
+            f"{ref_sentence}{consistent_sentence}{scene_sentence}\n"
+            f"Visual: {desc}. {quality_tags}.{dialogue_part}"
+        )
+        all_prompts.append(full_prompt)
+
+# --- OUTPUT ---
+st.divider()
+st.header("Hasil Prompt Adegan")
+
+if st.button("Generate Semua Prompt"):
+    for idx, prompt in enumerate(all_prompts, 1):
+        st.subheader(f"Prompt Adegan {idx}")
+        st.code(prompt, language="text")
+
+# Fitur Download
+full_text = "\n\n".join([f"--- ADEGAN {i+1} ---\n{p}" for i, p in enumerate(all_prompts)])
+st.download_button("Download Semua Prompt (.txt)", full_text, file_name="storyboard_prompts.txt")
