@@ -1,0 +1,47 @@
+import streamlit as st
+from PIL import Image
+
+st.set_page_config(page_title="Veo 3 Storyboard Pro", layout="wide")
+
+st.title("🎬 Veo 3: Storyboard Generator with Character Ref")
+
+# --- BAGIAN UPLOAD GAMBAR ---
+st.sidebar.header("👤 Character Reference")
+uploaded_file = st.sidebar.file_uploader("Upload Foto Karakter", type=['png', 'jpg', 'jpeg'])
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.sidebar.image(image, caption="Karakter Referensi Kamu", use_container_width=True)
+    st.sidebar.success("Gambar berhasil diunggah! Gunakan deskripsi gambar ini di setiap prompt.")
+
+# --- INPUT CERITA ---
+st.subheader("📝 Alur Cerita & Konsep")
+story_concept = st.text_area("Tulis Sinopsis Cerita (untuk 15 adegan):", 
+                             placeholder="Contoh: Petualangan gadis di hutan neon...")
+
+col1, col2 = st.columns(2)
+with col1:
+    char_description = st.text_input("Deskripsi Fisik Karakter (PENTING):", 
+                                    placeholder="Contoh: Rambut biru, jaket kulit hitam, mata kuning")
+with col2:
+    global_style = st.selectbox("Gaya Visual", ["Cinematic", "Anime", "3D Animation", "Cyberpunk"])
+
+# --- GENERATOR ---
+if st.button("🚀 Generate 15 Detailed Scene Prompts"):
+    if story_concept and char_description:
+        st.divider()
+        for i in range(1, 16):
+            with st.expander(f"🎬 ADEGAN {i}"):
+                # Prompt otomatis yang menyisipkan deskripsi karakter di SETIAP adegan
+                full_prompt = f"""
+**VIDEO:** Scene {i}/15. Character: {char_description}. 
+Action: [Deskripsi aksi spesifik untuk adegan {i} berdasarkan alur: {story_concept[:40]}...]. 
+Style: {global_style}. Reference: Consistent with uploaded character image.
+
+**AUDIO:** High-quality foley. 
+Sound: [Ambient sound for Scene {i}].
+                """
+                st.code(full_prompt, language="text")
+                st.caption(f"Salin ke Veo dan gunakan gambar yang diupload sebagai 'Image Reference'")
+    else:
+        st.warning("Mohon isi Konsep Cerita dan Deskripsi Fisik Karakter terlebih dahulu.")
