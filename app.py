@@ -13,10 +13,9 @@ with st.sidebar:
     st.divider()
     st.subheader("👥 Identitas & Fisik Tokoh")
     
-    # List untuk menampung data karakter
     characters = []
 
-    # Karakter 1 (Selalu Ada)
+    # Karakter 1
     st.markdown("**Karakter 1**")
     c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: Udin")
     c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
@@ -24,7 +23,7 @@ with st.sidebar:
     
     st.divider()
 
-    # Karakter 2 (Selalu Ada)
+    # Karakter 2
     st.markdown("**Karakter 2**")
     c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: Tung")
     c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
@@ -32,11 +31,9 @@ with st.sidebar:
 
     st.divider()
 
-    # Poin Utama: Form Jumlah Karakter diletakkan di bawah Karakter 2
-    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2, 
-                                help="Ubah angka ini jika ingin menambah Karakter 3, 4, atau 5")
+    # Form Jumlah Karakter di bawah Karakter 2
+    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2)
 
-    # Loop untuk karakter tambahan (mulai dari indeks ke-2/Karakter 3)
     if num_chars > 2:
         for j in range(2, num_chars):
             st.divider()
@@ -45,16 +42,17 @@ with st.sidebar:
             c_desc = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
             characters.append({"name": c_name, "desc": c_desc})
 
-# --- PARAMETER KUALITAS NATURAL ---
+# --- PARAMETER KUALITAS (Menghapus kata 'Realistic') ---
 img_quality = (
-    "hyper-realistic natural photography, raw photo, captured on 35mm lens, f/8 aperture, "
-    "high resolution, sharp details, realistic skin texture, authentic colors, "
-    "NO cartoon, NO anime, NO Pixar, NO 3D render, NO artificial lighting, NO AI-generated look"
+    "natural photography, raw photo style, captured on 35mm lens, f/8 aperture, "
+    "high resolution, sharp details, authentic skin texture, natural colors, "
+    "unprocessed look, NO cartoon, NO anime, NO Pixar, NO 3D render, "
+    "NO artificial lighting, NO AI-generated look, true to life appearance"
 )
 
 vid_quality = (
-    "natural handheld video, 60fps, realistic motion, authentic environment, "
-    "clear high definition, real-life footage style, NO animation, NO CGI"
+    "natural handheld video, 60fps, authentic motion, real-world environment, "
+    "clear high definition, raw footage style, NO animation, NO CGI, life-like movement"
 )
 
 # --- FORM INPUT ADEGAN ---
@@ -63,7 +61,6 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Layout kolom dinamis: Visual (2) + Waktu (1) + Dialog (1 per karakter)
         col_setup = [2, 1] + [1] * len(characters)
         cols = st.columns(col_setup)
         
@@ -127,7 +124,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
         final_vid = (
-            f"Generate a realistic natural video for Scene {i}. \n"
+            f"Generate a natural video for Scene {i}. \n"
             f"Visual: {combined_physique}{scene['desc']}. Time context: {english_time}. {vid_quality}.{dialog_part}"
         )
 
