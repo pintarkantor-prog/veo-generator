@@ -42,3 +42,4 @@ Audio: Synchronized footsteps and ambient noise.
                     count += 1
     else:
         st.error("Lengkapi Deskripsi Karakter dan Ide Cerita agar hasilnya tajam!")
+
