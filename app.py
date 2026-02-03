@@ -11,18 +11,25 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("🖼️ Referensi Karakter")
+    st.subheader("🖼️ Referensi Visual")
     uploaded_file = st.file_uploader("Unggah Gambar Referensi", type=["jpg", "jpeg", "png"])
     
-    char_global_desc = st.text_area("Deskripsi Fisik Karakter (Global)", 
-                                    placeholder="Contoh: Pria wajah lokal, kulit sawo matang, rambut pendek rapi.")
-
     st.divider()
-    st.subheader("👥 Nama Tokoh")
-    # Bagian Default Nama dikosongkan agar Anda bisa isi manual
-    char_a_name = st.text_input("Nama Karakter A", value="", placeholder="Isi Nama Karakter A")
-    char_b_name = st.text_input("Nama Karakter B", value="", placeholder="Isi Nama Karakter B")
-    char_c_name = st.text_input("Nama Karakter C", value="", placeholder="Isi Nama Karakter C")
+    st.subheader("👥 Identitas & Fisik Tokoh")
+    
+    # Form Karakter A
+    char_a_name = st.text_input("Nama Karakter A", value="", placeholder="Contoh: Udin")
+    char_a_desc = st.text_area("Deskripsi Fisik Karakter A", placeholder="Contoh: Pria, kaos oranye, topi caping.", height=68)
+    
+    st.divider()
+    # Form Karakter B
+    char_b_name = st.text_input("Nama Karakter B", value="", placeholder="Contoh: Tung")
+    char_b_desc = st.text_area("Deskripsi Fisik Karakter B", placeholder="Contoh: Pria, kepala kayu, jaket kulit.", height=68)
+    
+    st.divider()
+    # Form Karakter C
+    char_c_name = st.text_input("Nama Karakter C", value="", placeholder="Contoh: Wati")
+    char_c_desc = st.text_area("Deskripsi Fisik Karakter C", placeholder="Contoh: Wanita, kerudung biru, baju batik.", height=68)
 
 # --- PARAMETER KUALITAS NATURAL ---
 img_quality = (
@@ -51,7 +58,6 @@ for i in range(1, int(num_scenes) + 1):
             scene_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
         
         with col_diag_a:
-            # Label input dinamis mengikuti apa yang diketik di sidebar
             diag_a = st.text_input(f"Dialog {char_a_name if char_a_name else 'A'}", key=f"diag_a_{i}")
         with col_diag_b:
             diag_b = st.text_input(f"Dialog {char_b_name if char_b_name else 'B'}", key=f"diag_b_{i}")
@@ -73,7 +79,13 @@ st.divider()
 if st.button("🚀 BUAT PROMPT", type="primary"):
     st.header("📋 Hasil Prompt")
     
-    global_char = f"Character Appearance: {char_global_desc}. " if char_global_desc else ""
+    # Menggabungkan deskripsi fisik semua karakter untuk referensi global setiap adegan
+    all_char_refs = []
+    if char_a_name and char_a_desc: all_char_refs.append(f"{char_a_name} ({char_a_desc})")
+    if char_b_name and char_b_desc: all_char_refs.append(f"{char_b_name} ({char_b_desc})")
+    if char_c_name and char_c_desc: all_char_refs.append(f"{char_c_name} ({char_c_desc})")
+    
+    combined_physique = "Characters Appearance: " + ", ".join(all_char_refs) + ". " if all_char_refs else ""
     
     for scene in scene_data:
         i = scene["num"]
@@ -94,13 +106,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         
         final_img = (
             f"{ref_text}{mandatory_text}{scene_num_text}\n"
-            f"Visual: {global_char}{scene['desc']}. Waktu: {scene['time']}. "
+            f"Visual: {combined_physique}{scene['desc']}. Waktu: {scene['time']}. "
             f"Lighting: {english_time}. {img_quality}"
         )
 
         # --- LOGIKA PROMPT VIDEO ---
         dialogs = []
-        # Menggunakan nama yang diketik user atau inisial jika kosong
         name_a = char_a_name if char_a_name else "Character A"
         name_b = char_b_name if char_b_name else "Character B"
         name_c = char_c_name if char_c_name else "Character C"
@@ -115,7 +126,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
 
         final_vid = (
             f"Generate a realistic natural video for Scene {i}. \n"
-            f"Visual: {global_char}{scene['desc']}. Time context: {english_time}. {vid_quality}.{dialog_part}"
+            f"Visual: {combined_physique}{scene['desc']}. Time context: {english_time}. {vid_quality}.{dialog_part}"
         )
 
         # TAMPILAN HASIL
