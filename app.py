@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (ALTERNATING NAVY-GREY STYLE)
+# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -35,42 +35,26 @@ st.markdown("""
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     
+    button[title="Copy to clipboard"]:hover {
+        background-color: #218838 !important;
+    }
+    
+    button[title="Copy to clipboard"]:active {
+        background-color: #1e7e34 !important;
+        transform: scale(1.0);
+    }
+    
     /* Font Area Input Visual Deskripsi */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
     }
-
-    /* --- LOGIKA WARNA GANJIL (ABU-ABU) & GENAP (NAVY) --- */
-    div[data-testid="stExpander"] {
-        border-radius: 10px !important;
-        margin-bottom: 15px !important;
-        border: 1px solid #3d4150 !important;
-    }
-
-    /* Adegan GANJIL (1, 3, 5, dst) - Abu-abu Gelap Profesional */
-    div[data-testid="stExpander"]:nth-of-type(odd) {
-        background-color: #262730 !important;
-        border-left: 5px solid #555555 !important;
-    }
-
-    /* Adegan GENAP (2, 4, 6, dst) - Biru Gelap Navy */
-    div[data-testid="stExpander"]:nth-of-type(even) {
-        background-color: #0e1117 !important;
-        border-left: 5px solid #1c2e4a !important;
-    }
-
-    /* Hover effect agar lebih interaktif */
-    div[data-testid="stExpander"]:hover {
-        border: 1px solid #28a745 !important;
-        border-left: 5px solid #28a745 !important;
-    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.14 | Ganjil-Abu-abu | Genap-Navy | MASTER SYNC ❤️")
+st.info("Mode: v9.12 | MASTER SYNC LIGHTING | ALL-OBJECT TEXTURE LOCK ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC (SESSION STATE ENGINE)
@@ -86,12 +70,15 @@ options_lighting = [
     "Suasana Alami"
 ]
 
+# Inisialisasi memori master jika belum ada
 if 'master_light_choice' not in st.session_state:
     st.session_state.master_light_choice = options_lighting[0]
 
 def sync_all_lighting():
+    """Fungsi pemicu untuk menyamakan semua cahaya dengan Adegan 1"""
     new_choice = st.session_state.light_input_1
     st.session_state.master_light_choice = new_choice
+    # Update semua key radio button yang ada di session state
     for key in st.session_state.keys():
         if key.startswith("light_input_"):
             st.session_state[key] = new_choice
@@ -135,7 +122,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
+# 5. PARAMETER KUALITAS (ULTIMATE FIDELITY)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -166,9 +153,7 @@ st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
-    # Penanda visual di label header
-    label_prefix = "🟢 [MASTER]" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
-    with st.expander(label_prefix, expanded=(idx_s == 1)):
+    with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
@@ -176,9 +161,11 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
+            # Jika Adegan 1, pasang fungsi on_change untuk Master Sync
             if idx_s == 1:
                 light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}", on_change=sync_all_lighting)
             else:
+                # Jika bukan Adegan 1, gunakan state yang sudah ada atau default ke Master
                 if f"light_input_{idx_s}" not in st.session_state:
                     st.session_state[f"light_input_{idx_s}"] = st.session_state.master_light_choice
                 light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}")
@@ -197,7 +184,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - RESTORED)
+# 7. LOGIKA GENERATOR PROMPT (MAPPING & RENDERING)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -212,7 +199,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             v_txt = adegan["visual"]
             l_choice = adegan["lighting"]
             
-            # --- MAPPING LOGIKA LIGHTING (FULL EXPLICIT RESTORED) ---
+            # --- MAPPING LOGIKA LIGHTING ---
             if "Bening" in l_choice:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -277,7 +264,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             )
 
             # --- DISPLAY OUTPUT ---
-            st.subheader(f"HASIL PRODUKSI ADEGAN {s_id}")
+            st.subheader(f"ADENGAN {s_id}")
             res_c1, res_c2 = st.columns(2)
             with res_c1:
                 st.caption(f"📸 PROMPT GAMBAR ({l_choice})")
@@ -288,4 +275,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.14 - Alternating Zebra Style")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.12 - Master Sync Edition")
