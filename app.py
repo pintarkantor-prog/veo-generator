@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: Dimmed Sunlight & Ultra-Texture ❤️")
+st.info("Mode: Cold Visual & Deep Color Saturation ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -55,20 +55,22 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"sidebar_char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS (DIMMED & SHARP) ---
-# Di sini kita mengatur 'exposure' dan 'intensity' untuk mengurangi silau matahari
+# --- 4. PARAMETER KUALITAS (COLD & HYPER-SATURATED) ---
+# Mengunci warna tetap tajam meski intensitas cahaya matahari rendah (cold atmosphere)
 img_quality = (
-    "full-frame DSLR photography style, 16-bit color depth, intricate micro-textures, "
-    "edge-to-edge optical clarity, f/11 aperture for deep focus sharpness, "
-    "dimmed sunlight, 50% less sun glare, muted light intensity, soft diffused shadows, "
-    "unprocessed raw photography, 8k resolution, captured on 35mm lens, "
-    "STRICTLY NO speech bubbles, NO text on image, NO over-exposure"
+    "full-frame DSLR photography style, 16-bit color bit depth, hyper-saturated organic pigments, "
+    "edge-to-edge optical sharpness, f/11 deep focus aperture, polarized filter effect to remove glare, "
+    "intricate micro-textures on skin and surfaces, rich color contrast, deep blacks, "
+    "cold color temperature palette, clear atmospheric visibility, high-definition scenery, "
+    "unprocessed raw photography style, 8k resolution, captured on 35mm lens, "
+    "STRICTLY NO over-exposure, NO sun flare, NO washed out colors, NO cartoon, NO text"
 )
 
 vid_quality = (
-    "high-fidelity video, 9:16 vertical, 60fps, sharp background focus, "
-    "fluid organic motion, dimmed sunlight atmosphere, muted exposure, "
-    "intricate surface details, natural shadows, NO animation, NO motion blur"
+    "high-fidelity vertical video, 9:16, 60fps, cold cinematic atmosphere, "
+    "deep color depth, extreme visual clarity, sharp background focus, "
+    "natural physics and fluid motion, muted soft light, high contrast, "
+    "NO motion blur, NO animation look, NO CGI padding"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -84,9 +86,9 @@ for i in range(1, int(num_scenes) + 1):
             user_desc = st.text_area(f"Visual Adegan {i}", key=f"main_desc_{i}", height=100)
         
         with cols[1]:
-            # Setting khusus untuk cahaya matahari yang diredupkan
+            # Pilihan suasana dingin untuk menjaga detail warna
             scene_time = st.selectbox(f"Suasana {i}", 
-                                     ["10:00 AM (Dimmed Sunlight)", "10:00 AM (Deep Shadows)"], 
+                                     ["Dingin & Tajam (Cold Sharp)", "Mendung Vivid (Overcast)"], 
                                      key=f"time_{i}")
         
         scene_dialogs = []
@@ -100,7 +102,7 @@ for i in range(1, int(num_scenes) + 1):
 
 st.divider()
 
-# --- 6. TOMBOL GENERATE ---
+# --- 6. LOGIKA GENERATE ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
@@ -109,50 +111,55 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     else:
         st.header("📋 Hasil Prompt")
         
+        # Mapping Suasana: Fokus pada nuansa dingin dengan kontras tinggi
         time_map = {
-            "10:00 AM (Dimmed Sunlight)": "10:00 AM, 50% sun intensity, cool diffused light, moody atmosphere, no glare",
-            "10:00 AM (Deep Shadows)": "10:00 AM, low-key lighting, soft filtered sun, rich shadow depth"
+            "Dingin & Tajam (Cold Sharp)": "cold ambient light, morning overcast, no direct sun glare, rich color saturation, sharp silhouettes",
+            "Mendung Vivid (Overcast)": "flat cold lighting, diffused shadows, extreme texture detail, bold colors, dark moody background"
         }
 
         for scene in filled_scenes:
             i, v_in = scene["num"], scene["desc"]
             eng_time = time_map.get(scene["time"])
             
+            # Logika Otomatis Adegan 1 & Penomoran
             ref_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if i == 1 else ""
             img_command = f"buatkan saya sebuah gambar dari adegan ke {i}. "
 
+            # Logika Ekspresi Otomatis
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             d_text = " ".join(dialog_lines) if dialog_lines else ""
             
-            expression_logic = ""
+            expr_logic = ""
             if d_text:
-                expression_logic = (
-                    f"Emotion Analight: Analyze 50% less glare, mood from '{d_text}'. "
+                expr_logic = (
+                    f"Emotion Analysis: Analyze mood from '{d_text}'. "
                     "Apply realistic facial micro-expressions and muscle tension. "
                 )
 
+            # Sync Fisik Karakter
             phys = ", ".join([f"{c['name']} ({c['desc']})" for c in characters if c['name'] and c['name'].lower() in v_in.lower()])
             char_ref = f"Appearance: {phys}. " if phys else ""
             
+            # Konstruksi Prompt Final
             final_img = (
-                f"{ref_prefix}{img_command}{expression_logic}Visual: {char_ref}{v_in}. "
-                f"Lighting: {eng_time}. {img_quality}"
+                f"{ref_prefix}{img_command}{expr_logic}Visual: {char_ref}{v_in}. "
+                f"Atmosphere: {eng_time}. {img_quality}"
             )
 
             final_vid = (
-                f"Video Adegan {i}. {expression_logic}Visual: {char_ref}{v_in}. "
-                f"Lighting: {eng_time}. {vid_quality}. Dialog: {d_text}"
+                f"Video Adegan {i}. {expr_logic}Visual: {char_ref}{v_in}. "
+                f"Atmosphere: {eng_time}. {vid_quality}. Dialog: {d_text}"
             )
 
             st.subheader(f"Adegan {i}")
             c1, c2 = st.columns(2)
             with c1:
-                st.caption("📸 PROMPT GAMBAR (Dimmed & Sharp)")
+                st.caption("📸 PROMPT GAMBAR (Cold & High Contrast)")
                 st.code(final_img, language="text")
             with c2:
-                st.caption("🎥 PROMPT VIDEO (Dimmed & Sharp)")
+                st.caption("🎥 PROMPT VIDEO (Cold & High Contrast)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v6.0 - Dimmed Light Base")
+st.sidebar.caption("PINTAR MEDIA Storyboard v6.2 - Cold Visual Optimized")
