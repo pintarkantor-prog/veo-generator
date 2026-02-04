@@ -3,11 +3,20 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS ---
+# --- 2. CUSTOM CSS (TAMPILAN SIDEBAR & TOMBOL HIJAU) ---
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: white !important; }
+    /* Sidebar Gelap Profesional */
+    [data-testid="stSidebar"] {
+        background-color: #1a1c24 !important;
+    }
+    
+    /* Teks Sidebar Putih */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+        color: white !important;
+    }
+
+    /* Tombol Copy Hijau Terang */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -16,13 +25,19 @@ st.markdown("""
         border: 1px solid #ffffff !important;
         transform: scale(1.1); 
     }
-    button[title="Copy to clipboard"]:active { background-color: #1e7e34 !important; }
-    .stTextArea textarea { font-size: 14px !important; }
+    
+    button[title="Copy to clipboard"]:active {
+        background-color: #1e7e34 !important;
+    }
+    
+    .stTextArea textarea {
+        font-size: 14px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: Hyper-Fidelity & Dual Lighting Control (Versi Terlengkap) ❤️")
+st.info("Mode: Mega Structure - locked Crisp Daylight & Deep Color ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -59,20 +74,20 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"sidebar_char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS FULL (TETAP PANJANG & DETAIL) ---
-# Saya pisahkan agar kamu bisa melihat semua parameter teknisnya
-img_quality_base = (
+# --- 4. PARAMETER KUALITAS FULL (SANGAT DETAIL & PANJANG) ---
+# Mengunci suasana 10:00 AM, Dingin, Kering, dan Tajam di sini
+img_quality_standard = (
     "full-frame medium format photography, 16-bit color bit depth, hyper-saturated organic pigments, "
     "edge-to-edge optical sharpness, f/11 deep focus, micro-contrast enhancement, "
     "intricate micro-textures, dry surfaces, dry environment, clear atmosphere, "
-    "deep blue sky with thin wispy white clouds, natural sky depth, "
+    "10:00 AM crisp morning light, deep blue sky with thin wispy white clouds, natural sky depth, "
     "cool white balance, 7000k color temperature, rich color contrast, deep shadows, "
     "unprocessed raw photography, 8k resolution, captured on 35mm lens, "
     "STRICTLY NO rain, NO wet surfaces, NO overcast, NO over-exposure, NO dark clouds"
 )
 
-vid_quality_base = (
-    "ultra-high-fidelity vertical video, 60fps, crisp cold daylight, dry environment, "
+vid_quality_standard = (
+    "ultra-high-fidelity vertical video, 60fps, crisp 10:00 AM cold daylight, dry environment, "
     "natural blue sky with light white clouds, deep color depth, extreme visual clarity, "
     "lossless texture quality, fluid organic motion, muted cool light, "
     "high contrast ratio, NO motion blur, NO animation look"
@@ -84,41 +99,38 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Menyesuaikan kolom agar muat untuk pilihan lighting
-        col_setup = [2.5, 1, 1.5] + [1] * len(characters)
+        # Layout kolom yang lega karena pilihan waktu dihapus
+        col_setup = [3, 1.5] + [1] * len(characters)
         cols = st.columns(col_setup)
         
         with cols[0]:
-            user_desc = st.text_area(f"Visual Adegan {i}", key=f"main_desc_{i}", height=100)
+            user_desc = st.text_area(f"Visual Adegan {i}", key=f"main_desc_{i}", height=100, placeholder="Apa yang terlihat di kamera?")
         
         with cols[1]:
-            scene_time = st.selectbox(f"Waktu {i}", ["10:00 AM", "Siang hari", "Malam"], key=f"time_{i}")
-        
-        with cols[2]:
-            # FITUR BARU: PILIHAN LIGHTING
-            light_choice = st.radio(f"Lighting {i}", 
+            # Kontrol Intensitas Cahaya (Pilihan yang baru kita tambahkan)
+            light_choice = st.radio(f"Lighting Adegan {i}", 
                                     ["50% (Dingin)", "75% (Cerah)"], 
                                     key=f"light_{i}", horizontal=True)
         
         scene_dialogs = []
         for idx, char in enumerate(characters):
-            with cols[idx + 3]:
+            with cols[idx + 2]:
                 char_label = char['name'] if char['name'] else f"Karakter {idx+1}"
                 d_input = st.text_input(f"Dialog {char_label}", key=f"main_diag_{idx}_{i}")
                 scene_dialogs.append({"name": char_label, "text": d_input})
         
         scene_data.append({
-            "num": i, "desc": user_desc, "time": scene_time, "light": light_choice, "dialogs": scene_dialogs
+            "num": i, "desc": user_desc, "light": light_choice, "dialogs": scene_dialogs
         })
 
 st.divider()
 
-# --- 6. TOMBOL GENERATE ---
+# --- 6. TOMBOL GENERATE (LOGIKA FULL) ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
     if not filled_scenes:
-        st.warning("Silakan isi kolom 'Visual Adegan'.")
+        st.warning("Silakan isi setidaknya satu kolom 'Visual Adegan'.")
     else:
         st.header("📋 Hasil Prompt")
         
@@ -126,44 +138,52 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             i = scene["num"]
             v_in = scene["desc"]
             
-            # Logika Lighting Dinamis
+            # 1. Logika Lighting Terperinci
             if "50%" in scene["light"]:
-                light_val = "50% dimmed sunlight intensity, zero sun glare, crisp cool morning air"
+                light_val = "50% dimmed sunlight intensity, zero glare, crisp cool morning air, muted exposure"
             else:
-                light_val = "75% sunlight intensity, brilliant daylight, clear sharp highlights, vibrant energy"
+                light_val = "75% sunlight intensity, brilliant daylight, vivid highlights, high-energy sharp colors"
 
-            # Logika Waktu
-            time_val = f"{scene['time']}, crystal clear sky, wispy white clouds, dry environment"
-
-            # Logika Otomatis Adegan 1
+            # 2. Logika Otomatis Adegan 1
             ref_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if i == 1 else ""
             img_command = f"buatkan saya sebuah gambar dari adegan ke {i}. "
 
-            # Logika Ekspresi Otomatis
+            # 3. Logika Ekspresi Otomatis dari Dialog
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             d_text = " ".join(dialog_lines) if dialog_lines else ""
             
             expr_logic = ""
             if d_text:
-                expr_logic = f"Emotion Analysis: Analyze mood from '{d_text}'. Apply realistic facial micro-expressions. "
+                expr_logic = f"Emotion Analysis: Analyze mood from '{d_text}'. Apply realistic facial micro-expressions and muscle tension. "
 
-            # Cek Identitas Karakter
+            # 4. Logika Pengecekan Karakter Manual (Agar Akurat)
             phys_list = []
-            for char in characters:
-                if char['name'] and char['name'].lower() in v_in.lower():
-                    phys_list.append(f"{char['name']} ({char['desc']})")
+            if characters[0]['name'] and characters[0]['name'].lower() in v_in.lower():
+                phys_list.append(f"{characters[0]['name']} ({characters[0]['desc']})")
+            
+            if characters[1]['name'] and characters[1]['name'].lower() in v_in.lower():
+                phys_list.append(f"{characters[1]['name']} ({characters[1]['desc']})")
+            
+            # Jika ada karakter tambahan (3, 4, 5)
+            if len(characters) > 2:
+                for extra_char in characters[2:]:
+                    if extra_char['name'] and extra_char['name'].lower() in v_in.lower():
+                        phys_list.append(f"{extra_char['name']} ({extra_char['desc']})")
+            
             char_ref = "Appearance: " + ", ".join(phys_list) + ". " if phys_list else ""
             
-            # --- KONSTRUKSI PROMPT GAMBAR ---
+            # --- KONSTRUKSI PROMPT GAMBAR (FULL) ---
             final_img = (
                 f"{ref_prefix}{img_command}{expr_logic}Visual: {char_ref}{v_in}. "
-                f"Atmosphere: {time_val}. Lighting: {light_val}. {img_quality_base}"
+                f"Atmosphere: 10:00 AM Locked, dry environment, wispy white clouds. "
+                f"Lighting: {light_val}. {img_quality_standard}"
             )
 
-            # --- KONSTRUKSI PROMPT VIDEO ---
+            # --- KONSTRUKSI PROMPT VIDEO (FULL) ---
             final_vid = (
                 f"Video Adegan {i}. {expr_logic}Visual: {char_ref}{v_in}. "
-                f"Atmosphere: {time_val}. Lighting: {light_val}. {vid_quality_base}. Dialog: {d_text}"
+                f"Atmosphere: 10:00 AM Locked, clear blue sky, dry surfaces. "
+                f"Lighting: {light_val}. {vid_quality_standard}. Dialog: {d_text}"
             )
 
             st.subheader(f"Adegan {i}")
@@ -177,4 +197,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v6.8 - Mega Complete Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v7.1 - Mega Structure Locked Time")
