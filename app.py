@@ -37,7 +37,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("semangat buat alur cerita nya guys ❤️❤️❤️")
+st.info("semangat buat alur cerita nya guys ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -64,29 +64,22 @@ with st.sidebar:
     characters.append({"name": c2_name, "desc": c2_desc})
 
     st.divider()
+    num_chars = st.number_input("Tambah Karakter Lainnya", min_value=2, max_value=5, value=2)
 
-    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2)
-
-    if num_chars > 2:
-        for j in range(2, int(num_chars)):
-            st.divider()
-            st.markdown(f"**Karakter {j+1}**")
-            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}")
-            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
-            characters.append({"name": cn, "desc": cd})
-
-# --- 4. PARAMETER WARNA TAJAM & 9:16 (Tanpa Kata Cinematic/Realistic) ---
-# Menggunakan istilah warna teknis untuk hasil yang lebih 'pop'
+# --- 4. PARAMETER ULTRA-SHARP & VIVID COLORS (9:16) ---
+# Menghindari kata 'cinematic'/'realistic' dan fokus pada detail teknis ketajaman
 img_quality = (
-    "aspect ratio 9:16, vertical mobile frame, vivid color palette, vibrant saturation, "
-    "high dynamic range, deep rich contrast, crystal clear clarity, sharp edges, "
-    "natural light photography, raw texture, captured on 35mm, f/8, "
-    "authentic skin tones, bold colors, NO cartoon, NO 3D render, --ar 9:16"
+    "aspect ratio 9:16, vertical mobile orientation, ultra-vivid color saturation, "
+    "deep color depth, extreme sharpness, hyper-detailed textures, crystal clear 8k resolution, "
+    "bold and punchy colors, high dynamic range, intense contrast, sharp outlines, "
+    "natural sunlight photography, raw photo quality, captured on 35mm lens, f/11 aperture, "
+    "unprocessed style, NO cartoon, NO blur, NO soft focus, --ar 9:16"
 )
 
 vid_quality = (
-    "9:16 vertical video, TikTok format, high color fidelity, vivid tones, vibrant environment, "
-    "natural handheld motion, 60fps, clear high definition, raw footage style, NO CGI"
+    "9:16 vertical video format, ultra-high definition, vivid and punchy color grade, "
+    "extreme visual clarity, high frame rate 60fps, authentic textures, sharp focus, "
+    "natural handheld motion, NO CGI, NO animation look"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -112,10 +105,7 @@ for i in range(1, int(num_scenes) + 1):
                 scene_dialogs.append({"name": char_label, "text": d_input})
         
         scene_data.append({
-            "num": i, 
-            "desc": user_desc, 
-            "time": scene_time,
-            "dialogs": scene_dialogs
+            "num": i, "desc": user_desc, "time": scene_time, "dialogs": scene_dialogs
         })
 
 st.divider()
@@ -127,7 +117,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt (Vivid 9:16)")
+        st.header("📋 Hasil Prompt (Ultra-Sharp 9:16)")
         
         for scene in filled_scenes:
             i = scene["num"]
@@ -141,36 +131,40 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             char_ref = "Characters Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
             time_map = {
-                "Pagi hari": "morning golden hour light with high saturation",
-                "Siang hari": "bright midday sun, clear blue sky, vivid colors",
-                "Sore hari": "sunset warm orange glow, high contrast",
-                "Malam hari": "night ambient light, deep blacks, neon vibrant accents"
+                "Pagi hari": "vibrant morning sun, crystal clear golden light",
+                "Siang hari": "intense bright midday sun, vivid sky, punchy shadows",
+                "Sore hari": "deep orange sunset glow, high contrast lighting",
+                "Malam hari": "neon vivid night lighting, deep rich blacks, sharp light sources"
             }
-            eng_time = time_map.get(scene["time"], "natural lighting")
+            eng_time = time_map.get(scene["time"], "clear natural lighting")
             
+            # PROMPT GAMBAR
             final_img = (
-                f"ini adalah gambar referensi karakter saya. saya ingin membuat gambar secara konsisten adegan per adegan. buatkan saya sebuah gambar adegan ke {i}. "
+                f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
+                f"saya ingin hasil gambar yang tajam dan konsisten. "
                 f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
-                f"Lighting: {eng_time}. {img_quality}"
+                f"Environment: {eng_time}. {img_quality}"
             )
 
+            # PROMPT VIDEO
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
-                f"Generate a natural video for Scene {i} in 9:16. Visual: {char_ref}{v_input}. "
-                f"Colors: vivid and vibrant. Time: {eng_time}. {vid_quality}.{dialog_part}"
+                f"Generate an ultra-sharp vertical video for Scene {i}. 9:16 ratio. "
+                f"Visual: {char_ref}{v_input}. Lighting: {eng_time}. "
+                f"Output: vivid colors, extreme detail. {vid_quality}.{dialog_part}"
             )
 
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Vivid Colors)")
+                st.caption(f"📸 PROMPT GAMBAR (Sharp & Vivid)")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Vivid Colors)")
+                st.caption(f"🎥 PROMPT VIDEO (Sharp & Vivid)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.2 - Vivid 9:16")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.3 - Ultra-Sharp 9:16")
