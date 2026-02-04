@@ -45,7 +45,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v8.3 | ZERO-NATURAL POLICY | REFERENCE FIDELITY LOCK ❤️")
+st.info("Mode: v8.4 | 5-ADVANCED LIGHTING | ZERO-NATURAL POLICY ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT SETUP)
@@ -59,7 +59,7 @@ with st.sidebar:
     
     characters_data_list = []
 
-    # Karakter 1
+    # Karakter 1 (Manual Entry)
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
@@ -67,7 +67,7 @@ with st.sidebar:
     
     st.divider()
 
-    # Karakter 2
+    # Karakter 2 (Manual Entry)
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
@@ -85,7 +85,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC POLICY)
+# 4. PARAMETER KUALITAS (STRICT FIDELITY - NO NATURAL/REALISTIC)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -98,7 +98,6 @@ img_quality_base = (
     "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures on every surface, "
     "circular polarizer (CPL) filter effect, deep cobalt blue sky, crisp white wispy clouds, "
     "authentic sky depth, hyper-sharp foliage and vegetation textures, zero atmospheric haze, "
-    "10:00 AM morning crisp daylight, 50% sun intensity, cool white balance, 7000k cold color temperature, "
     "rich high-contrast shadows, unprocessed raw photography, 8k resolution, captured on high-end 35mm lens, "
     "STRICTLY NO over-exposure, NO motion blur, NO lens flare, " + no_text_no_rain_lock
 )
@@ -112,25 +111,28 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (FULL LAYOUT)
+# 5. FORM INPUT ADEGAN (FULL LAYOUT WITH 5 LIGHTING OPTIONS)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
+        
         cols_setup = st.columns([3, 2.8] + [1.2] * len(characters_data_list))
         
         with cols_setup[0]:
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=120)
         
         with cols_setup[1]:
+            # IMPLEMENTASI 5 OPSI LIGHTING BARU
             light_radio = st.radio(f"Pilih Efek Cahaya (Adegan {idx_s})", 
                                    [
-                                       "50% (Dingin & Kristal)", 
-                                       "75% (Cerah & Tajam)", 
-                                       "Lembap Dingin (Deep Saturation)", 
-                                       "Sore Jam 4 (Low Sun & Cold Contrast)"
+                                       "Alpine Light (Ultra-Sharp Clarity)", 
+                                       "Arctic High-Noon (Cold & Uniform)", 
+                                       "Chiaroscuro (Dramatic Side-Light)", 
+                                       "Polarized Saturation (Deep Vivid)", 
+                                       "Blue-Hour Rim (Sore & Silhouette)"
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
@@ -148,7 +150,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (CLEANSED MEGA LOGIC)
+# 6. LOGIKA GENERATOR PROMPT (AUTO-SYNC & ADVANCED LIGHTING)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -162,25 +164,33 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- LOGIKA LIGHTING ---
-            if "50%" in adegan["lighting"]:
-                f_light = "50% dimmed sunlight, crisp cool morning air, muted exposure, sharp shadows, 7000k temp."
-                f_atmos = "10:00 AM morning sun, deep cobalt blue sky, thin wispy clouds, dry environment."
-            elif "75%" in adegan["lighting"]:
-                f_light = "75% brilliant sunlight, vivid sharp highlights, high-energy vibrant colors, dry landscape."
-                f_atmos = "10:00 AM bright daylight, deep cobalt blue sky, crystal clear visibility."
-            elif "Lembap" in adegan["lighting"]:
-                f_light = "Deep matte color saturation, specular highlights on edges, cold ambient light, no direct glare, high micro-contrast."
-                f_atmos = "Early morning dew atmosphere, bone-dry ground, no puddles, crisp clear air, 8000k extreme cold temperature, hyper-saturated foliage colors."
+            # --- LOGIKA 5 LIGHTING BARU (MANUAL & DETAIL) ---
+            if "Alpine" in adegan["lighting"]:
+                f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
+                f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, bone-dry environment."
+            
+            elif "Arctic" in adegan["lighting"]:
+                f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
+                f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, wispy clouds."
+            
+            elif "Chiaroscuro" in adegan["lighting"]:
+                f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
+                f_atmos = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
+            
+            elif "Polarized" in adegan["lighting"]:
+                f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
+                f_atmos = "Post-mist morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+            
             else:
-                f_light = "Low-angle 4:00 PM sun position, minimal light intensity, cold long shadows, extreme edge sharpness."
-                f_atmos = "4:00 PM clear late afternoon, indigo-cobalt sky, zero haze, dry surfaces, crisp high-contrast background."
+                # Blue-Hour Rim
+                f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
+                f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- LOGIKA EMOSI DIALOG (CLEANSED FROM 'REALISTIC') ---
+            # --- LOGIKA EMOSI DIALOG (ZERO-REALISTIC) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             
-            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
+            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
 
             # --- LOGIKA AUTO-SYNC KARAKTER ---
             detected_phys_list = []
@@ -218,4 +228,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v8.3 - Reference Fidelity Lock")
+st.sidebar.caption("PINTAR MEDIA Storyboard v8.4 - 5-Advanced Lighting Edition")
