@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: Tajam Menyeluruh (Karakter & Latar Belakang) ❤️")
+st.info("Mode: Resolusi Tekstur Mikro & Kedalaman Warna Maksimal ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -43,22 +43,23 @@ with st.sidebar:
     c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Manusia kayu...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
-# --- 4. PARAMETER KUALITAS (FULL FRAME SHARPNESS) ---
-# Menggunakan f/11 untuk memastikan latar belakang setajam karakter
-# Menggunakan 'organic color depth' untuk warna yang kuat tapi tidak menyilaukan
+# --- 4. PARAMETER KUALITAS (HYPER-TECHNICAL DETAIL) ---
+# Menghapus kata terlarang, mengganti dengan parameter optik dan sensor tingkat tinggi
 img_quality = (
     "full body vertical portrait, 1080x1920 pixels, 9:16 aspect ratio, edge-to-edge frame, "
-    "edge-to-edge sharpness, deep focus, f/11 aperture, maximum texture detail on every object, "
-    "sharp background, high-resolution scenery, organic color depth, balanced exposure, "
-    "soft morning light at 10:00 AM, diffused illumination, no harsh sunbeams, no lens flare, "
-    "unprocessed raw photography, 8k resolution, captured on 35mm lens, "
+    "intricate micro-textures on every surface, 16-bit color depth, rich organic pigment, "
+    "edge-to-edge optical clarity, deep focus, f/11 aperture, maximum sensor detail, "
+    "sharp environmental textures, high-fidelity resolution, balanced light exposure, "
+    "diffused 10:00 AM light source, no over-exposure, no lens artifacts, "
+    "raw uncompressed photography style, 8k ultra-high definition, captured on 35mm prime lens, "
     "STRICTLY NO speech bubbles, NO text on image, NO watermarks, NO subtitles, NO cartoon"
 )
 
 vid_quality = (
-    "veo 3 high-quality video, 9:16 vertical 1080p, 60fps, "
-    "10:00 AM diffused lighting, sharp background details, deep focus, "
-    "organic colors, authentic fluid movements, NO motion blur, NO animation"
+    "veo 3 high-fidelity video, 9:16 vertical 1080p, 60fps, "
+    "maximum texture resolution, deep color bit depth, sharp background focus, "
+    "fluid organic motion, high-definition surface details, 10:00 AM diffused lighting, "
+    "NO motion blur, NO animation"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -72,9 +73,9 @@ for i in range(1, int(num_scenes) + 1):
         with cols[0]:
             user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100)
         with cols[1]:
-            # Setting khusus untuk cahaya pukul 10 pagi yang sejuk namun tajam
+            # Setting cahaya 10:00 AM yang sejuk dan detail
             scene_time = st.selectbox(f"Suasana {i}", 
-                                     ["10:00 AM (Sejuk & Tajam)", "10:00 AM (Berawan Tipis)"], 
+                                     ["10:00 AM (Ultra Detail)", "10:00 AM (Soft Texture)"], 
                                      key=f"time_{i}")
         
         scene_dialogs = []
@@ -95,11 +96,11 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt (Full Sharpness Mode)")
+        st.header("📋 Hasil Prompt (Hyper-Technical Mode)")
         
         time_map = {
-            "10:00 AM (Sejuk & Tajam)": "10:00 AM, cool temperature, clear visibility, soft shadow, sharp background scenery",
-            "10:00 AM (Berawan Tipis)": "10:00 AM, filtered light, no glare, organic color saturation, high detail on surroundings"
+            "10:00 AM (Ultra Detail)": "10:00 AM, cool light temperature, maximum visibility, intricate shadow detail, sharp environmental fidelity",
+            "10:00 AM (Soft Texture)": "10:00 AM, filtered soft light, rich color accuracy, deep surface textures, high-fidelity surroundings"
         }
 
         for scene in filled_scenes:
@@ -112,7 +113,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             
             expression_instruction = (
                 f"Emotion Analysis: mood from '{dialog_text}'. "
-                "Render facial micro-expressions with organic surface textures. "
+                "Render facial micro-expressions with hyper-detailed skin surface and material grain. "
                 "Do NOT include any speech bubbles, NO text."
             )
             
@@ -125,7 +126,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             # PROMPT GAMBAR
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. portrait 1080x1920. "
-                f"ketajaman menyeluruh pada karakter dan seluruh latar belakang. "
+                f"fokus pada resolusi tekstur mikro dan kejernihan optik pada karakter dan latar belakang secara menyeluruh. "
                 f"{expression_instruction} Visual: {char_ref}{v_input}. "
                 f"Time: {eng_time}. {img_quality}"
             )
@@ -133,8 +134,8 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             # PROMPT VIDEO
             dialog_block_vid = f"\n\nDialog:\n{dialog_text}" if dialog_text else ""
             final_vid = (
-                f"Generate video for Scene {i}, 9:16 vertical full-screen. "
-                f"Sharp background, deep focus, smooth motion. "
+                f"Generate high-fidelity video for Scene {i}, 9:16 vertical. "
+                f"Maximum background detail, intricate surface textures, fluid motion. "
                 f"{expression_instruction} Visual: {char_ref}{v_input}. "
                 f"Time: {eng_time}. {vid_quality}{dialog_block_vid}"
             )
@@ -142,12 +143,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption("📸 PROMPT GAMBAR (Sharp Foreground & Background)")
+                st.caption("📸 PROMPT GAMBAR (Hyper-Technical Detail)")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption("🎥 PROMPT VIDEO (Full Detail Video)")
+                st.caption("🎥 PROMPT VIDEO (High-Fidelity Video)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v5.0 - Full Sharpness Mode")
+st.sidebar.caption("PINTAR MEDIA v5.1 - Hyper-Technical Mode")
