@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
+# 1. KONFIGURASI HALAMAN
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -10,21 +10,12 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 2. CUSTOM CSS (FULL EXPLICIT - NO REDUCTION)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* Latar Belakang Sidebar Gelap Profesional */
-    [data-testid="stSidebar"] {
-        background-color: #1a1c24 !important;
-    }
-    
-    /* Warna Teks Sidebar Putih Terang */
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
-        color: #ffffff !important;
-    }
-
-    /* Tombol Copy Hijau Terang Ikonik */
+    [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -34,22 +25,13 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    
-    button[title="Copy to clipboard"]:hover {
-        background-color: #218838 !important;
-    }
-    
-    /* Font Area Input Visual Deskripsi */
-    .stTextArea textarea {
-        font-size: 14px !important;
-        line-height: 1.5 !important;
-        font-family: 'Inter', sans-serif !important;
-    }
+    button[title="Copy to clipboard"]:hover { background-color: #218838 !important; }
+    .stTextArea textarea { font-size: 14px !important; line-height: 1.5 !important; font-family: 'Inter', sans-serif !important; }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.22 | UNTOUCHABLE LOGIC | REACTIVE SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.23 | CLEAN CONTINUITY | NO REFERENCE TEXT | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI UTAMA & DIRECTOR SETTINGS
@@ -123,7 +105,6 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
         
         with cols_setup[1]:
-            # Logika Sinkronisasi: Key widget berubah saat Global berubah, memicu update index otomatis
             if global_weather != "Manual per Adegan":
                 current_default = options_lighting.index(global_weather)
                 radio_key = f"light_{idx_s}_{global_weather}" 
@@ -148,7 +129,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (ABSOLUTE FULL EXPLICIT)
+# 6. LOGIKA GENERATOR PROMPT (ABSOLUTE FULL EXPLICIT - NO REFERENCE TEXT)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -159,7 +140,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active_adegan:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (RE-VERIFIED NO REDUCTION) ---
+            # --- FULL MAPPING LOGIKA LIGHTING ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -202,12 +183,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c2_name} ({c2_phys})")
             final_phys_ref = " ".join(detected_phys_list) + " "
 
-            # --- KONSTRUKSI PROMPT FINAL ---
-            is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
-            img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
-
-            final_img = (f"{style_lock}{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos} Lighting: {f_light}. {img_quality_base}")
-            final_vid = (f"{style_lock}Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos}. Lighting: {f_light}. {vid_quality_base}")
+            # --- KONSTRUKSI PROMPT FINAL (CLEAN VERSION - NO REFERENCE TEXT) ---
+            final_img = (f"{style_lock}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos} Lighting: {f_light}. {img_quality_base}")
+            final_vid = (f"{style_lock}Video Scene: {v_txt}. {emotion_logic}{final_phys_ref}Atmosphere: {f_atmos}. Lighting: {f_light}. {vid_quality_base}")
 
             # --- DISPLAY ---
             st.subheader(f"ADENGAN {s_id}")
@@ -216,4 +194,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.22 - The Untouchable Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.23 - Clean Continuity Edition")
