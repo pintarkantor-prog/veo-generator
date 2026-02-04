@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: Cold Visual & Deep Color Saturation ❤️")
+st.info("Mode: Hyper-Fidelity Texture & Deep Organic Color ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -55,22 +55,22 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"sidebar_char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS (COLD & HYPER-SATURATED) ---
-# Mengunci warna tetap tajam meski intensitas cahaya matahari rendah (cold atmosphere)
+# --- 4. PARAMETER KUALITAS (HYPER-FIDELITY) ---
+# Menambahkan Micro-Contrast dan Subsurface Scattering untuk kulit/objek nyata
 img_quality = (
-    "full-frame DSLR photography style, 16-bit color bit depth, hyper-saturated organic pigments, "
-    "edge-to-edge optical sharpness, f/11 deep focus aperture, polarized filter effect to remove glare, "
-    "intricate micro-textures on skin and surfaces, rich color contrast, deep blacks, "
-    "cold color temperature palette, clear atmospheric visibility, high-definition scenery, "
-    "unprocessed raw photography style, 8k resolution, captured on 35mm lens, "
+    "full-frame medium format photography, 16-bit color bit depth, hyper-saturated organic color pigments, "
+    "edge-to-edge optical sharpness, f/11 deep focus aperture, micro-contrast enhancement, "
+    "intricate micro-textures on skin and every surface material, subsurface scattering, "
+    "ultra-high dynamic range, zero-compression raw image, crisp environmental fidelity, "
+    "polarized filter to eliminate glare, cold color temperature palette, 8k resolution, "
     "STRICTLY NO over-exposure, NO sun flare, NO washed out colors, NO cartoon, NO text"
 )
 
 vid_quality = (
-    "high-fidelity vertical video, 9:16, 60fps, cold cinematic atmosphere, "
+    "ultra-high-fidelity vertical video, 60fps, cold atmosphere, "
     "deep color depth, extreme visual clarity, sharp background focus, "
-    "natural physics and fluid motion, muted soft light, high contrast, "
-    "NO motion blur, NO animation look, NO CGI padding"
+    "lossless texture quality, fluid organic motion, muted soft light, "
+    "high contrast ratio, NO motion blur, NO animation look"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -86,9 +86,9 @@ for i in range(1, int(num_scenes) + 1):
             user_desc = st.text_area(f"Visual Adegan {i}", key=f"main_desc_{i}", height=100)
         
         with cols[1]:
-            # Pilihan suasana dingin untuk menjaga detail warna
+            # Setting suasana dingin dengan penekanan pada ketajaman tekstur
             scene_time = st.selectbox(f"Suasana {i}", 
-                                     ["Dingin & Tajam (Cold Sharp)", "Mendung Vivid (Overcast)"], 
+                                     ["Dingin & Hyper-Sharp (Cold High-Fi)", "Mendung Tekstur (Overcast Texture)"], 
                                      key=f"time_{i}")
         
         scene_dialogs = []
@@ -111,21 +111,18 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     else:
         st.header("📋 Hasil Prompt")
         
-        # Mapping Suasana: Fokus pada nuansa dingin dengan kontras tinggi
         time_map = {
-            "Dingin & Tajam (Cold Sharp)": "cold ambient light, morning overcast, no direct sun glare, rich color saturation, sharp silhouettes",
-            "Mendung Vivid (Overcast)": "flat cold lighting, diffused shadows, extreme texture detail, bold colors, dark moody background"
+            "Dingin & Hyper-Sharp (Cold High-Fi)": "cold ambient atmosphere, 10:00 AM overcast, zero sun glare, deep color saturation, hyper-sharp scenery",
+            "Mendung Tekstur (Overcast Texture)": "flat cold lighting, high-fidelity diffused shadows, maximum surface texture, bold vivid colors"
         }
 
         for scene in filled_scenes:
             i, v_in = scene["num"], scene["desc"]
             eng_time = time_map.get(scene["time"])
             
-            # Logika Otomatis Adegan 1 & Penomoran
             ref_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if i == 1 else ""
             img_command = f"buatkan saya sebuah gambar dari adegan ke {i}. "
 
-            # Logika Ekspresi Otomatis
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             d_text = " ".join(dialog_lines) if dialog_lines else ""
             
@@ -133,10 +130,9 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             if d_text:
                 expr_logic = (
                     f"Emotion Analysis: Analyze mood from '{d_text}'. "
-                    "Apply realistic facial micro-expressions and muscle tension. "
+                    "Apply realistic facial micro-expressions and high-definition muscle tension. "
                 )
 
-            # Sync Fisik Karakter
             phys = ", ".join([f"{c['name']} ({c['desc']})" for c in characters if c['name'] and c['name'].lower() in v_in.lower()])
             char_ref = f"Appearance: {phys}. " if phys else ""
             
@@ -154,12 +150,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.subheader(f"Adegan {i}")
             c1, c2 = st.columns(2)
             with c1:
-                st.caption("📸 PROMPT GAMBAR (Cold & High Contrast)")
+                st.caption("📸 PROMPT GAMBAR (Hyper-Fidelity)")
                 st.code(final_img, language="text")
             with c2:
-                st.caption("🎥 PROMPT VIDEO (Cold & High Contrast)")
+                st.caption("🎥 PROMPT VIDEO (Hyper-Fidelity)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v6.2 - Cold Visual Optimized")
+st.sidebar.caption("PINTAR MEDIA Storyboard v6.3 - Hyper Fidelity Edition")
