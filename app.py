@@ -25,7 +25,7 @@ st.markdown("""
         transform: scale(1.1); box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     
-    /* Text Area Styling */
+    /* Input Text Area Height & Font */
     .stTextArea textarea { 
         font-size: 14px !important; 
         line-height: 1.5 !important; 
@@ -35,7 +35,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.42 | MASTER LIGHTING | AUTO-DETECTION | VEO 3 READY ❤️")
+st.info("Mode: v9.43 | INVISIBLE MASTER LIGHTING | AUTO-DETECTION ENGINE | VEO 3 READY ❤️")
 
 # ==============================================================================
 # 3. LOGIKA INTERNAL: AUTO-DETECTION ENGINE
@@ -68,11 +68,6 @@ def detect_visual_logic(text):
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
-    
-    st.divider()
-    st.subheader("💡 Master Lighting Control")
-    sync_lighting = st.checkbox("Gunakan Adegan 1 sebagai Master Cahaya", value=True, 
-                                help="Jika aktif, semua adegan akan mengikuti pilihan cahaya di Adegan 1 secara otomatis.")
     
     st.divider()
     st.subheader("🎬 Estetika Visual")
@@ -108,19 +103,20 @@ veo_quality = (
 )
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (MASTER LIGHTING LOGIC)
+# 6. FORM INPUT ADEGAN (INVISIBLE MASTER LIGHTING LOGIC)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
-# ADEGAN 1 (MASTER)
-with st.expander("ADEGAN 1 (MASTER CONTROL)", expanded=True):
+# ADEGAN 1 (BERTINDAK SEBAGAI MASTER)
+with st.expander("ADEGAN 1 (LEADER)", expanded=True):
     v_col1, l_col1 = st.columns([3, 1])
     with v_col1:
         v_in1 = st.text_area("Visual Scene 1", key="vis_1", height=150, placeholder="Ceritakan adegan di sini...")
     with l_col1:
-        l_val1 = st.radio("Cahaya (Master)", options_lighting, key="l_1")
+        # Adegan 1 menentukan default untuk adegan lain
+        l_val1 = st.radio("Cahaya Dasar", options_lighting, key="l_1")
     adegan_storage.append({"num": 1, "visual": v_in1, "light": l_val1})
 
 # ADEGAN 2 DAN SETERUSNYA
@@ -130,16 +126,14 @@ for idx_s in range(2, int(num_scenes) + 1):
         with v_col:
             v_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=150)
         with l_col:
-            if sync_lighting:
-                st.info(f"Mengikuti Master: **{l_val1}**")
-                current_light = l_val1
-            else:
-                current_light = st.radio(f"Cahaya {idx_s}", options_lighting, key=f"l_{idx_s}")
+            # Otomatis mengikuti pilihan Adegan 1 jika tidak diubah manual
+            default_idx = options_lighting.index(l_val1)
+            current_light = st.radio(f"Cahaya {idx_s}", options_lighting, key=f"l_{idx_s}", index=default_idx)
         
         adegan_storage.append({"num": idx_s, "visual": v_in, "light": current_light})
 
 # ==============================================================================
-# 7. GENERATOR PROMPT (IMAGE & VEO 3)
+# 7. GENERATOR PROMPT (AUTO-SYNC ENGINE)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -165,6 +159,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             # --- CHARACTER INSTRUCTION ---
             char_prompts = []
             for char in all_characters:
+                # Memeriksa apakah nama karakter disebut dalam deskripsi adegan
                 if char['name'] and char['name'].lower() in v_txt.lower():
                     char_prompts.append(f"Follow exact visual appearance of {char['name']} from reference: {char['phys']}, wearing {char['wear']}. {auto_logic}.")
 
@@ -174,15 +169,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             is_ref = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
 
             st.subheader(f"ADENGAN {s_id}")
-            st.caption(f"🧠 {auto_logic} | 💡 Mode: {'Master Sync' if sync_lighting and s_id > 1 else 'Manual'}")
+            st.caption(f"🧠 Detected State: {auto_logic}")
             
-            # OUTPUT
-            st.write("**📸 Image Prompt:**")
+            # OUTPUT PROMPT GAMBAR
+            st.write("**📸 Image Prompt (DALL-E/Midjourney):**")
             st.code(f"{style_lock}{is_ref}buatkan gambar adegan {s_id}: {final_c} Visual: {v_txt}. Atmosphere: {f_a}. Lighting: {f_l}. {img_quality}")
             
-            st.write("**🎥 Veo 3 Prompt:**")
-            st.code(f"{style_lock}Video adegan {s_id}: {final_c} Visual: {v_txt}, organic motion. Atmosphere: {f_a}. Lighting: {f_l}. {veo_quality}")
+            # OUTPUT PROMPT VEO 3
+            st.write("**🎥 Veo 3 Prompt (Video Generation):**")
+            st.code(f"{style_lock}Video adegan {s_id}: {final_c} Visual: {v_txt}, organic motion and character interaction. Atmosphere: {f_a}. Lighting: {f_l}. {veo_quality}")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v9.42 - The Final Logic")
+st.sidebar.caption("PINTAR MEDIA v9.43 - Invisible Master Edition")
