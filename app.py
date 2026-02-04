@@ -3,7 +3,7 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS (SIDEBAR & TOMBOL HIJAU) ---
+# --- 2. CUSTOM CSS (SIDEBAR GELAP & TOMBOL HIJAU) ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
@@ -35,15 +35,15 @@ with st.sidebar:
     characters = []
     # Karakter 1
     st.markdown("**Karakter 1**")
-    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="UDIN")
-    c1_desc = st.text_area("Fisik 1", key="char_desc_0", placeholder="Contoh: Pria kepala jeruk, jaket denim...", height=68)
+    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
+    c1_desc = st.text_area("Fisik 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c1_name, "desc": c1_desc})
     
     st.divider()
     # Karakter 2
     st.markdown("**Karakter 2**")
-    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="TUNG")
-    c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Contoh: Manusia kayu, mata biru...", height=68)
+    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
+    c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
     st.divider()
@@ -57,13 +57,13 @@ with st.sidebar:
             cd = st.text_area(f"Fisik {j+1}", key=f"char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS (Bananan & Veo 3) ---
+# --- 4. PARAMETER KUALITAS (STRICT NO-TEXT FOR BANANAN) ---
 img_quality = (
     "full body vertical portrait, 1080x1920 pixels, 9:16 aspect ratio, edge-to-edge frame, "
-    "no black bars, no borders, ultra-vivid color saturation, "
-    "extreme sharpness, hyper-detailed textures, 8k resolution, "
-    "bold and punchy colors, intense contrast, sharp outlines, "
-    "natural sunlight photography, captured on 35mm lens, f/11 aperture, NO cartoon"
+    "no black bars, no borders, ultra-vivid color saturation, extreme sharpness, "
+    "hyper-detailed textures, 8k resolution, bold and punchy colors, intense contrast, "
+    "natural sunlight photography, captured on 35mm lens, f/11 aperture, "
+    "STRICTLY NO speech bubbles, NO text on image, NO watermarks, NO subtitles, NO cartoon"
 )
 
 vid_quality = (
@@ -103,7 +103,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt (Smart Logic v4.3)")
+        st.header("📋 Hasil Prompt (Clean Face Rendering)")
         
         time_map = {
             "Pagi hari": "vibrant morning sun",
@@ -121,11 +121,11 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_text = " ".join(dialog_lines) if dialog_lines else ""
             
-            # Instruksi Ekspresi: AI tetap membaca dialog untuk menentukan muka karakter
+            # Instruksi Ekspresi: Bananan membaca dialog hanya untuk emosi, bukan untuk ditulis.
             expression_instruction = (
-                f"Analyze the mood from visual context: '{v_input}' and dialogue context: '{dialog_text}'. "
-                "Automatically render appropriate facial expressions, micro-expressions, and eye emotions "
-                "to perfectly match the dramatic tension. "
+                f"Emotion Analysis: The character is feeling the mood of this dialogue: '{dialog_text}'. "
+                "Translate this emotion into realistic facial micro-expressions and facial tension. "
+                "Do NOT include any speech bubbles or text subtitles in the final image. "
             )
             
             detected_physique = []
@@ -135,7 +135,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             
             char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # --- Prompt Gambar (Bananan): Tanpa teks dialog tertulis ---
+            # --- Prompt Gambar (Bananan) ---
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
                 f"tampilkan gambar secara full-screen portrait 1080x1920 tanpa border hitam. "
@@ -143,7 +143,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                 f"Lighting: {eng_time}. {img_quality}"
             )
 
-            # --- Prompt Video (Veo 3): Dengan teks dialog tertulis ---
+            # --- Prompt Video (Veo 3) ---
             dialog_block_vid = f"\n\nDialog Context:\n{dialog_text}" if dialog_text else ""
             final_vid = (
                 f"Generate 9:16 vertical full-screen video for Scene {i}. 1080p, 60fps. "
@@ -154,12 +154,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Bananan - Clean)")
+                st.caption(f"📸 PROMPT GAMBAR (Bananan - No Text)")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Veo 3 - Full)")
+                st.caption(f"🎥 PROMPT VIDEO (Veo 3 - Full Sync)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v4.3 - Logic Separation Mode")
+st.sidebar.caption("PINTAR MEDIA v4.4 - Strict No-Text Mode")
