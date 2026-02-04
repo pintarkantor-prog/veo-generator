@@ -14,7 +14,7 @@ st.set_page_config(
 # ==============================================================================
 st.markdown("""
     <style>
-    /* Latar Belakang Sidebar Gelap */
+    /* Latar Belakang Sidebar Gelap Profesional */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.0 | FIXED STABLE | WIDE VISUAL COLUMN | REFERENCE FIDELITY ❤️")
+st.info("Mode: v9.1 | INTENSE OVERCAST | HYPER-DETAIL LOCK ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -68,7 +68,7 @@ with st.sidebar:
     
     characters_data_list = []
 
-    # Karakter 1 (Eksplisit)
+    # Karakter 1 (Penyimpanan Data Manual)
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
@@ -76,7 +76,7 @@ with st.sidebar:
     
     st.divider()
 
-    # Karakter 2 (Eksplisit)
+    # Karakter 2 (Penyimpanan Data Manual)
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
@@ -84,10 +84,9 @@ with st.sidebar:
 
     st.divider()
     
-    # Input Karakter Tambahan
+    # Opsi Tambah Karakter (3 sampai 5)
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=5, value=2)
 
-    # Manual Loop Karakter Tambahan
     if num_extra > 2:
         for idx_ex in range(2, int(num_extra)):
             st.divider()
@@ -97,7 +96,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
+# 4. PARAMETER KUALITAS (STRICT FIDELITY - NO NATURAL/REALISTIC)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -130,7 +129,7 @@ adegan_storage = []
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
-        # Kolom Visual Lebar [5], Kolom Lighting Ramping [2]
+        # Layout Kolom: Visual (Lebar), Lighting (Ramping), Dialog (Proporsional)
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
         with cols_setup[0]:
@@ -149,7 +148,7 @@ for idx_s in range(1, int(num_scenes) + 1):
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
-        # Penampung Dialog Per Karakter
+        # Penampung Dialog Tokoh
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
             with cols_setup[idx_c + 2]:
@@ -164,7 +163,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING & FIXING VARIABLES)
+# 6. LOGIKA GENERATOR PROMPT (MAPPING & HYPER-DETAIL OVERCAST)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -176,7 +175,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         
         for adegan in active_adegan:
             s_id = adegan["num"]
-            # Variabel v_txt (Fixed Name)
             v_txt = adegan["visual"]
             
             # --- MAPPING LOGIKA LIGHTING ---
@@ -192,21 +190,31 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             elif "Jelas" in adegan["lighting"]:
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+            
             elif "Mendung" in adegan["lighting"]:
-                f_light = "Intense moody overcast lighting, diffuse soft light with high local contrast, ultra-saturated cool tones, deep blacks, high micro-contrast."
-                f_atmos = "Damp-look cold atmosphere, STRICTLY NO rain, gray-cobalt sky, heavy thick wispy clouds, 7500k color temperature, extremely sharp object edges."
+                # LOGIKA HYPER-DETAIL: MENDUNG TERANG & TAJAM
+                f_light = (
+                    "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), "
+                    "extreme local contrast, ultra-saturated cold tones, deep blacks, "
+                    "brilliant specular highlights on all object edges."
+                )
+                f_atmos = (
+                    "Moody atmosphere with zero atmospheric haze, 8000k cold temperature, "
+                    "gray-cobalt sky with heavy thick wispy clouds, micro-texture amplification on all surfaces, "
+                    "hyper-defined object silhouettes, bone-dry environment."
+                )
+            
             else:
                 # Senja
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- LOGIKA EMOSI DIALOG (FIXED dialogs_combined) ---
+            # --- LOGIKA EMOSI DIALOG (CLEANSED) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
-            
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER (FIXED v_txt scan) ---
+            # --- LOGIKA AUTO-SYNC KARAKTER (MANUAL Loop) ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
@@ -238,8 +246,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 st.code(final_img, language="text")
             with res_c2:
                 st.caption("🎥 PROMPT VIDEO")
-                st.code(final_vid, language="text")
+                st.code(final_code := final_vid, language="text") # Menggunakan assignment untuk video prompt
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.0 - Final Wide Stable")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.1 - Hyper-Detail Overcast Stable")
