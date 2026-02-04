@@ -190,7 +190,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             
             elif "Mendung" in adegan["lighting"]:
-                # LOGIKA MENDUNG TERBARU (ULTIMATE SHARPNESS & COLOR CONTRAST)
+                # LOGIKA MENDUNG (MODIFIKASI ULTRA SHARPNESS & ALL-OBJECT CONTRAST)
                 f_light = (
                     "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, "
                     "vivid pigment recovery on every surface, extreme local micro-contrast, "
@@ -199,7 +199,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_atmos = (
                     "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, "
                     "gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, "
-                    "grass blades, house walls, concrete roads, and every environment object. "
+                    "grass blades, house walls, concrete roads, and every environment object in frame. "
                     "Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
                 )
             
