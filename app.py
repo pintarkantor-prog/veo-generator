@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT STYLE + VISUAL HIERARCHY)
+# 2. CUSTOM CSS (ALTERNATING NAVY-GREY STYLE)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -42,33 +42,35 @@ st.markdown("""
         font-family: 'Inter', sans-serif !important;
     }
 
-    /* --- LOGIKA PEWARNAAN BOX (EXPANDER) --- */
+    /* --- LOGIKA WARNA GANJIL (ABU-ABU) & GENAP (NAVY) --- */
     div[data-testid="stExpander"] {
         border-radius: 10px !important;
         margin-bottom: 15px !important;
         border: 1px solid #3d4150 !important;
     }
 
-    /* ADEGAN 1 (MASTER) - Warna Hijau Emerald Gelap */
-    div[data-testid="stExpander"]:nth-of-type(1) {
-        background-color: #1b2e23 !important;
-        border: 1px solid #28a745 !important;
-    }
-
-    /* Adegan GANJIL (3, 5, 7, dst) */
-    div[data-testid="stExpander"]:nth-of-type(odd):not(:nth-of-type(1)) {
+    /* Adegan GANJIL (1, 3, 5, dst) - Abu-abu Gelap Profesional */
+    div[data-testid="stExpander"]:nth-of-type(odd) {
         background-color: #262730 !important;
+        border-left: 5px solid #555555 !important;
     }
 
-    /* Adegan GENAP (2, 4, 6, dst) */
+    /* Adegan GENAP (2, 4, 6, dst) - Biru Gelap Navy */
     div[data-testid="stExpander"]:nth-of-type(even) {
-        background-color: #1a1c24 !important;
+        background-color: #0e1117 !important;
+        border-left: 5px solid #1c2e4a !important;
+    }
+
+    /* Hover effect agar lebih interaktif */
+    div[data-testid="stExpander"]:hover {
+        border: 1px solid #28a745 !important;
+        border-left: 5px solid #28a745 !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.13 | RESTORED MEGA STRUCTURE | MASTER SYNC | VISUAL BOX ❤️")
+st.info("Mode: v9.14 | Ganjil-Abu-abu | Genap-Navy | MASTER SYNC ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC (SESSION STATE ENGINE)
@@ -164,8 +166,9 @@ st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
-    label_box = f"🟢 MASTER CONTROL - ADEGAN {idx_s}" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
-    with st.expander(label_box, expanded=(idx_s == 1)):
+    # Penanda visual di label header
+    label_prefix = "🟢 [MASTER]" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
+    with st.expander(label_prefix, expanded=(idx_s == 1)):
         
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
@@ -244,12 +247,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
-            # --- LOGIKA EMOSI DIALOG (FULL RESTORED) ---
+            # --- LOGIKA EMOSI DIALOG ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER (FULL RESTORED) ---
+            # --- LOGIKA AUTO-SYNC KARAKTER ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
@@ -257,7 +260,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- KONSTRUKSI PROMPT FINAL (FULL RESTORED) ---
+            # --- KONSTRUKSI PROMPT FINAL ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -285,4 +288,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.13 - Ultimate Master Sync Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.14 - Alternating Zebra Style")
