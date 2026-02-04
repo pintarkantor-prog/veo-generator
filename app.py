@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.12 | MASTER SYNC LIGHTING | ALL-OBJECT TEXTURE LOCK ❤️")
+st.info("Mode: v9.15 | DROPBOX MASTER SYNC | ULTIMATE MENDUNG READY ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC (SESSION STATE ENGINE)
@@ -74,11 +74,11 @@ options_lighting = [
 if 'master_light_choice' not in st.session_state:
     st.session_state.master_light_choice = options_lighting[0]
 
-def sync_all_lighting():
-    """Fungsi pemicu untuk menyamakan semua cahaya dengan Adegan 1"""
+def sync_all_lighting_dropbox():
+    """Fungsi pemicu untuk menyamakan semua cahaya melalui Dropbox Adegan 1"""
     new_choice = st.session_state.light_input_1
     st.session_state.master_light_choice = new_choice
-    # Update semua key radio button yang ada di session state
+    # Update semua key selectbox yang ada di session state
     for key in st.session_state.keys():
         if key.startswith("light_input_"):
             st.session_state[key] = new_choice
@@ -122,7 +122,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (ULTIMATE FIDELITY)
+# 5. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -147,7 +147,7 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (MASTER SYNC INTERFACE)
+# 6. FORM INPUT ADEGAN (DROPBOX MASTER SYNC INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -161,14 +161,13 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
-            # Jika Adegan 1, pasang fungsi on_change untuk Master Sync
+            # PENGGANTIAN RADIO MENJADI SELECTBOX (DROPBOX)
             if idx_s == 1:
-                light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}", on_change=sync_all_lighting)
+                light_dropbox = st.selectbox(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}", on_change=sync_all_lighting_dropbox)
             else:
-                # Jika bukan Adegan 1, gunakan state yang sudah ada atau default ke Master
                 if f"light_input_{idx_s}" not in st.session_state:
                     st.session_state[f"light_input_{idx_s}"] = st.session_state.master_light_choice
-                light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}")
+                light_dropbox = st.selectbox(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}")
         
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
@@ -178,13 +177,13 @@ for idx_s in range(1, int(num_scenes) + 1):
                 scene_dialog_list.append({"name": char_label, "text": diag_in})
         
         adegan_storage.append({
-            "num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list
+            "num": idx_s, "visual": vis_in, "lighting": light_dropbox, "dialogs": scene_dialog_list
         })
 
 st.divider()
 
 # ==============================================================================
-# 7. LOGIKA GENERATOR PROMPT (MAPPING & RENDERING)
+# 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - NO REDUCTION)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -199,7 +198,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             v_txt = adegan["visual"]
             l_choice = adegan["lighting"]
             
-            # --- MAPPING LOGIKA LIGHTING ---
+            # --- MAPPING LOGIKA LIGHTING (FULL EXPLICIT) ---
             if "Bening" in l_choice:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -264,7 +263,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             )
 
             # --- DISPLAY OUTPUT ---
-            st.subheader(f"ADENGAN {s_id}")
+            st.subheader(f"HASIL PRODUKSI ADEGAN {s_id}")
             res_c1, res_c2 = st.columns(2)
             with res_c1:
                 st.caption(f"📸 PROMPT GAMBAR ({l_choice})")
@@ -275,4 +274,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.12 - Master Sync Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.15 - Dropbox Sync Edition")
