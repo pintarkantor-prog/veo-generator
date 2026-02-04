@@ -62,7 +62,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.17 | PONDASI v9.15 | RESTORED CHARACTER ADD-ON | UI INDONESIA ❤️")
+st.info("MASIH TAHAP UJI COBA DULU GUYS ❤️")
 
 # ==============================================================================
 # 3. MAPPING TRANSLATION (MENU INDONESIA -> LOGIKA INGGRIS)
@@ -314,3 +314,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA Storyboard v9.17 - Restored Full Edition")
+
