@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("PINTAR MEDIA - Versi 1.7 (Fixed Key Error) ❤️")
+st.info("PINTAR MEDIA - Versi 1.8 (Automated Prompt Logic) ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -33,7 +33,7 @@ with st.sidebar:
     st.subheader("👥 Identitas Tokoh")
     characters = []
     
-    # Menggunakan key yang berbeda dengan input di dalam adegan (sidebar_ prefix)
+    # Menggunakan unique key 'sidebar_' untuk menghindari DuplicateElementKey error
     for i in range(2):
         st.markdown(f"**Karakter {i+1}**")
         name = st.text_input(f"Nama", key=f"sidebar_name_{i}", placeholder="Contoh: UDIN")
@@ -74,15 +74,23 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         for scene in filled_scenes:
             i, v_in = scene["num"], scene["desc"]
             
-            # Gabungkan Dialog
+            # --- LOGIKA OTOMATIS ---
+            # Kalimat referensi hanya muncul di adegan 1
+            ref_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if i == 1 else ""
+            
+            # Kalimat perintah gambar mengikuti nomor adegan
+            img_command = f"buatkan saya sebuah gambar dari adegan ke {i}. "
+            # ---------------------------
+
+            # Pengolahan Dialog
             d_text = " ".join([f"{d['name']}: {d['text']}" for d in scene['dialogs'] if d['text']])
             
-            # Cek Fisik Tokoh yang disebut di Visual
+            # Cek Fisik Tokoh (Appearance sync)
             phys = ", ".join([f"{c['name']} ({c['desc']})" for c in characters if c['name'] and c['name'].lower() in v_in.lower()])
             char_ref = f"Appearance: {phys}. " if phys else ""
             
-            # Output Murni (Pure Base)
-            f_img = f"Adegan {i}. Visual: {char_ref}{v_in}."
+            # Konstruksi Prompt Final
+            f_img = f"{ref_prefix}{img_command}Visual: {char_ref}{v_in}."
             f_vid = f"Video Adegan {i}. Visual: {char_ref}{v_in}. Dialog: {d_text}."
 
             st.subheader(f"Adegan {i}")
@@ -96,4 +104,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA - v1.7 Pure")
+st.sidebar.caption("PINTAR MEDIA - v1.8 Logic")
