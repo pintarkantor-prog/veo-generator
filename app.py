@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v8.6 | 6-POINT LIGHTING | MOODY OVERCAST ADDED ❤️")
+st.info("Mode: v8.8 | SLIM INDONESIAN LABELS | REFERENCE FIDELITY LOCK ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -122,7 +122,7 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (FULL LAYOUT WITH 6 LIGHTING OPTIONS)
+# 5. FORM INPUT ADEGAN (DENGAN LABEL SLIM INDONESIA)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -130,22 +130,21 @@ adegan_storage = []
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
-        # Penentuan Kolom Manual
         cols_setup = st.columns([3, 3] + [1.2] * len(characters_data_list))
         
         with cols_setup[0]:
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=120)
         
         with cols_setup[1]:
-            # MENAMBAHKAN OPSI KE-6: MOODY OVERCAST
-            light_radio = st.radio(f"Efek Cahaya (Adegan {idx_s})", 
+            # MENGGANTI LABEL SESUAI PERMINTAAN (SLIM VERSION)
+            light_radio = st.radio(f"Pilih Efek Cahaya (Adegan {idx_s})", 
                                    [
-                                       "Alpine Light (Ultra-Sharp Clarity)", 
-                                       "Arctic High-Noon (Cold & Uniform)", 
-                                       "Chiaroscuro (Dramatic Side-Light)", 
-                                       "Polarized Saturation (Deep Vivid)", 
-                                       "Blue-Hour Rim (Sore & Silhouette)",
-                                       "Moody Overcast (Cold & Intense Contrast)"
+                                       "Bening dan Tajam", 
+                                       "Sejuk dan Terang", 
+                                       "Dramatis", 
+                                       "Jelas dan Solid", 
+                                       "Senja",
+                                       "Mendung"
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
@@ -163,7 +162,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (AUTO-SYNC & ADVANCED LIGHTING)
+# 6. LOGIKA GENERATOR PROMPT (MAPPING LABEL KE LOGIKA TEKNIS)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -177,34 +176,33 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- LOGIKA 6 LIGHTING (MANUAL & DETAIL) ---
-            if "Alpine" in adegan["lighting"]:
+            # --- MAPPING LABEL SLIM KE LOGIKA PROMPT ---
+            if "Bening" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
             
-            elif "Arctic" in adegan["lighting"]:
+            elif "Sejuk" in adegan["lighting"]:
                 f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
                 f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
             
-            elif "Chiaroscuro" in adegan["lighting"]:
+            elif "Dramatis" in adegan["lighting"]:
                 f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
                 f_atmos = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
             
-            elif "Polarized" in adegan["lighting"]:
+            elif "Jelas" in adegan["lighting"]:
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             
-            elif "Overcast" in adegan["lighting"]:
-                # LOGIKA BARU: MENDUNG DINGIN TAPI TAJAM
-                f_light = "Intense moody overcast lighting, diffuse soft light with high local contrast, ultra-saturated cool tones, deep blacks, high dynamic range (HDR)."
-                f_atmos = "Damp-look cold atmosphere, STRICTLY NO rain, gray-cobalt sky, heavy thick wispy clouds, 7500k color temperature, extremely sharp object edges, vivid vegetation."
+            elif "Mendung" in adegan["lighting"]:
+                f_light = "Intense moody overcast lighting, diffuse soft light with high local contrast, ultra-saturated cool tones, deep blacks, high micro-contrast."
+                f_atmos = "Damp-look cold atmosphere, STRICTLY NO rain, gray-cobalt sky, heavy thick wispy clouds, 7500k color temperature, extremely sharp object edges."
             
             else:
-                # Blue-Hour Rim
+                # Senja
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- LOGIKA EMOSI DIALOG (CLEANSED) ---
+            # --- LOGIKA EMOSI DIALOG ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             
@@ -246,4 +244,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v8.6 - Professional Moody Overcast")
+st.sidebar.caption("PINTAR MEDIA Storyboard v8.8 - Slim UI Edition")
