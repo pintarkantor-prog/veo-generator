@@ -28,7 +28,7 @@ st.markdown("""
 
 # Judul Utama & Pesan Penyemangat
 st.title("📸 PINTAR MEDIA")
-st.info("semangat buat alur cerita nya guys ❤️❤️❤️")
+st.info("masih tahap uji coba ya guys ^^ semangattsssss")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -176,4 +176,5 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA Storyboard v3.0")
+
 
