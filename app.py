@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.7 | ULTRA-VIVID MENDUNG | NO REDUCTION | WIDE LAYOUT ❤️")
+st.info("Mode: v9.11 | ULTIMATE MENDUNG | ALL-OBJECT TEXTURE LOCK ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -142,7 +142,8 @@ for idx_s in range(1, int(num_scenes) + 1):
                                        "Jelas dan Solid", 
                                        "Suasana Sore",
                                        "Mendung",
-                                       "Suasana Malam"
+                                       "Suasana Malam",
+                                       "Suasana Alami"
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
@@ -160,7 +161,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING & ULTRA-VIVID MENDUNG)
+# 6. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -189,30 +190,33 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             
             elif "Mendung" in adegan["lighting"]:
-                # LOGIKA MENDUNG YANG LEBIH TAJAM WARNA & KONTRASNYA (VERSI 9.7)
+                # LOGIKA MENDUNG TERBARU (ULTIMATE SHARPNESS & COLOR CONTRAST)
                 f_light = (
-                    "Intense moody overcast lighting, brilliant luminosity, high dynamic range (HDR), "
-                    "extreme local contrast, hyper-saturated cool tones, absolute pitch-black shadows, "
-                    "vivid pigment amplification, brilliant specular rim highlights on all object edges."
+                    "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, "
+                    "vivid pigment recovery on every surface, extreme local micro-contrast, "
+                    "brilliant specular highlights on object edges, deep rich high-definition shadows."
                 )
                 f_atmos = (
-                    "Heavy moody atmosphere, zero atmospheric haze, 8500k ice-cold temperature, "
-                    "gray-cobalt heavy sky, micro-texture amplification on all organic surfaces, "
-                    "hyper-defined object silhouettes, bone-dry environment."
+                    "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, "
+                    "gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, "
+                    "grass blades, house walls, concrete roads, and every environment object. "
+                    "Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
                 )
-                
+            
             elif "Suasana Malam" in adegan["lighting"]:
-                f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
-                f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
+                f_light = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow, visible background detail."
+                f_atmos = "Clear night atmosphere, deep indigo-black sky, hyper-defined textures on every object."
+            elif "Suasana Alami" in adegan["lighting"]:
+                f_light = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments."
+                f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures."
             else:
-                # Opsi Suasana Sore (Default)
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
             # --- LOGIKA EMOSI DIALOG (FULL VERSION) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
-            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
+            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
 
             # --- LOGIKA AUTO-SYNC KARAKTER (FULL VERSION) ---
             detected_phys_list = []
@@ -228,7 +232,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             final_img = (
                 f"{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
-                f"Atmosphere: {f_atmos} Dry environment surfaces, no rain, no water. "
+                f"Atmosphere: {f_atmos} Dry environment surfaces, no water droplets. "
                 f"Lighting Effect: {f_light}. {img_quality_base}"
             )
 
@@ -250,4 +254,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.7 - Ultra-Vivid Mendung Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.11 - Ultimate Mendung Edition")
