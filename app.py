@@ -436,6 +436,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | 2026🚀")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.1")
+
 
 
