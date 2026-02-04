@@ -3,32 +3,41 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS (TOMBOL COPY HIJAU & TAMPILAN) ---
+# --- 2. CUSTOM CSS (TAMPILAN SIDEBAR & TOMBOL HIJAU) ---
 st.markdown("""
     <style>
-    /* Mengubah tombol copy bawaan menjadi Hijau Terang agar mudah terlihat */
+    /* Sidebar Gelap Profesional */
+    [data-testid="stSidebar"] {
+        background-color: #1a1c24 !important;
+    }
+    
+    /* Teks Sidebar Putih */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+        color: white !important;
+    }
+
+    /* Tombol Copy Hijau Terang */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
-        opacity: 1 !important; /* Selalu muncul tanpa perlu di-hover */
+        opacity: 1 !important; 
         border-radius: 6px !important;
         border: 1px solid #ffffff !important;
-        transform: scale(1.1); /* Sedikit diperbesar agar jelas */
+        transform: scale(1.1); 
     }
-    /* Warna saat tombol diklik */
+    
     button[title="Copy to clipboard"]:active {
         background-color: #1e7e34 !important;
     }
-    /* Styling kotak input agar rapi */
+    
     .stTextArea textarea {
         font-size: 14px !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# Judul Utama & Pesan Penyemangat
 st.title("📸 PINTAR MEDIA")
-st.info("masih tahap uji coba ya guys ^^ semangattsssss")
+st.info("semangat buat alur cerita nya guys ❤️❤️❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -56,28 +65,28 @@ with st.sidebar:
 
     st.divider()
 
-    # Form Jumlah Karakter (Manual di bawah Karakter 2)
     num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2)
 
     if num_chars > 2:
         for j in range(2, int(num_chars)):
             st.divider()
             st.markdown(f"**Karakter {j+1}**")
-            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}", placeholder=f"Contoh: TOKOH {j+1}")
-            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
+            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}")
+            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS NATURAL (Tanpa kata 'Realistic') ---
+# --- 4. PARAMETER WARNA TAJAM & 9:16 (Tanpa Kata Cinematic/Realistic) ---
+# Menggunakan istilah warna teknis untuk hasil yang lebih 'pop'
 img_quality = (
-    "natural photography, raw photo style, captured on 35mm lens, f/8 aperture, "
-    "high resolution, sharp details, authentic skin texture, natural colors, "
-    "unprocessed look, NO cartoon, NO anime, NO Pixar, NO 3D render, "
-    "NO artificial lighting, NO AI-generated look, true to life appearance"
+    "aspect ratio 9:16, vertical mobile frame, vivid color palette, vibrant saturation, "
+    "high dynamic range, deep rich contrast, crystal clear clarity, sharp edges, "
+    "natural light photography, raw texture, captured on 35mm, f/8, "
+    "authentic skin tones, bold colors, NO cartoon, NO 3D render, --ar 9:16"
 )
 
 vid_quality = (
-    "natural handheld video, 60fps, authentic motion, real-world environment, "
-    "clear high definition, raw footage style, NO animation, NO CGI, life-like movement"
+    "9:16 vertical video, TikTok format, high color fidelity, vivid tones, vibrant environment, "
+    "natural handheld motion, 60fps, clear high definition, raw footage style, NO CGI"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -86,7 +95,6 @@ scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog per karakter (1)
         col_setup = [2, 1] + [1] * len(characters)
         cols = st.columns(col_setup)
         
@@ -112,21 +120,19 @@ for i in range(1, int(num_scenes) + 1):
 
 st.divider()
 
-# --- 6. TOMBOL GENERATE (BUAT PROMPT) ---
+# --- 6. TOMBOL GENERATE ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
-    # Filter: Hanya memproses adegan yang visualnya tidak kosong
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
     if not filled_scenes:
-        st.warning("Silakan isi kolom 'Visual Adegan' pada adegan yang ingin diproses.")
+        st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt")
+        st.header("📋 Hasil Prompt (Vivid 9:16)")
         
         for scene in filled_scenes:
             i = scene["num"]
             v_input = scene["desc"]
             
-            # Deteksi Nama Tokoh dalam Visual Adegan (Smart Trigger)
             detected_physique = []
             for char in characters:
                 if char['name'] and char['name'].lower() in v_input.lower():
@@ -134,47 +140,37 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             
             char_ref = "Characters Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # Waktu Mapping
             time_map = {
-                "Pagi hari": "morning golden hour light",
-                "Siang hari": "bright midday natural sunlight",
-                "Sore hari": "late afternoon warm sunset lighting",
-                "Malam hari": "ambient night lighting, dark environment"
+                "Pagi hari": "morning golden hour light with high saturation",
+                "Siang hari": "bright midday sun, clear blue sky, vivid colors",
+                "Sore hari": "sunset warm orange glow, high contrast",
+                "Malam hari": "night ambient light, deep blacks, neon vibrant accents"
             }
             eng_time = time_map.get(scene["time"], "natural lighting")
             
-            # --- PROMPT GAMBAR (Instruksi Indo & No Dialog) ---
-            ref_t = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
-            mand_t = "saya ingin membuat gambar secara konsisten adegan per adegan. "
-            sc_num_t = f"buatkan saya sebuah gambar adegan ke {i}. "
-            
             final_img = (
-                f"{ref_t}{mand_t}{sc_num_t}\n"
+                f"ini adalah gambar referensi karakter saya. saya ingin membuat gambar secara konsisten adegan per adegan. buatkan saya sebuah gambar adegan ke {i}. "
                 f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
                 f"Lighting: {eng_time}. {img_quality}"
             )
 
-            # --- PROMPT VIDEO (Dialog & No Instruksi Indo) ---
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
-                f"Generate a natural video for Scene {i}. \n"
-                f"Visual: {char_ref}{v_input}. Time context: {eng_time}. {vid_quality}.{dialog_part}"
+                f"Generate a natural video for Scene {i} in 9:16. Visual: {char_ref}{v_input}. "
+                f"Colors: vivid and vibrant. Time: {eng_time}. {vid_quality}.{dialog_part}"
             )
 
-            # Tampilan Output
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR")
+                st.caption(f"📸 PROMPT GAMBAR (Vivid Colors)")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO")
+                st.caption(f"🎥 PROMPT VIDEO (Vivid Colors)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.0")
-
-
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.2 - Vivid 9:16")
