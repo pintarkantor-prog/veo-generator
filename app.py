@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("PINTAR MEDIA - Versi 1.8 (Automated Prompt Logic) ❤️")
+st.info("PINTAR MEDIA - Versi 1.9 (Automatic Expression Logic) ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -33,7 +33,6 @@ with st.sidebar:
     st.subheader("👥 Identitas Tokoh")
     characters = []
     
-    # Menggunakan unique key 'sidebar_' untuk menghindari DuplicateElementKey error
     for i in range(2):
         st.markdown(f"**Karakter {i+1}**")
         name = st.text_input(f"Nama", key=f"sidebar_name_{i}", placeholder="Contoh: UDIN")
@@ -74,24 +73,28 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         for scene in filled_scenes:
             i, v_in = scene["num"], scene["desc"]
             
-            # --- LOGIKA OTOMATIS ---
-            # Kalimat referensi hanya muncul di adegan 1
+            # --- LOGIKA OTOMATIS DASAR ---
             ref_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if i == 1 else ""
-            
-            # Kalimat perintah gambar mengikuti nomor adegan
             img_command = f"buatkan saya sebuah gambar dari adegan ke {i}. "
-            # ---------------------------
 
-            # Pengolahan Dialog
+            # --- LOGIKA EKSPRESI OTOMATIS ---
             d_text = " ".join([f"{d['name']}: {d['text']}" for d in scene['dialogs'] if d['text']])
             
-            # Cek Fisik Tokoh (Appearance sync)
+            expression_logic = ""
+            if d_text:
+                expression_logic = (
+                    f"Emotion Analysis: Analyze the mood and drama from this dialogue: '{d_text}'. "
+                    "Apply the appropriate facial micro-expressions, eye emotions, and facial muscle tension "
+                    "to the characters involved. "
+                )
+
+            # Cek Fisik Tokoh
             phys = ", ".join([f"{c['name']} ({c['desc']})" for c in characters if c['name'] and c['name'].lower() in v_in.lower()])
             char_ref = f"Appearance: {phys}. " if phys else ""
             
             # Konstruksi Prompt Final
-            f_img = f"{ref_prefix}{img_command}Visual: {char_ref}{v_in}."
-            f_vid = f"Video Adegan {i}. Visual: {char_ref}{v_in}. Dialog: {d_text}."
+            f_img = f"{ref_prefix}{img_command}{expression_logic}Visual: {char_ref}{v_in}."
+            f_vid = f"Video Adegan {i}. {expression_logic}Visual: {char_ref}{v_in}. Dialog: {d_text}."
 
             st.subheader(f"Adegan {i}")
             c1, c2 = st.columns(2)
@@ -104,4 +107,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA - v1.8 Logic")
+st.sidebar.caption("PINTAR MEDIA - v1.9 Expressions")
