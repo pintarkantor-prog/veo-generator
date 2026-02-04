@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (STRICT STYLE - NO REDUCTION)
+# 2. CUSTOM CSS (FULL STYLE)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -31,10 +31,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.28 | LEADER-FOLLOWER LOGIC | SMART AUTO-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.30 | COLOSSAL EDITION | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI TOKOH & STYLE
+# 3. SIDEBAR: KONFIGURASI KARAKTER (MENGGUNAKAN DATA PROFILE)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -47,50 +47,52 @@ with st.sidebar:
 
     st.divider()
     st.subheader("👥 Karakter 1 (UDIN)")
-    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="UDIN")
+    c1_name = st.text_input("Nama Karakter 1", value="UDIN")
     c1_base = st.text_area("Fisik Dasar C1", value="UDIN, character with a realistic orange fruit head, organic peel texture, vivid orange color, humanoid body.", height=70)
     c1_outfit = st.text_input("Pakaian C1", value="white t-shirt, gold necklace")
 
     st.divider()
     st.subheader("👥 Karakter 2 (TUNG)")
-    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="TUNG")
+    c2_name = st.text_input("Nama Karakter 2", value="TUNG")
     c2_base = st.text_area("Fisik Dasar C2", value="TUNG, character with a realistic wood log head, natural tree bark texture, humanoid body.", height=70)
     c2_outfit = st.text_input("Pakaian C2", value="blue denim shirt, rustic style")
 
 # ==============================================================================
-# 4. INITIALIZING SESSION STATE (LOGIKA PENGINGAT)
+# 4. LOGIKA MASTER-SYNC (MANUAL SESSION STATE)
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
-# Inisialisasi memori pilihan lighting jika belum ada
-if 'prev_leader_light' not in st.session_state:
-    st.session_state.prev_leader_light = "Bening dan Tajam"
-if 'manual_overrides' not in st.session_state:
-    st.session_state.manual_overrides = {}
+if 'master_light' not in st.session_state:
+    st.session_state.master_light = options_lighting[0]
+
+def update_all_lights():
+    new_val = st.session_state["light_1"]
+    st.session_state.master_light = new_val
+    for i in range(2, 51):
+        st.session_state[f"light_{i}"] = new_val
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (FULL VERSION)
+# 5. PARAMETER KUALITAS (FULL EXPLICIT - NO REDUCTION)
 # ==============================================================================
-no_text_lock = "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters."
-img_quality_base = "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, absolute fidelity to unique character reference, edge-to-edge optical sharpness, f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures on every surface, 8k resolution, " + no_text_lock
-vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, strict character consistency, deep saturated pigments, extreme visual clarity, fluid organic motion, " + no_text_lock
+no_text_lock = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
+img_quality_base = "photorealistic surrealism style, 16-bit color, hyper-saturated organic pigments, 8k, absolute fidelity to character reference, " + no_text_lock
+vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, strict character consistency, fluid organic motion, high contrast, " + no_text_lock
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (LEADER-FOLLOWER LOGIC)
+# 6. FORM INPUT ADEGAN (EXPLICIT LOOPING)
 # ==============================================================================
 st.subheader("📝 Detail Adegan (Adegan 1 adalah Leader)")
 adegan_storage = []
 options_condition = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
 
-# --- BAGIAN ADEGAN 1 (THE LEADER) ---
+# KONFIGURASI ADEGAN 1 (LEADER)
 with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
     col_l1, col_l2 = st.columns([3, 1])
     with col_l1:
         vis_1 = st.text_area("Visual Scene 1", key="vis_1", height=100)
     with col_l2:
-        # Leader Radio
-        leader_light = st.radio("Cahaya (Master)", options_lighting, key="light_1")
-        
+        leader_light = st.radio("Cahaya (Master)", options_lighting, key="light_1", on_change=update_all_lights)
+    
     st.markdown("---")
     l_c1_1, l_c1_2 = st.columns([1, 2])
     with l_c1_1: cond_1_c1 = st.selectbox(f"Kondisi {c1_name}", options_condition, key="cond1_1")
@@ -102,34 +104,16 @@ with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
 
 adegan_storage.append({"num": 1, "visual": vis_1, "lighting": leader_light, "cond1": cond_1_c1, "cond2": cond_1_c2, "diag1": diag_1_c1, "diag2": diag_1_c2})
 
-# CEK APAKAH LEADER BERUBAH?
-leader_changed = False
-if leader_light != st.session_state.prev_leader_light:
-    leader_changed = True
-    st.session_state.prev_leader_light = leader_light
-
-# --- BAGIAN ADEGAN 2 DAN SETERUSNYA (THE FOLLOWERS) ---
+# ADEGAN 2 SAMPAI N (FOLLOWER LOGIC)
 for idx_s in range(2, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=False):
         f_col1, f_col2 = st.columns([3, 1])
         with f_col1:
             vis_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=100)
         with f_col2:
-            # Logika Follower: 
-            # Jika Leader berubah, maka semua Follower ikut Leader.
-            # Jika Leader TIDAK berubah, Follower tetap pada pilihan manualnya.
-            if leader_changed:
-                st.session_state.manual_overrides[idx_s] = leader_light
-            
-            # Ambil nilai default (dari Leader atau dari memori manual sebelumnya)
-            current_val = st.session_state.manual_overrides.get(idx_s, leader_light)
-            
-            f_light = st.radio(f"Cahaya Adegan {idx_s}", options_lighting, 
-                               index=options_lighting.index(current_val), 
-                               key=f"light_radio_{idx_s}")
-            
-            # Simpan jika user mengubah secara manual di adegan ini
-            st.session_state.manual_overrides[idx_s] = f_light
+            if f"light_{idx_s}" not in st.session_state:
+                st.session_state[f"light_{idx_s}"] = st.session_state.master_light
+            f_light = st.radio(f"Cahaya Adegan {idx_s}", options_lighting, key=f"light_{idx_s}")
 
         st.markdown("---")
         f_c1_1, f_c1_2 = st.columns([1, 2])
@@ -156,7 +140,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING ---
+            # --- FULL MAPPING LOGIKA LIGHTING (TIDAK ADA RINGKASAN) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -189,10 +173,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             char_prompts = []
             if c1_name and c1_name.lower() in v_txt.lower():
-                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial fidelity. " if adegan['diag1'] else ""
+                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial muscles. " if adegan['diag1'] else ""
                 char_prompts.append(f"CHARACTER REF: {c1_base}, wearing {c1_outfit}, status: {status_map[adegan['cond1']]}. {e1}")
             if c2_name and c2_name.lower() in v_txt.lower():
-                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial fidelity. " if adegan['diag2'] else ""
+                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial muscles. " if adegan['diag2'] else ""
                 char_prompts.append(f"CHARACTER REF: {c2_base}, wearing {c2_outfit}, status: {status_map[adegan['cond2']]}. {e2}")
             
             final_char = " ".join(char_prompts) + " "
@@ -205,4 +189,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.28 - Leader-Follower Logic")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.30 - Colossal Recovery Edition")
