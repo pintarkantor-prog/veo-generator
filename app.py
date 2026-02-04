@@ -207,16 +207,17 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MANUAL - NO REDUCTION)
 # ==============================================================================
 with st.sidebar:
-    # FITUR ADMIN MONITORING
+# FITUR ADMIN MONITORING
     if st.session_state.active_user == "admin":
         st.header("📊 Admin Monitor")
         if st.checkbox("Buka Log Google Sheets"):
             try:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
-                df_a = conn_a.read(worksheet="Sheet1", ttl=0)
+                # UBAH BAGIAN INI:
+                df_a = conn_a.read(worksheet="Sheet1", ttl=0) # Pastikan ttl=0
                 st.dataframe(df_a)
             except:
-                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")
+                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")  
         st.divider()
 
     st.header("⚙️ Konfigurasi Utama")
