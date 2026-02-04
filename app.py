@@ -1,32 +1,30 @@
 import streamlit as st
 
-# ==========================================
-# 1. KONFIGURASI HALAMAN (FULL SETUP)
-# ==========================================
+# ==============================================================================
+# 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
+# ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ==========================================
-# 2. CUSTOM CSS (MANUAL & FULL MEGA STRUCTURE)
-# ==========================================
+# ==============================================================================
+# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# ==============================================================================
 st.markdown("""
     <style>
-    /* Mengatur latar belakang sidebar menjadi sangat gelap */
+    /* Latar Belakang Sidebar Gelap Profesional */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
     
-    /* Mengatur semua teks di sidebar agar berwarna putih terang */
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] span, 
-    [data-testid="stSidebar"] label {
+    /* Warna Teks Sidebar Putih Terang */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
 
-    /* Mengatur tampilan tombol Copy khusus (Warna Hijau Terang) */
+    /* Tombol Copy Hijau Terang Ikonik */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -34,29 +32,33 @@ st.markdown("""
         border-radius: 6px !important;
         border: 2px solid #ffffff !important;
         transform: scale(1.1); 
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.4);
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     
-    /* Efek hover/tekan pada tombol Copy */
+    button[title="Copy to clipboard"]:hover {
+        background-color: #218838 !important;
+    }
+    
     button[title="Copy to clipboard"]:active {
         background-color: #1e7e34 !important;
         transform: scale(1.0);
     }
     
-    /* Mengatur font pada area input teks adegan */
+    /* Font Area Input Visual Deskripsi */
     .stTextArea textarea {
         font-size: 14px !important;
-        font-family: 'Inter', sans-serif;
+        line-height: 1.5 !important;
+        font-family: 'Inter', sans-serif !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: ULTRA-VIVID COBALT & AUTO-SYNC CHARACTER IDENTITY ❤️")
+st.info("Mode: v9.11 | ULTIMATE MENDUNG | ALL-OBJECT TEXTURE LOCK ❤️")
 
-# ==========================================
-# 3. SIDEBAR: KONFIGURASI TOKOH (MEGA SETUP)
-# ==========================================
+# ==============================================================================
+# 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
+# ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
@@ -64,170 +66,192 @@ with st.sidebar:
     st.divider()
     st.subheader("👥 Identitas & Fisik Karakter")
     
-    # Penampung data karakter (Mega List)
-    all_characters = []
+    characters_data_list = []
 
-    # Setup Karakter 1 secara Eksplisit
+    # Karakter 1 (Manual Entry)
     st.markdown("### Karakter 1")
-    char1_name = st.text_input("Nama Karakter 1", key="input_c_name_1", placeholder="Contoh: UDIN")
-    char1_physic = st.text_area("Fisik Karakter 1", key="input_c_desc_1", placeholder="Detail fisik...", height=70)
-    all_characters.append({"name": char1_name, "desc": char1_physic})
+    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
+    c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
+    characters_data_list.append({"name": c1_name, "desc": c1_phys})
     
     st.divider()
 
-    # Setup Karakter 2 secara Eksplisit
+    # Karakter 2 (Manual Entry)
     st.markdown("### Karakter 2")
-    char2_name = st.text_input("Nama Karakter 2", key="input_c_name_2", placeholder="Contoh: TUNG")
-    char2_physic = st.text_area("Fisik Karakter 2", key="input_c_desc_2", placeholder="Detail fisik...", height=70)
-    all_characters.append({"name": char2_name, "desc": char2_physic})
+    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
+    c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
+    characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
     st.divider()
     
-    # Menentukan jumlah karakter tambahan secara dinamis
-    extra_count = st.number_input("Tambah Karakter Lainnya", min_value=2, max_value=5, value=2)
+    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=5, value=2)
 
-    # Input Karakter 3, 4, 5 (Jika dipilih)
-    if extra_count > 2:
-        for ex_i in range(2, int(extra_count)):
+    if num_extra > 2:
+        for idx_ex in range(2, int(num_extra)):
             st.divider()
-            st.markdown(f"### Karakter {ex_i + 1}")
-            ex_name = st.text_input(f"Nama Karakter {ex_i + 1}", key=f"ex_name_input_{ex_i}")
-            ex_desc = st.text_area(f"Fisik Karakter {ex_i + 1}", key=f"ex_desc_input_{ex_i}", height=70)
-            all_characters.append({"name": ex_name, "desc": ex_desc})
+            st.markdown(f"### Karakter {idx_ex + 1}")
+            ex_n = st.text_input(f"Nama Karakter {idx_ex + 1}", key=f"ex_name_{idx_ex}")
+            ex_p = st.text_area(f"Fisik Karakter {idx_ex + 1}", key=f"ex_phys_{idx_ex}", height=80)
+            characters_data_list.append({"name": ex_n, "desc": ex_p})
 
-# ==========================================
-# 4. PARAMETER KUALITAS (FULL MEGA LIST)
-# ==========================================
-no_text_strict = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO words on image, NO user interface labels."
-
-# Variabel Kualitas Gambar (Ultra-Sharp & Cold)
-img_quality_vivid_sharp = (
-    "full-frame medium format photography, 16-bit color bit depth, hyper-saturated organic pigments, "
-    "edge-to-edge optical sharpness, f/11 deep focus aperture, micro-contrast enhancement, "
-    "circular polarizer (CPL) filter effect to darken blue sky and enhance saturation, "
-    "deep cobalt blue sky, small wispy natural white clouds, natural sky depth, "
-    "intricate micro-textures on foliage and tree barks, hyper-sharp vegetation, "
-    "dry surfaces, dry environment, zero atmospheric haze, crystal clear visibility, "
-    "10:00 AM morning crisp daylight, 50% sun intensity, cool white balance, 7000k cold color temperature, "
-    "rich high-contrast shadows, unprocessed raw photography style, 8k resolution, captured on 35mm high-end lens, "
-    "STRICTLY NO rain, NO wet surfaces, NO overcast sky, NO over-exposure, NO sun flare, " + no_text_strict
+# ==============================================================================
+# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
+# ==============================================================================
+no_text_no_rain_lock = (
+    "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
+    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters."
 )
 
-# Variabel Kualitas Video (Ultra-Sharp & Cold)
-vid_quality_vivid_sharp = (
-    "ultra-high-fidelity vertical video format, 9:16 aspect ratio, 60fps, crisp 10:00 AM cold daylight, "
-    "deep saturated colors, deep cobalt blue sky, natural light white clouds, "
-    "hyper-sharp background focus, sharp foliage and grass textures, dry landscape environment, "
-    "extreme visual clarity, lossless texture quality, fluid organic motion, muted cool lighting, "
-    "high contrast ratio, NO motion blur, NO animation look, NO CGI look, " + no_text_strict
+img_quality_base = (
+    "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, "
+    "absolute fidelity to unique character reference, edge-to-edge optical sharpness, "
+    "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures on every surface, "
+    "circular polarizer (CPL) filter effect, zero atmospheric haze, "
+    "rich high-contrast shadows, unprocessed raw photography, 8k resolution, captured on high-end 35mm lens, "
+    "STRICTLY NO over-exposure, NO motion blur, NO lens flare, " + no_text_no_rain_lock
 )
 
-# ==========================================
-# 5. FORM INPUT ADEGAN (FULL LAYOUT)
-# ==========================================
+vid_quality_base = (
+    "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, "
+    "strict character consistency, deep saturated pigments, "
+    "hyper-vivid foliage textures, crystal clear background focus, "
+    "extreme visual clarity, lossless texture quality, fluid organic motion, "
+    "high contrast ratio, NO animation look, NO CGI look, " + no_text_no_rain_lock
+)
+
+# ==============================================================================
+# 5. FORM INPUT ADEGAN (WIDE LAYOUT [5, 2])
+# ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
-scenes_list = []
+adegan_storage = []
 
-for s_num in range(1, int(num_scenes) + 1):
-    with st.expander(f"KONFIGURASI DATA ADEGAN {s_num}", expanded=(s_num == 1)):
-        # Layout Kolom Manual
-        layout_cols = st.columns([3, 1.8] + [1.2] * len(all_characters))
+for idx_s in range(1, int(num_scenes) + 1):
+    with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
-        with layout_cols[0]:
-            visual_input = st.text_area(f"Visual Adegan {s_num}", key=f"main_v_input_{s_num}", height=110, placeholder="Contoh: UDIN dan TUNG sedang berjalan di hutan...")
+        cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
-        with layout_cols[1]:
-            light_val_radio = st.radio(f"Lighting {s_num}", ["50% (Dingin)", "75% (Cerah)"], key=f"main_l_input_{s_num}", horizontal=True)
+        with cols_setup[0]:
+            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
-        # Penampung Dialog Per Karakter
-        scene_dialogs_data = []
-        for c_idx, c_info in enumerate(all_characters):
-            with layout_cols[c_idx + 2]:
-                char_label_name = c_info['name'] if c_info['name'] else f"Tokoh {c_idx + 1}"
-                diag_input_text = st.text_input(f"Dialog {char_label_name}", key=f"main_diag_input_{c_idx}_{s_num}")
-                scene_dialogs_data.append({"name": char_label_name, "text": diag_input_text})
+        with cols_setup[1]:
+            light_radio = st.radio(f"Pencahayaan", 
+                                   [
+                                       "Bening dan Tajam", 
+                                       "Sejuk dan Terang", 
+                                       "Dramatis", 
+                                       "Jelas dan Solid", 
+                                       "Suasana Sore",
+                                       "Mendung",
+                                       "Suasana Malam",
+                                       "Suasana Alami"
+                                   ], 
+                                   key=f"light_input_{idx_s}", horizontal=False)
         
-        scenes_list.append({
-            "num": s_num, 
-            "visual": visual_input, 
-            "lighting": light_val_radio, 
-            "dialogs": scene_dialogs_data
+        scene_dialog_list = []
+        for idx_c, char_val in enumerate(characters_data_list):
+            with cols_setup[idx_c + 2]:
+                char_label = char_val['name'] if char_val['name'] else f"Tokoh {idx_c + 1}"
+                diag_in = st.text_input(f"Dialog {char_label}", key=f"diag_input_{idx_c}_{idx_s}")
+                scene_dialog_list.append({"name": char_label, "text": diag_in})
+        
+        adegan_storage.append({
+            "num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list
         })
 
 st.divider()
 
-# ==========================================
-# 6. LOGIKA GENERATOR PROMPT (AUTO-SYNC CHARACTER)
-# ==========================================
+# ==============================================================================
+# 6. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC)
+# ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
-    active_scenes = [s for s in scenes_list if s["visual"].strip() != ""]
+    active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
     
-    if not active_scenes:
-        st.warning("Mohon isi deskripsi visual adegan.")
+    if not active_adegan:
+        st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
         
-        for scene in active_scenes:
-            id_scene = scene["num"]
-            v_text = scene["visual"]
+        for adegan in active_adegan:
+            s_id = adegan["num"]
+            v_txt = adegan["visual"]
             
-            # 1. Logic Lighting Eksplisit
-            if "50%" in scene["lighting"]:
-                final_lighting_prompt = "50% dimmed sunlight intensity, zero sun glare, crisp cool morning air, muted exposure, sharp contrast shadows"
-            else:
-                final_lighting_prompt = "75% sunlight intensity, brilliant clear daylight, vivid highlights, high-energy sharp colors"
-
-            # 2. Logika Emosi Dialog (Anti-Text)
-            current_dialog_list = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
-            full_dialog_string = " ".join(current_dialog_list) if current_dialog_list else ""
+            # --- MAPPING LOGIKA LIGHTING ---
+            if "Bening" in adegan["lighting"]:
+                f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
+                f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
+            elif "Sejuk" in adegan["lighting"]:
+                f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
+                f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
+            elif "Dramatis" in adegan["lighting"]:
+                f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
+                f_atmos = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
+            elif "Jelas" in adegan["lighting"]:
+                f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
+                f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             
-            emotion_instruction = ""
-            if full_dialog_string:
-                emotion_instruction = (
-                    f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_string}'. "
-                    "Focus on realistic facial micro-expressions and muscle tension. "
+            elif "Mendung" in adegan["lighting"]:
+                # LOGIKA MENDUNG TERBARU (ULTIMATE SHARPNESS & COLOR CONTRAST)
+                f_light = (
+                    "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, "
+                    "vivid pigment recovery on every surface, extreme local micro-contrast, "
+                    "brilliant specular highlights on object edges, deep rich high-definition shadows."
                 )
-
-            # 3. FUNGSI OTOMATIS: CHARACTER IDENTITY SYNC (Penting!)
-            # Memeriksa semua karakter (1 s/d 5) apakah ada di deskripsi visual adegan
-            final_appearance_ref = ""
-            detected_chars_physic = []
+                f_atmos = (
+                    "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, "
+                    "gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, "
+                    "grass blades, house walls, concrete roads, and every environment object. "
+                    "Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
+                )
             
-            for check_char in all_characters:
-                # Jika nama karakter diisi DAN nama tersebut tertulis di deskripsi visual adegan (case insensitive)
-                if check_char['name'] and check_char['name'].lower() in v_text.lower():
-                    detected_chars_physic.append(f"{check_char['name']} ({check_char['desc']})")
+            elif "Suasana Malam" in adegan["lighting"]:
+                f_light = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow, visible background detail."
+                f_atmos = "Clear night atmosphere, deep indigo-black sky, hyper-defined textures on every object."
+            elif "Suasana Alami" in adegan["lighting"]:
+                f_light = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments."
+                f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures."
+            else:
+                f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
+                f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
+
+            # --- LOGIKA EMOSI DIALOG (FULL VERSION) ---
+            dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
+            full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
+            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
+
+            # --- LOGIKA AUTO-SYNC KARAKTER (FULL VERSION) ---
+            detected_phys_list = []
+            for c_check in characters_data_list:
+                if c_check['name'] and c_check['name'].lower() in v_txt.lower():
+                    detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c_check['name']} ({c_check['desc']})")
             
-            # Jika ada karakter yang terdeteksi, masukkan ke dalam prompt
-            if detected_chars_physic:
-                final_appearance_ref = "Character Identity Reference: " + ", ".join(detected_chars_physic) + ". "
+            final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # 4. Perakitan Prompt (Mega Construction)
-            is_first_scene_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if id_scene == 1 else ""
-            command_image_prefix = f"buatkan saya sebuah gambar dari adegan ke {id_scene}. "
+            # --- KONSTRUKSI PROMPT FINAL (MANUAL & PANJANG) ---
+            is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
+            img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
-            image_prompt_result = (
-                f"{is_first_scene_prefix}{command_image_prefix}{emotion_instruction}Visual Scene: {final_appearance_ref}{v_text}. "
-                f"Atmosphere: Locked 10:00 AM morning sun, deep cobalt blue sky, thin wispy white clouds, dry landscape, hyper-sharp vegetation. "
-                f"Lighting Effect: {final_lighting_prompt}. {img_quality_vivid_sharp}"
+            final_img = (
+                f"{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
+                f"Atmosphere: {f_atmos} Dry environment surfaces, no water droplets. "
+                f"Lighting Effect: {f_light}. {img_quality_base}"
             )
 
-            video_prompt_result = (
-                f"Video Adegan {id_scene}. {emotion_instruction}Visual Scene: {final_appearance_ref}{v_text}. "
-                f"Atmosphere: 10:00 AM, crystal clear deep blue sky, hyper-vivid background, dry surfaces. "
-                f"Lighting Effect: {final_lighting_prompt}. {vid_quality_vivid_sharp}. Dialog Reference: {full_dialog_string}"
+            final_vid = (
+                f"Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
+                f"Atmosphere: {f_atmos} Hyper-vivid colors, sharp focus, dry surfaces. "
+                f"Lighting Effect: {f_light}. {vid_quality_base}. Context: {full_dialog_str}"
             )
 
-            # 5. Output Display
-            st.subheader(f"ADENGAN {id_scene}")
-            res_col_1, res_col_2 = st.columns(2)
-            with res_col_1:
-                st.caption("📸 PROMPT GAMBAR (Sync Active)")
-                st.code(image_prompt_result, language="text")
-            with res_col_2:
-                st.caption("🎥 PROMPT VIDEO (Sync Active)")
-                st.code(video_prompt_result, language="text")
+            # --- DISPLAY OUTPUT ---
+            st.subheader(f"ADENGAN {s_id}")
+            res_c1, res_c2 = st.columns(2)
+            with res_c1:
+                st.caption(f"📸 PROMPT GAMBAR ({adegan['lighting']})")
+                st.code(final_img, language="text")
+            with res_c2:
+                st.caption("🎥 PROMPT VIDEO")
+                st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v7.6 - Ultimate Character Sync")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.11 - Ultimate Mendung Edition")
