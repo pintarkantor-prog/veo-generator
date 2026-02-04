@@ -119,7 +119,7 @@ st.markdown("""
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | SEMANGAT KERJANYA! BUAT HASIL KONTEN YANG BENER BENER MANTEP YOW 🚀❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | SEMANGAT KERJANYA GUYS! BUAT KONTEN YANG BENER MANTEP YOW 🚀❤️")
 with c_header2:
     if st.button("Logout 🚪"):
         st.session_state.logged_in = False
@@ -437,6 +437,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.0.1")
+
 
 
 
