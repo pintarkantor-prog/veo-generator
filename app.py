@@ -3,7 +3,7 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS (TAMPILAN SIDEBAR & TOMBOL HIJAU) ---
+# --- 2. CUSTOM CSS (SIDEBAR GELAP & TOMBOL HIJAU) ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] {
@@ -42,13 +42,13 @@ with st.sidebar:
     
     characters = []
     st.markdown("**Karakter 1**")
-    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
+    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="UDIN")
     c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c1_name, "desc": c1_desc})
     
     st.divider()
     st.markdown("**Karakter 2**")
-    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
+    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="TUNG")
     c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
@@ -63,19 +63,21 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER KUALITAS TAJAM & WARNA VIVID (Update v3.1) ---
+# --- 4. PARAMETER KUALITAS SUPRA-DETAIL (Update v3.2) ---
+# Fokus pada ketajaman tekstur dan saturasi warna spesifik
 img_quality = (
-    "ultra-high definition, 8k resolution, extreme sharp details, "
-    "vivid color saturation, deep rich contrast, high dynamic range (HDR), "
-    "crystal clear clarity, bold colors, natural lighting, raw photo style, "
-    "captured on 35mm lens, f/11 aperture for deep focus, authentic textures, "
-    "unprocessed look, NO blur, NO soft edges, NO cartoon"
+    "8k resolution, ultra-detailed textures, macro photography sharpness, "
+    "vivid emerald green grass, deep azure blue sky, rich color pop, "
+    "high contrast ratio, intense visual clarity, sharp outlines, "
+    "accurate character color rendering, authentic skin textures with subsurface scattering, "
+    "raw photo quality, captured on 35mm lens, f/11 aperture for edge-to-edge sharpness, "
+    "NO soft focus, NO blur, NO cartoonish flat colors, --v 6.0"
 )
 
 vid_quality = (
-    "ultra-vivid color grade, 4k 60fps, high color fidelity, intense visual clarity, "
-    "sharp focus, natural handheld motion, authentic environment, raw footage style, "
-    "NO CGI, NO animation look, deep blacks and bright whites contrast"
+    "ultra-vivid 4k video, extreme clarity, high frame rate, vivid color fidelity, "
+    "vibrant natural environments, emerald foliage, deep blue sky tones, "
+    "sharp focus on moving objects, high-resolution textures, NO motion blur"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -119,29 +121,32 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                 if char['name'] and char['name'].lower() in v_input.lower():
                     detected_physique.append(f"{char['name']} ({char['desc']})")
             
-            char_ref = "Characters Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
+            char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # Waktu Mapping dengan penajaman warna
+            # Waktu Mapping dengan penajaman elemen alam
             time_map = {
-                "Pagi hari": "vibrant morning golden hour light, high contrast",
-                "Siang hari": "intense bright midday sun, vivid sky, punchy shadows",
-                "Sore hari": "warm sunset orange glow, deep saturation",
-                "Malam hari": "clear night ambient light, deep rich blacks, neon vibrant accents"
+                "Pagi hari": "vibrant golden hour light, high contrast emerald and azure tones",
+                "Siang hari": "bright intense midday sun, vivid deep blue sky, lush green grass contrast",
+                "Sore hari": "warm sunset fiery orange sky, high saturation silhouette contrast",
+                "Malam hari": "clear starry night, deep obsidian sky, sharp neon light reflections"
             }
             eng_time = time_map.get(scene["time"], "natural lighting")
             
+            # PROMPT GAMBAR
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
-                f"saya ingin warna yang sangat tajam, jernih, dan kontras tinggi. "
+                f"fokus pada ketajaman objek, kejernihan warna langit, rumput, dan detail fisik karakter. "
                 f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
                 f"Environment: {eng_time}. {img_quality}"
             )
 
+            # PROMPT VIDEO
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
-                f"Generate an ultra-vivid video for Scene {i}. \n"
+                f"Generate a supra-detailed vivid video for Scene {i}. "
+                f"Focus on lush environment colors and sharp character textures. "
                 f"Visual: {char_ref}{v_input}. Lighting: {eng_time}. {vid_quality}.{dialog_part}"
             )
 
@@ -156,4 +161,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.1")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.2")
