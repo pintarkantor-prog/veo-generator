@@ -22,10 +22,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.38 | INFINITY CHARACTER | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.39 | GUIDED INPUT | INFINITY CHARACTER | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: DINAMIS KARAKTER
+# 3. SIDEBAR: DINAMIS KARAKTER DENGAN PANDUAN
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -37,17 +37,29 @@ with st.sidebar:
 
     st.divider()
     st.subheader("👥 Pengaturan Karakter")
-    # INI KUNCINYA: Kamu bisa tentukan mau berapa karakter saja di sini
     num_chars = st.number_input("Jumlah Karakter", min_value=1, max_value=20, value=2)
     
     char_list = []
     for i in range(1, num_chars + 1):
         st.markdown(f"#### Tokoh {i}")
-        c_n = st.text_input(f"Nama Tokoh {i}", placeholder=f"Nama {i}", key=f"sn_{i}")
-        c_f = st.text_area(f"Fisik Dasar {i}", placeholder="Deskripsi wajah...", height=70, key=f"sf_{i}")
-        c_p = st.text_input(f"Pakaian {i}", key=f"sp_{i}")
+        c_n = st.text_input(f"Nama Tokoh {i}", placeholder=f"Contoh: UDIN", key=f"sn_{i}")
+        
+        # PERBAIKAN: Menambahkan parameter 'help' sebagai panduan isi
+        c_f = st.text_area(f"Fisik Dasar {i}", 
+                          placeholder="Contoh: Kepala jeruk orange, tekstur kulit pori-pori...", 
+                          help="Isi dengan: Bentuk kepala/wajah, warna kulit, jenis rambut, ekspresi permanen, atau ciri unik fisik lainnya.",
+                          height=70, key=f"sf_{i}")
+        
+        c_p = st.text_input(f"Pakaian {i}", 
+                           placeholder="Contoh: Kaos oblong putih kusam...", 
+                           help="Isi dengan: Jenis baju, warna pakaian, celana, alas kaki, atau aksesoris (topi, kacamata, kalung).",
+                           key=f"sp_{i}")
+        
         char_list.append({"name": c_n, "base": c_f, "outfit": c_p})
         if i < num_chars: st.divider()
+
+    st.sidebar.markdown("---")
+    st.sidebar.caption("PINTAR MEDIA Storyboard v9.39 - Guided Input Edition")
 
 # ==============================================================================
 # 4. LOGIKA MASTER-SYNC
@@ -66,7 +78,7 @@ no_text = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO 
 img_q = "photorealistic surrealism, 16-bit color, 8k, absolute fidelity to character reference, " + no_text
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (DINAMIS MENGIKUTI JUMLAH KARAKTER)
+# 5. FORM INPUT ADEGAN
 # ==============================================================================
 st.subheader("📝 Detail Adegan")
 adegan_storage = []
@@ -76,7 +88,10 @@ for idx_s in range(1, int(num_scenes) + 1):
     is_leader = (idx_s == 1)
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=is_leader):
         c_vis, c_light = st.columns([3, 1])
-        with c_vis: v_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=100)
+        with c_vis: 
+            v_in = st.text_area(f"Visual Scene {idx_s}", 
+                               placeholder="Gunakan Nama Tokoh di sini agar sistem mengenali siapa yang muncul...",
+                               key=f"vis_{idx_s}", height=100)
         with c_light:
             if is_leader:
                 l_val = st.selectbox("Cuaca", options_lighting, key="light_1", on_change=update_all_lights)
@@ -85,23 +100,20 @@ for idx_s in range(1, int(num_scenes) + 1):
                 l_val = st.selectbox(f"Cahaya {idx_s}", options_lighting, key=f"light_{idx_s}")
 
         st.markdown("---")
-        # Layout Karakter yang fleksibel (2 karakter per baris)
         char_scene_data = []
         for i in range(0, num_chars, 2):
             cols = st.columns([1, 1.5, 1, 1.5])
-            # Karakter pertama di baris ini
             c_idx = i
-            c_name = char_list[c_idx]["name"] if char_list[c_idx]["name"] else f"T{c_idx+1}"
-            with cols[0]: co = st.selectbox(f"Kond {c_name}", options_cond, key=f"cond_{c_idx}_{idx_s}")
-            with cols[1]: di = st.text_input(f"Dialog {c_name}", key=f"diag_{c_idx}_{idx_s}")
-            char_scene_data.append((co, di))
+            name1 = char_list[c_idx]["name"] if char_list[c_idx]["name"] else f"T{c_idx+1}"
+            with cols[0]: co1 = st.selectbox(f"Kond {name1}", options_cond, key=f"cond_{c_idx}_{idx_s}")
+            with cols[1]: di1 = st.text_input(f"Dialog {name1}", key=f"diag_{c_idx}_{idx_s}")
+            char_scene_data.append((co1, di1))
             
-            # Karakter kedua di baris ini (jika ada)
             if c_idx + 1 < num_chars:
                 c_idx2 = i + 1
-                c_name2 = char_list[c_idx2]["name"] if char_list[c_idx2]["name"] else f"T{c_idx2+1}"
-                with cols[2]: co2 = st.selectbox(f"Kond {c_name2}", options_cond, key=f"cond_{c_idx2}_{idx_s}")
-                with cols[3]: di2 = st.text_input(f"Dialog {c_name2}", key=f"diag_{c_idx2}_{idx_s}")
+                name2 = char_list[c_idx2]["name"] if char_list[c_idx2]["name"] else f"T{c_idx2+1}"
+                with cols[2]: co2 = st.selectbox(f"Kond {name2}", options_cond, key=f"cond_{c_idx2}_{idx_s}")
+                with cols[3]: di2 = st.text_input(f"Dialog {name2}", key=f"diag_{c_idx2}_{idx_s}")
                 char_scene_data.append((co2, di2))
 
         adegan_storage.append({"num": idx_s, "visual": v_in, "lighting": l_val, "chars": char_scene_data})
@@ -121,8 +133,8 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
         style_map = {"Sinematik": "Gritty Cinematic", "Warna Menyala": "Vibrant Pop", "Dokumenter": "High-End Documentary", "Film Jadul": "Vintage Film 35mm", "Film Thriller": "Dark Thriller", "Dunia Khayalan": "Surreal Dreamy"}
         s_lock = f"Overall Visual Tone: {style_map.get(tone_style, '')}. " if tone_style != "None" else ""
         
-        c_prompts = []
         status_map = {"Normal/Bersih": "clean skin.", "Terluka/Lecet": "scratches.", "Kotor/Berdebu": "covered in dust.", "Hancur Parah": "heavily damaged, cracks."}
+        c_prompts = []
         
         for i in range(num_chars):
             name = char_list[i]["name"]
@@ -135,8 +147,3 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
         st.subheader(f"ADENGAN {adegan['num']}")
         st.code(f"{s_lock}{final_c}Visual Scene: {adegan['visual']}. Atmosphere: {f_a}. Lighting: {f_l}. {img_q}")
         st.divider()
-
-st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.38 - Infinity Character Edition")
-
-
