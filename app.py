@@ -74,17 +74,19 @@ with st.sidebar:
             cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
             characters.append({"name": cn, "desc": cd})
 
-# --- 4. PARAMETER ULTRA-SHARP & VIVID COLORS (9:16) ---
+# --- 4. PARAMETER FULL SCREEN 9:16 (ULTRA-SHARP & VIVID) ---
 img_quality = (
-    "aspect ratio 9:16, vertical mobile orientation, ultra-vivid color saturation, "
+    "9:16 aspect ratio, vertical mobile full-screen orientation, edge-to-edge portrait composition, "
+    "full height frame, no black bars, no borders, ultra-vivid color saturation, "
     "deep color depth, extreme sharpness, hyper-detailed textures, crystal clear 8k resolution, "
-    "bold and punchy colors, high dynamic range, intense contrast, sharp outlines, "
+    "bold and punchy colors, intense contrast, sharp outlines, "
     "natural sunlight photography, raw photo quality, captured on 35mm lens, f/11 aperture, "
-    "unprocessed style, NO cartoon, NO blur, NO soft focus, --ar 9:16"
+    "unprocessed style, NO cartoon, NO blur, NO letterbox, --ar 9:16"
 )
 
 vid_quality = (
-    "9:16 vertical video format, ultra-high definition, vivid and punchy color grade, "
+    "9:16 vertical full-screen video format, TikTok and Reels full-height orientation, "
+    "edge-to-edge frame, no black padding, ultra-high definition, vivid and punchy colors, "
     "extreme visual clarity, high frame rate 60fps, authentic textures, sharp focus, "
     "natural handheld motion, NO CGI, NO animation look"
 )
@@ -148,7 +150,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             # PROMPT GAMBAR
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
-                f"saya ingin hasil gambar yang tajam dan konsisten. "
+                f"tampilkan gambar secara full-screen portrait 9:16 tanpa border hitam. "
                 f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
                 f"Environment: {eng_time}. {img_quality}"
             )
@@ -158,9 +160,9 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
-                f"Generate an ultra-sharp vertical video for Scene {i}. 9:16 ratio. "
+                f"Generate a vertical full-screen video for Scene {i}. 9:16 ratio edge-to-edge. "
                 f"Visual: {char_ref}{v_input}. Lighting: {eng_time}. "
-                f"Output: vivid colors, extreme detail. {vid_quality}.{dialog_part}"
+                f"Output: vivid colors, extreme detail, no letterbox. {vid_quality}.{dialog_part}"
             )
 
             st.subheader(f"Adegan {i}")
@@ -174,4 +176,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.4")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.5 - Full Screen Optimized")
