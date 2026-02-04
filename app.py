@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN
+# 1. KONFIGURASI HALAMAN (MEGA ARCHITECTURE)
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS
+# 2. CUSTOM CSS (STRICT PROFESSIONAL STYLE)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -26,7 +26,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.47 | ULTRA-STRICT FIDELITY | REAL-TIME SYNC | VEO 3 ❤️")
+st.info("Mode: v9.47 | CHARACTER DNA FIDELITY | AUTOMATIC MASTER SYNC | VEO 3 ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER-SYNC (SESSION STATE)
@@ -37,74 +37,62 @@ if 'master_light_val' not in st.session_state:
     st.session_state.master_light_val = options_lighting[0]
 
 def on_master_light_change():
+    # Menangkap perubahan di adegan 1 dan menyebarkannya secara instan ke adegan lain
     new_light = st.session_state.l_1
     st.session_state.master_light_val = new_light
     for i in range(2, 51):
-        if f"l_{i}" in st.session_state: # Pastikan key ada sebelum update
-            st.session_state[f"l_{i}"] = new_light
+        st.session_state[f"l_{i}"] = new_light
 
 # ==============================================================================
-# 4. LOGIKA AUTO-DETECTION ENGINE (Disematkan ke pakaian/wujud)
+# 4. LOGIKA AUTO-DETECTION: EMOTION CONTEXT
 # ==============================================================================
 def detect_visual_logic(text):
     text = text.lower()
-    emotion = "neutral facial expression, maintaining original character's base mesh."
+    # Deteksi emosi untuk panduan ekspresi wajah (bukan untuk render teks)
     if any(w in text for w in ["sedih", "menangis", "sad", "crying"]):
-        emotion = "visibly weeping, realistic tear streaks on surface texture, sorrowful face without altering original character geometry."
+        return "Reacting to sorrowful context: Focus on high-fidelity weeping facial expressions and surface tear streaks."
     elif any(w in text for w in ["marah", "teriak", "geram", "angry", "furious"]):
-        emotion = "aggressive furious expression, intense facial muscles, maintaining character's base mesh."
-    
-    condition = "maintaining 100% original high-resolution textures from reference images."
-    if any(w in text for w in ["luka", "berdarah", "injured"]):
-        condition = "adding surface scratches and scuff marks while preserving original texture mapping and character geometry."
-    elif any(w in text for w in ["hancur", "retak", "pecah", "broken", "cracked"]):
-        condition = "hyper-detailed deep physical cracks, maintaining original texture mapping and character geometry without deviation."
-    
-    return f"State: {condition} Expression: {emotion}"
+        return "Reacting to aggressive context: Focus on intense facial muscle tension and aggressive expression."
+    return "Neutral high-fidelity facial expression and relaxed muscle tension."
 
 # ==============================================================================
-# 5. SIDEBAR: IDENTITAS KARAKTER (SIMPLIFIED & STRICT)
+# 5. SIDEBAR: IDENTITAS KARAKTER (DNA MAPPING)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("👥 Karakter (STRICT APPEARANCE)")
+    st.subheader("🎬 Visual Tone")
+    tone_style = st.selectbox("Pilih Visual Tone", ["None", "Sinematik", "Warna Menyala", "Dokumenter", "Film Jadul", "Film Thriller", "Dunia Khayalan"])
+
+    st.divider()
+    st.subheader("👥 Karakter (Ikuti DNA Visual)")
     all_characters = []
     for i in range(1, 3):
         st.markdown(f"### Karakter {i}")
-        c_n = st.text_input(f"Nama Karakter {i}", value="", key=f"c_n_{i}")
-        # HANYA C_W (Pakaian) yang akan menjadi fokus deskripsi karakter
-        c_w = st.text_area(f"Wujud & Pakaian {i}", placeholder="Misal: 'si kepala jeruk, memakai kaos putih berlogo X, celana jeans, sepatu bot, berkalung emas logo dolar'", height=100, key=f"c_w_{i}")
-        all_characters.append({"name": c_n, "wear": c_w})
+        c_n = st.text_input(f"Nama Karakter {i}", value="", key=f"cn_{i}")
+        c_p = st.text_area(f"Detail DNA Fisik {i}", placeholder="Contoh: si kepala jeruk berpori tajam, badan muscular kekar berurat...", height=80, key=f"cp_{i}")
+        c_w = st.text_input(f"Pakaian {i}", key=f"cw_{i}")
+        all_characters.append({"name": c_n, "phys": c_p, "wear": c_w})
 
 # ==============================================================================
-# 6. PARAMETER KUALITAS (ABSOLUTE FIDELITY CONSTRAINTS)
+# 6. PARAMETER KUALITAS: ENHANCED CINEMATIC RENDER
 # ==============================================================================
-zero_text = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO dialogue boxes, NO labels, NO captions."
-
-# Instruksi keras untuk mempertahankan tekstur dan bentuk dasar karakter
-img_fidelity_lock = (
-    "photorealistic hyper-surrealism, 16-bit color, maintain 100% pixel-perfect fidelity to ALL PROVIDED CHARACTER REFERENCE IMAGES, "
-    "DO NOT DEVIATE from original character geometry and texture mapping, "
-    "emphasize micro-textures (orange peel pores, wood grain fractures, muscle definition) from reference, "
-    "edge-to-edge optical sharpness, f/11 deep focus, 8k resolution, raw photography, " + zero_text
-)
-
-veo_fidelity_lock = (
-    "cinematic high-fidelity motion video, 60fps, 4k, organic character movement, "
-    "ensure 100% temporal consistency with reference image textures and geometry, "
-    "zero texture loss or 'boiling' effect during animation, fluid interaction, " + zero_text
+# Menghilangkan 'pixel-lock' dan menggantinya dengan peningkatan kualitas render global
+quality_boost = (
+    "hyper-realistic cinematic render, 8k resolution, Unreal Engine 5 style, masterwork, "
+    "deep global illumination, ray-traced reflections, professional color grading, "
+    "STRICTLY NO speech bubbles, NO text, NO watermarks, NO dialogue boxes."
 )
 
 # ==============================================================================
-# 7. FORM INPUT ADEGAN
+# 7. FORM INPUT ADEGAN (INVISIBLE SYNC LOGIC)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
-# ADEGAN 1 (MASTER CONTROL)
+# ADEGAN 1 (MASTER)
 with st.expander("ADEGAN 1 (LEADER)", expanded=True):
     v_col1, l_col1 = st.columns([3, 1])
     with v_col1:
@@ -126,7 +114,7 @@ for idx_s in range(2, int(num_scenes) + 1):
         adegan_storage.append({"num": idx_s, "visual": v_in, "light": current_light})
 
 # ==============================================================================
-# 8. GENERATOR PROMPT (ULTRA-STRICT FIDELITY LOGIC)
+# 8. GENERATOR PROMPT (DNA FIDELITY LOGIC)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -135,50 +123,50 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     else:
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["light"]
-            auto_logic_state = detect_visual_logic(v_txt) # Tangkap status dan ekspresi
+            emotion_logic = detect_visual_logic(v_txt)
             
-            # Pemetaan pencahayaan
+            # Mapping Lighting
             light_map = {
-                "Mendung": "Intense moody overcast lighting, vivid pigment recovery, gray-cobalt sky.",
-                "Suasana Malam": "Hyper-Chrome Fidelity lighting, HMI studio illumination, 10000k cold industrial light.",
-                "Suasana Sore": "4:00 PM indigo atmosphere, sharp rim lighting, long dramatic shadows."
+                "Mendung": "Overcast lighting, moody atmosphere, gray-cobalt sky.",
+                "Suasana Malam": "Cinematic night lighting, high contrast, 10000k cold light.",
+                "Suasana Sore": "Golden hour lighting, sharp rim lighting, long dramatic shadows."
             }
-            final_lighting_atmos = light_map.get(l_type, f"{l_type} lighting, high local contrast.")
+            f_l = light_map.get(l_type, f"{l_type} lighting, high-fidelity contrast.")
 
-            # MEMBANGUN PROMPT KARAKTER DENGAN "STRICT CHARACTER APPEARANCE"
+            # Menyusun instruksi karakter: STRICT CHARACTER APPEARANCE
             char_prompts = []
             for char in all_characters:
                 if char['name'] and char['name'].lower() in v_txt.lower():
-                    # Gabungkan wujud dan pakaian di sini untuk kejelasan identitas karakter
-                    char_desc = char['wear'] if char['wear'] else ""
-                    char_prompts.append(f"STRICT CHARACTER APPEARANCE: {char['name']} ({char_desc}). {auto_logic_state}.")
+                    # Fokus pada Identitas (DNA) tanpa memaksa kualitas gambar sama dengan referensi
+                    char_prompts.append(f"STRICT CHARACTER APPEARANCE: {char['name']} ({char['phys']}, memakai {char['wear']})")
 
-            final_char_instruction = " ".join(char_prompts)
-            is_ref_intro = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
+            final_c = ". ".join(char_prompts)
+            is_ref = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
 
             st.subheader(f"ADENGAN {s_id}")
-            st.caption(f"🧠 Detected State: {auto_logic_state}")
             
             # --- OUTPUT PROMPT GAMBAR ---
-            st.write("**📸 Image Prompt (Fidelity Mode):**")
-            st.code(
-                f"{is_ref_intro}buatkan gambar adegan {s_id}. "
-                f"{final_char_instruction} " # Instruksi karakter di awal
+            img_prompt = (
+                f"{is_ref}buatkan gambar adegan {s_id}: "
+                f"Emotion Context (DO NOT RENDER TEXT): {emotion_logic}. "
+                f"{final_c}. "
                 f"Visual Scene: {v_txt}. "
-                f"Atmosphere & Lighting: {final_lighting_atmos}. "
-                f"{img_fidelity_lock}"
+                f"Atmosphere: {f_l}. "
+                f"{quality_boost}"
             )
+            st.write("**📸 Image Prompt (DNA Fidelity):**")
+            st.code(img_prompt)
             
             # --- OUTPUT PROMPT VEO 3 ---
-            st.write("**🎥 Veo 3 Prompt (Motion Mode):**")
-            st.code(
-                f"Video adegan {s_id}. "
-                f"{final_char_instruction} " # Instruksi karakter di awal
+            veo_prompt = (
+                f"Video adegan {s_id}: {final_c}. "
                 f"Visual Scene: {v_txt}, organic cinematic movement. "
-                f"Atmosphere & Lighting: {final_lighting_atmos}. "
-                f"{veo_fidelity_lock}"
+                f"Atmosphere: {f_l}. "
+                f"{quality_boost}"
             )
+            st.write("**🎥 Veo 3 Prompt (Motion Fidelity):**")
+            st.code(veo_prompt)
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v9.47 - Ultra-Strict Edition")
+st.sidebar.caption("PINTAR MEDIA v9.47 - DNA Fidelity Edition")
