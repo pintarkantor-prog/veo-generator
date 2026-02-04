@@ -436,5 +436,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.20 - Secure Service Account Edition")
+st.sidebar.caption("PINTAR MEDIA | 2026🚀")
+
 
