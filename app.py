@@ -61,7 +61,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.16 | PONDASI v9.15 | VIDEO CINEMATOGRAPHY SYNC ❤️")
+st.info("Mode: v9.16 | EXPLICIT MEGA STRUCTURE | VIDEO CINEMATOGRAPHY SYNC ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC & OPTIONS (EXPLICIT)
@@ -70,28 +70,29 @@ options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas d
 options_camera = ["Static (No Move)", "Slow Zoom In", "Slow Zoom Out", "Pan Left to Right", "Pan Right to Left", "Tilt Up", "Tilt Down", "Tracking Shot", "Orbit Circular"]
 options_shot = ["Extreme Close-Up", "Close-Up", "Medium Shot", "Full Body Shot", "Wide Landscape Shot", "Low Angle Shot", "High Angle Shot"]
 
-# Inisialisasi state master
 if 'master_l' not in st.session_state: st.session_state.master_l = options_lighting[0]
 if 'master_c' not in st.session_state: st.session_state.master_c = options_camera[0]
 if 'master_s' not in st.session_state: st.session_state.master_s = options_shot[2]
 
 def global_sync_v916():
-    """Fungsi Master Sync untuk semua Dropbox berdasarkan Adegan 1"""
+    # Mengambil nilai dari Adegan 1 (Master Control)
     new_l = st.session_state.light_input_1
     new_c = st.session_state.camera_input_1
     new_s = st.session_state.shot_input_1
     
+    # Menyimpan ke state utama
     st.session_state.master_l = new_l
     st.session_state.master_c = new_c
     st.session_state.master_s = new_s
     
+    # Sinkronisasi paksa ke semua dropbox di adegan lain
     for key in st.session_state.keys():
         if key.startswith("light_input_"): st.session_state[key] = new_l
         if key.startswith("camera_input_"): st.session_state[key] = new_c
         if key.startswith("shot_input_"): st.session_state[key] = new_s
 
 # ==============================================================================
-# 4. SIDEBAR: KONFIGURASI TOKOH (MANUAL EXPLICIT - NO REDUCTION)
+# 4. SIDEBAR: KONFIGURASI TOKOH (MANUAL EXPLICIT - NO LOOPING)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -117,7 +118,7 @@ with st.sidebar:
     characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (ULTIMATE FIDELITY - RESTORED)
+# 5. PARAMETER KUALITAS (ULTIMATE FIDELITY - NO REDUCTION)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -142,16 +143,16 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (DROPBOX MASTER SYNC INTERFACE)
+# 6. FORM INPUT ADEGAN (EXPLICIT DROPBOX INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
-    label_box = f"🟢 MASTER CONTROL - ADEGAN {idx_s}" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
-    with st.expander(label_box, expanded=(idx_s == 1)):
+    label_status = f"🟢 MASTER CONTROL - ADEGAN {idx_s}" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
+    with st.expander(label_status, expanded=(idx_s == 1)):
         
-        # Grid System: Visual (4), Lighting (1.5), Video Move (1.5), Video Shot (1.5)
+        # Grid System: Visual (4), Lighting (1.5), Camera (1.5), Shot (1.5)
         cols_setup = st.columns([4, 1.5, 1.5, 1.5])
         
         with cols_setup[0]:
@@ -181,7 +182,7 @@ for idx_s in range(1, int(num_scenes) + 1):
                 if f"shot_input_{idx_s}" not in st.session_state: st.session_state[f"shot_input_{idx_s}"] = st.session_state.master_s
                 shot_val = st.selectbox(f"S{idx_s}", options_shot, key=f"shot_input_{idx_s}", label_visibility="collapsed")
 
-        # Dialog Rows (Manual Entry)
+        # Dialog Rows (Manual Mapping)
         diag_cols = st.columns(len(characters_data_list))
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
@@ -197,7 +198,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - NO REDUCTION)
+# 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - FULL RESTORED)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -266,14 +267,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
-            # Prompt Gambar: Murni tanpa instruksi gerak
+            # Prompt Gambar: Tetap murni tanpa Camera Move/Shot Size agar komposisi statis tidak rusak
             final_img = (
                 f"{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
                 f"Atmosphere: {f_atmos} Dry environment surfaces, no water droplets. "
                 f"Lighting Effect: {f_light}. {img_quality_base}"
             )
 
-            # Prompt Video: Disuntikkan Camera Move & Shot Size khusus untuk Veo 3
+            # Prompt Video: Menyuntikkan Camera Movement dan Shot Size khusus untuk Veo 3
             final_vid = (
                 f"Video Adegan {s_id}. {s_size} perspective. {c_move} motion. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
                 f"Atmosphere: {f_atmos} Hyper-vivid colors, sharp focus, dry surfaces. "
@@ -292,4 +293,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.16 - Cinematic Video Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.16 - Cinematic Video Sync Edition")
