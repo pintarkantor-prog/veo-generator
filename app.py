@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL STYLE)
+# 2. CUSTOM CSS (STRICT STYLE - NO REDUCTION)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -31,10 +31,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.30 | COLOSSAL EDITION | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.31 | CLEAN DROP-LIST | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI KARAKTER (MENGGUNAKAN DATA PROFILE)
+# 3. SIDEBAR: KONFIGURASI KARAKTER & STYLE
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -58,7 +58,7 @@ with st.sidebar:
     c2_outfit = st.text_input("Pakaian C2", value="blue denim shirt, rustic style")
 
 # ==============================================================================
-# 4. LOGIKA MASTER-SYNC (MANUAL SESSION STATE)
+# 4. LOGIKA MASTER-SYNC (DROP-LIST VERSION)
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
@@ -66,32 +66,35 @@ if 'master_light' not in st.session_state:
     st.session_state.master_light = options_lighting[0]
 
 def update_all_lights():
+    # Mengambil nilai dari Drop List Adegan 1
     new_val = st.session_state["light_1"]
     st.session_state.master_light = new_val
+    # Force update semua adegan follower
     for i in range(2, 51):
         st.session_state[f"light_{i}"] = new_val
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (FULL EXPLICIT - NO REDUCTION)
+# 5. PARAMETER KUALITAS (FULL EXPLICIT)
 # ==============================================================================
 no_text_lock = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
 img_quality_base = "photorealistic surrealism style, 16-bit color, hyper-saturated organic pigments, 8k, absolute fidelity to character reference, " + no_text_lock
 vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, strict character consistency, fluid organic motion, high contrast, " + no_text_lock
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (EXPLICIT LOOPING)
+# 6. FORM INPUT ADEGAN (DROP-LIST INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan (Adegan 1 adalah Leader)")
 adegan_storage = []
 options_condition = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
 
-# KONFIGURASI ADEGAN 1 (LEADER)
+# --- ADEGAN 1 (MASTER DROP-LIST) ---
 with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
     col_l1, col_l2 = st.columns([3, 1])
     with col_l1:
         vis_1 = st.text_area("Visual Scene 1", key="vis_1", height=100)
     with col_l2:
-        leader_light = st.radio("Cahaya (Master)", options_lighting, key="light_1", on_change=update_all_lights)
+        # Menggunakan selectbox (Drop List) untuk tampilan lebih rapi
+        leader_light = st.selectbox("Cahaya (Master)", options_lighting, key="light_1", on_change=update_all_lights)
     
     st.markdown("---")
     l_c1_1, l_c1_2 = st.columns([1, 2])
@@ -104,16 +107,19 @@ with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
 
 adegan_storage.append({"num": 1, "visual": vis_1, "lighting": leader_light, "cond1": cond_1_c1, "cond2": cond_1_c2, "diag1": diag_1_c1, "diag2": diag_1_c2})
 
-# ADEGAN 2 SAMPAI N (FOLLOWER LOGIC)
+# --- ADEGAN 2 SAMPAI N (FOLLOWER DROP-LIST) ---
 for idx_s in range(2, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=False):
         f_col1, f_col2 = st.columns([3, 1])
         with f_col1:
             vis_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=100)
         with f_col2:
+            # Pastikan state ada, jika tidak, ambil dari master
             if f"light_{idx_s}" not in st.session_state:
                 st.session_state[f"light_{idx_s}"] = st.session_state.master_light
-            f_light = st.radio(f"Cahaya Adegan {idx_s}", options_lighting, key=f"light_{idx_s}")
+            
+            # Follower juga menggunakan selectbox (Drop List)
+            f_light = st.selectbox(f"Cahaya Adegan {idx_s}", options_lighting, key=f"light_{idx_s}")
 
         st.markdown("---")
         f_c1_1, f_c1_2 = st.columns([1, 2])
@@ -140,7 +146,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (TIDAK ADA RINGKASAN) ---
+            # --- FULL MAPPING LOGIKA LIGHTING (NO REDUCTION) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -167,7 +173,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
             else: f_light, f_atmos = "", ""
 
-            # --- KONDISI & EMOTION ---
+            # --- LOGIKA KONDISI & EMOTION ---
             status_map = {"Normal/Bersih": "pristine condition, clean skin.", "Terluka/Lecet": "visible scratches, scuff marks, pained look.", "Kotor/Berdebu": "covered in dust, messy.", "Hancur Parah": "heavily damaged, cracks, trauma."}
             style_lock = f"Overall Visual Tone: {tone_style}. " if tone_style != "None" else ""
             
@@ -189,4 +195,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.30 - Colossal Recovery Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.31 - Clean Interface Edition")
