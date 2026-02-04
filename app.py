@@ -39,22 +39,33 @@ st.markdown("""
         background-color: #218838 !important;
     }
     
-    button[title="Copy to clipboard"]:active {
-        background-color: #1e7e34 !important;
-        transform: scale(1.0);
-    }
-    
     /* Font Area Input Visual Deskripsi */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
     }
+
+    /* Styling Kotak Moodboard */
+    .moodboard-container {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+    .color-box {
+        width: 100%;
+        height: 40px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.12 | RECOVERY MEGA-LOGIC | VEO OPTIMIZED | NO REDUCTION ❤️")
+st.info("Mode: v9.14 | ULTIMATE RECOVERY | MOODBOARD | VEO OPTIMIZED | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -67,25 +78,21 @@ with st.sidebar:
     st.subheader("👥 Identitas & Fisik Karakter")
     
     characters_data_list = []
-
-    # Karakter 1 (Manual Entry)
+    # Karakter 1
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
     characters_data_list.append({"name": c1_name, "desc": c1_phys})
     
     st.divider()
-
-    # Karakter 2 (Manual Entry)
+    # Karakter 2
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
     characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
     st.divider()
-    
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=5, value=2)
-
     if num_extra > 2:
         for idx_ex in range(2, int(num_extra)):
             st.divider()
@@ -95,7 +102,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
+# 4. PARAMETER KUALITAS (FULL VERSION - NO REDUCTION)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -127,98 +134,97 @@ adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
-        
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
-        
         with cols_setup[0]:
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
-        
         with cols_setup[1]:
             light_radio = st.radio(f"Pencahayaan", 
-                                   [
-                                       "Bening dan Tajam", 
-                                       "Sejuk dan Terang", 
-                                       "Dramatis", 
-                                       "Jelas dan Solid", 
-                                       "Suasana Sore",
-                                       "Mendung",
-                                       "Suasana Malam",
-                                       "Suasana Alami"
-                                   ], 
+                                   ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"], 
                                    key=f"light_input_{idx_s}", horizontal=False)
-        
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
             with cols_setup[idx_c + 2]:
                 char_label = char_val['name'] if char_val['name'] else f"Tokoh {idx_c + 1}"
                 diag_in = st.text_input(f"Dialog {char_label}", key=f"diag_input_{idx_c}_{idx_s}")
                 scene_dialog_list.append({"name": char_label, "text": diag_in})
-        
-        adegan_storage.append({
-            "num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list
-        })
+        adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list})
 
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (VEO OPTIMIZED & RECOVERY)
+# 6. LOGIKA GENERATOR PROMPT (FULL IF-ELSE LOGIC - NO DICTIONARY REDUCTION)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
-    
     if not active_adegan:
         st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
-        
         for adegan in active_adegan:
             s_id = adegan["num"]
             v_txt = adegan["visual"]
+            l_type = adegan["lighting"]
             
-            # --- MAPPING LOGIKA LIGHTING (RECOVERED FULL) ---
-            if "Bening" in adegan["lighting"]:
+            # --- FULL MAPPING LOGIKA LIGHTING (RECOVERED) ---
+            if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
-            elif "Sejuk" in adegan["lighting"]:
+                mb_colors = ["#0047AB", "#87CEEB", "#FFFFFF", "#E0E0E0"]
+                mb_dna = "Sky Blue, Crystal Clarity, High Altitude"
+            elif l_type == "Sejuk dan Terang":
                 f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
                 f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
-            elif "Dramatis" in adegan["lighting"]:
+                mb_colors = ["#B0E0E6", "#F0FFFF", "#ADD8E6", "#778899"]
+                mb_dna = "Icy Tones, Uniform Light, Zenith Sun"
+            elif l_type == "Dramatis":
                 f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
                 f_atmos = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
-            elif "Jelas" in adegan["lighting"]:
+                mb_colors = ["#000000", "#FFD700", "#4B0082", "#1C1C1C"]
+                mb_dna = "Deep Shadows, Rim Lighting, High HDR"
+            elif l_type == "Jelas dan Solid":
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
-            elif "Mendung" in adegan["lighting"]:
-                f_light = "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, vivid pigment recovery on every surface, extreme local micro-contrast, brilliant specular highlights on object edges, deep rich high-definition shadows."
-                f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, grass blades, house walls, concrete roads, and every environment object. Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
-            elif "Suasana Malam" in adegan["lighting"]:
-                f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
-                f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
-            elif "Suasana Alami" in adegan["lighting"]:
-                f_light = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments, deep rich micro-shadows within foliage and soil textures."
-                f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
-            else:
-                # Opsi Suasana Sore
+                mb_colors = ["#006400", "#FF8C00", "#1A1A1A", "#FFFFFF"]
+                mb_dna = "Matte Pigments, Saturated, Zero Glare"
+            elif l_type == "Suasana Sore":
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
+                mb_colors = ["#4B0082", "#FF4500", "#2F4F4F", "#191970"]
+                mb_dna = "Indigo Sky, Long Shadows, Cold Rim Light"
+            elif l_type == "Mendung":
+                f_light = "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, vivid pigment recovery on every surface, extreme local micro-contrast, brilliant specular highlights on object edges, deep rich high-definition shadows."
+                f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, grass blades, house walls, concrete roads, and every environment object. Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
+                mb_colors = ["#2C3E50", "#7F8C8D", "#34495E", "#1A1A1A"]
+                mb_dna = "Tactile Texture, Vivid Gray, Heavy Contrast"
+            elif l_type == "Suasana Malam":
+                f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
+                f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
+                mb_colors = ["#000000", "#121212", "#243B55", "#4B79A1"]
+                mb_dna = "Midnight Chrome, HMI Spotlights, Cold Sharpness"
+            elif l_type == "Suasana Alami":
+                f_light = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments, deep rich micro-shadows within foliage and soil textures."
+                f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
+                mb_colors = ["#1B3022", "#395B44", "#263238", "#4E342E"]
+                mb_dna = "Deep Organic, Chlorophyll Green, Earthy Contrast"
+            else:
+                f_light = ""
+                f_atmos = ""
+                mb_colors = ["#FFFFFF"] * 4
+                mb_dna = ""
 
-            # --- LOGIKA EMOSI DIALOG (RECOVERED FULL) ---
+            # --- LOGIKA VEO OPTIMIZER & EMOTION (FULL) ---
+            veo_optimization = "slow cinematic camera movement, temporal stability lock, no flickering, no morphing, locked-in character features, constant micro-texture rendering across all frames, cinematic 60fps fluid organic motion."
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
-
-            # --- LOGIKA AUTO-SYNC KARAKTER (RECOVERED FULL) ---
+            
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
                     detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c_check['name']} ({c_check['desc']})")
-            
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- VEO OPTIMIZER LOGIC (KHUSUS VIDEO) ---
-            veo_optimization = "slow cinematic camera movement, temporal stability lock, no flickering, no morphing, locked-in character features, constant micro-texture rendering across all frames, cinematic 60fps fluid organic motion."
-
-            # --- KONSTRUKSI PROMPT FINAL (RECOVERED MEGA-LOGIC) ---
+            # --- KONSTRUKSI PROMPT FINAL (MEGA-LOGIC) ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -229,21 +235,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             )
 
             final_vid = (
-                f"Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
+                f"Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual: {v_txt}. "
                 f"Atmosphere: {f_atmos}. {veo_optimization}. "
                 f"Lighting Effect: {f_light}. {vid_quality_base}. Context: {full_dialog_str}"
             )
 
-            # --- DISPLAY OUTPUT (KEMBALI KE LAYOUT FULL) ---
+            # --- DISPLAY RENDERING ---
             st.subheader(f"ADENGAN {s_id}")
-            res_c1, res_c2 = st.columns(2)
-            with res_c1:
-                st.caption(f"📸 PROMPT GAMBAR ({adegan['lighting']})")
+            c_prompt, c_mood = st.columns([7, 3])
+            with c_prompt:
+                st.caption(f"📸 PROMPT GAMBAR ({l_type})")
                 st.code(final_img, language="text")
-            with res_c2:
                 st.caption("🎥 PROMPT VIDEO (VEO OPTIMIZED)")
                 st.code(final_vid, language="text")
+            
+            with c_mood:
+                st.markdown(f"""
+                <div class="moodboard-container">
+                    <p style="color:#1a1c24; font-weight:bold; margin-bottom:5px;">🎨 MOODBOARD REFERENCE</p>
+                    <div style="display:flex; gap:5px;">
+                        <div class="color-box" style="background-color:{mb_colors[0]}"></div>
+                        <div class="color-box" style="background-color:{mb_colors[1]}"></div>
+                        <div class="color-box" style="background-color:{mb_colors[2]}"></div>
+                        <div class="color-box" style="background-color:{mb_colors[3]}"></div>
+                    </div>
+                    <p style="color:#666; font-size:12px; margin-top:5px;"><b>DNA:</b> {mb_dna}</p>
+                </div>
+                """, unsafe_allow_html=True)
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.12 - Final Recovery Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.14 - Ultimate Recovery Edition")
