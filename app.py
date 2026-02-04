@@ -26,10 +26,35 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.39 | PURE VISUAL FOCUS | NO EMOTION/DIALOGUE INPUT | VEO 3 READY ❤️")
+st.info("Mode: v9.41 | AUTO-DETECTION ENGINE | VEO 3 | CHARACTER FIDELITY ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: IDENTITAS KARAKTER (REFERENSI GAMBAR)
+# 3. LOGIKA INTERNAL: AUTO-DETECTION ENGINE
+# ==============================================================================
+def detect_visual_logic(text):
+    text = text.lower()
+    # Deteksi Emosi & Ekspresi
+    emotion = "neutral and calm facial expression."
+    if any(w in text for w in ["sedih", "menangis", "lemas", "kecewa", "sad", "crying"]):
+        emotion = "tearful eyes, devastating sorrow facial expression, emotional distress."
+    elif any(w in text for w in ["marah", "teriak", "geram", "tegang", "angry", "furious"]):
+        emotion = "furious expression, intense facial muscles, aggressive posture."
+    elif any(w in text for w in ["senang", "tertawa", "bahagia", "happy", "laugh"]):
+        emotion = "joyful expression, bright eyes, genuine smile."
+
+    # Deteksi Kondisi Fisik
+    condition = "pristine condition, clean skin and clothes."
+    if any(w in text for w in ["luka", "berdarah", "lecet", "injured", "scuff"]):
+        condition = "visible scratches, fresh scuff marks, pained look, raw textures."
+    elif any(w in text for w in ["kotor", "debu", "lumpur", "dirty", "muddy"]):
+        condition = "covered in thick grime and dust, messy organic appearance."
+    elif any(w in text for w in ["hancur", "retak", "pecah", "broken", "cracked"]):
+        condition = "heavily damaged surface, deep physical cracks, torn elements, extreme texture detail."
+
+    return f"Status: {condition} Expression: {emotion}"
+
+# ==============================================================================
+# 4. SIDEBAR: IDENTITAS KARAKTER (REFERENSI GAMBAR)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -38,139 +63,96 @@ with st.sidebar:
     st.divider()
     st.subheader("🎬 Estetika Visual")
     tone_style = st.selectbox("Pilih Visual Tone", 
-                             ["None", "Gritty Cinematic", "Vibrant Pop", "High-End Documentary", "Vintage Film 35mm", "Dark Thriller", "Surreal Dreamy"])
+                             ["None", "Sinematik", "Warna Menyala", "Dokumenter", "Film Jadul", "Film Thriller", "Dunia Khayalan"])
 
     st.divider()
-    st.subheader("👥 Karakter (Ikuti Gambar Referensi)")
-    
+    st.subheader("👥 Karakter Utama")
     all_characters = []
-    # Karakter 1 (UDIN)
-    st.markdown("### Karakter 1")
-    c1_name = st.text_input("Nama Karakter 1", value="", key="c1_n_39")
-    c1_phys = st.text_area("Fisik Karakter 1 (Gunakan Detail dari Gambar)", placeholder="Input detail spesifik dari gambar referensi untuk menjaga kemiripan...", height=90, key="c1_f_39")
-    c1_wear = st.text_input("Pakaian 1", placeholder="Sesuai gambar...", key="c1_w_39")
-    all_characters.append({"name": c1_name, "phys": c1_phys, "wear": c1_wear})
-    
-    st.divider()
-    # Karakter 2 (TUNG)
-    st.markdown("### Karakter 2")
-    c2_name = st.text_input("Nama Karakter 2", value="", key="c2_n_39")
-    c2_phys = st.text_area("Fisik Karakter 2 (Gunakan Detail dari Gambar)", placeholder="Input detail spesifik dari gambar referensi untuk menjaga kemiripan...", height=90, key="c2_f_39")
-    c2_wear = st.text_input("Pakaian 2", placeholder="Sesuai gambar...", key="c2_w_39")
-    all_characters.append({"name": c2_name, "phys": c2_phys, "wear": c2_wear})
+    for i in range(1, 3):
+        st.markdown(f"### Karakter {i}")
+        c_n = st.text_input(f"Nama Karakter {i}", value="", key=f"c_n_{i}")
+        c_p = st.text_area(f"Detail Fisik {i} (Sesuai Gambar)", placeholder="Input detail spesifik...", height=90, key=f"c_p_{i}")
+        c_w = st.text_input(f"Pakaian {i}", key=f"c_w_{i}")
+        all_characters.append({"name": c_n, "phys": c_p, "wear": c_w})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (STRICT ANTI-TEXT & FIDELITY)
+# 5. PARAMETER KUALITAS (STRICT ANTI-TEXT & FIDELITY)
 # ==============================================================================
-# KEBIJAKAN NOL TEKS (ZERO TEXT POLICY)
-zero_text_policy = (
+no_text_lock = (
     "STRICTLY NO speech bubbles, NO text, NO letters, NO subtitles, NO captions, NO watermark, "
-    "NO dialogue boxes, NO labels, NO typography, NO on-screen text, NO written words. "
-    "The frame is 100% clean and pure visual content, without any textual overlays."
+    "NO dialogue boxes, NO labels, NO typography. The frame is 100% clean visual content."
 )
 
 img_quality = (
     "photorealistic surrealism, 16-bit color, extreme fidelity to provided visual reference, "
-    "edge-to-edge optical sharpness, f/11 deep focus, macro-textures, 8k resolution, " + zero_text_policy
+    "edge-to-edge optical sharpness, f/11 deep focus, macro-textures, 8k resolution, raw photography, " + no_text_lock
 )
 
 veo_quality = (
     "cinematic video, high-fidelity motion, 60fps, 4k, organic character movement, "
-    "strict consistency with provided visual reference, fluid interaction, lossless textures, " + zero_text_policy
+    "strict consistency with provided visual reference, fluid interaction, lossless textures, " + no_text_lock
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (NO EMOTION/DIALOGUE INPUT)
+# 6. FORM INPUT ADEGAN
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
-options_cond = ["Normal/Bersih", "Sedih", "Lusuh", "Marah", "Hancur Parah"] # Opsi kondisi disederhanakan
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=(idx_s == 1)):
         v_col, l_col = st.columns([3, 1])
         with v_col:
-            v_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=120)
+            v_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=150, placeholder="Ceritakan adegannya di sini (Sistem akan mendeteksi emosi secara otomatis)...")
         with l_col:
             l_val = st.radio(f"Cahaya {idx_s}", options_lighting, key=f"l_{idx_s}")
-
-        st.markdown("**Kondisi Karakter (Visual Saja)**")
-        c_data = []
-        char_cols = st.columns(len(all_characters))
-        for i, char in enumerate(all_characters):
-            with char_cols[i]:
-                name = char['name'] if char['name'] else f"K{i+1}"
-                co = st.selectbox(f"Kondisi {name}", options_cond, key=f"co_{i}_{idx_s}")
-                c_data.append({"cond": co}) # Hanya kondisi, dialog dihapus
         
-        adegan_storage.append({"num": idx_s, "visual": v_in, "light": l_val, "chars": c_data})
+        adegan_storage.append({"num": idx_s, "visual": v_in, "light": l_val})
 
 # ==============================================================================
-# 6. GENERATOR PROMPT (IMAGE & VEO 3)
+# 7. GENERATOR PROMPT (AUTO-DETECTION LOGIC)
 # ==============================================================================
-if st.button("🚀 GENERATE PROMPTS", type="primary"):
+if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
-    for adegan in active:
-        s_id = adegan["num"]
-        
-        # Lighting Mapping (tetap lengkap)
-        if adegan["light"] == "Mendung":
-            f_l = "Intense moody overcast lighting with 16-bit color depth fidelity, vivid pigment recovery, extreme local micro-contrast."
-            f_a = "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on every surface."
-        elif adegan["light"] == "Bening dan Tajam":
-            f_l = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
-            f_a = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
-        elif adegan["light"] == "Sejuk dan Terang":
-            f_l = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
-            f_a = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
-        elif adegan["light"] == "Dramatis":
-            f_l = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
-            f_a = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
-        elif adegan["light"] == "Jelas dan Solid":
-            f_l = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
-            f_a = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
-        elif adegan["light"] == "Suasana Sore":
-            f_l = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
-            f_a = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
-        elif adegan["light"] == "Suasana Malam":
-            f_l = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
-            f_a = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
-        elif adegan["light"] == "Suasana Alami":
-            f_l = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments, deep rich micro-shadows within foliage and soil textures."
-            f_a = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
-        else: f_l, f_a = f"{adegan['light']} lighting", f"{adegan['light']} atmosphere"
+    if not active:
+        st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
+    else:
+        for adegan in active:
+            s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["light"]
+            
+            # --- AUTO-DETECTION SYSTEM ---
+            auto_logic = detect_visual_logic(v_txt)
 
-        # Character Instruction (Based on Image Reference - No Emotion/Dialogue)
-        char_prompts = []
-        status_map = {
-            "Normal/Bersih": "pristine condition, neutral expression.", "Sedih": "sad facial expression, downcast eyes.",
-            "Lusuh": "worn-out look, dusty appearance.", "Marah": "angry facial expression, tensed muscles.",
-            "Hancur Parah": "heavily damaged textures on head surface, broken elements."
-        }
+            # Lighting Mapping (Mega Structure)
+            if l_type == "Mendung":
+                f_l, f_a = "Intense moody overcast lighting, 16-bit color.", "Moody atmosphere, gray-cobalt sky."
+            elif l_type == "Suasana Malam":
+                f_l, f_a = "Hyper-Chrome Fidelity lighting, HMI studio lamp illumination.", "Pure vacuum-like atmosphere, absolute visual bite."
+            else:
+                f_l, f_a = f"{l_type} lighting", f"{l_type} atmosphere"
 
-        for i, char in enumerate(all_characters):
-            if char['name'] and char['name'].lower() in adegan['visual'].lower():
-                # Ekspresi kini langsung dari kondisi, tidak ada lagi dari dialog
-                condition_desc = status_map[adegan['chars'][i]['cond']]
-                char_prompts.append(f"Follow the exact visual appearance of {char['name']} from reference: {char['phys']}, wearing {char['wear']}, in {condition_desc}.")
+            # Character Instruction
+            char_prompts = []
+            for char in all_characters:
+                if char['name'] and char['name'].lower() in v_txt.lower():
+                    char_prompts.append(f"Follow exact visual appearance of {char['name']} from reference: {char['phys']}, wearing {char['wear']}. {auto_logic}.")
 
-        final_c = " ".join(char_prompts)
-        style_lock = f"Visual Tone: {tone_style}. " if tone_style != "None" else ""
-        is_ref = "Gunakan gambar ini sebagai referensi karakter utama. " if s_id == 1 else ""
-        
-        # PROMPT GAMBAR
-        final_img = f"{style_lock}{is_ref}Buatkan gambar adegan {s_id}: {final_c} Visual Scene: {adegan['visual']}. Atmosphere: {f_a}. Lighting: {f_l}. {img_quality}"
-        
-        # PROMPT VEO 3
-        final_veo = f"{style_lock}Video adegan {s_id}: {final_c} Visual Scene: {adegan['visual']}, showing organic cinematic movement and fluid interaction. Atmosphere: {f_a}. Lighting: {f_l}. {veo_quality}"
+            final_c = " ".join(char_prompts)
+            style_map = {"Sinematik": "Gritty Cinematic", "Warna Menyala": "Vibrant Pop", "Dokumenter": "High-End Documentary", "Film Jadul": "Vintage Film 35mm", "Film Thriller": "Dark Thriller", "Dunia Khayalan": "Surreal Dreamy"}
+            style_lock = f"Visual Tone: {style_map.get(tone_style, '')}. " if tone_style != "None" else ""
+            is_ref = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
 
-        st.subheader(f"ADENGAN {s_id}")
-        st.write("**📸 Image Prompt:**")
-        st.code(final_img, language="text")
-        st.write("**🎥 Veo 3 Prompt:**")
-        st.code(final_veo, language="text")
-        st.divider()
+            st.subheader(f"ADENGAN {s_id}")
+            st.info(f"🧠 Detected: {auto_logic}")
+            
+            # OUTPUT PROMPTS
+            st.write("**📸 Image Prompt:**")
+            st.code(f"{style_lock}{is_ref}buatkan gambar adegan {s_id}: {final_c} Visual Scene: {v_txt}. Atmosphere: {f_a}. Lighting: {f_l}. {img_quality}")
+            
+            st.write("**🎥 Veo 3 Prompt:**")
+            st.code(f"{style_lock}Video adegan {s_id}: {final_c} Visual Scene: {v_txt}, organic cinematic movement. Atmosphere: {f_a}. Lighting: {f_l}. {veo_quality}")
+            st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.39 - Pure Visual Focus")
+st.sidebar.caption("PINTAR MEDIA v9.41 - Auto-Detection Engine")
