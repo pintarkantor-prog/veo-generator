@@ -1,124 +1,179 @@
 import streamlit as st
-import google.generativeai as genai
-from PIL import Image
-import io
 
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. KONFIGURASI API ---
-MY_API_KEY = "AIzaSyBJdViWnCZ7cnQE3Wx-c_WJQpWH_zsEHpI"
-genai.configure(api_key=MY_API_KEY)
-
-# --- 3. CUSTOM CSS (SIDEBAR TETAP GELAP) ---
+# --- 2. CUSTOM CSS (TOMBOL COPY HIJAU & TAMPILAN) ---
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] { background-color: #1a1c24 !important; color: white !important; }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: white !important; }
-    button[title="Copy to clipboard"] { background-color: #28a745 !important; color: white !important; }
-    .stImage > img { border-radius: 12px; border: 3px solid #28a745; }
-    .stTextArea textarea { background-color: #262730 !important; color: white !important; }
+    /* Mengubah tombol copy bawaan menjadi Hijau Terang agar mudah terlihat */
+    button[title="Copy to clipboard"] {
+        background-color: #28a745 !important;
+        color: white !important;
+        opacity: 1 !important; /* Selalu muncul tanpa perlu di-hover */
+        border-radius: 6px !important;
+        border: 1px solid #ffffff !important;
+        transform: scale(1.1); /* Sedikit diperbesar agar jelas */
+    }
+    /* Warna saat tombol diklik */
+    button[title="Copy to clipboard"]:active {
+        background-color: #1e7e34 !important;
+    }
+    /* Styling kotak input agar rapi */
+    .stTextArea textarea {
+        font-size: 14px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
+# Judul Utama & Pesan Penyemangat
 st.title("📸 PINTAR MEDIA")
-st.info("semangat buat alur cerita nya guys ❤️")
+st.info("semangat buat alur cerita nya guys ❤️❤️❤️")
 
-# --- 4. SIDEBAR: KONFIGURASI & REFERENSI ---
+# --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
     st.header("⚙️ Konfigurasi")
     num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
+    
     st.divider()
-    st.subheader("👥 Identitas & Referensi Tokoh")
+    st.subheader("👥 Identitas & Fisik Tokoh")
     
     characters = []
-    # Input Karakter 1
-    st.markdown("### **Karakter 1**")
-    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="UDIN")
-    c1_desc = st.text_area("Deskripsi Fisik 1", key="char_desc_0", height=70)
-    c1_img = st.file_uploader("Upload Foto 1", type=['png', 'jpg', 'jpeg'], key="img_ref_0", label_visibility="collapsed")
-    if c1_img: st.image(c1_img, width=120)
+
+    # Karakter 1
+    st.markdown("**Karakter 1**")
+    c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
+    c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
+    characters.append({"name": c1_name, "desc": c1_desc})
     
     st.divider()
-    # Input Karakter 2
-    st.markdown("### **Karakter 2**")
-    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="TUNG")
-    c2_desc = st.text_area("Deskripsi Fisik 2", key="char_desc_1", height=70)
-    c2_img = st.file_uploader("Upload Foto 2", type=['png', 'jpg', 'jpeg'], key="img_ref_1", label_visibility="collapsed")
-    if c2_img: st.image(c2_img, width=120)
 
-# --- 5. INPUT DATA ADEGAN ---
+    # Karakter 2
+    st.markdown("**Karakter 2**")
+    c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
+    c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
+    characters.append({"name": c2_name, "desc": c2_desc})
+
+    st.divider()
+
+    # Form Jumlah Karakter (Manual di bawah Karakter 2)
+    num_chars = st.number_input("Tambah Karakter Lainnya (Total)", min_value=2, max_value=5, value=2)
+
+    if num_chars > 2:
+        for j in range(2, int(num_chars)):
+            st.divider()
+            st.markdown(f"**Karakter {j+1}**")
+            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}", placeholder=f"Contoh: TOKOH {j+1}")
+            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", placeholder="Ciri fisik...", height=68)
+            characters.append({"name": cn, "desc": cd})
+
+# --- 4. PARAMETER KUALITAS NATURAL (Tanpa kata 'Realistic') ---
+img_quality = (
+    "natural photography, raw photo style, captured on 35mm lens, f/8 aperture, "
+    "high resolution, sharp details, authentic skin texture, natural colors, "
+    "unprocessed look, NO cartoon, NO anime, NO Pixar, NO 3D render, "
+    "NO artificial lighting, NO AI-generated look, true to life appearance"
+)
+
+vid_quality = (
+    "natural handheld video, 60fps, authentic motion, real-world environment, "
+    "clear high definition, raw footage style, NO animation, NO CGI, life-like movement"
+)
+
+# --- 5. FORM INPUT ADEGAN ---
 st.subheader("📝 Detail Adegan")
-scene_inputs = []
+scene_data = []
+
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        cols = st.columns([2, 1])
+        # Kolom dinamis: Visual (2) + Waktu (1) + Dialog per karakter (1)
+        col_setup = [2, 1] + [1] * len(characters)
+        cols = st.columns(col_setup)
+        
         with cols[0]:
-            u_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100)
+            user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100)
+        
         with cols[1]:
-            s_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
-        scene_inputs.append({"num": i, "desc": u_desc, "time": s_time})
-
-# --- 6. FUNGSI GENERATE (DENGAN DETEKSI MODEL) ---
-def generate_visual_api(prompt, images, scene_num):
-    try:
-        # Mencoba mendeteksi model Imagen yang diizinkan di akun Anda
-        all_models = [m.name for m in genai.list_models() if 'imagen' in m.name.lower()]
+            scene_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
         
-        if not all_models:
-            st.error("❌ Model Imagen TIDAK DITEMUKAN di akun Anda.")
-            st.warning("Solusi: Buka Google AI Studio, klik 'Settings' (ikon gerigi) -> 'Billing', dan klik 'Set up billing'.")
-            return None
+        scene_dialogs = []
+        for idx, char in enumerate(characters):
+            with cols[idx + 2]:
+                char_label = char['name'] if char['name'] else f"Karakter {idx+1}"
+                d_input = st.text_input(f"Dialog {char_label}", key=f"diag_{idx}_{i}")
+                scene_dialogs.append({"name": char_label, "text": d_input})
         
-        # Mencoba model yang ditemukan satu per satu
-        for model_name in all_models:
-            try:
-                model = genai.GenerativeModel(model_name)
-                content = [prompt]
-                if images:
-                    for img in images: content.append(Image.open(img))
-                
-                response = model.generate_content(content)
-                if response.images: return response.images[0]
-            except:
-                continue
-        return None
-    except Exception as e:
-        st.error(f"Sistem Gagal: {e}")
-        return None
+        scene_data.append({
+            "num": i, 
+            "desc": user_desc, 
+            "time": scene_time,
+            "dialogs": scene_dialogs
+        })
 
-# --- 7. TAMPILAN OUTPUT ---
 st.divider()
-if st.button("🚀 PROSES SEMUA ADEGAN", type="primary"):
-    st.session_state.submitted = True
 
-if st.session_state.get("submitted"):
-    st.header("📋 Hasil Output PINTAR MEDIA")
-    for scene in scene_inputs:
-        if not scene["desc"].strip(): continue
+# --- 6. TOMBOL GENERATE (BUAT PROMPT) ---
+if st.button("🚀 BUAT PROMPT", type="primary"):
+    # Filter: Hanya memproses adegan yang visualnya tidak kosong
+    filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
+    
+    if not filled_scenes:
+        st.warning("Silakan isi kolom 'Visual Adegan' pada adegan yang ingin diproses.")
+    else:
+        st.header("📋 Hasil Prompt")
         
-        i = scene["num"]
-        active_imgs = []
-        char_ctx = ""
-        # Deteksi Tokoh di Teks
-        if c1_name and c1_name.lower() in scene["desc"].lower():
-            char_ctx += f"{c1_name} ({c1_desc}). "
-            if c1_img: active_imgs.append(c1_img)
-        if c2_name and c2_name.lower() in scene["desc"].lower():
-            char_ctx += f"{c2_name} ({c2_desc}). "
-            if c2_img: active_imgs.append(c2_img)
+        for scene in filled_scenes:
+            i = scene["num"]
+            v_input = scene["desc"]
+            
+            # Deteksi Nama Tokoh dalam Visual Adegan (Smart Trigger)
+            detected_physique = []
+            for char in characters:
+                if char['name'] and char['name'].lower() in v_input.lower():
+                    detected_physique.append(f"{char['name']} ({char['desc']})")
+            
+            char_ref = "Characters Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
+            
+            # Waktu Mapping
+            time_map = {
+                "Pagi hari": "morning golden hour light",
+                "Siang hari": "bright midday natural sunlight",
+                "Sore hari": "late afternoon warm sunset lighting",
+                "Malam hari": "ambient night lighting, dark environment"
+            }
+            eng_time = time_map.get(scene["time"], "natural lighting")
+            
+            # --- PROMPT GAMBAR (Instruksi Indo & No Dialog) ---
+            ref_t = "ini adalah gambar referensi karakter saya. " if i == 1 else ""
+            mand_t = "saya ingin membuat gambar secara konsisten adegan per adegan. "
+            sc_num_t = f"buatkan saya sebuah gambar adegan ke {i}. "
+            
+            final_img = (
+                f"{ref_t}{mand_t}{sc_num_t}\n"
+                f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
+                f"Lighting: {eng_time}. {img_quality}"
+            )
 
-        prompt = f"Consistent character scene {i}: {scene['desc']}. Characters: {char_ctx}. Time: {scene['time']}. natural photography style."
+            # --- PROMPT VIDEO (Dialog & No Instruksi Indo) ---
+            dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
+            dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
-        st.subheader(f"Adegan {i}")
-        col_a, col_b = st.columns(2)
-        with col_a:
-            st.caption("📸 PROMPT GAMBAR")
-            st.code(prompt, language="text")
-            if st.button(f"GENERATE VISUAL {i}", key=f"btn_gen_{i}"):
-                res = generate_visual_api(prompt, active_imgs, i)
-                if res: st.image(res, use_container_width=True)
-        with col_b:
-            st.caption("🎥 PROMPT VIDEO")
-            st.code(f"Video motion, scene {i}: {scene['desc']}", language="text")
-        st.divider()
+            final_vid = (
+                f"Generate a natural video for Scene {i}. \n"
+                f"Visual: {char_ref}{v_input}. Time context: {eng_time}. {vid_quality}.{dialog_part}"
+            )
+
+            # Tampilan Output
+            st.subheader(f"Adegan {i}")
+            res_col1, res_col2 = st.columns(2)
+            with res_col1:
+                st.caption(f"📸 PROMPT GAMBAR")
+                st.code(final_img, language="text")
+            with res_col2:
+                st.caption(f"🎥 PROMPT VIDEO")
+                st.code(final_vid, language="text")
+            st.divider()
+
+st.sidebar.markdown("---")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.0")
+
