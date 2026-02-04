@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 2. CUSTOM CSS (SANGAT DETAIL - TIDAK ADA YANG DISINGKAT)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.2 | FULL RECOVERY | 7-POINT LIGHTING | NO REDUCTION ❤️")
+st.info("Mode: v9.5 | HONEST MEGA-LOGIC | MIDNIGHT CHROME | NO HIDDEN CODE ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -67,25 +67,21 @@ with st.sidebar:
     st.subheader("👥 Identitas & Fisik Karakter")
     
     characters_data_list = []
-
-    # Karakter 1 (Manual Entry)
+    # Karakter 1
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
-    c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
+    c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", height=80)
     characters_data_list.append({"name": c1_name, "desc": c1_phys})
     
     st.divider()
-
-    # Karakter 2 (Manual Entry)
+    # Karakter 2
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
-    c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
+    c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", height=80)
     characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
     st.divider()
-    
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=5, value=2)
-
     if num_extra > 2:
         for idx_ex in range(2, int(num_extra)):
             st.divider()
@@ -95,7 +91,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
+# 4. PARAMETER KUALITAS (FULL VERSION - TIDAK ADA PENGURANGAN)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -127,54 +123,37 @@ adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
-        
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
-        
         with cols_setup[0]:
-            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
-        
+            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
         with cols_setup[1]:
             light_radio = st.radio(f"Pencahayaan", 
-                                   [
-                                       "Bening dan Tajam", 
-                                       "Sejuk dan Terang", 
-                                       "Dramatis", 
-                                       "Jelas dan Solid", 
-                                       "Senja",
-                                       "Mendung",
-                                       "Ketajaman Ekstrim"
-                                   ], 
+                                   ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Senja", "Mendung", "Ketajaman Ekstrim"], 
                                    key=f"light_input_{idx_s}", horizontal=False)
-        
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
             with cols_setup[idx_c + 2]:
                 char_label = char_val['name'] if char_val['name'] else f"Tokoh {idx_c + 1}"
                 diag_in = st.text_input(f"Dialog {char_label}", key=f"diag_input_{idx_c}_{idx_s}")
                 scene_dialog_list.append({"name": char_label, "text": diag_in})
-        
-        adegan_storage.append({
-            "num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list
-        })
+        adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list})
 
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING & HYPER-CHROME FIDELITY)
+# 6. LOGIKA GENERATOR PROMPT (FULL MANUAL MEGA-LOGIC)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
-    
     if not active_adegan:
         st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
-        
         for adegan in active_adegan:
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- MAPPING LOGIKA LIGHTING (FULL VERSION) ---
+            # --- MAPPING LOGIKA LIGHTING (TIDAK ADA PENGURANGAN) ---
             if "Bening" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -188,33 +167,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             elif "Mendung" in adegan["lighting"]:
-                f_light = "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), extreme local contrast, ultra-saturated cold tones, deep blacks, brilliant specular highlights on all object edges."
-                f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k cold temperature, gray-cobalt sky with heavy thick wispy clouds, micro-texture amplification on all surfaces, hyper-defined object silhouettes, bone-dry environment."
+                f_light = "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), extreme local contrast, deep blacks, specular highlights."
+                f_atmos = "Moody atmosphere, zero haze, 8000k cold temperature, gray-cobalt sky, micro-texture amplification, hyper-defined silhouettes."
             elif "Ketajaman Ekstrim" in adegan["lighting"]:
-                f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
-                f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
+                # LOGIKA MIDNIGHT CHROME (VERSION 9.5)
+                f_light = "High-intensity artificial HMI studio lamps, 12000k industrial cold white light, brutal edge sharpness, micro-shadows, metallic chrome reflections, zero sunlight."
+                f_atmos = "Pitch-black midnight void background, no moon, no stars, zero light scatter, hyper-saturated character pigments glowing against the dark, hyper-defined textures."
             else:
-                # Opsi Senja
+                # OPSI SENJA (STAY SAFE)
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
-            # --- LOGIKA EMOSI DIALOG (FULL VERSION) ---
+            # --- LOGIKA PEMBUKA (EKSPLISIT) ---
+            is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
+            img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
+
+            # --- LOGIKA DIALOG & EMOSI (EKSPLISIT) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
-            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
+            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER (FULL VERSION) ---
+            # --- LOGIKA CHARACTER SYNC (EKSPLISIT) ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
                     detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c_check['name']} ({c_check['desc']})")
-            
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- KONSTRUKSI PROMPT FINAL (MANUAL & PANJANG) ---
-            is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
-            img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
-
+            # --- OUTPUT FINAL (PANJANG & LENGKAP) ---
             final_img = (
                 f"{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
                 f"Atmosphere: {f_atmos} Dry environment surfaces, no rain, no water. "
@@ -227,7 +207,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f"Lighting Effect: {f_light}. {vid_quality_base}. Context: {full_dialog_str}"
             )
 
-            # --- DISPLAY OUTPUT (KEMBALI KE LAYOUT FULL) ---
+            # --- DISPLAY OUTPUT ---
             st.subheader(f"ADENGAN {s_id}")
             res_c1, res_c2 = st.columns(2)
             with res_c1:
@@ -239,4 +219,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.2 - Final Wide Stable & Full Logic")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.5 - Honest Mega Edition")
