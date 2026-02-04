@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.2 | FULL RECOVERY | 7-POINT LIGHTING | NO REDUCTION ❤️")
+st.info("Mode: v9.6 | CORRECTED NIGHT LOGIC | NO REDUCTION | NO MORE RANDOM IMAGES ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -134,7 +134,7 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
-            # LABEL DIUBAH SESUAI PERINTAH
+            # LABEL SESUAI PERINTAH: SUASANA SORE & SUASANA MALAM
             light_radio = st.radio(f"Pencahayaan", 
                                    [
                                        "Bening dan Tajam", 
@@ -161,7 +161,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING & HYPER-CHROME FIDELITY)
+# 6. LOGIKA GENERATOR PROMPT (TIDAK ADA PENGURANGAN)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -175,7 +175,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- MAPPING LOGIKA LIGHTING (PENGECEKAN VARIABEL DIUBAH) ---
+            # --- MAPPING LOGIKA LIGHTING ---
             if "Bening" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -192,20 +192,20 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), extreme local contrast, ultra-saturated cool tones, deep blacks, brilliant specular highlights on all object edges."
                 f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k cold temperature, gray-cobalt sky with heavy thick wispy clouds, micro-texture amplification on all surfaces, hyper-defined object silhouettes, bone-dry environment."
             elif "Suasana Malam" in adegan["lighting"]:
-                # LOGIKA KETAJAMAN EKSTRIM TETAP DI SINI
-                f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
-                f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
+                # LOGIKA DIPERBAIKI: Malam yang tajam tapi tetap punya latar belakang (Cinematic Night)
+                f_light = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow, deep rich shadows but visible background detail."
+                f_atmos = "Clear night atmosphere, deep indigo-black sky, visible distant silhouette details, hyper-defined micro-pores and wood grain textures, zero sunlight, zero light scatter."
             else:
-                # Opsi Suasana Sore (Logika Senja)
+                # Opsi Suasana Sore
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
-            # --- LOGIKA EMOSI DIALOG (FULL VERSION) ---
+            # --- LOGIKA EMOSI DIALOG ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER (FULL VERSION) ---
+            # --- LOGIKA AUTO-SYNC KARAKTER ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
@@ -213,7 +213,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- KONSTRUKSI PROMPT FINAL (MANUAL & PANJANG) ---
+            # --- KONSTRUKSI PROMPT FINAL ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -229,7 +229,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f"Lighting Effect: {f_light}. {vid_quality_base}. Context: {full_dialog_str}"
             )
 
-            # --- DISPLAY OUTPUT (KEMBALI KE LAYOUT FULL) ---
+            # --- DISPLAY OUTPUT ---
             st.subheader(f"ADENGAN {s_id}")
             res_c1, res_c2 = st.columns(2)
             with res_c1:
@@ -241,4 +241,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.2 - Final Wide Stable & Full Logic")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.6 - Stable Night Logic")
