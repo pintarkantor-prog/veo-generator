@@ -14,69 +14,74 @@ st.set_page_config(
 # ==============================================================================
 st.markdown("""
     <style>
-    /* Sidebar Styling */
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
-    
-    /* Green Copy Button */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important; color: white !important;
         opacity: 1 !important; border-radius: 6px !important; border: 2px solid #ffffff !important;
         transform: scale(1.1); box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    
-    /* Input Text Area Height & Font */
-    .stTextArea textarea { 
-        font-size: 14px !important; 
-        line-height: 1.5 !important; 
-        font-family: 'Inter', sans-serif !important; 
-    }
+    .stTextArea textarea { font-size: 14px !important; line-height: 1.5 !important; }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.43 | INVISIBLE MASTER LIGHTING | AUTO-DETECTION ENGINE | VEO 3 READY ❤️")
+st.info("Mode: v9.45 | REAL-TIME MASTER SYNC | AUTO-DETECTION | VEO 3 ❤️")
 
 # ==============================================================================
-# 3. LOGIKA INTERNAL: AUTO-DETECTION ENGINE
+# 3. LOGIKA MASTER-SYNC (SESSION STATE)
+# ==============================================================================
+options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
+
+# Inisialisasi memori master jika belum ada
+if 'master_light_val' not in st.session_state:
+    st.session_state.master_light_val = options_lighting[0]
+
+# Fungsi Pemicu Otomatis untuk Sinkronisasi Cahaya
+def on_master_light_change():
+    # Mengambil nilai dari radio button Adegan 1 dan menyebarkannya ke memori global
+    new_light = st.session_state.l_1
+    st.session_state.master_light_val = new_light
+    # Memperbarui semua widget cahaya lainnya di session_state secara paksa
+    for i in range(2, 51):
+        st.session_state[f"l_{i}"] = new_light
+
+# ==============================================================================
+# 4. LOGIKA INTERNAL: AUTO-DETECTION ENGINE
 # ==============================================================================
 def detect_visual_logic(text):
     text = text.lower()
-    # Deteksi Emosi & Ekspresi
+    # Deteksi Emosi & Ekspresi secara otomatis dari teks
     emotion = "neutral facial expression."
-    if any(w in text for w in ["sedih", "menangis", "lemas", "kecewa", "sad", "crying"]):
+    if any(w in text for w in ["sedih", "menangis", "lemas", "sad", "crying"]):
         emotion = "tearful eyes, devastating sorrow facial expression, emotional distress."
     elif any(w in text for w in ["marah", "teriak", "geram", "tegang", "angry", "furious"]):
         emotion = "furious expression, intense facial muscles, aggressive posture."
-    elif any(w in text for w in ["senang", "tertawa", "bahagia", "happy", "laugh"]):
-        emotion = "joyful expression, bright eyes, genuine smile."
-
-    # Deteksi Kondisi Fisik
+    
+    # Deteksi Kondisi Fisik secara otomatis dari teks
     condition = "pristine condition, clean skin and clothes."
     if any(w in text for w in ["luka", "berdarah", "lecet", "injured", "scuff"]):
         condition = "visible scratches, fresh scuff marks, pained look, raw textures."
-    elif any(w in text for w in ["kotor", "debu", "lumpur", "dirty", "muddy"]):
-        condition = "covered in thick grime and dust, messy organic appearance."
     elif any(w in text for w in ["hancur", "retak", "pecah", "broken", "cracked"]):
-        condition = "heavily damaged surface, deep physical cracks, torn elements, extreme texture detail."
-
+        condition = "heavily damaged surface, deep physical cracks, extreme texture detail."
+    
     return f"Status: {condition} Expression: {emotion}"
 
 # ==============================================================================
-# 4. SIDEBAR: KONFIGURASI & IDENTITAS KARAKTER
+# 5. SIDEBAR: PENGATURAN KARAKTER (REFERENSI GAMBAR)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("🎬 Estetika Visual")
-    tone_style = st.selectbox("Pilih Visual Tone", 
-                             ["None", "Sinematik", "Warna Menyala", "Dokumenter", "Film Jadul", "Film Thriller", "Dunia Khayalan"])
+    st.subheader("🎬 Visual Tone")
+    tone_style = st.selectbox("Pilih Visual Tone", ["None", "Sinematik", "Warna Menyala", "Dokumenter", "Film Jadul", "Film Thriller", "Dunia Khayalan"])
 
     st.divider()
-    st.subheader("👥 Karakter (Ikuti Gambar Referensi)")
+    st.subheader("👥 Karakter (Ikuti Gambar)")
     all_characters = []
+    # Loop untuk membuat input dua karakter utama secara dinamis
     for i in range(1, 3):
         st.markdown(f"### Karakter {i}")
         c_n = st.text_input(f"Nama Karakter {i}", value="", key=f"c_n_{i}")
@@ -85,55 +90,45 @@ with st.sidebar:
         all_characters.append({"name": c_n, "phys": c_p, "wear": c_w})
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (STRICT ANTI-TEXT & FIDELITY)
+# 6. PARAMETER KUALITAS (STRICT ANTI-TEXT & FIDELITY)
 # ==============================================================================
-no_text_lock = (
-    "STRICTLY NO speech bubbles, NO text, NO letters, NO subtitles, NO captions, NO watermark, "
-    "NO dialogue boxes, NO labels, NO typography. The frame is 100% clean visual content."
-)
-
-img_quality = (
-    "photorealistic surrealism, 16-bit color, extreme fidelity to provided visual reference, "
-    "edge-to-edge optical sharpness, f/11 deep focus, macro-textures, 8k resolution, raw photography, " + no_text_lock
-)
-
-veo_quality = (
-    "cinematic video, high-fidelity motion, 60fps, 4k, organic character movement, "
-    "strict consistency with provided visual reference, fluid interaction, lossless textures, " + no_text_lock
-)
+no_text_lock = "STRICTLY NO speech bubbles, NO text, NO letters, NO subtitles, NO captions, NO watermark, NO dialogue boxes."
+img_quality = "photorealistic surrealism, 16-bit color, absolute fidelity to reference, 8k, raw photography, " + no_text_lock
+veo_quality = "cinematic video, high-fidelity motion, 60fps, 4k, organic character movement, strict consistency, " + no_text_lock
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (INVISIBLE MASTER LIGHTING LOGIC)
+# 7. FORM INPUT ADEGAN (MASTER-SYNC INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
-options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
-# ADEGAN 1 (BERTINDAK SEBAGAI MASTER)
-with st.expander("ADEGAN 1 (LEADER)", expanded=True):
+# ADEGAN 1 (BERTINDAK SEBAGAI MASTER CONTROL)
+with st.expander("ADEGAN 1 (MASTER CONTROL)", expanded=True):
     v_col1, l_col1 = st.columns([3, 1])
     with v_col1:
         v_in1 = st.text_area("Visual Scene 1", key="vis_1", height=150, placeholder="Ceritakan adegan di sini...")
     with l_col1:
-        # Adegan 1 menentukan default untuk adegan lain
-        l_val1 = st.radio("Cahaya Dasar", options_lighting, key="l_1")
+        # Menggunakan on_change untuk memicu fungsi sinkronisasi cahaya ke adegan lain
+        l_val1 = st.radio("Cahaya Dasar", options_lighting, key="l_1", on_change=on_master_light_change)
     adegan_storage.append({"num": 1, "visual": v_in1, "light": l_val1})
 
-# ADEGAN 2 DAN SETERUSNYA
+# ADEGAN 2 DAN SETERUSNYA (OTOMATIS MENGIKUTI ADEGAN 1)
 for idx_s in range(2, int(num_scenes) + 1):
     with st.expander(f"ADEGAN {idx_s}", expanded=False):
         v_col, l_col = st.columns([3, 1])
         with v_col:
             v_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=150)
         with l_col:
-            # Otomatis mengikuti pilihan Adegan 1 jika tidak diubah manual
-            default_idx = options_lighting.index(l_val1)
-            current_light = st.radio(f"Cahaya {idx_s}", options_lighting, key=f"l_{idx_s}", index=default_idx)
+            # Mengisi session state adegan ini dengan nilai master jika belum ada entri manual
+            if f"l_{idx_s}" not in st.session_state:
+                st.session_state[f"l_{idx_s}"] = st.session_state.master_light_val
+            
+            current_light = st.radio(f"Cahaya {idx_s}", options_lighting, key=f"l_{idx_s}")
         
         adegan_storage.append({"num": idx_s, "visual": v_in, "light": current_light})
 
 # ==============================================================================
-# 7. GENERATOR PROMPT (AUTO-SYNC ENGINE)
+# 8. GENERATOR PROMPT (IMAGE & VEO 3)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -143,42 +138,36 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["light"]
             
-            # --- AUTO-DETECTION ---
+            # Mendeteksi emosi dan kondisi fisik berdasarkan teks visual
             auto_logic = detect_visual_logic(v_txt)
+            
+            # Pemetaan teknis pencahayaan (Mega Structure)
+            light_map = {
+                "Mendung": "Intense moody overcast lighting, vivid pigment recovery.",
+                "Suasana Malam": "Hyper-Chrome Fidelity lighting, HMI studio lamp illumination.",
+                "Suasana Sore": "4:00 PM indigo atmosphere, sharp rim lighting."
+            }
+            f_l = light_map.get(l_type, f"{l_type} lighting, high contrast.")
 
-            # --- MEGA STRUCTURE LIGHTING ---
-            if l_type == "Mendung":
-                f_l, f_a = "Intense moody overcast lighting, vivid pigment recovery.", "Moody atmosphere, gray-cobalt sky."
-            elif l_type == "Suasana Malam":
-                f_l, f_a = "Hyper-Chrome Fidelity lighting, HMI studio lamp illumination.", "Pure vacuum-like atmosphere, absolute visual bite."
-            elif l_type == "Suasana Sore":
-                f_l, f_a = "4:00 PM indigo atmosphere, sharp rim lighting.", "Late afternoon cold sun, indigo-cobalt sky gradient."
-            else:
-                f_l, f_a = f"{l_type} lighting", f"{l_type} atmosphere"
-
-            # --- CHARACTER INSTRUCTION ---
+            # Menyusun instruksi karakter berdasarkan penyebutan nama di visual scene
             char_prompts = []
             for char in all_characters:
-                # Memeriksa apakah nama karakter disebut dalam deskripsi adegan
                 if char['name'] and char['name'].lower() in v_txt.lower():
-                    char_prompts.append(f"Follow exact visual appearance of {char['name']} from reference: {char['phys']}, wearing {char['wear']}. {auto_logic}.")
+                    char_prompts.append(f"Follow exact visual of {char['name']} from reference: {char['phys']}, wearing {char['wear']}. {auto_logic}.")
 
             final_c = " ".join(char_prompts)
-            style_map = {"Sinematik": "Gritty Cinematic", "Warna Menyala": "Vibrant Pop", "Dokumenter": "High-End Documentary", "Film Jadul": "Vintage Film 35mm", "Film Thriller": "Dark Thriller", "Dunia Khayalan": "Surreal Dreamy"}
-            style_lock = f"Visual Tone: {style_map.get(tone_style, '')}. " if tone_style != "None" else ""
             is_ref = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
 
+            # Menampilkan hasil produksi prompt
             st.subheader(f"ADENGAN {s_id}")
             st.caption(f"🧠 Detected State: {auto_logic}")
             
-            # OUTPUT PROMPT GAMBAR
             st.write("**📸 Image Prompt (DALL-E/Midjourney):**")
-            st.code(f"{style_lock}{is_ref}buatkan gambar adegan {s_id}: {final_c} Visual: {v_txt}. Atmosphere: {f_a}. Lighting: {f_l}. {img_quality}")
+            st.code(f"{is_ref}buatkan gambar adegan {s_id}: {final_c} Visual: {v_txt}. Atmosphere: {f_l}. {img_quality}")
             
-            # OUTPUT PROMPT VEO 3
             st.write("**🎥 Veo 3 Prompt (Video Generation):**")
-            st.code(f"{style_lock}Video adegan {s_id}: {final_c} Visual: {v_txt}, organic motion and character interaction. Atmosphere: {f_a}. Lighting: {f_l}. {veo_quality}")
+            st.code(f"Video adegan {s_id}: {final_c} Visual: {v_txt}, organic motion. Atmosphere: {f_l}. {veo_quality}")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v9.43 - Invisible Master Edition")
+st.sidebar.caption("PINTAR MEDIA v9.45 - Master-Sync Final")
