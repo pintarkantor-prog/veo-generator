@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("PINTAR MEDIA - Versi 1.1 (Flexible Frame) ❤️")
+st.info("PINTAR MEDIA - Versi 1.2 (Unified & Video) ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -44,7 +44,7 @@ with st.sidebar:
     c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
-# --- 4. PARAMETER KUALITAS (VERSI 1.1 - NO PORTRAIT/SIZE) ---
+# --- 4. PARAMETER KUALITAS (VERSI 1.2) ---
 img_quality = (
     "Ultra-realistic photorealistic cinematic image, professional full-frame DSLR photography, 8K ultra HD, "
     "extreme sharp focus, HDR, high dynamic range, vibrant yet natural colors, rich color contrast, "
@@ -54,6 +54,13 @@ img_quality = (
     "realistic fabric texture with sharp fibers, clean fine details, micro-details clearly visible, "
     "cinematic composition, eye-level camera angle, subject in perfect focus, subtle shallow depth of field, "
     "clean background separation, professional color grading, crisp clarity, premium photography quality"
+)
+
+# Kualitas Video dioptimalkan untuk Veo 3
+vid_quality = (
+    "Professional 8K video, high-frame rate, cinematic motion, realistic textures, "
+    "fluid natural movements, perfectly balanced exposure, crisp details, "
+    "professional color grading, no motion blur, premium cinematography"
 )
 
 negative_prompt = (
@@ -92,7 +99,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt Versi 1.1")
+        st.header("📋 Hasil Prompt Versi 1.2")
         
         for scene in filled_scenes:
             i = scene["num"]
@@ -112,21 +119,30 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                     detected_physique.append(f"{char['name']} ({char['desc']})")
             char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # --- Output Prompt (Tanpa instruksi ukuran/portrait) ---
+            # --- Prompt Gambar Terpadu (Positive + Negative dalam satu kotak) ---
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. "
-                f"{expression_instruction} Visual: {char_ref}{v_input}. {img_quality}"
+                f"{expression_instruction} Visual: {char_ref}{v_input}. {img_quality}. "
+                f"Negative Prompt: {negative_prompt}"
             )
             
-            final_negative = f"Negative Prompt: {negative_prompt}"
+            # --- Prompt Video Terpadu (Positive + Negative dalam satu kotak) ---
+            dialog_block_vid = f"\n\nDialog Context:\n{dialog_text}" if dialog_text else ""
+            final_vid = (
+                f"Generate video for adegan {i}. "
+                f"{expression_instruction} Visual: {char_ref}{v_input}. {vid_quality}. {dialog_block_vid}. "
+                f"Negative Prompt: {negative_prompt}"
+            )
 
             st.subheader(f"Adegan {i}")
-            st.caption("📸 PROMPT GAMBAR")
-            st.code(final_img, language="text")
-            
-            st.caption("🚫 NEGATIVE PROMPT")
-            st.code(final_negative, language="text")
+            res_col1, res_col2 = st.columns(2)
+            with res_col1:
+                st.caption("📸 PROMPT GAMBAR (Bananan)")
+                st.code(final_img, language="text")
+            with res_col2:
+                st.caption("🎥 PROMPT VIDEO (Veo 3)")
+                st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA - v1.1 Flexible")
+st.sidebar.caption("PINTAR MEDIA - v1.2 Unified")
