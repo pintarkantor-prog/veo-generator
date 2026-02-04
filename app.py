@@ -14,12 +14,17 @@ st.set_page_config(
 # ==============================================================================
 st.markdown("""
     <style>
+    /* Latar Belakang Sidebar Gelap */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
+    
+    /* Warna Teks Sidebar Putih Terang */
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
+
+    /* Tombol Copy Hijau Terang Ikonik */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -29,13 +34,17 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
+    
     button[title="Copy to clipboard"]:hover {
         background-color: #218838 !important;
     }
+    
     button[title="Copy to clipboard"]:active {
         background-color: #1e7e34 !important;
         transform: scale(1.0);
     }
+    
+    /* Font Area Input Visual Deskripsi */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
@@ -45,10 +54,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v8.4 | 5-ADVANCED LIGHTING | ZERO-NATURAL POLICY ❤️")
+st.info("Mode: v8.6 | 6-POINT LIGHTING | MOODY OVERCAST ADDED ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT SETUP)
+# 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -59,7 +68,7 @@ with st.sidebar:
     
     characters_data_list = []
 
-    # Karakter 1 (Manual Entry)
+    # Karakter 1 (Eksplisit)
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
@@ -67,15 +76,18 @@ with st.sidebar:
     
     st.divider()
 
-    # Karakter 2 (Manual Entry)
+    # Karakter 2 (Eksplisit)
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
     characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
     st.divider()
+    
+    # Input Karakter Tambahan
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=5, value=2)
 
+    # Manual Loop Karakter Tambahan
     if num_extra > 2:
         for idx_ex in range(2, int(num_extra)):
             st.divider()
@@ -85,7 +97,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 4. PARAMETER KUALITAS (STRICT FIDELITY - NO NATURAL/REALISTIC)
+# 4. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -96,22 +108,21 @@ img_quality_base = (
     "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, "
     "absolute fidelity to unique character reference, edge-to-edge optical sharpness, "
     "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures on every surface, "
-    "circular polarizer (CPL) filter effect, deep cobalt blue sky, crisp white wispy clouds, "
-    "authentic sky depth, hyper-sharp foliage and vegetation textures, zero atmospheric haze, "
+    "circular polarizer (CPL) filter effect, zero atmospheric haze, "
     "rich high-contrast shadows, unprocessed raw photography, 8k resolution, captured on high-end 35mm lens, "
     "STRICTLY NO over-exposure, NO motion blur, NO lens flare, " + no_text_no_rain_lock
 )
 
 vid_quality_base = (
     "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, "
-    "strict character consistency, deep saturated pigments, deep cobalt blue sky, "
+    "strict character consistency, deep saturated pigments, "
     "hyper-vivid foliage textures, crystal clear background focus, "
     "extreme visual clarity, lossless texture quality, fluid organic motion, "
     "high contrast ratio, NO animation look, NO CGI look, " + no_text_no_rain_lock
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (FULL LAYOUT WITH 5 LIGHTING OPTIONS)
+# 5. FORM INPUT ADEGAN (FULL LAYOUT WITH 6 LIGHTING OPTIONS)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -119,27 +130,29 @@ adegan_storage = []
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
-        cols_setup = st.columns([3, 2.8] + [1.2] * len(characters_data_list))
+        # Penentuan Kolom Manual
+        cols_setup = st.columns([3, 3] + [1.2] * len(characters_data_list))
         
         with cols_setup[0]:
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=120)
         
         with cols_setup[1]:
-            # IMPLEMENTASI 5 OPSI LIGHTING BARU
-            light_radio = st.radio(f"Pilih Efek Cahaya (Adegan {idx_s})", 
+            # MENAMBAHKAN OPSI KE-6: MOODY OVERCAST
+            light_radio = st.radio(f"Efek Cahaya (Adegan {idx_s})", 
                                    [
                                        "Alpine Light (Ultra-Sharp Clarity)", 
                                        "Arctic High-Noon (Cold & Uniform)", 
                                        "Chiaroscuro (Dramatic Side-Light)", 
                                        "Polarized Saturation (Deep Vivid)", 
-                                       "Blue-Hour Rim (Sore & Silhouette)"
+                                       "Blue-Hour Rim (Sore & Silhouette)",
+                                       "Moody Overcast (Cold & Intense Contrast)"
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
             with cols_setup[idx_c + 2]:
-                char_label = char_val['name'] if char_val['name'] else f"Karakter {idx_c + 1}"
+                char_label = char_val['name'] if char_val['name'] else f"Tokoh {idx_c + 1}"
                 diag_in = st.text_input(f"Dialog {char_label}", key=f"diag_input_{idx_c}_{idx_s}")
                 scene_dialog_list.append({"name": char_label, "text": diag_in})
         
@@ -156,7 +169,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
     
     if not active_adegan:
-        st.warning("Mohon isi deskripsi visual adegan.")
+        st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
         
@@ -164,14 +177,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- LOGIKA 5 LIGHTING BARU (MANUAL & DETAIL) ---
+            # --- LOGIKA 6 LIGHTING (MANUAL & DETAIL) ---
             if "Alpine" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
-                f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, bone-dry environment."
+                f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
             
             elif "Arctic" in adegan["lighting"]:
                 f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
-                f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, wispy clouds."
+                f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
             
             elif "Chiaroscuro" in adegan["lighting"]:
                 f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
@@ -179,18 +192,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             elif "Polarized" in adegan["lighting"]:
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
-                f_atmos = "Post-mist morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+                f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+            
+            elif "Overcast" in adegan["lighting"]:
+                # LOGIKA BARU: MENDUNG DINGIN TAPI TAJAM
+                f_light = "Intense moody overcast lighting, diffuse soft light with high local contrast, ultra-saturated cool tones, deep blacks, high dynamic range (HDR)."
+                f_atmos = "Damp-look cold atmosphere, STRICTLY NO rain, gray-cobalt sky, heavy thick wispy clouds, 7500k color temperature, extremely sharp object edges, vivid vegetation."
             
             else:
                 # Blue-Hour Rim
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- LOGIKA EMOSI DIALOG (ZERO-REALISTIC) ---
+            # --- LOGIKA EMOSI DIALOG (CLEANSED) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             
-            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
+            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
 
             # --- LOGIKA AUTO-SYNC KARAKTER ---
             detected_phys_list = []
@@ -206,7 +224,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             final_img = (
                 f"{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
-                f"Atmosphere: {f_atmos} Dry environment, no rain, no water. "
+                f"Atmosphere: {f_atmos} Dry environment surfaces, no rain, no water. "
                 f"Lighting Effect: {f_light}. {img_quality_base}"
             )
 
@@ -228,4 +246,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v8.4 - 5-Advanced Lighting Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v8.6 - Professional Moody Overcast")
