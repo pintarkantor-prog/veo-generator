@@ -134,15 +134,16 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
+            # LABEL DIUBAH SESUAI PERINTAH
             light_radio = st.radio(f"Pencahayaan", 
                                    [
                                        "Bening dan Tajam", 
                                        "Sejuk dan Terang", 
                                        "Dramatis", 
                                        "Jelas dan Solid", 
-                                       "Senja",
+                                       "Suasana Sore",
                                        "Mendung",
-                                       "Ketajaman Ekstrim"
+                                       "Suasana Malam"
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
@@ -174,7 +175,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             s_id = adegan["num"]
             v_txt = adegan["visual"]
             
-            # --- MAPPING LOGIKA LIGHTING (FULL VERSION) ---
+            # --- MAPPING LOGIKA LIGHTING (PENGECEKAN VARIABEL DIUBAH) ---
             if "Bening" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -188,13 +189,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
             elif "Mendung" in adegan["lighting"]:
-                f_light = "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), extreme local contrast, ultra-saturated cold tones, deep blacks, brilliant specular highlights on all object edges."
+                f_light = "Intense moody overcast lighting with brilliant luminosity, high dynamic range (HDR), extreme local contrast, ultra-saturated cool tones, deep blacks, brilliant specular highlights on all object edges."
                 f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k cold temperature, gray-cobalt sky with heavy thick wispy clouds, micro-texture amplification on all surfaces, hyper-defined object silhouettes, bone-dry environment."
-            elif "Ketajaman Ekstrim" in adegan["lighting"]:
+            elif "Suasana Malam" in adegan["lighting"]:
+                # LOGIKA KETAJAMAN EKSTRIM TETAP DI SINI
                 f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
                 f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
             else:
-                # Opsi Senja
+                # Opsi Suasana Sore (Logika Senja)
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
