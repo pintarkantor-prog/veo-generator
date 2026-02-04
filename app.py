@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 2. CUSTOM CSS (FOKUS PADA SIDEBAR & TOMBOL COPY)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -45,21 +45,11 @@ st.markdown("""
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
     }
-
-    /* Style untuk Box Preview Cinematic */
-    .preview-box {
-        border-radius: 12px;
-        padding: 12px;
-        background: #262730;
-        border: 1px solid #464b5d;
-        text-align: center;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
-    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.16 | STANDARD VIDEO | CINEMATIC PREVIEW | NO REDUCTION ❤️")
+st.info("Mode: v9.17 | CLEAN SLATE | FULL TEXT FOCUS | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -146,7 +136,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT & CINEMATIC PREVIEW
+# 6. LOGIKA GENERATOR PROMPT (FULL IF-ELSE - EXPLICIT LOGIC)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -159,43 +149,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             v_txt = adegan["visual"]
             l_type = adegan["lighting"]
             
-            # --- FULL IF-ELSE LOGIKA LIGHTING & PREVIEW URL (RECOVERED) ---
+            # --- FULL MAPPING LOGIKA LIGHTING (NO REDUCTION) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
-                img_url = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Sejuk dan Terang":
                 f_light = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
                 f_atmos = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
-                img_url = "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Dramatis":
                 f_light = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
                 f_atmos = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
-                img_url = "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Jelas dan Solid":
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
-                img_url = "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Suasana Sore":
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
-                img_url = "https://images.unsplash.com/photo-1472120482482-d42077454d2e?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Mendung":
                 f_light = "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, vivid pigment recovery on every surface, extreme local micro-contrast, brilliant specular highlights on object edges, deep rich high-definition shadows."
                 f_atmos = "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, grass blades, house walls, concrete roads, and every environment object. Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
-                img_url = "https://images.unsplash.com/photo-1483977399921-6cf34967481f?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Suasana Malam":
                 f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
                 f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
-                img_url = "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=400&q=80"
             elif l_type == "Suasana Alami":
                 f_light = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments, deep rich micro-shadows within foliage and soil textures."
                 f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
-                img_url = "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=400&q=80"
             else:
                 f_light = ""
                 f_atmos = ""
-                img_url = ""
 
             # --- LOGIKA EMOSI & CHARACTER SYNC (FULL) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
@@ -208,7 +189,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                     detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c_check['name']} ({c_check['desc']})")
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- KONSTRUKSI PROMPT FINAL (TANPA OPTIMIZER VEO) ---
+            # --- KONSTRUKSI PROMPT FINAL ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -217,22 +198,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             # --- DISPLAY RENDERING ---
             st.subheader(f"ADENGAN {s_id}")
-            c_prompt, c_preview = st.columns([7, 3])
-            with c_prompt:
-                st.caption(f"📸 PROMPT GAMBAR ({l_type})")
-                st.code(final_img, language="text")
-                st.caption("🎥 PROMPT VIDEO")
-                st.code(final_vid, language="text")
-            
-            with c_preview:
-                st.markdown(f"""
-                <div class="preview-box">
-                    <p style="color:white; font-size:12px; margin-bottom:8px;">REF: {l_type.upper()}</p>
-                    <img src="{img_url}" style="width:100%; border-radius:8px;">
-                    <p style="color:#aaa; font-size:10px; margin-top:8px;">Visual Target: High-Contrast Texture Lock</p>
-                </div>
-                """, unsafe_allow_html=True)
+            st.caption(f"📸 PROMPT GAMBAR ({l_type})")
+            st.code(final_img, language="text")
+            st.caption("🎥 PROMPT VIDEO")
+            st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.16 - Standard Video Recovery")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.17 - Clean Slate Edition")
