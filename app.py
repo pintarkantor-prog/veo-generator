@@ -185,7 +185,7 @@ st.divider()
 # ==============================================================================
 # 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - NO REDUCTION)
 # ==============================================================================
-if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
+if st.button("🚀 BUAT PROMPTS NYA!", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
     
     if not active_adegan:
@@ -275,4 +275,5 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA Storyboard v9.15 - Dropbox Sync Edition")
+
 
