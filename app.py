@@ -10,31 +10,14 @@ st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wid
 MY_API_KEY = "AIzaSyBJdViWnCZ7cnQE3Wx-c_WJQpWH_zsEHpI"
 genai.configure(api_key=MY_API_KEY)
 
-# --- 3. CUSTOM CSS (SIDEBAR GELAP & STYLING) ---
+# --- 3. CUSTOM CSS ---
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] {
-        background-color: #1a1c24 !important;
-        color: white !important;
-    }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
-        color: white !important;
-    }
-    button[title="Copy to clipboard"] {
-        background-color: #28a745 !important;
-        color: white !important;
-        opacity: 1 !important;
-        border-radius: 6px !important;
-        border: 1px solid #ffffff !important;
-    }
-    .stImage > img {
-        border-radius: 12px;
-        border: 3px solid #28a745;
-    }
-    .stTextArea textarea {
-        background-color: #262730 !important;
-        color: white !important;
-    }
+    [data-testid="stSidebar"] { background-color: #1a1c24 !important; color: white !important; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: white !important; }
+    button[title="Copy to clipboard"] { background-color: #28a745 !important; color: white !important; }
+    .stImage > img { border-radius: 12px; border: 3px solid #28a745; }
+    .stTextArea textarea { background-color: #262730 !important; color: white !important; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -76,19 +59,29 @@ for i in range(1, int(num_scenes) + 1):
             s_time = st.selectbox(f"Waktu {i}", ["Pagi hari", "Siang hari", "Sore hari", "Malam hari"], key=f"time_{i}")
         scene_inputs.append({"num": i, "desc": u_desc, "time": s_time})
 
-# --- 6. FUNGSI GENERATE ---
+# --- 6. FUNGSI GENERATE DENGAN FALLBACK ---
 def generate_visual_api(prompt, images, scene_num):
-    try:
-        model = genai.GenerativeModel('imagen-3.0-generate-001')
-        inputs = [prompt]
-        if images:
-            for img in images:
-                inputs.append(Image.open(img))
-        response = model.generate_content(inputs)
-        return response.images[0]
-    except Exception as e:
-        st.error(f"Gagal generate adegan {scene_num}: {e}")
-        return None
+    # Daftar model Imagen yang mungkin tersedia
+    model_names = ['imagen-3.0-generate-002', 'imagen-3.0-generate-001', 'imagen-3']
+    
+    last_error = ""
+    for name in model_names:
+        try:
+            model = genai.GenerativeModel(name)
+            inputs = [prompt]
+            if images:
+                for img in images:
+                    inputs.append(Image.open(img))
+            
+            response = model.generate_content(inputs)
+            return response.images[0]
+        except Exception as e:
+            last_error = str(e)
+            continue # Coba model berikutnya jika gagal
+            
+    st.error(f"Gagal di semua model adegan {scene_num}. Error terakhir: {last_error}")
+    st.info("Saran: Cek di Google AI Studio bagian 'Settings' -> 'Plan' apakah Imagen sudah aktif.")
+    return None
 
 # --- 7. LOGIKA TAMPILAN OUTPUT ---
 st.divider()
@@ -97,13 +90,10 @@ if st.button("🚀 PROSES SEMUA ADEGAN", type="primary"):
 
 if st.session_state.get("submitted"):
     st.header("📋 Hasil Output PINTAR MEDIA")
-    
     for scene in scene_inputs:
-        if not scene["desc"].strip():
-            continue
+        if not scene["desc"].strip(): continue
             
         i = scene["num"]
-        # Deteksi Karakter & Gambar Referensi
         active_imgs = []
         char_ctx = ""
         if c1_name and c1_name.lower() in scene["desc"].lower():
@@ -113,24 +103,19 @@ if st.session_state.get("submitted"):
             char_ctx += f"{c2_name} ({c2_desc}). "
             if c2_img: active_imgs.append(c2_img)
 
-        # Build Prompt
-        img_prompt = f"Consistent character scene {i}. Visual: {scene['desc']}. Characters: {char_ctx}. Time: {scene['time']}. natural photography, raw photo style, sharp details, high resolution."
+        img_prompt = f"Consistent character scene {i}. Visual: {scene['desc']}. Characters: {char_ctx}. Time: {scene['time']}. natural photography, sharp details."
 
         st.subheader(f"Adegan {i}")
         col_a, col_b = st.columns(2)
-        
         with col_a:
             st.caption("📸 PROMPT GAMBAR")
             st.code(img_prompt, language="text")
-            
-            # Tombol Generate per adegan
             if st.button(f"Generate Gambar Adegan {i}", key=f"btn_api_{i}"):
-                with st.spinner(f"AI sedang melukis adegan {i}..."):
+                with st.spinner(f"Mencoba berbagai model AI untuk adegan {i}..."):
                     res_img = generate_visual_api(img_prompt, active_imgs, i)
                     if res_img:
                         st.image(res_img, use_container_width=True)
-                        
         with col_b:
             st.caption("🎥 PROMPT VIDEO")
-            st.code(f"Natural motion video for scene {i}. Visual: {scene['desc']}. Time: {scene['time']}", language="text")
+            st.code(f"Natural motion video for scene {i}. Visual: {scene['desc']}", language="text")
         st.divider()
