@@ -52,10 +52,10 @@ if not st.session_state.logged_in:
 def record_to_sheets(user, first_visual, total_scenes):
     """Mencatat aktivitas karyawan menggunakan Service Account Secrets"""
     try:
-        # Membangun koneksi ke Google Sheets
+        # Membangun koneksi ke Google Sheets melalui Secrets
         conn = st.connection("gsheets", type=GSheetsConnection)
         
-        # Membaca data lama (Pastikan nama worksheet sesuai dengan tab di Google Sheets, misal: 'Sheet1')
+        # Membaca data lama (Worksheet harus bernama Sheet1)
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
         
         # Membuat baris data baru secara eksplisit
@@ -75,7 +75,7 @@ def record_to_sheets(user, first_visual, total_scenes):
         conn.update(worksheet="Sheet1", data=updated_df)
         
     except Exception as e:
-        st.error(f"Gagal mencatat riwayat: {e}")
+        st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
 
 
 # ==============================================================================
@@ -216,7 +216,7 @@ with st.sidebar:
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 st.dataframe(df_a)
             except:
-                st.warning("Gagal memuat. Periksa setting Secrets Anda.")
+                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")
         st.divider()
 
     st.header("⚙️ Konfigurasi Utama")
@@ -259,7 +259,7 @@ with st.sidebar:
 # ==============================================================================
 no_text_strict = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
-    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO letters, NO subtitles."
+    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters."
 )
 
 img_quality_base = (
@@ -346,7 +346,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     if not active_scenes:
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
-        # SIMPAN KE GOOGLE SHEETS CLOUD
+        # SIMPAN KE GOOGLE SHEETS CLOUD (MENGGUNAKAN SERVICE ACCOUNT)
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
         for item in active_scenes:
