@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("PINTAR MEDIA - Versi 1.0 (Master Base) ❤️")
+st.info("PINTAR MEDIA - Versi 1.1 (Flexible Frame) ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -44,7 +44,7 @@ with st.sidebar:
     c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
-# --- 4. PARAMETER KUALITAS (VERSI 1.0) ---
+# --- 4. PARAMETER KUALITAS (VERSI 1.1 - NO PORTRAIT/SIZE) ---
 img_quality = (
     "Ultra-realistic photorealistic cinematic image, professional full-frame DSLR photography, 8K ultra HD, "
     "extreme sharp focus, HDR, high dynamic range, vibrant yet natural colors, rich color contrast, "
@@ -92,7 +92,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt Versi 1.0")
+        st.header("📋 Hasil Prompt Versi 1.1")
         
         for scene in filled_scenes:
             i = scene["num"]
@@ -112,16 +112,16 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
                     detected_physique.append(f"{char['name']} ({char['desc']})")
             char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # --- Output Prompt ---
+            # --- Output Prompt (Tanpa instruksi ukuran/portrait) ---
             final_img = (
-                f"buatkan saya sebuah gambar adegan ke {i}. portrait 1080x1920. "
+                f"buatkan saya sebuah gambar adegan ke {i}. "
                 f"{expression_instruction} Visual: {char_ref}{v_input}. {img_quality}"
             )
             
             final_negative = f"Negative Prompt: {negative_prompt}"
 
             st.subheader(f"Adegan {i}")
-            st.caption("📸 PROMPT GAMBAR (Bananan)")
+            st.caption("📸 PROMPT GAMBAR")
             st.code(final_img, language="text")
             
             st.caption("🚫 NEGATIVE PROMPT")
@@ -129,4 +129,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA - v1.0 Master")
+st.sidebar.caption("PINTAR MEDIA - v1.1 Flexible")
