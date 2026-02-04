@@ -1,4 +1,4 @@
-import streamlit st
+import streamlit as st
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v8.9 | WIDE VISUAL COLUMN | REFERENCE FIDELITY LOCK ❤️")
+st.info("Mode: v9.0 | FIXED STABLE | WIDE VISUAL COLUMN | REFERENCE FIDELITY ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MEGA SETUP)
@@ -122,7 +122,7 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (WIDE LAYOUT EDITION)
+# 5. FORM INPUT ADEGAN (WIDE LAYOUT [5, 2])
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -130,15 +130,14 @@ adegan_storage = []
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
         
-        # PERUBAHAN: Memperlebar kolom visual [5] dan merampingkan lighting [2]
+        # Kolom Visual Lebar [5], Kolom Lighting Ramping [2]
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
         with cols_setup[0]:
-            # Kolom Visual sekarang jauh lebih lebar
-            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual yang panjang di sini...")
+            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
-            # Kolom Lighting menjadi lebih ramping di samping
+            # Pilihan Lighting (Mapping Label Indonesia)
             light_radio = st.radio(f"Pencahayaan", 
                                    [
                                        "Bening dan Tajam", 
@@ -150,6 +149,7 @@ for idx_s in range(1, int(num_scenes) + 1):
                                    ], 
                                    key=f"light_input_{idx_s}", horizontal=False)
         
+        # Penampung Dialog Per Karakter
         scene_dialog_list = []
         for idx_c, char_val in enumerate(characters_data_list):
             with cols_setup[idx_c + 2]:
@@ -164,7 +164,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING LABEL KE LOGIKA TEKNIS)
+# 6. LOGIKA GENERATOR PROMPT (MAPPING & FIXING VARIABLES)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -176,9 +176,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         
         for adegan in active_adegan:
             s_id = adegan["num"]
+            # Variabel v_txt (Fixed Name)
             v_txt = adegan["visual"]
             
-            # --- MAPPING LOGIKA PROMPT ---
+            # --- MAPPING LOGIKA LIGHTING ---
             if "Bening" in adegan["lighting"]:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -195,15 +196,17 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "Intense moody overcast lighting, diffuse soft light with high local contrast, ultra-saturated cool tones, deep blacks, high micro-contrast."
                 f_atmos = "Damp-look cold atmosphere, STRICTLY NO rain, gray-cobalt sky, heavy thick wispy clouds, 7500k color temperature, extremely sharp object edges."
             else:
+                # Senja
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- LOGIKA EMOSI DIALOG ---
+            # --- LOGIKA EMOSI DIALOG (FIXED dialogs_combined) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
+            
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions and muscle tension. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER ---
+            # --- LOGIKA AUTO-SYNC KARAKTER (FIXED v_txt scan) ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
@@ -239,4 +242,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v8.9 - Wide Layout Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.0 - Final Wide Stable")
