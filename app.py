@@ -52,7 +52,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: ULTRA-VIVID COBALT & AUTO-SYNC CHARACTER IDENTITY ❤️")
+st.info("Mode: ULTRA-VIVID COBALT & FULL AUTO-SYNC CHARACTER IDENTITY ❤️")
 
 # ==========================================
 # 3. SIDEBAR: KONFIGURASI TOKOH (MEGA SETUP)
@@ -96,11 +96,11 @@ with st.sidebar:
             all_characters.append({"name": ex_name, "desc": ex_desc})
 
 # ==========================================
-# 4. PARAMETER KUALITAS (FULL MEGA LIST)
+# 4. PARAMETER KUALITAS (FULL MEGA LIST - NO REDUCTION)
 # ==========================================
 no_text_strict = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO words on image, NO user interface labels."
 
-# Variabel Kualitas Gambar (Ultra-Sharp & Cold)
+# Variabel Kualitas Gambar (Ultra-Sharp & Cold & Cobalt)
 img_quality_vivid_sharp = (
     "full-frame medium format photography, 16-bit color bit depth, hyper-saturated organic pigments, "
     "edge-to-edge optical sharpness, f/11 deep focus aperture, micro-contrast enhancement, "
@@ -113,7 +113,7 @@ img_quality_vivid_sharp = (
     "STRICTLY NO rain, NO wet surfaces, NO overcast sky, NO over-exposure, NO sun flare, " + no_text_strict
 )
 
-# Variabel Kualitas Video (Ultra-Sharp & Cold)
+# Variabel Kualitas Video (Ultra-Sharp & Cold & Cobalt)
 vid_quality_vivid_sharp = (
     "ultra-high-fidelity vertical video format, 9:16 aspect ratio, 60fps, crisp 10:00 AM cold daylight, "
     "deep saturated colors, deep cobalt blue sky, natural light white clouds, "
@@ -134,7 +134,7 @@ for s_num in range(1, int(num_scenes) + 1):
         layout_cols = st.columns([3, 1.8] + [1.2] * len(all_characters))
         
         with layout_cols[0]:
-            visual_input = st.text_area(f"Visual Adegan {s_num}", key=f"main_v_input_{s_num}", height=110, placeholder="Contoh: UDIN dan TUNG sedang berjalan di hutan...")
+            visual_input = st.text_area(f"Visual Adegan {s_num}", key=f"main_v_input_{s_num}", height=110, placeholder="Sebutkan nama tokoh agar fisiknya muncul otomatis...")
         
         with layout_cols[1]:
             light_val_radio = st.radio(f"Lighting {s_num}", ["50% (Dingin)", "75% (Cerah)"], key=f"main_l_input_{s_num}", horizontal=True)
@@ -157,7 +157,7 @@ for s_num in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==========================================
-# 6. LOGIKA GENERATOR PROMPT (AUTO-SYNC CHARACTER)
+# 6. LOGIKA GENERATOR PROMPT (AUTO-SYNC CHARACTER IDENTITY)
 # ==========================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_scenes = [s for s in scenes_list if s["visual"].strip() != ""]
@@ -184,23 +184,22 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             emotion_instruction = ""
             if full_dialog_string:
                 emotion_instruction = (
-                    f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_string}'. "
+                    f"Emotion Context (DO NOT RENDER TEXT): The characters are reacting to this dialogue: '{full_dialog_string}'. "
                     "Focus on realistic facial micro-expressions and muscle tension. "
                 )
 
-            # 3. FUNGSI OTOMATIS: CHARACTER IDENTITY SYNC (Penting!)
-            # Memeriksa semua karakter (1 s/d 5) apakah ada di deskripsi visual adegan
-            final_appearance_ref = ""
+            # 3. FUNGSI AUTO-SYNC: CHARACTER IDENTITY (Hanya muncul jika nama disebut)
+            # Bagian ini adalah inti permintaan kamu: menscan semua tokoh yang didaftarkan
             detected_chars_physic = []
-            
             for check_char in all_characters:
-                # Jika nama karakter diisi DAN nama tersebut tertulis di deskripsi visual adegan (case insensitive)
+                # Memeriksa apakah nama karakter diinput di sidebar DAN disebut di teks visual (Case Insensitive)
                 if check_char['name'] and check_char['name'].lower() in v_text.lower():
                     detected_chars_physic.append(f"{check_char['name']} ({check_char['desc']})")
             
-            # Jika ada karakter yang terdeteksi, masukkan ke dalam prompt
+            # Merakit string identitas karakter
+            final_appearance_ref = ""
             if detected_chars_physic:
-                final_appearance_ref = "Character Identity Reference: " + ", ".join(detected_chars_physic) + ". "
+                final_appearance_ref = "Character Physical Reference: " + ", ".join(detected_chars_physic) + ". "
 
             # 4. Perakitan Prompt (Mega Construction)
             is_first_scene_prefix = "ini adalah referensi gambar karakter pada adegan per adegan. " if id_scene == 1 else ""
@@ -214,7 +213,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             video_prompt_result = (
                 f"Video Adegan {id_scene}. {emotion_instruction}Visual Scene: {final_appearance_ref}{v_text}. "
-                f"Atmosphere: 10:00 AM, crystal clear deep blue sky, hyper-vivid background, dry surfaces. "
+                f"Atmosphere: 10:00 AM Locked Time, crystal clear deep blue sky, hyper-vivid background, dry surfaces. "
                 f"Lighting Effect: {final_lighting_prompt}. {vid_quality_vivid_sharp}. Dialog Reference: {full_dialog_string}"
             )
 
@@ -222,12 +221,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.subheader(f"ADENGAN {id_scene}")
             res_col_1, res_col_2 = st.columns(2)
             with res_col_1:
-                st.caption("📸 PROMPT GAMBAR (Sync Active)")
+                st.caption("📸 PROMPT GAMBAR (Auto-Sync Identity)")
                 st.code(image_prompt_result, language="text")
             with res_col_2:
-                st.caption("🎥 PROMPT VIDEO (Sync Active)")
+                st.caption("🎥 PROMPT VIDEO (Auto-Sync Identity)")
                 st.code(video_prompt_result, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v7.6 - Ultimate Character Sync")
+st.sidebar.caption("PINTAR MEDIA Storyboard v7.6 - Auto-Sync Character Identity")
