@@ -31,10 +31,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.31 | CLEAN DROP-LIST | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.32 | MANUAL CHARACTER INPUT | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI KARAKTER & STYLE
+# 3. SIDEBAR: KONFIGURASI KARAKTER (MANUAL DESCRIPTION)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -46,16 +46,17 @@ with st.sidebar:
                              ["None", "Gritty Cinematic", "Vibrant Pop", "High-End Documentary", "Vintage Film 35mm", "Dark Thriller", "Surreal Dreamy"])
 
     st.divider()
-    st.subheader("👥 Karakter 1 (UDIN)")
-    c1_name = st.text_input("Nama Karakter 1", value="UDIN")
-    c1_base = st.text_area("Fisik Dasar C1", value="UDIN, character with a realistic orange fruit head, organic peel texture, vivid orange color, humanoid body.", height=70)
-    c1_outfit = st.text_input("Pakaian C1", value="white t-shirt, gold necklace")
+    # PERBAIKAN: Input dikosongkan agar user mengisi manual
+    st.subheader("👥 Karakter 1")
+    c1_name = st.text_input("Nama Karakter 1", placeholder="Contoh: UDIN")
+    c1_base = st.text_area("Fisik Dasar C1", placeholder="Deskripsikan fisik wajah/kepala di sini...", height=70)
+    c1_outfit = st.text_input("Pakaian C1", placeholder="Contoh: kaos putih, celana jeans")
 
     st.divider()
-    st.subheader("👥 Karakter 2 (TUNG)")
-    c2_name = st.text_input("Nama Karakter 2", value="TUNG")
-    c2_base = st.text_area("Fisik Dasar C2", value="TUNG, character with a realistic wood log head, natural tree bark texture, humanoid body.", height=70)
-    c2_outfit = st.text_input("Pakaian C2", value="blue denim shirt, rustic style")
+    st.subheader("👥 Karakter 2")
+    c2_name = st.text_input("Nama Karakter 2", placeholder="Contoh: TUNG")
+    c2_base = st.text_area("Fisik Dasar C2", placeholder="Deskripsikan fisik wajah/kepala di sini...", height=70)
+    c2_outfit = st.text_input("Pakaian C2", placeholder="Contoh: kemeja biru, topi")
 
 # ==============================================================================
 # 4. LOGIKA MASTER-SYNC (DROP-LIST VERSION)
@@ -66,22 +67,21 @@ if 'master_light' not in st.session_state:
     st.session_state.master_light = options_lighting[0]
 
 def update_all_lights():
-    # Mengambil nilai dari Drop List Adegan 1
-    new_val = st.session_state["light_1"]
-    st.session_state.master_light = new_val
-    # Force update semua adegan follower
-    for i in range(2, 51):
-        st.session_state[f"light_{i}"] = new_val
+    if "light_1" in st.session_state:
+        new_val = st.session_state["light_1"]
+        st.session_state.master_light = new_val
+        for i in range(2, 51):
+            st.session_state[f"light_{i}"] = new_val
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (FULL EXPLICIT)
+# 5. PARAMETER KUALITAS (FULL EXPLICIT - NO REDUCTION)
 # ==============================================================================
 no_text_lock = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
 img_quality_base = "photorealistic surrealism style, 16-bit color, hyper-saturated organic pigments, 8k, absolute fidelity to character reference, " + no_text_lock
 vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, strict character consistency, fluid organic motion, high contrast, " + no_text_lock
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (DROP-LIST INTERFACE)
+# 6. FORM INPUT ADEGAN (CLEAN INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan (Adegan 1 adalah Leader)")
 adegan_storage = []
@@ -93,42 +93,38 @@ with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
     with col_l1:
         vis_1 = st.text_area("Visual Scene 1", key="vis_1", height=100)
     with col_l2:
-        # Menggunakan selectbox (Drop List) untuk tampilan lebih rapi
         leader_light = st.selectbox("Cahaya (Master)", options_lighting, key="light_1", on_change=update_all_lights)
     
     st.markdown("---")
     l_c1_1, l_c1_2 = st.columns([1, 2])
-    with l_c1_1: cond_1_c1 = st.selectbox(f"Kondisi {c1_name}", options_condition, key="cond1_1")
-    with l_c1_2: diag_1_c1 = st.text_input(f"Dialog {c1_name}", key="diag1_1")
+    with l_c1_1: cond_1_c1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'C1'}", options_condition, key="cond1_1")
+    with l_c1_2: diag_1_c1 = st.text_input(f"Dialog {c1_name if c1_name else 'C1'}", key="diag1_1")
     
     l_c2_1, l_c2_2 = st.columns([1, 2])
-    with l_c2_1: cond_1_c2 = st.selectbox(f"Kondisi {c2_name}", options_condition, key="cond2_1")
-    with l_c2_2: diag_1_c2 = st.text_input(f"Dialog {c2_name}", key="diag2_1")
+    with l_c2_1: cond_1_c2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'C2'}", options_condition, key="cond2_1")
+    with l_c2_2: diag_1_c2 = st.text_input(f"Dialog {c2_name if c2_name else 'C2'}", key="diag2_1")
 
 adegan_storage.append({"num": 1, "visual": vis_1, "lighting": leader_light, "cond1": cond_1_c1, "cond2": cond_1_c2, "diag1": diag_1_c1, "diag2": diag_1_c2})
 
-# --- ADEGAN 2 SAMPAI N (FOLLOWER DROP-LIST) ---
+# --- ADEGAN 2 SAMPAI N ---
 for idx_s in range(2, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=False):
         f_col1, f_col2 = st.columns([3, 1])
         with f_col1:
             vis_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=100)
         with f_col2:
-            # Pastikan state ada, jika tidak, ambil dari master
             if f"light_{idx_s}" not in st.session_state:
                 st.session_state[f"light_{idx_s}"] = st.session_state.master_light
-            
-            # Follower juga menggunakan selectbox (Drop List)
             f_light = st.selectbox(f"Cahaya Adegan {idx_s}", options_lighting, key=f"light_{idx_s}")
 
         st.markdown("---")
         f_c1_1, f_c1_2 = st.columns([1, 2])
-        with f_c1_1: f_cond1 = st.selectbox(f"Kondisi {c1_name}", options_condition, key=f"cond1_{idx_s}")
-        with f_c1_2: f_diag1 = st.text_input(f"Dialog {c1_name}", key=f"diag1_{idx_s}")
+        with f_c1_1: f_cond1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'C1'}", options_condition, key=f"cond1_{idx_s}")
+        with f_c1_2: f_diag1 = st.text_input(f"Dialog {c1_name if c1_name else 'C1'}", key=f"diag1_{idx_s}")
 
         f_c2_1, f_c2_2 = st.columns([1, 2])
-        with f_c2_1: f_cond2 = st.selectbox(f"Kondisi {c2_name}", options_condition, key=f"cond2_{idx_s}")
-        with f_c2_2: f_diag2 = st.text_input(f"Dialog {c2_name}", key=f"diag2_{idx_s}")
+        with f_c2_1: f_cond2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'C2'}", options_condition, key=f"cond2_{idx_s}")
+        with f_c2_2: f_diag2 = st.text_input(f"Dialog {c2_name if c2_name else 'C2'}", key=f"diag2_{idx_s}")
 
         adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": f_light, "cond1": f_cond1, "cond2": f_cond2, "diag1": f_diag1, "diag2": f_diag2})
 
@@ -146,7 +142,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (NO REDUCTION) ---
+            # --- FULL MAPPING LOGIKA LIGHTING ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -179,10 +175,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             char_prompts = []
             if c1_name and c1_name.lower() in v_txt.lower():
-                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial muscles. " if adegan['diag1'] else ""
+                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial fidelity. " if adegan['diag1'] else ""
                 char_prompts.append(f"CHARACTER REF: {c1_base}, wearing {c1_outfit}, status: {status_map[adegan['cond1']]}. {e1}")
             if c2_name and c2_name.lower() in v_txt.lower():
-                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial muscles. " if adegan['diag2'] else ""
+                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial fidelity. " if adegan['diag2'] else ""
                 char_prompts.append(f"CHARACTER REF: {c2_base}, wearing {c2_outfit}, status: {status_map[adegan['cond2']]}. {e2}")
             
             final_char = " ".join(char_prompts) + " "
@@ -195,4 +191,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.31 - Clean Interface Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.32 - Manual Entry Edition")
