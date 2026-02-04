@@ -54,7 +54,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.15 | DROPBOX MASTER SYNC | ULTIMATE MENDUNG READY ❤️")
+st.info("MASIH UJI COBA DULU GUYS ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC (SESSION STATE ENGINE)
@@ -275,3 +275,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA Storyboard v9.15 - Dropbox Sync Edition")
+
