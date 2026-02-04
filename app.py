@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 2. CUSTOM CSS (FULL EXPLICIT STYLE + VISUAL HIERARCHY)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -35,26 +35,40 @@ st.markdown("""
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     
-    button[title="Copy to clipboard"]:hover {
-        background-color: #218838 !important;
-    }
-    
-    button[title="Copy to clipboard"]:active {
-        background-color: #1e7e34 !important;
-        transform: scale(1.0);
-    }
-    
     /* Font Area Input Visual Deskripsi */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
     }
+
+    /* --- LOGIKA PEWARNAAN BOX (EXPANDER) --- */
+    div[data-testid="stExpander"] {
+        border-radius: 10px !important;
+        margin-bottom: 15px !important;
+        border: 1px solid #3d4150 !important;
+    }
+
+    /* ADEGAN 1 (MASTER) - Warna Hijau Emerald Gelap */
+    div[data-testid="stExpander"]:nth-of-type(1) {
+        background-color: #1b2e23 !important;
+        border: 1px solid #28a745 !important;
+    }
+
+    /* Adegan GANJIL (3, 5, 7, dst) */
+    div[data-testid="stExpander"]:nth-of-type(odd):not(:nth-of-type(1)) {
+        background-color: #262730 !important;
+    }
+
+    /* Adegan GENAP (2, 4, 6, dst) */
+    div[data-testid="stExpander"]:nth-of-type(even) {
+        background-color: #1a1c24 !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.12 | MASTER SYNC LIGHTING | ALL-OBJECT TEXTURE LOCK ❤️")
+st.info("Mode: v9.13 | RESTORED MEGA STRUCTURE | MASTER SYNC | VISUAL BOX ❤️")
 
 # ==============================================================================
 # 3. LOGIKA MASTER SYNC (SESSION STATE ENGINE)
@@ -70,15 +84,12 @@ options_lighting = [
     "Suasana Alami"
 ]
 
-# Inisialisasi memori master jika belum ada
 if 'master_light_choice' not in st.session_state:
     st.session_state.master_light_choice = options_lighting[0]
 
 def sync_all_lighting():
-    """Fungsi pemicu untuk menyamakan semua cahaya dengan Adegan 1"""
     new_choice = st.session_state.light_input_1
     st.session_state.master_light_choice = new_choice
-    # Update semua key radio button yang ada di session state
     for key in st.session_state.keys():
         if key.startswith("light_input_"):
             st.session_state[key] = new_choice
@@ -122,7 +133,7 @@ with st.sidebar:
             characters_data_list.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (ULTIMATE FIDELITY)
+# 5. PARAMETER KUALITAS (ZERO-NATURAL & ZERO-REALISTIC ABSOLUTE)
 # ==============================================================================
 no_text_no_rain_lock = (
     "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
@@ -153,7 +164,8 @@ st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
 
 for idx_s in range(1, int(num_scenes) + 1):
-    with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
+    label_box = f"🟢 MASTER CONTROL - ADEGAN {idx_s}" if idx_s == 1 else f"🎬 ADEGAN {idx_s}"
+    with st.expander(label_box, expanded=(idx_s == 1)):
         
         cols_setup = st.columns([5, 2] + [1.2] * len(characters_data_list))
         
@@ -161,11 +173,9 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
         
         with cols_setup[1]:
-            # Jika Adegan 1, pasang fungsi on_change untuk Master Sync
             if idx_s == 1:
                 light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}", on_change=sync_all_lighting)
             else:
-                # Jika bukan Adegan 1, gunakan state yang sudah ada atau default ke Master
                 if f"light_input_{idx_s}" not in st.session_state:
                     st.session_state[f"light_input_{idx_s}"] = st.session_state.master_light_choice
                 light_radio = st.radio(f"Pencahayaan", options_lighting, key=f"light_input_{idx_s}")
@@ -184,7 +194,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 7. LOGIKA GENERATOR PROMPT (MAPPING & RENDERING)
+# 7. LOGIKA GENERATOR PROMPT (THE ULTIMATE OVERCAST LOGIC - RESTORED)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -199,7 +209,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             v_txt = adegan["visual"]
             l_choice = adegan["lighting"]
             
-            # --- MAPPING LOGIKA LIGHTING ---
+            # --- MAPPING LOGIKA LIGHTING (FULL EXPLICIT RESTORED) ---
             if "Bening" in l_choice:
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -234,12 +244,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 f_atmos = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
 
-            # --- LOGIKA EMOSI DIALOG ---
+            # --- LOGIKA EMOSI DIALOG (FULL RESTORED) ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
 
-            # --- LOGIKA AUTO-SYNC KARAKTER ---
+            # --- LOGIKA AUTO-SYNC KARAKTER (FULL RESTORED) ---
             detected_phys_list = []
             for c_check in characters_data_list:
                 if c_check['name'] and c_check['name'].lower() in v_txt.lower():
@@ -247,7 +257,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
 
-            # --- KONSTRUKSI PROMPT FINAL ---
+            # --- KONSTRUKSI PROMPT FINAL (FULL RESTORED) ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -264,7 +274,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             )
 
             # --- DISPLAY OUTPUT ---
-            st.subheader(f"ADENGAN {s_id}")
+            st.subheader(f"HASIL PRODUKSI ADEGAN {s_id}")
             res_c1, res_c2 = st.columns(2)
             with res_c1:
                 st.caption(f"📸 PROMPT GAMBAR ({l_choice})")
@@ -275,4 +285,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.12 - Master Sync Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.13 - Ultimate Master Sync Edition")
