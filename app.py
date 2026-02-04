@@ -49,7 +49,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.22 | UNTOUCHABLE LOGIC | REACTIVE SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.23 | BASE v9.22 | CUSTOM LABELS | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI UTAMA & DIRECTOR SETTINGS
@@ -64,24 +64,24 @@ with st.sidebar:
                              ["None", "Gritty Cinematic", "Vibrant Pop", "High-End Documentary", "Vintage Film 35mm", "Dark Thriller", "Surreal Dreamy"])
     
     st.divider()
-    st.subheader("☁️ Cuaca Global (Auto-Apply)")
-    global_weather = st.selectbox("Set Cuaca untuk Semua Adegan", 
-                                 ["Manual per Adegan", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
+    st.subheader("☁️ Pencahayaan Global (Auto-Apply)")
+    global_weather = st.selectbox("Set Pencahayaan untuk Semua Adegan", 
+                                  ["Manual per Adegan", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
 
     st.divider()
-    st.subheader("👥 Identitas & Fisik Karakter")
+    st.subheader("👥 Identitas & Detail Fisik Karakter")
     
     # Karakter 1 (Default: UDIN)
     st.markdown("### Karakter 1")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="UDIN")
-    c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
+    c1_phys = st.text_area("Detail Fisik 1 (STRICT)", key="c_desc_1_input", placeholder="Contoh: Kepala jeruk orange berpori, badan kekar...", height=80)
     
     st.divider()
     
     # Karakter 2 (Default: TUNG)
     st.markdown("### Karakter 2")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="TUNG")
-    c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
+    c2_phys = st.text_area("Detail Fisik 2 (STRICT)", key="c_desc_2_input", placeholder="Contoh: Kepala kayu balok, serat kayu kasar...", height=80)
 
 # ==============================================================================
 # 4. PARAMETER KUALITAS (FULL VERSION - NO REDUCTION)
@@ -123,7 +123,6 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
         
         with cols_setup[1]:
-            # Logika Sinkronisasi: Key widget berubah saat Global berubah, memicu update index otomatis
             if global_weather != "Manual per Adegan":
                 current_default = options_lighting.index(global_weather)
                 radio_key = f"light_{idx_s}_{global_weather}" 
@@ -131,15 +130,15 @@ for idx_s in range(1, int(num_scenes) + 1):
                 current_default = 0
                 radio_key = f"light_{idx_s}_manual"
 
-            light_radio = st.radio(f"Pencahayaan", options_lighting, index=current_default, key=radio_key)
+            light_radio = st.radio(f"Pencahayaan Adegan {idx_s}", options_lighting, index=current_default, key=radio_key)
         
         scene_dialog_list = []
         with cols_setup[2]:
-            label_c1 = c1_name if c1_name else "Tokoh 1"
+            label_c1 = c1_name if c1_name else "Karakter 1"
             diag_c1 = st.text_input(f"Dialog {label_c1}", key=f"diag_1_{idx_s}")
             scene_dialog_list.append({"name": label_c1, "text": diag_c1})
         with cols_setup[3]:
-            label_c2 = c2_name if c2_name else "Tokoh 2"
+            label_c2 = c2_name if c2_name else "Karakter 2"
             diag_c2 = st.text_input(f"Dialog {label_c2}", key=f"diag_2_{idx_s}")
             scene_dialog_list.append({"name": label_c2, "text": diag_c2})
         
@@ -159,7 +158,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active_adegan:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (RE-VERIFIED NO REDUCTION) ---
+            # --- FULL MAPPING LOGIKA LIGHTING ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -216,4 +215,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.22 - The Untouchable Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.23 - The Guided Label Edition")
