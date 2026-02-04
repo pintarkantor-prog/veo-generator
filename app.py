@@ -49,7 +49,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.20 | ABSOLUTE FULL CODE | SMART GLOBAL LOGIC | NO REDUCTION ❤️")
+st.info("Mode: v9.22 | UNTOUCHABLE LOGIC | REACTIVE SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: KONFIGURASI UTAMA & DIRECTOR SETTINGS
@@ -65,28 +65,23 @@ with st.sidebar:
     
     st.divider()
     st.subheader("☁️ Cuaca Global (Auto-Apply)")
-    # Pilihan "Pilih Cuaca Global..." berfungsi agar tidak otomatis merubah pilihan di adegan
     global_weather = st.selectbox("Set Cuaca untuk Semua Adegan", 
-                                 ["Pilih Cuaca Global...", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
+                                 ["Manual per Adegan", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
 
     st.divider()
     st.subheader("👥 Identitas & Fisik Karakter")
     
-    characters_data_list = []
-    
-    # Karakter 1
+    # Karakter 1 (Default: UDIN)
     st.markdown("### Karakter 1")
-    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
+    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="UDIN")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
-    characters_data_list.append({"name": c1_name, "desc": c1_phys})
     
     st.divider()
     
-    # Karakter 2
+    # Karakter 2 (Default: TUNG)
     st.markdown("### Karakter 2")
-    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
+    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="TUNG")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
-    characters_data_list.append({"name": c2_name, "desc": c2_phys})
 
 # ==============================================================================
 # 4. PARAMETER KUALITAS (FULL VERSION - NO REDUCTION)
@@ -114,71 +109,57 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (WIDE LAYOUT [5, 2])
+# 5. FORM INPUT ADEGAN (REACTIVE SYNC LOGIC)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
-
-# List opsi lighting untuk mapping index
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
-        
-        # Kolom Layout (Visual, Lighting, Dialog Tokoh)
         cols_setup = st.columns([5, 2, 1.2, 1.2])
         
         with cols_setup[0]:
-            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150, placeholder="Tulis deskripsi visual di sini...")
+            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
         
         with cols_setup[1]:
-            # Logika override: Jika global dipilih, radio button otomatis bergeser
-            if global_weather != "Pilih Cuaca Global...":
+            # Logika Sinkronisasi: Key widget berubah saat Global berubah, memicu update index otomatis
+            if global_weather != "Manual per Adegan":
                 current_default = options_lighting.index(global_weather)
+                radio_key = f"light_{idx_s}_{global_weather}" 
             else:
-                current_default = 0 # Default ke opsi pertama jika global kosong
-                
-            light_radio = st.radio(f"Pencahayaan", options_lighting, index=current_default, key=f"light_input_{idx_s}", horizontal=False)
+                current_default = 0
+                radio_key = f"light_{idx_s}_manual"
+
+            light_radio = st.radio(f"Pencahayaan", options_lighting, index=current_default, key=radio_key)
         
         scene_dialog_list = []
-        # Input Dialog Karakter 1
         with cols_setup[2]:
-            label_c1 = characters_data_list[0]['name'] if characters_data_list[0]['name'] else "Tokoh 1"
-            diag_c1 = st.text_input(f"Dialog {label_c1}", key=f"diag_input_1_{idx_s}")
+            label_c1 = c1_name if c1_name else "Tokoh 1"
+            diag_c1 = st.text_input(f"Dialog {label_c1}", key=f"diag_1_{idx_s}")
             scene_dialog_list.append({"name": label_c1, "text": diag_c1})
-            
-        # Input Dialog Karakter 2
         with cols_setup[3]:
-            label_c2 = characters_data_list[1]['name'] if characters_data_list[1]['name'] else "Tokoh 2"
-            diag_c2 = st.text_input(f"Dialog {label_c2}", key=f"diag_input_2_{idx_s}")
+            label_c2 = c2_name if c2_name else "Tokoh 2"
+            diag_c2 = st.text_input(f"Dialog {label_c2}", key=f"diag_2_{idx_s}")
             scene_dialog_list.append({"name": label_c2, "text": diag_c2})
         
-        adegan_storage.append({
-            "num": idx_s, 
-            "visual": vis_in, 
-            "lighting": light_radio, 
-            "dialogs": scene_dialog_list
-        })
+        adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list})
 
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (FULL EXPLICIT - NO REDUCTION)
+# 6. LOGIKA GENERATOR PROMPT (ABSOLUTE FULL EXPLICIT)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
-    
     if not active_adegan:
         st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
-        
         for adegan in active_adegan:
-            s_id = adegan["num"]
-            v_txt = adegan["visual"]
-            l_type = adegan["lighting"]
+            s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (NO REDUCTION) ---
+            # --- FULL MAPPING LOGIKA LIGHTING (RE-VERIFIED NO REDUCTION) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -206,49 +187,33 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             else:
                 f_light = ""
                 f_atmos = ""
-
-            # --- LOGIKA TONE STYLE LOCK ---
+            
+            # --- TONE STYLE LOCK & EMOTION ---
             style_lock = f"Overall Visual Tone: {tone_style}. " if tone_style != "None" else ""
-
-            # --- LOGIKA EMOSI DIALOG ---
             dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
             full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
             emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
-
-            # --- LOGIKA AUTO-SYNC FISIK TOKOH ---
-            detected_phys_list = []
-            for c_check in characters_data_list:
-                if c_check['name'] and c_check['name'].lower() in v_txt.lower():
-                    detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c_check['name']} ({c_check['desc']})")
             
-            final_phys_ref = " ".join(detected_phys_list) + " " if detected_phys_list else ""
+            # --- AUTO-SYNC FISIK TOKOH ---
+            detected_phys_list = []
+            if c1_name and c1_name.lower() in v_txt.lower():
+                detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c1_name} ({c1_phys})")
+            if c2_name and c2_name.lower() in v_txt.lower():
+                detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c2_name} ({c2_phys})")
+            final_phys_ref = " ".join(detected_phys_list) + " "
 
             # --- KONSTRUKSI PROMPT FINAL ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
-            final_img = (
-                f"{style_lock}{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
-                f"Atmosphere: {f_atmos} Dry environment surfaces, no rain, no water. "
-                f"Lighting Effect: {f_light}. {img_quality_base}"
-            )
+            final_img = (f"{style_lock}{is_first_pre}{img_cmd_pre}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos} Lighting: {f_light}. {img_quality_base}")
+            final_vid = (f"{style_lock}Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos}. Lighting: {f_light}. {vid_quality_base}")
 
-            final_vid = (
-                f"{style_lock}Video Adegan {s_id}. {emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. "
-                f"Atmosphere: {f_atmos}. "
-                f"Lighting Effect: {f_light}. {vid_quality_base}. Context: {full_dialog_str}"
-            )
-
-            # --- DISPLAY OUTPUT ---
+            # --- DISPLAY ---
             st.subheader(f"ADENGAN {s_id}")
-            res_c1, res_c2 = st.columns(2)
-            with res_c1:
-                st.caption(f"📸 PROMPT GAMBAR ({l_type})")
-                st.code(final_img, language="text")
-            with res_c2:
-                st.caption("🎥 PROMPT VIDEO")
-                st.code(final_vid, language="text")
+            st.code(final_img, language="text")
+            st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.20 - Absolute Full Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.22 - The Untouchable Edition")
