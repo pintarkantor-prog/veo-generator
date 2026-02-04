@@ -66,8 +66,15 @@ with st.sidebar:
     st.divider()
     num_chars = st.number_input("Tambah Karakter Lainnya", min_value=2, max_value=5, value=2)
 
+    if num_chars > 2:
+        for j in range(2, int(num_chars)):
+            st.divider()
+            st.markdown(f"**Karakter {j+1}**")
+            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}")
+            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
+            characters.append({"name": cn, "desc": cd})
+
 # --- 4. PARAMETER ULTRA-SHARP & VIVID COLORS (9:16) ---
-# Menghindari kata 'cinematic'/'realistic' dan fokus pada detail teknis ketajaman
 img_quality = (
     "aspect ratio 9:16, vertical mobile orientation, ultra-vivid color saturation, "
     "deep color depth, extreme sharpness, hyper-detailed textures, crystal clear 8k resolution, "
@@ -117,7 +124,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt (Ultra-Sharp 9:16)")
+        st.header("📋 Hasil Prompt")
         
         for scene in filled_scenes:
             i = scene["num"]
@@ -159,12 +166,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Sharp & Vivid)")
+                st.caption(f"📸 PROMPT GAMBAR")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Sharp & Vivid)")
+                st.caption(f"🎥 PROMPT VIDEO")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.3 - Ultra-Sharp 9:16")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.4")
