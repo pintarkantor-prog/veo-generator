@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.37 | INFINITY CHARACTER | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.38 | INFINITY CHARACTER | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
 # 3. SIDEBAR: DINAMIS KARAKTER
@@ -48,9 +48,6 @@ with st.sidebar:
         c_p = st.text_input(f"Pakaian {i}", key=f"sp_{i}")
         char_list.append({"name": c_n, "base": c_f, "outfit": c_p})
         if i < num_chars: st.divider()
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption("PINTAR MEDIA Storyboard v9.37 - Infinity Character Edition")
 
 # ==============================================================================
 # 4. LOGIKA MASTER-SYNC
@@ -141,4 +138,5 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA Storyboard v9.38 - Infinity Character Edition")
+
 
