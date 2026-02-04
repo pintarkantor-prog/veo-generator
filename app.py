@@ -31,35 +31,34 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.32 | MANUAL CHARACTER INPUT | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.33 | BAHASA INDONESIA SIDEBAR | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI KARAKTER (MANUAL DESCRIPTION)
+# 3. SIDEBAR: KONFIGURASI (SUDAH BAHASA INDONESIA)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
-    num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
+    num_scenes = st.number_input("Jumlah Total Adegan", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("🎬 Director's Style Lock")
-    tone_style = st.selectbox("Pilih Visual Tone Keseluruhan", 
-                             ["None", "Gritty Cinematic", "Vibrant Pop", "High-End Documentary", "Vintage Film 35mm", "Dark Thriller", "Surreal Dreamy"])
+    st.subheader("🎬 Kunci Gaya Sutradara")
+    tone_style = st.selectbox("Pilih Estetika Visual", 
+                             ["None", "Sinematik Kasar (Gritty)", "Warna Menyala (Vibrant Pop)", "Dokumenter Berkelas", "Film Jadul 35mm", "Thriller Gelap", "Surealis Mimpi"])
 
     st.divider()
-    # PERBAIKAN: Input dikosongkan agar user mengisi manual
-    st.subheader("👥 Karakter 1")
-    c1_name = st.text_input("Nama Karakter 1", placeholder="Contoh: UDIN")
-    c1_base = st.text_area("Fisik Dasar C1", placeholder="Deskripsikan fisik wajah/kepala di sini...", height=70)
-    c1_outfit = st.text_input("Pakaian C1", placeholder="Contoh: kaos putih, celana jeans")
+    st.subheader("👥 Pengaturan Karakter 1")
+    c1_name = st.text_input("Nama Tokoh 1", placeholder="Contoh: UDIN")
+    c1_base = st.text_area("Ciri Fisik Dasar (Wajah/Kepala)", placeholder="Contoh: Kepala jeruk orange, tekstur kulit jeruk asli...", height=70)
+    c1_outfit = st.text_input("Pakaian & Aksesoris", placeholder="Contoh: Kaos putih, kalung emas")
 
     st.divider()
-    st.subheader("👥 Karakter 2")
-    c2_name = st.text_input("Nama Karakter 2", placeholder="Contoh: TUNG")
-    c2_base = st.text_area("Fisik Dasar C2", placeholder="Deskripsikan fisik wajah/kepala di sini...", height=70)
-    c2_outfit = st.text_input("Pakaian C2", placeholder="Contoh: kemeja biru, topi")
+    st.subheader("👥 Pengaturan Karakter 2")
+    c2_name = st.text_input("Nama Tokoh 2", placeholder="Contoh: TUNG")
+    c2_base = st.text_area("Ciri Fisik Dasar (Wajah/Kayu)", placeholder="Contoh: Kepala balok kayu, tekstur kulit pohon alami...", height=70)
+    c2_outfit = st.text_input("Pakaian & Aksesoris ", placeholder="Contoh: Kemeja jeans biru")
 
 # ==============================================================================
-# 4. LOGIKA MASTER-SYNC (DROP-LIST VERSION)
+# 4. LOGIKA MASTER-SYNC
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
@@ -74,57 +73,57 @@ def update_all_lights():
             st.session_state[f"light_{i}"] = new_val
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (FULL EXPLICIT - NO REDUCTION)
+# 5. PARAMETER KUALITAS (FULL EXPLICIT)
 # ==============================================================================
 no_text_lock = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
 img_quality_base = "photorealistic surrealism style, 16-bit color, hyper-saturated organic pigments, 8k, absolute fidelity to character reference, " + no_text_lock
 vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, strict character consistency, fluid organic motion, high contrast, " + no_text_lock
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN (CLEAN INTERFACE)
+# 6. FORM INPUT ADEGAN
 # ==============================================================================
 st.subheader("📝 Detail Adegan (Adegan 1 adalah Leader)")
 adegan_storage = []
 options_condition = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
 
-# --- ADEGAN 1 (MASTER DROP-LIST) ---
-with st.expander("KONFIGURASI ADEGAN 1 (LEADER)", expanded=True):
+# ADEGAN 1 (LEADER)
+with st.expander("KONFIGURASI ADEGAN 1 (MASTER CONTROL)", expanded=True):
     col_l1, col_l2 = st.columns([3, 1])
     with col_l1:
-        vis_1 = st.text_area("Visual Scene 1", key="vis_1", height=100)
+        vis_1 = st.text_area("Deskripsi Visual 1", key="vis_1", height=100)
     with col_l2:
-        leader_light = st.selectbox("Cahaya (Master)", options_lighting, key="light_1", on_change=update_all_lights)
+        leader_light = st.selectbox("Cuaca/Cahaya", options_lighting, key="light_1", on_change=update_all_lights)
     
     st.markdown("---")
     l_c1_1, l_c1_2 = st.columns([1, 2])
-    with l_c1_1: cond_1_c1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'C1'}", options_condition, key="cond1_1")
-    with l_c1_2: diag_1_c1 = st.text_input(f"Dialog {c1_name if c1_name else 'C1'}", key="diag1_1")
+    with l_c1_1: cond_1_c1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'Tokoh 1'}", options_condition, key="cond1_1")
+    with l_c1_2: diag_1_c1 = st.text_input(f"Dialog {c1_name if c1_name else 'Tokoh 1'}", key="diag1_1")
     
     l_c2_1, l_c2_2 = st.columns([1, 2])
-    with l_c2_1: cond_1_c2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'C2'}", options_condition, key="cond2_1")
-    with l_c2_2: diag_1_c2 = st.text_input(f"Dialog {c2_name if c2_name else 'C2'}", key="diag2_1")
+    with l_c2_1: cond_1_c2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'Tokoh 2'}", options_condition, key="cond2_1")
+    with l_c2_2: diag_1_c2 = st.text_input(f"Dialog {c2_name if c2_name else 'Tokoh 2'}", key="diag2_1")
 
 adegan_storage.append({"num": 1, "visual": vis_1, "lighting": leader_light, "cond1": cond_1_c1, "cond2": cond_1_c2, "diag1": diag_1_c1, "diag2": diag_1_c2})
 
-# --- ADEGAN 2 SAMPAI N ---
+# ADEGAN 2 SAMPAI N
 for idx_s in range(2, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI ADEGAN {idx_s}", expanded=False):
         f_col1, f_col2 = st.columns([3, 1])
         with f_col1:
-            vis_in = st.text_area(f"Visual Scene {idx_s}", key=f"vis_{idx_s}", height=100)
+            vis_in = st.text_area(f"Deskripsi Visual {idx_s}", key=f"vis_{idx_s}", height=100)
         with f_col2:
             if f"light_{idx_s}" not in st.session_state:
                 st.session_state[f"light_{idx_s}"] = st.session_state.master_light
-            f_light = st.selectbox(f"Cahaya Adegan {idx_s}", options_lighting, key=f"light_{idx_s}")
+            f_light = st.selectbox(f"Cahaya {idx_s}", options_lighting, key=f"light_{idx_s}")
 
         st.markdown("---")
         f_c1_1, f_c1_2 = st.columns([1, 2])
-        with f_c1_1: f_cond1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'C1'}", options_condition, key=f"cond1_{idx_s}")
-        with f_c1_2: f_diag1 = st.text_input(f"Dialog {c1_name if c1_name else 'C1'}", key=f"diag1_{idx_s}")
+        with f_c1_1: f_cond1 = st.selectbox(f"Kondisi {c1_name if c1_name else 'Tokoh 1'}", options_condition, key=f"cond1_{idx_s}")
+        with f_c1_2: f_diag1 = st.text_input(f"Dialog {c1_name if c1_name else 'Tokoh 1'}", key=f"diag1_{idx_s}")
 
         f_c2_1, f_c2_2 = st.columns([1, 2])
-        with f_c2_1: f_cond2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'C2'}", options_condition, key=f"cond2_{idx_s}")
-        with f_c2_2: f_diag2 = st.text_input(f"Dialog {c2_name if c2_name else 'C2'}", key=f"diag2_{idx_s}")
+        with f_c2_1: f_cond2 = st.selectbox(f"Kondisi {c2_name if c2_name else 'Tokoh 2'}", options_condition, key=f"cond2_{idx_s}")
+        with f_c2_2: f_diag2 = st.text_input(f"Dialog {c2_name if c2_name else 'Tokoh 2'}", key=f"diag2_{idx_s}")
 
         adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": f_light, "cond1": f_cond1, "cond2": f_cond2, "diag1": f_diag1, "diag2": f_diag2})
 
@@ -133,16 +132,31 @@ st.divider()
 # ==============================================================================
 # 7. LOGIKA GENERATOR PROMPT (ABSOLUTE FULL EXPLICIT)
 # ==============================================================================
-if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
+if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
     if not active:
-        st.warning("Mohon isi deskripsi visual adegan.")
+        st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
     else:
         st.header("📋 Hasil Produksi Prompt")
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING ---
+            # Mapping Style Lock ke Bahasa Inggris untuk AI
+            style_map = {
+                "Sinematik Kasar (Gritty)": "Gritty Cinematic",
+                "Warna Menyala (Vibrant Pop)": "Vibrant Pop",
+                "Dokumenter Berkelas": "High-End Documentary",
+                "Film Jadul 35mm": "Vintage Film 35mm",
+                "Thriller Gelap": "Dark Thriller",
+                "Surealis Mimpi": "Surreal Dreamy"
+            }
+            active_style = style_map.get(tone_style, "")
+            style_lock = f"Overall Visual Tone: {active_style}. " if tone_style != "None" else ""
+
+            # Mapping Kondisi ke Bahasa Inggris
+            status_map = {"Normal/Bersih": "pristine condition, clean skin.", "Terluka/Lecet": "visible scratches, scuff marks, pained look.", "Kotor/Berdebu": "covered in dust, muddy stains.", "Hancur Parah": "heavily damaged, cracks, physical trauma."}
+
+            # --- FULL MAPPING LIGHTING (TIDAK ADA RINGKASAN) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -169,13 +183,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
             else: f_light, f_atmos = "", ""
 
-            # --- LOGIKA KONDISI & EMOTION ---
-            status_map = {"Normal/Bersih": "pristine condition, clean skin.", "Terluka/Lecet": "visible scratches, scuff marks, pained look.", "Kotor/Berdebu": "covered in dust, messy.", "Hancur Parah": "heavily damaged, cracks, trauma."}
-            style_lock = f"Overall Visual Tone: {tone_style}. " if tone_style != "None" else ""
-            
+            # --- LOGIKA TOKOH & EMOSI ---
             char_prompts = []
             if c1_name and c1_name.lower() in v_txt.lower():
-                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial fidelity. " if adegan['diag1'] else ""
+                e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial muscles. " if adegan['diag1'] else ""
                 char_prompts.append(f"CHARACTER REF: {c1_base}, wearing {c1_outfit}, status: {status_map[adegan['cond1']]}. {e1}")
             if c2_name and c2_name.lower() in v_txt.lower():
                 e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial fidelity. " if adegan['diag2'] else ""
@@ -191,4 +202,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.32 - Manual Entry Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.33 - Bahasa Indonesia Sidebar")
