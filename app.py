@@ -49,10 +49,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.22 | THE REAL MEGA STRUCTURE | CHARACTER EXPANSION | NO REDUCTION ❤️")
+st.info("Mode: v9.23 | CLEAN SETUP | MANUAL LIGHTING | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI UTAMA & DIRECTOR SETTINGS
+# 3. SIDEBAR: KONFIGURASI UTAMA & CHARACTER EXPANSION
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -62,38 +62,33 @@ with st.sidebar:
     st.subheader("🎬 Director's Style Lock")
     tone_style = st.selectbox("Pilih Visual Tone Keseluruhan", 
                              ["None", "Gritty Cinematic", "Vibrant Pop", "High-End Documentary", "Vintage Film 35mm", "Dark Thriller", "Surreal Dreamy"])
-    
-    st.divider()
-    st.subheader("☁️ Cuaca Global (Auto-Apply)")
-    global_weather = st.selectbox("Set Cuaca untuk Semua Adegan", 
-                                  ["Manual per Adegan", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
 
     st.divider()
     st.subheader("👥 Identitas & Fisik Karakter")
     
     all_characters = []
     
-    # Karakter 1 (Default: UDIN)
+    # Karakter 1 (Nama dikosongkan)
     st.markdown("### Karakter 1")
-    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="UDIN")
+    c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="")
     c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
     all_characters.append({"name": c1_name, "phys": c1_phys})
     
     st.divider()
     
-    # Karakter 2 (Default: TUNG)
+    # Karakter 2 (Nama dikosongkan)
     st.markdown("### Karakter 2")
-    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="TUNG")
+    c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="")
     c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
     all_characters.append({"name": c2_name, "phys": c2_phys})
 
-    # FITUR EKSPANSI MANUAL (Sesuai Permintaan)
+    # FITUR EKSPANSI MANUAL
     st.divider()
     extra_chars = st.number_input("Tambah Karakter Tambahan?", min_value=0, max_value=10, value=0)
     if extra_chars > 0:
         for i in range(extra_chars):
             st.markdown(f"### Karakter Tambahan {i+1}")
-            ex_n = st.text_input(f"Nama Karakter Tambahan {i+1}", key=f"ex_n_{i}")
+            ex_n = st.text_input(f"Nama Karakter Tambahan {i+1}", key=f"ex_n_{i}", value="")
             ex_f = st.text_area(f"Fisik Karakter Tambahan {i+1}", key=f"ex_f_{i}", height=80)
             all_characters.append({"name": ex_n, "phys": ex_f})
 
@@ -115,7 +110,7 @@ img_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (REACTIVE SYNC LOGIC)
+# 5. FORM INPUT ADEGAN (PURE MANUAL LIGHTING)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -129,22 +124,18 @@ for idx_s in range(1, int(num_scenes) + 1):
             vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
         
         with cols_setup[1]:
-            if global_weather != "Manual per Adegan":
-                current_default = options_lighting.index(global_weather)
-                radio_key = f"light_{idx_s}_{global_weather}" 
-            else:
-                current_default = 0
-                radio_key = f"light_{idx_s}_manual"
-
-            light_radio = st.radio(f"Pencahayaan {idx_s}", options_lighting, index=current_default, key=radio_key)
+            # Sekarang murni pilihan manual untuk setiap adegan tanpa Cuaca Global
+            light_radio = st.radio(f"Pencahayaan Adegan {idx_s}", options_lighting, key=f"light_manual_{idx_s}")
         
         # Dialog dinamis untuk semua karakter yang aktif
         st.markdown("**Dialog Karakter**")
         dialog_data = {}
         char_cols = st.columns(len(all_characters))
         for i, char in enumerate(all_characters):
+            # Menggunakan placeholder jika nama kosong agar tetap bisa diinput dialog
+            display_name = char['name'] if char['name'] else f"Karakter {i+1}"
             with char_cols[i]:
-                d_val = st.text_input(f"Dialog {char['name']}", key=f"diag_{i}_{idx_s}")
+                d_val = st.text_input(f"Dialog {display_name}", key=f"diag_{i}_{idx_s}")
                 dialog_data[char['name']] = d_val
         
         adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": dialog_data})
@@ -163,7 +154,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active_adegan:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING (KEMBALI KE MEGA STRUCTURE) ---
+            # --- FULL MAPPING LOGIKA LIGHTING ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -197,6 +188,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             # --- AUTO-SYNC FISIK & EMOTION SEMUA KARAKTER ---
             char_refs = []
             for char in all_characters:
+                # Hanya masukkan referensi fisik jika nama karakter diketik di deskripsi visual adegan
                 if char['name'] and char['name'].lower() in v_txt.lower():
                     diag = adegan['dialogs'].get(char['name'], "")
                     emotion_logic = f"Expression Context: Reacting to dialogue context: '{diag}'. Focus on high-fidelity facial expressions. " if diag else ""
@@ -204,7 +196,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             
             final_phys_ref = " ".join(char_refs) + " "
 
-            # --- KONSTRUKSI PROMPT FINAL (KALIMAT SAKTI UTUH) ---
+            # --- KONSTRUKSI PROMPT FINAL ---
             is_first_pre = "ini adalah referensi gambar karakter pada adegan per adegan. " if s_id == 1 else ""
             img_cmd_pre = f"buatkan saya sebuah gambar dari adegan ke {s_id}. "
 
@@ -216,4 +208,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.22 - Absolute Mega Structure Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.23 - Clean Architecture Edition")
