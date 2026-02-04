@@ -3,7 +3,7 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS (SIDEBAR GELAP & TOMBOL HIJAU) ---
+# --- 2. CUSTOM CSS (SIDEBAR & TOMBOL HIJAU) ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
@@ -103,7 +103,7 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt (Fokus Bananan & Veo 3)")
+        st.header("📋 Hasil Prompt (Smart Logic v4.3)")
         
         time_map = {
             "Pagi hari": "vibrant morning sun",
@@ -117,15 +117,15 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             v_input = scene["desc"]
             eng_time = time_map.get(scene["time"], "natural lighting")
             
-            # Pengolahan Dialog untuk Ekspresi
+            # --- PEMROSESAN DIALOG ---
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_text = " ".join(dialog_lines) if dialog_lines else ""
-            dialog_block = f"\n\nDialog:\n{dialog_text}" if dialog_text else ""
             
-            # Instruksi Auto-Expression
+            # Instruksi Ekspresi: AI tetap membaca dialog untuk menentukan muka karakter
             expression_instruction = (
-                f"Analyze the mood from visual: '{v_input}' and dialogue: '{dialog_text}'. "
-                "Render precise facial expressions and micro-expressions to match this emotion. "
+                f"Analyze the mood from visual context: '{v_input}' and dialogue context: '{dialog_text}'. "
+                "Automatically render appropriate facial expressions, micro-expressions, and eye emotions "
+                "to perfectly match the dramatic tension. "
             )
             
             detected_physique = []
@@ -135,30 +135,31 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             
             char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
-            # --- Prompt Gambar (Bananan) ---
+            # --- Prompt Gambar (Bananan): Tanpa teks dialog tertulis ---
             final_img = (
                 f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
                 f"tampilkan gambar secara full-screen portrait 1080x1920 tanpa border hitam. "
                 f"{expression_instruction} Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
-                f"Lighting: {eng_time}. {img_quality}{dialog_block}"
+                f"Lighting: {eng_time}. {img_quality}"
             )
 
-            # --- Prompt Video (Veo 3) ---
+            # --- Prompt Video (Veo 3): Dengan teks dialog tertulis ---
+            dialog_block_vid = f"\n\nDialog Context:\n{dialog_text}" if dialog_text else ""
             final_vid = (
                 f"Generate 9:16 vertical full-screen video for Scene {i}. 1080p, 60fps. "
                 f"{expression_instruction} Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
-                f"Lighting: {eng_time}. {vid_quality}{dialog_block}"
+                f"Lighting: {eng_time}. {vid_quality}{dialog_block_vid}"
             )
 
             st.subheader(f"Adegan {i}")
             res_col1, res_col2 = st.columns(2)
             with res_col1:
-                st.caption(f"📸 PROMPT GAMBAR (Bananan)")
+                st.caption(f"📸 PROMPT GAMBAR (Bananan - Clean)")
                 st.code(final_img, language="text")
             with res_col2:
-                st.caption(f"🎥 PROMPT VIDEO (Veo 3)")
+                st.caption(f"🎥 PROMPT VIDEO (Veo 3 - Full)")
                 st.code(final_vid, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA v4.2 - Final Optimized")
+st.sidebar.caption("PINTAR MEDIA v4.3 - Logic Separation Mode")
