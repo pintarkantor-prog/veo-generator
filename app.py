@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN
+# 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -10,12 +10,21 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. CUSTOM CSS (FULL EXPLICIT - NO REDUCTION)
+# 2. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
 # ==============================================================================
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
+    /* Latar Belakang Sidebar Gelap Profesional */
+    [data-testid="stSidebar"] {
+        background-color: #1a1c24 !important;
+    }
+    
+    /* Warna Teks Sidebar Putih Terang */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+        color: #ffffff !important;
+    }
+
+    /* Tombol Copy Hijau Terang Ikonik */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -25,19 +34,28 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    button[title="Copy to clipboard"]:hover { background-color: #218838 !important; }
-    .stTextArea textarea { font-size: 14px !important; line-height: 1.5 !important; font-family: 'Inter', sans-serif !important; }
+    
+    button[title="Copy to clipboard"]:hover {
+        background-color: #218838 !important;
+    }
+    
+    /* Font Area Input Visual Deskripsi */
+    .stTextArea textarea {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        font-family: 'Inter', sans-serif !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.23 | CLEAN CONTINUITY | NO REFERENCE TEXT | NO REDUCTION ❤️")
+st.info("Mode: v9.24 | DYNAMIC CHARACTER LOGIC | CONDITION SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI UTAMA & DIRECTOR SETTINGS
+# 3. SIDEBAR: IDENTITAS DASAR, OUTFIT & DIRECTOR SETTINGS
 # ==============================================================================
 with st.sidebar:
-    st.header("⚙️ Konfigurasi Utama")
+    st.header("⚙️ Konfigurasi Global")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
     st.divider()
@@ -51,19 +69,16 @@ with st.sidebar:
                                  ["Manual per Adegan", "Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"])
 
     st.divider()
-    st.subheader("👥 Identitas & Fisik Karakter")
-    
-    # Karakter 1 (Default: UDIN)
-    st.markdown("### Karakter 1")
+    st.subheader("👥 Karakter 1 (UDIN)")
     c1_name = st.text_input("Nama Karakter 1", key="c_name_1_input", value="UDIN")
-    c1_phys = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", placeholder="Detail fisik...", height=80)
-    
+    c1_base = st.text_area("Identitas Fisik Dasar (Kepala/Wajah)", value="UDIN, character with a realistic orange fruit head, organic peel texture, vivid orange color, humanoid body.", height=70)
+    c1_outfit = st.text_input("Pakaian & Aksesoris Saat Ini", value="white t-shirt, gold necklace")
+
     st.divider()
-    
-    # Karakter 2 (Default: TUNG)
-    st.markdown("### Karakter 2")
+    st.subheader("👥 Karakter 2 (TUNG)")
     c2_name = st.text_input("Nama Karakter 2", key="c_name_2_input", value="TUNG")
-    c2_phys = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", placeholder="Detail fisik...", height=80)
+    c2_base = st.text_area("Identitas Fisik Dasar (Kepala/Kayu)", value="TUNG, character with a realistic wood log head, natural tree bark texture, humanoid body.", height=70)
+    c2_outfit = st.text_input("Pakaian & Aksesoris Saat Ini ", value="blue denim shirt, rustic style")
 
 # ==============================================================================
 # 4. PARAMETER KUALITAS (FULL VERSION - NO REDUCTION)
@@ -91,45 +106,45 @@ vid_quality_base = (
 )
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN (REACTIVE SYNC LOGIC)
+# 5. FORM INPUT ADEGAN (DYNAMIC LOGIC)
 # ==============================================================================
-st.subheader("📝 Detail Adegan Storyboard")
+st.subheader("📝 Detail Adegan & Kondisi Dinamis")
 adegan_storage = []
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
+options_condition = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
 
 for idx_s in range(1, int(num_scenes) + 1):
     with st.expander(f"KONFIGURASI DATA ADEGAN {idx_s}", expanded=(idx_s == 1)):
-        cols_setup = st.columns([5, 2, 1.2, 1.2])
+        cols_setup = st.columns([4, 2, 2, 2])
         
         with cols_setup[0]:
-            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=150)
+            vis_in = st.text_area(f"Visual Adegan {idx_s}", key=f"vis_input_{idx_s}", height=120)
         
         with cols_setup[1]:
+            # Reactive Lighting Sync
             if global_weather != "Manual per Adegan":
                 current_default = options_lighting.index(global_weather)
                 radio_key = f"light_{idx_s}_{global_weather}" 
             else:
                 current_default = 0
                 radio_key = f"light_{idx_s}_manual"
-
             light_radio = st.radio(f"Pencahayaan", options_lighting, index=current_default, key=radio_key)
         
-        scene_dialog_list = []
         with cols_setup[2]:
-            label_c1 = c1_name if c1_name else "Tokoh 1"
-            diag_c1 = st.text_input(f"Dialog {label_c1}", key=f"diag_1_{idx_s}")
-            scene_dialog_list.append({"name": label_c1, "text": diag_c1})
+            cond_radio = st.radio(f"Kondisi Fisik Tokoh", options_condition, key=f"cond_{idx_s}")
+            
         with cols_setup[3]:
-            label_c2 = c2_name if c2_name else "Tokoh 2"
-            diag_c2 = st.text_input(f"Dialog {label_c2}", key=f"diag_2_{idx_s}")
-            scene_dialog_list.append({"name": label_c2, "text": diag_c2})
+            diag_in = st.text_input(f"Dialog (Untuk Emosi)", key=f"diag_{idx_s}")
         
-        adegan_storage.append({"num": idx_s, "visual": vis_in, "lighting": light_radio, "dialogs": scene_dialog_list})
+        adegan_storage.append({
+            "num": idx_s, "visual": vis_in, "lighting": light_radio, 
+            "condition": cond_radio, "dialog": diag_in
+        })
 
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (ABSOLUTE FULL EXPLICIT - NO REFERENCE TEXT)
+# 6. LOGIKA GENERATOR PROMPT (DYNAMIC INJECTION - NO REDUCTION)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -140,7 +155,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for adegan in active_adegan:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # --- FULL MAPPING LOGIKA LIGHTING ---
+            # --- 1. MAPPING KONDISI FISIK DINAMIS ---
+            cond_map = {
+                "Normal/Bersih": "pristine condition, clean skin and clothes, perfect texture fidelity.",
+                "Terluka/Lecet": "visible scratches, fresh scuff marks on face and body, pained distressed look, raw textures.",
+                "Kotor/Berdebu": "covered in dust and grime, muddy stains on clothes, messy organic appearance.",
+                "Hancur Parah": "heavily damaged, deep cracks on head surface, torn clothes, extreme physical trauma, broken parts."
+            }
+            active_status = cond_map[adegan["condition"]]
+
+            # --- 2. FULL MAPPING LOGIKA LIGHTING ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -169,23 +193,21 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 f_light = ""
                 f_atmos = ""
             
-            # --- TONE STYLE LOCK & EMOTION ---
+            # --- 3. TONE STYLE & EMOTION SYNC ---
             style_lock = f"Overall Visual Tone: {tone_style}. " if tone_style != "None" else ""
-            dialogs_combined = [f"{d['name']}: \"{d['text']}\"" for d in adegan['dialogs'] if d['text']]
-            full_dialog_str = " ".join(dialogs_combined) if dialogs_combined else ""
-            emotion_logic = f"Emotion Context (DO NOT RENDER TEXT): Reacting to dialogue context: '{full_dialog_str}'. Focus on high-fidelity facial expressions. " if full_dialog_str else ""
+            emotion_logic = f"Expression: reacting to dialog '{adegan['dialog']}', intense high-fidelity facial expressions. " if adegan['dialog'] else ""
             
-            # --- AUTO-SYNC FISIK TOKOH ---
+            # --- 4. AUTO-SYNC FISIK TOKOH DINAMIS ---
             detected_phys_list = []
             if c1_name and c1_name.lower() in v_txt.lower():
-                detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c1_name} ({c1_phys})")
+                detected_phys_list.append(f"CHARACTER REF: {c1_base}, wearing {c1_outfit}, status: {active_status}")
             if c2_name and c2_name.lower() in v_txt.lower():
-                detected_phys_list.append(f"STRICT CHARACTER APPEARANCE: {c2_name} ({c2_phys})")
-            final_phys_ref = " ".join(detected_phys_list) + " "
+                detected_phys_list.append(f"CHARACTER REF: {c2_base}, wearing {c2_outfit}, status: {active_status}")
+            final_char_ref = " ".join(detected_phys_list) + " "
 
-            # --- KONSTRUKSI PROMPT FINAL (CLEAN VERSION - NO REFERENCE TEXT) ---
-            final_img = (f"{style_lock}{emotion_logic}{final_phys_ref}Visual Scene: {v_txt}. Atmosphere: {f_atmos} Lighting: {f_light}. {img_quality_base}")
-            final_vid = (f"{style_lock}Video Scene: {v_txt}. {emotion_logic}{final_phys_ref}Atmosphere: {f_atmos}. Lighting: {f_light}. {vid_quality_base}")
+            # --- 5. KONSTRUKSI PROMPT FINAL ---
+            final_img = (f"{style_lock}{final_char_ref}{emotion_logic}Visual Scene: {v_txt}. Atmosphere: {f_atmos} Lighting: {f_light}. {img_quality_base}")
+            final_vid = (f"{style_lock}Video Scene: {v_txt}. {final_char_ref}{emotion_logic}Atmosphere: {f_atmos}. Lighting: {f_light}. {vid_quality_base}")
 
             # --- DISPLAY ---
             st.subheader(f"ADENGAN {s_id}")
@@ -194,4 +216,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.23 - Clean Continuity Edition")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.24 - Dynamic & Reactive Edition")
