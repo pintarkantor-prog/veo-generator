@@ -160,7 +160,7 @@ for idx_s in range(1, int(num_scenes) + 1):
 st.divider()
 
 # ==============================================================================
-# 6. LOGIKA GENERATOR PROMPT (MAPPING & REFINED MENDUNG)
+# 6. LOGIKA GENERATOR PROMPT (MAPPING & ULTRA-VIVID MENDUNG)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_adegan = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -187,8 +187,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             elif "Jelas" in adegan["lighting"]:
                 f_light = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 f_atmos = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+            
             elif "Mendung" in adegan["lighting"]:
-                # LOGIKA MENDUNG YANG LEBIH TAJAM WARNA & KONTRASNYA
+                # LOGIKA MENDUNG YANG LEBIH TAJAM WARNA & KONTRASNYA (VERSI 9.7)
                 f_light = (
                     "Intense moody overcast lighting, brilliant luminosity, high dynamic range (HDR), "
                     "extreme local contrast, hyper-saturated cool tones, absolute pitch-black shadows, "
@@ -199,6 +200,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                     "gray-cobalt heavy sky, micro-texture amplification on all organic surfaces, "
                     "hyper-defined object silhouettes, bone-dry environment."
                 )
+                
             elif "Suasana Malam" in adegan["lighting"]:
                 f_light = "Hyper-Chrome Fidelity lighting, ultra-intense HMI studio lamp illumination, extreme micro-shadows on all textures, brutal contrast ratio, specular highlight glints on every edge, zero-black floor depth."
                 f_atmos = "Pure vacuum-like atmosphere, zero light scattering, absolute visual bite, chrome-saturated pigments, hyper-defined micro-pores and wood grain textures, 10000k ultra-cold industrial white light."
