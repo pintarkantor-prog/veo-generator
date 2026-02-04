@@ -22,10 +22,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.40 | CUSTOM LABELS | INFINITY CHARACTER | NO REDUCTION ❤️")
+st.info("Mode: v9.41 | EMOTIONAL STATUS | INFINITY CHARACTER | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: DINAMIS KARAKTER DENGAN LABEL BARU
+# 3. SIDEBAR: DINAMIS KARAKTER
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -41,26 +41,24 @@ with st.sidebar:
     
     char_list = []
     for i in range(1, num_chars + 1):
-        # PERUBAHAN LABEL: 'Tokoh' menjadi 'Karakter'
         st.markdown(f"#### Karakter {i}")
         c_n = st.text_input(f"Nama Karakter {i}", placeholder=f"Contoh: UDIN", key=f"sn_{i}")
         
-        # PERUBAHAN LABEL: 'Fisik Dasar' menjadi 'Detail Fisik'
         c_f = st.text_area(f"Detail Fisik {i}", 
                           placeholder="Contoh: Kepala jeruk orange, tekstur kulit pori-pori...", 
-                          help="Isi dengan: Bentuk kepala/wajah, warna kulit, jenis rambut, ekspresi permanen, atau ciri unik fisik lainnya.",
+                          help="Isi dengan: Bentuk kepala/wajah, warna kulit, jenis rambut, atau ciri unik fisik lainnya.",
                           height=70, key=f"sf_{i}")
         
         c_p = st.text_input(f"Pakaian {i}", 
                            placeholder="Contoh: Kaos oblong putih kusam...", 
-                           help="Isi dengan: Jenis baju, warna pakaian, celana, alas kaki, atau aksesoris (topi, kacamata, kalung).",
+                           help="Isi dengan: Jenis baju, warna pakaian, atau aksesoris.",
                            key=f"sp_{i}")
         
         char_list.append({"name": c_n, "base": c_f, "outfit": c_p})
         if i < num_chars: st.divider()
 
     st.sidebar.markdown("---")
-    st.sidebar.caption("PINTAR MEDIA Storyboard v9.40 - Custom Label Edition")
+    st.sidebar.caption("PINTAR MEDIA Storyboard v9.41 - Emotional Status Edition")
 
 # ==============================================================================
 # 4. LOGIKA MASTER-SYNC
@@ -79,11 +77,21 @@ no_text = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO 
 img_q = "photorealistic surrealism, 16-bit color, 8k, absolute fidelity to character reference, " + no_text
 
 # ==============================================================================
-# 5. FORM INPUT ADEGAN
+# 5. FORM INPUT ADEGAN (OPSI KONDISI BARU)
 # ==============================================================================
 st.subheader("📝 Detail Adegan")
 adegan_storage = []
-options_cond = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
+
+# OPSI KONDISI YANG DIPERBARUI (FISIK + EMOSIONAL + SOSIAL)
+options_cond = [
+    "Normal/Bersih", 
+    "Sedih/Patah Hati", 
+    "Lusuh/Miskin", 
+    "Marah/Tegang",
+    "Terluka/Lecet", 
+    "Kotor/Berdebu", 
+    "Hancur Parah"
+]
 
 for idx_s in range(1, int(num_scenes) + 1):
     is_leader = (idx_s == 1)
@@ -91,10 +99,9 @@ for idx_s in range(1, int(num_scenes) + 1):
         c_vis, c_light = st.columns([3, 1])
         with c_vis: 
             v_in = st.text_area(f"Visual Scene {idx_s}", 
-                               placeholder="Gunakan Nama Karakter di sini agar sistem mengenali siapa yang muncul...",
+                               placeholder="Tulis apa yang terjadi di sini...",
                                key=f"vis_{idx_s}", height=100)
         with c_light:
-            # PERUBAHAN LABEL: 'Cuaca' menjadi 'Pencahayaan'
             if is_leader:
                 l_val = st.selectbox("Pencahayaan (Master)", options_lighting, key="light_1", on_change=update_all_lights)
             else:
@@ -106,9 +113,7 @@ for idx_s in range(1, int(num_scenes) + 1):
         for i in range(0, num_chars, 2):
             cols = st.columns([1, 1.5, 1, 1.5])
             c_idx = i
-            # PERUBAHAN LABEL: 'Tokoh' menjadi 'Karakter'
             name1 = char_list[c_idx]["name"] if char_list[c_idx]["name"] else f"Karakter {c_idx+1}"
-            # PERUBAHAN LABEL: 'Kond' menjadi 'Kondisi'
             with cols[0]: co1 = st.selectbox(f"Kondisi {name1}", options_cond, key=f"cond_{c_idx}_{idx_s}")
             with cols[1]: di1 = st.text_input(f"Dialog {name1}", key=f"diag_{c_idx}_{idx_s}")
             char_scene_data.append((co1, di1))
@@ -123,35 +128,39 @@ for idx_s in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": idx_s, "visual": v_in, "lighting": l_val, "chars": char_scene_data})
 
 # ==============================================================================
-# 6. GENERATOR PROMPT
+# 6. GENERATOR PROMPT (LOGIKA TRANSLASI KONDISI)
 # ==============================================================================
 if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
-    if not active_scenes:
-        st.warning("Mohon isi deskripsi visual adegan terlebih dahulu.")
-    else:
-        for adegan in active_scenes:
-            l_t = adegan["lighting"]
-            if l_t == "Mendung":
-                f_l, f_a = "Intense moody overcast, vivid pigment.", "Moody atmosphere, 8000k ice-cold, thick clouds."
-            elif l_t == "Suasana Malam":
-                f_l, f_a = "Hyper-Chrome Fidelity, intense HMI.", "Pure vacuum-like atmosphere, 10000k white light."
-            else: f_l, f_a = f"{l_t} lighting", f"Clear {l_t} atmosphere"
+    for adegan in active_scenes:
+        l_t = adegan["lighting"]
+        if l_t == "Mendung": f_l, f_a = "Intense moody overcast.", "8000k ice-cold brilliance, thick clouds."
+        elif l_t == "Suasana Malam": f_l, f_a = "Hyper-Chrome Fidelity, HMI lighting.", "Pure vacuum atmosphere, 10000k white."
+        else: f_l, f_a = f"{l_t} lighting", f"Clear {l_t} atmosphere"
 
-            style_map = {"Sinematik": "Gritty Cinematic", "Warna Menyala": "Vibrant Pop", "Dokumenter": "High-End Documentary", "Film Jadul": "Vintage Film 35mm", "Film Thriller": "Dark Thriller", "Dunia Khayalan": "Surreal Dreamy"}
-            s_lock = f"Overall Visual Tone: {style_map.get(tone_style, '')}. " if tone_style != "None" else ""
-            
-            status_map = {"Normal/Bersih": "clean skin.", "Terluka/Lecet": "scratches.", "Kotor/Berdebu": "covered in dust.", "Hancur Parah": "heavily damaged, cracks."}
-            c_prompts = []
-            
-            for i in range(num_chars):
-                name = char_list[i]["name"]
-                if name and name.lower() in adegan["visual"].lower():
-                    cond, diag = adegan["chars"][i]
-                    emo = f"Expression: reacting to '{diag}'. " if diag else ""
-                    c_prompts.append(f"CHARACTER REF: {char_list[i]['base']}, wearing {char_list[i]['outfit']}, status: {status_map[cond]}. {emo}")
+        style_map = {"Sinematik": "Gritty Cinematic", "Warna Menyala": "Vibrant Pop", "Dokumenter": "High-End Documentary", "Film Jadul": "Vintage Film 35mm", "Film Thriller": "Dark Thriller", "Dunia Khayalan": "Surreal Dreamy"}
+        s_lock = f"Overall Visual Tone: {style_map.get(tone_style, '')}. " if tone_style != "None" else ""
+        
+        # MAPPING KONDISI BARU KE BAHASA PROMPT AI
+        status_map = {
+            "Normal/Bersih": "neat appearance, neutral calm face.",
+            "Sedih/Patah Hati": "tearful eyes, heartbroken expression, devastating sorrow, messy hair.",
+            "Lusuh/Miskin": "impoverished look, dusty worn-out skin, weary face, unkempt appearance.",
+            "Marah/Tegang": "furious expression, intense eyes, aggressive posture, tensed facial muscles.",
+            "Terluka/Lecet": "visible scratches, bruises, pained expression.",
+            "Kotor/Berdebu": "covered in thick dust and grime, sweating.",
+            "Hancur Parah": "heavily damaged, physical cracks, exhausted, near defeat."
+        }
+        
+        c_prompts = []
+        for i in range(num_chars):
+            name = char_list[i]["name"]
+            if name and name.lower() in adegan["visual"].lower():
+                cond, diag = adegan["chars"][i]
+                emo = f"Character is speaking: '{diag}'. " if diag else ""
+                c_prompts.append(f"CHARACTER REF: {char_list[i]['base']}, wearing {char_list[i]['outfit']}, status: {status_map[cond]}. {emo}")
 
-            final_c = " ".join(c_prompts) + " "
-            st.subheader(f"ADENGAN {adegan['num']}")
-            st.code(f"{s_lock}{final_c}Visual Scene: {adegan['visual']}. Atmosphere: {f_a}. Lighting: {f_l}. {img_q}")
-            st.divider()
+        final_c = " ".join(c_prompts) + " "
+        st.subheader(f"ADENGAN {adegan['num']}")
+        st.code(f"{s_lock}{final_c}Visual Scene: {adegan['visual']}. Atmosphere: {f_a}. Lighting: {f_l}. {img_q}")
+        st.divider()
