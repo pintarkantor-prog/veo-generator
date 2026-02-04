@@ -3,7 +3,7 @@ import streamlit as st
 # --- 1. KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="PINTAR MEDIA - Storyboard Generator", layout="wide")
 
-# --- 2. CUSTOM CSS (SIDEBAR & TOMBOL COPY) ---
+# --- 2. CUSTOM CSS ---
 st.markdown("""
     <style>
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
@@ -22,7 +22,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("PINTAR MEDIA - Fokus Visual & Dialog ❤️")
+st.info("PINTAR MEDIA - Versi 1.0 (Master Base) ❤️")
 
 # --- 3. SIDEBAR: KONFIGURASI TOKOH ---
 with st.sidebar:
@@ -44,18 +44,35 @@ with st.sidebar:
     c2_desc = st.text_area("Fisik 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
     characters.append({"name": c2_name, "desc": c2_desc})
 
-# --- 4. FORM INPUT ADEGAN (WAKTU DIHAPUS) ---
+# --- 4. PARAMETER KUALITAS (VERSI 1.0) ---
+img_quality = (
+    "Ultra-realistic photorealistic cinematic image, professional full-frame DSLR photography, 8K ultra HD, "
+    "extreme sharp focus, HDR, high dynamic range, vibrant yet natural colors, rich color contrast, "
+    "true-to-life color accuracy, deep blues and vivid greens, bright tropical daylight, natural sunlight, "
+    "cinematic lighting with soft realistic shadows, perfectly balanced exposure, no overexposure, "
+    "highly detailed textures, hyper-detailed surfaces, realistic skin texture with visible pores, "
+    "realistic fabric texture with sharp fibers, clean fine details, micro-details clearly visible, "
+    "cinematic composition, eye-level camera angle, subject in perfect focus, subtle shallow depth of field, "
+    "clean background separation, professional color grading, crisp clarity, premium photography quality"
+)
+
+negative_prompt = (
+    "cartoon, illustration, anime, CGI, 3D render, low resolution, blur, motion blur, soft focus, "
+    "noise, grain, artifacts, color banding, oversharpen, overprocessed, flat lighting, "
+    "washed out colors, dull colors, STRICTLY NO speech bubbles, NO text on image"
+)
+
+# --- 5. FORM INPUT ADEGAN ---
 st.subheader("📝 Detail Adegan")
 scene_data = []
 
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"INPUT DATA ADEGAN {i}", expanded=(i == 1)):
-        # Layout kolom hanya untuk Visual dan Dialog
         col_setup = [3] + [1] * len(characters)
         cols = st.columns(col_setup)
         
         with cols[0]:
-            user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100, placeholder="Ceritakan apa yang terjadi di adegan ini...")
+            user_desc = st.text_area(f"Visual Adegan {i}", key=f"desc_{i}", height=100, placeholder="Deskripsikan visual di sini...")
         
         scene_dialogs = []
         for idx, char in enumerate(characters):
@@ -68,24 +85,27 @@ for i in range(1, int(num_scenes) + 1):
 
 st.divider()
 
-# --- 5. TOMBOL GENERATE ---
+# --- 6. TOMBOL GENERATE ---
 if st.button("🚀 BUAT PROMPT", type="primary"):
     filled_scenes = [s for s in scene_data if s["desc"].strip() != ""]
     
     if not filled_scenes:
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
-        st.header("📋 Hasil Prompt")
+        st.header("📋 Hasil Prompt Versi 1.0")
         
         for scene in filled_scenes:
             i = scene["num"]
             v_input = scene["desc"]
             
-            # Pengolahan Dialog
+            # Analisa emosi dari dialog
             dialog_lines = [f"{d['name']}: \"{d['text']}\"" for d in scene['dialogs'] if d['text']]
             dialog_text = " ".join(dialog_lines) if dialog_lines else ""
             
-            # Referensi Fisik Tokoh
+            expression_instruction = (
+                f"Analyze mood from '{dialog_text}'. Apply realistic facial tension. No text on image. "
+            )
+            
             detected_physique = []
             for char in characters:
                 if char['name'] and char['name'].lower() in v_input.lower():
@@ -93,20 +113,20 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             char_ref = "Appearance: " + ", ".join(detected_physique) + ". " if detected_physique else ""
             
             # --- Output Prompt ---
-            final_img = f"Adegan {i}. Visual: {char_ref}{v_input}."
+            final_img = (
+                f"buatkan saya sebuah gambar adegan ke {i}. portrait 1080x1920. "
+                f"{expression_instruction} Visual: {char_ref}{v_input}. {img_quality}"
+            )
             
-            dialog_block_vid = f"\n\nDialog Context:\n{dialog_text}" if dialog_text else ""
-            final_vid = f"Video Adegan {i}. Visual: {char_ref}{v_input}.{dialog_block_vid}"
+            final_negative = f"Negative Prompt: {negative_prompt}"
 
             st.subheader(f"Adegan {i}")
-            res_col1, res_col2 = st.columns(2)
-            with res_col1:
-                st.caption("📸 PROMPT GAMBAR")
-                st.code(final_img, language="text")
-            with res_col2:
-                st.caption("🎥 PROMPT VIDEO")
-                st.code(final_vid, language="text")
+            st.caption("📸 PROMPT GAMBAR (Bananan)")
+            st.code(final_img, language="text")
+            
+            st.caption("🚫 NEGATIVE PROMPT")
+            st.code(final_negative, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA - No Time Base")
+st.sidebar.caption("PINTAR MEDIA - v1.0 Master")
