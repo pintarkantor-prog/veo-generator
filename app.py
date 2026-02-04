@@ -39,55 +39,50 @@ st.markdown("""
 st.title("📸 PINTAR MEDIA")
 st.info("semangat buat alur cerita nya guys ❤️")
 
-# --- 3. SIDEBAR: KONFIGURASI TOKOH ---
+# --- 3. SIDEBAR: KONFIGURASI TOKOH & SKALA TINGGI ---
 with st.sidebar:
     st.header("⚙️ Konfigurasi")
     num_scenes = st.number_input("Jumlah Adegan", min_value=1, max_value=50, value=10)
     
     st.divider()
-    st.subheader("👥 Identitas & Fisik Tokoh")
+    st.subheader("👥 Identitas & Skala Postur")
     
     characters = []
 
-    # Karakter 1
-    st.markdown("**Karakter 1**")
+    # Karakter 1 (Referensi Utama)
+    st.markdown("**Karakter 1 (Patokan Tinggi)**")
     c1_name = st.text_input("Nama Karakter 1", key="char_name_0", placeholder="Contoh: UDIN")
-    c1_desc = st.text_area("Fisik Karakter 1", key="char_desc_0", placeholder="Ciri fisik...", height=68)
-    characters.append({"name": c1_name, "desc": c1_desc})
+    c1_desc = st.text_area("Deskripsi Fisik 1", key="char_desc_0", placeholder="Pria dewasa, tinggi 180cm, tegap...", height=68)
+    characters.append({"name": c1_name, "desc": c1_desc, "height_rel": "sebagai referensi tinggi utama"})
     
     st.divider()
 
-    # Karakter 2
+    # Karakter 2 (Relatif terhadap Karakter 1)
     st.markdown("**Karakter 2**")
     c2_name = st.text_input("Nama Karakter 2", key="char_name_1", placeholder="Contoh: TUNG")
-    c2_desc = st.text_area("Fisik Karakter 2", key="char_desc_1", placeholder="Ciri fisik...", height=68)
-    characters.append({"name": c2_name, "desc": c2_desc})
+    c2_h_rel = st.selectbox("Tinggi Karakter 2", 
+                            ["Lebih tinggi dari Karakter 1", 
+                             "Sama tinggi dengan Karakter 1", 
+                             "Lebih pendek dari Karakter 1",
+                             "Sangat kecil (setinggi lutut Karakter 1)"], key="h_rel_1")
+    c2_desc = st.text_area("Deskripsi Fisik 2", key="char_desc_1", placeholder="Log kayu hidup, kaki pendek...", height=68)
+    characters.append({"name": c2_name, "desc": c2_desc, "height_rel": c2_h_rel})
 
     st.divider()
     num_chars = st.number_input("Tambah Karakter Lainnya", min_value=2, max_value=5, value=2)
 
-    if num_chars > 2:
-        for j in range(2, int(num_chars)):
-            st.divider()
-            st.markdown(f"**Karakter {j+1}**")
-            cn = st.text_input(f"Nama Karakter {j+1}", key=f"char_name_{j}")
-            cd = st.text_area(f"Fisik Karakter {j+1}", key=f"char_desc_{j}", height=68)
-            characters.append({"name": cn, "desc": cd})
-
-# --- 4. PARAMETER KUALITAS, 1080x1920 & AUTO-ENHANCE ---
+# --- 4. PARAMETER KUALITAS & KONSISTENSI SKALA ---
 img_quality = (
-    "resolution 1080x1920 pixels, vertical 9:16 aspect ratio, full-screen orientation, "
-    "edge-to-edge portrait, no black bars, no letterbox, "
-    "auto-enhance facial features from reference, upscale character details, "
-    "restore skin texture clarity, sharp focus on subject, ultra-vivid color saturation, "
-    "hyper-detailed 8k resolution, bold colors, intense contrast, natural sunlight photography, "
-    "captured on 35mm lens, f/11 aperture, unprocessed style, NO cartoon, --ar 9:16"
+    "resolution 1080x1920 pixels, vertical 9:16 aspect ratio, edge-to-edge portrait, "
+    "maintain strict height scale between characters, accurate body proportions, "
+    "consistent character height in every frame, no black bars, no letterbox, "
+    "auto-enhance facial features, restore skin texture, extreme sharpness, "
+    "vivid color saturation, hyper-detailed 8k, natural lighting, 35mm lens, f/11, --ar 9:16"
 )
 
 vid_quality = (
-    "1080x1920 pixel resolution, 9:16 vertical video, TikTok format, "
-    "high-fidelity character restoration, enhanced motion details, vivid color grade, "
-    "60fps high frame rate, authentic textures, sharp focus, natural handheld motion, NO CGI"
+    "1080x1920 pixels, 9:16 vertical video, accurate height difference between characters, "
+    "smooth motion, high-fidelity restoration, vivid colors, 60fps, sharp focus, NO CGI"
 )
 
 # --- 5. FORM INPUT ADEGAN ---
@@ -123,6 +118,12 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
         st.warning("Silakan isi kolom 'Visual Adegan'.")
     else:
         st.header("📋 Hasil Prompt")
+        
+        # Ringkasan Skala Tinggi untuk Prompt
+        height_summary = f"Height Consistency Rules: {characters[0]['name']} is the primary height anchor. "
+        if len(characters) > 1:
+            height_summary += f"{characters[1]['name']} is strictly {characters[1]['height_rel']}. "
+
         for scene in filled_scenes:
             i = scene["num"]
             v_input = scene["desc"]
@@ -142,11 +143,10 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             }
             eng_time = time_map.get(scene["time"], "clear natural lighting")
             
-            # PROMPT GAMBAR (Dengan instruksi rekonstruksi referensi)
+            # PROMPT GAMBAR
             final_img = (
-                f"buatkan saya sebuah gambar adegan ke {i}. ini adalah gambar referensi karakter saya. "
-                f"perbaiki dan pertajam kualitas visual dari sumber referensi agar tampak jernih dan detail. "
-                f"tampilkan gambar secara full-screen portrait 1080x1920 tanpa border hitam. "
+                f"buatkan saya sebuah gambar adegan ke {i}. {height_summary} "
+                f"pertajam kualitas visual dari referensi, perbaiki detail wajah dan tekstur. "
                 f"Visual: {char_ref}{v_input}. Waktu: {scene['time']}. "
                 f"Environment: {eng_time}. {img_quality}"
             )
@@ -156,10 +156,9 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             dialog_part = f"\n\nDialog:\n" + "\n".join(dialog_lines) if dialog_lines else ""
 
             final_vid = (
-                f"Generate a vertical 1080x1920 video for Scene {i}. 9:16 edge-to-edge. "
-                f"Enhance and clarify character facial features and textures from original reference. "
-                f"Visual: {char_ref}{v_input}. Lighting: {eng_time}. "
-                f"Output: vivid colors, extreme detail, no letterbox. {vid_quality}.{dialog_part}"
+                f"Generate a vertical 1080x1920 video for Scene {i}. {height_summary} "
+                f"Ensure accurate height scale between {characters[0]['name']} and other characters. "
+                f"Visual: {char_ref}{v_input}. Lighting: {eng_time}. {vid_quality}.{dialog_part}"
             )
 
             st.subheader(f"Adegan {i}")
@@ -173,4 +172,4 @@ if st.button("🚀 BUAT PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v3.7 - 1080x1920 & Auto-Enhance")
+st.sidebar.caption("PINTAR MEDIA Storyboard v3.8 - Height & Scale Optimized")
