@@ -1,7 +1,7 @@
 import streamlit as st
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN
+# 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -14,8 +14,17 @@ st.set_page_config(
 # ==============================================================================
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
+    /* Latar Belakang Sidebar Gelap Profesional */
+    [data-testid="stSidebar"] {
+        background-color: #1a1c24 !important;
+    }
+    
+    /* Warna Teks Sidebar Putih Terang */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+        color: #ffffff !important;
+    }
+
+    /* Tombol Copy Hijau Terang Ikonik */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -25,16 +34,25 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    button[title="Copy to clipboard"]:hover { background-color: #218838 !important; }
-    .stTextArea textarea { font-size: 14px !important; line-height: 1.5 !important; font-family: 'Inter', sans-serif !important; }
+    
+    button[title="Copy to clipboard"]:hover {
+        background-color: #218838 !important;
+    }
+    
+    /* Font Area Input Visual Deskripsi */
+    .stTextArea textarea {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        font-family: 'Inter', sans-serif !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📸 PINTAR MEDIA")
-st.info("Mode: v9.33 | BAHASA INDONESIA SIDEBAR | MASTER-SYNC | NO REDUCTION ❤️")
+st.info("Mode: v9.34 | SIMPLIFIED LABELS | MASTER-SYNC | NO REDUCTION ❤️")
 
 # ==============================================================================
-# 3. SIDEBAR: KONFIGURASI (SUDAH BAHASA INDONESIA)
+# 3. SIDEBAR: KONFIGURASI (BAHASA INDONESIA SEDERHANA)
 # ==============================================================================
 with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
@@ -42,8 +60,9 @@ with st.sidebar:
     
     st.divider()
     st.subheader("🎬 Kunci Gaya Sutradara")
+    # Label sudah disederhanakan sesuai permintaan
     tone_style = st.selectbox("Pilih Estetika Visual", 
-                             ["None", "Sinematik Kasar (Gritty)", "Warna Menyala (Vibrant Pop)", "Dokumenter Berkelas", "Film Jadul 35mm", "Thriller Gelap", "Surealis Mimpi"])
+                             ["None", "Sinematik", "Warna Menyala", "Dokumenter", "Film Jadul", "Film Thriller", "Dunia Khayalan"])
 
     st.divider()
     st.subheader("👥 Pengaturan Karakter 1")
@@ -58,7 +77,7 @@ with st.sidebar:
     c2_outfit = st.text_input("Pakaian & Aksesoris ", placeholder="Contoh: Kemeja jeans biru")
 
 # ==============================================================================
-# 4. LOGIKA MASTER-SYNC
+# 4. LOGIKA MASTER-SYNC (SESSION STATE)
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 
@@ -73,20 +92,37 @@ def update_all_lights():
             st.session_state[f"light_{i}"] = new_val
 
 # ==============================================================================
-# 5. PARAMETER KUALITAS (FULL EXPLICIT)
+# 5. PARAMETER KUALITAS (FULL EXPLICIT - NO REDUCTION)
 # ==============================================================================
-no_text_lock = "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
-img_quality_base = "photorealistic surrealism style, 16-bit color, hyper-saturated organic pigments, 8k, absolute fidelity to character reference, " + no_text_lock
-vid_quality_base = "ultra-high-fidelity vertical video, 9:16, 60fps, strict character consistency, fluid organic motion, high contrast, " + no_text_lock
+no_text_lock = (
+    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters, NO rain, NO water."
+)
+
+img_quality_base = (
+    "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, "
+    "absolute fidelity to unique character reference, edge-to-edge optical sharpness, "
+    "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures on every surface, "
+    "circular polarizer (CPL) filter effect, zero atmospheric haze, "
+    "rich high-contrast shadows, unprocessed raw photography, 8k resolution, captured on high-end 35mm lens, "
+    "STRICTLY NO over-exposure, NO motion blur, NO lens flare, " + no_text_lock
+)
+
+vid_quality_base = (
+    "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, "
+    "strict character consistency, deep saturated pigments, "
+    "hyper-vivid foliage textures, crystal clear background focus, "
+    "extreme visual clarity, lossless texture quality, fluid organic motion, "
+    "high contrast ratio, NO animation look, NO CGI look, " + no_text_lock
+)
 
 # ==============================================================================
-# 6. FORM INPUT ADEGAN
+# 6. FORM INPUT ADEGAN (MASTER-SYNC INTERFACE)
 # ==============================================================================
 st.subheader("📝 Detail Adegan (Adegan 1 adalah Leader)")
 adegan_storage = []
 options_condition = ["Normal/Bersih", "Terluka/Lecet", "Kotor/Berdebu", "Hancur Parah"]
 
-# ADEGAN 1 (LEADER)
+# ADEGAN 1 (MASTER)
 with st.expander("KONFIGURASI ADEGAN 1 (MASTER CONTROL)", expanded=True):
     col_l1, col_l2 = st.columns([3, 1])
     with col_l1:
@@ -141,22 +177,27 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
         for adegan in active:
             s_id, v_txt, l_type = adegan["num"], adegan["visual"], adegan["lighting"]
             
-            # Mapping Style Lock ke Bahasa Inggris untuk AI
+            # Mapping Style Lock Sesuai Permintaan Baru
             style_map = {
-                "Sinematik Kasar (Gritty)": "Gritty Cinematic",
-                "Warna Menyala (Vibrant Pop)": "Vibrant Pop",
-                "Dokumenter Berkelas": "High-End Documentary",
-                "Film Jadul 35mm": "Vintage Film 35mm",
-                "Thriller Gelap": "Dark Thriller",
-                "Surealis Mimpi": "Surreal Dreamy"
+                "Sinematik": "Gritty Cinematic",
+                "Warna Menyala": "Vibrant Pop",
+                "Dokumenter": "High-End Documentary",
+                "Film Jadul": "Vintage Film 35mm",
+                "Film Thriller": "Dark Thriller",
+                "Dunia Khayalan": "Surreal Dreamy"
             }
             active_style = style_map.get(tone_style, "")
             style_lock = f"Overall Visual Tone: {active_style}. " if tone_style != "None" else ""
 
-            # Mapping Kondisi ke Bahasa Inggris
-            status_map = {"Normal/Bersih": "pristine condition, clean skin.", "Terluka/Lecet": "visible scratches, scuff marks, pained look.", "Kotor/Berdebu": "covered in dust, muddy stains.", "Hancur Parah": "heavily damaged, cracks, physical trauma."}
+            # Mapping Kondisi Fisik
+            status_map = {
+                "Normal/Bersih": "pristine condition, clean skin and clothes, perfect texture fidelity.",
+                "Terluka/Lecet": "visible scratches, fresh scuff marks on face and body, pained look, raw textures.",
+                "Kotor/Berdebu": "covered in dust and grime, muddy stains on clothes, messy organic appearance.",
+                "Hancur Parah": "heavily damaged, deep cracks on surface, torn clothes, extreme physical trauma, broken parts."
+            }
 
-            # --- FULL MAPPING LIGHTING (TIDAK ADA RINGKASAN) ---
+            # --- FULL MAPPING LOGIKA LIGHTING (NO REDUCTION) ---
             if l_type == "Bening dan Tajam":
                 f_light = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 f_atmos = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -183,13 +224,13 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
                 f_atmos = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures on every grass blade and soil particle, high-fidelity natural contrast across the entire frame, 5000k neutral soft-sun brilliance."
             else: f_light, f_atmos = "", ""
 
-            # --- LOGIKA TOKOH & EMOSI ---
+            # --- LOGIKA TOKOH & EMOSI TERPISAH ---
             char_prompts = []
             if c1_name and c1_name.lower() in v_txt.lower():
                 e1 = f"Expression: reacting to saying '{adegan['diag1']}', intense facial muscles. " if adegan['diag1'] else ""
                 char_prompts.append(f"CHARACTER REF: {c1_base}, wearing {c1_outfit}, status: {status_map[adegan['cond1']]}. {e1}")
             if c2_name and c2_name.lower() in v_txt.lower():
-                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial fidelity. " if adegan['diag2'] else ""
+                e2 = f"Expression: reacting to saying '{adegan['diag2']}', intense facial muscles. " if adegan['diag2'] else ""
                 char_prompts.append(f"CHARACTER REF: {c2_base}, wearing {c2_outfit}, status: {status_map[adegan['cond2']]}. {e2}")
             
             final_char = " ".join(char_prompts) + " "
@@ -202,4 +243,4 @@ if st.button("🚀 GENERATE SEMUA PROMPT", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.33 - Bahasa Indonesia Sidebar")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.34 - Simplified Master-Sync")
