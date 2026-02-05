@@ -18,12 +18,12 @@ st.set_page_config(
 DB_KARAKTER = {
     "Pilih dari Database": {"deskripsi": "", "url": ""},
     "UDIN": {
-        "deskripsi": "Indonesian man, rugged facial features, sharp intense eyes, medium-tan skin, short neat black hair, realistic skin texture, authentic rugged look.",
-        "url": "https://drive.google.com/uc?export=download&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5"
+        "deskripsi": "Indonesian man, rugged facial features, sharp intense eyes, medium-tan skin, short neat black hair.",
+        "url": "https://drive.google.com/uc?export=view&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5"
     },
     "TUNG": {
-        "deskripsi": "Indonesian man, distinct facial structure, expressive eyes, natural black hair, authentic Asian skin tone, clean aesthetic features.",
-        "url": "https://drive.google.com/uc?export=download&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
+        "deskripsi": "Indonesian man, distinct facial structure, expressive eyes, natural black hair, authentic Asian skin tone.",
+        "url": "https://drive.google.com/uc?export=view&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
     }
 }
 
@@ -532,3 +532,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.3.0")
+
