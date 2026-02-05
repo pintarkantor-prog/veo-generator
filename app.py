@@ -7,8 +7,8 @@ from datetime import datetime
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
 # ==============================================================================
 st.set_page_config(
-    page_title="PINTAR MEDIA - Storyboard Generator", 
-    layout="wide", 
+    page_title="PINTAR MEDIA - Storyboard Generator",
+    layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -16,8 +16,8 @@ st.set_page_config(
 # 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
 # ==============================================================================
 USERS = {
-    "admin": "QWERTY21ab", 
-    "icha": "udin99", 
+    "admin": "QWERTY21ab",
+    "icha": "udin99",
     "nissa": "tung22"
 }
 
@@ -41,7 +41,7 @@ if not st.session_state.logged_in:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
                 st.rerun()
-            else: 
+            else:
                 st.error("Username atau Password Salah!")
     st.stop()
 
@@ -62,9 +62,9 @@ def record_to_sheets(user, first_visual, total_scenes):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
-            "Waktu": current_time, 
-            "User": user, 
-            "Total Adegan": total_scenes, 
+            "Waktu": current_time,
+            "User": user,
+            "Total Adegan": total_scenes,
             "Visual Utama": first_visual[:150]
         }])
         
@@ -280,24 +280,24 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     with col_c1:
         st.markdown("### Karakter 1")
         c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
-        # --- PENAMBAHAN URL GAMBAR 1 ---
-        c_url1 = st.text_input("URL Gambar Karakter 1", key="c_url_1_input", placeholder="Tempel link gambar referensi di sini")
+        # --- RUBAH: PENAMBAHAN URL KONSISTENSI ---
+        c_url1_v = st.text_input("URL Gambar Referensi 1", key="c_url_1_input", placeholder="Link gambar untuk menjaga wajah konsisten")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", key="c_desc_1_input", height=100)
     
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
-        # --- PENAMBAHAN URL GAMBAR 2 ---
-        c_url2 = st.text_input("URL Gambar Karakter 2", key="c_url_2_input", placeholder="Tempel link gambar referensi di sini")
+        # --- RUBAH: PENAMBAHAN URL KONSISTENSI ---
+        c_url2_v = st.text_input("URL Gambar Referensi 2", key="c_url_2_input", placeholder="Link gambar untuk menjaga wajah konsisten")
         c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", key="c_desc_2_input", height=100)
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
     all_chars_list = []
-    # --- MENAMBAHKAN URL KE LIST DATA ---
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_url1})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_url2})
+    # --- RUBAH: URL MASUK KE DATA LIST ---
+    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_url1_v})
+    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_url2_v})
 
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
@@ -305,7 +305,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
-                # --- PENAMBAHAN URL UNTUK EXTRA KARAKTER ---
+                # --- RUBAH: URL EXTRA ---
                 ex_url = st.text_input(f"URL Gambar {ex_idx + 1}", key=f"ex_url_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
                 all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url})
@@ -470,13 +470,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # --- PENAMBAHAN LOGIKA IMAGE REFERENCE LOCK (DNA + URL) ---
-            dna_str = ""
+            # --- RUBAH: LOGIKA KONSISTENSI DENGAN PENYUNIKAN URL ---
+            dna_str_list = []
             for c in all_chars_list:
                 if c['name'] and c['name'].lower() in vis_lower:
-                    # Menyuntikkan URL gambar sebagai referensi visual utama
-                    ref_url_tag = f"IMAGE_REFERENCE_LOCK: {c['url']} " if c['url'] else ""
-                    dna_str += f"{ref_url_tag}STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness. "
+                    # Menambahkan URL referensi langsung ke dalam prompt DNA
+                    u_tag = f"CHARACTER_IMAGE_REFERENCE: {c['url']} | " if c['url'] else ""
+                    dna_str_list.append(f"{u_tag}STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness.")
+            dna_str = " ".join(dna_str_list)
 
             # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
             current_lock = master_lock_instruction if scene_id == 1 else ""
@@ -507,4 +508,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.1.9-STABLE")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.9-STRICT")
