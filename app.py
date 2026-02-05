@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. DATABASE LINK FOTO (Gunakan Direct Link .png / .jpg)
+# 2. DATABASE LINK FOTO (DIRECT LINK .PNG / .JPG)
 # ==============================================================================
 LINK_REFERENSI = {
     "UDIN": "https://i.ibb.co/qbssssw/UDIN.png",
@@ -67,7 +67,7 @@ def record_to_sheets(user, first_visual, total_scenes):
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         conn.update(worksheet="Sheet1", data=updated_df)
     except Exception as e:
-        st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
+        st.error(f"Gagal mencatat riwayat: {e}")
 
 # ==============================================================================
 # 5. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
@@ -91,12 +91,12 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 6. HEADER APLIKASI (KALIMAT MOTIVASI DIPERTAHANKAN)
+# 6. HEADER APLIKASI
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | Fokus: Structural Character Match V.1.3.16 🚀❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | Mode Prioritas Gambar Referensi 🚀❤️")
 with c_header2:
     if st.button("Logout 🚪"):
         st.session_state.logged_in = False
@@ -121,11 +121,11 @@ shot_map = {
 }
 angle_map = {
     "Normal (Depan)": "",
-    "Samping (Arah Kamera)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
-    "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
-    "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
-    "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
-    "Mata Karakter (POV)": "First-person point of view, looking through the character's eyes, immersive perspective."
+    "Samping (Arah Kamera)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth.",
+    "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact.",
+    "Intip Bahu (Framing)": "Over-the-shoulder framing to create depth.",
+    "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, looking up at the subject.",
+    "Mata Karakter (POV)": "First-person point of view."
 }
 
 if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
@@ -149,7 +149,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 8. SIDEBAR: ADMIN MONITOR & KONFIGURASI (UTUH V.1.1.8)
+# 8. SIDEBAR & ADMIN MONITOR
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
@@ -174,7 +174,7 @@ img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
-# 10. FORM INPUT IDENTITAS (AUTO-MATCH LINK)
+# 10. FORM INPUT IDENTITAS
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
@@ -209,7 +209,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
 # ==============================================================================
 adegan_storage = []
 for i_s in range(1, int(num_scenes) + 1):
-    l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
+    l_box_title = f"🎬 ADEGAN {i_s}"
     with st.expander(l_box_title, expanded=(i_s == 1)):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         with col_v:
@@ -217,34 +217,24 @@ for i_s in range(1, int(num_scenes) + 1):
         with col_ctrl:
             r1c1, r1c2 = st.columns(2)
             with r1c1:
-                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
                 idx_l = options_lighting.index(st.session_state.m_light)
-                l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None, label_visibility="collapsed")
+                l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None)
             with r1c2:
-                st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 idx_c = indonesia_camera.index(st.session_state.m_cam)
-                c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None, label_visibility="collapsed")
+                c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None)
             r2c1, r2c2 = st.columns(2)
             with r2c1:
-                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 idx_s = indonesia_shot.index(st.session_state.m_shot)
-                s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None, label_visibility="collapsed")
+                s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None)
             with r2c2:
-                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 idx_a = indonesia_angle.index(st.session_state.m_angle)
-                a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None, label_visibility="collapsed")
-        diag_cols = st.columns(len(all_chars_list))
-        scene_dialogs_list = []
-        for i_char, char_data in enumerate(all_chars_list):
-            with diag_cols[i_char]:
-                d_in = st.text_input(f"Dialog {char_data['name']}", key=f"diag_{i_s}_{i_char}")
-                scene_dialogs_list.append({"name": char_data['name'], "text": d_in})
-        adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list})
+                a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=global_sync_v920 if i_s == 1 else None)
+        adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val})
 
 st.divider()
 
 # ==============================================================================
-# 12. GENERATOR PROMPT (PEMISAHAN TUGAS - STRUCTURAL ANCHOR V.1.3.16)
+# 12. GENERATOR PROMPT (ABSOLUTE IMAGE PRIORITY - V.1.3.17)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -253,48 +243,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     else:
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
-        # FIX: LINK TELANJANG DI PALING DEPAN (IMAGE PROMPT MODE)
-        ref_links_only = " ".join([f"[{c['url']}]" for c in all_chars_list if c['url']]) + " "
+        # TEKNIK: Link di paling depan, dipisah dengan baris baru ganda agar AI fokus
+        ref_links = "\n\n".join([f"[{c['url']}]" for c in all_chars_list if c['url']])
         
-        # MASTER IDENTITY (Hanya bicara struktur wajah dan tubuh dari link)
-        master_identity = "STRUCTURAL CHARACTER ANCHOR: Use the provided image links as the absolute reference for facial identity and body proportions. "
-
         for item in active_scenes:
             vis_lower = item["visual"].lower()
             
-            # CAMERA MOVEMENT & LIGHTING (FULL EXPLICIT V.1.1.8)
-            if camera_map.get(item["cam"]) == "AUTO_MOOD":
-                if any(x in vis_lower for x in ["lari", "jalan", "mobil"]): e_cam_move = "Dynamic Tracking Shot"
-                elif "sedih" in vis_lower: e_cam_move = "Slow Cinematic Zoom In"
-                else: e_cam_move = "Subtle cinematic camera drift"
-            else: e_cam_move = camera_map.get(item["cam"], "Static")
-
-            l_type = item["light"]
-            if "Bening" in l_type:
-                l_cmd, a_cmd = "Ultra-high altitude light visibility, extreme micro-contrast.", "10:00 AM sun, deepest cobalt blue sky."
-            elif "Mendung" in l_type:
-                l_cmd, a_cmd = "Intense moody overcast lighting, vivid recovery.", "Gray-cobalt sky gradient."
+            # LIGHTING MAPPING (FULL EXPLICIT)
+            if "Bening" in item["light"]:
+                l_cmd, a_cmd = "Ultra-high altitude light visibility, extreme micro-contrast.", "10:00 AM sun."
+            elif "Mendung" in item["light"]:
+                l_cmd, a_cmd = "Intense moody overcast lighting.", "Gray-cobalt sky."
             else:
-                l_cmd, a_cmd = "Natural cinematic lighting.", "Clear 8k definition, zero digital noise."
+                l_cmd, a_cmd = "Natural cinematic lighting.", "8k definition."
 
-            # DNA INJECTION (STRICT FACE & BODY)
-            dna_injection = ""
+            # DNA: Memberi tahu AI bahwa link adalah WAJAH UTAMA
+            dna_map = ""
             for idx, c in enumerate(all_chars_list):
                 if c['name'].lower() in vis_lower:
-                    dna_injection += f"ABSOLUTE CHARACTER FIDELITY: Maintain face and body anatomy of {c['name']} from link #{idx+1}. "
-
-            # Karakter Deskripsi (BAJU & AKSESORIS) diletakkan di bagian VISUAL SCENE agar tidak menimpa WAJAH
-            char_visual_traits = ", ".join([f"{c['name']} wearing ({c['desc']})" for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
+                    dna_map += f"ACTUAL FACE REFERENCE: Character {c['name']} must look exactly like the human face in reference link #{idx+1}. "
 
             st.subheader(f"✅ Hasil Adegan {item['num']}")
-            # HASIL AKHIR: [URL] [MASTER IDENTITY] [DNA] Visual Scene + Baju ...
-            img_final = f"{ref_links_only}{master_identity}STATIC photograph, 9:16. {dna_injection} Visual scene: {item['visual']}. {char_visual_traits}. {a_cmd} {l_cmd} {img_quality_base} --ar 9:16"
-            vid_final = f"{ref_links_only}{master_identity}9:16 video. {shot_map.get(item['shot'], 'Medium')} perspective. {dna_injection} Visual scene: {item['visual']}. {char_visual_traits}. {e_cam_move}. {l_cmd} {vid_quality_base}"
+            # HASIL: [LINKS] [ENTER] [ENTER] [DNA] [SCENE] [QUALITY] --iw 2
+            p_img = f"{ref_links}\n\n{dna_map} Visual scene: {item['visual']}. {a_cmd} {l_cmd} {img_quality_base} --iw 2 --ar 9:16"
+            p_vid = f"{ref_links}\n\n{dna_map} 9:16 video. {item['visual']}. {vid_quality_base}"
             
             c1, c2 = st.columns(2)
-            with c1: st.code(img_final)
-            with c2: st.code(vid_final)
+            with c1: st.code(p_img)
+            with c2: st.code(p_vid)
             st.divider()
 
-st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.16")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.17")
