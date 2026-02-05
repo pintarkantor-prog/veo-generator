@@ -87,7 +87,7 @@ with c_h2:
         st.rerun()
 
 # ==============================================================================
-# 6. MAPPING DATA (FULL GEMUK)
+# 6. MAPPING DATA (FULL DETAIL - TIDAK ADA RINGKASAN)
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 indonesia_camera = ["Ikuti Karakter", "Diam (Tanpa Gerak)", "Zoom Masuk Pelan", "Zoom Keluar Pelan", "Geser Kiri ke Kanan", "Geser Kanan ke Kiri", "Dongak ke Atas", "Tunduk ke Bawah", "Ikuti Objek (Tracking)", "Memutar (Orbit)"]
@@ -145,7 +145,7 @@ with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
     for i in range(int(num_chars)):
         with char_cols[i % 2]:
             c_name = st.text_input(f"Nama Karakter {i+1}", key=f"c_name_{i}").strip()
-            c_desc = st.text_area(f"Deskripsi Fisik {i+1}", key=f"c_desc_{i}", height=100)
+            c_desc = st.text_area(f"Fisik {i+1}", key=f"c_desc_{i}", height=100)
             if c_name: 
                 all_chars.append({"name": c_name, "desc": c_desc, "ref_id": i+1})
 
@@ -174,7 +174,7 @@ for i in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i, "visual": v_in, "light": l_v, "camera": c_v, "shot": s_v, "angle": a_v, "dialogs": diags})
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (THE ABSOLUTE MAXIMUM GEMUK)
+# 10. GENERATOR PROMPT (THE ABSOLUTE MAXIMUM GEMUK & RESTORED DIALOG)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -194,6 +194,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for item in active:
             v_low = item["visual"].lower()
             
+            # DNA IDENTITAS
             dna_parts = []
             for c in all_chars:
                 if c['name'].lower() in v_low:
@@ -203,6 +204,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                         dna_parts.append(f"((CONTINUE SESSION IDENTITY IMAGE_REF_{c['ref_id']}: {c['name']} remains 100% identical to reference))")
             dna_final = " ".join(dna_parts)
 
+            # --- RESTORED: DIALOG LOGIC ---
+            # Dialog dikembalikan ke dalam prompt agar AI memahami konteks ekspresi karakter
+            prompt_dialog = ""
+            if item['dialogs']:
+                dialog_list = [f"{name} says: '{text}'" for name, text in item['dialogs'].items()]
+                prompt_dialog = " Character Dialogue Context: " + " | ".join(dialog_list)
+
+            # MEGA LIGHTING (FULL DESKRIPSI TANPA RINGKASAN)
             l_t = item["light"]
             if "Bening" in l_t: 
                 l_cmd = "Ultra-high altitude light visibility, extreme micro-contrast, zero haze. 10:00 AM altitude sun, deepest cobalt blue sky, bone-dry environment clarity, crystal clear object visibility."
@@ -223,15 +232,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             st.subheader(f"✅ Adegan {item['num']}")
             
-            # Display Dialog
+            # Display Dialog di Dashboard
             if item['dialogs']:
                 for char_name, text in item['dialogs'].items():
                     st.markdown(f"**{char_name}**: \"{text}\"")
 
             env_priority = f"ENVIRONMENTAL ACTION PRIORITY: {item['visual']}. Ensure all background objects and actions are rendered with high detail and mandatory presence."
             
-            final_p = f"{dna_final} Visual Scene: {env_priority}. Angle: {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
-            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['camera']]}. SCENE ACTION: {item['visual']}. Lighting: {l_cmd}. 60fps, fluid motion, {ultra_quality}"
+            # RAKITAN FINAL (Dialog Masuk ke Prompt!)
+            final_p = f"{dna_final}{prompt_dialog} Visual Scene: {env_priority}. Angle: {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
+            final_v = f"9:16 vertical video. {dna_final}{prompt_dialog} {shot_map[item['shot']]} {camera_map[item['camera']]}. SCENE ACTION: {item['visual']}. Lighting: {l_cmd}. 60fps, fluid motion, {ultra_quality}"
 
             c1, c2 = st.columns(2)
             c1.markdown("**📸 Prompt Gambar**")
@@ -240,4 +250,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             c2.code(final_v, language="text")
             st.divider()
 
-st.sidebar.caption("PINTAR MEDIA | V.2.1.0-GEMUK-STABLE")
+st.sidebar.caption("PINTAR MEDIA | V.2.1.5-MAX-GEMUK")
