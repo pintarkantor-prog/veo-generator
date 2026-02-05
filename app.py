@@ -7,7 +7,7 @@ from datetime import datetime
 # 1. KONFIGURASI HALAMAN
 # ==============================================================================
 st.set_page_config(
-    page_title="PINTAR MEDIA - Ultra Cinematic Storyboard", 
+    page_title="PINTAR MEDIA - Precision Storyboard", 
     layout="wide", 
     initial_sidebar_state="expanded"
 )
@@ -15,28 +15,19 @@ st.set_page_config(
 # ==============================================================================
 # 2. SISTEM LOGIN
 # ==============================================================================
-USERS = {
-    "admin": "QWERTY21ab", 
-    "icha": "udin99", 
-    "nissa": "tung22"
-}
-
+USERS = {"admin": "QWERTY21ab", "icha": "udin99", "nissa": "tung22"}
 if 'logged_in' not in st.session_state: st.session_state.logged_in = False
 if 'active_user' not in st.session_state: st.session_state.active_user = ""
 
 if not st.session_state.logged_in:
     st.title("🔐 PINTAR MEDIA - AKSES PRODUKSI")
     with st.form("form_login_staf"):
-        input_user = st.text_input("Username")
-        input_pass = st.text_input("Password", type="password")
-        btn_login = st.form_submit_button("Masuk Ke Sistem")
-        if btn_login:
-            if input_user in USERS and USERS[input_user] == input_pass:
-                st.session_state.logged_in = True
-                st.session_state.active_user = input_user
+        u, p = st.text_input("Username"), st.text_input("Password", type="password")
+        if st.form_submit_button("Masuk Ke Sistem"):
+            if u in USERS and USERS[u] == p:
+                st.session_state.logged_in, st.session_state.active_user = True, u
                 st.rerun()
-            else: 
-                st.error("Username atau Password Salah!")
+            else: st.error("Username atau Password Salah!")
     st.stop()
 
 # ==============================================================================
@@ -46,17 +37,9 @@ def record_to_sheets(user, first_visual, total_scenes):
     try:
         conn = st.connection("gsheets", type=GSheetsConnection)
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        new_row = pd.DataFrame([{
-            "Waktu": current_time, 
-            "User": user, 
-            "Total Adegan": total_scenes, 
-            "Visual Utama": first_visual[:150]
-        }])
-        updated_df = pd.concat([existing_data, new_row], ignore_index=True)
-        conn.update(worksheet="Sheet1", data=updated_df)
-    except: 
-        pass
+        new_row = pd.DataFrame([{"Waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "User": user, "Total Adegan": total_scenes, "Visual Utama": first_visual[:150]}])
+        conn.update(worksheet="Sheet1", data=pd.concat([existing_data, new_row], ignore_index=True))
+    except: pass
 
 st.markdown("""<style>
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
@@ -65,15 +48,14 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. HEADER APLIKASI (RESTORED - BAGIAN YANG DILINGKARI MERAH)
+# 4. HEADER APLIKASI (RESTORED)
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
     st.info(f"Staf Aktif: {st.session_state.active_user} | SEMANGAT KERJANYA GUYS! BUAT KONTEN YANG BENER MANTEP YOW 🚀 ❤️")
-
 with c_header2:
-    if st.button("Logout 🚪", key="logout_btn_top"):
+    if st.button("Logout 🚪", key="logout_top"):
         st.session_state.logged_in = False
         st.rerun()
 
@@ -87,52 +69,25 @@ indonesia_angle = ["Normal (Depan)", "Samping (Arah Kamera)", "Berhadapan (Ngobr
 
 camera_map = {"Ikuti Karakter": "AUTO_MOOD", "Diam (Tanpa Gerak)": "Static", "Zoom Masuk Pelan": "Slow Zoom In", "Zoom Keluar Pelan": "Slow Zoom Out", "Geser Kiri ke Kanan": "Pan L-R", "Geser Kanan ke Kiri": "Pan R-L", "Dongak ke Atas": "Tilt Up", "Tunduk ke Bawah": "Tilt Down", "Ikuti Objek (Tracking)": "Tracking", "Memutar (Orbit)": "Orbit"}
 shot_map = {"Sangat Dekat (Detail)": "Extreme Close-Up", "Dekat (Wajah)": "Close-Up", "Setengah Badan": "Medium Shot", "Seluruh Badan": "Full Body Shot", "Pemandangan Luas": "Wide Landscape", "Sudut Rendah (Gagah)": "Low Angle", "Sudut Tinggi (Kecil)": "High Angle"}
-
-angle_map = {
-    "Normal (Depan)": "",
-    "Samping (Arah Kamera)": "90-degree side profile.",
-    "Berhadapan (Ngobrol)": "Facing each other directly.",
-    "Intip Bahu (Framing)": "Over-the-shoulder cinematic framing.",
-    "Wibawa/Gagah (Low Angle)": "Heroic low-angle perspective.",
-    "Mata Karakter (POV)": "First-person immersive POV."
-}
-
-if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
-if 'm_cam' not in st.session_state: st.session_state.m_cam = "Ikuti Karakter"
-if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
-if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
+angle_map = {"Normal (Depan)": "", "Samping (Arah Kamera)": "90-degree side profile.", "Berhadapan (Ngobrol)": "Facing each other.", "Intip Bahu (Framing)": "Over-the-shoulder framing.", "Wibawa/Gagah (Low Angle)": "Heroic low-angle.", "Mata Karakter (POV)": "First-person POV."}
 
 def global_sync_v920():
-    st.session_state.m_light = st.session_state.light_input_1
-    st.session_state.m_cam = st.session_state.camera_input_1
-    st.session_state.m_shot = st.session_state.shot_input_1
-    st.session_state.m_angle = st.session_state.angle_input_1
+    st.session_state.m_light, st.session_state.m_cam = st.session_state.light_input_1, st.session_state.camera_input_1
+    st.session_state.m_shot, st.session_state.m_angle = st.session_state.shot_input_1, st.session_state.angle_input_1
     for idx in range(2, 51):
-        if f"light_input_{idx}" in st.session_state: st.session_state[f"light_input_{idx}"] = st.session_state.m_light
-        if f"camera_input_{idx}" in st.session_state: st.session_state[f"camera_input_{idx}"] = st.session_state.m_cam
-        if f"shot_input_{idx}" in st.session_state: st.session_state[f"shot_input_{idx}"] = st.session_state.m_shot
-        if f"angle_input_{idx}" in st.session_state: st.session_state[f"angle_input_{idx}"] = st.session_state.m_angle
+        for k in ["light", "camera", "shot", "angle"]:
+            key = f"{k}_input_{idx}"
+            if key in st.session_state: st.session_state[key] = st.session_state[f"m_{k[:3]}"]
 
 # ==============================================================================
-# 6. SIDEBAR & ADMIN MONITOR
+# 6. SIDEBAR & CHARACTER INPUT
 # ==============================================================================
 with st.sidebar:
-    if st.session_state.active_user == "admin":
-        st.header("📊 Admin Monitor")
-        if st.checkbox("Buka Log Google Sheets"):
-            try:
-                conn_a = st.connection("gsheets", type=GSheetsConnection)
-                df_a = conn_a.read(worksheet="Sheet1", ttl=0)
-                st.dataframe(df_a)
-            except: st.warning("Database Error.")
-        st.divider()
-    
-    st.header("⚙️ Konfigurasi")
+    if st.session_state.active_user == "admin" and st.checkbox("📊 Admin Monitor"):
+        try: st.dataframe(st.connection("gsheets", type=GSheetsConnection).read(worksheet="Sheet1", ttl=0))
+        except: st.warning("DB Error.")
     num_scenes = st.number_input("Jumlah Adegan", 1, 50, 10)
 
-# ==============================================================================
-# 7. IDENTITAS KARAKTER (UNIVERSAL)
-# ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
     num_chars = st.number_input("Total Karakter", 1, 10, 2)
@@ -142,22 +97,19 @@ with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
         with char_cols[i % 2]:
             c_name = st.text_input(f"Nama Karakter {i+1}", key=f"c_name_{i}").strip()
             c_desc = st.text_area(f"Fisik {i+1}", key=f"c_desc_{i}", height=80)
-            if c_name: 
-                all_chars.append({"name": c_name, "desc": c_desc, "ref_id": i+1})
+            if c_name: all_chars.append({"name": c_name, "desc": c_desc, "ref_id": i+1})
 
 # ==============================================================================
-# 8. GRID INPUT ADEGAN
+# 7. GRID INPUT ADEGAN
 # ==============================================================================
 adegan_storage = []
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"{'🟢 MASTER' if i==1 else '🎬 ADEGAN'} {i}", expanded=(i==1)):
         v_col, c_col = st.columns([6.5, 3.5])
         v_in = v_col.text_area(f"Visual {i}", key=f"vis_input_{i}", height=150)
-        
         r1c1, r1c2 = c_col.columns(2)
         l_v = r1c1.selectbox(f"💡 Cahaya {i}", options_lighting, index=options_lighting.index(st.session_state.m_light), key=f"light_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         c_v = r1c2.selectbox(f"🎥 Gerak {i}", indonesia_camera, index=indonesia_camera.index(st.session_state.m_cam), key=f"camera_input_{i}", on_change=(global_sync_v920 if i==1 else None))
-        
         r2c1, r2c2 = c_col.columns(2)
         s_v = r2c1.selectbox(f"📐 Shot {i}", indonesia_shot, index=indonesia_shot.index(st.session_state.m_shot), key=f"shot_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         a_v = r2c2.selectbox(f"✨ Angle {i}", indonesia_angle, index=indonesia_angle.index(st.session_state.m_angle), key=f"angle_input_{i}", on_change=(global_sync_v920 if i==1 else None))
@@ -170,46 +122,46 @@ for i in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i, "visual": v_in, "light": l_v, "cam": c_v, "shot": s_v, "angle": a_v, "dialogs": diags})
 
 # ==============================================================================
-# 9. GENERATOR PROMPT (ABSOLUTE IDENTITY LOCK SYSTEM)
+# 8. GENERATOR PROMPT (OBJECT REINFORCEMENT)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
-    if not active: 
-        st.warning("Mohon isi visual adegan!")
+    if not active: st.warning("Mohon isi visual adegan!")
     else:
         record_to_sheets(st.session_state.active_user, active[0]["visual"], len(active))
         
-        # PARAMETER KUALITAS TAJAM & WARNA BERANI
         ultra_quality = (
-            "8k resolution, extreme micro-contrast, vivid color saturation, "
-            "f/11 aperture, zero noise, high dynamic range. (Contrast:1.3), (Saturation:1.4), "
-            "STRICTLY NO AI-blur, NO text, NO speech bubbles, NO black bars. --ar 9:16"
+            "8k resolution, micro-contrast, vivid color depth, f/11 sharpness, zero noise. "
+            "(Contrast:1.3), (Saturation:1.4). STRICTLY NO AI-blur, NO text, NO black bars. --ar 9:16"
         )
 
         for item in active:
             v_low = item["visual"].lower()
             
-            # T1: ABSOLUTE IDENTITY LOCK (Kurung Ganda + Keyword Anchor)
+            # T1: ABSOLUTE IDENTITY LOCK
             dna_parts = [f"((ABSOLUTE IDENTITY MATCH IMAGE_REF_{c['ref_id']}: {c['name']} as {c['desc']}))" for c in all_chars if c['name'].lower() in v_low]
             dna_final = " ".join(dna_parts)
 
-            # T2: LIGHTING (LEAN MEAT)
+            # T1.5: OBJECT REINFORCEMENT (Menemukan meja, kursi, dll)
+            v_reinforced = item["visual"]
+            if "meja" in v_low or "table" in v_low:
+                v_reinforced = v_reinforced.replace("meja", "**solid wooden table**").replace("table", "**solid wooden table**")
+
+            # T2: LIGHTING
             l_t = item["light"]
-            if "Bening" in l_t: l_cmd = "Crystal sun clarity, zero haze, micro-contrast."
-            elif "Mendung" in l_t: l_cmd = "8000k moody overcast, tactile depth, 16-bit color."
-            elif "Dramatis" in l_t: l_cmd = "Hard directional side-lighting, HDR shadows."
-            elif "Alami" in l_t: l_cmd = "Hyper-saturated plant pigments, low-exposure natural sunlight, intricate leaf textures."
-            else: l_cmd = "Professional high-contrast lighting."
+            if "Bening" in l_t: l_cmd = "Crystal sun clarity, zero haze."
+            elif "Mendung" in l_t: l_cmd = "8000k overcast, tactile depth."
+            else: l_cmd = "Professional high-contrast natural lighting."
 
             st.subheader(f"✅ Adegan {item['num']}")
             
-            # RENDER FINAL
-            img_p = f"{dna_final} Visual: {item['visual']}. {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
-            vid_p = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. {item['visual']}. {l_cmd}. {ultra_quality}"
+            # SUSUNAN FINAL: Memastikan Deskripsi Visual (v_reinforced) dibaca sangat jelas
+            final_p = f"{dna_final} MANDATORY SCENE ELEMENTS: {v_reinforced}. Angle: {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
+            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. SCENE: {v_reinforced}. {l_cmd}. {ultra_quality}"
 
             c1, c2 = st.columns(2)
-            c1.code(img_p, language="text")
-            c2.code(vid_p, language="text")
+            c1.code(final_p, language="text")
+            c2.code(final_v, language="text")
             st.divider()
 
-st.sidebar.caption("PINTAR MEDIA | V.1.8.5-STABLE")
+st.sidebar.caption("PINTAR MEDIA | V.1.8.6-STABLE")
