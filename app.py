@@ -79,7 +79,7 @@ def record_to_sheets(user, first_visual, total_scenes):
 
 
 # ==============================================================================
-# 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 4. CUSTOM CSS (MODIFIKASI: KOLOM ADEGAN LEBIH PANJANG)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -98,10 +98,12 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
+    /* PERUBAHAN TATA LETAK: Textarea Visual dibuat lebih tinggi (300px) */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
+        min-height: 300px !important; 
     }
     .small-label {
         font-size: 12px;
@@ -310,7 +312,8 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_l, col_c, col_s, col_a = st.columns([3, 1.2, 1.2, 1.2, 1.4])
         
         with col_v:
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=150)
+            # AREA VISUAL TETAP TINGGI (Disesuaikan CSS)
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=300)
         
         with col_l:
             st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
@@ -375,7 +378,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
         # --- LOGIKA MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
-        # Mengumpulkan semua definisi karakter dari sidebar
         char_defs = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
         master_lock_instruction = f"IMPORTANT: Remember these characters and their physical traits for this entire session. Do not deviate from these visuals: {char_defs}. "
 
@@ -490,4 +492,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.3")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.4")
