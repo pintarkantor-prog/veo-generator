@@ -13,12 +13,12 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT)
+# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
 # ==============================================================================
 USERS = {
-    "admin": "admin123",
-    "staf_01": "karya01",
-    "staf_02": "karya02"
+    "admin": "QWERTY21ab",
+    "icha": "udin99",
+    "nissa": "tung22"
 }
 
 if 'logged_in' not in st.session_state:
@@ -98,10 +98,12 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
+    /* PENYESUAIAN TINGGI: Area visual dibatasi tingginya sesuai permintaan Dian */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
+        min-height: 180px !important; 
     }
     .small-label {
         font-size: 12px;
@@ -114,12 +116,12 @@ st.markdown("""
 
 
 # ==============================================================================
-# 5. HEADER APLIKASI
+# 5. HEADER APLIKASI (KALIMAT MOTIVASI DIPERTAHANKAN)
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | v9.20 | SECURE CLOUD ACTIVE ❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
 with c_header2:
     if st.button("Logout 🚪"):
         st.session_state.logged_in = False
@@ -127,9 +129,10 @@ with c_header2:
 
 
 # ==============================================================================
-# 6. MAPPING TRANSLATION (INDONESIA -> INGGRIS)
+# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - NO REDUCTION)
 # ==============================================================================
 indonesia_camera = [
+    "Otomatis (Ikuti Mood Adegan)", 
     "Diam (Tanpa Gerak)", 
     "Zoom Masuk Pelan", 
     "Zoom Keluar Pelan", 
@@ -151,7 +154,17 @@ indonesia_shot = [
     "Sudut Tinggi (Kecil)"
 ]
 
+indonesia_angle = [
+    "Normal (Depan)",
+    "Samping (Melihat Jalan/Kedalaman)", 
+    "Berhadapan (Ngobrol)", 
+    "Intip Bahu (Framing)", 
+    "Wibawa/Gagah (Low Angle)", 
+    "Mata Karakter (POV)"
+]
+
 camera_map = {
+    "Otomatis (Ikuti Mood Adegan)": "AUTO_MOOD",
     "Diam (Tanpa Gerak)": "Static (No Move)", 
     "Zoom Masuk Pelan": "Slow Zoom In", 
     "Zoom Keluar Pelan": "Slow Zoom Out",
@@ -173,6 +186,15 @@ shot_map = {
     "Sudut Tinggi (Kecil)": "High Angle Shot"
 }
 
+angle_map = {
+    "Normal (Depan)": "",
+    "Samping (Melihat Jalan/Kedalaman)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
+    "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
+    "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
+    "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
+    "Mata Karakter (POV)": "First-person point of view, looking through the character's eyes, immersive perspective."
+}
+
 options_lighting = [
     "Bening dan Tajam", 
     "Sejuk dan Terang", 
@@ -187,27 +209,30 @@ options_lighting = [
 if 'm_light' not in st.session_state: st.session_state.m_light = options_lighting[0]
 if 'm_cam' not in st.session_state: st.session_state.m_cam = indonesia_camera[0]
 if 'm_shot' not in st.session_state: st.session_state.m_shot = indonesia_shot[2]
+if 'm_angle' not in st.session_state: st.session_state.m_angle = indonesia_angle[0]
 
 def global_sync_v920():
     lt1 = st.session_state.light_input_1
     cm1 = st.session_state.camera_input_1
     st1 = st.session_state.shot_input_1
+    ag1 = st.session_state.angle_input_1
     
     st.session_state.m_light = lt1
     st.session_state.m_cam = cm1
     st.session_state.m_shot = st1
+    st.session_state.m_angle = ag1
     
     for key in st.session_state.keys():
         if key.startswith("light_input_"): st.session_state[key] = lt1
         if key.startswith("camera_input_"): st.session_state[key] = cm1
         if key.startswith("shot_input_"): st.session_state[key] = st1
+        if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 
 # ==============================================================================
 # 7. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MANUAL - NO REDUCTION)
 # ==============================================================================
 with st.sidebar:
-    # FITUR ADMIN MONITORING
     if st.session_state.active_user == "admin":
         st.header("📊 Admin Monitor")
         if st.checkbox("Buka Log Google Sheets"):
@@ -225,19 +250,16 @@ with st.sidebar:
     st.divider()
     st.subheader("👥 Identitas & Fisik Karakter")
     
-    # --- Karakter 1 ---
     st.markdown("### Karakter 1")
     c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
     c_p1_v = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", height=100)
     
     st.divider()
     
-    # --- Karakter 2 ---
     st.markdown("### Karakter 2")
     c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
     c_p2_v = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", height=100)
 
-    # --- Tambah Karakter (v9.15 Mode) ---
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
@@ -255,30 +277,27 @@ with st.sidebar:
 
 
 # ==============================================================================
-# 8. PARAMETER KUALITAS (ULTIMATE FIDELITY - NO REDUCTION)
+# 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
 # ==============================================================================
+sharp_natural_stack = (
+    "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, zero black borders, "
+    "expansive background rendering to edges, Circular Polarizer (CPL) filter effect, eliminates light glare, "
+    "ultra-high-fidelity resolution, micro-contrast enhancement, optical clarity, deep saturated pigments, "
+    "vivid organic color punch, intricate organic textures, skin texture override with 8k details, "
+    "f/11 aperture for deep focus sharpness, zero digital noise, zero atmospheric haze, crystal clear background focus."
+)
+
 no_text_strict = (
-    "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
-    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters."
+    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, "
+    "NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
 )
 
-img_quality_base = (
-    "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, "
-    "absolute fidelity to unique character reference, edge-to-edge optical sharpness, "
-    "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures, "
-    "circular polarizer (CPL) filter effect, zero atmospheric haze, 8k resolution, " + no_text_strict
-)
-
-vid_quality_base = (
-    "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, "
-    "strict character consistency, deep saturated pigments, "
-    "hyper-vivid foliage textures, crystal clear background focus, "
-    "lossless texture quality, fluid organic motion, " + no_text_strict
-)
+img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (MANUAL GRID - NO COMPRESSION)
+# 9. FORM INPUT ADEGAN (TATA LETAK GRID SESUAI INSTRUKSI DIAN)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -289,37 +308,50 @@ for i_s in range(1, int(num_scenes) + 1):
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
         
-        # Grid System Manual
-        col_v, col_l, col_c, col_s = st.columns([4, 1.5, 1.5, 1.5])
+        # Grid System: Visual 65% di kiri, Kontrol 35% di kanan
+        # Penyesuaian lebar kolom agar lebih presisi sesuai gambar referensi
+        col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=150)
+            # Persempit area visual sesuai batas (height dikurangi)
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
         
-        with col_l:
-            st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-            if i_s == 1:
-                l_val = st.selectbox("L1", options_lighting, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-            else:
-                if f"light_input_{i_s}" not in st.session_state: st.session_state[f"light_input_{i_s}"] = st.session_state.m_light
-                l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
-        
-        with col_c:
-            st.markdown('<p class="small-label">🎥 Gerak Video</p>', unsafe_allow_html=True)
-            if i_s == 1:
-                c_val = st.selectbox("C1", indonesia_camera, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-            else:
-                if f"camera_input_{i_s}" not in st.session_state: st.session_state[f"camera_input_{i_s}"] = st.session_state.m_cam
-                c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
+        with col_ctrl:
+            # Kontrol Baris 1: Cahaya & Gerak (Merapat ke area visual)
+            r1_c1, r1_c2 = st.columns(2)
+            with r1_c1:
+                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                if i_s == 1:
+                    l_val = st.selectbox("L1", options_lighting, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                else:
+                    if f"light_input_{i_s}" not in st.session_state: st.session_state[f"light_input_{i_s}"] = st.session_state.m_light
+                    l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
+            with r1_c2:
+                st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
+                if i_s == 1:
+                    c_val = st.selectbox("C1", indonesia_camera, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                else:
+                    if f"camera_input_{i_s}" not in st.session_state: st.session_state[f"camera_input_{i_s}"] = st.session_state.m_cam
+                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
+            
+            # Kontrol Baris 2: Shot & Angle (Langsung di bawah Baris 1)
+            r2_c1, r2_c2 = st.columns(2)
+            with r2_c1:
+                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
+                if i_s == 1:
+                    s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                else:
+                    if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
+                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+            with r2_c2:
+                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
+                if i_s == 1:
+                    a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                else:
+                    if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
+                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
 
-        with col_s:
-            st.markdown('<p class="small-label">📐 Ukuran Shot</p>', unsafe_allow_html=True)
-            if i_s == 1:
-                s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-            else:
-                if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
-                s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
-
-        # Dialog Dinamis Manual
+        # Dialog Dinamis Manual (Posisinya tetap di bawah visual utama)
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -329,7 +361,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "dialogs": scene_dialogs_list
+            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
         })
 
 
@@ -337,7 +369,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - FULL MANUAL EXPLICIT)
+# 10. GENERATOR PROMPT (V.1.0.3 - MASTER LIGHTING & CHARACTER LOCK)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -346,17 +378,44 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     if not active_scenes:
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
-        # SIMPAN KE GOOGLE SHEETS CLOUD (MENGGUNAKAN SERVICE ACCOUNT)
+        # LOGGING CLOUD
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
+        # --- LOGIKA MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
+        char_defs = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
+        master_lock_instruction = f"IMPORTANT: Remember these characters and their physical traits for this entire session. Do not deviate from these visuals: {char_defs}. "
+
         for item in active_scenes:
             
-            # Konversi Teknis
-            e_cam_move = camera_map.get(item["cam"], "Static")
+            # --- LOGIKA SMART CAMERA MOVEMENT ---
+            vis_core = item["visual"]
+            vis_lower = vis_core.lower()
+            
+            if camera_map.get(item["cam"]) == "AUTO_MOOD":
+                if any(x in vis_lower for x in ["lari", "jalan", "pergi", "mobil", "motor"]): 
+                    e_cam_move = "Dynamic Tracking Shot, follow subject motion"
+                elif any(x in vis_lower for x in ["sedih", "menangis", "fokus", "detail", "melihat", "terkejut"]): 
+                    e_cam_move = "Slow Cinematic Zoom In"
+                elif any(x in vis_lower for x in ["pemandangan", "kota", "luas", "halaman", "jalan raya"]): 
+                    e_cam_move = "Slow Pan Left to Right"
+                elif any(x in vis_lower for x in ["marah", "teriak", "berantem", "aksi"]): 
+                    e_cam_move = "Handheld Shaky Cam intensity"
+                else: 
+                    e_cam_move = "Subtle cinematic camera drift"
+            else:
+                e_cam_move = camera_map.get(item["cam"], "Static")
+
+            # --- SMART ANCHOR TERAS ---
+            if "teras" in vis_lower:
+                vis_core_final = vis_core + " (Backrest fixed against the house wall, positioned under the porch roof roof, chair anchored to house structure)."
+            else:
+                vis_core_final = vis_core
+
+            # Konversi Teknis Lainnya
             e_shot_size = shot_map.get(item["shot"], "Medium Shot")
+            e_angle_cmd = angle_map.get(item["angle"], "")
             
             scene_id = item["num"]
-            vis_core = item["visual"]
             light_type = item["light"]
             
             # --- FULL LIGHTING MAPPING (MANUAL EXPLICIT - NO REDUCTION) ---
@@ -405,28 +464,30 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # Character Appearance DNA Sync
-            dna_str = " ".join([f"STRICT CHARACTER APPEARANCE: {c['name']} ({c['desc']})" for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
+            # DNA Anchor: Identity Preservation + Texture Override (LENGKAP)
+            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
+
+            # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
+            current_lock = master_lock_instruction if scene_id == 1 else ""
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
             
-            # Prompt Gambar (Static)
             img_final = (
-                f"buatkan gambar adegan {scene_id}. {emotion_ctx}{dna_str} Visual: {vis_core}. "
-                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base}"
+                f"{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
+                f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
+                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
-            # Prompt Video (Cinematic)
             vid_final = (
-                f"Video Adegan {scene_id}. {e_shot_size} perspective. {e_cam_move} movement. "
-                f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
+                f"{current_lock}9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
+                f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
             
             c1, c2 = st.columns(2)
             with c1:
-                st.caption("📸 PROMPT GAMBAR")
+                st.caption("📸 PROMPT GAMBAR (STATIC)")
                 st.code(img_final, language="text")
             with c2:
                 st.caption(f"🎥 PROMPT VIDEO ({e_shot_size} + {e_cam_move})")
@@ -435,4 +496,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA Storyboard v9.20 - Secure Service Account Edition")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.9")
