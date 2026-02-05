@@ -7,8 +7,8 @@ from datetime import datetime
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
 # ==============================================================================
 st.set_page_config(
-    page_title="PINTAR MEDIA - Storyboard Generator",
-    layout="wide",
+    page_title="PINTAR MEDIA - Storyboard Generator", 
+    layout="wide", 
     initial_sidebar_state="expanded"
 )
 
@@ -16,8 +16,8 @@ st.set_page_config(
 # 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
 # ==============================================================================
 USERS = {
-    "admin": "QWERTY21ab",
-    "icha": "udin99",
+    "admin": "QWERTY21ab", 
+    "icha": "udin99", 
     "nissa": "tung22"
 }
 
@@ -41,7 +41,7 @@ if not st.session_state.logged_in:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
                 st.rerun()
-            else:
+            else: 
                 st.error("Username atau Password Salah!")
     st.stop()
 
@@ -62,9 +62,9 @@ def record_to_sheets(user, first_visual, total_scenes):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
-            "Waktu": current_time,
-            "User": user,
-            "Total Adegan": total_scenes,
+            "Waktu": current_time, 
+            "User": user, 
+            "Total Adegan": total_scenes, 
             "Visual Utama": first_visual[:150]
         }])
         
@@ -93,7 +93,7 @@ st.markdown("""
         background-color: #28a745 !important;
         color: white !important;
         opacity: 1 !important; 
-        border_radius: 6px !important;
+        border-radius: 6px !important;
         border: 2px solid #ffffff !important;
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
@@ -280,19 +280,24 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     with col_c1:
         st.markdown("### Karakter 1")
         c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
+        # --- PENAMBAHAN: URL REFERENSI ---
+        c_url1 = st.text_input("URL Gambar Karakter 1", key="c_url_1_input", placeholder="Paste link gambar referensi di sini")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", key="c_desc_1_input", height=100)
     
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
+        # --- PENAMBAHAN: URL REFERENSI ---
+        c_url2 = st.text_input("URL Gambar Karakter 2", key="c_url_2_input", placeholder="Paste link gambar referensi di sini")
         c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", key="c_desc_2_input", height=100)
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
     all_chars_list = []
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
+    # --- PENAMBAHAN: DATA URL MASUK KE LIST ---
+    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_url1})
+    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_url2})
 
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
@@ -300,8 +305,10 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
+                # --- PENAMBAHAN: URL EXTRA ---
+                ex_url = st.text_input(f"URL Gambar {ex_idx + 1}", key=f"ex_url_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
-                all_chars_list.append({"name": ex_name, "desc": ex_phys})
+                all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url})
 
 # --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
@@ -320,7 +327,6 @@ for i_s in range(1, int(num_scenes) + 1):
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                # Gunakan nilai dari session state jika ada, jika tidak pakai 0
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
                 if i_s == 1:
                     l_val = st.selectbox("L1", options_lighting, index=idx_l, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
@@ -463,8 +469,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor: Identity Preservation + Texture Override (LENGKAP)
-            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
+            # --- PENAMBAHAN: LOGIKA IMAGE REFERENCE (DNA + URL) ---
+            dna_str = ""
+            for c in all_chars_list:
+                if c['name'] and c['name'].lower() in vis_lower:
+                    ref_url = f"IMAGE_REFERENCE_LOCK: {c['url']} " if c['url'] else ""
+                    dna_str += f"{ref_url}STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness. "
 
             # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
             current_lock = master_lock_instruction if scene_id == 1 else ""
@@ -495,4 +505,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.9")
