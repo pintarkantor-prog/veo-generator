@@ -16,8 +16,8 @@ st.set_page_config(
 # 2. DATABASE LINK FOTO (INVISIBLE - AUTO-MATCHING SYSTEM)
 # ==============================================================================
 LINK_REFERENSI = {
-    "UDIN": "https://drive.google.com/uc?export=view&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5",
-    "TUNG": "https://drive.google.com/uc?export=view&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
+    "UDIN": "https://i.ibb.co.com/qbssssw/UDIN.png",
+    "TUNG": "https://i.ibb.co.com/RG9CGhNx/TUNG.png"
 }
 
 # ==============================================================================
@@ -515,3 +515,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.3.11")
+
