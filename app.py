@@ -4,13 +4,10 @@ import pandas as pd
 from datetime import datetime
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN
+# 1-3. CONFIG, LOGIN, & CSS (STABLE VERSION)
 # ==============================================================================
-st.set_page_config(page_title="PINTAR MEDIA - Ultra Chroma Storyboard", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="PINTAR MEDIA - Final Chroma", layout="wide", initial_sidebar_state="expanded")
 
-# ==============================================================================
-# 2. SISTEM LOGIN
-# ==============================================================================
 USERS = {"admin": "QWERTY21ab", "icha": "udin99", "nissa": "tung22"}
 if 'logged_in' not in st.session_state: st.session_state.logged_in = False
 if 'active_user' not in st.session_state: st.session_state.active_user = ""
@@ -26,9 +23,6 @@ if not st.session_state.logged_in:
             else: st.error("Akses Ditolak!")
     st.stop()
 
-# ==============================================================================
-# 3. DATABASE & CSS
-# ==============================================================================
 def record_to_sheets(user, first_visual, total_scenes):
     try:
         conn = st.connection("gsheets", type=GSheetsConnection)
@@ -44,7 +38,7 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. MAPPING DATA (ULTRA CHROMA ENGINE)
+# 4. MAPPING DATA
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 indonesia_camera = ["Ikuti Karakter", "Diam (Tanpa Gerak)", "Zoom Masuk Pelan", "Zoom Keluar Pelan", "Geser Kiri ke Kanan", "Geser Kanan ke Kiri", "Dongak ke Atas", "Tunduk ke Bawah", "Ikuti Objek (Tracking)", "Memutar (Orbit)"]
@@ -56,11 +50,11 @@ shot_map = {"Sangat Dekat (Detail)": "Extreme Close-Up", "Dekat (Wajah)": "Close
 
 angle_map = {
     "Normal (Depan)": "",
-    "Samping (Arah Kamera)": "90-degree side profile view, cinematic depth.",
-    "Berhadapan (Ngobrol)": "Facing each other directly, character interaction.",
-    "Intip Bahu (Framing)": "Over-the-shoulder framing for depth.",
-    "Wibawa/Gagah (Low Angle)": "Heroic low-angle perspective.",
-    "Mata Karakter (POV)": "Immersive character POV."
+    "Samping (Arah Kamera)": "90-degree side profile.",
+    "Berhadapan (Ngobrol)": "Facing each other directly.",
+    "Intip Bahu (Framing)": "Over-the-shoulder framing.",
+    "Wibawa/Gagah (Low Angle)": "Heroic low-angle shot.",
+    "Mata Karakter (POV)": "First-person POV."
 }
 
 def global_sync_v920():
@@ -81,14 +75,14 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan", 1, 50, 10)
 
 st.subheader("📝 Detail Adegan Storyboard")
-with st.expander("👥 Identitas & Fisik Karakter (Universal)", expanded=True):
+with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
     num_chars = st.number_input("Total Karakter", 1, 10, 2)
     all_chars = []
     char_cols = st.columns(2)
     for i in range(num_chars):
         with char_cols[i % 2]:
             c_name = st.text_input(f"Nama Karakter {i+1}", key=f"c_name_{i}").strip()
-            c_desc = st.text_area(f"Deskripsi {i+1}", key=f"c_desc_{i}", height=80)
+            c_desc = st.text_area(f"Fisik {i+1}", key=f"c_desc_{i}", height=80)
             if c_name: all_chars.append({"name": c_name, "desc": c_desc, "ref_id": i+1})
 
 # ==============================================================================
@@ -106,15 +100,15 @@ for i in range(1, int(num_scenes) + 1):
         s_v = r2c1.selectbox(f"📐 Shot {i}", indonesia_shot, key=f"shot_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         a_v = r2c2.selectbox(f"✨ Angle {i}", indonesia_angle, key=f"angle_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         
-        diag_cols = st.columns(len(all_chars) if all_chars else 1)
         diags = []
+        diag_cols = st.columns(len(all_chars) if all_chars else 1)
         for ic, cd in enumerate(all_chars):
             d_t = diag_cols[ic].text_input(f"Dialog {cd['name']}", key=f"diag_{i}_{ic}")
             if d_t: diags.append({"name": cd['name'], "text": d_t})
         adegan_storage.append({"num": i, "visual": v_in, "light": l_v, "cam": c_v, "shot": s_v, "angle": a_v, "dialogs": diags})
 
 # ==============================================================================
-# 8. GENERATOR PROMPT (THE ULTRA CHROMA SYSTEM)
+# 8. GENERATOR PROMPT (ISOLATION TAG SYSTEM)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -122,39 +116,36 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     else:
         record_to_sheets(st.session_state.active_user, active[0]["visual"], len(active))
         
-        # PARAMETER KUALITAS TERBAIK (SUNTIKAN KONTRAS & SATURASI)
+        # QUALITY CORE - Dipadatkan secara ekstrim untuk mencegah drift
         ultra_quality = (
-            "8k resolution, extreme micro-contrast, local contrast amplification, "
-            "hyper-defined micro-pores on leaves and tree bark, intricate micro-textures, "
-            "deep saturated pigments, vivid organic color punch, f/11 aperture, zero noise. "
-            "(Contrast:1.3), (Saturation:1.5), hyper-realistic organic sharp details. "
-            "STRICTLY NO AI-blur, NO text, NO speech bubbles, NO black bars. --ar 9:16"
+            "8k resolution, micro-contrast enhancement, vivid color, f/11 sharpness, zero noise. "
+            "(Contrast:1.3), (Saturation:1.4), intricate-organic-textures. --ar 9:16"
         )
 
         for item in active:
             v_low = item["visual"].lower()
             
-            # T1: DNA ANCHOR
-            dna_parts = [f"IDENTITY MATCH [IMAGE_REF_{c['ref_id']}]: {c['name']} is ({c['desc']}). NO VARIATION." for c in all_chars if c['name'].lower() in v_low]
+            # T1: IDENTITY ISOLATION (Menggunakan kurung ganda untuk penguncian maksimal)
+            dna_parts = [f"((STRICT IDENTITY LOCK IMAGE_REF_{c['ref_id']}: {c['name']} as {c['desc']}))" for c in all_chars if c['name'].lower() in v_low]
             dna_final = " ".join(dna_parts)
 
             # T2: LIGHTING (TAJAM & ALAMI)
             l_t = item["light"]
-            if "Bening" in l_t: l_cmd = "Ultra-altitude sunlight, zero haze, crisp sky, extreme micro-contrast."
-            elif "Mendung" in l_t: l_cmd = "8000k moody overcast, 16-bit color, tactile texture bite, gray-cobalt sky."
-            elif "Dramatis" in l_t: l_cmd = "Hard directional side-lighting, HDR shadows, deep dynamic range."
-            elif "Alami" in l_t: l_cmd = "Low-exposure sunlight, extreme chlorophyll color depth, hyper-saturated organic plant pigments."
-            else: l_cmd = "Professional high-contrast natural lighting, sharp rim highlights."
+            if "Bening" in l_t: l_cmd = "Ultra-altitude sunlight, crisp micro-contrast, zero haze."
+            elif "Mendung" in l_t: l_cmd = "8000k overcast, tactile texture depth, 16-bit color."
+            elif "Dramatis" in l_t: l_cmd = "Hard side-lighting, HDR shadows, deep dynamic range."
+            elif "Alami" in l_t: l_cmd = "Hyper-saturated chlorophyll, low-exposure sunlight, defined micro-textures on leaves."
+            else: l_cmd = "Professional high-contrast natural lighting, clear sky."
 
             st.subheader(f"✅ Adegan {item['num']}")
             
-            # PROMPT GAMBAR & VIDEO DENGAN PARAMETER KHUSUS
-            final_p = f"STATIC PHOTO SESSION. {dna_final} Visual: {item['visual']}. {angle_map[item['angle']]}. {l_cmd} {ultra_quality}"
-            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. {item['visual']}. {l_cmd} 60fps, fluid, {ultra_quality}"
+            # SUSUNAN TERISOLASI
+            final_p = f"{dna_final} Visual: {item['visual']}. {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
+            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. {item['visual']}. {l_cmd}. {ultra_quality}"
 
             c1, c2 = st.columns(2)
             c1.code(final_p, language="text")
             c2.code(final_v, language="text")
             st.divider()
 
-st.sidebar.caption("PINTAR MEDIA | V.1.7.0-ULTRA-CHROMA")
+st.sidebar.caption("PINTAR MEDIA | V.1.8.0-FINAL-CHROMA")
