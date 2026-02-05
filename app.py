@@ -15,7 +15,6 @@ st.set_page_config(
 # ==============================================================================
 # 2. DATABASE LINK FOTO (INVISIBLE - AUTO-MATCHING SYSTEM)
 # ==============================================================================
-# Sistem akan mencocokkan Nama Karakter (Case-Insensitive) dengan link di bawah
 LINK_REFERENSI = {
     "UDIN": "https://drive.google.com/uc?export=view&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5",
     "TUNG": "https://drive.google.com/uc?export=view&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
@@ -61,13 +60,8 @@ if not st.session_state.logged_in:
 def record_to_sheets(user, first_visual, total_scenes):
     """Mencatat aktivitas karyawan menggunakan Service Account Secrets"""
     try:
-        # Membangun koneksi ke Google Sheets melalui Secrets
         conn = st.connection("gsheets", type=GSheetsConnection)
-        
-        # Membaca data lama (Worksheet harus bernama Sheet1)
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
-        
-        # Membuat baris data baru secara eksplisit
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
@@ -77,12 +71,8 @@ def record_to_sheets(user, first_visual, total_scenes):
             "Visual Utama": first_visual[:150]
         }])
         
-        # Menggabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
-        
-        # Menulis kembali ke Cloud (Update)
         conn.update(worksheet="Sheet1", data=updated_df)
-        
     except Exception as e:
         st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
 
@@ -297,7 +287,6 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
-    # Matching logic otomatis di balik layar (Case Insensitive)
     u1_auto = LINK_REFERENSI.get(c_n1_v.upper().strip(), "")
     u2_auto = LINK_REFERENSI.get(c_n2_v.upper().strip(), "")
     
@@ -324,7 +313,6 @@ for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
-        # Grid Layout 
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
@@ -383,7 +371,7 @@ st.divider()
 
 
 # ==============================================================================
-# 12. GENERATOR PROMPT (PEMISAHAN TUGAS OPTIMIZED - V.1.3.7)
+# 12. GENERATOR PROMPT (THE MEGA LOGIC RESTORED - V.1.3.10)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -395,7 +383,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         # LOGGING CLOUD
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
-        # 1. LINK URL DITARUH DI DEPAN DENGAN LABEL JELAS
+        # 1. LINK URL DITARUH DI DEPAN DENGAN LABEL JELAS (PRIORITAS VISUAL)
         ref_header = "Character Visual References: " + " ".join([f"{c['name']}: [{c['url']}]" for c in all_chars_list if c['url']]) + ". "
         
         # 2. MASTER LOCK (ADEGAN 1)
@@ -483,9 +471,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             # 3. DNA FOKUS PADA WAJAH (IDENTITAS DARI LINK)
             dna_injection = ""
-            for n in [c['name'] for c in all_chars_list]:
-                if n.lower() in vis_lower:
-                    dna_injection += f"Use facial identity of {n} from reference link. "
+            for c in all_chars_list:
+                if c['name'].lower() in vis_lower:
+                    dna_injection += f"Use facial identity of {c['name']} from reference link. "
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"✅ Hasil Adegan {scene_id}")
@@ -513,4 +501,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.7")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.10")
