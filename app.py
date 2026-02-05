@@ -93,11 +93,6 @@ camera_map = {"Ikuti Karakter": "AUTO_MOOD", "Diam (Tanpa Gerak)": "Static (No M
 shot_map = {"Sangat Dekat (Detail)": "Extreme Close-Up", "Dekat (Wajah)": "Close-Up", "Setengah Badan": "Medium Shot", "Seluruh Badan": "Full Body Shot", "Pemandangan Luas": "Wide Landscape Shot", "Sudut Rendah (Gagah)": "Low Angle Shot", "Sudut Tinggi (Kecil)": "High Angle Shot"}
 angle_map = {"Normal (Depan)": "", "Samping (Arah Kamera)": "Side profile view, 90-degree angle.", "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly.", "Intip Bahu (Framing)": "Over-the-shoulder framing.", "Wibawa/Gagah (Low Angle)": "Heroic low angle shot.", "Mata Karakter (POV)": "First-person point of view."}
 
-if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
-if 'm_cam' not in st.session_state: st.session_state.m_cam = "Ikuti Karakter"
-if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
-if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
-
 def global_sync_v920():
     st.session_state.m_light = st.session_state.light_input_1
     st.session_state.m_cam = st.session_state.camera_input_1
@@ -110,7 +105,7 @@ def global_sync_v920():
         if f"angle_input_{i}" in st.session_state: st.session_state[f"angle_input_{i}"] = st.session_state.m_angle
 
 # ==============================================================================
-# 7. SIDEBAR (ADMIN MONITOR RESTORED)
+# 7. SIDEBAR (ADMIN MONITOR & CONFIG)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
@@ -127,9 +122,8 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
 
 # ==============================================================================
-# 8. PARAMETER KUALITAS & FORM INPUT
+# 8. MEGA QUALITY STACK (UNIVERSAL)
 # ==============================================================================
-# Mega Detail Quality Stacking - INI YANG KEMBALI SEPENUHNYA
 full_quality_stack = (
     "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, "
     "zero black borders, expansive background rendering to edges, Circular Polarizer (CPL) filter effect, "
@@ -139,6 +133,9 @@ full_quality_stack = (
     "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, NO watermark, NO letters, NO black bars on top and bottom, NO subtitles. --ar 9:16"
 )
 
+# ==============================================================================
+# 9. FORM INPUT ADEGAN
+# ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
@@ -166,9 +163,6 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
                 if ex_name: all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
-# ==============================================================================
-# 9. LIST ADEGAN
-# ==============================================================================
 adegan_storage = []
 for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
@@ -178,11 +172,11 @@ for i_s in range(1, int(num_scenes) + 1):
             visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
         with col_ctrl:
             r1c1, r1c2 = st.columns(2)
-            l_val = r1c1.selectbox(f"💡 Cahaya {i_s}", options_lighting, index=options_lighting.index(st.session_state.m_light), key=f"light_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
-            c_val = r1c2.selectbox(f"🎥 Gerak {i_s}", indonesia_camera, index=indonesia_camera.index(st.session_state.m_cam), key=f"camera_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
+            l_val = r1c1.selectbox(f"💡 Cahaya {i_s}", options_lighting, key=f"light_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
+            c_val = r1c2.selectbox(f"🎥 Gerak {i_s}", indonesia_camera, key=f"camera_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
             r2c1, r2c2 = st.columns(2)
-            s_val = r2c1.selectbox(f"📐 Shot {i_s}", indonesia_shot, index=indonesia_shot.index(st.session_state.m_shot), key=f"shot_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
-            a_val = r2c2.selectbox(f"✨ Angle {i_s}", indonesia_angle, index=indonesia_angle.index(st.session_state.m_angle), key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
+            s_val = r2c1.selectbox(f"📐 Shot {i_s}", indonesia_shot, key=f"shot_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
+            a_val = r2c2.selectbox(f"✨ Angle {i_s}", indonesia_angle, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None))
 
         diag_cols = st.columns(len(all_chars_list) if all_chars_list else 1)
         scene_dialogs = []
@@ -193,7 +187,7 @@ for i_s in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs})
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (ULTRA QUALITY INTEGRATED)
+# 10. GENERATOR PROMPT (HIERARCHICAL PRIORITY LOGIC)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -201,69 +195,50 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     else:
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
-        # MASTER LOCK (Hanya untuk Adegan 1)
-        master_lock = "SESSION ANTI-DRIFT: Maintain strict permanent visual consistency for all characters. "
+        # Sesi Global (Paling Depan)
+        master_lock = "STRICT VISUAL SESSION: Characters must remain 100% identical to their initial reference. "
 
         for item in active_scenes:
             v_low = item["visual"].lower()
             
-            # Smart Anchor Teras
-            vis_core_final = item["visual"] + " (Backrest fixed against house wall, positioned under porch roof)." if "teras" in v_low else item["visual"]
-
-            # DNA Anchor (DEDUPLICATED & RESOLUTION ENHANCEMENT)
+            # --- TIER 1: CHARACTER DNA (PRIORITAS UTAMA) ---
             dna_parts = []
             for c in all_chars_list:
                 if c['name'].lower() in v_low:
-                    # Setiap karakter yang muncul akan dire-render dengan detail 8k dan ketajaman
                     dna_instruction = (
-                        f"STRICT FIDELITY on {c['name']} appearance: {c['desc']}. "
-                        f"Maintain identity in 8k detail, but re-render surface with 8k skin texture, "
-                        f"enhanced contrast, and professional cinematic sharpness."
+                        f"IDENTICAL CHARACTER ANCHOR: {c['name']} is ({c['desc']}). "
+                        f"STRICT FIDELITY: Re-render this specific identity with 8k skin texture, "
+                        f"enhanced contrast, and professional cinematic sharpness. "
                     )
-                    # Tambahan instruksi untuk TUNG agar tidak kekar
-                    if c['name'].lower() == "tung":
-                        dna_instruction += " Ensure TUNG's body type is LEAN, NOT MUSCULAR."
                     dna_parts.append(dna_instruction)
             dna_final = " ".join(dna_parts)
 
-            # Emotion Context
+            # --- TIER 2: SCENE & ACTION (VISUALISASI) ---
+            vis_core_final = item["visual"] + " (Backrest fixed against house wall, positioned under porch roof)." if "teras" in v_low else item["visual"]
             d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context: Reacting to '{d_all_text}'. Focus on facial expressions. " if d_all_text else ""
 
-            # Lighting Logic (Full Detail Restored)
+            # --- TIER 3: LIGHTING & ATMOSPHERE ---
             l_type = item["light"]
             if "Bening" in l_type: l_cmd, a_cmd = "Ultra-high altitude light clarity, extreme micro-contrast.", "10:00 AM mountain sun, deepest cobalt blue sky."
             elif "Mendung" in l_type: l_cmd, a_cmd = "Intense moody overcast, 8000k cold temperature.", "Gray-cobalt sky, tactile texture definition."
             elif "Suasana Malam" in l_type: l_cmd, a_cmd = "Cinematic Night lighting, 9000k moonlit glow.", "Deep indigo-black sky, hyper-defined textures."
-            elif "Suasana Sore" in l_type: l_cmd, a_cmd = "4:00 PM indigo atmosphere, sharp rim lighting.", "Late afternoon cold sun, long sharp shadows."
-            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere." # Default
+            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere."
             
-            # Combine Lighting and Atmosphere for the prompt
-            atmosphere_and_lighting = f"Atmosphere: {a_cmd}. Lighting: {l_cmd}."
-
-
-            # Render
             st.subheader(f"✅ Hasil Adegan {item['num']}")
             current_lock = master_lock if item['num'] == 1 else ""
             
-            # Final Image Prompt (Menggunakan full_quality_stack)
+            # SUSUNAN HIERARKI: DNA Karakter -> Visual Adegan -> Kualitas
             img_final = (
-                f"{current_lock}STATIC photo, 9:16 vertical. {angle_map.get(item['angle'], '')} "
-                f"{emotion_ctx}{dna_final} Visual: {vis_core_final}. "
-                f"{atmosphere_and_lighting} {full_quality_stack}"
+                f"{current_lock} {dna_final} " # DNA Karakter dibaca AI paling awal
+                f"Visual Scene: {vis_core_final}. "
+                f"Camera: {angle_map.get(item['angle'], '')} {emotion_ctx} "
+                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. "
+                f"{full_quality_stack}" # Detail teknis diletakkan paling akhir
             )
             
-            # Final Video Prompt (Video biasanya tidak sekompleks gambar, tapi tetap detail)
-            vid_final = (
-                f"{current_lock}9:16 vertical video. {shot_map.get(item['shot'], 'Medium Shot')} {camera_map.get(item['cam'], 'Static')}. "
-                f"{emotion_ctx}{dna_final} Visual: {vis_core_final}. "
-                f"{atmosphere_and_lighting} 60fps, fluid motion, professional quality. --ar 9:16"
-            )
-
-            c1, c2 = st.columns(2)
-            c1.code(img_final, language="text")
-            c2.code(vid_final, language="text")
+            st.code(img_final, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.0-ULTRA")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.5-ULTRA")
