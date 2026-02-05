@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN (MEGA STRUCTURE)
+# 1. KONFIGURASI HALAMAN
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -45,14 +45,14 @@ def record_to_sheets(user, first_visual, total_scenes):
 st.markdown("""
     <style>
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
-    button[title="Copy to clipboard"] { background-color: #28a745 !important; color: white !important; }
+    button[title="Copy to clipboard"] { background-color: #28a745 !important; color: white !important; transform: scale(1.05); }
     .stTextArea textarea { font-size: 14px !important; min-height: 180px !important; }
     .small-label { font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px; }
     </style>
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. MAPPING FULL EXPLICIT (KEMBALI KE VERSI ASLI KAMU)
+# 4. MAPPING DATA (VERSI GEMUK)
 # ==============================================================================
 options_lighting = ["Bening dan Tajam", "Sejuk dan Terang", "Dramatis", "Jelas dan Solid", "Suasana Sore", "Mendung", "Suasana Malam", "Suasana Alami"]
 indonesia_camera = ["Ikuti Karakter", "Diam (Tanpa Gerak)", "Zoom Masuk Pelan", "Zoom Keluar Pelan", "Geser Kiri ke Kanan", "Geser Kanan ke Kiri", "Dongak ke Atas", "Tunduk ke Bawah", "Ikuti Objek (Tracking)", "Memutar (Orbit)"]
@@ -62,7 +62,6 @@ indonesia_angle = ["Normal (Depan)", "Samping (Arah Kamera)", "Berhadapan (Ngobr
 camera_map = {"Ikuti Karakter": "AUTO_MOOD", "Diam (Tanpa Gerak)": "Static (No Move)", "Zoom Masuk Pelan": "Slow Zoom In", "Zoom Keluar Pelan": "Slow Zoom Out", "Geser Kiri ke Kanan": "Pan Left to Right", "Geser Kanan ke Kiri": "Pan Right to Left", "Dongak ke Atas": "Tilt Up", "Tunduk ke Bawah": "Tilt Down", "Ikuti Objek (Tracking)": "Tracking Shot", "Memutar (Orbit)": "Orbit Circular"}
 shot_map = {"Sangat Dekat (Detail)": "Extreme Close-Up", "Dekat (Wajah)": "Close-Up", "Setengah Badan": "Medium Shot", "Seluruh Badan": "Full Body Shot", "Pemandangan Luas": "Wide Landscape Shot", "Sudut Rendah (Gagah)": "Low Angle Shot", "Sudut Tinggi (Kecil)": "High Angle Shot"}
 
-# Kembalikan Deskripsi Angle yang Panjang
 angle_map = {
     "Normal (Depan)": "",
     "Samping (Arah Kamera)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
@@ -78,15 +77,18 @@ if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
 if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
 
 def global_sync_v920():
-    st.session_state.m_light, st.session_state.m_cam = st.session_state.light_input_1, st.session_state.camera_input_1
-    st.session_state.m_shot, st.session_state.m_angle = st.session_state.shot_input_1, st.session_state.angle_input_1
-    for i in range(2, 51):
-        for k in ["light", "camera", "shot", "angle"]:
-            key = f"{k}_input_{i}"
-            if key in st.session_state: st.session_state[key] = st.session_state[f"m_{k[:3]}"]
+    st.session_state.m_light = st.session_state.light_input_1
+    st.session_state.m_cam = st.session_state.camera_input_1
+    st.session_state.m_shot = st.session_state.shot_input_1
+    st.session_state.m_angle = st.session_state.angle_input_1
+    for idx_loop in range(2, 51):
+        if f"light_input_{idx_loop}" in st.session_state: st.session_state[f"light_input_{idx_loop}"] = st.session_state.m_light
+        if f"camera_input_{idx_loop}" in st.session_state: st.session_state[f"camera_input_{idx_loop}"] = st.session_state.m_cam
+        if f"shot_input_{idx_loop}" in st.session_state: st.session_state[f"shot_input_{idx_loop}"] = st.session_state.m_shot
+        if f"angle_input_{idx_loop}" in st.session_state: st.session_state[f"angle_input_{idx_loop}"] = st.session_state.m_angle
 
 # ==============================================================================
-# 5. SIDEBAR & ADMIN MONITOR
+# 5. SIDEBAR
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin" and st.checkbox("📊 Admin Monitor"):
@@ -95,10 +97,10 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan", 1, 50, 10)
 
 # ==============================================================================
-# 6. IDENTITAS & KARAKTER
+# 6. IDENTITAS KARAKTER
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
-with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
+with st.expander("👥 Identitas & Fisik Karakter (WAJIB)", expanded=True):
     c1, c2 = st.columns(2)
     n1 = c1.text_input("Nama Karakter 1", key="c_name_1_input").strip()
     p1 = c1.text_area("Fisik 1", key="c_desc_1_input", height=100)
@@ -112,25 +114,27 @@ with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
 
     if num_extra > 2:
         cols = st.columns(num_extra - 2)
-        for i in range(2, int(num_extra)):
-            ex_n = cols[i-2].text_input(f"Nama {i+1}", key=f"ex_name_{i}").strip()
-            ex_p = cols[i-2].text_area(f"Fisik {i+1}", key=f"ex_phys_{i}", height=100)
+        for idx_e in range(2, int(num_extra)):
+            ex_n = cols[idx_e-2].text_input(f"Nama {idx_e+1}", key=f"ex_name_{idx_e}").strip()
+            ex_p = cols[idx_e-2].text_area(f"Fisik {idx_e+1}", key=f"ex_phys_{idx_e}", height=100)
             if ex_n: all_chars.append({"name": ex_n, "desc": ex_p})
 
 # ==============================================================================
-# 7. GRID INPUT
+# 7. GRID INPUT ADEGAN (FIXED NameError)
 # ==============================================================================
 adegan_storage = []
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"{'🟢 MASTER' if i==1 else '🎬 ADEGAN'} {i}", expanded=(i==1)):
         v_col, c_col = st.columns([6.5, 3.5])
         v_in = v_col.text_area(f"Visual {i}", key=f"vis_input_{i}", height=180)
+        
         r1c1, r1c2 = c_col.columns(2)
         l_v = r1c1.selectbox(f"💡 Cahaya {i}", options_lighting, index=options_lighting.index(st.session_state.m_light), key=f"light_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         c_v = r1c2.selectbox(f"🎥 Gerak {i}", indonesia_camera, index=indonesia_camera.index(st.session_state.m_cam), key=f"camera_input_{i}", on_change=(global_sync_v920 if i==1 else None))
+        
         r2c1, r2c2 = c_col.columns(2)
-        s_v = r2c1.selectbox(f"📐 Shot {i}", indonesia_shot, index=indonesia_shot.index(st.session_state.m_shot), key=f"shot_input_{i}", on_change=(global_sync_v920 if i_s==1 else None))
-        a_v = r2c2.selectbox(f"✨ Angle {i}", indonesia_angle, index=indonesia_angle.index(st.session_state.m_angle), key=f"angle_input_{i}", on_change=(global_sync_v920 if i_s==1 else None))
+        s_v = r2c1.selectbox(f"📐 Shot {i}", indonesia_shot, index=indonesia_shot.index(st.session_state.m_shot), key=f"shot_input_{i}", on_change=(global_sync_v920 if i==1 else None))
+        a_v = r2c2.selectbox(f"✨ Angle {i}", indonesia_angle, index=indonesia_angle.index(st.session_state.m_angle), key=f"angle_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         
         diag_cols = st.columns(len(all_chars) if all_chars else 1)
         diags = []
@@ -140,15 +144,14 @@ for i in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i, "visual": v_in, "light": l_v, "cam": c_v, "shot": s_v, "angle": a_v, "dialogs": diags})
 
 # ==============================================================================
-# 8. HIERARCHICAL PROMPT GENERATOR (ULTRA QUALITY + STABILITY)
+# 8. GENERATOR PROMPT (MEGA HIERARCHY)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
-    if not active: st.warning("Isi visual!")
+    if not active: st.warning("Mohon isi visual adegan!")
     else:
         record_to_sheets(st.session_state.active_user, active[0]["visual"], len(active))
         
-        # KEMBALIKAN MEGA QUALITY STACK ASLI KAMU
         full_quality_stack = (
             "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, "
             "zero black borders, expansive background rendering to edges, Circular Polarizer (CPL) filter effect, "
@@ -162,14 +165,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         for item in active:
             v_low = item["visual"].lower()
             
-            # --- TIER 1: CHARACTER DNA (PENJAGA KONSISTENSI) ---
+            # --- T1: DNA ANCHOR ---
             dna_parts = []
             for c in all_chars:
                 if c['name'].lower() in v_low:
                     dna_parts.append(f"IDENTICAL CHARACTER ANCHOR: {c['name']} is ({c['desc']}). STRICT FIDELITY: Maintain identity in 8k detail.")
             dna_final = " ".join(dna_parts)
 
-            # --- TIER 2: LIGHTING MAPPING (KEMBALIKAN DESKRIPSI PANJANG ASLI KAMU) ---
+            # --- T2: MEGA LIGHTING MAPPING ---
             l_type = item["light"]
             if "Bening" in l_type:
                 l_cmd = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
@@ -190,24 +193,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 l_cmd = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow."
                 a_cmd = "Clear night atmosphere, deep indigo-black sky, hyper-defined textures."
             elif "Suasana Alami" in l_type:
-                l_cmd = "Low-exposure natural sunlight, high local contrast amplification, extreme chlorophyll color depth."
+                l_cmd = "Low-exposure natural sunlight, high local contrast amplification, extreme chlorophyll color depth, hyper-saturated organic plant pigments."
                 a_cmd = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures."
             else: # Sore
                 l_cmd = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
                 a_cmd = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
 
-            # --- TIER 3: RENDER FINAL ---
+            # --- T3: RENDER FINAL ---
             st.subheader(f"✅ Adegan {item['num']}")
             
-            # URUTAN HIERARKI: DNA (T1) -> VISUAL (T2) -> ATMOSPHERE/LIGHT (T2.5) -> MEGA QUALITY (T3)
-            img_prompt = (
+            img_p = (
                 f"IDENTICAL CHARACTER SESSION. {dna_final} "
                 f"Visual: {item['visual']}. {angle_map[item['angle']]}. "
                 f"Atmosphere: {a_cmd} Lighting: {l_cmd} "
                 f"{full_quality_stack}"
             )
             
-            vid_prompt = (
+            vid_p = (
                 f"IDENTICAL CHARACTER SESSION. {dna_final} "
                 f"9:16 vertical video. {shot_map[item['shot']]} {camera_map[item['cam']]}. "
                 f"Visual: {item['visual']}. Lighting: {l_cmd}. "
@@ -216,9 +218,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
             c1, c2 = st.columns(2)
             c1.markdown("**📸 Prompt Gambar**")
-            c1.code(img_prompt, language="text")
+            c1.code(img_p, language="text")
             c2.markdown("**🎥 Prompt Video**")
-            c2.code(vid_prompt, language="text")
+            c2.code(vid_p, language="text")
             st.divider()
 
-st.sidebar.caption("PINTAR MEDIA | V.1.4.0-FINAL")
+st.sidebar.caption("PINTAR MEDIA | V.1.4.2-MAX-ULTRA")
