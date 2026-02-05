@@ -272,7 +272,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- POSISI BARU: IDENTITAS TOKOH (Antara Subheader dan Master Control) ---
+# --- IDENTITAS TOKOH (Antara Subheader dan Master Control) ---
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     
@@ -302,7 +302,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
-st.divider()
+# Garis pembatas (st.divider) di sini sudah saya hapus sesuai perintah Dian agar spasi konsisten.
 
 # --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
@@ -495,4 +495,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.1.2")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.3")
