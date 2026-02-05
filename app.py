@@ -128,10 +128,10 @@ with c_header2:
 
 
 # ==============================================================================
-# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - MODIFIKASI NAMA RALAT)
+# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - MODIFIKASI NAMA)
 # ==============================================================================
 indonesia_camera = [
-    "Ikuti Karakter",  # Nama diubah dari Otomatis (Ikuti Mood Adegan)
+    "Ikuti Karakter", 
     "Diam (Tanpa Gerak)", 
     "Zoom Masuk Pelan", 
     "Zoom Keluar Pelan", 
@@ -155,7 +155,7 @@ indonesia_shot = [
 
 indonesia_angle = [
     "Normal (Depan)",
-    "Samping (Arah Kamera)", # Nama diubah dari Samping (Melihat Jalan/Kedalaman)
+    "Samping (Arah Kamera)", 
     "Berhadapan (Ngobrol)", 
     "Intip Bahu (Framing)", 
     "Wibawa/Gagah (Low Angle)", 
@@ -205,10 +205,11 @@ options_lighting = [
     "Suasana Alami"
 ]
 
-if 'm_light' not in st.session_state: st.session_state.m_light = options_lighting[0]
-if 'm_cam' not in st.session_state: st.session_state.m_cam = indonesia_camera[0]
-if 'm_shot' not in st.session_state: st.session_state.m_shot = indonesia_shot[2]
-if 'm_angle' not in st.session_state: st.session_state.m_angle = indonesia_angle[0]
+# SETTING DEFAULT OTOMATIS SESUAI PERINTAH DIAN
+if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
+if 'm_cam' not in st.session_state: st.session_state.m_cam = "Ikuti Karakter"
+if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
+if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
 
 def global_sync_v920():
     lt1 = st.session_state.light_input_1
@@ -268,7 +269,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (POSISI IDENTITAS SESUAI INSTRUKSI DIAN)
+# 9. FORM INPUT ADEGAN (TATA LETAK GRID)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -320,33 +321,33 @@ for i_s in range(1, int(num_scenes) + 1):
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
                 if i_s == 1:
-                    l_val = st.selectbox("L1", options_lighting, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    l_val = st.selectbox("L1", options_lighting, index=options_lighting.index(st.session_state.m_light), key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
                     if f"light_input_{i_s}" not in st.session_state: st.session_state[f"light_input_{i_s}"] = st.session_state.m_light
-                    l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
+                    l_val = st.selectbox(f"L{i_s}", options_lighting, index=options_lighting.index(st.session_state[f"light_input_{i_s}"]), key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1_c2:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 if i_s == 1:
-                    c_val = st.selectbox("C1", indonesia_camera, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    c_val = st.selectbox("C1", indonesia_camera, index=indonesia_camera.index(st.session_state.m_cam), key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
                     if f"camera_input_{i_s}" not in st.session_state: st.session_state[f"camera_input_{i_s}"] = st.session_state.m_cam
-                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
+                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=indonesia_camera.index(st.session_state[f"camera_input_{i_s}"]), key=f"camera_input_{i_s}", label_visibility="collapsed")
             
             r2_c1, r2_c2 = st.columns(2)
             with r2_c1:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 if i_s == 1:
-                    s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    s_val = st.selectbox("S1", indonesia_shot, index=indonesia_shot.index(st.session_state.m_shot), key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
                     if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
-                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=indonesia_shot.index(st.session_state[f"shot_input_{i_s}"]), key=f"shot_input_{i_s}", label_visibility="collapsed")
             with r2_c2:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 if i_s == 1:
-                    a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    a_val = st.selectbox("A1", indonesia_angle, index=indonesia_angle.index(st.session_state.m_angle), key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
                     if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
-                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
+                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=indonesia_angle.index(st.session_state[f"angle_input_{i_s}"]), key=f"angle_input_{i_s}", label_visibility="collapsed")
 
         # Dialog Dinamis
         diag_cols = st.columns(len(all_chars_list))
@@ -493,4 +494,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.1.6")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.7")
