@@ -129,7 +129,7 @@ st.markdown("""
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | Konsistensi Karakter & Database Aktif 🚀❤️")
 with c_header2:
     if st.button("Logout 🚪"):
         st.session_state.logged_in = False
@@ -277,7 +277,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 10. FORM INPUT IDENTITAS (CLEAN & MANUAL - NO DROP DOWN)
+# 10. FORM INPUT IDENTITAS (AUTO-MATCH LINK DI BALIK LAYAR)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -287,17 +287,17 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     with col_c1:
         st.markdown("### Karakter 1")
         c_n1_v = st.text_input("Nama Karakter 1", value="UDIN", key="c_name_1_input")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value="", key="c_desc_1_input", height=100, placeholder="Tulis deskripsi fisik manual di sini...")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value="", key="c_desc_1_input", height=100, placeholder="Wajah, baju, celana, aksesoris...")
     
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value="TUNG", key="c_name_2_input")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value="", key="c_desc_2_input", height=100, placeholder="Tulis deskripsi fisik manual di sini...")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value="", key="c_desc_2_input", height=100, placeholder="Wajah, baju, celana, aksesoris...")
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
-    # --- LOGIKA OTOMATISASI URL DIBALIK LAYAR (Case-Insensitive) ---
+    # Auto-matching URL di balik layar (Case-insensitive)
     u1_auto = LINK_REFERENSI.get(c_n1_v.upper().strip(), "")
     u2_auto = LINK_REFERENSI.get(c_n2_v.upper().strip(), "")
     
@@ -316,7 +316,10 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 ex_url_auto = LINK_REFERENSI.get(ex_name.upper().strip(), "") if ex_name else ""
                 all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url_auto})
 
-# --- LANJUT KE LIST ADEGAN ---
+
+# ==============================================================================
+# 11. LIST ADEGAN (FULL MEGA STRUCTURE)
+# ==============================================================================
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
@@ -382,7 +385,7 @@ st.divider()
 
 
 # ==============================================================================
-# 11. GENERATOR PROMPT (MEGA STRUCTURE COMPLETE - NO REDUCTION)
+# 12. GENERATOR PROMPT (KUNCIAN KETAT: LINK + FISIK LENGKAP)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -394,9 +397,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         # LOGGING CLOUD
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
-        # --- LOGIKA MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
+        # Link header dikumpulkan di depan untuk referensi utama
+        link_header = " ".join([f"[{c['url']}]" for c in all_chars_list if c['url']])
         char_defs_full = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
-        master_lock_instruction = f"IMPORTANT: Remember ini characters and their physical traits for this entire session. Do not deviate from these visuals: {char_defs_full}. "
+        master_lock_instruction = f"IMPORTANT: Always refer to these specific visual identities and clothing: {char_defs_full}. "
 
         for item in active_scenes:
             
@@ -477,12 +481,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor & URL Injection (OTOMATIS)
-            url_prefix, dna_str = "", ""
+            # DNA Anchor & URL Injection (KUNCIAN WAJAH + BAJU)
+            dna_str = ""
             for c in all_chars_list:
                 if c['name'] and (c['name'].lower() in vis_lower or c['name'].lower() in [n.lower() for n in [c_n1_v, c_n2_v]]):
-                    if c['url']: url_prefix += f"[{c['url']}] "
-                    dna_str += f"STRICT CHARACTER FIDELITY: Maintain facial identity of {c['name']} ({c['desc']}). "
+                    # Injeksi Wajib: Pakai foto di link DAN deskripsi fisik baju dll
+                    dna_str += f"STRICT CHARACTER FIDELITY: Maintain facial identity and specific clothing of {c['name']} ({c['desc']}) exactly as shown in reference. "
 
             # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
             current_lock = master_lock_instruction if scene_id == 1 else ""
@@ -491,14 +495,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.subheader(f"✅ Hasil Adegan {scene_id}")
             
             img_final = (
-                f"{url_prefix}{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
-                f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
+                f"{link_header} {current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
+                f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual scene: {vis_core_final}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
             vid_final = (
-                f"{url_prefix}{current_lock}9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
-                f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
+                f"{link_header} {current_lock}9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
+                f"{emotion_ctx}{dna_str} Visual scene: {vis_core_final}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
             
@@ -513,4 +517,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.3")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.5")
