@@ -7,7 +7,7 @@ from datetime import datetime
 # 1. KONFIGURASI HALAMAN
 # ==============================================================================
 st.set_page_config(
-    page_title="PINTAR MEDIA - Precision Storyboard", 
+    page_title="PINTAR MEDIA - Universal Ultra Storyboard", 
     layout="wide", 
     initial_sidebar_state="expanded"
 )
@@ -48,7 +48,7 @@ st.markdown("""<style>
 </style>""", unsafe_allow_html=True)
 
 # ==============================================================================
-# 4. HEADER APLIKASI (RESTORED)
+# 4. HEADER APLIKASI (RESTORED - UNIVERSAL)
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
@@ -69,7 +69,7 @@ indonesia_angle = ["Normal (Depan)", "Samping (Arah Kamera)", "Berhadapan (Ngobr
 
 camera_map = {"Ikuti Karakter": "AUTO_MOOD", "Diam (Tanpa Gerak)": "Static", "Zoom Masuk Pelan": "Slow Zoom In", "Zoom Keluar Pelan": "Slow Zoom Out", "Geser Kiri ke Kanan": "Pan L-R", "Geser Kanan ke Kiri": "Pan R-L", "Dongak ke Atas": "Tilt Up", "Tunduk ke Bawah": "Tilt Down", "Ikuti Objek (Tracking)": "Tracking", "Memutar (Orbit)": "Orbit"}
 shot_map = {"Sangat Dekat (Detail)": "Extreme Close-Up", "Dekat (Wajah)": "Close-Up", "Setengah Badan": "Medium Shot", "Seluruh Badan": "Full Body Shot", "Pemandangan Luas": "Wide Landscape", "Sudut Rendah (Gagah)": "Low Angle", "Sudut Tinggi (Kecil)": "High Angle"}
-angle_map = {"Normal (Depan)": "", "Samping (Arah Kamera)": "90-degree side profile.", "Berhadapan (Ngobrol)": "Facing each other.", "Intip Bahu (Framing)": "Over-the-shoulder framing.", "Wibawa/Gagah (Low Angle)": "Heroic low-angle.", "Mata Karakter (POV)": "First-person POV."}
+angle_map = {"Normal (Depan)": "", "Samping (Arah Kamera)": "90-degree side profile.", "Berhadapan (Ngobrol)": "Facing each other directly.", "Intip Bahu (Framing)": "Over-the-shoulder framing.", "Wibawa/Gagah (Low Angle)": "Heroic low-angle shot.", "Mata Karakter (POV)": "First-person POV."}
 
 def global_sync_v920():
     st.session_state.m_light, st.session_state.m_cam = st.session_state.light_input_1, st.session_state.camera_input_1
@@ -80,16 +80,16 @@ def global_sync_v920():
             if key in st.session_state: st.session_state[key] = st.session_state[f"m_{k[:3]}"]
 
 # ==============================================================================
-# 6. SIDEBAR & CHARACTER INPUT
+# 6. SIDEBAR & ADMIN MONITOR
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin" and st.checkbox("📊 Admin Monitor"):
         try: st.dataframe(st.connection("gsheets", type=GSheetsConnection).read(worksheet="Sheet1", ttl=0))
-        except: st.warning("DB Error.")
+        except: st.warning("Database Error.")
     num_scenes = st.number_input("Jumlah Adegan", 1, 50, 10)
 
 st.subheader("📝 Detail Adegan Storyboard")
-with st.expander("👥 Identitas & Fisik Karakter", expanded=True):
+with st.expander("👥 Identitas & Fisik Karakter (UNIVERSAL SETUP)", expanded=True):
     num_chars = st.number_input("Total Karakter", 1, 10, 2)
     all_chars = []
     char_cols = st.columns(2)
@@ -106,7 +106,7 @@ adegan_storage = []
 for i in range(1, int(num_scenes) + 1):
     with st.expander(f"{'🟢 MASTER' if i==1 else '🎬 ADEGAN'} {i}", expanded=(i==1)):
         v_col, c_col = st.columns([6.5, 3.5])
-        v_in = v_col.text_area(f"Visual {i}", key=f"vis_input_{i}", height=150)
+        v_in = v_col.text_area(f"Visual {i}", key=f"vis_input_{i}", height=180)
         r1c1, r1c2 = c_col.columns(2)
         l_v = r1c1.selectbox(f"💡 Cahaya {i}", options_lighting, index=options_lighting.index(st.session_state.m_light), key=f"light_input_{i}", on_change=(global_sync_v920 if i==1 else None))
         c_v = r1c2.selectbox(f"🎥 Gerak {i}", indonesia_camera, index=indonesia_camera.index(st.session_state.m_cam), key=f"camera_input_{i}", on_change=(global_sync_v920 if i==1 else None))
@@ -122,7 +122,7 @@ for i in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i, "visual": v_in, "light": l_v, "cam": c_v, "shot": s_v, "angle": a_v, "dialogs": diags})
 
 # ==============================================================================
-# 8. GENERATOR PROMPT (OBJECT REINFORCEMENT)
+# 8. GENERATOR PROMPT (UNIVERSAL OBJECT STABILITY)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -131,37 +131,41 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         record_to_sheets(st.session_state.active_user, active[0]["visual"], len(active))
         
         ultra_quality = (
-            "8k resolution, micro-contrast, vivid color depth, f/11 sharpness, zero noise. "
-            "(Contrast:1.3), (Saturation:1.4). STRICTLY NO AI-blur, NO text, NO black bars. --ar 9:16"
+            "8k resolution, extreme micro-contrast enhancement, vivid color saturation, "
+            "f/11 aperture, zero digital noise. (Contrast:1.3), (Saturation:1.4). "
+            "STRICTLY NO AI-blur, NO text, NO speech bubbles, NO black bars. --ar 9:16"
         )
 
         for item in active:
             v_low = item["visual"].lower()
             
-            # T1: ABSOLUTE IDENTITY LOCK
-            dna_parts = [f"((ABSOLUTE IDENTITY MATCH IMAGE_REF_{c['ref_id']}: {c['name']} as {c['desc']}))" for c in all_chars if c['name'].lower() in v_low]
+            # T1: IDENTITY SLOT (Mengunci Karakter Tanpa Mengganggu Environment)
+            dna_parts = [f"((IDENTITY MATCH IMAGE_REF_{c['ref_id']}: {c['name']} as {c['desc']}))" for c in all_chars if c['name'].lower() in v_low]
             dna_final = " ".join(dna_parts)
 
-            # T1.5: OBJECT REINFORCEMENT (Menemukan meja, kursi, dll)
-            v_reinforced = item["visual"]
-            if "meja" in v_low or "table" in v_low:
-                v_reinforced = v_reinforced.replace("meja", "**solid wooden table**").replace("table", "**solid wooden table**")
+            # T2: ENVIRONMENT STABILITY (Universal: Memastikan Objek Visual Tetap Eksis)
+            env_final = f"ENVIRONMENTAL SETUP: {item['visual']}. All mentioned background objects must be rendered with high priority."
 
-            # T2: LIGHTING
+            # T3: LIGHTING (TAJAM & KONTRAS)
             l_t = item["light"]
-            if "Bening" in l_t: l_cmd = "Crystal sun clarity, zero haze."
-            elif "Mendung" in l_t: l_cmd = "8000k overcast, tactile depth."
-            else: l_cmd = "Professional high-contrast natural lighting."
+            if "Bening" in l_t: l_cmd = "Crystal sun clarity, zero haze, extreme micro-contrast."
+            elif "Mendung" in l_t: l_cmd = "8000k moody overcast, tactile micro-texture bite, gray-cobalt sky."
+            elif "Dramatis" in l_t: l_cmd = "Hard directional side-lighting, HDR shadows, deep dynamic range."
+            elif "Alami" in l_t: l_cmd = "Hyper-saturated plant pigments, low-exposure sunlight, defined textures on leaves."
+            else: l_cmd = "Professional high-contrast natural lighting, clear sky."
 
             st.subheader(f"✅ Adegan {item['num']}")
             
-            # SUSUNAN FINAL: Memastikan Deskripsi Visual (v_reinforced) dibaca sangat jelas
-            final_p = f"{dna_final} MANDATORY SCENE ELEMENTS: {v_reinforced}. Angle: {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
-            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. SCENE: {v_reinforced}. {l_cmd}. {ultra_quality}"
+            # SUSUNAN PROMPT: Memisahkan Identitas dan Lingkungan agar AI tidak bingung
+            # Struktur: Identitas -> Lingkungan (Prioritas) -> Sudut Pandang -> Kualitas
+            final_p = f"{dna_final} {env_final} Angle: {angle_map[item['angle']]}. Lighting: {l_cmd}. {ultra_quality}"
+            final_v = f"9:16 vertical video. {dna_final} {shot_map[item['shot']]} {camera_map[item['cam']]}. {env_final} {l_cmd}. {ultra_quality}"
 
             c1, c2 = st.columns(2)
+            c1.markdown("**🖼️ Prompt Gambar**")
             c1.code(final_p, language="text")
+            c2.markdown("**▶️ Prompt Video**")
             c2.code(final_v, language="text")
             st.divider()
 
-st.sidebar.caption("PINTAR MEDIA | V.1.8.6-STABLE")
+st.sidebar.caption("PINTAR MEDIA | V.1.9.0-UNIVERSAL")
