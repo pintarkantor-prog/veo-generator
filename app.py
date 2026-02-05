@@ -36,9 +36,9 @@ USERS = {
 
     "admin": "QWERTY21ab",
 
-    "icha": "udin99",
+    "icha01": "mnbvc098",
 
-    "nissa": "tung22"
+    "nisa02": "zxcv123"
 
 }
 
@@ -240,7 +240,7 @@ with c_header1:
 
     st.title("📸 PINTAR MEDIA")
 
-    st.info(f"Staf Aktif: {st.session_state.active_user} | SEMANGAT KERJANYA GUYS! BUAT KONTEN YANG BENER MANTEP YOW 🚀❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | v9.20 | SECURE CLOUD ACTIVE ❤️")
 
 with c_header2:
 
@@ -874,4 +874,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 
-st.sidebar.caption("PINTAR MEDIA | V.1.0.1")
+st.sidebar.caption("PINTAR MEDIA Storyboard v9.20 - Secure Service Account Edition")
