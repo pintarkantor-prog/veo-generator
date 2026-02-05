@@ -60,8 +60,13 @@ if not st.session_state.logged_in:
 def record_to_sheets(user, first_visual, total_scenes):
     """Mencatat aktivitas karyawan menggunakan Service Account Secrets"""
     try:
+        # Membangun koneksi ke Google Sheets melalui Secrets
         conn = st.connection("gsheets", type=GSheetsConnection)
+        
+        # Membaca data lama (Worksheet harus bernama Sheet1)
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
+        
+        # Membuat baris data baru secara eksplisit
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
@@ -71,8 +76,12 @@ def record_to_sheets(user, first_visual, total_scenes):
             "Visual Utama": first_visual[:150]
         }])
         
+        # Menggabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
+        
+        # Menulis kembali ke Cloud (Update)
         conn.update(worksheet="Sheet1", data=updated_df)
+        
     except Exception as e:
         st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
 
@@ -267,7 +276,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 10. FORM INPUT IDENTITAS (CLEAN & MANUAL - AUTO-MATCH DB)
+# 10. FORM INPUT IDENTITAS (AUTO-MATCH LINK DI BALIK LAYAR)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -287,6 +296,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
+    # Auto-matching URL di balik layar (Case-insensitive)
     u1_auto = LINK_REFERENSI.get(c_n1_v.upper().strip(), "")
     u2_auto = LINK_REFERENSI.get(c_n2_v.upper().strip(), "")
     
@@ -301,11 +311,13 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
+                # Karakter tambahan juga dicek di database secara otomatis
                 ex_url_auto = LINK_REFERENSI.get(ex_name.upper().strip(), "") if ex_name else ""
                 all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url_auto})
 
+
 # ==============================================================================
-# 11. LIST ADEGAN (STRUKTUR PANJANG V.1.1.8)
+# 11. LIST ADEGAN (FULL MEGA STRUCTURE V.1.1.8)
 # ==============================================================================
 adegan_storage = []
 
@@ -313,6 +325,7 @@ for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
+        # Grid Layout 
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
@@ -371,7 +384,7 @@ st.divider()
 
 
 # ==============================================================================
-# 12. GENERATOR PROMPT (THE MEGA LOGIC RESTORED - V.1.3.10)
+# 12. GENERATOR PROMPT (PEMISAHAN TUGAS OPTIMIZED - TELANJANG LINK)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -383,8 +396,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
         # LOGGING CLOUD
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
-        # 1. LINK URL DITARUH DI DEPAN DENGAN LABEL JELAS (PRIORITAS VISUAL)
-        ref_header = "Character Visual References: " + " ".join([f"{c['name']}: [{c['url']}]" for c in all_chars_list if c['url']]) + ". "
+        # 1. LINK TELANJANG DI PALING DEPAN (IMAGE PROMPT MODE)
+        ref_links_only = " ".join([f"[{c['url']}]" for c in all_chars_list if c['url']]) + " "
         
         # 2. MASTER LOCK (ADEGAN 1)
         char_defs_full = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
@@ -469,23 +482,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # 3. DNA FOKUS PADA WAJAH (IDENTITAS DARI LINK)
+            # 3. DNA FOKUS PADA WAJAH (IMAGE PROMPT MODE)
             dna_injection = ""
             for c in all_chars_list:
                 if c['name'].lower() in vis_lower:
-                    dna_injection += f"Use facial identity of {c['name']} from reference link. "
+                    dna_injection += f"STRICT CHARACTER IDENTITY: Maintain facial features of {c['name']} from the first image reference link. "
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"✅ Hasil Adegan {scene_id}")
             
             img_final = (
-                f"{ref_header}{master_lock_instruction if scene_id==1 else ''}STATIC photograph, 9:16. "
+                f"{ref_links_only}{master_lock_instruction if scene_id==1 else ''}STATIC photograph, 9:16. "
                 f"{e_angle_cmd} {emotion_ctx}{dna_injection} Visual scene: {vis_core_final}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
             vid_final = (
-                f"{ref_header}{master_lock_instruction if scene_id==1 else ''}9:16 video. {e_shot_size} perspective. "
+                f"{ref_links_only}{master_lock_instruction if scene_id==1 else ''}9:16 video. {e_shot_size} perspective. "
                 f"{e_angle_cmd} {e_cam_move}. {emotion_ctx}{dna_injection} Visual scene: {vis_core_final}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
@@ -501,4 +514,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.10")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.11")
