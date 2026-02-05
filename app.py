@@ -255,14 +255,16 @@ with st.sidebar:
 
 
 # ==============================================================================
-# 8. PARAMETER KUALITAS (V.1.0.2 - ULTRA SHARP & FULL-FRAME LOGIC)
+# 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING SWITCH & FULL-BLEED)
 # ==============================================================================
-# Agresif mengunci 9:16 dan menaikkan kualitas tekstur melampaui referensi
+# Mengunci 9:16 Full-Frame, Ketajaman Maksimal, dan Menghilangkan Haze
 sharp_natural_stack = (
-    "9:16 vertical aspect ratio, Full-frame vertical coverage, edge-to-edge pixel rendering, zero black borders, "
-    "ultra-high-fidelity resolution, micro-contrast enhancement, optical clarity, deep saturated pigments, "
+    "9:16 vertical aspect ratio, Full-bleed cinematography, edge-to-edge pixel rendering, "
+    "Full-frame vertical coverage, zero black borders, expansive background rendering to edges, "
+    "Circular Polarizer (CPL) filter effect, eliminates light glare, ultra-high-fidelity resolution, "
+    "micro-contrast enhancement, optical clarity, deep saturated pigments, vivid organic color punch, "
     "intricate organic textures, skin texture override with 8k details, f/11 aperture for deep focus sharpness, "
-    "zero atmospheric haze, crystal clear background focus, photorealistic cinema style."
+    "zero digital noise, zero atmospheric haze, crystal clear background focus, photorealistic cinema style."
 )
 
 no_text_strict = (
@@ -271,7 +273,7 @@ no_text_strict = (
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid motion, {sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
 
 # ==============================================================================
@@ -334,7 +336,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - V.1.0.2 AGGRESSIVE)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE - V.1.0.3 MASTER LIGHTING)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -402,15 +404,20 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor: Identity Preservation + Texture Override (Kualitas ditingkatkan dari referensi)
-            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
+            # DNA Anchor: Identity Preservation + Neural Texture Reconstruction (Kualitas ditingkatkan dari referensi)
+            dna_str = " ".join([
+                f"STRICT CHARACTER FIDELITY: Maintain exact facial identity and bone structure of {c['name']} ({c['desc']}). "
+                f"Bypass source resolution, perform neural texture reconstruction, "
+                f"re-render surface with 8k skin pores recovery, enhanced contrast, and professional cinematic sharpness." 
+                for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()
+            ])
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
             
-            # Prompt Gambar: Mengunci 9:16 di bagian paling depan
+            # Prompt Gambar: Mengunci 9:16 Full-Bleed di bagian paling depan
             img_final = (
-                f"vertical 9:16 aspect ratio, edge-to-edge full frame coverage. "
+                f"vertical 9:16 aspect ratio, Full-bleed cinematography, edge-to-edge full frame coverage. "
                 f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base}"
             )
@@ -433,4 +440,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.2")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.3")
