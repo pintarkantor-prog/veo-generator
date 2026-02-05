@@ -119,7 +119,7 @@ st.markdown("""
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
+    st.info(f"Staf Aktif: {st.session_state.active_user} | SEMANGAT KERJANYA GUYS! BUAT KONTEN YANG BENER MANTEP YOW 🚀❤️")
 with c_header2:
     if st.button("Logout 🚪"):
         st.session_state.logged_in = False
@@ -130,7 +130,6 @@ with c_header2:
 # 6. MAPPING TRANSLATION (INDONESIA -> INGGRIS)
 # ==============================================================================
 indonesia_camera = [
-    "Otomatis (Ikuti Mood Adegan)", 
     "Diam (Tanpa Gerak)", 
     "Zoom Masuk Pelan", 
     "Zoom Keluar Pelan", 
@@ -152,18 +151,7 @@ indonesia_shot = [
     "Sudut Tinggi (Kecil)"
 ]
 
-# DROPDOWN SUDUT KAMERA BARU
-indonesia_angle = [
-    "Normal (Depan)",
-    "Samping (Melihat Jalan/Kedalaman)", 
-    "Berhadapan (Ngobrol)", 
-    "Intip Bahu (Framing)", 
-    "Wibawa/Gagah (Low Angle)", 
-    "Mata Karakter (POV)"
-]
-
 camera_map = {
-    "Otomatis (Ikuti Mood Adegan)": "AUTO_MOOD",
     "Diam (Tanpa Gerak)": "Static (No Move)", 
     "Zoom Masuk Pelan": "Slow Zoom In", 
     "Zoom Keluar Pelan": "Slow Zoom Out",
@@ -185,16 +173,6 @@ shot_map = {
     "Sudut Tinggi (Kecil)": "High Angle Shot"
 }
 
-# MAPPING LOGIKA ANGLE
-angle_map = {
-    "Normal (Depan)": "",
-    "Samping (Melihat Jalan/Kedalaman)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
-    "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
-    "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
-    "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
-    "Mata Karakter (POV)": "First-person point of view, looking through the character's eyes, immersive perspective."
-}
-
 options_lighting = [
     "Bening dan Tajam", 
     "Sejuk dan Terang", 
@@ -209,24 +187,20 @@ options_lighting = [
 if 'm_light' not in st.session_state: st.session_state.m_light = options_lighting[0]
 if 'm_cam' not in st.session_state: st.session_state.m_cam = indonesia_camera[0]
 if 'm_shot' not in st.session_state: st.session_state.m_shot = indonesia_shot[2]
-if 'm_angle' not in st.session_state: st.session_state.m_angle = indonesia_angle[0]
 
 def global_sync_v920():
     lt1 = st.session_state.light_input_1
     cm1 = st.session_state.camera_input_1
     st1 = st.session_state.shot_input_1
-    ag1 = st.session_state.angle_input_1
     
     st.session_state.m_light = lt1
     st.session_state.m_cam = cm1
     st.session_state.m_shot = st1
-    st.session_state.m_angle = ag1
     
     for key in st.session_state.keys():
         if key.startswith("light_input_"): st.session_state[key] = lt1
         if key.startswith("camera_input_"): st.session_state[key] = cm1
         if key.startswith("shot_input_"): st.session_state[key] = st1
-        if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 
 # ==============================================================================
@@ -283,6 +257,7 @@ with st.sidebar:
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
 # ==============================================================================
+# Agresif mengunci 9:16 dan menaikkan kualitas tekstur melampaui referensi
 sharp_natural_stack = (
     "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, zero black borders, "
     "expansive background rendering to edges, Circular Polarizer (CPL) filter effect, eliminates light glare, "
@@ -313,7 +288,7 @@ for i_s in range(1, int(num_scenes) + 1):
     with st.expander(l_box_title, expanded=(i_s == 1)):
         
         # Grid System Manual
-        col_v, col_l, col_c, col_s, col_a = st.columns([3, 1.2, 1.2, 1.2, 1.4])
+        col_v, col_l, col_c, col_s = st.columns([4, 1.5, 1.5, 1.5])
         
         with col_v:
             visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=150)
@@ -342,14 +317,6 @@ for i_s in range(1, int(num_scenes) + 1):
                 if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
                 s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
 
-        with col_a:
-            st.markdown('<p class="small-label">📸 Sudut Kamera</p>', unsafe_allow_html=True)
-            if i_s == 1:
-                a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-            else:
-                if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
-                a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
-
         # Dialog Dinamis Manual
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
@@ -360,7 +327,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
+            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "dialogs": scene_dialogs_list
         })
 
 
@@ -377,40 +344,17 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     if not active_scenes:
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
-        # SIMPAN KE GOOGLE SHEETS
+        # SIMPAN KE GOOGLE SHEETS CLOUD (MENGGUNAKAN SERVICE ACCOUNT)
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
         for item in active_scenes:
             
-            # --- LOGIKA SMART CAMERA MOVEMENT ---
-            vis_core = item["visual"]
-            vis_lower = vis_core.lower()
-            
-            if camera_map.get(item["cam"]) == "AUTO_MOOD":
-                if any(x in vis_lower for x in ["lari", "jalan", "pergi", "mobil", "motor"]): 
-                    e_cam_move = "Dynamic Tracking Shot, follow subject motion"
-                elif any(x in vis_lower for x in ["sedih", "menangis", "fokus", "detail", "melihat", "terkejut"]): 
-                    e_cam_move = "Slow Cinematic Zoom In"
-                elif any(x in vis_lower for x in ["pemandangan", "kota", "luas", "halaman", "jalan raya"]): 
-                    e_cam_move = "Slow Pan Left to Right"
-                elif any(x in vis_lower for x in ["marah", "teriak", "berantem", "aksi"]): 
-                    e_cam_move = "Handheld Shaky Cam intensity"
-                else: 
-                    e_cam_move = "Subtle cinematic camera drift"
-            else:
-                e_cam_move = camera_map.get(item["cam"], "Static")
-
-            # --- SMART ANCHOR TERAS ---
-            if "teras" in vis_lower:
-                vis_core_final = vis_core + " (Backrest fixed against the house wall, positioned under the porch roof roof, chair anchored to house structure)."
-            else:
-                vis_core_final = vis_core
-
-            # Konversi Teknis Lainnya
+            # Konversi Teknis
+            e_cam_move = camera_map.get(item["cam"], "Static")
             e_shot_size = shot_map.get(item["shot"], "Medium Shot")
-            e_angle_cmd = angle_map.get(item["angle"], "")
             
             scene_id = item["num"]
+            vis_core = item["visual"]
             light_type = item["light"]
             
             # --- FULL LIGHTING MAPPING (MANUAL EXPLICIT - NO REDUCTION) ---
@@ -459,21 +403,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor: Identity Preservation + Texture Override (LENGKAP)
-            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
+            # DNA Anchor: Identity Preservation + Texture Override (Kualitas ditingkatkan dari referensi)
+            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
             
+            # PROMPT GAMBAR: Ditambahkan perintah STATIC agar AI tidak membuat video
             img_final = (
                 f"create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
-                f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
+                f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
+            # PROMPT VIDEO: Mengunci Full-screen mobile di bagian paling depan
             vid_final = (
-                f"9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
-                f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
+                f"9:16 full-screen mobile video. {e_shot_size} perspective. {e_cam_move} movement. "
+                f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
             
