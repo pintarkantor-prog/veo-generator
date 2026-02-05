@@ -17,8 +17,8 @@ st.set_page_config(
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
-    "icha01": "mnbvc098",
-    "nisa02": "zxcv123"
+    "icha": "udin99",
+    "nissa": "tung22"
 }
 
 if 'logged_in' not in st.session_state:
@@ -437,6 +437,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.0.1")
+
 
 
 
