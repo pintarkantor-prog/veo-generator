@@ -128,10 +128,10 @@ with c_header2:
 
 
 # ==============================================================================
-# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - NO REDUCTION)
+# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - MODIFIKASI NAMA RALAT)
 # ==============================================================================
 indonesia_camera = [
-    "Otomatis (Ikuti Mood Adegan)", 
+    "Ikuti Karakter",  # Nama diubah dari Otomatis (Ikuti Mood Adegan)
     "Diam (Tanpa Gerak)", 
     "Zoom Masuk Pelan", 
     "Zoom Keluar Pelan", 
@@ -155,7 +155,7 @@ indonesia_shot = [
 
 indonesia_angle = [
     "Normal (Depan)",
-    "Samping (Melihat Jalan/Kedalaman)", 
+    "Samping (Arah Kamera)", # Nama diubah dari Samping (Melihat Jalan/Kedalaman)
     "Berhadapan (Ngobrol)", 
     "Intip Bahu (Framing)", 
     "Wibawa/Gagah (Low Angle)", 
@@ -163,7 +163,7 @@ indonesia_angle = [
 ]
 
 camera_map = {
-    "Otomatis (Ikuti Mood Adegan)": "AUTO_MOOD",
+    "Ikuti Karakter": "AUTO_MOOD", 
     "Diam (Tanpa Gerak)": "Static (No Move)", 
     "Zoom Masuk Pelan": "Slow Zoom In", 
     "Zoom Keluar Pelan": "Slow Zoom Out",
@@ -187,7 +187,7 @@ shot_map = {
 
 angle_map = {
     "Normal (Depan)": "",
-    "Samping (Melihat Jalan/Kedalaman)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
+    "Samping (Arah Kamera)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
     "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
     "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
     "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
@@ -301,8 +301,6 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
-
-# Garis pembatas (st.divider) di sini sudah saya hapus sesuai perintah Dian agar spasi konsisten.
 
 # --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
@@ -495,4 +493,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.1.3")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.6")
