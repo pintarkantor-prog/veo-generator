@@ -7,8 +7,8 @@ from datetime import datetime
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
 # ==============================================================================
 st.set_page_config(
-    page_title="PINTAR MEDIA - Storyboard Generator", 
-    layout="wide", 
+    page_title="PINTAR MEDIA - Storyboard Generator",
+    layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -16,8 +16,8 @@ st.set_page_config(
 # 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
 # ==============================================================================
 USERS = {
-    "admin": "QWERTY21ab", 
-    "icha": "udin99", 
+    "admin": "QWERTY21ab",
+    "icha": "udin99",
     "nissa": "tung22"
 }
 
@@ -41,7 +41,7 @@ if not st.session_state.logged_in:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
                 st.rerun()
-            else: 
+            else:
                 st.error("Username atau Password Salah!")
     st.stop()
 
@@ -62,9 +62,9 @@ def record_to_sheets(user, first_visual, total_scenes):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
-            "Waktu": current_time, 
-            "User": user, 
-            "Total Adegan": total_scenes, 
+            "Waktu": current_time,
+            "User": user,
+            "Total Adegan": total_scenes,
             "Visual Utama": first_visual[:150]
         }])
         
