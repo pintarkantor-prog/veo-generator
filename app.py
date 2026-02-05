@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT)
+# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
@@ -114,7 +114,7 @@ st.markdown("""
 
 
 # ==============================================================================
-# 5. HEADER APLIKASI
+# 5. HEADER APLIKASI (KALIMAT MOTIVASI DIPERTAHANKAN)
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
@@ -207,17 +207,16 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MANUAL - NO REDUCTION)
 # ==============================================================================
 with st.sidebar:
-# FITUR ADMIN MONITORING
+    # FITUR ADMIN MONITORING
     if st.session_state.active_user == "admin":
         st.header("📊 Admin Monitor")
         if st.checkbox("Buka Log Google Sheets"):
             try:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
-                # UBAH BAGIAN INI:
-                df_a = conn_a.read(worksheet="Sheet1", ttl=0) # Pastikan ttl=0
+                df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 st.dataframe(df_a)
             except:
-                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")  
+                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")
         st.divider()
 
     st.header("⚙️ Konfigurasi Utama")
@@ -256,26 +255,23 @@ with st.sidebar:
 
 
 # ==============================================================================
-# 8. PARAMETER KUALITAS (ULTIMATE FIDELITY - NO REDUCTION)
+# 8. PARAMETER KUALITAS (V.1.0.2 - ULTRA SHARP & FULL-FRAME LOGIC)
 # ==============================================================================
+# Agresif mengunci 9:16 dan menaikkan kualitas tekstur melampaui referensi
+sharp_natural_stack = (
+    "9:16 vertical aspect ratio, Full-frame vertical coverage, edge-to-edge pixel rendering, zero black borders, "
+    "ultra-high-fidelity resolution, micro-contrast enhancement, optical clarity, deep saturated pigments, "
+    "intricate organic textures, skin texture override with 8k details, f/11 aperture for deep focus sharpness, "
+    "zero atmospheric haze, crystal clear background focus, photorealistic cinema style."
+)
+
 no_text_strict = (
-    "STRICTLY NO rain, NO puddles, NO raindrops, NO wet ground, NO water droplets, "
-    "STRICTLY NO speech bubbles, NO text, NO typography, NO watermark, NO subtitles, NO letters."
+    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, "
+    "NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
 )
 
-img_quality_base = (
-    "photorealistic surrealism style, 16-bit color bit depth, hyper-saturated organic pigments, "
-    "absolute fidelity to unique character reference, edge-to-edge optical sharpness, "
-    "f/11 deep focus aperture, micro-contrast enhancement, intricate micro-textures, "
-    "circular polarizer (CPL) filter effect, zero atmospheric haze, 8k resolution, " + no_text_strict
-)
-
-vid_quality_base = (
-    "ultra-high-fidelity vertical video, 9:16, 60fps, photorealistic surrealism, "
-    "strict character consistency, deep saturated pigments, "
-    "hyper-vivid foliage textures, crystal clear background focus, "
-    "lossless texture quality, fluid organic motion, " + no_text_strict
-)
+img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid motion, {sharp_natural_stack} {no_text_strict}"
 
 
 # ==============================================================================
@@ -338,7 +334,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - FULL MANUAL EXPLICIT)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE - V.1.0.2 AGGRESSIVE)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -406,21 +402,22 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # Character Appearance DNA Sync
-            dna_str = " ".join([f"STRICT CHARACTER APPEARANCE: {c['name']} ({c['desc']})" for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
+            # DNA Anchor: Identity Preservation + Texture Override (Kualitas ditingkatkan dari referensi)
+            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
             
-            # Prompt Gambar (Static)
+            # Prompt Gambar: Mengunci 9:16 di bagian paling depan
             img_final = (
-                f"buatkan gambar adegan {scene_id}. {emotion_ctx}{dna_str} Visual: {vis_core}. "
+                f"vertical 9:16 aspect ratio, edge-to-edge full frame coverage. "
+                f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base}"
             )
             
-            # Prompt Video (Cinematic)
+            # Prompt Video: Mengunci Full-screen mobile di bagian paling depan
             vid_final = (
-                f"Video Adegan {scene_id}. {e_shot_size} perspective. {e_cam_move} movement. "
+                f"9:16 full-screen mobile video. {e_shot_size} perspective. {e_cam_move} movement. "
                 f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
@@ -436,9 +433,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.1")
-
-
-
-
-
+st.sidebar.caption("PINTAR MEDIA | V.1.0.2")
