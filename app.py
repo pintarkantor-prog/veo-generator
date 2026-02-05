@@ -98,11 +98,12 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
+    /* PENYESUAIAN TINGGI: Area visual dibatasi tingginya sesuai permintaan Dian */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
-        min-height: 300px !important; 
+        min-height: 180px !important; 
     }
     .small-label {
         font-size: 12px;
@@ -296,7 +297,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (MANUAL GRID - SESUAI GAMBAR DIAN)
+# 9. FORM INPUT ADEGAN (TATA LETAK GRID SESUAI INSTRUKSI DIAN)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -307,14 +308,16 @@ for i_s in range(1, int(num_scenes) + 1):
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
         
-        # Grid System Manual: Visual 70% di kiri, Kontrol 30% di kanan
-        col_v, col_ctrl = st.columns([7, 3])
+        # Grid System: Visual 65% di kiri, Kontrol 35% di kanan
+        # Penyesuaian lebar kolom agar lebih presisi sesuai gambar referensi
+        col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=300)
+            # Persempit area visual sesuai batas (height dikurangi)
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
         
         with col_ctrl:
-            # Membuat Baris 1 Kontrol: Cahaya & Gerak
+            # Kontrol Baris 1: Cahaya & Gerak (Merapat ke area visual)
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
@@ -331,9 +334,7 @@ for i_s in range(1, int(num_scenes) + 1):
                     if f"camera_input_{i_s}" not in st.session_state: st.session_state[f"camera_input_{i_s}"] = st.session_state.m_cam
                     c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
             
-            st.write("") # Spacer antar baris kontrol
-
-            # Membuat Baris 2 Kontrol: Shot & Angle
+            # Kontrol Baris 2: Shot & Angle (Langsung di bawah Baris 1)
             r2_c1, r2_c2 = st.columns(2)
             with r2_c1:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
@@ -350,7 +351,7 @@ for i_s in range(1, int(num_scenes) + 1):
                     if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
                     a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
 
-        # Dialog Dinamis Manual
+        # Dialog Dinamis Manual (Posisinya tetap di bawah visual utama)
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -495,4 +496,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.8")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.9")
