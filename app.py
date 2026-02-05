@@ -151,6 +151,16 @@ indonesia_shot = [
     "Sudut Tinggi (Kecil)"
 ]
 
+# --- TAMBAHAN BARU: DROPDOWN SUDUT KAMERA ---
+indonesia_angle = [
+    "Normal (Depan)",
+    "Samping (Melihat Jalan/Kedalaman)", 
+    "Berhadapan (Ngobrol)", 
+    "Intip Bahu (Framing)", 
+    "Wibawa/Gagah (Low Angle)", 
+    "Mata Karakter (POV)"
+]
+
 camera_map = {
     "Diam (Tanpa Gerak)": "Static (No Move)", 
     "Zoom Masuk Pelan": "Slow Zoom In", 
@@ -173,6 +183,16 @@ shot_map = {
     "Sudut Tinggi (Kecil)": "High Angle Shot"
 }
 
+# --- TAMBAHAN BARU: MAPPING LOGIKA ANGLE ---
+angle_map = {
+    "Normal (Depan)": "",
+    "Samping (Melihat Jalan/Kedalaman)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
+    "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
+    "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
+    "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
+    "Mata Karakter (POV)": "First-person point of view, looking through the character's eyes, immersive perspective."
+}
+
 options_lighting = [
     "Bening dan Tajam", 
     "Sejuk dan Terang", 
@@ -187,20 +207,24 @@ options_lighting = [
 if 'm_light' not in st.session_state: st.session_state.m_light = options_lighting[0]
 if 'm_cam' not in st.session_state: st.session_state.m_cam = indonesia_camera[0]
 if 'm_shot' not in st.session_state: st.session_state.m_shot = indonesia_shot[2]
+if 'm_angle' not in st.session_state: st.session_state.m_angle = indonesia_angle[0]
 
 def global_sync_v920():
     lt1 = st.session_state.light_input_1
     cm1 = st.session_state.camera_input_1
     st1 = st.session_state.shot_input_1
+    ag1 = st.session_state.angle_input_1
     
     st.session_state.m_light = lt1
     st.session_state.m_cam = cm1
     st.session_state.m_shot = st1
+    st.session_state.m_angle = ag1
     
     for key in st.session_state.keys():
         if key.startswith("light_input_"): st.session_state[key] = lt1
         if key.startswith("camera_input_"): st.session_state[key] = cm1
         if key.startswith("shot_input_"): st.session_state[key] = st1
+        if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 
 # ==============================================================================
@@ -257,7 +281,6 @@ with st.sidebar:
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
 # ==============================================================================
-# Agresif mengunci 9:16 dan menaikkan kualitas tekstur melampaui referensi
 sharp_natural_stack = (
     "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, zero black borders, "
     "expansive background rendering to edges, Circular Polarizer (CPL) filter effect, eliminates light glare, "
@@ -287,8 +310,8 @@ for i_s in range(1, int(num_scenes) + 1):
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
         
-        # Grid System Manual
-        col_v, col_l, col_c, col_s = st.columns([4, 1.5, 1.5, 1.5])
+        # Grid System Manual - Ditambah kolom untuk Sudut Kamera
+        col_v, col_l, col_c, col_s, col_a = st.columns([3, 1.2, 1.2, 1.2, 1.4])
         
         with col_v:
             visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=150)
@@ -310,12 +333,21 @@ for i_s in range(1, int(num_scenes) + 1):
                 c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
 
         with col_s:
-            st.markdown('<p class="small-label">📐 Ukuran Shot</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
             if i_s == 1:
                 s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
             else:
                 if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
                 s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+
+        # --- FITUR BARU: SELECTBOX SUDUT KAMERA ---
+        with col_a:
+            st.markdown('<p class="small-label">📸 Sudut Kamera</p>', unsafe_allow_html=True)
+            if i_s == 1:
+                a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+            else:
+                if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
+                a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
 
         # Dialog Dinamis Manual
         diag_cols = st.columns(len(all_chars_list))
@@ -327,7 +359,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "dialogs": scene_dialogs_list
+            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
         })
 
 
@@ -344,7 +376,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     if not active_scenes:
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
-        # SIMPAN KE GOOGLE SHEETS CLOUD (MENGGUNAKAN SERVICE ACCOUNT)
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
         for item in active_scenes:
@@ -352,73 +383,59 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             # Konversi Teknis
             e_cam_move = camera_map.get(item["cam"], "Static")
             e_shot_size = shot_map.get(item["shot"], "Medium Shot")
+            e_angle_cmd = angle_map.get(item["angle"], "") # AMBIL LOGIKA ANGLE
             
             scene_id = item["num"]
             vis_core = item["visual"]
             light_type = item["light"]
             
-            # --- FULL LIGHTING MAPPING (MANUAL EXPLICIT - NO REDUCTION) ---
+            # --- FULL LIGHTING MAPPING ---
             if "Bening" in light_type:
                 l_cmd = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                 a_cmd = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
-            
             elif "Sejuk" in light_type:
                 l_cmd = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
                 a_cmd = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
-            
             elif "Dramatis" in light_type:
                 l_cmd = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
                 a_cmd = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
-            
             elif "Jelas" in light_type:
                 l_cmd = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
                 a_cmd = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
-            
             elif "Mendung" in light_type:
-                l_cmd = (
-                    "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, "
-                    "vivid pigment recovery on every surface, extreme local micro-contrast, "
-                    "brilliant specular highlights on object edges, deep rich high-definition shadows."
-                )
-                a_cmd = (
-                    "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, "
-                    "gray-cobalt sky with heavy thick wispy clouds. Tactile texture definition on foliage, wood grain, "
-                    "grass blades, house walls, concrete roads, and every environment object in frame. "
-                    "Bone-dry surfaces, zero moisture, hyper-sharp edge definition across the entire frame."
-                )
-            
+                l_cmd = ("Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, "
+                        "vivid pigment recovery on every surface, extreme local micro-contrast.")
+                a_cmd = ("Moody atmosphere with zero atmospheric haze, gray-cobalt sky with heavy thick wispy clouds.")
             elif "Suasana Malam" in light_type:
-                l_cmd = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow, visible background detail."
-                a_cmd = "Clear night atmosphere, deep indigo-black sky, hyper-defined textures on every object."
-            
+                l_cmd = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow."
+                a_cmd = "Clear night atmosphere, deep indigo-black sky."
             elif "Suasana Alami" in light_type:
-                l_cmd = "Low-exposure natural sunlight, high local contrast amplification on all environmental objects, extreme chlorophyll color depth, hyper-saturated organic plant pigments."
-                a_cmd = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves and tree bark, intricate micro-textures."
-            
+                l_cmd = "Low-exposure natural sunlight, high local contrast amplification, extreme chlorophyll color depth."
+                a_cmd = "Crystal clear forest humidity (zero haze), hyper-defined micro-textures."
             else: # Suasana Sore
-                l_cmd = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
-                a_cmd = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background, zero atmospheric haze."
+                l_cmd = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights."
+                a_cmd = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient."
 
             # Logika Dialog & Emosi
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor: Identity Preservation + Texture Override (Kualitas ditingkatkan dari referensi)
-            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
+            # DNA Anchor
+            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture." for c in all_chars_list if c['name'] and c['name'].lower() in vis_core.lower()])
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
             
-            # PROMPT GAMBAR: Ditambahkan perintah STATIC agar AI tidak membuat video
+            # PROMPT GAMBAR: Ditambah e_angle_cmd
             img_final = (
                 f"create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
-                f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
+                f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
-            # PROMPT VIDEO: Mengunci Full-screen mobile di bagian paling depan
+            # PROMPT VIDEO: Ditambah e_angle_cmd
             vid_final = (
-                f"9:16 full-screen mobile video. {e_shot_size} perspective. {e_cam_move} movement. "
+                f"9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move} movement. "
                 f"{emotion_ctx}{dna_str} Visual: {vis_core}. "
                 f"Lighting: {l_cmd}. {vid_quality_base}"
             )
@@ -435,4 +452,3 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.0.3")
-
