@@ -251,7 +251,6 @@ with st.sidebar:
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
 # ==============================================================================
-# Variabel ini tetap ada di kode namun tidak akan dipanggil ke hasil prompt akhir sesuai perintah hapus.
 sharp_natural_stack = (
     "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, zero black borders, "
     "expansive background rendering to edges, Circular Polarizer (CPL) filter effect, eliminates light glare, "
@@ -264,6 +263,9 @@ no_text_strict = (
     "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, "
     "NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
 )
+
+img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
 
 # ==============================================================================
@@ -318,6 +320,7 @@ for i_s in range(1, int(num_scenes) + 1):
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                # Gunakan nilai dari session state jika ada, jika tidak pakai 0
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
                 if i_s == 1:
                     l_val = st.selectbox("L1", options_lighting, index=idx_l, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
@@ -365,7 +368,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (PERINTAH HAPUS DIAPLIKASIKAN - V.1.3.21)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE LENGKAP - NO REDUCTION)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -460,28 +463,25 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor: HAPUS REDUNDANSI BAJU (TIDAK ADA c['desc'] DI SINI)
-            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} re-rendered with 8k skin texture and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
+            # DNA Anchor: Identity Preservation + Texture Override (LENGKAP)
+            dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
 
-            # --- LOGIKA PENYUNTIKAN MASTER LOCK ---
+            # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
             current_lock = master_lock_instruction if scene_id == 1 else ""
 
             # --- DISPLAY HASIL AKHIR ---
             st.subheader(f"✅ Hasil Adegan {scene_id}")
             
-            # HAPUS KALIMAT PEMBUKA & HAPUS PARAMETER MENUMPUK
             img_final = (
-                f"{current_lock}"
+                f"{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
                 f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
-                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. --ar 9:16"
+                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
             )
             
-            # HAPUS KALIMAT PEMBUKA & HAPUS PARAMETER MENUMPUK
             vid_final = (
-                f"{current_lock}"
-                f"{e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
+                f"{current_lock}9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
                 f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
-                f"Lighting: {l_cmd}."
+                f"Lighting: {l_cmd}. {vid_quality_base}"
             )
             
             c1, c2 = st.columns(2)
@@ -495,4 +495,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.21")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
