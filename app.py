@@ -79,7 +79,7 @@ def record_to_sheets(user, first_visual, total_scenes):
 
 
 # ==============================================================================
-# 4. CUSTOM CSS (MODIFIKASI: KOLOM ADEGAN LEBIH PANJANG)
+# 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -98,12 +98,10 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    /* PERUBAHAN TATA LETAK: Textarea Visual dibuat lebih tinggi (300px) */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
-        min-height: 300px !important; 
     }
     .small-label {
         font-size: 12px;
@@ -297,7 +295,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (MANUAL GRID - NO COMPRESSION)
+# 9. FORM INPUT ADEGAN (MODIFIKASI: KOLOM VISUAL LEBIH PANJANG KE SAMPING)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 adegan_storage = []
@@ -308,12 +306,12 @@ for i_s in range(1, int(num_scenes) + 1):
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
         
-        # Grid System Manual
-        col_v, col_l, col_c, col_s, col_a = st.columns([3, 1.2, 1.2, 1.2, 1.4])
+        # Grid System: Visual di sebelah kiri diperlebar (80%), Kontrol di kanan (20%)
+        # [8, 1, 1, 1, 1] memberikan kolom visual yang sangat lebar menyamping.
+        col_v, col_l, col_c, col_s, col_a = st.columns([8, 1.5, 1.5, 1.5, 1.5])
         
         with col_v:
-            # AREA VISUAL TETAP TINGGI (Disesuaikan CSS)
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=300)
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=150)
         
         with col_l:
             st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
@@ -324,7 +322,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
         
         with col_c:
-            st.markdown('<p class="small-label">🎥 Gerak Video</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
             if i_s == 1:
                 c_val = st.selectbox("C1", indonesia_camera, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
             else:
@@ -332,7 +330,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
 
         with col_s:
-            st.markdown('<p class="small-label">📐 Ukuran Shot</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
             if i_s == 1:
                 s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
             else:
@@ -340,7 +338,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
 
         with col_a:
-            st.markdown('<p class="small-label">📸 Sudut Kamera</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">📸 Angle</p>', unsafe_allow_html=True)
             if i_s == 1:
                 a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
             else:
@@ -492,4 +490,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.4")
+st.sidebar.caption("PINTAR MEDIA | V.1.0.7")
