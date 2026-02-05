@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 
 # ==============================================================================
-# 1. KONFIGURASI HALAMAN (MEGA STRUCTURE)
+# 1. KONFIGURASI HALAMAN
 # ==============================================================================
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT)
+# 2. SISTEM LOGIN & DATABASE USER
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
@@ -21,11 +21,8 @@ USERS = {
     "nissa": "tung22"
 }
 
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-
-if 'active_user' not in st.session_state:
-    st.session_state.active_user = ""
+if 'logged_in' not in st.session_state: st.session_state.logged_in = False
+if 'active_user' not in st.session_state: st.session_state.active_user = ""
 
 if not st.session_state.logged_in:
     st.title("🔐 PINTAR MEDIA - AKSES PRODUKSI")
@@ -38,8 +35,7 @@ if not st.session_state.logged_in:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
                 st.rerun()
-            else:
-                st.error("Username atau Password Salah!")
+            else: st.error("Username atau Password Salah!")
     st.stop()
 
 # ==============================================================================
@@ -51,15 +47,12 @@ def record_to_sheets(user, first_visual, total_scenes):
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         new_row = pd.DataFrame([{
-            "Waktu": current_time,
-            "User": user,
-            "Total Adegan": total_scenes,
-            "Visual Utama": first_visual[:150]
+            "Waktu": current_time, "User": user,
+            "Total Adegan": total_scenes, "Visual Utama": first_visual[:150]
         }])
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         conn.update(worksheet="Sheet1", data=updated_df)
-    except Exception as e:
-        st.error(f"Gagal mencatat riwayat: {e}")
+    except Exception as e: st.error(f"Gagal mencatat riwayat: {e}")
 
 # ==============================================================================
 # 4. CUSTOM CSS (FULL STYLE)
@@ -69,13 +62,9 @@ st.markdown("""
     [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
     button[title="Copy to clipboard"] {
-        background-color: #28a745 !important;
-        color: white !important;
-        opacity: 1 !important; 
-        border-radius: 6px !important;
-        border: 2px solid #ffffff !important;
-        transform: scale(1.1); 
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
+        background-color: #28a745 !important; color: white !important; opacity: 1 !important; 
+        border-radius: 6px !important; border: 2px solid #ffffff !important;
+        transform: scale(1.1); box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     .stTextArea textarea { font-size: 14px !important; line-height: 1.5 !important; min-height: 180px !important; }
     .small-label { font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px; }
@@ -90,9 +79,7 @@ with c_header1:
     st.title("📸 PINTAR MEDIA")
     st.info(f"Staf Aktif: {st.session_state.active_user} | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 with c_header2:
-    if st.button("Logout 🚪"):
-        st.session_state.logged_in = False
-        st.rerun()
+    if st.button("Logout 🚪"): st.session_state.logged_in = False; st.rerun()
 
 # ==============================================================================
 # 6. MAPPING & SYNC LOGIC
@@ -133,8 +120,7 @@ with st.sidebar:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 st.dataframe(df_a)
-            except:
-                st.warning("Gagal memuat Database.")
+            except: st.warning("Gagal memuat Database.")
         st.divider()
 
     st.header("⚙️ Konfigurasi Utama")
@@ -143,7 +129,15 @@ with st.sidebar:
 # ==============================================================================
 # 8. PARAMETER KUALITAS & FORM INPUT
 # ==============================================================================
-img_quality_base = "Full-bleed cinematography, edge-to-edge pixel rendering, 8k resolution, deep saturated pigments, zero digital noise, STRICTLY NO text, NO speech bubbles. --ar 9:16"
+# Mega Detail Quality Stacking - INI YANG KEMBALI SEPENUHNYA
+full_quality_stack = (
+    "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, "
+    "zero black borders, expansive background rendering to edges, Circular Polarizer (CPL) filter effect, "
+    "eliminates light glare, ultra-high-fidelity resolution, micro-contrast enhancement, optical clarity, "
+    "deep saturated pigments, vivid organic color punch, intricate organic textures, skin texture override with 8k details, "
+    "f/11 aperture for deep focus sharpness, zero digital noise, zero atmospheric haze, crystal clear background focus. "
+    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, NO watermark, NO letters, NO black bars on top and bottom, NO subtitles. --ar 9:16"
+)
 
 st.subheader("📝 Detail Adegan Storyboard")
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
@@ -199,12 +193,11 @@ for i_s in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs})
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (DEDUPLICATED LOGIC)
+# 10. GENERATOR PROMPT (ULTRA QUALITY INTEGRATED)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
-    if not active_scenes:
-        st.warning("Mohon isi deskripsi visual adegan!")
+    if not active_scenes: st.warning("Mohon isi deskripsi visual adegan!")
     else:
         record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
         
@@ -217,11 +210,20 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             # Smart Anchor Teras
             vis_core_final = item["visual"] + " (Backrest fixed against house wall, positioned under porch roof)." if "teras" in v_low else item["visual"]
 
-            # DNA Anchor (DEDUPLICATED: Hanya panggil karakter yang disebutkan di visual adegan ini)
+            # DNA Anchor (DEDUPLICATED & RESOLUTION ENHANCEMENT)
             dna_parts = []
             for c in all_chars_list:
                 if c['name'].lower() in v_low:
-                    dna_parts.append(f"STRICT FIDELITY on {c['name']} appearance: {c['desc']}. Maintain identity in 8k detail.")
+                    # Setiap karakter yang muncul akan dire-render dengan detail 8k dan ketajaman
+                    dna_instruction = (
+                        f"STRICT FIDELITY on {c['name']} appearance: {c['desc']}. "
+                        f"Maintain identity in 8k detail, but re-render surface with 8k skin texture, "
+                        f"enhanced contrast, and professional cinematic sharpness."
+                    )
+                    # Tambahan instruksi untuk TUNG agar tidak kekar
+                    if c['name'].lower() == "tung":
+                        dna_instruction += " Ensure TUNG's body type is LEAN, NOT MUSCULAR."
+                    dna_parts.append(dna_instruction)
             dna_final = " ".join(dna_parts)
 
             # Emotion Context
@@ -233,14 +235,30 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             if "Bening" in l_type: l_cmd, a_cmd = "Ultra-high altitude light clarity, extreme micro-contrast.", "10:00 AM mountain sun, deepest cobalt blue sky."
             elif "Mendung" in l_type: l_cmd, a_cmd = "Intense moody overcast, 8000k cold temperature.", "Gray-cobalt sky, tactile texture definition."
             elif "Suasana Malam" in l_type: l_cmd, a_cmd = "Cinematic Night lighting, 9000k moonlit glow.", "Deep indigo-black sky, hyper-defined textures."
-            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere."
+            elif "Suasana Sore" in l_type: l_cmd, a_cmd = "4:00 PM indigo atmosphere, sharp rim lighting.", "Late afternoon cold sun, long sharp shadows."
+            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere." # Default
+            
+            # Combine Lighting and Atmosphere for the prompt
+            atmosphere_and_lighting = f"Atmosphere: {a_cmd}. Lighting: {l_cmd}."
 
-            # Final Output
+
+            # Render
             st.subheader(f"✅ Hasil Adegan {item['num']}")
             current_lock = master_lock if item['num'] == 1 else ""
             
-            img_final = f"{current_lock}STATIC photo, 9:16 vertical. {angle_map.get(item['angle'], '')} {emotion_ctx}{dna_final} Visual: {vis_core_final}. Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base}"
-            vid_final = f"{current_lock}9:16 vertical video. {shot_map.get(item['shot'], 'Medium Shot')} {camera_map.get(item['cam'], 'Static')}. {emotion_ctx}{dna_final} Visual: {vis_core_final}. Lighting: {l_cmd}. 60fps, fluid motion."
+            # Final Image Prompt (Menggunakan full_quality_stack)
+            img_final = (
+                f"{current_lock}STATIC photo, 9:16 vertical. {angle_map.get(item['angle'], '')} "
+                f"{emotion_ctx}{dna_final} Visual: {vis_core_final}. "
+                f"{atmosphere_and_lighting} {full_quality_stack}"
+            )
+            
+            # Final Video Prompt (Video biasanya tidak sekompleks gambar, tapi tetap detail)
+            vid_final = (
+                f"{current_lock}9:16 vertical video. {shot_map.get(item['shot'], 'Medium Shot')} {camera_map.get(item['cam'], 'Static')}. "
+                f"{emotion_ctx}{dna_final} Visual: {vis_core_final}. "
+                f"{atmosphere_and_lighting} 60fps, fluid motion, professional quality. --ar 9:16"
+            )
 
             c1, c2 = st.columns(2)
             c1.code(img_final, language="text")
@@ -248,4 +266,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.2.8-MEGA")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.0-ULTRA")
