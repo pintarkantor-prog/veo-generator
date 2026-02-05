@@ -132,6 +132,11 @@ full_quality_stack = (
     "f/11 aperture for deep focus sharpness, zero digital noise, zero atmospheric haze, crystal clear background focus. "
     "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, NO watermark, NO letters, NO black bars on top and bottom, NO subtitles. --ar 9:16"
 )
+# Kualitas video yang sedikit berbeda
+video_quality_stack = (
+    "60fps, fluid motion, professional cinematic quality, deep saturated pigments, zero digital noise, "
+    "full-bleed cinematography, edge-to-edge rendering. --ar 9:16"
+)
 
 # ==============================================================================
 # 9. FORM INPUT ADEGAN
@@ -187,7 +192,7 @@ for i_s in range(1, int(num_scenes) + 1):
         adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs})
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (HIERARCHICAL PRIORITY LOGIC)
+# 10. GENERATOR PROMPT (HIERARCHICAL PRIORITY LOGIC & VIDEO PROMPT RESTORED)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -223,22 +228,39 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             if "Bening" in l_type: l_cmd, a_cmd = "Ultra-high altitude light clarity, extreme micro-contrast.", "10:00 AM mountain sun, deepest cobalt blue sky."
             elif "Mendung" in l_type: l_cmd, a_cmd = "Intense moody overcast, 8000k cold temperature.", "Gray-cobalt sky, tactile texture definition."
             elif "Suasana Malam" in l_type: l_cmd, a_cmd = "Cinematic Night lighting, 9000k moonlit glow.", "Deep indigo-black sky, hyper-defined textures."
-            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere."
+            elif "Suasana Sore" in l_type: l_cmd, a_cmd = "4:00 PM indigo atmosphere, sharp rim lighting.", "Late afternoon cold sun, long sharp shadows."
+            else: l_cmd, a_cmd = "Natural professional lighting.", "Crystal clear atmosphere." # Default
             
             st.subheader(f"✅ Hasil Adegan {item['num']}")
+            c1, c2 = st.columns(2) # Dua kolom untuk Gambar dan Video
             current_lock = master_lock if item['num'] == 1 else ""
             
-            # SUSUNAN HIERARKI: DNA Karakter -> Visual Adegan -> Kualitas
+            # SUSUNAN HIERARKI UNTUK GAMBAR: DNA Karakter -> Visual Adegan -> Kualitas Gambar
             img_final = (
                 f"{current_lock} {dna_final} " # DNA Karakter dibaca AI paling awal
                 f"Visual Scene: {vis_core_final}. "
                 f"Camera: {angle_map.get(item['angle'], '')} {emotion_ctx} "
                 f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. "
-                f"{full_quality_stack}" # Detail teknis diletakkan paling akhir
+                f"{full_quality_stack}" # Detail teknis gambar diletakkan paling akhir
             )
             
-            st.code(img_final, language="text")
+            # SUSUNAN HIERARKI UNTUK VIDEO: DNA Karakter -> Visual Adegan -> Kualitas Video
+            vid_final = (
+                f"{current_lock} {dna_final} " # DNA Karakter dibaca AI paling awal
+                f"9:16 vertical video. {shot_map.get(item['shot'], 'Medium Shot')} {camera_map.get(item['cam'], 'Static')}. "
+                f"Visual Scene: {vis_core_final}. "
+                f"Camera: {angle_map.get(item['angle'], '')} {emotion_ctx} "
+                f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. "
+                f"{video_quality_stack}" # Detail teknis video diletakkan paling akhir
+            )
+
+            with c1:
+                st.markdown("**🖼️ Prompt Gambar:**")
+                st.code(img_final, language="text")
+            with c2:
+                st.markdown("**▶️ Prompt Video:**")
+                st.code(vid_final, language="text")
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.5-ULTRA")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.6-ULTRA-FIX")
