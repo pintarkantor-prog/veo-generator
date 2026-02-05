@@ -98,7 +98,6 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    /* PENYESUAIAN TINGGI: Area visual dibatasi tingginya sesuai permintaan Dian */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
@@ -129,10 +128,10 @@ with c_header2:
 
 
 # ==============================================================================
-# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL - NO REDUCTION)
+# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
 indonesia_camera = [
-    "Otomatis (Ikuti Mood Adegan)", 
+    "Ikuti Karakter", 
     "Diam (Tanpa Gerak)", 
     "Zoom Masuk Pelan", 
     "Zoom Keluar Pelan", 
@@ -156,7 +155,7 @@ indonesia_shot = [
 
 indonesia_angle = [
     "Normal (Depan)",
-    "Samping (Melihat Jalan/Kedalaman)", 
+    "Samping (Arah Kamera)", 
     "Berhadapan (Ngobrol)", 
     "Intip Bahu (Framing)", 
     "Wibawa/Gagah (Low Angle)", 
@@ -164,7 +163,7 @@ indonesia_angle = [
 ]
 
 camera_map = {
-    "Otomatis (Ikuti Mood Adegan)": "AUTO_MOOD",
+    "Ikuti Karakter": "AUTO_MOOD", 
     "Diam (Tanpa Gerak)": "Static (No Move)", 
     "Zoom Masuk Pelan": "Slow Zoom In", 
     "Zoom Keluar Pelan": "Slow Zoom Out",
@@ -188,7 +187,7 @@ shot_map = {
 
 angle_map = {
     "Normal (Depan)": "",
-    "Samping (Melihat Jalan/Kedalaman)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
+    "Samping (Arah Kamera)": "Side profile view, 90-degree angle, subject positioned on the side to show environmental depth and the street ahead.",
     "Berhadapan (Ngobrol)": "Two subjects in profile view, facing each other directly, strict eye contact, bodies turned away from the camera.",
     "Intip Bahu (Framing)": "Over-the-shoulder framing, using foreground elements like window frames or shoulders to create a voyeuristic look.",
     "Wibawa/Gagah (Low Angle)": "Heroic low angle shot, camera looking up at the subject to create a powerful and majestic presence.",
@@ -206,10 +205,11 @@ options_lighting = [
     "Suasana Alami"
 ]
 
-if 'm_light' not in st.session_state: st.session_state.m_light = options_lighting[0]
-if 'm_cam' not in st.session_state: st.session_state.m_cam = indonesia_camera[0]
-if 'm_shot' not in st.session_state: st.session_state.m_shot = indonesia_shot[2]
-if 'm_angle' not in st.session_state: st.session_state.m_angle = indonesia_angle[0]
+# INISIALISASI SESSION STATE AWAL (Mencegah ValueError)
+if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
+if 'm_cam' not in st.session_state: st.session_state.m_cam = "Ikuti Karakter"
+if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
+if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
 
 def global_sync_v920():
     lt1 = st.session_state.light_input_1
@@ -230,7 +230,7 @@ def global_sync_v920():
 
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI TOKOH (EXPLICIT MANUAL - NO REDUCTION)
+# 7. SIDEBAR: KONFIGURASI UTAMA (TIDAK DIRUBAH)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
@@ -241,39 +241,11 @@ with st.sidebar:
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 st.dataframe(df_a)
             except:
-                st.warning("Gagal memuat. Periksa setting Secrets atau Nama Worksheet Anda.")
+                st.warning("Gagal memuat Database.")
         st.divider()
 
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
-    
-    st.divider()
-    st.subheader("👥 Identitas & Fisik Karakter")
-    
-    st.markdown("### Karakter 1")
-    c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
-    c_p1_v = st.text_area("Fisik Karakter 1 (STRICT)", key="c_desc_1_input", height=100)
-    
-    st.divider()
-    
-    st.markdown("### Karakter 2")
-    c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
-    c_p2_v = st.text_area("Fisik Karakter 2 (STRICT)", key="c_desc_2_input", height=100)
-
-    st.divider()
-    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
-    
-    all_chars_list = []
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
-
-    if num_extra > 2:
-        for ex_idx in range(2, int(num_extra)):
-            st.divider()
-            st.markdown(f"### Karakter {ex_idx + 1}")
-            ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
-            ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
-            all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
 
 # ==============================================================================
@@ -297,61 +269,88 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (TATA LETAK GRID SESUAI INSTRUKSI DIAN)
+# 9. FORM INPUT ADEGAN (TATA LETAK GRID)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
+
+# --- IDENTITAS TOKOH (Antara Subheader dan Master Control) ---
+with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
+    col_c1, col_c2 = st.columns(2)
+    
+    with col_c1:
+        st.markdown("### Karakter 1")
+        c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", key="c_desc_1_input", height=100)
+    
+    with col_c2:
+        st.markdown("### Karakter 2")
+        c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", key="c_desc_2_input", height=100)
+
+    st.divider()
+    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
+    
+    all_chars_list = []
+    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
+    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
+
+    if num_extra > 2:
+        extra_cols = st.columns(num_extra - 2)
+        for ex_idx in range(2, int(num_extra)):
+            with extra_cols[ex_idx - 2]:
+                st.markdown(f"### Karakter {ex_idx + 1}")
+                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
+                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
+                all_chars_list.append({"name": ex_name, "desc": ex_phys})
+
+# --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
-    
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
-        
-        # Grid System: Visual 65% di kiri, Kontrol 35% di kanan
-        # Penyesuaian lebar kolom agar lebih presisi sesuai gambar referensi
+        # Grid Layout 
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            # Persempit area visual sesuai batas (height dikurangi)
             visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
         
         with col_ctrl:
-            # Kontrol Baris 1: Cahaya & Gerak (Merapat ke area visual)
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                # Gunakan nilai dari session state jika ada, jika tidak pakai 0
+                idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
                 if i_s == 1:
-                    l_val = st.selectbox("L1", options_lighting, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    l_val = st.selectbox("L1", options_lighting, index=idx_l, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
-                    if f"light_input_{i_s}" not in st.session_state: st.session_state[f"light_input_{i_s}"] = st.session_state.m_light
-                    l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
+                    l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1_c2:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
+                idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
                 if i_s == 1:
-                    c_val = st.selectbox("C1", indonesia_camera, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    c_val = st.selectbox("C1", indonesia_camera, index=idx_c, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
-                    if f"camera_input_{i_s}" not in st.session_state: st.session_state[f"camera_input_{i_s}"] = st.session_state.m_cam
-                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
+                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", label_visibility="collapsed")
             
-            # Kontrol Baris 2: Shot & Angle (Langsung di bawah Baris 1)
             r2_c1, r2_c2 = st.columns(2)
             with r2_c1:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
+                idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
                 if i_s == 1:
-                    s_val = st.selectbox("S1", indonesia_shot, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    s_val = st.selectbox("S1", indonesia_shot, index=idx_s, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
-                    if f"shot_input_{i_s}" not in st.session_state: st.session_state[f"shot_input_{i_s}"] = st.session_state.m_shot
-                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", label_visibility="collapsed")
             with r2_c2:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
+                idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 if i_s == 1:
-                    a_val = st.selectbox("A1", indonesia_angle, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
+                    a_val = st.selectbox("A1", indonesia_angle, index=idx_a, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
                 else:
-                    if f"angle_input_{i_s}" not in st.session_state: st.session_state[f"angle_input_{i_s}"] = st.session_state.m_angle
-                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
+                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", label_visibility="collapsed")
 
-        # Dialog Dinamis Manual (Posisinya tetap di bawah visual utama)
+        # Dialog Dinamis
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -369,7 +368,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (V.1.0.3 - MASTER LIGHTING & CHARACTER LOCK)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE LENGKAP - NO REDUCTION)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -471,7 +470,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             current_lock = master_lock_instruction if scene_id == 1 else ""
 
             # --- DISPLAY HASIL AKHIR ---
-            st.subheader(f"HASIL PRODUKSI ADEGAN {scene_id}")
+            st.subheader(f"✅ Hasil Adegan {scene_id}")
             
             img_final = (
                 f"{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
@@ -496,4 +495,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.0.9")
+st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
