@@ -13,16 +13,16 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. DATABASE KARAKTER CEPAT (UDIN & TUNG)
+# 2. DATABASE KARAKTER CEPAT (UDIN & TUNG) - BACKGROUND DATA ONLY
 # ==============================================================================
 DB_KARAKTER = {
     "Pilih dari Database": {"deskripsi": "", "url": ""},
     "UDIN": {
-        "deskripsi": "Indonesian man, rugged facial features, sharp intense eyes, medium-tan skin, short neat black hair, realistic skin texture.",
+        "deskripsi": "Indonesian man, rugged facial features, sharp intense eyes, medium-tan skin, short neat black hair, realistic skin texture, authentic rugged look.",
         "url": "https://drive.google.com/uc?export=download&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5"
     },
     "TUNG": {
-        "deskripsi": "Indonesian man, distinct facial structure, expressive eyes, natural black hair, authentic Asian skin tone.",
+        "deskripsi": "Indonesian man, distinct facial structure, expressive eyes, natural black hair, authentic Asian skin tone, clean aesthetic features.",
         "url": "https://drive.google.com/uc?export=download&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
     }
 }
@@ -287,41 +287,43 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (DENGAN DATABASE SELECTOR TETAPI TETAP BISA MANUAL) ---
+# --- IDENTITAS TOKOH (DATABASE SELECTOR DI BALIK LAYAR) ---
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     
     with col_c1:
         st.markdown("### Karakter 1")
-        sel_db1 = st.selectbox("Cari di Database K1", list(DB_KARAKTER.keys()), key="sel_db_1")
+        # Selector Database hanya sebagai alat bantu pengisian cepat
+        sel_db1 = st.selectbox("Cepat dari Database K1", list(DB_KARAKTER.keys()), key="sel_db_1")
         
-        # Logika Pengisian Otomatis dari Database ke Kolom Input
-        def_n1 = sel_db1 if sel_db1 != "Pilih dari Database" else "UDIN"
-        def_p1 = DB_KARAKTER[sel_db1]["deskripsi"] if sel_db1 != "Pilih dari Database" else ""
-        def_u1 = DB_KARAKTER[sel_db1]["url"] if sel_db1 != "Pilih dari Database" else ""
+        # Default value mengikuti selector
+        val_n1 = sel_db1 if sel_db1 != "Pilih dari Database" else "UDIN"
+        val_p1 = DB_KARAKTER[sel_db1]["deskripsi"] if sel_db1 != "Pilih dari Database" else ""
+        val_u1 = DB_KARAKTER[sel_db1]["url"] if sel_db1 != "Pilih dari Database" else ""
         
-        c_n1_v = st.text_input("Nama Karakter 1", value=def_n1, key="c_name_1_input")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=def_p1, key="c_desc_1_input", height=100)
-        c_u1_v = st.text_input("Link Foto Referensi 1 (URL)", value=def_u1, key="c_url_1_input")
+        c_n1_v = st.text_input("Nama Karakter 1", value=val_n1, key="c_name_1_input")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=val_p1, key="c_desc_1_input", height=100)
+        # Link Foto tetap disimpan di belakang (bisa diedit di kode)
+        c_u1_hidden = val_u1 
     
     with col_c2:
         st.markdown("### Karakter 2")
-        sel_db2 = st.selectbox("Cari di Database K2", list(DB_KARAKTER.keys()), key="sel_db_2")
+        sel_db2 = st.selectbox("Cepat dari Database K2", list(DB_KARAKTER.keys()), key="sel_db_2")
         
-        def_n2 = sel_db2 if sel_db2 != "Pilih dari Database" else "TUNG"
-        def_p2 = DB_KARAKTER[sel_db2]["deskripsi"] if sel_db2 != "Pilih dari Database" else ""
-        def_u2 = DB_KARAKTER[sel_db2]["url"] if sel_db2 != "Pilih dari Database" else ""
+        val_n2 = sel_db2 if sel_db2 != "Pilih dari Database" else "TUNG"
+        val_p2 = DB_KARAKTER[sel_db2]["deskripsi"] if sel_db2 != "Pilih dari Database" else ""
+        val_u2 = DB_KARAKTER[sel_db2]["url"] if sel_db2 != "Pilih dari Database" else ""
         
-        c_n2_v = st.text_input("Nama Karakter 2", value=def_n2, key="c_name_2_input")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=def_p2, key="c_desc_2_input", height=100)
-        c_u2_v = st.text_input("Link Foto Referensi 2 (URL)", value=def_u2, key="c_url_2_input")
+        c_n2_v = st.text_input("Nama Karakter 2", value=val_n2, key="c_name_2_input")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=val_p2, key="c_desc_2_input", height=100)
+        c_u2_hidden = val_u2
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
     all_chars_list = []
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_u1_v})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_u2_v})
+    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_u1_hidden})
+    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_u2_hidden})
 
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
@@ -330,8 +332,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
-                ex_url = st.text_input(f"Link Foto {ex_idx + 1}", key=f"ex_url_{ex_idx}")
-                all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url})
+                all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ""})
 
 # --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
@@ -530,4 +531,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.2.8")
+st.sidebar.caption("PINTAR MEDIA | V.1.3.0")
