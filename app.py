@@ -13,18 +13,12 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. DATABASE KARAKTER CEPAT (UDIN & TUNG) - BACKGROUND DATA ONLY
+# 2. DATABASE LINK FOTO (INVISIBLE - AUTO-MATCHING SYSTEM)
 # ==============================================================================
-DB_KARAKTER = {
-    "Pilih dari Database": {"deskripsi": "", "url": ""},
-    "UDIN": {
-        "deskripsi": "Indonesian man, rugged facial features, sharp intense eyes, medium-tan skin, short neat black hair.",
-        "url": "https://drive.google.com/uc?export=view&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5"
-    },
-    "TUNG": {
-        "deskripsi": "Indonesian man, distinct facial structure, expressive eyes, natural black hair, authentic Asian skin tone.",
-        "url": "https://drive.google.com/uc?export=view&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
-    }
+# Sistem akan mencocokkan Nama Karakter (Case-Insensitive) dengan link di bawah
+LINK_REFERENSI = {
+    "UDIN": "https://drive.google.com/uc?export=view&id=1f51O-_PpHdXdGQkngsTh5b1fJjHtx5l5",
+    "TUNG": "https://drive.google.com/uc?export=view&id=1r94LHZSEwaurGViq1lGZ9ptPr0FOrcS5"
 }
 
 # ==============================================================================
@@ -283,47 +277,33 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 10. FORM INPUT ADEGAN (TIDAK DIRUBAH STRUKTURNYA)
+# 10. FORM INPUT IDENTITAS (CLEAN & MANUAL - NO DROP DOWN)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (DATABASE SELECTOR DI BALIK LAYAR) ---
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     
     with col_c1:
         st.markdown("### Karakter 1")
-        # Selector Database hanya sebagai alat bantu pengisian cepat
-        sel_db1 = st.selectbox("Cepat dari Database K1", list(DB_KARAKTER.keys()), key="sel_db_1")
-        
-        # Default value mengikuti selector
-        val_n1 = sel_db1 if sel_db1 != "Pilih dari Database" else "UDIN"
-        val_p1 = DB_KARAKTER[sel_db1]["deskripsi"] if sel_db1 != "Pilih dari Database" else ""
-        val_u1 = DB_KARAKTER[sel_db1]["url"] if sel_db1 != "Pilih dari Database" else ""
-        
-        c_n1_v = st.text_input("Nama Karakter 1", value=val_n1, key="c_name_1_input")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=val_p1, key="c_desc_1_input", height=100)
-        # Link Foto tetap disimpan di belakang (bisa diedit di kode)
-        c_u1_hidden = val_u1 
+        c_n1_v = st.text_input("Nama Karakter 1", value="UDIN", key="c_name_1_input")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value="", key="c_desc_1_input", height=100, placeholder="Tulis deskripsi fisik manual di sini...")
     
     with col_c2:
         st.markdown("### Karakter 2")
-        sel_db2 = st.selectbox("Cepat dari Database K2", list(DB_KARAKTER.keys()), key="sel_db_2")
-        
-        val_n2 = sel_db2 if sel_db2 != "Pilih dari Database" else "TUNG"
-        val_p2 = DB_KARAKTER[sel_db2]["deskripsi"] if sel_db2 != "Pilih dari Database" else ""
-        val_u2 = DB_KARAKTER[sel_db2]["url"] if sel_db2 != "Pilih dari Database" else ""
-        
-        c_n2_v = st.text_input("Nama Karakter 2", value=val_n2, key="c_name_2_input")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=val_p2, key="c_desc_2_input", height=100)
-        c_u2_hidden = val_u2
+        c_n2_v = st.text_input("Nama Karakter 2", value="TUNG", key="c_name_2_input")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value="", key="c_desc_2_input", height=100, placeholder="Tulis deskripsi fisik manual di sini...")
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
+    # --- LOGIKA OTOMATISASI URL DIBALIK LAYAR (Case-Insensitive) ---
+    u1_auto = LINK_REFERENSI.get(c_n1_v.upper().strip(), "")
+    u2_auto = LINK_REFERENSI.get(c_n2_v.upper().strip(), "")
+    
     all_chars_list = []
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": c_u1_hidden})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": c_u2_hidden})
+    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v, "url": u1_auto})
+    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v, "url": u2_auto})
 
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
@@ -332,7 +312,9 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
-                all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ""})
+                # Karakter tambahan juga dicek di database secara otomatis
+                ex_url_auto = LINK_REFERENSI.get(ex_name.upper().strip(), "") if ex_name else ""
+                all_chars_list.append({"name": ex_name, "desc": ex_phys, "url": ex_url_auto})
 
 # --- LANJUT KE LIST ADEGAN ---
 adegan_storage = []
@@ -495,12 +477,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
             emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
 
-            # DNA Anchor & URL Injection
+            # DNA Anchor & URL Injection (OTOMATIS)
             url_prefix, dna_str = "", ""
             for c in all_chars_list:
-                if c['name'] and c['name'].lower() in vis_lower:
+                if c['name'] and (c['name'].lower() in vis_lower or c['name'].lower() in [n.lower() for n in [c_n1_v, c_n2_v]]):
                     if c['url']: url_prefix += f"[{c['url']}] "
-                    dna_str += f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture, enhanced contrast, and professional cinematic sharpness. "
+                    dna_str += f"STRICT CHARACTER FIDELITY: Maintain facial identity of {c['name']} ({c['desc']}). "
 
             # --- LOGIKA PENYUNTIKAN MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
             current_lock = master_lock_instruction if scene_id == 1 else ""
@@ -531,5 +513,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             st.divider()
 
 st.sidebar.markdown("---")
-st.sidebar.caption("PINTAR MEDIA | V.1.3.0")
-
+st.sidebar.caption("PINTAR MEDIA | V.1.3.3")
