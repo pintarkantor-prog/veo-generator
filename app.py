@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (PERFECT CENTERED NOTIF)
+# 0. SISTEM LOGIN TUNGGAL (ANTI-LOGOUT SAAT REFRESH)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -14,11 +14,18 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
+# --- 1. FITUR AUTO-LOGIN (Cek URL saat Refresh) ---
+if 'active_user' not in st.session_state:
+    # Ambil parameter 'u' (user) dari URL jika ada
+    q_user = st.query_params.get("u")
+    if q_user in USER_PASSWORDS:
+        st.session_state.active_user = q_user
+
+# --- 2. LAYAR LOGIN (Muncul jika benar-benar belum login) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
     placeholder = st.empty()
-    
     with placeholder.container():
         st.write("")
         st.write("")
@@ -36,42 +43,31 @@ if 'active_user' not in st.session_state:
                 user_clean = user_input.lower().strip()
                 
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                    # TITIPKAN USER KE URL AGAR TIDAK HILANG SAAT REFRESH
+                    st.query_params["u"] = user_clean
                     st.session_state.active_user = user_clean
                     
-                    # --- PROSES NOTIFIKASI TENGAH LAYAR ---
                     placeholder.empty() 
                     with placeholder.container():
                         st.write("")
                         st.write("")
-                        st.write("")
-                        st.write("")
-                        # Teks "AKSES DITERIMA" dibuat Center dengan HTML
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
-                        st.markdown("<p style='text-align: center; color: gray;'>Sedang menyiapkan dashboard utama Anda...</p>", unsafe_allow_html=True)
-                        
-                        # Spinner ditaruh di kolom tengah agar simetris
+                        st.markdown("<p style='text-align: center; color: gray;'>Menyiapkan dashboard...</p>", unsafe_allow_html=True)
                         _, col_spin, _ = st.columns([2, 1, 2])
                         with col_spin:
                             with st.spinner(""):
                                 import time
-                                time.sleep(1.5) 
-                        
+                                time.sleep(1.2) 
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
-            
             st.write("---")
             st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
     st.stop() 
 
-# --- 2. SETELAH LOGIN (Ubah layout jadi WIDE otomatis) ---
-st.set_page_config(
-    page_title="PINTAR MEDIA - Storyboard Generator",
-    page_icon="🎬",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# --- 3. SETELAH LOGIN ---
+st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
 # ==============================================================================
@@ -710,6 +706,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
