@@ -530,11 +530,18 @@ st.write("")
 # 2. PROSES GENERATE (Saat tombol diklik)
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     
+    # --- [VALIDASI SAKTI DIAN] ---
+    nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
     
-    if not active_scenes:
-        st.warning("Mohon isi deskripsi visual adegan!")
+    if not nama_tokoh_utama:
+        st.warning("⚠️ **Nama Tokoh 1 belum diisi!** Mohon isi nama karakter di bagian Identitas agar AI mengenal subjeknya.")
+    
+    elif not active_scenes:
+        st.warning("⚠️ **Mohon isi deskripsi visual adegan!** Minimal satu adegan harus memiliki deskripsi.")
+    
     else:
+        # JIKA LOLOS VALIDASI, JALANKAN PROSES
         nama_staf = st.session_state.active_user.capitalize()
         
         # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP SEBELUM GENERATE] ---
@@ -649,7 +656,7 @@ if st.session_state.last_generated_results:
         
         if is_done:
             with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
-                st.info("Prompt ini sudah ditandai selesai di sidebar.")
+                st.info("Prompt ini sudah ditandai selesai!")
                 st.code(res['img'], language="text")
                 st.code(res['vid'], language="text")
         else:
