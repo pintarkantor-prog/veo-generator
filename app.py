@@ -363,7 +363,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL RESTORE VERSION - ANTI-ERROR JSON)
+# 9. FORM INPUT ADEGAN (FULL RESTORE VERSION - NO REDUCTION - FIXED SPACING)
 # ==============================================================================
 
 # 1. Inisialisasi Counter & Memori (WAJIB ADA)
@@ -374,32 +374,49 @@ if "restore_counter" not in st.session_state:
 col_res, col_space = st.columns([4, 6])
 with col_res:
     if st.button("🔄 TARIK SEMUA DATA DRAFT", use_container_width=True):
-    import json
-    try:
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        df_log = conn.read(worksheet="Sheet1", ttl="5s")
-        my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
-        
-        if not my_data.empty:
-            raw_data = my_data.iloc[-1]['Visual Utama']
-            if raw_data.startswith("{"):
-                paket = json.loads(raw_data)
-                # Kembalikan Karakter
-                st.session_state.c_name_1_input = paket.get("n1", "")
-                st.session_state.c_desc_1_input = paket.get("p1", "")
-                st.session_state.c_name_2_input = paket.get("n2", "")
-                st.session_state.c_desc_2_input = paket.get("p2", "")
-                # Kembalikan Semua Adegan
-                for k, v in paket.get("scenes", {}).items():
-                    st.session_state[f"vis_input_{k.replace('v', '')}"] = v
-                st.success("Semua data berhasil ditarik! ✅")
+        import json # <--- Sekarang sudah menjorok (aman)
+        try:
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            # Menggunakan ttl="5s" agar hemat kuota dan tidak Delay
+            df_log = conn.read(worksheet="Sheet1", ttl="5s")
+            
+            # Cari data terakhir milik user aktif
+            my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
+            
+            if not my_data.empty:
+                raw_data = my_data.iloc[-1]['Visual Utama']
+                
+                # --- LOGIKA PINTAR: CEK APAKAH INI JSON ATAU TEKS BIASA ---
+                if raw_data.strip().startswith("{"):
+                    # JIKA FORMAT JSON (Paket Lengkap)
+                    data = json.loads(raw_data)
+                    
+                    # 1. Isi Identitas Tokoh Utama
+                    st.session_state.c_name_1_input = data.get("n1", "")
+                    st.session_state.c_desc_1_input = data.get("p1", "")
+                    st.session_state.c_name_2_input = data.get("n2", "")
+                    st.session_state.c_desc_2_input = data.get("p2", "")
+                    
+                    # 2. Isi Semua Visual Adegan secara otomatis
+                    scenes_data = data.get("scenes", {})
+                    for key_v, val_v in scenes_data.items():
+                        # Mengubah 'v1' menjadi 'vis_input_1', dst
+                        num_idx = key_v.replace('v', '')
+                        st.session_state[f"vis_input_{num_idx}"] = val_v
+                    
+                    st.success("Paket Draft Lengkap Berhasil Dimuat! ✅")
+                else:
+                    # JIKA FORMAT TEKS BIASA (Data Lama)
+                    st.session_state["vis_input_1"] = raw_data
+                    st.info("Data lama terdeteksi. Hanya Adegan 1 yang dipulihkan. ⚠️")
+                
+                # 3. Paksa Widget Reset agar data muncul di layar
+                st.session_state.restore_counter += 1 
+                st.rerun()
             else:
-                st.session_state["vis_input_1"] = raw_data
-                st.warning("Hanya Adegan 1 yang ditemukan (Data Lama).")
-            st.session_state.restore_counter += 1
-            st.rerun()
-    except Exception as e:
-        st.error(f"Gagal tarik data: {e}")
+                st.warning("Belum ada draft tersimpan di Google Sheets.")
+        except Exception as e:
+            st.error(f"Gagal membongkar draft: {e}")
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -454,7 +471,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.session_state[k_phys_key] = ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
-# --- LIST ADEGAN (FULL RESTORE LOGIC) ---
+# --- LIST ADEGAN (FULL VERSION) ---
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
@@ -467,7 +484,6 @@ for i_s in range(1, int(num_scenes) + 1):
             v_key = f"vis_input_{i_s}"
             if v_key not in st.session_state: st.session_state[v_key] = ""
             
-            # Widget menarik value dari session_state
             visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state[v_key], key=f"w_vis_{i_s}_{st.session_state.restore_counter}", height=180)
             st.session_state[v_key] = visual_input
         
@@ -492,7 +508,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{st.session_state.restore_counter}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # --- DIALOG DINAMIS (FULL VERSION) ---
+        # --- DIALOG DINAMIS ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -688,6 +704,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
