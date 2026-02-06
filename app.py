@@ -104,38 +104,37 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: TOTAL FIXED HEADER)
+# 4. CUSTOM CSS (VERSION: BRUTE FORCE FIXED HEADER)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. MENGUNCI BARIS INFO STAF (FIXED) */
-    .sticky-bar {
+    /* 1. PAKSA BARIS PERTAMA (INFO STAF) UNTUK FIXED */
+    /* Kita tembak container urutan pertama di area main */
+    [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
         position: fixed;
-        top: 0px; 
-        left: 310px; /* Jarak agar tidak menabrak sidebar (lebar sidebar) */
+        top: 0;
+        left: 310px; /* Lebar Sidebar */
         right: 0;
-        z-index: 9999; /* Lapisan paling atas */
-        background-color: #0e1117; /* Warna background utama */
-        padding: 15px 2rem 10px 1rem;
-        border-bottom: 1px solid #31333f;
+        z-index: 99999;
+        background-color: #0e1117;
+        padding: 10px 2rem;
+        border-bottom: 2px solid #31333f;
     }
 
-    /* 2. PENYESUAIAN UNTUK LAYAR HP (SIDEBAR TERSEMBUNYI) */
+    /* Penyesuaian Mobile */
     @media (max-width: 768px) {
-        .sticky-bar {
+        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
             left: 0;
         }
     }
 
-    /* 3. STYLE SIDEBAR & WIDGET (PUNYA KAMU SEBELUMNYA) */
+    /* 2. STYLE SIDEBAR & WIDGET (TETAP SAMA) */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
-    
-    /* Tombol Copy */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -145,29 +144,22 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-
-    /* Area Ketik */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
         min-height: 180px !important; 
     }
-
-    /* Label Kecil */
     .small-label {
-        font-size: 12px; 
-        font-weight: bold; 
-        color: #a1a1a1; 
-        margin-bottom: 2px;
+        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 5. STICKY INFO BAR (VERSI FINAL - TERKUNCI)
+# 5. HEADER STAF (AUTO-FIXED BY CSS)
 # ==============================================================================
-st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
+# Elemen ini otomatis akan diam di atas karena CSS nth-child(1) di atas
 col_staf, col_logout = st.columns([8, 2])
 
 with col_staf:
@@ -175,20 +167,21 @@ with col_staf:
     st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
 with col_logout:
-    if st.button("Logout 🚪", use_container_width=True, key="sticky_logout_btn"):
+    if st.button("Logout 🚪", use_container_width=True, key="btn_logout_fix"):
         st.query_params.clear()
         st.session_state.logged_in = False
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
 
-st.markdown('</div>', unsafe_allow_html=True)
+# --- GANJALAN (PENTING) ---
+# Beri jarak agar Form Karakter di bawahnya tidak tertutup
+st.write("")
+st.write("")
+st.write("")
+st.write("")
+st.divider()
 
-# --- GANJALAN AGAR KONTEN DI BAWAH TIDAK TERTUTUP (WAJIB ADA) ---
-st.write("")
-st.write("")
-st.write("")
-st.write("")
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
@@ -732,6 +725,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
