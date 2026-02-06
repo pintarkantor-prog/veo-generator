@@ -475,6 +475,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
+    st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
     all_chars_list = [{"name": c_n1_v, "desc": c_p1_v}, {"name": c_n2_v, "desc": c_p2_v}]
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
@@ -693,5 +694,6 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
