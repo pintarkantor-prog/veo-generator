@@ -51,7 +51,7 @@ if 'active_user' not in st.session_state:
                         
                         with st.spinner(""):
                             import time
-                            time.sleep(1.5) # Kamu bisa ubah durasi ini
+                            time.sleep(3.0) # Kamu bisa ubah durasi ini
                         
                     st.rerun()
                 else:
@@ -706,6 +706,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
