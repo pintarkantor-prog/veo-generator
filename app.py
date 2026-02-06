@@ -73,11 +73,14 @@ def record_to_sheets(user, first_visual, total_scenes):
         
         # Gabungkan dan Update
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
+        # --- FITUR OTOMATIS HAPUS (Keep last 100) ---
+        if len(updated_df) > 100:
+            updated_df = updated_df.tail(100)
+        
         conn.update(worksheet="Sheet1", data=updated_df)
         
-    except Exception as e:
+        except Exception as e:
         st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
-
 
 # ==============================================================================
 # 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
@@ -497,5 +500,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
