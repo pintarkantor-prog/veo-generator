@@ -439,9 +439,11 @@ with st.sidebar:
         del st.session_state["sidebar_success_msg"]
 
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
+    
+    # --- TOMBOL LOGOUT (SUDAH RAPI SPASINYA) ---
     if st.sidebar.button("Log Out 🚪", use_container_width=True):
-    del st.session_state.active_user
-    st.rerun()
+        del st.session_state.active_user
+        st.rerun()
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -706,6 +708,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
