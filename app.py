@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (DENGAN LOGO PINTAR.PNG)
+# 0. SISTEM LOGIN TUNGGAL (CLEAN LOGO ONLY)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -31,14 +31,13 @@ if 'active_user' not in st.session_state:
         _, col_login, _ = st.columns([1, 2, 1])
         
         with col_login:
-            # --- PANGGIL LOGO YANG BARU DIUPLOAD ---
+            # --- TAMPILAN LOGO TANPA TEKS KETERANGAN ---
             try:
-                # Saya pakai width=300 supaya ukurannya pas di tengah
                 st.image("PINTAR.png", use_container_width=True) 
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            st.markdown("<p style='text-align: center; color: gray; margin-top: -10px;'>Production Management System v1.2</p>", unsafe_allow_html=True)
+            # Garis pemisah langsung di bawah logo agar rapi
             st.write("---")
             
             user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
@@ -62,12 +61,13 @@ if 'active_user' not in st.session_state:
                         with col_spin:
                             with st.spinner(""):
                                 import time
-                                time.sleep(1.2) 
+                                time.sleep(3.0) 
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
+            
             st.write("---")
-            st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
+            st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
     st.stop() 
 
 # --- 3. SETELAH LOGIN ---
@@ -707,6 +707,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
