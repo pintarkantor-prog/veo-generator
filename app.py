@@ -420,23 +420,22 @@ with st.sidebar:
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
-# 8. PARAMETER KUALITAS (VERSION: VIVID CRYSTAL CLEAR)
+# 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
 sharp_natural_stack = (
-    "photorealistic, raw photo, shot on 35mm lens, f/1.8, ISO 100, ultra-sharp focus, "
-    "vibrant organic colors, deep color saturation, rich color depth, "
-    "vivid foliage green, high-fidelity textures, crystal clear optics, "
-    "zero digital noise, ray-traced global illumination, 8k resolution."
+    "photorealistic raw photo, 8k UHD, extremely high-resolution, shot on 35mm lens, f/1.8, ISO 100, "
+    "ultra-sharp focus, crystal clear optical clarity, vibrant organic colors, deep color saturation, "
+    "ray-traced global illumination, hyper-detailed skin pores and fabric fibers, "
+    "zero digital noise, clean pixels, masterpiece quality."
 )
 
 no_text_strict = (
-    "STRICTLY NO text, NO typography, NO watermark, NO letters, NO characters, "
-    "NO subtitles, NO captions, NO speech bubbles, NO labels, NO signage, "
-    "NO black bars, NO frames, zero words on image."
+    "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
+    "NO captions, NO speech bubbles, NO labels, NO black bars, NO grain, NO blur."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
 # 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
@@ -661,12 +660,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Expression: reacting to context '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (ULTRA VIVID & CRYSTAL CLEAR) ---
+                # --- RAKIT PROMPT AKHIR (THE ULTIMATE SHARP & CLEAN) ---
                 img_final = (
                     f"{master_lock_instruction} Clean of any text, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
-                    f"No lettering, sharp focus, uncompressed 8k quality, vivid organic color punch. {e_angle_cmd} {emotion_ctx} "
+                    f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --no text typography watermark"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2 --stylize 250 --no text typography watermark"
                 )
                 
                 vid_final = (
@@ -701,6 +700,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
