@@ -363,8 +363,13 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL MEGA STRUCTURE - ANTI-HILANG 100% REFRESH)
+# 9. FORM INPUT ADEGAN (V1.3 - REAL-TIME PERSISTENCE - ANTI-HILANG TOTAL)
 # ==============================================================================
+
+# FUNGSI PENYELAMAT: Memaksa data masuk ke state saat ada perubahan
+def save_to_state(key):
+    st.session_state[key] = st.session_state[f"widget_{key}"]
+
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH ---
@@ -373,53 +378,44 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     
     with col_c1:
         st.markdown("### Karakter 1")
-        # Inisialisasi State Karakter 1
-        if "c_name_1_input" not in st.session_state: st.session_state["c_name_1_input"] = ""
-        if "c_desc_1_input" not in st.session_state: st.session_state["c_desc_1_input"] = ""
+        # Inisialisasi jika kosong
+        if "c_name_1" not in st.session_state: st.session_state["c_name_1"] = ""
+        if "c_desc_1" not in st.session_state: st.session_state["c_desc_1"] = ""
         
-        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state["c_name_1_input"], key="c_name_1_widget")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state["c_desc_1_input"], key="c_desc_1_widget", height=100)
-        # Update State
-        st.session_state["c_name_1_input"] = c_n1_v
-        st.session_state["c_desc_1_input"] = c_p1_v
+        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state["c_name_1"], 
+                               key="widget_c_name_1", on_change=save_to_state, args=("c_name_1",))
+        c_p1_v = st.text_area("Fisik Karakter 1", value=st.session_state["c_desc_1"], 
+                              key="widget_c_desc_1", height=100, on_change=save_to_state, args=("c_desc_1",))
     
     with col_c2:
         st.markdown("### Karakter 2")
-        # Inisialisasi State Karakter 2
-        if "c_name_2_input" not in st.session_state: st.session_state["c_name_2_input"] = ""
-        if "c_desc_2_input" not in st.session_state: st.session_state["c_desc_2_input"] = ""
+        if "c_name_2" not in st.session_state: st.session_state["c_name_2"] = ""
+        if "c_desc_2" not in st.session_state: st.session_state["c_desc_2"] = ""
         
-        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state["c_name_2_input"], key="c_name_2_widget")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=st.session_state["c_desc_2_input"], key="c_desc_2_widget", height=100)
-        # Update State
-        st.session_state["c_name_2_input"] = c_n2_v
-        st.session_state["c_desc_2_input"] = c_p2_v
+        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state["c_name_2"], 
+                               key="widget_c_name_2", on_change=save_to_state, args=("c_name_2",))
+        c_p2_v = st.text_area("Fisik Karakter 2", value=st.session_state["c_desc_2"], 
+                              key="widget_c_desc_2", height=100, on_change=save_to_state, args=("c_desc_2",))
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     
     all_chars_list = []
-    all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
-    all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
+    all_chars_list.append({"name": st.session_state["c_name_1"], "desc": st.session_state["c_desc_1"]})
+    all_chars_list.append({"name": st.session_state["c_name_2"], "desc": st.session_state["c_desc_2"]})
 
-    # --- KARAKTER TAMBAHAN DENGAN MEMORI ---
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
-                k_name_state = f"ex_name_val_{ex_idx}"
-                k_phys_state = f"ex_phys_val_{ex_idx}"
+                kn, kp = f"ex_n_{ex_idx}", f"ex_p_{ex_idx}"
+                if kn not in st.session_state: st.session_state[kn] = ""
+                if kp not in st.session_state: st.session_state[kp] = ""
                 
-                if k_name_state not in st.session_state: st.session_state[k_name_state] = ""
-                if k_phys_state not in st.session_state: st.session_state[k_phys_state] = ""
-                
-                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", value=st.session_state[k_name_state], key=f"ex_name_w_{ex_idx}")
-                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", value=st.session_state[k_phys_state], key=f"ex_phys_w_{ex_idx}", height=100)
-                
-                st.session_state[k_name_state] = ex_name
-                st.session_state[k_phys_state] = ex_phys
-                all_chars_list.append({"name": ex_name, "desc": ex_phys})
+                ex_n = st.text_input(f"Nama Karakter {ex_idx+1}", value=st.session_state[kn], key=f"widget_{kn}", on_change=save_to_state, args=(kn,))
+                ex_p = st.text_area(f"Fisik Karakter {ex_idx+1}", value=st.session_state[kp], key=f"widget_{kp}", height=100, on_change=save_to_state, args=(kp,))
+                all_chars_list.append({"name": st.session_state[kn], "desc": st.session_state[kp]})
 
 # --- LIST ADEGAN ---
 adegan_storage = []
@@ -431,53 +427,47 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            v_key_state = f"vis_val_{i_s}"
-            if v_key_state not in st.session_state: st.session_state[v_key_state] = ""
+            v_key = f"vis_{i_s}"
+            if v_key not in st.session_state: st.session_state[v_key] = ""
             
-            # PAKSA VALUE MENGAMBIL DARI STATE
-            visual_input = st.text_area(f"Visual Adegan {i_s}", 
-                                        value=st.session_state[v_key_state], 
-                                        key=f"vis_widget_{i_s}", 
-                                        height=180)
-            st.session_state[v_key_state] = visual_input
+            # PAKSA REAL-TIME SAVE
+            visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state[v_key], 
+                                        key=f"widget_{v_key}", height=180, 
+                                        on_change=save_to_state, args=(v_key,))
         
         with col_ctrl:
+            # (Mapping dropdown tetap menggunakan key bawaan agar sinkronisasi global_sync_v920 tidak rusak)
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
-                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
                 l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r1_c2:
-                st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
                 c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             
             r2_c1, r2_c2 = st.columns(2)
             with r2_c1:
-                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
                 s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r2_c2:
-                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # --- DIALOG DINAMIS DENGAN MEMORI ---
+        # Dialog (Anti-Hilang)
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_key_state = f"diag_val_{i_s}_{i_char}"
+                d_key = f"diag_{i_s}_{i_char}"
+                if d_key not in st.session_state: st.session_state[d_key] = ""
                 
-                if d_key_state not in st.session_state: st.session_state[d_key_state] = ""
-                
-                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state[d_key_state], key=f"diag_w_{i_s}_{i_char}")
-                st.session_state[d_key_state] = d_in
-                scene_dialogs_list.append({"name": char_label, "text": d_in})
+                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state[d_key], 
+                                     key=f"widget_{d_key}", on_change=save_to_state, args=(d_key,))
+                scene_dialogs_list.append({"name": char_label, "text": st.session_state[d_key]})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
+            "num": i_s, "visual": st.session_state[v_key], "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
         })
         
 # ==============================================================================
@@ -623,6 +613,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
