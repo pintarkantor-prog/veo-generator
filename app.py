@@ -289,7 +289,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI & SMART RESTORE)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN INDENTATION)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
@@ -310,7 +310,6 @@ with st.sidebar:
             done_key = f"mark_done_{res['id']}"
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
-        # Progress Bar
         total_p = len(st.session_state.last_generated_results)
         done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
         st.progress(done_p / total_p)
@@ -319,7 +318,7 @@ with st.sidebar:
 
     st.divider()
 
-    # --- C. SAVE & RESTORE (CLEAN VERSION) ---
+    # --- C. SAVE & RESTORE ---
     c_s, c_r = st.columns(2)
     
     with c_s:
@@ -339,23 +338,18 @@ with st.sidebar:
             except:
                 st.error("Gagal simpan")
 
-with c_r:
+    with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="1s")
-                
-                # --- KUNCI RAHASIANYA DI SINI ---
-                # Kita cari baris yang User-nya mengandung kata "DRAFT_" + nama user
-                # Contoh: "DRAFT_icha" bukan "AUTO_icha" atau "icha"
+                # Khusus mencari DRAFT agar tidak tertimpa auto-save
                 user_draft_tag = f"DRAFT_{st.session_state.active_user}"
                 my_data = df_log[df_log['User'] == user_draft_tag]
                 
                 if not my_data.empty:
-                    # Ambil SAVE-an terakhir yang sengaja disimpan
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
-                    
                     if raw_data.startswith("{"):
                         data = json.loads(raw_data)
                         st.session_state.c_name_1_input = data.get("n1", "")
@@ -371,11 +365,11 @@ with c_r:
                     st.toast("Draft Berhasil Dipulihkan! 🔄")
                     st.rerun()
                 else:
-                    st.error("Kamu belum pernah klik tombol SAVE.")
-            except Exception as e:
-                st.error(f"Gagal tarik: {str(e)}")
+                    st.error("Draft tidak ditemukan.")
+            except:
+                st.error("Gagal tarik data.")
 
-# --- Penutup Sidebar ---
+    # BARIS INI HARUS SEJAJAR DENGAN 'c_s, c_r = st.columns(2)'
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -634,6 +628,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
