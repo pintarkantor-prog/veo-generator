@@ -280,7 +280,7 @@ def global_sync_v920():
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
     if st.session_state.active_user == "admin":
-        st.header("🔍 CEK KERJAAN")
+        #st.header("🔍 CEK KERJAAN")
         
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -715,5 +715,6 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
