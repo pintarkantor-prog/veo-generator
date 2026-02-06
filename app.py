@@ -304,7 +304,7 @@ with st.sidebar:
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM ---
+    # --- B. KONFIGURASI UMUM (SEKARANG DITARIK KELUAR AGAR SEMUA USER BISA LIHAT) ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
     # STATUS PRODUKSI
@@ -368,7 +368,9 @@ with st.sidebar:
                     st.rerun()
             except: st.error("Gagal tarik data")
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
-    
+
+# --- MULAI DARI SINI SEMUA DITARIK KE KIRI (RATA KIRI) AGAR ICHA & NISSA BISA LIHAT ---
+
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -446,7 +448,6 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 1: CAHAYA & GERAK ---
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                # Hapus on_change agar tidak otomatis ganti adegan lain
                 st.selectbox(f"L{i_s}", options_lighting, 
                              key=f"l_i_{i_s}_{count}", 
                              label_visibility="collapsed")
@@ -470,7 +471,7 @@ for i_s in range(1, int(num_scenes) + 1):
                              key=f"a_i_{i_s}_{count}", 
                              label_visibility="collapsed")
 
-        # --- BAGIAN DIALOG (INDENTASI DIPERBAIKI) ---
+        # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -518,10 +519,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK (Kunci Identitas & Anti-Kartun) ---
+            # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
-            
-            # Kalimat Sakti untuk mengunci ingatan AI terhadap foto yang diupload sekali di awal
             master_lock_instruction = (
                 f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
                 f"Do not deviate from these visuals: {char_defs}. "
@@ -554,7 +553,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING (VERSION 4.0: VIVID & HIGH CONTRAST) ---
+                # --- LIGHTING MAPPING ---
                 if "Bening" in light_type:
                     l_cmd = "Hard sunlight photography, vivid high-contrast, realistic shadows, sharp optical clarity, color-graded foliage."
                 elif "Sejuk" in light_type:
@@ -572,12 +571,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else: # Suasana Sore
                     l_cmd = "4:00 PM sunset, long sharp high-contrast shadows, golden-indigo gradient, high-fidelity rim lighting."
 
-                # Logika Dialog (DIUBAH AGAR TIDAK JADI TEKS DI GAMBAR)
+                # Logika Dialog
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
-                # Label diganti ke 'Invisible Mood' agar AI tidak merender teks dialognya
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (THE ULTIMATE SHARP & CLEAN - NO CAPTION) ---
+                # --- RAKIT PROMPT AKHIR ---
                 img_final = (
                     f"{master_lock_instruction} NO TEXT, Clean of any lettering, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
                     f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
@@ -612,17 +610,17 @@ if st.session_state.last_generated_results:
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
         
-        # LOGIKA: Cukup cek statusnya saja, JANGAN buat st.checkbox lagi di sini!
+        # LOGIKA: Cukup cek statusnya saja
         is_done = st.session_state.get(done_key, False)
         
         if is_done:
-            # Jika SUDAH DICENTANG di Sidebar: Menciut (Collapse)
+            # Jika SUDAH DICENTANG: Menciut (Collapse)
             with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
                 st.info("Prompt ini sudah ditandai selesai di sidebar.")
                 st.code(res['img'], language="text")
                 st.code(res['vid'], language="text")
         else:
-            # Jika BELUM DICENTANG di Sidebar: Terbuka lebar (Focus)
+            # Jika BELUM DICENTANG: Terbuka lebar (Focus)
             with st.container():
                 st.subheader(f"🚀 ADEGAN {res['id']}")
                 c1, c2 = st.columns(2)
@@ -633,10 +631,3 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
-
-
-
-
-
-
-
