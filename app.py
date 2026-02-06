@@ -361,6 +361,44 @@ no_text_strict = (
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
+# ==============================================================================
+# 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
+# ==============================================================================
+
+def global_sync_v920():
+    """Menyamakan setelan Master Control (Adegan 1) ke semua adegan secara otomatis"""
+    try:
+        # Ambil angka counter agar namanya cocok dengan widget yang ada di Bagian 9
+        count = st.session_state.get("restore_counter", 0)
+        
+        # Ambil nilai dari widget Adegan 1 (Master)
+        # Perhatikan: Nama key-nya harus sama persis dengan yang ada di st.selectbox Bagian 9
+        lt1 = st.session_state.get(f"light_input_1_{count}")
+        cm1 = st.session_state.get(f"camera_input_1_{count}")
+        sh1 = st.session_state.get(f"shot_input_1_{count}")
+        an1 = st.session_state.get(f"angle_input_1_{count}")
+
+        # Simpan ke Master State
+        st.session_state.m_light = lt1
+        st.session_state.m_cam = cm1
+        st.session_state.m_shot = sh1
+        st.session_state.m_angle = an1
+
+        # Sebarkan nilai Adegan 1 ke adegan 2 sampai seterusnya
+        for i in range(2, int(num_scenes) + 1):
+            st.session_state[f"light_input_{i}_{count}"] = lt1
+            st.session_state[f"camera_input_{i}_{count}"] = cm1
+            st.session_state[f"shot_input_{i}_{count}"] = sh1
+            st.session_state[f"angle_input_{i}_{count}"] = an1
+            
+    except Exception as e:
+        # Jika ada error kecil, aplikasi tidak akan mati/crash
+        pass
+
+# ==============================================================================
+# 9. FORM INPUT ADEGAN (Lanjut ke bawah sini...)
+# ==============================================================================
+
 
 # ==============================================================================
 # 9. FORM INPUT ADEGAN (FULL RESTORE VERSION - NO REDUCTION - FIXED SPACING)
@@ -701,6 +739,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
