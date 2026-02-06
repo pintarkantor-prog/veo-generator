@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN
+# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (WITH LOADING EFFECT)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -26,16 +26,27 @@ if 'active_user' not in st.session_state:
         st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
         st.write("---")
         
-        # DROPLIST SUDAH DIHAPUS, GANTI JADI INPUT KETIK BIASA
         user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
         pass_input = st.text_input("Password", type="password")
         
         if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
-            # Kita buat case-insensitive (huruf kecil semua) agar input lebih fleksibel
             user_clean = user_input.lower().strip()
             
             if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                # --- EFEK LOADING ---
+                with st.spinner("Mengautentikasi... Mohon tunggu sebentar."):
+                    import time
+                    time.sleep(1.5) # Jeda loading agar terasa prosesnya
+                
+                # Simpan status login
                 st.session_state.active_user = user_clean
+                
+                # --- PESAN SAMBUTAN CUSTOM ---
+                if user_clean == "admin":
+                    st.toast(f"Selamat datang kembali, Boss! Dashboard siap dipantau. 😎")
+                else:
+                    st.toast(f"Halo {user_clean.capitalize()}! Selamat bekerja & terus semangat buat hari ini! 🔥")
+                
                 st.rerun()
             else:
                 st.error("❌ Username atau Password salah.")
@@ -51,7 +62,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 # ==============================================================================
 # 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
 # ==============================================================================
@@ -690,6 +700,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
