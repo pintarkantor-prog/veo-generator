@@ -275,20 +275,19 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (V.1.2.2 - PROGRESS TRACKER & STANDARD BUTTONS)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSI 100% IDENTIK - HANYA PINDAH POSISI)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
+    
+    # --- LOGIKA ADMIN (TETAP SAMA) ---
     if st.session_state.active_user == "admin":
-        #st.header("🔍 CEK KERJAAN")
-        
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
                 df_a = conn_a.read(worksheet="Sheet1", ttl="1m")
                 
                 if not df_a.empty:
-                    # --- 1. METRIK PERFORMANCE ---
                     st.markdown("### 📊 Ringkasan Produksi")
                     total_prod = len(df_a)
                     user_counts = df_a["User"].value_counts()
@@ -302,10 +301,8 @@ with st.sidebar:
 
                     st.divider()
 
-                    # --- 2. VISUAL TRICK: EXPANDER UNTUK DETAIL LOG ---
                     with st.expander("👁️ Lihat Detail Log", expanded=False):
                         search = st.text_input("🔍 Filter Nama/Cerita", placeholder="Cari...")
-                        
                         df_show = df_a.iloc[::-1].copy()
                         df_show["Status"] = "✅ Done"
                         
@@ -342,19 +339,40 @@ with st.sidebar:
                             st.rerun()
                 else:
                     st.info("Belum ada aktivitas hari ini.")
-                    
             except Exception as e:
                 st.error(f"Koneksi GSheets Delay: {e}")
                 
         st.divider()
 
-    # --- KONFIGURASI UNTUK SEMUA USER ---
-    # st.header("⚙️ Konfigurasi Utama") # Baris ini dimatikan agar tulisan hilang
+    # --- INPUT JUMLAH ADEGAN (Tetap di atas) ---
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
-    # --- TOMBOL DRAFT (KEMBALI KE STANDAR TANPA TYPE) ---
-    
-    # 1. TOMBOL SIMPAN
+    # --- [TARGET PINDAH] STATUS PRODUKSI ---
+    if st.session_state.last_generated_results:
+        st.divider()
+        st.markdown("### 🗺️ STATUS PRODUKSI")
+        st.caption("Tandai adegan yang sudah di-copy:")
+        
+        for res in st.session_state.last_generated_results:
+            done_key = f"mark_done_{res['id']}"
+            if done_key not in st.session_state:
+                st.session_state[done_key] = False
+            st.checkbox(f"Adegan {res['id']}", key=done_key)
+        
+        # Progress Bar
+        total_p = len(st.session_state.last_generated_results)
+        done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
+        st.write("")
+        st.progress(done_p / total_p)
+        
+        if done_p == total_p:
+            st.balloons()
+            st.success("🎉 Selesai!")
+
+    st.divider()
+
+    # --- DRAFT MANAGEMENT (KODE ASLI UTUH) ---
+    # 1. TOMBOL SIMPAN (SAVE)
     if st.button("💾 SAVE DATA", use_container_width=True):
         import json
         try:
@@ -377,7 +395,7 @@ with st.sidebar:
         except Exception as e:
             st.error(f"Gagal simpan draft: {e}")
 
-    # 2. TOMBOL TARIK
+    # 2. TOMBOL TARIK (RESTORE)
     if st.button("🔄 RESTORE DATA", use_container_width=True):
         import json
         try:
@@ -400,6 +418,8 @@ with st.sidebar:
                     st.success("Draft Pulih! ✅")
                 else:
                     st.session_state["vis_input_1"] = raw_data
+                
+                # BAGIAN INI JANGAN SAMPAI HILANG
                 st.session_state.restore_counter += 1 
                 st.rerun()
             else:
@@ -700,5 +720,6 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO (MOTION)")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
