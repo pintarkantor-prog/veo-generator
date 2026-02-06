@@ -289,7 +289,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (FIXED INDENTATION & NOTIFICATION)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DEFAULT HINT)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
@@ -300,50 +300,32 @@ with st.sidebar:
             st.info("Log aktivitas tercatat di Cloud.")
         st.divider()
 
-    # --- B. KONFIGURASI UMUM (AKSES SEMUA STAF) ---
+    # --- B. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # --- STATUS PRODUKSI (DAFTAR CEK ADEGAN) ---
+    # --- STATUS PRODUKSI (Hanya muncul jika sudah ada hasil) ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
-        st.caption("Tandai jika adegan sudah selesai diproses:")
-        
-        # Hitung progres secara otomatis
         total_p = len(st.session_state.last_generated_results)
         done_p = 0
-        
         for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
-            # Jika belum ada di session, buat default False
-            if done_key not in st.session_state:
-                st.session_state[done_key] = False
-            
-            # Tampilkan checkbox
             if st.checkbox(f"Adegan {res['id']}", key=done_key):
                 done_p += 1
-        
-        # Tampilkan Progress Bar
-        st.write("") 
         st.progress(done_p / total_p)
-        
-        if done_p == total_p:
-            st.balloons()
-            st.success("🎉 Semua Adegan Selesai!")
-    else:
-        st.info("Klik 'GENERATE' untuk memunculkan peta status.")
+    
+    # Bagian 'else' (Klik Generate untuk munculkan peta) sudah dihapus agar bersih
 
     st.divider()
 
-    # --- C. TOMBOL SAVE & RESTORE (ANTI-TABRAKAN NOTIF) ---
+    # --- C. TOMBOL SAVE & RESTORE ---
     c_s, c_r = st.columns(2)
     
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # Ambil semua visual yang tidak kosong
                 captured_scenes = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
-                
                 draft_packet = {
                     "n1": st.session_state.get("c_name_1_input", ""), 
                     "p1": st.session_state.get("c_desc_1_input", ""),
@@ -351,59 +333,49 @@ with st.sidebar:
                     "p2": st.session_state.get("c_desc_2_input", ""),
                     "scenes": captured_scenes
                 }
-                
-                # Kirim ke Sheets dengan label DRAFT agar bisa di-restore khusus
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
-                st.toast("Draft Berhasil Disimpan! ✅", icon="💾")
+                st.toast("Draft Disimpan!", icon="✅")
             except:
-                st.error("Gagal menyimpan draft.")
+                st.error("Gagal simpan")
 
     with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                # TTL 1 detik agar selalu ambil data yang paling baru di-Save
-                df_log = conn.read(worksheet="Sheet1", ttl="1s") 
-                user_tag = st.session_state.active_user
-                
-                # CARI HANYA DATA YANG BERLABEL DRAFT_namauser
-                user_draft_tag = f"DRAFT_{user_tag}"
+                df_log = conn.read(worksheet="Sheet1", ttl="1s")
+                user_draft_tag = f"DRAFT_{st.session_state.active_user}"
                 my_data = df_log[df_log['User'] == user_draft_tag]
                 
                 if not my_data.empty:
-                    # Ambil baris paling terakhir
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
-                    
                     if raw_data.startswith("{"):
                         data = json.loads(raw_data)
-                        
-                        # Masukkan kembali ke session state agar kotak input terisi
                         st.session_state.c_name_1_input = data.get("n1", "")
                         st.session_state.c_desc_1_input = data.get("p1", "")
                         st.session_state.c_name_2_input = data.get("n2", "")
                         st.session_state.c_desc_2_input = data.get("p2", "")
-                        
                         for k, v in data.get("scenes", {}).items():
-                            key_num = k.replace('v','')
-                            st.session_state[f"vis_input_{key_num}"] = v
+                            st.session_state[f"vis_input_{k.replace('v','')}"] = v
                         
-                        # Trigger refresh UI
+                        # Simpan pesan sukses ke memori
+                        st.session_state["restore_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
                         st.session_state.restore_counter += 1
-                        st.toast("Data Berhasil Dipulihkan! 🔄", icon="✅")
                         st.rerun()
                     else:
-                        # Jika data lama (teks biasa), taruh di adegan 1
                         st.session_state["vis_input_1"] = raw_data
-                        st.toast("Data lama ditarik ke Adegan 1", icon="⚠️")
+                        st.session_state["restore_success_msg"] = "Data Lama Dipulihkan ke Adegan 1! ⚠️"
                         st.rerun()
                 else:
-                    st.error("Belum ada data SAVE untuk kamu.")
+                    st.error("Draft tidak ditemukan.")
             except Exception as e:
-                # Pesan error hanya muncul jika benar-benar gagal teknis
-                st.error(f"Gagal koneksi Cloud: {str(e)}")
+                st.error(f"Gagal koneksi: {str(e)}")
 
-    # Caption Sidebar (Pastikan sejajar vertikal dengan st.title)
+    # --- MENAMPILKAN NOTIFIKASI BERHASIL ---
+    if "restore_success_msg" in st.session_state:
+        st.success(st.session_state["restore_success_msg"])
+        del st.session_state["restore_success_msg"]
+
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -662,6 +634,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
