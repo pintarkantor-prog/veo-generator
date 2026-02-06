@@ -275,12 +275,12 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSI 100% IDENTIK - HANYA PINDAH POSISI)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSI FIX AKSES SEMUA STAF)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
     
-    # --- LOGIKA ADMIN (TETAP SAMA) ---
+    # --- LOGIKA ADMIN ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -342,7 +342,34 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Koneksi GSheets Delay: {e}")
                 
+        st.divider() # Divider Admin
+
+    # --- KONFIGURASI UNTUK SEMUA USER (Ditarik ke kiri agar Icha/Nissa bisa lihat) ---
+    num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
+    
+    # --- [PINDAH KE SINI] 🗺️ STATUS PRODUKSI (Icha & Nissa pasti muncul sekarang) ---
+    if st.session_state.last_generated_results:
         st.divider()
+        st.markdown("### 🗺️ STATUS PRODUKSI")
+        st.caption("Tandai adegan yang sudah di-copy:")
+        
+        for res in st.session_state.last_generated_results:
+            done_key = f"mark_done_{res['id']}"
+            if done_key not in st.session_state:
+                st.session_state[done_key] = False
+            st.checkbox(f"Adegan {res['id']}", key=done_key)
+        
+        # Hitung Persentase & Progress Bar
+        total_p = len(st.session_state.last_generated_results)
+        done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
+        st.write("")
+        st.progress(done_p / total_p)
+        
+        if done_p == total_p:
+            st.balloons()
+            st.success("🎉 Selesai!")
+
+    st.divider()
 
     # --- INPUT JUMLAH ADEGAN (Tetap di atas) ---
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
@@ -694,3 +721,4 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
