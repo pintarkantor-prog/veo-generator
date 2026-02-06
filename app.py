@@ -37,9 +37,6 @@ if 'active_user' not in st.session_state:
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            # Garis pemisah langsung di bawah logo agar rapi
-            st.write("---")
-            
             user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
             pass_input = st.text_input("Password", type="password")
             
@@ -707,6 +704,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
