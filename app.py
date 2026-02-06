@@ -520,7 +520,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: AUTO-SAVE & APEX SHARPNESS)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: FULL AUTO-SAVE)
 # ==============================================================================
 import json
 
@@ -555,18 +555,17 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 "p2": st.session_state.get("c_desc_2_input", ""),
                 "scenes": captured_scenes_auto
             }
-            # Simpan dengan prefiks AUTO_ agar tidak tertukar dengan Save manual
+            # Simpan paket lengkap (JSON) ke Cloud agar Restore bisa menarik SEMUA adegan
             record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
         except:
-            pass # Silent fail agar jika internet drop, generate tetap jalan
+            pass 
         # ------------------------------------------------
         
         with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
-            # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD (Log Produksi Utama Tetap Jalan)
-            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+            # --- LOGGING CLOUD UTAMA (Sekarang mengirim paket lengkap, bukan cuma adegan[0]) ---
+            record_to_sheets(st.session_state.active_user, json.dumps(auto_packet), len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
@@ -658,18 +657,14 @@ if st.session_state.last_generated_results:
     
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
-        
-        # LOGIKA: Cukup cek statusnya saja
         is_done = st.session_state.get(done_key, False)
         
         if is_done:
-            # Jika SUDAH DICENTANG: Menciut (Collapse)
             with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
                 st.info("Prompt ini sudah ditandai selesai di sidebar.")
                 st.code(res['img'], language="text")
                 st.code(res['vid'], language="text")
         else:
-            # Jika BELUM DICENTANG: Terbuka lebar (Focus)
             with st.container():
                 st.subheader(f"🚀 ADEGAN {res['id']}")
                 c1, c2 = st.columns(2)
