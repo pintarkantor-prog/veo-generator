@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (MANUAL EXPLICIT - TIDAK DIRUBAH)
+# 2. SISTEM LOGIN & DATABASE USER (ANTI-REFRESH MODE)
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
@@ -22,13 +22,27 @@ USERS = {
     "nissa": "tung22"
 }
 
+# Inisialisasi session state (pastikan semua variabel ada)
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
-
 if 'active_user' not in st.session_state:
     st.session_state.active_user = ""
+if 'last_generated_results' not in st.session_state:
+    st.session_state.last_generated_results = []
 
-# Layar Login Manual
+# --- FITUR ANTI-REFRESH: Cek Jejak Login di URL ---
+query_params = st.query_params
+if not st.session_state.logged_in:
+    # Cek apakah ada parameter 'u' (user) dan 'p' (pass) di link browser
+    if "u" in query_params and "p" in query_params:
+        u_param = query_params["u"]
+        p_param = query_params["p"]
+        # Validasi otomatis
+        if u_param in USERS and USERS[u_param] == p_param:
+            st.session_state.logged_in = True
+            st.session_state.active_user = u_param
+
+# Tampilkan Layar Login hanya jika tidak ada jejak login
 if not st.session_state.logged_in:
     st.title("🔐 PINTAR MEDIA - AKSES PRODUKSI")
     
@@ -41,12 +55,16 @@ if not st.session_state.logged_in:
             if input_user in USERS and USERS[input_user] == input_pass:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
+                
+                # --- SIMPAN KE URL ---
+                # Ini yang bikin browser "ingat" Icha/Nissa meskipun di-refresh
+                st.query_params["u"] = input_user
+                st.query_params["p"] = input_pass
                 st.rerun()
             else:
                 st.error("Username atau Password Salah!")
     st.stop()
-
-
+    
 # ==============================================================================
 # 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE)
 # ==============================================================================
@@ -122,17 +140,26 @@ st.markdown("""
 
 
 # ==============================================================================
-# 5. HEADER APLIKASI (KALIMAT MOTIVASI DIPERTAHANKAN)
+# 5. HEADER APLIKASI (LOGOUT BERSIH TOTAL)
 # ==============================================================================
 c_header1, c_header2 = st.columns([8, 2])
 with c_header1:
     st.title("📸 PINTAR MEDIA")
-    st.info(f"Staf Aktif: {st.session_state.active_user} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
-with c_header2:
-    if st.button("Logout 🚪"):
-        st.session_state.logged_in = False
-        st.rerun()
+    # Nama staf otomatis menyesuaikan siapa yang login
+    nama_display = st.session_state.active_user.capitalize()
+    st.info(f"Staf Aktif: {nama_display} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
 
+with c_header2:
+    # Tombol Logout yang membersihkan segalanya
+    if st.button("Logout 🚪", use_container_width=True):
+        # 1. Bersihkan jejak URL browser
+        st.query_params.clear()
+        # 2. Reset status login aplikasi
+        st.session_state.logged_in = False
+        st.session_state.active_user = ""
+        # 3. Bersihkan hasil generate agar tidak nyangkut ke staf lain
+        st.session_state.last_generated_results = []
+        st.rerun()
 
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -577,4 +604,5 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
