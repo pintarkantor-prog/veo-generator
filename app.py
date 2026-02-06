@@ -403,8 +403,6 @@ vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_s
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
 
-# --- BAGIAN TOMBOL RESTORE SUDAH PINDAH KE SIDEBAR (BAGIAN 7) ---
-
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH (FULL VERSION - UTUH) ---
@@ -412,9 +410,12 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.markdown("### Karakter 1")
+        # Gunakan key dinamis untuk restore, tapi langsung simpan ke memori utama
         c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}")
         c_p1_v = st.text_area("Detail Fisik Karakter 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
+        # SINKRONISASI: Kunci ke memori utama
         st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
+        
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
@@ -424,7 +425,9 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=6, value=2)
     st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
+    
     all_chars_list = [{"name": c_n1_v, "desc": c_p1_v}, {"name": c_n2_v, "desc": c_p2_v}]
+    
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
@@ -445,7 +448,10 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         with col_v:
             v_key = f"vis_input_{i_s}"
-            visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state.get(v_key, ""), key=f"w_vis_{i_s}_{count}", height=180)
+            # Kita ambil nilai terakhir dari session_state supaya tidak hilang saat rerun
+            val_sekarang = st.session_state.get(v_key, "")
+            visual_input = st.text_area(f"Visual Adegan {i_s}", value=val_sekarang, key=f"w_vis_{i_s}_{count}", height=180)
+            # SIMPAN BALIK: Ini yang menjaga data tidak hilang saat klik Generate
             st.session_state[v_key] = visual_input
         
         with col_ctrl:
@@ -454,28 +460,24 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 1: CAHAYA & GERAK ---
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                st.selectbox(f"L{i_s}", options_lighting, 
-                             key=f"l_i_{i_s}_{count}", 
-                             label_visibility="collapsed")
+                l_key = f"l_i_{i_s}_{count}"
+                light_val = st.selectbox(f"L{i_s}", options_lighting, key=l_key, label_visibility="collapsed")
             
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
-                st.selectbox(f"C{i_s}", indonesia_camera, 
-                             key=f"c_i_{i_s}_{count}", 
-                             label_visibility="collapsed")
+                c_key = f"c_i_{i_s}_{count}"
+                cam_val = st.selectbox(f"C{i_s}", indonesia_camera, key=c_key, label_visibility="collapsed")
             
             # --- BARIS 2: SHOT & ANGLE ---
             with r2[0]:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
-                st.selectbox(f"S{i_s}", indonesia_shot, 
-                             key=f"s_i_{i_s}_{count}", 
-                             label_visibility="collapsed")
+                s_key = f"s_i_{i_s}_{count}"
+                shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=s_key, label_visibility="collapsed")
             
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
-                st.selectbox(f"A{i_s}", indonesia_angle, 
-                             key=f"a_i_{i_s}_{count}", 
-                             label_visibility="collapsed")
+                a_key = f"a_i_{i_s}_{count}"
+                angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=a_key, label_visibility="collapsed")
 
         # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -483,20 +485,21 @@ for i_s in range(1, int(num_scenes) + 1):
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_key = f"diag_{i_s}_{i_char}"
-                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state.get(d_key, ""), key=f"wd_{i_s}_{i_char}_{count}")
-                st.session_state[d_key] = d_in
+                d_key_mem = f"diag_{i_s}_{i_char}"
+                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state.get(d_key_mem, ""), key=f"wd_{i_s}_{i_char}_{count}")
+                # SIMPAN BALIK
+                st.session_state[d_key_mem] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, 
-            "light": st.session_state.get(f"l_i_{i_s}_{count}", st.session_state.m_light),
-            "cam": st.session_state.get(f"c_i_{i_s}_{count}", st.session_state.m_cam),
-            "shot": st.session_state.get(f"s_i_{i_s}_{count}", st.session_state.m_shot),
-            "angle": st.session_state.get(f"a_i_{i_s}_{count}", st.session_state.m_angle),
+            "num": i_s, 
+            "visual": visual_input, 
+            "light": light_val,
+            "cam": cam_val,
+            "shot": shot_val,
+            "angle": angle_val,
             "dialogs": scene_dialogs_list
         })
-        
 # ==============================================================================
 # 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
 # ==============================================================================
@@ -644,3 +647,4 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
