@@ -405,12 +405,12 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     with col_c1:
         st.markdown("### Karakter 1")
         c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}")
-        c_p1_v = st.text_area("Detail Fisik 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
+        c_p1_v = st.text_area("Detail Fisik Karakter 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
-        c_p2_v = st.text_area("Detail Fisik 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
+        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
@@ -423,7 +423,7 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
             with extra_cols[ex_idx - 2]:
                 kn, kp = f"ex_name_{ex_idx}", f"ex_phys_{ex_idx}"
                 ex_name = st.text_input(f"Nama Karakter {ex_idx+1}", value=st.session_state.get(kn, ""), key=f"w_en_{ex_idx}_{st.session_state.restore_counter}")
-                ex_phys = st.text_area(f"Fisik Karakter {ex_idx+1}", value=st.session_state.get(kp, ""), key=f"w_ep_{ex_idx}_{st.session_state.restore_counter}", height=100)
+                ex_phys = st.text_area(f"Detail Fisik Karakter {ex_idx+1}", value=st.session_state.get(kp, ""), key=f"w_ep_{ex_idx}_{st.session_state.restore_counter}", height=100)
                 st.session_state[kn], st.session_state[kp] = ex_name, ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
@@ -633,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
