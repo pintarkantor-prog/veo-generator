@@ -310,7 +310,7 @@ with st.sidebar:
     # STATUS PRODUKSI
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
-        st.caption("Tandai jika sudah selesai!:")
+        st.caption("Tandai disini jika sudah selesai!:")
         
         for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
@@ -633,4 +633,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
