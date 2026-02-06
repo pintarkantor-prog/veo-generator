@@ -277,7 +277,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DRAFT TITLE)
+# 7. SIDEBAR: KONFIGURASI UTAMA (FIXED RESTORE LOGIC)
 # ==============================================================================
 with st.sidebar:
     
@@ -306,7 +306,7 @@ with st.sidebar:
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM (SEKARANG DITARIK KELUAR AGAR SEMUA USER BISA LIHAT) ---
+    # --- B. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
     # STATUS PRODUKSI
@@ -330,7 +330,7 @@ with st.sidebar:
             st.balloons()
             st.success("🎉 Selesai!")
 
-    # --- C. BUTTONS ONLY (TANPA JUDUL DRAFT MANAGEMENT) ---
+    # --- C. BUTTONS ONLY (SAVE & RESTORE) ---
     c_s, c_r = st.columns(2)
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
@@ -356,19 +356,37 @@ with st.sidebar:
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="5s")
-                my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
+                
+                # Kita cari semua baris yang mengandung nama user (icha, DRAFT_icha, AUTO_icha)
+                my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)].copy()
+                
+                # Kita ambil hanya data yang berformat JSON (Draft/Auto)
+                my_data = my_data[my_data['Visual Utama'].str.startswith("{", na=False)]
+                
                 if not my_data.empty:
+                    # Ambil yang paling terbaru (baris terakhir)
                     raw_data = my_data.iloc[-1]['Visual Utama']
                     data = json.loads(raw_data)
+                    
+                    # Isi kembali session state
                     st.session_state.c_name_1_input = data.get("n1", "")
                     st.session_state.c_desc_1_input = data.get("p1", "")
                     st.session_state.c_name_2_input = data.get("n2", "")
                     st.session_state.c_desc_2_input = data.get("p2", "")
-                    for k, v in data.get("scenes", {}).items():
+                    
+                    scenes_data = data.get("scenes", {})
+                    for k, v in scenes_data.items():
+                        # key 'v1' jadi 'vis_input_1'
                         st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                    
                     st.session_state.restore_counter += 1
+                    st.success("Draft Berhasil Dipulihkan! ✅")
                     st.rerun()
-            except: st.error("Gagal tarik data")
+                else:
+                    st.warning("Tidak ditemukan data cadangan.")
+            except Exception as e: 
+                st.error(f"Gagal tarik data: {e}")
+
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 
 # --- MULAI DARI SINI SEMUA DITARIK KE KIRI (RATA KIRI) AGAR ICHA & NISSA BISA LIHAT ---
@@ -654,3 +672,4 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
