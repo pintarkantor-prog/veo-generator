@@ -54,7 +54,7 @@ if 'active_user' not in st.session_state:
                     
                     with st.spinner("Membuka ruang kerja..."):
                         import time
-                        time.sleep(1.2)
+                        time.sleep(3.0)
                     
                     st.rerun()
                 else:
@@ -702,6 +702,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
