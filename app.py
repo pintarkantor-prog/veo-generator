@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (FULL STABLE VERSION)
+# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (CENTERED NOTIF)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -14,44 +14,51 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
-# --- 1. CEK LOGIN (Jika belum login, tampilkan halaman login centered) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
-    st.write("")
-    st.write("")
-    _, col_login, _ = st.columns([1, 2, 1])
+    # Gunakan placeholder agar kita bisa "menghapus" form login saat sukses
+    placeholder = st.empty()
     
-    with col_login:
-        st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
-        st.write("---")
+    with placeholder.container():
+        st.write("")
+        st.write("")
+        _, col_login, _ = st.columns([1, 2, 1])
         
-        user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
-        pass_input = st.text_input("Password", type="password")
-        
-        if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
-            user_clean = user_input.lower().strip()
+        with col_login:
+            st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
+            st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
+            st.write("---")
             
-            if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                # 1. Simpan user ke memori
-                st.session_state.active_user = user_clean
+            user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
+            pass_input = st.text_input("Password", type="password")
+            
+            if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
+                user_clean = user_input.lower().strip()
                 
-                # 2. Tampilkan notif sukses (pasti terlihat karena di dalam kolom login)
-                st.success(f"✅ Akses Diterima! Selamat bekerja, {user_clean.capitalize()}.")
-                
-                # 3. Efek Loading
-                with st.spinner("Membuka Dashboard Utama..."):
-                    import time
-                    time.sleep(1.5) 
-                
-                # 4. Pindah ke Dashboard
-                st.rerun()
-            else:
-                st.error("❌ Username atau Password salah. Silakan cek kembali.")
-        
-        st.write("---")
-        st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
+                if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                    st.session_state.active_user = user_clean
+                    
+                    # --- BAGIAN NOTIF TENGAH LAYAR ---
+                    placeholder.empty() # Hapus form login
+                    with placeholder.container():
+                        st.write("")
+                        st.write("")
+                        st.write("")
+                        st.success(f"### ✅ AKSES DITERIMA!")
+                        st.markdown(f"<h2 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h2>", unsafe_allow_html=True)
+                        st.markdown("<p style='text-align: center;'>Membuka Dashboard Utama...</p>", unsafe_allow_html=True)
+                        
+                        with st.spinner(""):
+                            import time
+                            time.sleep(1.5) # Kamu bisa ubah durasi ini
+                        
+                    st.rerun()
+                else:
+                    st.error("❌ Username atau Password salah.")
+            
+            st.write("---")
+            st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
     st.stop() 
 
 # --- 2. SETELAH LOGIN (Ubah layout jadi WIDE otomatis) ---
@@ -699,6 +706,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
