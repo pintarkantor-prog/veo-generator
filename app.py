@@ -430,8 +430,9 @@ sharp_natural_stack = (
 )
 
 no_text_strict = (
-    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, "
-    "NO typography, NO watermark, NO letters, NO black bars, NO grain, NO blur."
+    "STRICTLY NO text, NO typography, NO watermark, NO letters, NO characters, "
+    "NO subtitles, NO captions, NO speech bubbles, NO labels, NO signage, "
+    "NO black bars, NO frames, zero words on image."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
@@ -662,10 +663,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 # --- RAKIT PROMPT AKHIR (ULTRA VIVID & CRYSTAL CLEAR) ---
                 img_final = (
-                    f"{master_lock_instruction} Extremely detailed raw color photography, cinematic still, 9:16 vertical aspect ratio. "
-                    f"Sharp focus, uncompressed 8k quality, vivid organic color punch. {e_angle_cmd} {emotion_ctx} "
+                    f"{master_lock_instruction} Clean of any text, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
+                    f"No lettering, sharp focus, uncompressed 8k quality, vivid organic color punch. {e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --no text typography watermark"
                 )
                 
                 vid_final = (
@@ -700,5 +701,6 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
