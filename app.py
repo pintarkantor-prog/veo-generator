@@ -695,10 +695,11 @@ if st.session_state.last_generated_results:
                 st.code(res['vid'], language="text")
             
             # Saklar Utama (Checkbox)
-            if st.checkbox("Tandai adegan ini SELESAI di-copy", key=done_key):
+            if st.checkbox("Tandai adegan ini kalau udah selesai dibuat!", key=done_key):
                 if not st.session_state[done_key]: # Jika baru saja dicentang
                     st.rerun() # Refresh biar judul Tab di atas berubah jadi centang hijau
             
             # Info tambahan biar nggak bingung
             if st.session_state[done_key]:
                 st.success(f"Adegan {res['id']} sudah aman! Pindah ke tab berikutnya. 🚀")
+
