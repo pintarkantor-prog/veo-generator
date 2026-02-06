@@ -236,75 +236,84 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: COMMAND CENTER PRO)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: ULTIMATE CONTROL)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
-        st.header("🎮 Admin Command Center")
+        st.header("🏢 PINTAR MEDIA - HQ")
         
-        show_log = st.checkbox("Buka Dashboard Monitoring")
-        
-        if show_log:
+        if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 
                 if not df_a.empty:
-                    # --- 1. RINGKASAN PERFORMA (KPI) ---
+                    # --- 1. METRIK PERFORMANCE ---
+                    st.markdown("### 📊 Ringkasan Produksi")
                     total_prod = len(df_a)
+                    # Menghitung kontribusi per staf
                     user_counts = df_a["User"].value_counts()
                     
-                    st.markdown("### 📈 Ringkasan")
                     c1, c2 = st.columns(2)
                     with c1:
-                        st.metric("Total Produksi", total_prod)
+                        st.metric("Total Klik", total_prod, delta="Live")
                     with c2:
-                        # Menampilkan siapa yang paling banyak generate
-                        top_user = user_counts.idxmax() if not user_counts.empty else "-"
-                        st.metric("Staf Teraktif", top_user)
-                    
-                    # --- 2. FITUR SEARCH (CANGGIH) ---
+                        top_staf = user_counts.idxmax() if not user_counts.empty else "-"
+                        st.metric("MVP Staf", top_staf, delta="Top")
+
+                    # --- 2. FITUR SEARCH & FILTER ---
                     st.markdown("---")
-                    search_query = st.text_input("🔍 Cari Visual / Staf", placeholder="Contoh: Udin...")
+                    search = st.text_input("🔍 Filter Nama Staf atau Cerita", placeholder="Cari...")
+
+                    # --- 3. TABEL LOG DENGAN ICON STATUS ---
+                    df_show = df_a.iloc[::-1].copy() # Terbaru di atas
                     
-                    # --- 3. TABEL AKTIVITAS ---
-                    df_show = df_a.iloc[::-1] # Terbaru di atas
+                    # Tambahkan kolom 'Status' visual (Hanya di tampilan)
+                    df_show["Status"] = "✅ Done"
                     
-                    # Filter data berdasarkan search
-                    if search_query:
+                    # Logika Filter Search
+                    if search:
                         df_show = df_show[
-                            df_show['Visual Utama'].str.contains(search_query, case=False, na=False) | 
-                            df_show['User'].str.contains(search_query, case=False, na=False)
+                            df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
+                            df_show['User'].str.contains(search, case=False, na=False)
                         ]
 
-                    st.write(f"📂 **Log Aktivitas ({len(df_show)}):**")
+                    st.write(f"📂 **Arsip Produksi ({len(df_show)}):**")
                     st.dataframe(
                         df_show, 
                         use_container_width=True,
                         hide_index=True,
                         column_config={
+                            "Status": st.column_config.TextColumn("Stat"),
                             "Waktu": st.column_config.TextColumn("⏰ Jam"),
                             "User": st.column_config.TextColumn("👤 Staf"),
                             "Total Adegan": st.column_config.NumberColumn("🎬"),
-                            "Visual Utama": st.column_config.TextColumn("📝 Inti Cerita")
+                            "Visual Utama": st.column_config.TextColumn("📝 Ringkasan")
                         }
                     )
+
+                    # --- 4. ACTION BUTTONS (DOWNLOAD & RESET) ---
+                    col_btn1, col_btn2 = st.columns(2)
+                    with col_btn1:
+                        # Fitur Download ke CSV
+                        csv = df_a.to_csv(index=False).encode('utf-8')
+                        st.download_button("📥 Export Log", data=csv, file_name="log_produksi.csv", mime="text/csv", use_container_width=True)
                     
-                    # --- 4. TOMBOL BERSIHKAN ---
-                    if st.button("🗑️ Reset Semua Log", use_container_width=True):
-                        empty_df = pd.DataFrame(columns=["Waktu", "User", "Total Adegan", "Visual Utama"])
-                        conn_a.update(worksheet="Sheet1", data=empty_df)
-                        st.success("Log dikosongkan!")
-                        st.rerun()
+                    with col_btn2:
+                        if st.button("🗑️ Reset", use_container_width=True):
+                            empty_df = pd.DataFrame(columns=["Waktu", "User", "Total Adegan", "Visual Utama"])
+                            conn_a.update(worksheet="Sheet1", data=empty_df)
+                            st.success("Log Reset!")
+                            st.rerun()
                 else:
-                    st.info("Belum ada data masuk.")
+                    st.info("Belum ada aktivitas hari ini.")
                     
             except Exception as e:
-                st.error(f"GSheets Error: {e}")
+                st.error(f"Koneksi GSheets Delay: {e}")
                 
         st.divider()
 
-    # Pengaturan Global
+    # KONFIGURASI UNTUK SEMUA USER
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
@@ -556,5 +565,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
