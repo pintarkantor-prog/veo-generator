@@ -74,9 +74,9 @@ def record_to_sheets(user, first_visual, total_scenes):
         # 5. Gabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         
-        # 6. FITUR OTOMATIS HAPUS: Hanya simpan 100 data terakhir
-        if len(updated_df) > 100:
-            updated_df = updated_df.tail(100)
+        # 6. FITUR OTOMATIS HAPUS: Hanya simpan 300 data terakhir
+        if len(updated_df) > 300:
+            updated_df = updated_df.tail(300)
         
         # 7. Update kembali ke Google Sheets
         conn.update(worksheet="Sheet1", data=updated_df)
@@ -503,6 +503,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
