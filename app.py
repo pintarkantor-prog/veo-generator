@@ -575,7 +575,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: VIVID CRYSTAL CLEAR & CHARACTER LOCK)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
 # ==============================================================================
 import json
 
@@ -656,16 +656,17 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else: # Suasana Sore
                     l_cmd = "4:00 PM sunset, long sharp high-contrast shadows, golden-indigo gradient, high-fidelity rim lighting."
 
-                # Logika Dialog & Emosi
+                # Logika Dialog (DIUBAH AGAR TIDAK JADI TEKS DI GAMBAR)
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
-                emotion_ctx = f"Expression: reacting to context '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
+                # Label diganti ke 'Invisible Mood' agar AI tidak merender teks dialognya
+                emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (THE ULTIMATE SHARP & CLEAN) ---
+                # --- RAKIT PROMPT AKHIR (THE ULTIMATE SHARP & CLEAN - NO CAPTION) ---
                 img_final = (
-                    f"{master_lock_instruction} Clean of any text, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
+                    f"{master_lock_instruction} NO TEXT, Clean of any lettering, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
                     f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2 --stylize 250 --no text typography watermark"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2 --stylize 250 --no text typography watermark characters letters captions subtitles"
                 )
                 
                 vid_final = (
@@ -700,7 +701,3 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
-
-
-
-
