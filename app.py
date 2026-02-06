@@ -93,8 +93,8 @@ def record_to_sheets(user, first_visual, total_scenes):
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         
         # 6. FITUR OTOMATIS HAPUS: Hanya simpan 300 data terakhir
-        if len(updated_df) > 300:
-            updated_df = updated_df.tail(300)
+        if len(updated_df) > 150:
+            updated_df = updated_df.tail(150)
         
         # 7. Update kembali ke Google Sheets
         conn.update(worksheet="Sheet1", data=updated_df)
@@ -102,6 +102,13 @@ def record_to_sheets(user, first_visual, total_scenes):
     except Exception as e:
         # Jika error, tampilkan pesan agar mudah didebug
         st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
+        # 4. Buat baris baru (Teks Visual disimpan UTUH tanpa dipotong)
+        new_row = pd.DataFrame([{
+            "Waktu": current_time,
+            "User": user,
+            "Total Adegan": total_scenes,
+            "Visual Utama": first_visual  # <--- Hapus [:150] agar teks utuh tersimpan
+        }])
         
 # ==============================================================================
 # 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
@@ -363,31 +370,33 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL VERSION - WITH RESTORE DRAFT CAPABILITY)
+# 9. FORM INPUT ADEGAN (FIXED RESTORE CAPABILITY)
 # ==============================================================================
 
-# --- TOMBOL RESTORE (TARIK DATA DARI CLOUD) ---
-# Taruh di paling atas sebelum input agar staf bisa narik data lama jika refresh
-col_res, col_space = st.columns([3, 7])
+# --- TOMBOL RESTORE (VERSI PERBAIKAN TOTAL) ---
+col_res, col_space = st.columns([4, 6])
 with col_res:
     if st.button("🔄 TARIK DRAFT TERAKHIR", use_container_width=True):
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
             df_log = conn.read(worksheet="Sheet1", ttl=0)
             
-            # Cari data terakhir milik user yang sedang login
-            user_log = df_log[df_log['User'] == st.session_state.active_user]
+            # Filter hanya untuk user aktif
+            my_drafts = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
             
-            if not user_log.empty:
-                last_vis = user_log.iloc[-1]['Visual Utama']
-                # Masukkan kembali ke memori adegan 1 sebagai pancingan
-                st.session_state["vis_input_1"] = last_vis
-                st.success("Draft ditemukan! Adegan 1 berhasil ditarik.")
+            if not my_drafts.empty:
+                # Ambil baris paling bawah (terbaru)
+                last_data = my_drafts.iloc[-1]
+                teks_visual = last_data['Visual Utama']
+                
+                # MASUKKAN KE MEMORI PERMANEN
+                st.session_state["vis_input_1"] = teks_visual
+                st.toast("Data Draft Berhasil Ditarik! Periksa Adegan 1.", icon="📥")
                 st.rerun()
             else:
-                st.warning("Kamu belum punya riwayat draft.")
+                st.warning("Data draft tidak ditemukan di Google Sheets.")
         except Exception as e:
-            st.error(f"Gagal menarik data: {e}")
+            st.error(f"Gagal koneksi ke Sheets: {e}")
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -654,5 +663,6 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
