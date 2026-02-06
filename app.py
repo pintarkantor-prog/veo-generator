@@ -349,7 +349,7 @@ with st.sidebar:
         st.divider()
 
     # --- KONFIGURASI UNTUK SEMUA USER ---
-    st.header("⚙️ Konfigurasi Utama")
+    # st.header("⚙️ Konfigurasi Utama") # Baris ini dimatikan agar tulisan hilang
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
     # --- PROGRESS TRACKER ---
@@ -716,3 +716,4 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
