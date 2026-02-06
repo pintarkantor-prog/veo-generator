@@ -275,12 +275,12 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSI FIX AKSES SEMUA STAF)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSI FINAL - NO DUPLICATE)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
     
-    # --- LOGIKA ADMIN ---
+    # --- A. LOGIKA ADMIN ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -342,12 +342,13 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Koneksi GSheets Delay: {e}")
                 
-        st.divider() # Divider Admin
+        st.divider()
 
-    # --- KONFIGURASI UNTUK SEMUA USER (Ditarik ke kiri agar Icha/Nissa bisa lihat) ---
+    # --- B. KONFIGURASI UMUM (SEUA USER BISA LIHAT) ---
+    # Input ini diletakkan di luar blok admin agar Icha/Nissa bisa akses
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
-    # --- [PINDAH KE SINI] 🗺️ STATUS PRODUKSI (Icha & Nissa pasti muncul sekarang) ---
+    # --- C. STATUS PRODUKSI (HANYA ADA SATU DI SINI) ---
     if st.session_state.last_generated_results:
         st.divider()
         st.markdown("### 🗺️ STATUS PRODUKSI")
@@ -359,7 +360,7 @@ with st.sidebar:
                 st.session_state[done_key] = False
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
-        # Hitung Persentase & Progress Bar
+        # Progress Bar & Ballons
         total_p = len(st.session_state.last_generated_results)
         done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
         st.write("")
@@ -371,34 +372,7 @@ with st.sidebar:
 
     st.divider()
 
-    # --- INPUT JUMLAH ADEGAN (Tetap di atas) ---
-    num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
-    
-    # --- [TARGET PINDAH] STATUS PRODUKSI ---
-    if st.session_state.last_generated_results:
-        st.divider()
-        st.markdown("### 🗺️ STATUS PRODUKSI")
-        st.caption("Tandai adegan yang sudah di-copy:")
-        
-        for res in st.session_state.last_generated_results:
-            done_key = f"mark_done_{res['id']}"
-            if done_key not in st.session_state:
-                st.session_state[done_key] = False
-            st.checkbox(f"Adegan {res['id']}", key=done_key)
-        
-        # Progress Bar
-        total_p = len(st.session_state.last_generated_results)
-        done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
-        st.write("")
-        st.progress(done_p / total_p)
-        
-        if done_p == total_p:
-            st.balloons()
-            st.success("🎉 Selesai!")
-
-    st.divider()
-
-    # --- DRAFT MANAGEMENT (KODE ASLI UTUH) ---
+    # --- D. DRAFT MANAGEMENT (SAVE & RESTORE) ---
     # 1. TOMBOL SIMPAN (SAVE)
     if st.button("💾 SAVE DATA", use_container_width=True):
         import json
@@ -418,7 +392,7 @@ with st.sidebar:
             }
             packet_string = json.dumps(draft_packet)
             record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(captured_scenes))
-            st.toast(f"Berhasil! {len(captured_scenes)} Adegan tersimpan. ✅")
+            st.toast(f"Berhasil Tersimpan! ✅")
         except Exception as e:
             st.error(f"Gagal simpan draft: {e}")
 
@@ -446,7 +420,6 @@ with st.sidebar:
                 else:
                     st.session_state["vis_input_1"] = raw_data
                 
-                # BAGIAN INI JANGAN SAMPAI HILANG
                 st.session_state.restore_counter += 1 
                 st.rerun()
             else:
@@ -721,4 +694,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
