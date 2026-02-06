@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
+import pytz  #
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -59,7 +60,8 @@ def record_to_sheets(user, first_visual, total_scenes):
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
         
         # Membuat baris data baru secara eksplisit
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+tz = pytz.timezone('Asia/Jakarta')
+current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         
         new_row = pd.DataFrame([{
             "Waktu": current_time,
@@ -496,3 +498,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
