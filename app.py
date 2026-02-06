@@ -420,22 +420,22 @@ with st.sidebar:
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
-# 8. PARAMETER KUALITAS (VERSION: LEAN BUT PROTECTED)
+# 8. PARAMETER KUALITAS (VERSION: HIGH-FIDELITY RECOVERY)
 # ==============================================================================
-# Fokus pada kualitas tajam tanpa mengulang-ulang kata yang sama
 sharp_natural_stack = (
-    "8k ultra-detailed, cinematic photography, sharp focus, high-fidelity textures, "
-    "vibrant organic colors, hyper-realistic skin, clear background, professional lighting."
+    "8k resolution, ultra-high-fidelity, micro-contrast enhancement, optical clarity, "
+    "sharp-focus, f/11 aperture for deep focus sharpness, zero digital noise, "
+    "vivid organic textures, skin texture override with 8k details."
 )
 
-# Pagar larangan yang kamu minta tetap dijaga ketat di sini
 no_text_strict = (
     "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, "
-    "NO typography, NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
+    "NO typography, NO watermark, NO letters, NO black bars, NO subtitles."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"60fps, fluid motion, {sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
+
 # ==============================================================================
 # 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
 # ==============================================================================
@@ -574,7 +574,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: CHARACTER ANCHOR FIXED)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: PREMIUM QUALITY & CHARACTER LOCK)
 # ==============================================================================
 import json
 
@@ -594,21 +594,21 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         nama_staf = st.session_state.active_user.capitalize()
         
-        with st.spinner(f"⏳ Sedang meracik prompt AI untuk {nama_staf}..."):
+        with st.spinner(f"⏳ Sedang meracik prompt AI premium untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
             # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK (Kunci Identitas Sesuai Keinginan Dian) ---
+            # --- LOGIKA MASTER LOCK (Konsistensi Karakter Dian) ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             
             # Kalimat Sakti untuk mengunci ingatan AI terhadap foto yang diupload sekali di awal
             master_lock_instruction = (
                 f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
                 f"Do not deviate from these visuals: {char_defs}. "
-                f"Use the previously provided image references as the absolute visual anchor for faces and clothing. "
+                f"Use the previously provided image references as the absolute visual anchor for faces and clothing structure. "
             )
 
             for item in active_scenes:
@@ -618,18 +618,18 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 
                 if camera_map.get(item["cam"]) == "AUTO_MOOD":
                     if any(x in vis_lower for x in ["lari", "jalan", "pergi", "mobil", "motor"]): 
-                        e_cam_move = "Dynamic Tracking Shot"
+                        e_cam_move = "Dynamic Tracking Shot, follow subject motion"
                     elif any(x in vis_lower for x in ["sedih", "menangis", "fokus", "detail", "melihat", "terkejut"]): 
                         e_cam_move = "Slow Cinematic Zoom In"
                     elif any(x in vis_lower for x in ["pemandangan", "kota", "luas", "halaman", "jalan raya"]): 
-                        e_cam_move = "Slow Pan"
+                        e_cam_move = "Slow Pan Left to Right"
                     else: 
-                        e_cam_move = "Subtle camera drift"
+                        e_cam_move = "Subtle cinematic camera drift"
                 else:
                     e_cam_move = camera_map.get(item["cam"], "Static")
 
                 # --- SMART ANCHOR TERAS ---
-                vis_core_final = vis_core + " (Fixed porch structure background)" if "teras" in vis_lower else vis_core
+                vis_core_final = vis_core + " (Backrest fixed against the house wall, porch structure anchored)" if "teras" in vis_lower else vis_core
 
                 # Konversi Teknis
                 e_shot_size = shot_map.get(item["shot"], "Medium Shot")
@@ -637,7 +637,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING (VERSION 2.0: ENHANCED BUT CLEAN) ---
+                # --- LIGHTING MAPPING (VERSION 2.0: ENHANCED & DETAILED) ---
                 if "Bening" in light_type:
                     l_cmd = "Crystal clear lighting, ultra-high altitude sun, 10:00 AM bright atmosphere, zero haze, sharp micro-contrast."
                 elif "Sejuk" in light_type:
@@ -657,22 +657,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 # Logika Dialog & Emosi
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
-                emotion_ctx = f"Expression: reacting to '{d_all_text}'. " if d_all_text else ""
+                emotion_ctx = f"Expression: reacting to context '{d_all_text}'. Focus on high-fidelity facial muscles. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR ---
-                # Menggunakan master_lock_instruction di awal setiap adegan
+                # --- RAKIT PROMPT AKHIR (PREMIUM RECOVERY) ---
                 img_final = (
-                    f"{master_lock_instruction} create a STATIC high-quality photograph, 9:16 vertical. "
-                    f"{e_angle_cmd} {emotion_ctx} Visual: {vis_core_final}. "
-                    f"Atmosphere: {l_cmd}. {img_quality_base} --ar 9:16"
+                    f"{master_lock_instruction} Create a STATIC high-quality photograph, 9:16 vertical aspect ratio. "
+                    f"Full-bleed cinematography, edge-to-edge full frame. {e_angle_cmd} {emotion_ctx} "
+                    f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
+                    f"Quality Override: {img_quality_base} --ar 9:16"
                 )
                 
                 vid_final = (
                     f"{master_lock_instruction} 9:16 full-screen mobile video. {e_shot_size} {e_cam_move}. "
-                    f"{emotion_ctx} Visual: {vis_core_final}. Lighting: {l_cmd}. {vid_quality_base}"
+                    f"{emotion_ctx} Visual: {vis_core_final}. "
+                    f"Lighting: {l_cmd}. {vid_quality_base}"
                 )
 
-                # --- SIMPAN KE LEMARI ---
+                # --- SIMPAN KE LEMARI (SESSION STATE) ---
                 st.session_state.last_generated_results.append({
                     "id": scene_id,
                     "img": img_final,
@@ -680,7 +681,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Berhasil Dibuat! 🚀", icon="🎨")
+        st.toast("Prompt Premium Berhasil Dibuat! 🚀", icon="🎨")
 
 # 3. AREA TAMPILAN
 if st.session_state.last_generated_results:
@@ -698,10 +699,3 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
-
-
-
-
-
-
-
