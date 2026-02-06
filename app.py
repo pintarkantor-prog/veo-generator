@@ -2,9 +2,11 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
-import pytz #
+import pytz
+import time
+
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (FULL STABLE: ENTER KEY + LOGO + PLACEHOLDER)
+# 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -15,11 +17,13 @@ USER_PASSWORDS = {
     "ezaalma": "aprihgino"
 }
 
-# --- 1. FITUR AUTO-LOGIN (Cek URL saat Refresh) ---
+# --- 1. FITUR AUTO-LOGIN & SESSION CHECK ---
 if 'active_user' not in st.session_state:
     q_user = st.query_params.get("u")
     if q_user in USER_PASSWORDS:
         st.session_state.active_user = q_user
+        if 'login_time' not in st.session_state:
+            st.session_state.login_time = time.time()
 
 # --- 2. LAYAR LOGIN (Muncul jika belum login) ---
 if 'active_user' not in st.session_state:
@@ -32,47 +36,32 @@ if 'active_user' not in st.session_state:
         _, col_login, _ = st.columns([1, 2, 1])
         
         with col_login:
-            # Tampilan Logo PINTAR.png
             try:
                 st.image("PINTAR.png", use_container_width=True) 
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            # --- FORM LOGIN (Dukungan Enter Key) ---
             with st.form("login_form", clear_on_submit=False):
                 user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
-                
-                # Placeholder password sudah diubah dari titik-titik menjadi teks
-                pass_input = st.text_input(
-                    "Password", 
-                    type="password", 
-                    placeholder="Masukkan password Anda..."
-                )
-                
+                pass_input = st.text_input("Password", type="password", placeholder="Masukkan password Anda...")
                 submit_button = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary")
             
-            # Logika Pengecekan
             if submit_button:
                 user_clean = user_input.lower().strip()
-                
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
                     st.query_params["u"] = user_clean
                     st.session_state.active_user = user_clean
+                    st.session_state.login_time = time.time() # CATAT WAKTU LOGIN
                     
-                    # Efek Transisi Sukses
                     placeholder.empty() 
                     with placeholder.container():
                         st.write("")
-                        st.write("")
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
-                        st.markdown("<p style='text-align: center; color: gray;'>Menyiapkan dashboard...</p>", unsafe_allow_html=True)
-                        
                         _, col_spin, _ = st.columns([2, 1, 2])
                         with col_spin:
                             with st.spinner(""):
-                                import time
-                                time.sleep(2.5) # Saya kembalikan ke 1.2 detik agar tidak kelamaan menunggu
+                                time.sleep(3.0)
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
@@ -80,7 +69,18 @@ if 'active_user' not in st.session_state:
             st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
     st.stop() 
 
-# --- 3. SETELAH LOGIN (Konfigurasi Dashboard) ---
+# --- 3. PROTEKSI SESI (AUTO-LOGOUT 10 JAM) ---
+if 'active_user' in st.session_state and 'login_time' in st.session_state:
+    selisih_detik = time.time() - st.session_state.login_time
+    if selisih_detik > 20: # 10 Jam
+        st.query_params.clear()
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.warning("Sesi Anda telah berakhir (Batas 10 jam). Silakan login kembali.")
+        time.sleep(2.5)
+        st.rerun()
+
+# --- 4. CONFIG DASHBOARD (Area Kerja Utama) ---
 st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
@@ -768,6 +768,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
