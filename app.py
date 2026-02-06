@@ -11,7 +11,8 @@ USER_PASSWORDS = {
     "icha": "udin99",
     "nissa": "tung22",
     "inggi": "udin33",
-    "lisa": "tung66"
+    "lisa": "tung66",
+    "ezaalma": "aprihgino"
 }
 
 # --- 1. FITUR AUTO-LOGIN (Cek URL saat Refresh) ---
@@ -767,6 +768,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
