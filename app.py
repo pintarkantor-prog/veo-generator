@@ -652,57 +652,46 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: TRUE ONE-CLICK COPY & MARK)
+# AREA TAMPILAN HASIL (VERSION: VISUAL WORKFLOW TRACKER)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
-    st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
+    st.info(f"💡 **Tips untuk {nama_staf}:** Klik ikon di pojok kanan kotak teks untuk COPY, lalu klik tombol 'SELESAI' di bawahnya.")
 
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
         if done_key not in st.session_state:
             st.session_state[done_key] = False
 
-        # --- TAMPILAN HEADER ---
-        header_color = "#28a745" if st.session_state[done_key] else "#31333f"
-        header_text = f"✅ ADEGAN {res['id']} (COPIED)" if st.session_state[done_key] else f"🎬 ADEGAN {res['id']}"
-        
-        st.markdown(f"""
-            <div style="background-color: {header_color}; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                <h4 style="margin: 0; color: white;">{header_text}</h4>
-            </div>
-        """, unsafe_allow_html=True)
-
-        c1, c2 = st.columns(2)
-        
-        # --- KOLOM 1: PROMPT GAMBAR ---
-        with c1:
-            st.caption("📸 PROMPT GAMBAR")
-            st.code(res['img'], language="text")
-            # Tombol Sakti: Copy + Tandai
-            if st.button(f"📋 Copy & Mark Done (Img {res['id']})", key=f"btn_img_{res['id']}", use_container_width=True):
-                # JS untuk Copy ke Clipboard
-                st.components.v1.html(f"""
-                    <script>
-                    navigator.clipboard.writeText(`{res['img']}`);
-                    </script>
-                """, height=0)
-                st.session_state[done_key] = True
-                st.rerun()
-                
-        # --- KOLOM 2: PROMPT VIDEO ---
-        with c2:
-            st.caption("🎥 PROMPT VIDEO")
-            st.code(res['vid'], language="text")
-            # Tombol Sakti: Copy + Tandai
-            if st.button(f"📋 Copy & Mark Done (Vid {res['id']})", key=f"btn_vid_{res['id']}", use_container_width=True):
-                # JS untuk Copy ke Clipboard
-                st.components.v1.html(f"""
-                    <script>
-                    navigator.clipboard.writeText(`{res['vid']}`);
-                    </script>
-                """, height=0)
+        # --- LOGIKA PERUBAHAN TAMPILAN ---
+        if st.session_state[done_key]:
+            # Jika sudah selesai, tampilkan box hijau minimalis
+            st.markdown(f"""
+                <div style="background-color: #1e3d2f; padding: 10px; border-radius: 5px; border-left: 5px solid #28a745;">
+                    <span style="color: white; font-weight: bold;">✅ ADEGAN {res['id']} - SELESAI DI-COPY</span>
+                </div>
+            """, unsafe_allow_html=True)
+            # Biar hemat tempat, prompt yang sudah selesai kita sembunyikan dalam expander
+            with st.expander("Lihat kembali prompt yang sudah dicopy"):
+                st.code(res['img'])
+                st.code(res['vid'])
+                if st.button(f"Urungkan Selesai {res['id']}", key=f"undo_{res['id']}"):
+                    st.session_state[done_key] = False
+                    st.rerun()
+        else:
+            # Tampilan aktif jika belum dicopy
+            st.subheader(f"🎬 HASIL ADEGAN {res['id']}")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.caption("📸 PROMPT GAMBAR")
+                st.code(res['img'], language="text")
+            with c2:
+                st.caption("🎥 PROMPT VIDEO")
+                st.code(res['vid'], language="text")
+            
+            # Tombol Konfirmasi Manual (Besar & Jelas)
+            if st.button(f"✔️ SELESAI COPY ADEGAN {res['id']}", key=f"btn_done_{res['id']}", use_container_width=True, type="secondary"):
                 st.session_state[done_key] = True
                 st.rerun()
         
