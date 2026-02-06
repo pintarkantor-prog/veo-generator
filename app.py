@@ -652,45 +652,53 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: DYNAMIC HIGHLIGHTER)
+# AREA TAMPILAN HASIL (VERSION: DYNAMIC PROGRESS TABS)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
-    st.markdown("### 📋 Antrean Prompt Produksi")
-    st.caption("Klik ikon di pojok kanan kotak teks untuk COPY, lalu centang adegan jika sudah selesai.")
-
+    
+    # 1. Hitung Progress untuk Motivasi Staf
+    total = len(st.session_state.last_generated_results)
+    done_count = sum(1 for res in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{res['id']}", False))
+    progress = done_count / total
+    
+    col_t, col_p = st.columns([2, 1])
+    with col_t:
+        st.markdown(f"### 📋 Antrean Adegan ({done_count}/{total})")
+    with col_p:
+        st.progress(progress) # Bar progress otomatis di atas
+    
+    # 2. Buat Tab untuk tiap adegan
+    # Nama tab akan berubah otomatis jika sudah dicentang
+    tab_names = []
     for res in st.session_state.last_generated_results:
-        # 1. Inisialisasi State
-        done_key = f"mark_done_{res['id']}"
-        if done_key not in st.session_state:
-            st.session_state[done_key] = False
+        is_done = st.session_state.get(f"mark_done_{res['id']}", False)
+        prefix = "✅" if is_done else "🎬"
+        tab_names.append(f"{prefix} Adegan {res['id']}")
+    
+    tabs = st.tabs(tab_names) # Membuat barisan tab di atas
 
-        # 2. Logika Visual: Meredupkan yang sudah selesai
-        opacity = "0.3" if st.session_state[done_key] else "1.0"
-        bg_color = "#12141d" if st.session_state[done_key] else "#1e212b"
-        border_color = "#28a745" if st.session_state[done_key] else "#31333f"
-
-        # 3. Wrapper Container (Bikin Box)
-        st.markdown(f"""
-            <div style="opacity: {opacity}; background-color: {bg_color}; border: 1px solid {border_color}; 
-                        padding: 15px; border-radius: 10px; margin-bottom: 5px; transition: 0.3s;">
-                <h4 style="margin:0; color: white;">{'✅' if st.session_state[done_key] else '🎬'} Adegan {res['id']}</h4>
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Bagian Konten
-        with st.container():
-            col_check, col_content = st.columns([1, 9])
+    for i, res in enumerate(st.session_state.last_generated_results):
+        with tabs[i]:
+            done_key = f"mark_done_{res['id']}"
+            if done_key not in st.session_state:
+                st.session_state[done_key] = False
             
-            with col_check:
-                # Checkbox diletakkan paling pinggir sebagai saklar
-                st.checkbox("Done", key=done_key, label_visibility="collapsed")
+            # Tampilan dalam Tab
+            st.write("")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.caption("📸 PROMPT GAMBAR (STATIC)")
+                st.code(res['img'], language="text")
+            with c2:
+                st.caption("🎥 PROMPT VIDEO (MOTION)")
+                st.code(res['vid'], language="text")
             
-            with col_content:
-                c1, c2 = st.columns(2)
-                with c1:
-                    st.code(res['img'], language="text")
-                with c2:
-                    st.code(res['vid'], language="text")
-        
-        st.write("") # Spacer kecil
+            # Saklar Utama (Checkbox)
+            if st.checkbox("Tandai adegan ini SELESAI di-copy", key=done_key):
+                if not st.session_state[done_key]: # Jika baru saja dicentang
+                    st.rerun() # Refresh biar judul Tab di atas berubah jadi centang hijau
+            
+            # Info tambahan biar nggak bingung
+            if st.session_state[done_key]:
+                st.success(f"Adegan {res['id']} sudah aman! Pindah ke tab berikutnya. 🚀")
