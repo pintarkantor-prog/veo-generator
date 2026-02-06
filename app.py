@@ -363,8 +363,32 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL VERSION - CLEAN URL MODE)
+# 9. FORM INPUT ADEGAN (FULL VERSION - WITH RESTORE DRAFT CAPABILITY)
 # ==============================================================================
+
+# --- TOMBOL RESTORE (TARIK DATA DARI CLOUD) ---
+# Taruh di paling atas sebelum input agar staf bisa narik data lama jika refresh
+col_res, col_space = st.columns([3, 7])
+with col_res:
+    if st.button("🔄 TARIK DRAFT TERAKHIR", use_container_width=True):
+        try:
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            df_log = conn.read(worksheet="Sheet1", ttl=0)
+            
+            # Cari data terakhir milik user yang sedang login
+            user_log = df_log[df_log['User'] == st.session_state.active_user]
+            
+            if not user_log.empty:
+                last_vis = user_log.iloc[-1]['Visual Utama']
+                # Masukkan kembali ke memori adegan 1 sebagai pancingan
+                st.session_state["vis_input_1"] = last_vis
+                st.success("Draft ditemukan! Adegan 1 berhasil ditarik.")
+                st.rerun()
+            else:
+                st.warning("Kamu belum punya riwayat draft.")
+        except Exception as e:
+            st.error(f"Gagal menarik data: {e}")
+
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH ---
@@ -373,15 +397,12 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     
     with col_c1:
         st.markdown("### Karakter 1")
-        # Inisialisasi memori internal (Session State)
         if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
         if "c_desc_1_input" not in st.session_state: st.session_state.c_desc_1_input = ""
         
-        # Gunakan value dari session_state agar 'nempel'
         c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.c_name_1_input, key="w_n1", placeholder="Contoh: UDIN")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state.c_desc_1_input, key="w_p1", height=100)
         
-        # Simpan balik ke memori
         st.session_state.c_name_1_input = c_n1_v
         st.session_state.c_desc_1_input = c_p1_v
     
@@ -403,7 +424,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
     all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
 
-    # --- KARAKTER TAMBAHAN (DENGAN MEMORI INTERNAL) ---
+    # --- KARAKTER TAMBAHAN ---
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
@@ -432,7 +453,6 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            # MEMORI VISUAL INTERNAL
             v_key = f"vis_input_{i_s}"
             if v_key not in st.session_state: st.session_state[v_key] = ""
             
@@ -460,7 +480,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # --- DIALOG DINAMIS (DENGAN MEMORI INTERNAL) ---
+        # --- DIALOG DINAMIS ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -634,4 +654,5 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
