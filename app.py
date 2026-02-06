@@ -512,11 +512,32 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         nama_staf = st.session_state.active_user.capitalize()
         
+        # --- [PROSES AUTO-SAVE: KITA BUNGKUS DULU SEMUA ADEGAN KE GOOGLE SHEETS] ---
+        try:
+            captured_scenes_auto = {}
+            for i_a in range(1, int(num_scenes) + 1):
+                v_k_auto = f"vis_input_{i_a}"
+                if v_k_auto in st.session_state and st.session_state[v_k_auto].strip() != "":
+                    captured_scenes_auto[f"v{i_a}"] = st.session_state[v_k_auto]
+            
+            auto_packet = {
+                "n1": st.session_state.get("c_name_1_input", ""), 
+                "p1": st.session_state.get("c_desc_1_input", ""),
+                "n2": st.session_state.get("c_name_2_input", ""), 
+                "p2": st.session_state.get("c_desc_2_input", ""),
+                "scenes": captured_scenes_auto
+            }
+            # Simpan paket lengkap (JSON) ke Cloud dengan label AUTO_
+            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+        except:
+            pass # Silent fail agar generate tetap jalan jika koneksi sheets drop
+        # --------------------------------------------------------------------------
+
         with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD
+            # LOGGING CLOUD (Data mentah untuk log utama)
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
@@ -597,7 +618,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
+        st.toast("Prompt Berhasil & Cadangan Otomatis Disimpan! 🚀", icon="🎨")
 
 # ==============================================================================
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
