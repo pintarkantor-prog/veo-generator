@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
-import pytz #
+import pytz  #
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -412,7 +412,7 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
-        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
+        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
