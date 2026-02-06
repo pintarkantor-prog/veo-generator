@@ -396,7 +396,7 @@ with st.sidebar:
             st.error(f"Gagal tarik draft: {e}")
 
     st.markdown("---")
-    st.caption(f"PINTAR MEDIA | V.1.2.0 | {st.session_state.active_user.upper()}")
+st.sidebar.caption(f"🎨 PINTAR MEDIA | V.1.2.0 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
@@ -693,4 +693,5 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
