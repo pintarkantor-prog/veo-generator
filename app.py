@@ -346,8 +346,7 @@ with st.sidebar:
     
     # --- 2. LOGIKA ADMIN (Satu kali saja) ---
     if st.session_state.active_user == "admin":
-        if st.checkbox("🚀 Buka Dashboard Utama", value=False):
-            st.info("Log aktivitas tercatat di Cloud.")
+        st.info("Log aktivitas tercatat di Cloud.")
         st.divider()
 
     # --- 3. KONFIGURASI UMUM ---
@@ -743,6 +742,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
