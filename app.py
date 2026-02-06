@@ -267,16 +267,16 @@ indonesia_angle = [
 ]
 
 camera_map = {
-    "Ikuti Karakter": "AUTO_MOOD", 
-    "Diam (Tanpa Gerak)": "Static (No Move)", 
-    "Zoom Masuk Pelan": "Slow Zoom In", 
-    "Zoom Keluar Pelan": "Slow Zoom Out",
-    "Geser Kiri ke Nanan": "Pan Left to Right", 
-    "Geser Kanan ke Kiri": "Pan Right to Left", 
-    "Dongak ke Atas": "Tilt Up",
-    "Tunduk ke Bawah": "Tilt Down", 
-    "Ikuti Objek (Tracking)": "Tracking Shot", 
-    "Memutar (Orbit)": "Orbit Circular"
+    "Ikuti Karakter": "Dynamic tracking shot following the subject's movement", 
+    "Diam (Tanpa Gerak)": "Locked-off static camera, no movement", 
+    "Zoom Masuk Pelan": "Slow cinematic zoom-in, intensifying the focus", 
+    "Zoom Keluar Pelan": "Slow cinematic zoom-out, revealing the environment",
+    "Geser Kiri ke Nanan": "Smooth cinematic pan from left to right", 
+    "Geser Kanan ke Kiri": "Smooth cinematic pan from right to left", 
+    "Dongak ke Atas": "Cinematic tilt-up movement",
+    "Tunduk ke Bawah": "Cinematic tilt-down movement", 
+    "Ikuti Objek (Tracking)": "Smooth tracking shot with parallax depth", 
+    "Memutar (Orbit)": "360-degree orbital circular camera rotation"
 }
 
 shot_map = {
@@ -670,7 +670,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR ---
+                # --- RAKIT PROMPT AKHIR (OPTIMIZED FOR VEO) ---
                 img_final = (
                     f"{master_lock_instruction} NO TEXT, Clean of any lettering, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
                     f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
@@ -678,10 +678,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2 --stylize 250 --no text typography watermark characters letters captions subtitles"
                 )
                 
+                # Kita tambahkan penguat gerakan khusus untuk video
+                motion_boost = "Ensure natural subject movement. The scene is alive, with organic secondary motion and micro-expressions."
+                
                 vid_final = (
-                    f"{master_lock_instruction} 9:16 full-screen mobile video. {e_shot_size} {e_cam_move}. "
-                    f"{emotion_ctx} Visual: {vis_core_final}. "
-                    f"Lighting: {l_cmd}. {vid_quality_base}"
+                    f"{master_lock_instruction} 9:16 full-screen mobile video. "
+                    f"CINEMATIC MOTION: {e_shot_size}, {e_cam_move}. {motion_boost} " 
+                    f"ACTING & EMOTION: {emotion_ctx} "
+                    f"SUBJECT VISUAL: {vis_core_final}. "
+                    f"LIGHTING: {l_cmd}. {vid_quality_base}"
                 )
 
                 # --- SIMPAN KE LEMARI ---
@@ -722,6 +727,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
