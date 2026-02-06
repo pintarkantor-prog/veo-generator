@@ -444,6 +444,8 @@ with st.sidebar:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
+    st.divider() # Kasih garis pemisah biar nggak berantakan
+
     # 1. Tampilkan Tombol Logout dulu
     if st.sidebar.button("Log Out 🚪", use_container_width=True):
         st.query_params.clear() 
@@ -717,6 +719,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
