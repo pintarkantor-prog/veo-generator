@@ -374,49 +374,32 @@ if "restore_counter" not in st.session_state:
 col_res, col_space = st.columns([4, 6])
 with col_res:
     if st.button("🔄 TARIK SEMUA DATA DRAFT", use_container_width=True):
-        import json
-        try:
-            conn = st.connection("gsheets", type=GSheetsConnection)
-            # Menggunakan ttl="5s" agar hemat kuota dan tidak Delay
-            df_log = conn.read(worksheet="Sheet1", ttl="5s")
-            
-            # Cari data terakhir milik user aktif
-            my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
-            
-            if not my_data.empty:
-                raw_string = my_data.iloc[-1]['Visual Utama']
-                
-                # --- LOGIKA PINTAR: CEK APAKAH INI JSON ATAU TEKS BIASA ---
-                if raw_string.strip().startswith("{"):
-                    # JIKA FORMAT JSON (Paket Lengkap)
-                    data = json.loads(raw_string)
-                    
-                    # 1. Isi Identitas Tokoh Utama
-                    st.session_state.c_name_1_input = data.get("n1", "")
-                    st.session_state.c_desc_1_input = data.get("p1", "")
-                    st.session_state.c_name_2_input = data.get("n2", "")
-                    st.session_state.c_desc_2_input = data.get("p2", "")
-                    
-                    # 2. Isi Semua Visual Adegan secara otomatis
-                    scenes_data = data.get("scenes", {})
-                    for key_v, val_v in scenes_data.items():
-                        # Mengubah 'v1' menjadi 'vis_input_1', dst
-                        num_idx = key_v.replace('v', '')
-                        st.session_state[f"vis_input_{num_idx}"] = val_v
-                    
-                    st.success("Paket Draft Lengkap Berhasil Dimuat! ✅")
-                else:
-                    # JIKA FORMAT TEKS BIASA (Data Lama)
-                    st.session_state["vis_input_1"] = raw_string
-                    st.info("Data lama terdeteksi. Hanya Adegan 1 yang dipulihkan. ⚠️")
-                
-                # 3. Paksa Widget Reset agar data muncul di layar
-                st.session_state.restore_counter += 1 
-                st.rerun()
+    import json
+    try:
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        df_log = conn.read(worksheet="Sheet1", ttl="5s")
+        my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
+        
+        if not my_data.empty:
+            raw_data = my_data.iloc[-1]['Visual Utama']
+            if raw_data.startswith("{"):
+                paket = json.loads(raw_data)
+                # Kembalikan Karakter
+                st.session_state.c_name_1_input = paket.get("n1", "")
+                st.session_state.c_desc_1_input = paket.get("p1", "")
+                st.session_state.c_name_2_input = paket.get("n2", "")
+                st.session_state.c_desc_2_input = paket.get("p2", "")
+                # Kembalikan Semua Adegan
+                for k, v in paket.get("scenes", {}).items():
+                    st.session_state[f"vis_input_{k.replace('v', '')}"] = v
+                st.success("Semua data berhasil ditarik! ✅")
             else:
-                st.warning("Belum ada draft tersimpan di Google Sheets.")
-        except Exception as e:
-            st.error(f"Gagal membongkar draft: {e}")
+                st.session_state["vis_input_1"] = raw_data
+                st.warning("Hanya Adegan 1 yang ditemukan (Data Lama).")
+            st.session_state.restore_counter += 1
+            st.rerun()
+    except Exception as e:
+        st.error(f"Gagal tarik data: {e}")
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -527,40 +510,51 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & AUTO-DRAFT (ANTI-PANIK & FULL DATA RESTORE)
+# 10. GENERATOR PROMPT & AUTO-DRAFT (MEGA-CAPTURE VERSION)
 # ==============================================================================
-import json  # Penting untuk membungkus data
+import json 
 
 # 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# --- FITUR UTAMA: TOMBOL SIMPAN DRAFT (PAKET LENGKAP) ---
+# --- FITUR UTAMA: TOMBOL SIMPAN DRAFT (PAKET LENGKAP ANTI-REDUKSI) ---
 col_draft, col_empty = st.columns([4, 6])
 with col_draft:
     if st.button("💾 SIMPAN SEMUA ADEGAN & KARAKTER", use_container_width=True):
         try:
-            # 1. Bungkus SEMUA data ke dalam satu paket (Karakter + Semua Adegan)
+            # STRATEGI MEGA-CAPTURE: Ambil langsung dari memori session_state
+            # Agar adegan 2, 3, dst tidak tertinggal
+            
+            # 1. Kumpulkan semua visual adegan yang ada isinya
+            captured_scenes = {}
+            for i in range(1, int(num_scenes) + 1):
+                v_key = f"vis_input_{i}"
+                if v_key in st.session_state and st.session_state[v_key].strip() != "":
+                    captured_scenes[f"v{i}"] = st.session_state[v_key]
+
+            # 2. Bungkus SEMUA data (Identitas + Semua Adegan)
             draft_packet = {
-                "n1": st.session_state.c_name_1_input,
-                "p1": st.session_state.c_desc_1_input,
-                "n2": st.session_state.c_name_2_input,
-                "p2": st.session_state.c_desc_2_input,
-                # Ambil semua visual adegan yang sudah diketik
-                "scenes": {f"v{i+1}": a["visual"] for i, a in enumerate(adegan_storage)}
+                "n1": st.session_state.get("c_name_1_input", ""),
+                "p1": st.session_state.get("c_desc_1_input", ""),
+                "n2": st.session_state.get("c_name_2_input", ""),
+                "p2": st.session_state.get("c_desc_2_input", ""),
+                "scenes": captured_scenes
             }
             
-            # 2. Ubah jadi teks (String) agar bisa masuk ke 1 kolom Google Sheets
+            # 3. Ubah jadi teks (JSON String)
             packet_string = json.dumps(draft_packet)
             
-            # 3. Kirim ke Google Sheets lewat fungsi record_to_sheets
-            # Kita beri tanda DRAFT_ agar admin tahu ini simpanan sementara
-            record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(adegan_storage))
-            st.toast("Semua Adegan & Karakter Berhasil Dikunci ke Cloud! ✅")
+            # 4. Kirim ke Google Sheets
+            # Pastikan fungsi record_to_sheets di Bagian 3 tidak memotong teks [:150]
+            record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(captured_scenes))
+            
+            st.toast(f"Berhasil! {len(captured_scenes)} Adegan & Karakter telah aman di Cloud. ✅")
+            
         except Exception as e:
             st.error(f"Gagal mengemas draft: {e}")
 
-st.write("") # Spasi kecil
+st.write("")
 
 # 2. PROSES GENERATE (Saat tombol diklik)
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
@@ -694,6 +688,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
