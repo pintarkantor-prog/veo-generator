@@ -652,54 +652,50 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: DYNAMIC PROGRESS TABS)
+# AREA TAMPILAN HASIL (VERSION: SIDEBAR WORKFLOW MAP)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
     
-    # 1. Hitung Progress untuk Motivasi Staf
-    total = len(st.session_state.last_generated_results)
-    done_count = sum(1 for res in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{res['id']}", False))
-    progress = done_count / total
-    
-    col_t, col_p = st.columns([2, 1])
-    with col_t:
-        st.markdown(f"### 📋 Antrean Adegan ({done_count}/{total})")
-    with col_p:
-        st.progress(progress) # Bar progress otomatis di atas
-    
-    # 2. Buat Tab untuk tiap adegan
-    # Nama tab akan berubah otomatis jika sudah dicentang
-    tab_names = []
-    for res in st.session_state.last_generated_results:
-        is_done = st.session_state.get(f"mark_done_{res['id']}", False)
-        prefix = "✅" if is_done else "🎬"
-        tab_names.append(f"{prefix} Adegan {res['id']}")
-    
-    tabs = st.tabs(tab_names) # Membuat barisan tab di atas
-
-    for i, res in enumerate(st.session_state.last_generated_results):
-        with tabs[i]:
+    # 1. SIDEBAR PROGRESS TRACKER
+    with st.sidebar:
+        st.markdown("### 🗺️ Status Produksi")
+        st.caption("Gunakan ini untuk melacak progress copy-paste.")
+        
+        # Buat penanda di sidebar untuk setiap adegan
+        for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
             if done_key not in st.session_state:
                 st.session_state[done_key] = False
             
-            # Tampilan dalam Tab
-            st.write("")
-            c1, c2 = st.columns(2)
-            with c1:
-                st.caption("📸 PROMPT GAMBAR (STATIC)")
-                st.code(res['img'], language="text")
-            with c2:
-                st.caption("🎥 PROMPT VIDEO (MOTION)")
-                st.code(res['vid'], language="text")
-            
-            # Saklar Utama (Checkbox)
-            if st.checkbox("Tandai adegan ini kalau udah selesai dibuat!", key=done_key):
-                if not st.session_state[done_key]: # Jika baru saja dicentang
-                    st.rerun() # Refresh biar judul Tab di atas berubah jadi centang hijau
-            
-            # Info tambahan biar nggak bingung
-            if st.session_state[done_key]:
-                st.success(f"Adegan {res['id']} sudah aman! Pindah ke tab berikutnya. 🚀")
+            # Checkbox di sidebar yang langsung merespon ke area utama
+            st.checkbox(f"Adegan {res['id']}", key=done_key)
+        
+        # Hitung Persentase
+        total = len(st.session_state.last_generated_results)
+        done_count = sum(1 for res in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{res['id']}", False))
+        st.write(f"**Progress: {done_count}/{total}**")
+        st.progress(done_count / total)
 
+    # 2. AREA UTAMA (FOKUS PROMPT)
+    st.markdown("### 🎬 Daftar Prompt Siap Copy")
+    
+    for res in st.session_state.last_generated_results:
+        done_key = f"mark_done_{res['id']}"
+        
+        # Jika sudah dicentang di sidebar, area ini akan meredup/hilang
+        if st.session_state[done_key]:
+            with st.expander(f"✅ Adegan {res['id']} (Selesai)", expanded=False):
+                st.code(res['img'])
+                st.code(res['vid'])
+        else:
+            with st.container():
+                st.subheader(f"🚀 Adegan {res['id']}")
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.caption("📸 PROMPT GAMBAR")
+                    st.code(res['img'], language="text")
+                with c2:
+                    st.caption("🎥 PROMPT VIDEO")
+                    st.code(res['vid'], language="text")
+                st.divider()
