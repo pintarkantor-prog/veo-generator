@@ -652,7 +652,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: AUTO-MARK AFTER COPY)
+# AREA TAMPILAN HASIL (VERSION: TRUE ONE-CLICK COPY & MARK)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
@@ -660,42 +660,50 @@ if st.session_state.last_generated_results:
     st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
 
     for res in st.session_state.last_generated_results:
-        # 1. Inisialisasi State Penanda
         done_key = f"mark_done_{res['id']}"
         if done_key not in st.session_state:
             st.session_state[done_key] = False
 
-        # 2. Penentuan Tampilan Berdasarkan Status
-        if st.session_state[done_key]:
-            header_label = f"✅ ADEGAN {res['id']} (SUDAH DI-COPY)"
-            box_color = "rgba(40, 167, 69, 0.1)" # Hijau transparan
-        else:
-            header_label = f"🎬 ADEGAN {res['id']}"
-            box_color = "transparent"
-
-        # 3. Render Box dengan Style Khusus
+        # --- TAMPILAN HEADER ---
+        header_color = "#28a745" if st.session_state[done_key] else "#31333f"
+        header_text = f"✅ ADEGAN {res['id']} (COPIED)" if st.session_state[done_key] else f"🎬 ADEGAN {res['id']}"
+        
         st.markdown(f"""
-            <div style="background-color: {box_color}; padding: 15px; border-radius: 10px; border: 1px solid #31333f; margin-bottom: 10px;">
-                <h3 style="margin: 0;">{header_label}</h3>
+            <div style="background-color: {header_color}; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <h4 style="margin: 0; color: white;">{header_text}</h4>
             </div>
         """, unsafe_allow_html=True)
 
         c1, c2 = st.columns(2)
+        
+        # --- KOLOM 1: PROMPT GAMBAR ---
         with c1:
             st.caption("📸 PROMPT GAMBAR")
             st.code(res['img'], language="text")
-            # Tombol Penanda Pengganti Otomatis
-            if st.button(f"Copy Prompt Gambar {res['id']}", key=f"btn_img_{res['id']}"):
+            # Tombol Sakti: Copy + Tandai
+            if st.button(f"📋 Copy & Mark Done (Img {res['id']})", key=f"btn_img_{res['id']}", use_container_width=True):
+                # JS untuk Copy ke Clipboard
+                st.components.v1.html(f"""
+                    <script>
+                    navigator.clipboard.writeText(`{res['img']}`);
+                    </script>
+                """, height=0)
                 st.session_state[done_key] = True
                 st.rerun()
                 
+        # --- KOLOM 2: PROMPT VIDEO ---
         with c2:
             st.caption("🎥 PROMPT VIDEO")
             st.code(res['vid'], language="text")
-            # Tombol Penanda Pengganti Otomatis
-            if st.button(f"Copy Prompt Video {res['id']}", key=f"btn_vid_{res['id']}"):
+            # Tombol Sakti: Copy + Tandai
+            if st.button(f"📋 Copy & Mark Done (Vid {res['id']})", key=f"btn_vid_{res['id']}", use_container_width=True):
+                # JS untuk Copy ke Clipboard
+                st.components.v1.html(f"""
+                    <script>
+                    navigator.clipboard.writeText(`{res['vid']}`);
+                    </script>
+                """, height=0)
                 st.session_state[done_key] = True
                 st.rerun()
         
         st.divider()
-
