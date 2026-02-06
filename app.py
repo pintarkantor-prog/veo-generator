@@ -289,7 +289,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (LENGKAP DENGAN SAVE/RESTORE DIALOG)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + DOUBLE NOTIF SUCCESS)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
@@ -335,10 +335,9 @@ with st.sidebar:
                 # 1. Ambil Visual yang terisi
                 captured_scenes = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
                 
-                # 2. Ambil SEMUA Dialog (Looping semua kemungkinan dialog)
+                # 2. Ambil SEMUA Dialog
                 captured_dialogs = {}
                 for i_s in range(1, int(num_scenes) + 1):
-                    # Kita asumsikan max 6 tokoh sesuai limit number_input kamu
                     for i_char in range(7): 
                         d_key = f"diag_{i_s}_{i_char}"
                         if d_key in st.session_state and st.session_state[d_key]:
@@ -350,10 +349,13 @@ with st.sidebar:
                     "n2": st.session_state.get("c_name_2_input", ""), 
                     "p2": st.session_state.get("c_desc_2_input", ""),
                     "scenes": captured_scenes,
-                    "dialogs": captured_dialogs # Masuk koper!
+                    "dialogs": captured_dialogs 
                 }
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
-                st.toast("Draft & Dialog Disimpan! ✅", icon="💾")
+                
+                # TITIP PESAN SUKSES SAVE
+                st.session_state["sidebar_success_msg"] = "Berhasil Disimpan! ✅"
+                st.rerun()
             except Exception as e:
                 st.error(f"Gagal simpan: {str(e)}")
 
@@ -385,22 +387,23 @@ with st.sidebar:
                         for d_key, d_text in data.get("dialogs", {}).items():
                             st.session_state[d_key] = d_text
                         
-                        st.session_state["restore_success_msg"] = "Semua Data & Dialog Berhasil Dipulihkan! 🔄"
+                        # TITIP PESAN SUKSES RESTORE
+                        st.session_state["sidebar_success_msg"] = "Berhasil Dipulihkan! 🔄"
                         st.session_state.restore_counter += 1
                         st.rerun()
                     else:
                         st.session_state["vis_input_1"] = raw_data
-                        st.session_state["restore_success_msg"] = "Data Lama Dipulihkan ke Adegan 1! ⚠️"
+                        st.session_state["sidebar_success_msg"] = "Data Lama Dipulihkan ke Adegan 1! ⚠️"
                         st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
                 st.error(f"Gagal koneksi: {str(e)}")
 
-    # --- MENAMPILKAN NOTIFIKASI RESTORE BERHASIL ---
-    if "restore_success_msg" in st.session_state:
-        st.success(st.session_state["restore_success_msg"])
-        del st.session_state["restore_success_msg"]
+    # --- MENAMPILKAN NOTIFIKASI SUKSES (DARI SAVE ATAU RESTORE) ---
+    if "sidebar_success_msg" in st.session_state:
+        st.success(st.session_state["sidebar_success_msg"])
+        del st.session_state["sidebar_success_msg"]
 
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 # ==============================================================================
@@ -660,6 +663,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
