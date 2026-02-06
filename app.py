@@ -435,7 +435,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - ANTI-HILANG & FULL MAPPING)
+# 10. GENERATOR PROMPT (FULL MEGA STRUCTURE - ANTI-ERROR & ANTI-HILANG)
 # ==============================================================================
 
 # 1. Siapkan Lemari Penyimpanan (Jika belum ada)
@@ -559,27 +559,22 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
-    st.success(f"Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
+    st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
 
     for res in st.session_state.last_generated_results:
-        st.subheader(f"✅ Hasil Adegan {res['id']}")
+        st.subheader(f"🎬 Hasil Adegan {res['id']}")
         
         c1, c2 = st.columns(2)
         with c1:
             st.caption("📸 PROMPT GAMBAR (STATIC)")
-            st.code(res['img'], language="text")
-            if st.button(f"📋 Salin Gambar {res['id']}", key=f"btn_copy_img_{res['id']}", use_container_width=True):
-                st.copy_to_clipboard(res['img'])
-                st.toast(f"Gambar Adegan {res['id']} Tersalin! ✅")
+            st.code(res['img'], language="text") # Salin lewat ikon pojok kanan kotak ini
 
         with c2:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
-            st.code(res['vid'], language="text")
-            if st.button(f"📋 Salin Video {res['id']}", key=f"btn_copy_vid_{res['id']}", use_container_width=True):
-                st.copy_to_clipboard(res['vid'])
-                st.toast(f"Video Adegan {res['id']} Tersalin! ✅")
+            st.code(res['vid'], language="text") # Salin lewat ikon pojok kanan kotak ini
         
         st.divider()
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
