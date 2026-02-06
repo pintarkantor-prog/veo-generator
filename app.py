@@ -278,7 +278,6 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DRAFT TITLE)
 # ==============================================================================
 with st.sidebar:
-    st.title("📸 PINTAR MEDIA")
     
     # --- A. LOGIKA ADMIN (Hanya tampil untuk admin) ---
     if st.session_state.active_user == "admin":
@@ -637,6 +636,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
