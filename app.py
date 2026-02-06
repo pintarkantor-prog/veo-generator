@@ -203,22 +203,10 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 # ==============================================================================
-# 5. HEADER STAF (AUTO-FIXED BY CSS)
+# 5. HEADER STAF (CLEAN & MINIMALIST)
 # ==============================================================================
-# Elemen ini otomatis akan diam di atas karena CSS nth-child(1) di atas
-col_staf, col_logout = st.columns([8, 2])
-
-with col_staf:
-    nama_display = st.session_state.active_user.capitalize()
-    st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
-
-with col_logout:
-    if st.button("Logout 🚪", use_container_width=True, key="btn_logout_fix"):
-        st.query_params.clear()
-        st.session_state.logged_in = False
-        st.session_state.active_user = ""
-        st.session_state.last_generated_results = []
-        st.rerun()
+nama_display = st.session_state.active_user.capitalize()
+st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
         
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -708,6 +696,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
