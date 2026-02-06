@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (CLEAN & STABLE VERSION)
+# 0. SISTEM LOGIN TUNGGAL (ANTI-LOGOUT SAAT REFRESH)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -14,21 +14,21 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
-# --- 1. FITUR AUTO-LOGIN ---
+# --- 1. FITUR AUTO-LOGIN (Cek URL saat Refresh) ---
 if 'active_user' not in st.session_state:
+    # Ambil parameter 'u' (user) dari URL jika ada
     q_user = st.query_params.get("u")
     if q_user in USER_PASSWORDS:
         st.session_state.active_user = q_user
 
-# --- 2. LAYAR LOGIN (Versi Bersih Tanpa CSS Ribet) ---
+# --- 2. LAYAR LOGIN (Muncul jika benar-benar belum login) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
-    st.write("")
-    st.write("")
-    
-    # Gunakan Container bawaan agar rapi
-    with st.container():
+    placeholder = st.empty()
+    with placeholder.container():
+        st.write("")
+        st.write("")
         _, col_login, _ = st.columns([1, 2, 1])
         
         with col_login:
@@ -36,36 +36,37 @@ if 'active_user' not in st.session_state:
             st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
             st.write("---")
             
-            # Inputan Standar (Teks Hitam di atas Putih, Jelas!)
-            user_input = st.text_input("Username", placeholder="Ketik nama user...")
-            pass_input = st.text_input("Password", type="password", placeholder="••••••••")
+            user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
+            pass_input = st.text_input("Password", type="password")
             
-            st.write("")
             if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
                 user_clean = user_input.lower().strip()
                 
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                    # Simpan status
+                    # TITIPKAN USER KE URL AGAR TIDAK HILANG SAAT REFRESH
                     st.query_params["u"] = user_clean
                     st.session_state.active_user = user_clean
                     
-                    # Notif Sukses yang Jelas
-                    st.success(f"✅ Akses Diterima! Selamat bekerja, {user_clean.capitalize()}.")
-                    
-                    with st.spinner("Membuka ruang kerja..."):
-                        import time
-                        time.sleep(3.0)
-                    
+                    placeholder.empty() 
+                    with placeholder.container():
+                        st.write("")
+                        st.write("")
+                        st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
+                        st.markdown("<p style='text-align: center; color: gray;'>Menyiapkan dashboard...</p>", unsafe_allow_html=True)
+                        _, col_spin, _ = st.columns([2, 1, 2])
+                        with col_spin:
+                            with st.spinner(""):
+                                import time
+                                time.sleep(3.0) 
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
-            
             st.write("---")
-            st.caption("<p style='text-align: center;'>© 2026 PINTAR MEDIA Production • Secure Access</p>", unsafe_allow_html=True)
-
+            st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
     st.stop() 
 
-# --- 3. KONFIGURASI DASHBOARD (WIDE) ---
+# --- 3. SETELAH LOGIN ---
 st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
@@ -702,6 +703,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
