@@ -26,15 +26,22 @@ if 'active_user' not in st.session_state:
         st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
         st.write("---")
         
-        user_input = st.selectbox("Pilih User", list(USER_PASSWORDS.keys()))
+        # DROPLIST SUDAH DIHAPUS, GANTI JADI INPUT KETIK BIASA
+        user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
         pass_input = st.text_input("Password", type="password")
         
         if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
-            if pass_input == USER_PASSWORDS.get(user_input):
-                st.session_state.active_user = user_input
+            # Kita buat case-insensitive (huruf kecil semua) agar input lebih fleksibel
+            user_clean = user_input.lower().strip()
+            
+            if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                st.session_state.active_user = user_clean
                 st.rerun()
             else:
-                st.error("❌ Password salah.")
+                st.error("❌ Username atau Password salah.")
+        
+        st.write("---")
+        st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
     st.stop() 
 
 # --- 2. SETELAH LOGIN (Ubah layout jadi WIDE otomatis) ---
@@ -683,6 +690,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
