@@ -606,7 +606,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
-    st.markdown(f"### 🎬 Antrean Prompt: {st.session_state.active_user.capitalize()}")
+    st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}")
     st.caption("Klik ikon copy di kotak teks, lalu ceklis status di sidebar kiri.")
     
     for res in st.session_state.last_generated_results:
@@ -633,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
