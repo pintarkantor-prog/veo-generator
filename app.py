@@ -392,7 +392,7 @@ def global_sync_v920():
         pass
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL RESTORE & AUTO-SYNC VERSION)
+# 9. FORM INPUT ADEGAN (FULL VERSION - FIXED INDENTATION & AUTO-SYNC)
 # ==============================================================================
 
 # 1. Inisialisasi Counter & Memori (WAJIB ADA)
@@ -407,36 +407,24 @@ with col_res:
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
             df_log = conn.read(worksheet="Sheet1", ttl="5s")
-            
-            # Cari data terakhir milik user aktif
             my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
             
             if not my_data.empty:
                 raw_data = my_data.iloc[-1]['Visual Utama']
-                
-                # --- LOGIKA PEMBONGKAR PAKET ---
                 if raw_data.strip().startswith("{"):
                     data = json.loads(raw_data)
-                    
-                    # 1. Pulihkan Identitas Tokoh
                     st.session_state.c_name_1_input = data.get("n1", "")
                     st.session_state.c_desc_1_input = data.get("p1", "")
                     st.session_state.c_name_2_input = data.get("n2", "")
                     st.session_state.c_desc_2_input = data.get("p2", "")
-                    
-                    # 2. Pulihkan Semua Visual Adegan
                     scenes_data = data.get("scenes", {})
                     for key_v, val_v in scenes_data.items():
                         num_idx = key_v.replace('v', '')
                         st.session_state[f"vis_input_{num_idx}"] = val_v
-                    
                     st.success("Seluruh Adegan & Karakter Berhasil Dimuat! ✅")
                 else:
-                    # Logika data lama (teks biasa)
                     st.session_state["vis_input_1"] = raw_data
                     st.info("Data lama terdeteksi. Hanya Adegan 1 yang dipulihkan. ⚠️")
-                
-                # 3. Paksa Widget Reset agar data muncul di layar
                 st.session_state.restore_counter += 1 
                 st.rerun()
             else:
@@ -446,34 +434,29 @@ with col_res:
 
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (FULL VERSION - NO REDUCTION) ---
+# --- IDENTITAS TOKOH (UTUH) ---
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
-    
     with col_c1:
         st.markdown("### Karakter 1")
-        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}", placeholder="Contoh: UDIN")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
+        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}")
+        c_p1_v = st.text_area("Fisik Karakter 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
-    
     with col_c2:
         st.markdown("### Karakter 2")
-        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}", placeholder="Contoh: TUNG")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
+        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
+        c_p2_v = st.text_area("Fisik Karakter 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
     all_chars_list = [{"name": c_n1_v, "desc": c_p1_v}, {"name": c_n2_v, "desc": c_p2_v}]
-
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
             with extra_cols[ex_idx - 2]:
-                st.markdown(f"### Karakter {ex_idx + 1}")
                 kn, kp = f"ex_name_{ex_idx}", f"ex_phys_{ex_idx}"
-                if kn not in st.session_state: st.session_state[kn] = ""
-                ex_name = st.text_input(f"Nama Karakter {ex_idx+1}", value=st.session_state[kn], key=f"w_en_{ex_idx}_{st.session_state.restore_counter}")
+                ex_name = st.text_input(f"Nama Karakter {ex_idx+1}", value=st.session_state.get(kn, ""), key=f"w_en_{ex_idx}_{st.session_state.restore_counter}")
                 ex_phys = st.text_area(f"Fisik Karakter {ex_idx+1}", value=st.session_state.get(kp, ""), key=f"w_ep_{ex_idx}_{st.session_state.restore_counter}", height=100)
                 st.session_state[kn], st.session_state[kp] = ex_name, ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
@@ -484,42 +467,29 @@ count = st.session_state.restore_counter
 
 for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
-    
     with st.expander(l_box_title, expanded=(i_s == 1)):
         col_v, col_ctrl = st.columns([6.5, 3.5])
-        
         with col_v:
             v_key = f"vis_input_{i_s}"
             visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state.get(v_key, ""), key=f"w_vis_{i_s}_{count}", height=180)
             st.session_state[v_key] = visual_input
         
-with col_ctrl:
-            # --- BARIS 1: CAHAYA & GERAK ---
+        with col_ctrl:
             r1, r2 = st.columns(2), st.columns(2)
-            
-            with r1[0]:
-                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                # Ambil index dari m_light (Master)
-                idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
-                st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
-            
-            with r1[1]:
-                st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
-                idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
-                st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
-            
-            # --- BARIS 2: SHOT & ANGLE ---
-            with r2[0]:
-                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
-                idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
-                st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
-            
-            with r2[1]:
-                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
-                idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
-                st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+            # CAHAYA
+            idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
+            l_val = r1[0].selectbox(f"💡 L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
+            # GERAK
+            idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
+            c_val = r1[1].selectbox(f"🎥 C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
+            # SHOT
+            idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
+            s_val = r2[0].selectbox(f"📐 S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
+            # ANGLE
+            idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
+            a_val = r2[1].selectbox(f"✨ A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
 
-        # --- DIALOG --- (Tetap utuh seperti kodemu)
+        # --- BAGIAN DIALOG (INDENTASI DIPERBAIKI) ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -530,10 +500,8 @@ with col_ctrl:
                 st.session_state[d_key] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
-        # Ambil data terbaru langsung dari session_state untuk Generate
         adegan_storage.append({
-            "num": i_s, 
-            "visual": visual_input, 
+            "num": i_s, "visual": visual_input, 
             "light": st.session_state.get(f"l_i_{i_s}_{count}", st.session_state.m_light),
             "cam": st.session_state.get(f"c_i_{i_s}_{count}", st.session_state.m_cam),
             "shot": st.session_state.get(f"s_i_{i_s}_{count}", st.session_state.m_shot),
@@ -717,6 +685,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
