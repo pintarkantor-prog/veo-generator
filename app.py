@@ -275,7 +275,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (POSISI FIX SESUAI GAMBAR)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DRAFT TITLE)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
@@ -305,27 +305,25 @@ with st.sidebar:
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM (Sesuai Posisi Gambar) ---
-    # 1. Input Jumlah Adegan
+    # --- B. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
-    # 2. 🗺️ STATUS PRODUKSI (MENGGANTIKAN PROGRESS MERAH)
+    # STATUS PRODUKSI
     if st.session_state.last_generated_results:
         st.divider()
         st.markdown("### 🗺️ STATUS PRODUKSI")
         st.caption("Tandai jika sudah di-copy ke AI:")
         
-        # Checkbox mapping
         for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
             if done_key not in st.session_state:
                 st.session_state[done_key] = False
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
-        # Progress Bar Baru (Tanpa teks statistik yang mengganggu)
+        # Progress Bar Minimalis
         total_p = len(st.session_state.last_generated_results)
         done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
-        st.write("") # Spacer
+        st.write("") 
         st.progress(done_p / total_p)
         
         if done_p == total_p:
@@ -334,11 +332,10 @@ with st.sidebar:
 
     st.divider()
 
-    # --- C. DRAFT MANAGEMENT (SAVE & RESTORE) ---
-    st.markdown("### 💾 Draft Management")
+    # --- C. BUTTONS ONLY (TANPA JUDUL DRAFT MANAGEMENT) ---
     c_s, c_r = st.columns(2)
     with c_s:
-        if st.button("💾 SAVE DATA", use_container_width=True):
+        if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
                 captured_scenes = {}
@@ -356,7 +353,7 @@ with st.sidebar:
             except: st.error("Gagal simpan")
 
     with c_r:
-        if st.button("🔄 RESTORE DATA", use_container_width=True):
+        if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -642,4 +639,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
