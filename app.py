@@ -477,15 +477,20 @@ vid_quality_stack = (
     "smooth motion, professional cinematography, masterpiece quality."
 )
 
+# --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
 no_text_strict = (
     "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
     "NO captions, NO speech bubbles, NO labels, NO black bars, NO grain, NO blur."
 )
 
+negative_motion_strict = (
+    "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
+    "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+)
+
 # --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
 img_quality_base = f"{img_quality_stack} {no_text_strict}"
-vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict}"
-
+vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict} {negative_motion_strict}"
 # ==============================================================================
 # 9. FORM INPUT ADEGAN (FIXED: ANTI-HILANG & AUTO-SYNC)
 # ==============================================================================
@@ -738,6 +743,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
