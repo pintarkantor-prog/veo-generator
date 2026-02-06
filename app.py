@@ -363,7 +363,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (ANTI-HILANG SAAT REFRESH)
+# 9. FORM INPUT ADEGAN (FULL MEGA STRUCTURE - ANTI-HILANG 100% REFRESH)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -373,20 +373,27 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     
     with col_c1:
         st.markdown("### Karakter 1")
-        # Inisialisasi memori jika kosong
-        if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
-        if "c_desc_1_input" not in st.session_state: st.session_state.c_desc_1_input = ""
+        # Inisialisasi State Karakter 1
+        if "c_name_1_input" not in st.session_state: st.session_state["c_name_1_input"] = ""
+        if "c_desc_1_input" not in st.session_state: st.session_state["c_desc_1_input"] = ""
         
-        c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", key="c_desc_1_input", height=100)
+        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state["c_name_1_input"], key="c_name_1_widget")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state["c_desc_1_input"], key="c_desc_1_widget", height=100)
+        # Update State
+        st.session_state["c_name_1_input"] = c_n1_v
+        st.session_state["c_desc_1_input"] = c_p1_v
     
     with col_c2:
         st.markdown("### Karakter 2")
-        if "c_name_2_input" not in st.session_state: st.session_state.c_name_2_input = ""
-        if "c_desc_2_input" not in st.session_state: st.session_state.c_desc_2_input = ""
+        # Inisialisasi State Karakter 2
+        if "c_name_2_input" not in st.session_state: st.session_state["c_name_2_input"] = ""
+        if "c_desc_2_input" not in st.session_state: st.session_state["c_desc_2_input"] = ""
         
-        c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", key="c_desc_2_input", height=100)
+        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state["c_name_2_input"], key="c_name_2_widget")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=st.session_state["c_desc_2_input"], key="c_desc_2_widget", height=100)
+        # Update State
+        st.session_state["c_name_2_input"] = c_n2_v
+        st.session_state["c_desc_2_input"] = c_p2_v
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
@@ -395,20 +402,23 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
     all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
 
-    # Karakter Tambahan
+    # --- KARAKTER TAMBAHAN DENGAN MEMORI ---
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
-                # Memori untuk karakter tambahan
-                k_name = f"ex_name_{ex_idx}"
-                k_phys = f"ex_phys_{ex_idx}"
-                if k_name not in st.session_state: st.session_state[k_name] = ""
-                if k_phys not in st.session_state: st.session_state[k_phys] = ""
+                k_name_state = f"ex_name_val_{ex_idx}"
+                k_phys_state = f"ex_phys_val_{ex_idx}"
                 
-                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=k_name)
-                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=k_phys, height=100)
+                if k_name_state not in st.session_state: st.session_state[k_name_state] = ""
+                if k_phys_state not in st.session_state: st.session_state[k_phys_state] = ""
+                
+                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", value=st.session_state[k_name_state], key=f"ex_name_w_{ex_idx}")
+                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", value=st.session_state[k_phys_state], key=f"ex_phys_w_{ex_idx}", height=100)
+                
+                st.session_state[k_name_state] = ex_name
+                st.session_state[k_phys_state] = ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
 # --- LIST ADEGAN ---
@@ -421,10 +431,15 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            # MEMORI VISUAL: Agar ketikan tidak hilang saat refresh
-            v_key = f"vis_input_{i_s}"
-            if v_key not in st.session_state: st.session_state[v_key] = ""
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=v_key, height=180)
+            v_key_state = f"vis_val_{i_s}"
+            if v_key_state not in st.session_state: st.session_state[v_key_state] = ""
+            
+            # PAKSA VALUE MENGAMBIL DARI STATE
+            visual_input = st.text_area(f"Visual Adegan {i_s}", 
+                                        value=st.session_state[v_key_state], 
+                                        key=f"vis_widget_{i_s}", 
+                                        height=180)
+            st.session_state[v_key_state] = visual_input
         
         with col_ctrl:
             r1_c1, r1_c2 = st.columns(2)
@@ -447,21 +462,24 @@ for i_s in range(1, int(num_scenes) + 1):
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # Dialog Dinamis (Juga Anti-Hilang)
+        # --- DIALOG DINAMIS DENGAN MEMORI ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_key = f"diag_{i_s}_{i_char}"
-                if d_key not in st.session_state: st.session_state[d_key] = ""
-                d_in = st.text_input(f"Dialog {char_label}", key=d_key)
+                d_key_state = f"diag_val_{i_s}_{i_char}"
+                
+                if d_key_state not in st.session_state: st.session_state[d_key_state] = ""
+                
+                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state[d_key_state], key=f"diag_w_{i_s}_{i_char}")
+                st.session_state[d_key_state] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
             "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
         })
-
+        
 # ==============================================================================
 # 10. GENERATOR PROMPT (FULL MEGA STRUCTURE - ANTI-ERROR & ANTI-HILANG)
 # ==============================================================================
@@ -605,6 +623,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
