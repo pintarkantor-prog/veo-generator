@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
-import pytz  #
+import pytz #
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -275,10 +275,9 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (FIXED: STATUS PRODUKSI & RESTORE SAKTI)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DRAFT TITLE)
 # ==============================================================================
 with st.sidebar:
-    st.title("📸 PINTAR MEDIA")
     
     # --- A. LOGIKA ADMIN (Hanya tampil untuk admin) ---
     if st.session_state.active_user == "admin":
@@ -299,16 +298,16 @@ with st.sidebar:
                         search = st.text_input("🔍 Filter Nama/Cerita", placeholder="Cari...")
                         df_show = df_a.iloc[::-1].copy()
                         if search:
-                            df_show = df_show[df_show['Visual Utama'].astype(str).str.contains(search, case=False, na=False) | 
-                                             df_show['User'].astype(str).str.contains(search, case=False, na=False)]
+                            df_show = df_show[df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
+                                             df_show['User'].str.contains(search, case=False, na=False)]
                         st.dataframe(df_show, use_container_width=True, hide_index=True)
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM (AKSES SEMUA USER) ---
+    # --- B. KONFIGURASI UMUM (SEKARANG DITARIK KELUAR AGAR SEMUA USER BISA LIHAT) ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # --- [STATUS PRODUKSI: SEJAJAR AGAR MUNCUL UNTUK ICHA/NISSA] ---
+    # STATUS PRODUKSI
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         st.caption("Tandai disini jika sudah selesai!:")
@@ -319,6 +318,7 @@ with st.sidebar:
                 st.session_state[done_key] = False
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
+        # Progress Bar Minimalis
         total_p = len(st.session_state.last_generated_results)
         done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
         st.write("") 
@@ -328,9 +328,7 @@ with st.sidebar:
             st.balloons()
             st.success("🎉 Selesai!")
 
-    st.divider()
-
-    # --- C. SAVE & RESTORE ---
+    # --- C. BUTTONS ONLY (TANPA JUDUL DRAFT MANAGEMENT) ---
     c_s, c_r = st.columns(2)
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
@@ -356,42 +354,22 @@ with st.sidebar:
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="5s")
-                
-                if not df_log.empty:
-                    df_log['User'] = df_log['User'].astype(str)
-                    df_log['Visual Utama'] = df_log['Visual Utama'].astype(str)
-                    
-                    # Filter data milik user (baik DRAFT_, AUTO_, atau nama biasa)
-                    user_tag = st.session_state.active_user
-                    my_data = df_log[df_log['User'].str.contains(user_tag, na=False)].copy()
-                    
-                    if not my_data.empty:
-                        raw_data = my_data.iloc[-1]['Visual Utama'].strip()
-                        
-                        # CEK APAKAH JSON (KOPER) ATAU BUKAN
-                        if raw_data.startswith("{"):
-                            data = json.loads(raw_data)
-                            st.session_state.c_name_1_input = data.get("n1", "")
-                            st.session_state.c_desc_1_input = data.get("p1", "")
-                            st.session_state.c_name_2_input = data.get("n2", "")
-                            st.session_state.c_desc_2_input = data.get("p2", "")
-                            
-                            scenes_data = data.get("scenes", {})
-                            for k, v in scenes_data.items():
-                                st.session_state[f"vis_input_{k.replace('v','')}"] = v
-                        else:
-                            # Jika teks biasa (1111111)
-                            st.session_state["vis_input_1"] = raw_data
-                        
-                        st.session_state.restore_counter += 1
-                        st.success("Data Pulih! ✅")
-                        st.rerun()
-                    else:
-                        st.warning("Data tidak ditemukan.")
-            except Exception as e: 
-                st.error(f"Gagal tarik: {e}")
-
+                my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
+                if not my_data.empty:
+                    raw_data = my_data.iloc[-1]['Visual Utama']
+                    data = json.loads(raw_data)
+                    st.session_state.c_name_1_input = data.get("n1", "")
+                    st.session_state.c_desc_1_input = data.get("p1", "")
+                    st.session_state.c_name_2_input = data.get("n2", "")
+                    st.session_state.c_desc_2_input = data.get("p2", "")
+                    for k, v in data.get("scenes", {}).items():
+                        st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                    st.session_state.restore_counter += 1
+                    st.rerun()
+            except: st.error("Gagal tarik data")
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
+
+# --- MULAI DARI SINI SEMUA DITARIK KE KIRI (RATA KIRI) AGAR ICHA & NISSA BISA LIHAT ---
 
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -434,7 +412,7 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
-        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
+        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
@@ -514,7 +492,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: AUTO-SAVE & APEX SHARPNESS)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
 # ==============================================================================
 import json
 
@@ -534,35 +512,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         nama_staf = st.session_state.active_user.capitalize()
         
-        # --- [SUNTIKAN AUTO-SAVE: BUNGKUS KOPER SEBELUM GENERATE] ---
-        try:
-            captured_scenes_auto = {}
-            for i_a in range(1, int(num_scenes) + 1):
-                v_k_auto = f"vis_input_{i_a}"
-                if v_k_auto in st.session_state and st.session_state[v_k_auto].strip() != "":
-                    captured_scenes_auto[f"v{i_a}"] = st.session_state[v_k_auto]
-            
-            auto_packet = {
-                "n1": st.session_state.get("c_name_1_input", ""), 
-                "p1": st.session_state.get("c_desc_1_input", ""),
-                "n2": st.session_state.get("c_name_2_input", ""), 
-                "p2": st.session_state.get("c_desc_2_input", ""),
-                "scenes": captured_scenes_auto
-            }
-            # Simpan dengan label AUTO_ agar RESTORE sakti bisa mengenali
-            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
-        except:
-            pass # Silent fail agar tidak menghambat staf jika Sheets sibuk
-        # -------------------------------------------------------------
-
-        with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K for {nama_staf}..."):
+        with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD (Log Utama Tetap Jalan)
+            # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK (TETAP UTUH) ---
+            # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = (
                 f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
@@ -571,7 +528,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             )
 
             for item in active_scenes:
-                # --- LOGIKA SMART CAMERA MOVEMENT (TETAP UTUH) ---
+                # --- LOGIKA SMART CAMERA MOVEMENT ---
                 vis_core = item["visual"]
                 vis_lower = vis_core.lower()
                 
@@ -587,7 +544,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else:
                     e_cam_move = camera_map.get(item["cam"], "Static")
 
-                # --- SMART ANCHOR TERAS (TETAP UTUH) ---
+                # --- SMART ANCHOR TERAS ---
                 vis_core_final = vis_core + " (Backrest fixed against the house wall, porch structure anchored)" if "teras" in vis_lower else vis_core
 
                 # Konversi Teknis
@@ -596,7 +553,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING (TETAP UTUH) ---
+                # --- LIGHTING MAPPING ---
                 if "Bening" in light_type:
                     l_cmd = "Hard sunlight photography, vivid high-contrast, realistic shadows, sharp optical clarity, color-graded foliage."
                 elif "Sejuk" in light_type:
@@ -614,11 +571,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else: # Suasana Sore
                     l_cmd = "4:00 PM sunset, long sharp high-contrast shadows, golden-indigo gradient, high-fidelity rim lighting."
 
-                # Logika Dialog (TETAP UTUH)
+                # Logika Dialog
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (TETAP UTUH) ---
+                # --- RAKIT PROMPT AKHIR ---
                 img_final = (
                     f"{master_lock_instruction} NO TEXT, Clean of any lettering, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
                     f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
@@ -640,5 +597,37 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Selesai & Data Tersimpan Otomatis! 🚀", icon="🎨")
+        st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
+# ==============================================================================
+# AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
+# ==============================================================================
+if st.session_state.last_generated_results:
+    st.divider()
+    st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
+    st.caption("⚠️ *Copy prompt ini, jangan lupa tandai di Status Produksi!*")
+    
+    for res in st.session_state.last_generated_results:
+        done_key = f"mark_done_{res['id']}"
+        
+        # LOGIKA: Cukup cek statusnya saja
+        is_done = st.session_state.get(done_key, False)
+        
+        if is_done:
+            # Jika SUDAH DICENTANG: Menciut (Collapse)
+            with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
+                st.info("Prompt ini sudah ditandai selesai di sidebar.")
+                st.code(res['img'], language="text")
+                st.code(res['vid'], language="text")
+        else:
+            # Jika BELUM DICENTANG: Terbuka lebar (Focus)
+            with st.container():
+                st.subheader(f"🚀 ADEGAN {res['id']}")
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.caption("📸 PROMPT GAMBAR")
+                    st.code(res['img'], language="text")
+                with c2:
+                    st.caption("🎥 PROMPT VIDEO")
+                    st.code(res['vid'], language="text")
+                st.divider()
