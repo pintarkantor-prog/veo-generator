@@ -3,6 +3,44 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
 import pytz #
+# ==============================================================================
+# 0. SMART LOGIN & URL CLEANER
+# ==============================================================================
+# Daftar Password Staf (Sesuaikan dengan data kamu)
+USER_PASSWORDS = {
+    "admin": "QWERTY21ab",
+    "icha": "udin99",
+    "nissa": "tung22",
+    "inggi": "udin33",
+    "lisa": "tung66"
+}
+
+# 1. Ambil data dari URL
+url_user = st.query_params.get("u")
+url_pass = st.query_params.get("p")
+
+# 2. Logika Validasi
+if url_user in USER_PASSWORDS:
+    # Cek apakah password di URL benar
+    if url_pass == USER_PASSWORDS[url_user]:
+        # Simpan ke session state agar login tetap awet
+        st.session_state.active_user = url_user
+        
+        # --- RAHASIA SAKTI: Bersihkan URL ---
+        # Kita set ulang query_params cuma nama user saja, password DIHAPUS
+        st.query_params.update({"u": url_user}) 
+        # (Parameter 'p' otomatis hilang dari tampilan browser saat rerun)
+        
+    elif 'active_user' not in st.session_state:
+        # Jika password salah dan belum login, stop aplikasi
+        st.error("🔒 Akses Ditolak: Password salah atau Link tidak valid.")
+        st.stop()
+else:
+    if 'active_user' not in st.session_state:
+        st.warning("Silakan gunakan tautan akses resmi.")
+        st.stop()
+
+# Jika sudah sampai sini, berarti user aman dan sudah login sebagai st.session_state.active_user
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -670,6 +708,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
