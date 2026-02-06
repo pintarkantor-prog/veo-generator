@@ -72,7 +72,7 @@ if 'active_user' not in st.session_state:
 # --- 3. PROTEKSI SESI (AUTO-LOGOUT 10 JAM) ---
 if 'active_user' in st.session_state and 'login_time' in st.session_state:
     selisih_detik = time.time() - st.session_state.login_time
-    if selisih_detik > 20: # 10 Jam
+    if selisih_detik > (10 * 60 * 60): # 10 Jam
         st.query_params.clear()
         for key in list(st.session_state.keys()):
             del st.session_state[key]
@@ -768,6 +768,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
