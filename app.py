@@ -652,15 +652,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: SIDEBAR WORKFLOW MAP)
+# AREA TAMPILAN HASIL (VERSION: SIDEBAR WORKFLOW MAP - PRODUCTION READY)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
     
-    # 1. SIDEBAR PROGRESS TRACKER
+    # 1. SIDEBAR PROGRESS TRACKER (Peta Kerja)
     with st.sidebar:
-        st.markdown("### 🗺️ Status Produksi")
-        st.caption("Gunakan ini untuk melacak progress copy-paste.")
+        st.markdown("### 🗺️ STATUS PRODUKSI")
+        st.write("Tandai jika sudah di-copy ke AI:")
         
         # Buat penanda di sidebar untuk setiap adegan
         for res in st.session_state.last_generated_results:
@@ -668,34 +668,45 @@ if st.session_state.last_generated_results:
             if done_key not in st.session_state:
                 st.session_state[done_key] = False
             
-            # Checkbox di sidebar yang langsung merespon ke area utama
+            # Checkbox minimalis di sidebar
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
-        # Hitung Persentase
+        st.divider()
+        # Hitung Persentase Progress
         total = len(st.session_state.last_generated_results)
         done_count = sum(1 for res in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{res['id']}", False))
-        st.write(f"**Progress: {done_count}/{total}**")
+        
+        st.markdown(f"**Progress: {done_count}/{total} Adegan**")
         st.progress(done_count / total)
+        
+        if done_count == total:
+            st.balloons()
+            st.success("🎉 Semua adegan selesai di-copy!")
 
     # 2. AREA UTAMA (FOKUS PROMPT)
-    st.markdown("### 🎬 Daftar Prompt Siap Copy")
+    st.markdown(f"### 🎬 Antrean Prompt: {st.session_state.active_user.capitalize()}")
+    st.caption("Klik ikon copy di pojok kanan kotak teks, lalu centang status di sidebar kiri.")
     
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
         
-        # Jika sudah dicentang di sidebar, area ini akan meredup/hilang
+        # LOGIKA: Jika SUDAH DICENTANG, adegan menciut (Collapse)
         if st.session_state[done_key]:
-            with st.expander(f"✅ Adegan {res['id']} (Selesai)", expanded=False):
-                st.code(res['img'])
-                st.code(res['vid'])
+            with st.expander(f"✅ ADEGAN {res['id']} (SELESAI)", expanded=False):
+                st.info("Prompt ini sudah ditandai selesai di sidebar.")
+                st.code(res['img'], language="text")
+                st.code(res['vid'], language="text")
+        
+        # LOGIKA: Jika BELUM DICENTANG, adegan terbuka lebar (Focus)
         else:
             with st.container():
-                st.subheader(f"🚀 Adegan {res['id']}")
+                st.subheader(f"🚀 ADEGAN {res['id']}")
                 c1, c2 = st.columns(2)
                 with c1:
-                    st.caption("📸 PROMPT GAMBAR")
+                    st.caption("📸 PROMPT GAMBAR (STATIC)")
                     st.code(res['img'], language="text")
                 with c2:
-                    st.caption("🎥 PROMPT VIDEO")
+                    st.caption("🎥 PROMPT VIDEO (MOTION)")
                     st.code(res['vid'], language="text")
                 st.divider()
+
