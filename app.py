@@ -156,28 +156,27 @@ st.markdown("""
 # ==============================================================================
 # 5. STICKY INFO BAR (GANTI TOTAL BAGIAN 5 LAMA DENGAN INI)
 # ==============================================================================
-with st.container():
-    # Memasukkan ke dalam div sticky-bar (CSS-nya sudah kamu pasang di Bagian 4 tadi)
-    st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
-    
-    col_staf, col_logout = st.columns([8, 2])
-    
-    with col_staf:
-        nama_display = st.session_state.active_user.capitalize()
-        # Menggunakan st.success agar lebih ramping dan warnanya segar
-        st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
+# Membungkus baris info staf dan logout
+st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
+col_staf, col_logout = st.columns([8, 2])
 
-    with col_logout:
-        # Tombol Logout sekarang sejajar dengan info staf
-        if st.button("Logout 🚪", use_container_width=True):
-            st.query_params.clear()
-            st.session_state.logged_in = False
-            st.session_state.active_user = ""
-            st.session_state.last_generated_results = []
-            st.rerun()
-            
-    st.markdown('</div>', unsafe_allow_html=True)
+with col_staf:
+    nama_display = st.session_state.active_user.capitalize()
+    st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
+with col_logout:
+    if st.button("Logout 🚪", use_container_width=True):
+        st.query_params.clear()
+        st.session_state.logged_in = False
+        st.session_state.active_user = ""
+        st.session_state.last_generated_results = []
+        st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
+
+# --- PENTING: Kasih spasi kosong agar konten di bawah tidak tertutup ---
+st.write("") 
+st.write("")
+st.write("")
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
@@ -721,6 +720,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
