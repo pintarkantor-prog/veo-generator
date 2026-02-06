@@ -19,7 +19,9 @@ st.set_page_config(
 USERS = {
     "admin": "QWERTY21ab",
     "icha": "udin99",
-    "nissa": "tung22"
+    "nissa": "tung22",
+    "inggi": "udin33",
+    "lisa": "tung66"    
 }
 
 # Inisialisasi session state (pastikan semua variabel ada)
@@ -631,4 +633,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
