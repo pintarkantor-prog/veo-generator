@@ -66,10 +66,10 @@ if not st.session_state.logged_in:
     st.stop()
     
 # ==============================================================================
-# 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE)
+# 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE - FIXED UTUH)
 # ==============================================================================
 def record_to_sheets(user, first_visual, total_scenes):
-    """Mencatat aktivitas dan membatasi log maksimal 100 baris"""
+    """Mencatat aktivitas dan menyimpan visual secara utuh agar bisa ditarik balik"""
     try:
         # 1. Koneksi
         conn = st.connection("gsheets", type=GSheetsConnection)
@@ -81,34 +81,27 @@ def record_to_sheets(user, first_visual, total_scenes):
         tz = pytz.timezone('Asia/Jakarta')
         current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         
-        # 4. Buat baris baru
+        # 4. Buat baris baru (Visual Utama disimpan UTUH tanpa dipotong [:150])
         new_row = pd.DataFrame([{
             "Waktu": current_time,
             "User": user,
             "Total Adegan": total_scenes,
-            "Visual Utama": first_visual[:150]
+            "Visual Utama": first_visual  # <--- SUDAH UTUH SEKARANG
         }])
         
         # 5. Gabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         
-        # 6. FITUR OTOMATIS HAPUS: Hanya simpan 300 data terakhir
-        if len(updated_df) > 150:
-            updated_df = updated_df.tail(150)
+        # 6. FITUR OTOMATIS HAPUS: Simpan 150-300 data terakhir
+        if len(updated_df) > 300:
+            updated_df = updated_df.tail(300)
         
         # 7. Update kembali ke Google Sheets
         conn.update(worksheet="Sheet1", data=updated_df)
         
     except Exception as e:
-        # Jika error, tampilkan pesan agar mudah didebug
-        st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
-        # 4. Buat baris baru (Teks Visual disimpan UTUH tanpa dipotong)
-        new_row = pd.DataFrame([{
-            "Waktu": current_time,
-            "User": user,
-            "Total Adegan": total_scenes,
-            "Visual Utama": first_visual  # <--- Hapus [:150] agar teks utuh tersimpan
-        }])
+        # Tampilkan pesan jika gagal agar mudah didebug
+        st.error(f"Gagal mencatat/menyimpan draft: {e}")
         
 # ==============================================================================
 # 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
@@ -663,6 +656,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
