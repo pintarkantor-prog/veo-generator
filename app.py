@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (CENTERED NOTIF)
+# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (PERFECT CENTERED NOTIF)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -17,7 +17,6 @@ USER_PASSWORDS = {
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
-    # Gunakan placeholder agar kita bisa "menghapus" form login saat sukses
     placeholder = st.empty()
     
     with placeholder.container():
@@ -39,19 +38,24 @@ if 'active_user' not in st.session_state:
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
                     st.session_state.active_user = user_clean
                     
-                    # --- BAGIAN NOTIF TENGAH LAYAR ---
-                    placeholder.empty() # Hapus form login
+                    # --- PROSES NOTIFIKASI TENGAH LAYAR ---
+                    placeholder.empty() 
                     with placeholder.container():
                         st.write("")
                         st.write("")
                         st.write("")
-                        st.success(f"### ✅ AKSES DITERIMA!")
-                        st.markdown(f"<h2 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h2>", unsafe_allow_html=True)
-                        st.markdown("<p style='text-align: center;'>Membuka Dashboard Utama...</p>", unsafe_allow_html=True)
+                        st.write("")
+                        # Teks "AKSES DITERIMA" dibuat Center dengan HTML
+                        st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
+                        st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
+                        st.markdown("<p style='text-align: center; color: gray;'>Sedang menyiapkan dashboard utama Anda...</p>", unsafe_allow_html=True)
                         
-                        with st.spinner(""):
-                            import time
-                            time.sleep(3.0) # Kamu bisa ubah durasi ini
+                        # Spinner ditaruh di kolom tengah agar simetris
+                        _, col_spin, _ = st.columns([2, 1, 2])
+                        with col_spin:
+                            with st.spinner(""):
+                                import time
+                                time.sleep(1.5) 
                         
                     st.rerun()
                 else:
@@ -706,6 +710,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
