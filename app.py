@@ -305,7 +305,7 @@ with st.sidebar:
         st.divider()
 
     # --- B. KONFIGURASI UMUM ---
-    num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=10)
+    num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
     # STATUS PRODUKSI
     if st.session_state.last_generated_results:
@@ -414,7 +414,7 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
-    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
+    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=6, value=2)
     st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
     all_chars_list = [{"name": c_n1_v, "desc": c_p1_v}, {"name": c_n2_v, "desc": c_p2_v}]
     if num_extra > 2:
@@ -633,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
