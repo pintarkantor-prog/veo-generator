@@ -682,11 +682,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 motion_boost = "Ensure natural subject movement. The scene is alive, with organic secondary motion and micro-expressions."
                 
                 vid_final = (
-                    f"{master_lock_instruction} 9:16 full-screen mobile video. "
-                    f"CINEMATIC MOTION: {e_shot_size}, {e_cam_move}. {motion_boost} " 
-                    f"ACTING & EMOTION: {emotion_ctx} "
-                    f"SUBJECT VISUAL: {vis_core_final}. "
-                    f"LIGHTING: {l_cmd}. {vid_quality_base}"
+                    f"{master_lock_instruction} " # 1. IDENTITAS (Kunci Karakter)
+                    f"9:16 VERTICAL CINEMATOGRAPHY. " # 2. FORMAT (Kunci Kanvas)
+                    f"CAMERA MOVEMENT: {e_shot_size}, {e_cam_move}. {motion_boost} " # 3. PERGERAKAN
+                    f"ACTING & ACTION: {vis_core_final}. {emotion_ctx} " # 4. CERITA & EMOSI
+                    f"ENVIRONMENT & LIGHTING: {l_cmd}. " # 5. ATMOSFER
+                    f"TECHNICAL SPEC: {vid_quality_base}" # 6. KUALITAS FINAL
                 )
 
                 # --- SIMPAN KE LEMARI ---
@@ -727,6 +728,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
