@@ -339,42 +339,39 @@ with st.sidebar:
             except:
                 st.error("Gagal simpan")
 
-    with c_r:
+with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="1s")
-                user_tag = st.session_state.active_user
                 
-                # Filter data milik user ini
-                my_data = df_log[df_log['User'].astype(str).str.contains(user_tag, na=False)]
+                # --- KUNCI RAHASIANYA DI SINI ---
+                # Kita cari baris yang User-nya mengandung kata "DRAFT_" + nama user
+                # Contoh: "DRAFT_icha" bukan "AUTO_icha" atau "icha"
+                user_draft_tag = f"DRAFT_{st.session_state.active_user}"
+                my_data = df_log[df_log['User'] == user_draft_tag]
                 
                 if not my_data.empty:
-                    # Ambil data terbaru (paling bawah)
+                    # Ambil SAVE-an terakhir yang sengaja disimpan
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     
-                    # LOGIKA PENERJEMAH MULTI-FORMAT
                     if raw_data.startswith("{"):
-                        # JIKA FORMAT BARU (JSON/KOPER)
                         data = json.loads(raw_data)
                         st.session_state.c_name_1_input = data.get("n1", "")
                         st.session_state.c_desc_1_input = data.get("p1", "")
                         st.session_state.c_name_2_input = data.get("n2", "")
                         st.session_state.c_desc_2_input = data.get("p2", "")
-                        
                         for k, v in data.get("scenes", {}).items():
                             st.session_state[f"vis_input_{k.replace('v','')}"] = v
                     else:
-                        # JIKA FORMAT LAMA (TEKS BIASA)
-                        # Masukkan saja ke Adegan 1 biar tidak error
                         st.session_state["vis_input_1"] = raw_data
                     
                     st.session_state.restore_counter += 1
-                    st.toast("Data Berhasil Dipulihkan! 🔄")
+                    st.toast("Draft Berhasil Dipulihkan! 🔄")
                     st.rerun()
                 else:
-                    st.error("Data tidak ditemukan")
+                    st.error("Kamu belum pernah klik tombol SAVE.")
             except Exception as e:
                 st.error(f"Gagal tarik: {str(e)}")
 
@@ -636,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
