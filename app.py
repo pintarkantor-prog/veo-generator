@@ -435,7 +435,7 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - WITH PERSONALIZED LOADING & NOTIF)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE - WITH PERSONALIZED LOADING, NOTIF & COPY BUTTON)
 # ==============================================================================
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
@@ -544,15 +544,24 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 with c1:
                     st.caption("📸 PROMPT GAMBAR (STATIC)")
                     st.code(img_final, language="text")
+                    # Tombol Salin Gambar
+                    if st.button(f"📋 Salin Gambar {scene_id}", key=f"btn_copy_img_{scene_id}", use_container_width=True):
+                        st.copy_to_clipboard(img_final)
+                        st.toast(f"Gambar Adegan {scene_id} Tersalin! ✅")
+
                 with c2:
                     st.caption(f"🎥 PROMPT VIDEO ({e_shot_size} + {e_cam_move})")
                     st.code(vid_final, language="text")
+                    # Tombol Salin Video
+                    if st.button(f"📋 Salin Video {scene_id}", key=f"btn_copy_vid_{scene_id}", use_container_width=True):
+                        st.copy_to_clipboard(vid_final)
+                        st.toast(f"Video Adegan {scene_id} Tersalin! ✅")
                 
                 st.divider()
 
-        # --- NOTIFIKASI TOAST DINAMIS (DI LUAR SPINNER) ---
+        # --- NOTIFIKASI TOAST DINAMIS ---
         if st.session_state.active_user == "admin":
-            pesan_toast = "Prompt Berhasil Dibuat!🚀"
+            pesan_toast = "Prompt Berhasil Dibuat! 🚀"
         else:
             pesan_toast = f"Kerjaan {nama_staf} Berhasil Dibuat! 🚀"
             
@@ -561,6 +570,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
