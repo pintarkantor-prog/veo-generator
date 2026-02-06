@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (HALAMAN DEPAN)
+# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -14,6 +14,7 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
+# --- 1. CEK LOGIN (Jika belum login, tampilkan halaman login centered) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
@@ -25,54 +26,64 @@ if 'active_user' not in st.session_state:
         st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
         st.write("---")
         
-        # Input Login
         user_input = st.selectbox("Pilih User", list(USER_PASSWORDS.keys()))
         pass_input = st.text_input("Password", type="password")
         
         if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
             if pass_input == USER_PASSWORDS.get(user_input):
-                st.session_state.active_user = user_input # Kunci login disimpan di sini
+                st.session_state.active_user = user_input
                 st.rerun()
             else:
                 st.error("❌ Password salah.")
-    st.stop()
+    st.stop() 
 
-# ==============================================================================
-# 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
-# ==============================================================================
+# --- 2. SETELAH LOGIN (Ubah layout jadi WIDE otomatis) ---
 st.set_page_config(
     page_title="PINTAR MEDIA - Storyboard Generator",
+    page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (SINKRONISASI MEMORI TOTAL)
+# 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
 # ==============================================================================
-USERS = {
-    "admin": "QWERTY21ab",
-    "icha": "udin99",
-    "nissa": "tung22",
-    "inggi": "udin33",
-    "lisa": "tung66"
-}
+active_user = st.session_state.active_user # Kunci identitas tunggal
 
-# --- 1. INISIALISASI DASAR ---
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
-if 'active_user' not in st.session_state:
-    st.session_state.active_user = ""
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# --- 2. BOOKING MEMORI UNTUK INPUT (AGAR ANTI-HILANG SAAT REFRESH) ---
-# Kita amankan input Tokoh
+# Ambil data Identitas Tokoh
 if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
 if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
 if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
 if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
 
-# Kita amankan input Adegan (v1 sampai v50) secara otomatis
+# Ambil data Adegan (v1 sampai v50)
+for i in range(1, 51):
+    for key, default in [
+        (f"vis_input_{i}", ""),
+        (f"light_input_{i}", "Bening dan Tajam"),
+        (f"camera_input_{i}", "Ikuti Karakter"),
+        (f"shot_input_{i}", "Setengah Badan"),
+        (f"angle_input_{i}", "Normal (Depan)")
+    ]:
+        if key not in st.session_state: st.session_state[key] = default
+# ==============================================================================
+# 2. SISTEM LOGIN & DATABASE USER (SINKRONISASI MEMORI TOTAL)
+# ==============================================================================
+# (Variabel USERS boleh tetap ada atau dihapus karena sudah ada di Bagian 0)
+
+# --- 1. INISIALISASI DASAR (KITA SEDERHANAKAN) ---
+if 'last_generated_results' not in st.session_state:
+    st.session_state.last_generated_results = []
+
+# --- 2. BOOKING MEMORI UNTUK INPUT (TETAP PERTAHANKAN INI) ---
+if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
+if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
+if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
+if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
+
 for i in range(1, 51):
     vk = f"vis_input_{i}"
     lk = f"light_input_{i}"
@@ -85,32 +96,8 @@ for i in range(1, 51):
     if sk not in st.session_state: st.session_state[sk] = "Setengah Badan"
     if ak not in st.session_state: st.session_state[ak] = "Normal (Depan)"
 
-# --- 3. FITUR ANTI-REFRESH URL ---
-query_params = st.query_params
-if not st.session_state.logged_in:
-    if "u" in query_params and "p" in query_params:
-        u_param = query_params["u"]
-        p_param = query_params["p"]
-        if u_param in USERS and USERS[u_param] == p_param:
-            st.session_state.logged_in = True
-            st.session_state.active_user = u_param
-
-# --- 4. LAYAR LOGIN ---
-if not st.session_state.logged_in:
-    st.title("🔐 PINTAR MEDIA - AKSES PRODUKSI")
-    with st.form("form_login_staf"):
-        input_user = st.text_input("Username")
-        input_pass = st.text_input("Password", type="password")
-        if st.form_submit_button("Masuk Ke Sistem"):
-            if input_user in USERS and USERS[input_user] == input_pass:
-                st.session_state.logged_in = True
-                st.session_state.active_user = input_user
-                st.query_params["u"] = input_user
-                st.query_params["p"] = input_pass
-                st.rerun()
-            else:
-                st.error("Username atau Password Salah!")
-    st.stop()
+# --- 3. KUNCI AKSES (HANYA SATU BARIS) ---
+active_user = st.session_state.active_user
     
 # ==============================================================================
 # 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE - FULL DATA)
@@ -696,6 +683,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
