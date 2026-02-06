@@ -272,7 +272,7 @@ with st.sidebar:
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
-                df_a = conn_a.read(worksheet="Sheet1", ttl=1m)
+                df_a = conn_a.read(worksheet="Sheet1", ttl="1m")
                 
                 if not df_a.empty:
                     # --- 1. METRIK PERFORMANCE ---
@@ -672,6 +672,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
