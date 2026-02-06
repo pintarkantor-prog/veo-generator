@@ -274,7 +274,6 @@ with st.sidebar:
                             df_show['User'].str.contains(search, case=False, na=False)
                         ]
 
-                    st.write(f"📂 **Arsip Produksi ({len(df_show)}):**")
                     st.dataframe(
                         df_show, 
                         use_container_width=True,
@@ -561,6 +560,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
