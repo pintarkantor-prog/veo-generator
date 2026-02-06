@@ -438,36 +438,6 @@ img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
-# 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
-# ==============================================================================
-def global_sync_v920():
-    """Menyamakan setelan Master Control (Adegan 1) ke semua adegan secara otomatis"""
-    try:
-        count = st.session_state.get("restore_counter", 0)
-        
-        # Ambil nilai dari widget Adegan 1 (Master)
-        # Nama key di sini HARUS sama dengan key di selectbox (l_i, c_i, s_i, a_i)
-        lt1 = st.session_state.get(f"l_i_1_{count}")
-        cm1 = st.session_state.get(f"c_i_1_{count}")
-        sh1 = st.session_state.get(f"s_i_1_{count}")
-        an1 = st.session_state.get(f"a_i_1_{count}")
-
-        # Update Master State Global
-        st.session_state.m_light = lt1
-        st.session_state.m_cam = cm1
-        st.session_state.m_shot = sh1
-        st.session_state.m_angle = an1
-
-        # Sebarkan ke adegan 2 sampai seterusnya
-        for i in range(2, int(num_scenes) + 1):
-            st.session_state[f"l_i_{i}_{count}"] = lt1
-            st.session_state[f"c_i_{i}_{count}"] = cm1
-            st.session_state[f"s_i_{i}_{count}"] = sh1
-            st.session_state[f"a_i_{i}_{count}"] = an1
-    except:
-        pass
-
-# ==============================================================================
 # 9. FORM INPUT ADEGAN (FULL VERSION - CLEAN UI & AUTO-SYNC)
 # ==============================================================================
 
@@ -526,17 +496,15 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 1: CAHAYA & GERAK ---
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                # HAPUS index=idx_l, biarkan session_state yang pegang kendali
+                # Hapus on_change agar tidak otomatis ganti adegan lain
                 st.selectbox(f"L{i_s}", options_lighting, 
                              key=f"l_i_{i_s}_{count}", 
-                             on_change=(global_sync_v920 if i_s == 1 else None),
                              label_visibility="collapsed")
             
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 st.selectbox(f"C{i_s}", indonesia_camera, 
                              key=f"c_i_{i_s}_{count}", 
-                             on_change=(global_sync_v920 if i_s == 1 else None),
                              label_visibility="collapsed")
             
             # --- BARIS 2: SHOT & ANGLE ---
@@ -544,14 +512,12 @@ for i_s in range(1, int(num_scenes) + 1):
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 st.selectbox(f"S{i_s}", indonesia_shot, 
                              key=f"s_i_{i_s}_{count}", 
-                             on_change=(global_sync_v920 if i_s == 1 else None),
                              label_visibility="collapsed")
             
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 st.selectbox(f"A{i_s}", indonesia_angle, 
                              key=f"a_i_{i_s}_{count}", 
-                             on_change=(global_sync_v920 if i_s == 1 else None),
                              label_visibility="collapsed")
 
         # --- BAGIAN DIALOG (INDENTASI DIPERBAIKI) ---
@@ -701,3 +667,4 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
