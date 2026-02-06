@@ -153,24 +153,26 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 5. HEADER STAF (DIPAKSA STICKY OLEH CSS BAGIAN 4)
+# 5. HEADER APLIKASI (VERSI STABIL & RAPI)
 # ==============================================================================
-# Pastikan kode ini adalah kode pertama yang muncul di bawah Bagian 4
-header_col1, header_col2 = st.columns([8, 2])
+# Pakai kolom agar Staf Aktif dan Logout sejajar dalam satu baris
+c_header1, c_header2 = st.columns([8, 2])
 
-with header_col1:
+with c_header1:
     nama_display = st.session_state.active_user.capitalize()
+    # Pake st.success karena lebih tipis daripada st.info
     st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
-with header_col2:
-    if st.button("Logout 🚪", use_container_width=True, key="main_logout"):
+with c_header2:
+    # Tombol Logout sejajar dengan teks
+    if st.button("Logout 🚪", use_container_width=True):
         st.query_params.clear()
         st.session_state.logged_in = False
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
 
-st.divider() # Sebagai batas visual
+st.divider() # Garis pembatas tipis agar rapi
 
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -715,6 +717,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
