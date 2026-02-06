@@ -651,20 +651,42 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
-# 3. AREA TAMPILAN
+# ==============================================================================
+# AREA TAMPILAN HASIL (MODIFIED: DENGAN INDIKATOR SELESAI)
+# ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
     st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
 
+    # Looping hasil generate
     for res in st.session_state.last_generated_results:
-        st.subheader(f"🎬 Hasil Adegan {res['id']}")
-        c1, c2 = st.columns(2)
-        with c1:
-            st.caption("📸 PROMPT GAMBAR (STATIC)")
-            st.code(res['img'], language="text")
-        with c2:
-            st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
-            st.code(res['vid'], language="text")
-        st.divider()
+        # 1. Bikin ID penanda unik tiap adegan biar nggak tertukar
+        done_key = f"mark_done_{res['id']}"
+        if done_key not in st.session_state:
+            st.session_state[done_key] = False
+
+        # 2. Logika Judul: Kalau sudah dicentang, judul berubah warna/simbol
+        if st.session_state[done_key]:
+            status_header = f"✅ ADEGAN {res['id']} (SELESAI)"
+        else:
+            status_header = f"🎬 HASIL ADEGAN {res['id']}"
+
+        # 3. Tampilkan Box Adegan
+        with st.container():
+            st.subheader(status_header)
+            
+            c1, c2 = st.columns(2)
+            with c1:
+                st.caption("📸 PROMPT GAMBAR (STATIC)")
+                st.code(res['img'], language="text")
+            with c2:
+                st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
+                st.code(res['vid'], language="text")
+            
+            # 4. Tombol Penanda (Ini kuncinya!)
+            st.checkbox("Sudah di-copy ke AI", key=done_key)
+            
+            st.divider()
+
 
