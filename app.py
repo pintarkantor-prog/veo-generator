@@ -172,10 +172,7 @@ with col_logout:
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
-
-# --- GANJALAN (PENTING) ---
-# Beri jarak agar Form Karakter di bawahnya tidak tertutup
-st.divider()
+        
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
@@ -719,6 +716,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
