@@ -574,7 +574,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: LEAN & SHARP)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: CHARACTER ANCHOR FIXED)
 # ==============================================================================
 import json
 
@@ -601,10 +601,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK (Kunci Identitas Karakter) ---
-            # Mengambil nama dan fisik karakter agar konsisten
+            # --- LOGIKA MASTER LOCK (Kunci Identitas Sesuai Keinginan Dian) ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
-            master_lock_instruction = f"STRICT CHARACTER FIDELITY. Consistent appearances for: {char_defs}. "
+            
+            # Kalimat Sakti untuk mengunci ingatan AI terhadap foto yang diupload sekali di awal
+            master_lock_instruction = (
+                f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
+                f"Do not deviate from these visuals: {char_defs}. "
+                f"Use the previously provided image references as the absolute visual anchor for faces and clothing. "
+            )
 
             for item in active_scenes:
                 # --- LOGIKA SMART CAMERA MOVEMENT ---
@@ -655,13 +660,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 emotion_ctx = f"Expression: reacting to '{d_all_text}'. " if d_all_text else ""
 
                 # --- RAKIT PROMPT AKHIR ---
+                # Menggunakan master_lock_instruction di awal setiap adegan
                 img_final = (
-                    f"{master_lock_instruction} Professional photo, 9:16 vertical. {e_angle_cmd} {emotion_ctx} "
-                    f"Visual: {vis_core_final}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
+                    f"{master_lock_instruction} create a STATIC high-quality photograph, 9:16 vertical. "
+                    f"{e_angle_cmd} {emotion_ctx} Visual: {vis_core_final}. "
+                    f"Atmosphere: {l_cmd}. {img_quality_base} --ar 9:16"
                 )
                 
                 vid_final = (
-                    f"{master_lock_instruction} Cinematic video 9:16. {e_shot_size} {e_cam_move}. "
+                    f"{master_lock_instruction} 9:16 full-screen mobile video. {e_shot_size} {e_cam_move}. "
                     f"{emotion_ctx} Visual: {vis_core_final}. Lighting: {l_cmd}. {vid_quality_base}"
                 )
 
@@ -691,6 +698,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
