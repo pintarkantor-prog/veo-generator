@@ -605,7 +605,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 if st.session_state.last_generated_results:
     st.divider()
     st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
-    st.caption("💡Copy prompt ini, jangan lupa tandai di Status Produksi!")
+    st.caption("⚠️ *Copy prompt ini, jangan lupa tandai di Status Produksi!*")
     
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
@@ -631,3 +631,4 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
