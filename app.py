@@ -526,30 +526,27 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & AUTO-DRAFT (MEGA-CAPTURE VERSION)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (FULL VERSION - UTUH TANPA POTONGAN)
 # ==============================================================================
-import json 
+import json # <--- WAJIB ADA di paling atas blok ini
 
 # 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# --- FITUR UTAMA: TOMBOL SIMPAN DRAFT (PAKET LENGKAP ANTI-REDUKSI) ---
+# --- FITUR UTAMA: TOMBOL SIMPAN DRAFT (MEGA-CAPTURE KE KOLOM D) ---
 col_draft, col_empty = st.columns([4, 6])
 with col_draft:
-    if st.button("💾 SIMPAN SEMUA ADEGAN & KARAKTER", use_container_width=True):
+    if st.button("💾 SIMPAN SEMUA DATA & KARAKTER", use_container_width=True):
         try:
-            # STRATEGI MEGA-CAPTURE: Ambil langsung dari memori session_state
-            # Agar adegan 2, 3, dst tidak tertinggal
-            
-            # 1. Kumpulkan semua visual adegan yang ada isinya
+            # 1. SCANNING MEMORI: Ambil semua visual dari adegan 1 sampai terakhir
             captured_scenes = {}
             for i in range(1, int(num_scenes) + 1):
                 v_key = f"vis_input_{i}"
                 if v_key in st.session_state and st.session_state[v_key].strip() != "":
                     captured_scenes[f"v{i}"] = st.session_state[v_key]
 
-            # 2. Bungkus SEMUA data (Identitas + Semua Adegan)
+            # 2. BUNGKUS KOPER: Masukkan Nama, Fisik, dan Semua Adegan ke satu paket
             draft_packet = {
                 "n1": st.session_state.get("c_name_1_input", ""),
                 "p1": st.session_state.get("c_desc_1_input", ""),
@@ -558,14 +555,14 @@ with col_draft:
                 "scenes": captured_scenes
             }
             
-            # 3. Ubah jadi teks (JSON String)
+            # 3. CONVERT: Ubah koper data menjadi teks string JSON
             packet_string = json.dumps(draft_packet)
             
-            # 4. Kirim ke Google Sheets
-            # Pastikan fungsi record_to_sheets di Bagian 3 tidak memotong teks [:150]
+            # 4. KIRIM: Masukkan teks tersebut ke Google Sheets (Kolom Visual Utama)
+            # Pastikan fungsi record_to_sheets di Bagian 3 sudah kamu update juga!
             record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(captured_scenes))
             
-            st.toast(f"Berhasil! {len(captured_scenes)} Adegan & Karakter telah aman di Cloud. ✅")
+            st.toast(f"Berhasil! {len(captured_scenes)} adegan & karakter masuk ke Cloud. ✅")
             
         except Exception as e:
             st.error(f"Gagal mengemas draft: {e}")
@@ -704,6 +701,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
