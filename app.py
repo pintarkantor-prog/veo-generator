@@ -277,36 +277,11 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (FIXED: STATUS PRODUKSI UNTUK SEMUA)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DRAFT TITLE)
 # ==============================================================================
 with st.sidebar:
-    st.title("📸 PINTAR MEDIA")
     
-    # --- [PINDAH KE PALING ATAS: STATUS PRODUKSI UNTUK SEMUA USER] ---
-    if st.session_state.last_generated_results:
-        st.markdown("### 🗺️ STATUS PRODUKSI")
-        st.caption("Tandai disini jika sudah selesai!:")
-        
-        # Hitung Progress
-        total_p = len(st.session_state.last_generated_results)
-        done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
-        
-        # Tampilkan Checkbox
-        for res in st.session_state.last_generated_results:
-            done_key = f"mark_done_{res['id']}"
-            if done_key not in st.session_state:
-                st.session_state[done_key] = False
-            st.checkbox(f"Adegan {res['id']}", key=done_key)
-        
-        st.write("") 
-        st.progress(done_p / total_p)
-        
-        if done_p == total_p:
-            st.balloons()
-            st.success("🎉 Selesai!")
-        st.divider()
-
-    # --- A. LOGIKA ADMIN (Hanya Dashboard Log) ---
+    # --- A. LOGIKA ADMIN (Hanya tampil untuk admin) ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -325,25 +300,52 @@ with st.sidebar:
                         search = st.text_input("🔍 Filter Nama/Cerita", placeholder="Cari...")
                         df_show = df_a.iloc[::-1].copy()
                         if search:
-                            df_show = df_show[df_show['Visual Utama'].astype(str).str.contains(search, case=False, na=False) | 
-                                             df_show['User'].astype(str).str.contains(search, case=False, na=False)]
+                            df_show = df_show[df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
+                                             df_show['User'].str.contains(search, case=False, na=False)]
                         st.dataframe(df_show, use_container_width=True, hide_index=True)
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM ---
+    # --- B. KONFIGURASI UMUM (SEKARANG DITARIK KELUAR AGAR SEMUA USER BISA LIHAT) ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    st.divider()
+    # STATUS PRODUKSI
+    if st.session_state.last_generated_results:
+        st.markdown("### 🗺️ STATUS PRODUKSI")
+        st.caption("Tandai disini jika sudah selesai!:")
+        
+        for res in st.session_state.last_generated_results:
+            done_key = f"mark_done_{res['id']}"
+            if done_key not in st.session_state:
+                st.session_state[done_key] = False
+            st.checkbox(f"Adegan {res['id']}", key=done_key)
+        
+        # Progress Bar Minimalis
+        total_p = len(st.session_state.last_generated_results)
+        done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
+        st.write("") 
+        st.progress(done_p / total_p)
+        
+        if done_p == total_p:
+            st.balloons()
+            st.success("🎉 Selesai!")
 
-    # --- C. SAVE & RESTORE ---
+    # --- C. BUTTONS ONLY (TANPA JUDUL DRAFT MANAGEMENT) ---
     c_s, c_r = st.columns(2)
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                captured_scenes = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
-                draft_packet = {"n1": st.session_state.get("c_name_1_input"), "p1": st.session_state.get("c_desc_1_input"), "n2": st.session_state.get("c_name_2_input"), "p2": st.session_state.get("c_desc_2_input"), "scenes": captured_scenes}
+                captured_scenes = {}
+                for i in range(1, int(num_scenes) + 1):
+                    v_key = f"vis_input_{i}"
+                    if v_key in st.session_state and st.session_state[v_key].strip() != "":
+                        captured_scenes[f"v{i}"] = st.session_state[v_key]
+                draft_packet = {
+                    "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                    "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                    "scenes": captured_scenes
+                }
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
                 st.toast("Draft Tersimpan! ✅")
             except: st.error("Gagal simpan")
@@ -354,27 +356,23 @@ with st.sidebar:
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="5s")
-                if not df_log.empty:
-                    df_log['User'] = df_log['User'].astype(str)
-                    df_log['Visual Utama'] = df_log['Visual Utama'].astype(str)
-                    user_tag = st.session_state.active_user
-                    my_data = df_log[df_log['User'].str.contains(user_tag, na=False)].copy()
-                    if not my_data.empty:
-                        raw_data = my_data.iloc[-1]['Visual Utama'].strip()
-                        if raw_data.startswith("{"):
-                            data = json.loads(raw_data)
-                            st.session_state.c_name_1_input = data.get("n1", ""); st.session_state.c_desc_1_input = data.get("p1", "")
-                            st.session_state.c_name_2_input = data.get("n2", ""); st.session_state.c_desc_2_input = data.get("p2", "")
-                            scenes_data = data.get("scenes", {})
-                            for k, v in scenes_data.items():
-                                st.session_state[f"vis_input_{k.replace('v','')}"] = v
-                        else:
-                            st.session_state["vis_input_1"] = raw_data
-                        st.session_state.restore_counter += 1
-                        st.rerun()
-            except: st.error("Gagal tarik")
-
+                my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
+                if not my_data.empty:
+                    raw_data = my_data.iloc[-1]['Visual Utama']
+                    data = json.loads(raw_data)
+                    st.session_state.c_name_1_input = data.get("n1", "")
+                    st.session_state.c_desc_1_input = data.get("p1", "")
+                    st.session_state.c_name_2_input = data.get("n2", "")
+                    st.session_state.c_desc_2_input = data.get("p2", "")
+                    for k, v in data.get("scenes", {}).items():
+                        st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                    st.session_state.restore_counter += 1
+                    st.rerun()
+            except: st.error("Gagal tarik data")
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
+
+# --- MULAI DARI SINI SEMUA DITARIK KE KIRI (RATA KIRI) AGAR ICHA & NISSA BISA LIHAT ---
+
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -400,6 +398,8 @@ vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_s
 # 1. Inisialisasi Counter & Memori (WAJIB ADA untuk sinkronisasi)
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
+
+# --- BAGIAN TOMBOL RESTORE SUDAH PINDAH KE SIDEBAR (BAGIAN 7) ---
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -494,7 +494,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: FULL AUTO-SAVE)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
 # ==============================================================================
 import json
 
@@ -513,34 +513,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
         nama_staf = st.session_state.active_user.capitalize()
-
-        # --- [BLOCK AUTO-SAVE: SEBELUM GENERATE MULAI] ---
-        try:
-            captured_scenes_auto = {}
-            for i_a in range(1, int(num_scenes) + 1):
-                v_k_auto = f"vis_input_{i_a}"
-                if v_k_auto in st.session_state and st.session_state[v_k_auto].strip() != "":
-                    captured_scenes_auto[f"v{i_a}"] = st.session_state[v_k_auto]
-            
-            auto_packet = {
-                "n1": st.session_state.get("c_name_1_input", ""), 
-                "p1": st.session_state.get("c_desc_1_input", ""),
-                "n2": st.session_state.get("c_name_2_input", ""), 
-                "p2": st.session_state.get("c_desc_2_input", ""),
-                "scenes": captured_scenes_auto
-            }
-            # Simpan paket lengkap (JSON) ke Cloud agar Restore bisa menarik SEMUA adegan
-            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
-        except:
-            pass 
-        # ------------------------------------------------
         
         with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD UTAMA (Sekarang mengirim paket lengkap, bukan cuma adegan[0])
-            record_to_sheets(st.session_state.active_user, json.dumps(auto_packet), len(active_scenes))
+            # LOGGING CLOUD
+            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
@@ -620,7 +599,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Berhasil & Cadangan Otomatis Disimpan! 🚀", icon="🎨")
+        st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
@@ -654,4 +633,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
