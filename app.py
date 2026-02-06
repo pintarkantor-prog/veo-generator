@@ -277,11 +277,12 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (FIXED RESTORE LOGIC)
+# 7. SIDEBAR: KONFIGURASI UTAMA (ANTI-ERROR & GLOBAL ACCESS)
 # ==============================================================================
 with st.sidebar:
+    st.title("📸 PINTAR MEDIA")
     
-    # --- A. LOGIKA ADMIN (Hanya tampil untuk admin) ---
+    # --- A. LOGIKA ADMIN ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -300,16 +301,17 @@ with st.sidebar:
                         search = st.text_input("🔍 Filter Nama/Cerita", placeholder="Cari...")
                         df_show = df_a.iloc[::-1].copy()
                         if search:
-                            df_show = df_show[df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
-                                             df_show['User'].str.contains(search, case=False, na=False)]
+                            # Gunakan astype(str) agar tidak eror accessor
+                            df_show = df_show[df_show['Visual Utama'].astype(str).str.contains(search, case=False, na=False) | 
+                                             df_show['User'].astype(str).str.contains(search, case=False, na=False)]
                         st.dataframe(df_show, use_container_width=True, hide_index=True)
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM ---
+    # --- B. KONFIGURASI UMUM (PASTIKAN SEJAJAR KE KIRI) ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # STATUS PRODUKSI
+    # --- [STATUS PRODUKSI] ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         st.caption("Tandai disini jika sudah selesai!:")
@@ -320,7 +322,6 @@ with st.sidebar:
                 st.session_state[done_key] = False
             st.checkbox(f"Adegan {res['id']}", key=done_key)
         
-        # Progress Bar Minimalis
         total_p = len(st.session_state.last_generated_results)
         done_p = sum(1 for r in st.session_state.last_generated_results if st.session_state.get(f"mark_done_{r['id']}", False))
         st.write("") 
@@ -330,7 +331,9 @@ with st.sidebar:
             st.balloons()
             st.success("🎉 Selesai!")
 
-    # --- C. BUTTONS ONLY (SAVE & RESTORE) ---
+    st.divider()
+
+    # --- C. SAVE & RESTORE ---
     c_s, c_r = st.columns(2)
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
@@ -357,35 +360,38 @@ with st.sidebar:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="5s")
                 
-                # Kita cari semua baris yang mengandung nama user (icha, DRAFT_icha, AUTO_icha)
-                my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)].copy()
-                
-                # Kita ambil hanya data yang berformat JSON (Draft/Auto)
-                my_data = my_data[my_data['Visual Utama'].str.startswith("{", na=False)]
-                
-                if not my_data.empty:
-                    # Ambil yang paling terbaru (baris terakhir)
-                    raw_data = my_data.iloc[-1]['Visual Utama']
-                    data = json.loads(raw_data)
+                if not df_log.empty:
+                    # Paksa semua jadi string dulu biar gak error .str accessor
+                    df_log['User'] = df_log['User'].astype(str)
+                    df_log['Visual Utama'] = df_log['Visual Utama'].astype(str)
                     
-                    # Isi kembali session state
-                    st.session_state.c_name_1_input = data.get("n1", "")
-                    st.session_state.c_desc_1_input = data.get("p1", "")
-                    st.session_state.c_name_2_input = data.get("n2", "")
-                    st.session_state.c_desc_2_input = data.get("p2", "")
+                    # Filter data milik user ini (baik DRAFT_ maupun AUTO_)
+                    user_tag = st.session_state.active_user
+                    my_data = df_log[df_log['User'].str.contains(user_tag, na=False)].copy()
                     
-                    scenes_data = data.get("scenes", {})
-                    for k, v in scenes_data.items():
-                        # key 'v1' jadi 'vis_input_1'
-                        st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                    # Filter hanya yang format JSON
+                    my_data = my_data[my_data['Visual Utama'].str.startswith("{", na=False)]
                     
-                    st.session_state.restore_counter += 1
-                    st.success("Draft Berhasil Dipulihkan! ✅")
-                    st.rerun()
+                    if not my_data.empty:
+                        raw_data = my_data.iloc[-1]['Visual Utama']
+                        data = json.loads(raw_data)
+                        
+                        st.session_state.c_name_1_input = data.get("n1", "")
+                        st.session_state.c_desc_1_input = data.get("p1", "")
+                        st.session_state.c_name_2_input = data.get("n2", "")
+                        st.session_state.c_desc_2_input = data.get("p2", "")
+                        
+                        for k, v in data.get("scenes", {}).items():
+                            st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                        
+                        st.session_state.restore_counter += 1
+                        st.rerun()
+                    else:
+                        st.warning("Data cadangan tidak ditemukan.")
                 else:
-                    st.warning("Tidak ditemukan data cadangan.")
+                    st.warning("Database kosong.")
             except Exception as e: 
-                st.error(f"Gagal tarik data: {e}")
+                st.error(f"Gagal tarik: {e}")
 
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 
@@ -672,4 +678,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
