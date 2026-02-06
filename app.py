@@ -236,13 +236,13 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION PRO DASHBOARD)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: COMMAND CENTER PRO)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
-        st.header("📊 Admin Monitor")
+        st.header("🎮 Admin Command Center")
         
-        show_log = st.checkbox("Buka Dashboard Produksi")
+        show_log = st.checkbox("Buka Dashboard Monitoring")
         
         if show_log:
             try:
@@ -250,51 +250,61 @@ with st.sidebar:
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 
                 if not df_a.empty:
-                    # --- BAGIAN STATISTIK (HIGHLIGHTS) ---
+                    # --- 1. RINGKASAN PERFORMA (KPI) ---
                     total_prod = len(df_a)
-                    # Menghitung total adegan yang sudah dibuat
-                    total_scenes_made = df_a["Total Adegan"].sum()
+                    user_counts = df_a["User"].value_counts()
                     
-                    col_m1, col_m2 = st.columns(2)
-                    with col_m1:
-                        st.metric("Total Log", f"{total_prod}")
-                    with col_m2:
-                        st.metric("Total Adegan", f"{total_scenes_made}")
+                    st.markdown("### 📈 Ringkasan")
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        st.metric("Total Produksi", total_prod)
+                    with c2:
+                        # Menampilkan siapa yang paling banyak generate
+                        top_user = user_counts.idxmax() if not user_counts.empty else "-"
+                        st.metric("Staf Teraktif", top_user)
                     
+                    # --- 2. FITUR SEARCH (CANGGIH) ---
                     st.markdown("---")
+                    search_query = st.text_input("🔍 Cari Visual / Staf", placeholder="Contoh: Udin...")
                     
-                    # --- TABEL AKTIVITAS TERBARU ---
-                    st.write("📂 **Aktivitas Terbaru:**")
+                    # --- 3. TABEL AKTIVITAS ---
                     df_show = df_a.iloc[::-1] # Terbaru di atas
                     
+                    # Filter data berdasarkan search
+                    if search_query:
+                        df_show = df_show[
+                            df_show['Visual Utama'].str.contains(search_query, case=False, na=False) | 
+                            df_show['User'].str.contains(search_query, case=False, na=False)
+                        ]
+
+                    st.write(f"📂 **Log Aktivitas ({len(df_show)}):**")
                     st.dataframe(
                         df_show, 
                         use_container_width=True,
                         hide_index=True,
                         column_config={
-                            "Waktu": st.column_config.TextColumn("⏰ Waktu"),
+                            "Waktu": st.column_config.TextColumn("⏰ Jam"),
                             "User": st.column_config.TextColumn("👤 Staf"),
-                            "Total Adegan": st.column_config.NumberColumn("🎬 Jml"),
-                            "Visual Utama": st.column_config.TextColumn("📝 Visual")
+                            "Total Adegan": st.column_config.NumberColumn("🎬"),
+                            "Visual Utama": st.column_config.TextColumn("📝 Inti Cerita")
                         }
                     )
                     
-                    # --- TOMBOL ACTION ---
-                    st.divider()
-                    if st.button("🗑️ Reset Database Log", use_container_width=True):
+                    # --- 4. TOMBOL BERSIHKAN ---
+                    if st.button("🗑️ Reset Semua Log", use_container_width=True):
                         empty_df = pd.DataFrame(columns=["Waktu", "User", "Total Adegan", "Visual Utama"])
                         conn_a.update(worksheet="Sheet1", data=empty_df)
-                        st.success("Log dibersihkan!")
+                        st.success("Log dikosongkan!")
                         st.rerun()
                 else:
-                    st.info("Belum ada aktivitas tercatat.")
+                    st.info("Belum ada data masuk.")
                     
             except Exception as e:
-                st.error(f"Koneksi GSheets Sibuk: {e}")
+                st.error(f"GSheets Error: {e}")
                 
         st.divider()
 
-    # Pengaturan Global (Berlaku untuk Icha & Nissa)
+    # Pengaturan Global
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
@@ -546,4 +556,5 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
