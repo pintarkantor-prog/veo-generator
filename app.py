@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (ANTI-HILANG & MULTI-USER)
+# 2. SISTEM LOGIN & DATABASE USER (SINKRONISASI MEMORI TOTAL)
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
@@ -24,7 +24,7 @@ USERS = {
     "lisa": "tung66"
 }
 
-# --- 1. INISIALISASI MEMORI (AGAR DATA TIDAK HILANG SAAT REFRESH/GENERATE) ---
+# --- 1. INISIALISASI DASAR ---
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'active_user' not in st.session_state:
@@ -32,14 +32,27 @@ if 'active_user' not in st.session_state:
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# --- 2. PENGUNCI DATA INPUT (PENTING!) ---
-# Ini adalah "booking tempat" di memori agar Streamlit tidak menghapus ketikan staf
+# --- 2. BOOKING MEMORI UNTUK INPUT (AGAR ANTI-HILANG SAAT REFRESH) ---
+# Kita amankan input Tokoh
 if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
 if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
 if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
 if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
 
-# --- FITUR ANTI-REFRESH: Cek Jejak Login di URL ---
+# Kita amankan input Adegan (v1 sampai v50) secara otomatis
+for i in range(1, 51):
+    vk = f"vis_input_{i}"
+    lk = f"light_input_{i}"
+    ck = f"camera_input_{i}"
+    sk = f"shot_input_{i}"
+    ak = f"angle_input_{i}"
+    if vk not in st.session_state: st.session_state[vk] = ""
+    if lk not in st.session_state: st.session_state[lk] = "Bening dan Tajam"
+    if ck not in st.session_state: st.session_state[ck] = "Ikuti Karakter"
+    if sk not in st.session_state: st.session_state[sk] = "Setengah Badan"
+    if ak not in st.session_state: st.session_state[ak] = "Normal (Depan)"
+
+# --- 3. FITUR ANTI-REFRESH URL ---
 query_params = st.query_params
 if not st.session_state.logged_in:
     if "u" in query_params and "p" in query_params:
@@ -49,21 +62,16 @@ if not st.session_state.logged_in:
             st.session_state.logged_in = True
             st.session_state.active_user = u_param
 
-# Tampilkan Layar Login hanya jika tidak ada jejak login
+# --- 4. LAYAR LOGIN ---
 if not st.session_state.logged_in:
     st.title("🔐 PINTAR MEDIA - AKSES PRODUKSI")
-    
     with st.form("form_login_staf"):
         input_user = st.text_input("Username")
         input_pass = st.text_input("Password", type="password")
-        btn_login = st.form_submit_button("Masuk Ke Sistem")
-        
-        if btn_login:
+        if st.form_submit_button("Masuk Ke Sistem"):
             if input_user in USERS and USERS[input_user] == input_pass:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
-                
-                # Simpan ke URL agar browser "ingat" user ini
                 st.query_params["u"] = input_user
                 st.query_params["p"] = input_pass
                 st.rerun()
@@ -640,6 +648,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
