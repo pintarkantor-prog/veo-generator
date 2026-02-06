@@ -326,7 +326,6 @@ with st.sidebar:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # Kumpulkan semua data yang ada di session_state
                 captured_scenes = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
                 draft_packet = {
                     "n1": st.session_state.get("c_name_1_input", ""), 
@@ -345,29 +344,35 @@ with st.sidebar:
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                df_log = conn.read(worksheet="Sheet1", ttl="1s") # TTL rendah agar data terbaru masuk
+                df_log = conn.read(worksheet="Sheet1", ttl="1s")
                 user_tag = st.session_state.active_user
                 
-                # Cari data terakhir milik user ini
+                # Filter data milik user ini
                 my_data = df_log[df_log['User'].astype(str).str.contains(user_tag, na=False)]
                 
                 if not my_data.empty:
-                    raw_data = my_data.iloc[-1]['Visual Utama']
-                    if str(raw_data).startswith("{"):
+                    # Ambil data terbaru (paling bawah)
+                    raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
+                    
+                    # LOGIKA PENERJEMAH MULTI-FORMAT
+                    if raw_data.startswith("{"):
+                        # JIKA FORMAT BARU (JSON/KOPER)
                         data = json.loads(raw_data)
-                        # Masukkan kembali ke lemari session_state
                         st.session_state.c_name_1_input = data.get("n1", "")
                         st.session_state.c_desc_1_input = data.get("p1", "")
                         st.session_state.c_name_2_input = data.get("n2", "")
                         st.session_state.c_desc_2_input = data.get("p2", "")
+                        
                         for k, v in data.get("scenes", {}).items():
                             st.session_state[f"vis_input_{k.replace('v','')}"] = v
-                        
-                        st.session_state.restore_counter += 1
-                        st.toast("Data Berhasil Dipulihkan! 🔄") # Pakai toast agar tidak menumpuk kotak hijau
-                        st.rerun()
                     else:
-                        st.warning("Data lama tidak support format baru.")
+                        # JIKA FORMAT LAMA (TEKS BIASA)
+                        # Masukkan saja ke Adegan 1 biar tidak error
+                        st.session_state["vis_input_1"] = raw_data
+                    
+                    st.session_state.restore_counter += 1
+                    st.toast("Data Berhasil Dipulihkan! 🔄")
+                    st.rerun()
                 else:
                     st.error("Data tidak ditemukan")
             except Exception as e:
@@ -631,6 +636,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
