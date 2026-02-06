@@ -632,23 +632,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING (LEAN VERSION) ---
+                # --- LIGHTING MAPPING (VERSION 2.0: ENHANCED BUT CLEAN) ---
                 if "Bening" in light_type:
-                    l_cmd = "High altitude air clarity, 10:00 AM sun"
+                    l_cmd = "Crystal clear lighting, ultra-high altitude sun, 10:00 AM bright atmosphere, zero haze, sharp micro-contrast."
                 elif "Sejuk" in light_type:
-                    l_cmd = "8000k cold temperature, crisp light"
+                    l_cmd = "8000k ice-cold color temperature, crisp blueish daylight, clean zenith sun, refreshing morning glow."
                 elif "Dramatis" in light_type:
-                    l_cmd = "Hard directional side-lighting, deep shadows"
+                    l_cmd = "Hard directional side-lighting, high-contrast cinematic shadows, Rembrandt lighting style, intense mood."
                 elif "Jelas" in light_type:
-                    l_cmd = "Vivid matte pigments, morning sun"
+                    l_cmd = "Deeply saturated colors, morning sun brilliance, vivid matte pigments, high-definition object clarity."
                 elif "Mendung" in light_type:
-                    l_cmd = "Overcast lighting, moody atmosphere"
+                    l_cmd = "Soft diffused overcast lighting, moody gray-cobalt sky, 16-bit color depth, flat but rich cinematic tones."
                 elif "Suasana Malam" in light_type:
-                    l_cmd = "Cinematic night, indigo moonlight"
+                    l_cmd = "Cinematic night photography, indigo moonlit glow, dual-tone spotlighting, sharp rim light highlights."
                 elif "Suasana Alami" in light_type:
-                    l_cmd = "Natural sunlight, forest humidity"
+                    l_cmd = "Low-exposure natural sunlight, golden hour highlights, organic forest humidity, intricate textures."
                 else: # Suasana Sore
-                    l_cmd = "4:00 PM sunset, long sharp shadows"
+                    l_cmd = "4:00 PM late afternoon sun, long sharp shadows, golden-indigo gradient, high-fidelity rim lighting."
 
                 # Logika Dialog & Emosi
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
@@ -691,6 +691,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
