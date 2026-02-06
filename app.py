@@ -371,8 +371,6 @@ with st.sidebar:
                     st.session_state.restore_counter += 1
                     st.rerun()
             except: st.error("Gagal tarik data")
-
-    st.markdown("---")
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
@@ -639,5 +637,6 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
