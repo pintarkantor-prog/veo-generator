@@ -333,10 +333,10 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + DOUBLE NOTIF SUCCESS)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + LOGO)
 # ==============================================================================
 with st.sidebar:
-    # --- GANTI TEKS JADI LOGO ---
+    # --- 1. LOGO SIDEBAR ---
     try:
         st.image("PINTAR.png", use_container_width=True)
     except:
@@ -344,20 +344,16 @@ with st.sidebar:
     
     st.write("") # Kasih jarak dikit di bawah logo
     
-    # --- A. LOGIKA ADMIN ---
-    if st.session_state.active_user == "admin":
-        # ... (lanjutkan ke kode checkbox admin kamu)
-    
-    # --- A. LOGIKA ADMIN ---
+    # --- 2. LOGIKA ADMIN (Satu kali saja) ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=False):
             st.info("Log aktivitas tercatat di Cloud.")
         st.divider()
 
-    # --- B. KONFIGURASI UMUM ---
+    # --- 3. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # --- STATUS PRODUKSI (Hanya muncul jika sudah ada hasil) ---
+    # --- 4. STATUS PRODUKSI (Hanya muncul jika sudah ada hasil) ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         total_p = len(st.session_state.last_generated_results)
@@ -374,7 +370,7 @@ with st.sidebar:
         
         # --- EFEK SELEBRASI (BALON) ---
         if done_p == total_p and total_p > 0:
-            st.balloons() # Munculkan balon di layar
+            st.balloons() 
             st.success("🎉 Semua Adegan Selesai!")
     
     st.divider()
@@ -726,6 +722,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
