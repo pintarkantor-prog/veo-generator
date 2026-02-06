@@ -263,7 +263,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: CLEAN EXPANDER + DRAFT MANAGEMENT)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: CLEAN UI - NO EXTRA TEXT)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
@@ -339,23 +339,19 @@ with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
-    # --- BARU: MANAJEMEN DRAFT DI SIDEBAR ---
     st.divider()
-    st.header("💾 Manajemen Draft")
-    st.caption("Gunakan tombol ini untuk mengamankan progress kerja di Cloud.")
-
-    # 1. TOMBOL SIMPAN (DIPINDAH DARI BAGIAN 10)
+    # Kalimat penjelas sudah dihapus, langsung ke tombol
+    
+    # 1. TOMBOL SIMPAN
     if st.button("💾 SIMPAN SEMUA DATA", use_container_width=True):
         import json
         try:
-            # Ambil semua visual adegan yang ada isinya
             captured_scenes = {}
             for i in range(1, int(num_scenes) + 1):
                 v_key = f"vis_input_{i}"
                 if v_key in st.session_state and st.session_state[v_key].strip() != "":
                     captured_scenes[f"v{i}"] = st.session_state[v_key]
 
-            # Bungkus semua data (Identitas + Semua Adegan)
             draft_packet = {
                 "n1": st.session_state.get("c_name_1_input", ""),
                 "p1": st.session_state.get("c_desc_1_input", ""),
@@ -363,61 +359,44 @@ with st.sidebar:
                 "p2": st.session_state.get("c_desc_2_input", ""),
                 "scenes": captured_scenes
             }
-            
             packet_string = json.dumps(draft_packet)
-            
-            # Kirim ke Sheets melalui fungsi di Bagian 3
             record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(captured_scenes))
-            st.toast(f"Berhasil! {len(captured_scenes)} Adegan & Karakter tersimpan. ✅")
-            
+            st.toast(f"Berhasil! {len(captured_scenes)} Adegan tersimpan. ✅")
         except Exception as e:
             st.error(f"Gagal simpan draft: {e}")
 
-    # 2. TOMBOL TARIK (DIPINDAH DARI BAGIAN 9)
+    # 2. TOMBOL TARIK
     if st.button("🔄 TARIK DATA DRAFT", use_container_width=True):
         import json
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
             df_log = conn.read(worksheet="Sheet1", ttl="5s")
-            
-            # Filter data user yang aktif
             my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
             
             if not my_data.empty:
                 raw_data = my_data.iloc[-1]['Visual Utama']
-                
-                # Cek jika formatnya koper JSON
                 if raw_data.strip().startswith("{"):
                     data = json.loads(raw_data)
-                    
-                    # Pulihkan Identitas
                     st.session_state.c_name_1_input = data.get("n1", "")
                     st.session_state.c_desc_1_input = data.get("p1", "")
                     st.session_state.c_name_2_input = data.get("n2", "")
                     st.session_state.c_desc_2_input = data.get("p2", "")
-                    
-                    # Pulihkan Semua Visual Adegan
                     scenes_data = data.get("scenes", {})
                     for key_v, val_v in scenes_data.items():
                         num_idx = key_v.replace('v', '')
                         st.session_state[f"vis_input_{num_idx}"] = val_v
-                        
-                    st.success("Draft Pulih Sepenuhnya! ✅")
+                    st.success("Draft Pulih! ✅")
                 else:
-                    # Jika format lama (hanya teks biasa)
                     st.session_state["vis_input_1"] = raw_data
-                    st.info("Hanya Adegan 1 yang pulih (Format lama).")
-
-                # Trigger refresh widget
                 st.session_state.restore_counter += 1 
                 st.rerun()
             else:
-                st.warning("Belum ada draft tersimpan untukmu.")
+                st.warning("Belum ada draft.")
         except Exception as e:
             st.error(f"Gagal tarik draft: {e}")
 
     st.markdown("---")
-    st.caption(f"PINTAR MEDIA | V.1.1.9 | {st.session_state.active_user.upper()}")
+    st.caption(f"PINTAR MEDIA | V.1.2.0 | {st.session_state.active_user.upper()}")
     
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
@@ -717,6 +696,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
