@@ -154,27 +154,35 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 5. STICKY INFO BAR (GANTI TOTAL BAGIAN 5 LAMA DENGAN INI)
+# 5. STICKY INFO BAR (VERSI FIX - TERKUNCI DI ATAS)
 # ==============================================================================
-# Membungkus baris info staf dan logout
+
+# 1. Buka bungkus Sticky
 st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
+
+# 2. Buat kolom untuk Staf dan Logout
 col_staf, col_logout = st.columns([8, 2])
 
 with col_staf:
     nama_display = st.session_state.active_user.capitalize()
+    # Pake success agar ramping
     st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
 with col_logout:
-    if st.button("Logout 🚪", use_container_width=True):
+    # Logout sejajar
+    if st.button("Logout 🚪", use_container_width=True, key="logout_sticky"):
         st.query_params.clear()
         st.session_state.logged_in = False
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
+
+# 3. Tutup bungkus Sticky
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- PENTING: Kasih spasi kosong agar konten di bawah tidak tertutup ---
+# 4. PENTING: Kasih ganjalan (Spacer) agar form input di bawah tidak tertutup header yang melayang
 st.write("") 
+st.write("")
 st.write("")
 st.write("")
 # ==============================================================================
@@ -720,6 +728,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
