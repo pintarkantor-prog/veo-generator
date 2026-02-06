@@ -37,8 +37,6 @@ if 'active_user' not in st.session_state:
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            st.write("---")
-            
             # --- FORM LOGIN (Dukungan Enter Key) ---
             with st.form("login_form", clear_on_submit=False):
                 user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
@@ -78,7 +76,6 @@ if 'active_user' not in st.session_state:
                 else:
                     st.error("❌ Username atau Password salah.")
             
-            st.write("---")
             st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
     st.stop() 
 
@@ -719,6 +716,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
