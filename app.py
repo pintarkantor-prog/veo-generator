@@ -363,21 +363,28 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (TATA LETAK GRID)
+# 9. FORM INPUT ADEGAN (ANTI-HILANG SAAT REFRESH)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (Antara Subheader dan Master Control) ---
+# --- IDENTITAS TOKOH ---
 with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     
     with col_c1:
         st.markdown("### Karakter 1")
+        # Inisialisasi memori jika kosong
+        if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
+        if "c_desc_1_input" not in st.session_state: st.session_state.c_desc_1_input = ""
+        
         c_n1_v = st.text_input("Nama Karakter 1", key="c_name_1_input", placeholder="Contoh: UDIN")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", key="c_desc_1_input", height=100)
     
     with col_c2:
         st.markdown("### Karakter 2")
+        if "c_name_2_input" not in st.session_state: st.session_state.c_name_2_input = ""
+        if "c_desc_2_input" not in st.session_state: st.session_state.c_desc_2_input = ""
+        
         c_n2_v = st.text_input("Nama Karakter 2", key="c_name_2_input", placeholder="Contoh: TUNG")
         c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", key="c_desc_2_input", height=100)
 
@@ -388,78 +395,72 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
     all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
 
+    # Karakter Tambahan
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
-                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=f"ex_name_{ex_idx}")
-                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=f"ex_phys_{ex_idx}", height=100)
+                # Memori untuk karakter tambahan
+                k_name = f"ex_name_{ex_idx}"
+                k_phys = f"ex_phys_{ex_idx}"
+                if k_name not in st.session_state: st.session_state[k_name] = ""
+                if k_phys not in st.session_state: st.session_state[k_phys] = ""
+                
+                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", key=k_name)
+                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", key=k_phys, height=100)
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
-# --- LANJUT KE LIST ADEGAN ---
+# --- LIST ADEGAN ---
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     
     with st.expander(l_box_title, expanded=(i_s == 1)):
-        # Grid Layout 
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
+            # MEMORI VISUAL: Agar ketikan tidak hilang saat refresh
+            v_key = f"vis_input_{i_s}"
+            if v_key not in st.session_state: st.session_state[v_key] = ""
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=v_key, height=180)
         
         with col_ctrl:
             r1_c1, r1_c2 = st.columns(2)
             with r1_c1:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                # Gunakan nilai dari session state jika ada, jika tidak pakai 0
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
-                if i_s == 1:
-                    l_val = st.selectbox("L1", options_lighting, index=idx_l, key="light_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-                else:
-                    l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", label_visibility="collapsed")
+                l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"light_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r1_c2:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
-                if i_s == 1:
-                    c_val = st.selectbox("C1", indonesia_camera, index=idx_c, key="camera_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-                else:
-                    c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", label_visibility="collapsed")
+                c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"camera_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             
             r2_c1, r2_c2 = st.columns(2)
             with r2_c1:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
-                if i_s == 1:
-                    s_val = st.selectbox("S1", indonesia_shot, index=idx_s, key="shot_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-                else:
-                    s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", label_visibility="collapsed")
+                s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"shot_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r2_c2:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
-                if i_s == 1:
-                    a_val = st.selectbox("A1", indonesia_angle, index=idx_a, key="angle_input_1", on_change=global_sync_v920, label_visibility="collapsed")
-                else:
-                    a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", label_visibility="collapsed")
+                a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # Dialog Dinamis
+        # Dialog Dinamis (Juga Anti-Hilang)
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_in = st.text_input(f"Dialog {char_label}", key=f"diag_{i_s}_{i_char}")
+                d_key = f"diag_{i_s}_{i_char}"
+                if d_key not in st.session_state: st.session_state[d_key] = ""
+                d_in = st.text_input(f"Dialog {char_label}", key=d_key)
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
             "num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list
         })
-
-
-st.divider()
-
 
 # ==============================================================================
 # 10. GENERATOR PROMPT (FULL MEGA STRUCTURE - ANTI-ERROR & ANTI-HILANG)
@@ -604,5 +605,6 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
