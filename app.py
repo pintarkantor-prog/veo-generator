@@ -432,7 +432,7 @@ adegan_storage = []
 count = st.session_state.restore_counter
 
 for i_s in range(1, int(num_scenes) + 1):
-    l_box_title = f"🟢 MASTER CONTROL - ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
+    l_box_title = f"🟢 ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     with st.expander(l_box_title, expanded=(i_s == 1)):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         with col_v:
@@ -633,5 +633,6 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
