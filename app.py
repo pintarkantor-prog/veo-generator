@@ -420,23 +420,20 @@ with st.sidebar:
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
-# 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
+# 8. PARAMETER KUALITAS (VERSION: LEAN & SHARP)
 # ==============================================================================
+# Kita fokus pada kata kunci yang benar-benar berefek pada AI modern
 sharp_natural_stack = (
-    "Full-bleed cinematography, edge-to-edge pixel rendering, Full-frame vertical coverage, zero black borders, "
-    "expansive background rendering to edges, Circular Polarizer (CPL) filter effect, eliminates light glare, "
-    "ultra-high-fidelity resolution, micro-contrast enhancement, optical clarity, deep saturated pigments, "
-    "vivid organic color punch, intricate organic textures, skin texture override with 8k details, "
-    "f/11 aperture for deep focus sharpness, zero digital noise, zero atmospheric haze, crystal clear background focus."
+    "8k ultra-detailed, cinematic photography, sharp focus, high-fidelity textures, "
+    "vibrant organic colors, hyper-realistic skin, clear background, professional lighting."
 )
 
 no_text_strict = (
-    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, NO typography, "
-    "NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
+    "NO text, NO watermark, NO speech bubbles, NO subtitles, NO typography."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"60fps, fluid motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
 # 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
@@ -576,9 +573,9 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (FULL VERSION - UTUH TANPA POTONGAN)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: LEAN & SHARP)
 # ==============================================================================
-import json # <--- WAJIB ADA di paling atas blok ini
+import json
 
 # 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
@@ -600,12 +597,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD (FINAL VERSION - Simpan visual utama saja untuk log harian)
+            # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK ---
-            char_defs = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
-            master_lock_instruction = f"IMPORTANT: Remember these characters and their physical traits for this entire session. Do not deviate from these visuals: {char_defs}. "
+            # --- LOGIKA MASTER LOCK (Kunci Identitas Karakter) ---
+            char_defs = ", ".join([f"{c['name']}: {c['desc']}" for c in all_chars_list if c['name']])
+            master_lock_instruction = f"STRICT CHARACTER FIDELITY. Consistent appearances for: {char_defs}. "
 
             for item in active_scenes:
                 # --- LOGIKA SMART CAMERA MOVEMENT ---
@@ -614,23 +611,18 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 
                 if camera_map.get(item["cam"]) == "AUTO_MOOD":
                     if any(x in vis_lower for x in ["lari", "jalan", "pergi", "mobil", "motor"]): 
-                        e_cam_move = "Dynamic Tracking Shot, follow subject motion"
+                        e_cam_move = "Dynamic Tracking Shot"
                     elif any(x in vis_lower for x in ["sedih", "menangis", "fokus", "detail", "melihat", "terkejut"]): 
                         e_cam_move = "Slow Cinematic Zoom In"
                     elif any(x in vis_lower for x in ["pemandangan", "kota", "luas", "halaman", "jalan raya"]): 
-                        e_cam_move = "Slow Pan Left to Right"
-                    elif any(x in vis_lower for x in ["marah", "teriak", "berantem", "aksi"]): 
-                        e_cam_move = "Handheld Shaky Cam intensity"
+                        e_cam_move = "Slow Pan"
                     else: 
-                        e_cam_move = "Subtle cinematic camera drift"
+                        e_cam_move = "Subtle camera drift"
                 else:
                     e_cam_move = camera_map.get(item["cam"], "Static")
 
                 # --- SMART ANCHOR TERAS ---
-                if "teras" in vis_lower:
-                    vis_core_final = vis_core + " (Backrest fixed against the house wall, positioned under the porch roof roof, chair anchored to house structure)."
-                else:
-                    vis_core_final = vis_core
+                vis_core_final = vis_core + " (Fixed porch structure background)" if "teras" in vis_lower else vis_core
 
                 # Konversi Teknis
                 e_shot_size = shot_map.get(item["shot"], "Medium Shot")
@@ -638,56 +630,41 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- FULL LIGHTING MAPPING ---
+                # --- LIGHTING MAPPING (LEAN VERSION) ---
                 if "Bening" in light_type:
-                    l_cmd = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
-                    a_cmd = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
+                    l_cmd = "High altitude air clarity, 10:00 AM sun"
                 elif "Sejuk" in light_type:
-                    l_cmd = "8000k ice-cold color temperature, zenith sun position, uniform illumination, zero sun glare."
-                    a_cmd = "12:00 PM glacier-clear atmosphere, crisp cold light, deep blue sky, organic wispy clouds."
+                    l_cmd = "8000k cold temperature, crisp light"
                 elif "Dramatis" in light_type:
-                    l_cmd = "Hard directional side-lighting, pitch-black sharp shadows, high dynamic range (HDR) contrast."
-                    a_cmd = "Late morning sun, dramatic light rays, hyper-sharp edge definition, deep sky contrast."
+                    l_cmd = "Hard directional side-lighting, deep shadows"
                 elif "Jelas" in light_type:
-                    l_cmd = "Deeply saturated matte pigments, circular polarizer (CPL) effect, vivid organic color punch, zero reflections."
-                    a_cmd = "Early morning atmosphere, hyper-saturated foliage colors, deep blue cobalt sky, crystal clear objects."
+                    l_cmd = "Vivid matte pigments, morning sun"
                 elif "Mendung" in light_type:
-                    l_cmd = "Intense moody overcast lighting with 16-bit color depth fidelity, absolute visual bite, vivid pigment recovery."
-                    a_cmd = "Moody atmosphere with zero atmospheric haze, 8000k ice-cold temperature brilliance, gray-cobalt sky."
+                    l_cmd = "Overcast lighting, moody atmosphere"
                 elif "Suasana Malam" in light_type:
-                    l_cmd = "Cinematic Night lighting, dual-tone HMI spotlighting, sharp rim light highlights, 9000k cold moonlit glow."
-                    a_cmd = "Clear night atmosphere, deep indigo-black sky, hyper-defined textures."
+                    l_cmd = "Cinematic night, indigo moonlight"
                 elif "Suasana Alami" in light_type:
-                    l_cmd = "Low-exposure natural sunlight, high local contrast amplification, extreme chlorophyll color depth."
-                    a_cmd = "Crystal clear forest humidity (zero haze), hyper-defined micro-pores on leaves, intricate micro-textures."
+                    l_cmd = "Natural sunlight, forest humidity"
                 else: # Suasana Sore
-                    l_cmd = "4:00 PM indigo atmosphere, sharp rim lighting, low-intensity cold highlights, crisp silhouette definition."
-                    a_cmd = "Late afternoon cold sun, long sharp shadows, indigo-cobalt sky gradient, hyper-clear background."
+                    l_cmd = "4:00 PM sunset, long sharp shadows"
 
                 # Logika Dialog & Emosi
-                d_all_text = " ".join([f"{d['name']}: \"{d['text']}\"" for d in item['dialogs'] if d['text']])
-                emotion_ctx = f"Emotion Context (DO NOT RENDER TEXT): Reacting to context: '{d_all_text}'. Focus on high-fidelity facial expressions. " if d_all_text else ""
+                d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
+                emotion_ctx = f"Expression: reacting to '{d_all_text}'. " if d_all_text else ""
 
-                # DNA Anchor
-                dna_str = " ".join([f"STRICT CHARACTER FIDELITY: Maintain facial identity structure of {c['name']} ({c['desc']}) but re-render surface with 8k skin texture." for c in all_chars_list if c['name'] and c['name'].lower() in vis_lower])
-
-                # Logika Penyuntikan Master Lock
-                current_lock = master_lock_instruction if scene_id == 1 else ""
-
-                # --- RAKIT PROMPT AKHIR ---
+                # --- RAKIT PROMPT AKHIR (METODE LEAN & POWERFUL) ---
+                # Master Lock diletakkan di awal agar menjadi prioritas AI
                 img_final = (
-                    f"{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
-                    f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
-                    f"Atmosphere: {a_cmd}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
+                    f"{master_lock_instruction} Professional photo, 9:16 vertical. {e_angle_cmd} {emotion_ctx} "
+                    f"Visual: {vis_core_final}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
                 )
                 
                 vid_final = (
-                    f"{current_lock}9:16 full-screen mobile video. {e_shot_size} perspective. {e_angle_cmd} {e_cam_move}. "
-                    f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
-                    f"Lighting: {l_cmd}. {vid_quality_base}"
+                    f"{master_lock_instruction} Cinematic video 9:16. {e_shot_size} {e_cam_move}. "
+                    f"{emotion_ctx} Visual: {vis_core_final}. Lighting: {l_cmd}. {vid_quality_base}"
                 )
 
-                # --- SIMPAN KE LEMARI (SESSION STATE) ---
+                # --- SIMPAN KE LEMARI ---
                 st.session_state.last_generated_results.append({
                     "id": scene_id,
                     "img": img_final,
@@ -695,9 +672,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        # Notifikasi Berhasil
-        pesan_toast = "Prompt Berhasil Dibuat! 🚀" if st.session_state.active_user == "admin" else f"Kerjaan {nama_staf} Berhasil Dibuat! 🚀"
-        st.toast(pesan_toast, icon="🎨")
+        st.toast("Prompt Berhasil Dibuat! 🚀", icon="🎨")
 
 # 3. AREA TAMPILAN
 if st.session_state.last_generated_results:
