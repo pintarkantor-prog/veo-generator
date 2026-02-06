@@ -411,7 +411,6 @@ with st.sidebar:
                 }
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
                 
-                # TITIP PESAN SUKSES SAVE
                 st.session_state["sidebar_success_msg"] = "Data Berhasil Disimpan! ✅"
                 st.rerun()
             except Exception as e:
@@ -431,21 +430,17 @@ with st.sidebar:
                     if raw_data.startswith("{"):
                         data = json.loads(raw_data)
                         
-                        # Restore Identitas
                         st.session_state.c_name_1_input = data.get("n1", "")
                         st.session_state.c_desc_1_input = data.get("p1", "")
                         st.session_state.c_name_2_input = data.get("n2", "")
                         st.session_state.c_desc_2_input = data.get("p2", "")
                         
-                        # Restore Visual
                         for k, v in data.get("scenes", {}).items():
                             st.session_state[f"vis_input_{k.replace('v','')}"] = v
                         
-                        # Restore Dialog
                         for d_key, d_text in data.get("dialogs", {}).items():
                             st.session_state[d_key] = d_text
                         
-                        # TITIP PESAN SUKSES RESTORE
                         st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
                         st.session_state.restore_counter += 1
                         st.rerun()
@@ -458,16 +453,18 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Gagal koneksi: {str(e)}")
 
-    # --- MENAMPILKAN NOTIFIKASI SUKSES (DARI SAVE ATAU RESTORE) ---
+    # --- MENAMPILKAN NOTIFIKASI SUKSES ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
-    # --- TOMBOL LOGOUT (SUDAH RAPI SPASINYA) ---
+    # --- TOMBOL LOGOUT (DIPERBAIKI AGAR BISA LOGOUT TOTAL) ---
     if st.sidebar.button("Log Out 🚪", use_container_width=True):
-        del st.session_state.active_user
+        st.query_params.clear() # <--- INI PENTING: Hapus user di URL browser
+        if 'active_user' in st.session_state:
+            del st.session_state.active_user # Hapus user di memori
         st.rerun()
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -733,6 +730,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
