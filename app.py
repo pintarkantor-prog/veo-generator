@@ -307,10 +307,10 @@ with st.sidebar:
             except: pass
         st.divider()
 
-    # --- B. KONFIGURASI UMUM (AKSES SEMUA USER) ---
+    # --- B. KONFIGURASI UMUM (AKSES SEMUA USER - SEJAJAR) ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # STATUS PRODUKSI
+    # --- [STATUS PRODUKSI - PINDAH KE SINI AGAR MUNCUL DI SEMUA USER] ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         st.caption("Tandai disini jika sudah selesai!:")
@@ -395,9 +395,7 @@ with st.sidebar:
             except Exception as e: 
                 st.error(f"Gagal tarik: {e}")
 
-    # PASTIKAN BARIS CAPTION INI SEJAJAR DENGAN 'c_s, c_r'
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
-# --- MULAI DARI SINI SEMUA DITARIK KE KIRI (RATA KIRI) AGAR ICHA & NISSA BISA LIHAT ---
 
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -424,8 +422,6 @@ vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_s
 # 1. Inisialisasi Counter & Memori (WAJIB ADA untuk sinkronisasi)
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
-
-# --- BAGIAN TOMBOL RESTORE SUDAH PINDAH KE SIDEBAR (BAGIAN 7) ---
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -562,9 +558,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         # ------------------------------------------------
         
         with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
+            # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # --- LOGGING CLOUD UTAMA (Sekarang mengirim paket lengkap, bukan cuma adegan[0]) ---
+            # LOGGING CLOUD UTAMA (Sekarang mengirim paket lengkap, bukan cuma adegan[0])
             record_to_sheets(st.session_state.active_user, json.dumps(auto_packet), len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
@@ -657,14 +654,18 @@ if st.session_state.last_generated_results:
     
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
+        
+        # LOGIKA: Cukup cek statusnya saja
         is_done = st.session_state.get(done_key, False)
         
         if is_done:
+            # Jika SUDAH DICENTANG: Menciut (Collapse)
             with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
                 st.info("Prompt ini sudah ditandai selesai di sidebar.")
                 st.code(res['img'], language="text")
                 st.code(res['vid'], language="text")
         else:
+            # Jika BELUM DICENTANG: Terbuka lebar (Focus)
             with st.container():
                 st.subheader(f"🚀 ADEGAN {res['id']}")
                 c1, c2 = st.columns(2)
@@ -675,7 +676,3 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
-
-
-
-
