@@ -104,34 +104,38 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: STICKY SUB-HEADER)
+# 4. CUSTOM CSS (VERSION: TOTAL FIXED HEADER)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* Mengunci baris info staf di atas */
+    /* 1. MENGUNCI BARIS INFO STAF (FIXED) */
     .sticky-bar {
-        position: fixed; /* Pakai fixed agar benar-benar terkunci di layar */
-        top: 45px;      /* Jarak dari top bar Streamlit */
-        left: 0;
+        position: fixed;
+        top: 0px; 
+        left: 310px; /* Jarak agar tidak menabrak sidebar (lebar sidebar) */
         right: 0;
-        z-index: 999;
-        background-color: #0e1117; /* Harus sama dengan background utama */
-        padding: 10px 2rem;       /* Sesuaikan padding samping agar sejajar konten */
+        z-index: 9999; /* Lapisan paling atas */
+        background-color: #0e1117; /* Warna background utama */
+        padding: 15px 2rem 10px 1rem;
         border-bottom: 1px solid #31333f;
     }
-    
-    /* Tambahan agar konten di bawahnya tidak tertutup oleh bar yang melayang */
-    .stApp {
-        margin-top: 20px;
+
+    /* 2. PENYESUAIAN UNTUK LAYAR HP (SIDEBAR TERSEMBUNYI) */
+    @media (max-width: 768px) {
+        .sticky-bar {
+            left: 0;
+        }
     }
 
-    /* --- STYLE SIDEBAR & WIDGET SEBELUMNYA --- */
+    /* 3. STYLE SIDEBAR & WIDGET (PUNYA KAMU SEBELUMNYA) */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
+    
+    /* Tombol Copy */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -141,47 +145,47 @@ st.markdown("""
         transform: scale(1.1); 
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
+
+    /* Area Ketik */
     .stTextArea textarea {
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
         min-height: 180px !important; 
     }
+
+    /* Label Kecil */
     .small-label {
-        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
+        font-size: 12px; 
+        font-weight: bold; 
+        color: #a1a1a1; 
+        margin-bottom: 2px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 5. STICKY INFO BAR (VERSI FIX - TERKUNCI DI ATAS)
+# 5. STICKY INFO BAR (VERSI FINAL - TERKUNCI)
 # ==============================================================================
-
-# 1. Buka bungkus Sticky
 st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
-
-# 2. Buat kolom untuk Staf dan Logout
 col_staf, col_logout = st.columns([8, 2])
 
 with col_staf:
     nama_display = st.session_state.active_user.capitalize()
-    # Pake success agar ramping
     st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
 with col_logout:
-    # Logout sejajar
-    if st.button("Logout 🚪", use_container_width=True, key="logout_sticky"):
+    if st.button("Logout 🚪", use_container_width=True, key="sticky_logout_btn"):
         st.query_params.clear()
         st.session_state.logged_in = False
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
 
-# 3. Tutup bungkus Sticky
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 4. PENTING: Kasih ganjalan (Spacer) agar form input di bawah tidak tertutup header yang melayang
-st.write("") 
+# --- GANJALAN AGAR KONTEN DI BAWAH TIDAK TERTUTUP (WAJIB ADA) ---
+st.write("")
 st.write("")
 st.write("")
 st.write("")
@@ -728,6 +732,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
