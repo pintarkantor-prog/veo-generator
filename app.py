@@ -685,7 +685,7 @@ if st.session_state.last_generated_results:
             st.caption("📸 PROMPT GAMBAR")
             st.code(res['img'], language="text")
             # Tombol Penanda Pengganti Otomatis
-            if st.button(f"Selesai Copy Gambar {res['id']}", key=f"btn_img_{res['id']}"):
+            if st.button(f"Copy Prompt Gambar {res['id']}", key=f"btn_img_{res['id']}"):
                 st.session_state[done_key] = True
                 st.rerun()
                 
@@ -693,8 +693,9 @@ if st.session_state.last_generated_results:
             st.caption("🎥 PROMPT VIDEO")
             st.code(res['vid'], language="text")
             # Tombol Penanda Pengganti Otomatis
-            if st.button(f"Selesai Copy Video {res['id']}", key=f"btn_vid_{res['id']}"):
+            if st.button(f"Copy Prompt Video {res['id']}", key=f"btn_vid_{res['id']}"):
                 st.session_state[done_key] = True
                 st.rerun()
         
         st.divider()
+
