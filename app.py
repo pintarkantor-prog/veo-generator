@@ -110,14 +110,21 @@ st.markdown("""
     <style>
     /* Mengunci baris info staf di atas */
     .sticky-bar {
-        position: sticky;
-        top: 2.875rem;
-        background-color: #0e1117; /* Warna gelap tema Streamlit */
+        position: fixed; /* Pakai fixed agar benar-benar terkunci di layar */
+        top: 45px;      /* Jarak dari top bar Streamlit */
+        left: 0;
+        right: 0;
         z-index: 999;
-        padding: 10px 0px;
+        background-color: #0e1117; /* Harus sama dengan background utama */
+        padding: 10px 2rem;       /* Sesuaikan padding samping agar sejajar konten */
         border-bottom: 1px solid #31333f;
     }
     
+    /* Tambahan agar konten di bawahnya tidak tertutup oleh bar yang melayang */
+    .stApp {
+        margin-top: 20px;
+    }
+
     /* --- STYLE SIDEBAR & WIDGET SEBELUMNYA --- */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
@@ -714,6 +721,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
