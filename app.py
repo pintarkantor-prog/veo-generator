@@ -235,22 +235,56 @@ def global_sync_v920():
         if key.startswith("shot_input_"): st.session_state[key] = st1
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
-
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (TIDAK DIRUBAH)
+# 7. SIDEBAR: KONFIGURASI UTAMA
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
         st.header("📊 Admin Monitor")
-        if st.checkbox("Buka Log Google Sheets"):
+        
+        # Checkbox untuk mengintip aktivitas
+        show_log = st.checkbox("Buka Log Produksi")
+        
+        if show_log:
             try:
+                # Koneksi ke GSheets
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
-                st.dataframe(df_a)
-            except:
-                st.warning("Gagal memuat Database.")
+                
+                if not df_a.empty:
+                    # Urutan: Balik data agar yang terbaru di PALING ATAS
+                    df_show = df_a.iloc[::-1] 
+                    
+                    # Tampilan Tabel Cantik
+                    st.dataframe(
+                        df_show, 
+                        use_container_width=True,
+                        hide_index=True,
+                        column_config={
+                            "Waktu": st.column_config.TextColumn("⏰ Waktu (WIB)"),
+                            "User": st.column_config.TextColumn("👤 Staf"),
+                            "Total Adegan": st.column_config.NumberColumn("🎬 Adegan"),
+                            "Visual Utama": st.column_config.TextColumn("📝 Detail Visual")
+                        }
+                    )
+                    
+                    # Tombol Pembersih Manual
+                    st.divider()
+                    if st.button("🗑️ Kosongkan Semua Log", use_container_width=True):
+                        # Membuat dataframe kosong dengan kolom yang sama
+                        empty_df = pd.DataFrame(columns=["Waktu", "User", "Total Adegan", "Visual Utama"])
+                        conn_a.update(worksheet="Sheet1", data=empty_df)
+                        st.success("Log berhasil dibersihkan!")
+                        st.rerun()
+                else:
+                    st.info("Belum ada riwayat produksi.")
+                    
+            except Exception as e:
+                st.error(f"Gagal memuat log: {e}")
+                
         st.divider()
 
+    # Pengaturan Jumlah Adegan (Untuk Semua User)
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
 
@@ -503,8 +537,3 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
-
-
-
-
-
