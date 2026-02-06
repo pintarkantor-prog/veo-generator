@@ -14,15 +14,17 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (ANTI-REFRESH MODE)
+# 2. SISTEM LOGIN & DATABASE USER (ANTI-HILANG & MULTI-USER)
 # ==============================================================================
 USERS = {
     "admin": "QWERTY21ab",
     "icha": "udin99",
-    "nissa": "tung22"
+    "nissa": "tung22",
+    "inggi": "udin33",
+    "lisa": "tung66"
 }
 
-# Inisialisasi session state (pastikan semua variabel ada)
+# --- 1. INISIALISASI MEMORI (AGAR DATA TIDAK HILANG SAAT REFRESH/GENERATE) ---
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'active_user' not in st.session_state:
@@ -30,14 +32,19 @@ if 'active_user' not in st.session_state:
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
+# --- 2. PENGUNCI DATA INPUT (PENTING!) ---
+# Ini adalah "booking tempat" di memori agar Streamlit tidak menghapus ketikan staf
+if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
+if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
+if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
+if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
+
 # --- FITUR ANTI-REFRESH: Cek Jejak Login di URL ---
 query_params = st.query_params
 if not st.session_state.logged_in:
-    # Cek apakah ada parameter 'u' (user) dan 'p' (pass) di link browser
     if "u" in query_params and "p" in query_params:
         u_param = query_params["u"]
         p_param = query_params["p"]
-        # Validasi otomatis
         if u_param in USERS and USERS[u_param] == p_param:
             st.session_state.logged_in = True
             st.session_state.active_user = u_param
@@ -56,8 +63,7 @@ if not st.session_state.logged_in:
                 st.session_state.logged_in = True
                 st.session_state.active_user = input_user
                 
-                # --- SIMPAN KE URL ---
-                # Ini yang bikin browser "ingat" Icha/Nissa meskipun di-refresh
+                # Simpan ke URL agar browser "ingat" user ini
                 st.query_params["u"] = input_user
                 st.query_params["p"] = input_pass
                 st.rerun()
@@ -634,5 +640,6 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
