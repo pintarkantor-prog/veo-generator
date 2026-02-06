@@ -400,7 +400,7 @@ if "restore_counter" not in st.session_state:
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH (FULL VERSION - UTUH) ---
-with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
+with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.markdown("### Karakter 1")
@@ -633,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
