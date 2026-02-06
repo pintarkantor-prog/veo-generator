@@ -36,7 +36,6 @@ if 'active_user' not in st.session_state:
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            st.write("---")
             
             # --- MENGGUNAKAN FORM AGAR BISA ENTER ---
             with st.form("login_form", clear_on_submit=False):
@@ -711,6 +710,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
