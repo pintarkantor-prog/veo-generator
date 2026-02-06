@@ -236,11 +236,11 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: ULTIMATE CONTROL)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: ULTIMATE CONTROL UPDATED)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
-        st.header("🏢 PINTAR MEDIA - HQ")
+        st.header("🔍 CEK KERJAAN") # <--- Perubahan Nama Header
         
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -251,7 +251,6 @@ with st.sidebar:
                     # --- 1. METRIK PERFORMANCE ---
                     st.markdown("### 📊 Ringkasan Produksi")
                     total_prod = len(df_a)
-                    # Menghitung kontribusi per staf
                     user_counts = df_a["User"].value_counts()
                     
                     c1, c2 = st.columns(2)
@@ -266,12 +265,9 @@ with st.sidebar:
                     search = st.text_input("🔍 Filter Nama Staf atau Cerita", placeholder="Cari...")
 
                     # --- 3. TABEL LOG DENGAN ICON STATUS ---
-                    df_show = df_a.iloc[::-1].copy() # Terbaru di atas
-                    
-                    # Tambahkan kolom 'Status' visual (Hanya di tampilan)
+                    df_show = df_a.iloc[::-1].copy() 
                     df_show["Status"] = "✅ Done"
                     
-                    # Logika Filter Search
                     if search:
                         df_show = df_show[
                             df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
@@ -295,9 +291,9 @@ with st.sidebar:
                     # --- 4. ACTION BUTTONS (DOWNLOAD & RESET) ---
                     col_btn1, col_btn2 = st.columns(2)
                     with col_btn1:
-                        # Fitur Download ke CSV
                         csv = df_a.to_csv(index=False).encode('utf-8')
-                        st.download_button("📥 Export Log", data=csv, file_name="log_produksi.csv", mime="text/csv", use_container_width=True)
+                        # --- Perubahan Nama Tombol Export ---
+                        st.download_button("📥 Export", data=csv, file_name="log_produksi.csv", mime="text/csv", use_container_width=True)
                     
                     with col_btn2:
                         if st.button("🗑️ Reset", use_container_width=True):
@@ -565,6 +561,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
