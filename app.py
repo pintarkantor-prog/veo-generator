@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (CLEAN LOGO ONLY)
+# 0. SISTEM LOGIN TUNGGAL (SUPPORT ENTER KEY & LOGO ONLY)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -31,16 +31,23 @@ if 'active_user' not in st.session_state:
         _, col_login, _ = st.columns([1, 2, 1])
         
         with col_login:
-            # --- TAMPILAN LOGO TANPA TEKS KETERANGAN ---
             try:
                 st.image("PINTAR.png", use_container_width=True) 
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
-            user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
-            pass_input = st.text_input("Password", type="password")
+            st.write("---")
             
-            if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
+            # --- MENGGUNAKAN FORM AGAR BISA ENTER ---
+            with st.form("login_form", clear_on_submit=False):
+                user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
+                pass_input = st.text_input("Password", type="password", placeholder="••••••••")
+                
+                # Di dalam form, tombol harus menggunakan st.form_submit_button
+                submit_button = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary")
+            
+            # Logika pengecekan setelah tombol diklik atau Enter ditekan
+            if submit_button:
                 user_clean = user_input.lower().strip()
                 
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
@@ -704,6 +711,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
