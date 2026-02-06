@@ -420,21 +420,22 @@ with st.sidebar:
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
-# 8. PARAMETER KUALITAS (VERSION: ULTRA-REALISM ANTI-CARTOON)
+# 8. PARAMETER KUALITAS (VERSION: VIVID CRYSTAL CLEAR)
 # ==============================================================================
 sharp_natural_stack = (
-    "photorealistic, raw photo, Fujifilm XT4, 8k UHD, highly detailed textures, "
-    "National Geographic cinematography, authentic skin pores, visible fabric fibers, "
-    "sharp focus, natural depth of field, ray-tracing, physically based rendering."
+    "photorealistic, raw photo, shot on 35mm lens, f/1.8, ISO 100, ultra-sharp focus, "
+    "vibrant organic colors, deep color saturation, rich color depth, "
+    "vivid foliage green, high-fidelity textures, crystal clear optics, "
+    "zero digital noise, ray-traced global illumination, 8k resolution."
 )
 
 no_text_strict = (
-    "STRICTLY NO cartoon, NO 3D render, NO illustration, NO anime, NO painting, "
-    "NO speech bubbles, NO text, NO watermark, NO black bars."
+    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, "
+    "NO typography, NO watermark, NO letters, NO black bars, NO grain, NO blur."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"60fps, realistic movement, {sharp_natural_stack} {no_text_strict}"
+vid_quality_base = f"60fps, fluid organic motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
 # 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
@@ -574,7 +575,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CARTOON ULTRA REALISM)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: VIVID CRYSTAL CLEAR & CHARACTER LOCK)
 # ==============================================================================
 import json
 
@@ -594,7 +595,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         nama_staf = st.session_state.active_user.capitalize()
         
-        with st.spinner(f"⏳ Sedang meracik prompt AI Ultra-Realistik untuk {nama_staf}..."):
+        with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
@@ -608,7 +609,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             master_lock_instruction = (
                 f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
                 f"Do not deviate from these visuals: {char_defs}. "
-                f"Maintain strict facial identity from the initial reference images. "
+                f"Maintain strict facial identity and clothing structure from the initial references. "
             )
 
             for item in active_scenes:
@@ -618,11 +619,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 
                 if camera_map.get(item["cam"]) == "AUTO_MOOD":
                     if any(x in vis_lower for x in ["lari", "jalan", "pergi", "mobil", "motor"]): 
-                        e_cam_move = "Dynamic Tracking Shot, follow subject motion"
+                        e_cam_move = "Dynamic Tracking Shot, sharp focus on motion"
                     elif any(x in vis_lower for x in ["sedih", "menangis", "fokus", "detail", "melihat", "terkejut"]): 
-                        e_cam_move = "Slow Cinematic Zoom In"
+                        e_cam_move = "Slow Cinematic Zoom In, micro-detail focus"
                     elif any(x in vis_lower for x in ["pemandangan", "kota", "luas", "halaman", "jalan raya"]): 
-                        e_cam_move = "Slow Pan Left to Right"
+                        e_cam_move = "Slow Pan, edge-to-edge clarity"
                     else: 
                         e_cam_move = "Subtle cinematic camera drift"
                 else:
@@ -637,34 +638,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING (VERSION 3.0: ANTI-FLAT LIGHTING) ---
+                # --- LIGHTING MAPPING (VERSION 4.0: VIVID & HIGH CONTRAST) ---
                 if "Bening" in light_type:
-                    l_cmd = "Hard sunlight photography, high-contrast, realistic shadows, sharp optical clarity, clear sky illumination."
+                    l_cmd = "Hard sunlight photography, vivid high-contrast, realistic shadows, sharp optical clarity, color-graded foliage."
                 elif "Sejuk" in light_type:
-                    l_cmd = "8000k cold daylight, realistic color temperature, crisp shadows, professional outdoor lighting."
+                    l_cmd = "8000k cold daylight, vibrant color temperature, crisp shadows, refreshing morning atmosphere."
                 elif "Dramatis" in light_type:
-                    l_cmd = "Cinematic side-lighting, deep realistic shadows, chiaroscuro effect, intense mood lighting."
+                    l_cmd = "Cinematic side-lighting, deep realistic high-contrast shadows, chiaroscuro effect, saturated mood."
                 elif "Jelas" in light_type:
-                    l_cmd = "Midday sun, realistic color pigments, natural light bounce, sharp texture definition, raw color depth."
+                    l_cmd = "Vivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch."
                 elif "Mendung" in light_type:
-                    l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky tones, flat but rich cinematic textures, moody atmosphere."
+                    l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures."
                 elif "Suasana Malam" in light_type:
-                    l_cmd = "Cinematic night photography, realistic indigo moonlit shadows, dual-tone spotlighting, sharp rim lights."
+                    l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors."
                 elif "Suasana Alami" in light_type:
-                    l_cmd = "Natural sunlight, golden hour highlights, realistic forest humidity, intricate organic textures."
+                    l_cmd = "Natural sunlight, golden hour highlights, vibrant forest green, realistic humidity, intricate organic textures."
                 else: # Suasana Sore
-                    l_cmd = "4:00 PM sunset sun, long sharp realistic shadows, golden-indigo gradient, high-fidelity rim lighting."
+                    l_cmd = "4:00 PM sunset, long sharp high-contrast shadows, golden-indigo gradient, high-fidelity rim lighting."
 
                 # Logika Dialog & Emosi
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Expression: reacting to context '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (ULTRA PHOTOGRAPHIC) ---
+                # --- RAKIT PROMPT AKHIR (ULTRA VIVID & CRYSTAL CLEAR) ---
                 img_final = (
-                    f"{master_lock_instruction} Raw color photography, cinematic still, 9:16 vertical aspect ratio. "
-                    f"Full-bleed, edge-to-edge frame coverage. {e_angle_cmd} {emotion_ctx} "
+                    f"{master_lock_instruction} Extremely detailed raw color photography, cinematic still, 9:16 vertical aspect ratio. "
+                    f"Sharp focus, uncompressed 8k quality, vivid organic color punch. {e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
-                    f"Rendering Quality: {img_quality_base} --ar 9:16 --v 6.0 --style raw"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2"
                 )
                 
                 vid_final = (
@@ -681,13 +682,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Anti-Kartun Berhasil Dibuat! 🚀", icon="🎨")
+        st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # 3. AREA TAMPILAN
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
-    st.success(f"✅ Mantap! Prompt Realistik untuk {nama_staf} sudah siap.")
+    st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
 
     for res in st.session_state.last_generated_results:
         st.subheader(f"🎬 Hasil Adegan {res['id']}")
@@ -699,4 +700,5 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
