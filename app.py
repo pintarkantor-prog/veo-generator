@@ -305,11 +305,10 @@ with st.sidebar:
         st.divider()
 
     # --- B. KONFIGURASI UMUM ---
-    num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
+    num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=10)
     
     # STATUS PRODUKSI
     if st.session_state.last_generated_results:
-        st.divider()
         st.markdown("### 🗺️ STATUS PRODUKSI")
         st.caption("Tandai jika sudah di-copy ke AI:")
         
@@ -328,8 +327,6 @@ with st.sidebar:
         if done_p == total_p:
             st.balloons()
             st.success("🎉 Selesai!")
-
-    st.divider()
 
     # --- C. BUTTONS ONLY (TANPA JUDUL DRAFT MANAGEMENT) ---
     c_s, c_r = st.columns(2)
@@ -636,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
