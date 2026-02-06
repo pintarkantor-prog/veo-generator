@@ -346,12 +346,33 @@ with st.sidebar:
     
     # --- 2. LOGIKA ADMIN (Satu kali saja) ---
     if st.session_state.active_user == "admin":
-        # Kita buat variabel sakelar
-        buka_dashboard = st.checkbox("🚀 Buka Dashboard Utama", value=False)
-        
-        if buka_dashboard:
+        if st.checkbox("🚀 Buka Dashboard Utama", value=False):
             st.info("Log aktivitas tercatat di Cloud.")
-            st.divider()
+            
+            try:
+                # 1. Koneksi ke GSheets
+                conn = st.connection("gsheets", type=GSheetsConnection)
+                # 2. Baca data (Sheet1)
+                df_monitor = conn.read(worksheet="Sheet1", ttl="0")
+                
+                if not df_monitor.empty:
+                    # --- FITUR CEK MVP (Siapa paling rajin) ---
+                    st.markdown("#### 🏆 Top Staf (MVP)")
+                    mvp_count = df_monitor['User'].value_counts().reset_index()
+                    mvp_count.columns = ['Staf', 'Total Input']
+                    st.dataframe(mvp_count, use_container_width=True, hide_index=True)
+                    
+                    # --- TABEL AKTIVITAS LENGKAP ---
+                    st.markdown("#### 📅 Log Aktivitas Terbaru")
+                    # Tampilkan 10 data terbaru saja biar gak berat
+                    st.dataframe(df_monitor.tail(10), use_container_width=True, hide_index=True)
+                else:
+                    st.warning("Belum ada data aktivitas tercatat.")
+            
+            except Exception as e:
+                st.error(f"Gagal memuat data Cloud: {e}")
+                
+        st.divider()
 
     # --- 3. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
@@ -746,6 +767,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
