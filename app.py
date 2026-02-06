@@ -652,41 +652,49 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (MODIFIED: DENGAN INDIKATOR SELESAI)
+# AREA TAMPILAN HASIL (VERSION: AUTO-MARK AFTER COPY)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
     st.success(f"✅ Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
 
-    # Looping hasil generate
     for res in st.session_state.last_generated_results:
-        # 1. Bikin ID penanda unik tiap adegan biar nggak tertukar
+        # 1. Inisialisasi State Penanda
         done_key = f"mark_done_{res['id']}"
         if done_key not in st.session_state:
             st.session_state[done_key] = False
 
-        # 2. Logika Judul: Kalau sudah dicentang, judul berubah warna/simbol
+        # 2. Penentuan Tampilan Berdasarkan Status
         if st.session_state[done_key]:
-            status_header = f"✅ ADEGAN {res['id']} (SELESAI)"
+            header_label = f"✅ ADEGAN {res['id']} (SUDAH DI-COPY)"
+            box_color = "rgba(40, 167, 69, 0.1)" # Hijau transparan
         else:
-            status_header = f"🎬 HASIL ADEGAN {res['id']}"
+            header_label = f"🎬 ADEGAN {res['id']}"
+            box_color = "transparent"
 
-        # 3. Tampilkan Box Adegan
-        with st.container():
-            st.subheader(status_header)
-            
-            c1, c2 = st.columns(2)
-            with c1:
-                st.caption("📸 PROMPT GAMBAR (STATIC)")
-                st.code(res['img'], language="text")
-            with c2:
-                st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
-                st.code(res['vid'], language="text")
-            
-            # 4. Tombol Penanda (Ini kuncinya!)
-            st.checkbox("Sudah di-copy ke AI", key=done_key)
-            
-            st.divider()
+        # 3. Render Box dengan Style Khusus
+        st.markdown(f"""
+            <div style="background-color: {box_color}; padding: 15px; border-radius: 10px; border: 1px solid #31333f; margin-bottom: 10px;">
+                <h3 style="margin: 0;">{header_label}</h3>
+            </div>
+        """, unsafe_allow_html=True)
 
-
+        c1, c2 = st.columns(2)
+        with c1:
+            st.caption("📸 PROMPT GAMBAR")
+            st.code(res['img'], language="text")
+            # Tombol Penanda Pengganti Otomatis
+            if st.button(f"Selesai Copy Gambar {res['id']}", key=f"btn_img_{res['id']}"):
+                st.session_state[done_key] = True
+                st.rerun()
+                
+        with c2:
+            st.caption("🎥 PROMPT VIDEO")
+            st.code(res['vid'], language="text")
+            # Tombol Penanda Pengganti Otomatis
+            if st.button(f"Selesai Copy Video {res['id']}", key=f"btn_vid_{res['id']}"):
+                st.session_state[done_key] = True
+                st.rerun()
+        
+        st.divider()
