@@ -4,9 +4,8 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SMART LOGIN & URL CLEANER
+# 0. SISTEM LOGIN TERPUSAT (USER & PASSWORD CUSTOM)
 # ==============================================================================
-# Daftar Password Staf (Sesuaikan dengan data kamu)
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
     "icha": "udin99",
@@ -15,32 +14,36 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
-# 1. Ambil data dari URL
-url_user = st.query_params.get("u")
-url_pass = st.query_params.get("p")
-
-# 2. Logika Validasi
-if url_user in USER_PASSWORDS:
-    # Cek apakah password di URL benar
-    if url_pass == USER_PASSWORDS[url_user]:
-        # Simpan ke session state agar login tetap awet
-        st.session_state.active_user = url_user
+if 'active_user' not in st.session_state:
+    st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
+    
+    # Membuat tampilan kotak login yang rapi di tengah
+    st.write("")
+    st.write("")
+    _, col_login, _ = st.columns([1, 2, 1])
+    
+    with col_login:
+        st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
+        st.write("---")
         
-        # --- RAHASIA SAKTI: Bersihkan URL ---
-        # Kita set ulang query_params cuma nama user saja, password DIHAPUS
-        st.query_params.update({"u": url_user}) 
-        # (Parameter 'p' otomatis hilang dari tampilan browser saat rerun)
+        user_input = st.selectbox("Pilih User", list(USER_PASSWORDS.keys()))
+        pass_input = st.text_input("Password", type="password", help="Masukkan password unik Anda")
         
-    elif 'active_user' not in st.session_state:
-        # Jika password salah dan belum login, stop aplikasi
-        st.error("🔒 Akses Ditolak: Password salah atau Link tidak valid.")
-        st.stop()
-else:
-    if 'active_user' not in st.session_state:
-        st.warning("Silakan gunakan tautan akses resmi.")
-        st.stop()
-
-# Jika sudah sampai sini, berarti user aman dan sudah login sebagai st.session_state.active_user
+        st.write("")
+        if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
+            if pass_input == USER_PASSWORDS.get(user_input):
+                st.session_state.active_user = user_input
+                st.success(f"Akses diberikan! Selamat bekerja, {user_input.capitalize()}.")
+                st.rerun()
+            else:
+                st.error("❌ Password salah. Silakan cek kembali.")
+        
+        st.write("---")
+        st.caption("🛡️ Keamanan: Link akses ini bersifat privat. Jangan bagikan password Anda kepada orang lain.")
+    
+    # MENGHENTIKAN SELURUH PROSES DI BAWAHNYA JIKA BELUM LOGIN
+    st.stop()
 
 # ==============================================================================
 # 1. KONFIGURASI HALAMAN (MANUAL SETUP - MEGA STRUCTURE)
@@ -708,6 +711,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
