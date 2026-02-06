@@ -652,47 +652,45 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
 
 # ==============================================================================
-# AREA TAMPILAN HASIL (VERSION: VISUAL WORKFLOW TRACKER)
+# AREA TAMPILAN HASIL (VERSION: DYNAMIC HIGHLIGHTER)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
-    nama_staf = st.session_state.active_user.capitalize()
-    st.info(f"💡 **Tips untuk {nama_staf}:** Klik ikon di pojok kanan kotak teks untuk COPY, lalu klik tombol 'SELESAI' di bawahnya.")
+    st.markdown("### 📋 Antrean Prompt Produksi")
+    st.caption("Klik ikon di pojok kanan kotak teks untuk COPY, lalu centang adegan jika sudah selesai.")
 
     for res in st.session_state.last_generated_results:
+        # 1. Inisialisasi State
         done_key = f"mark_done_{res['id']}"
         if done_key not in st.session_state:
             st.session_state[done_key] = False
 
-        # --- LOGIKA PERUBAHAN TAMPILAN ---
-        if st.session_state[done_key]:
-            # Jika sudah selesai, tampilkan box hijau minimalis
-            st.markdown(f"""
-                <div style="background-color: #1e3d2f; padding: 10px; border-radius: 5px; border-left: 5px solid #28a745;">
-                    <span style="color: white; font-weight: bold;">✅ ADEGAN {res['id']} - SELESAI DI-COPY</span>
-                </div>
-            """, unsafe_allow_html=True)
-            # Biar hemat tempat, prompt yang sudah selesai kita sembunyikan dalam expander
-            with st.expander("Lihat kembali prompt yang sudah dicopy"):
-                st.code(res['img'])
-                st.code(res['vid'])
-                if st.button(f"Urungkan Selesai {res['id']}", key=f"undo_{res['id']}"):
-                    st.session_state[done_key] = False
-                    st.rerun()
-        else:
-            # Tampilan aktif jika belum dicopy
-            st.subheader(f"🎬 HASIL ADEGAN {res['id']}")
-            c1, c2 = st.columns(2)
-            with c1:
-                st.caption("📸 PROMPT GAMBAR")
-                st.code(res['img'], language="text")
-            with c2:
-                st.caption("🎥 PROMPT VIDEO")
-                st.code(res['vid'], language="text")
+        # 2. Logika Visual: Meredupkan yang sudah selesai
+        opacity = "0.3" if st.session_state[done_key] else "1.0"
+        bg_color = "#12141d" if st.session_state[done_key] else "#1e212b"
+        border_color = "#28a745" if st.session_state[done_key] else "#31333f"
+
+        # 3. Wrapper Container (Bikin Box)
+        st.markdown(f"""
+            <div style="opacity: {opacity}; background-color: {bg_color}; border: 1px solid {border_color}; 
+                        padding: 15px; border-radius: 10px; margin-bottom: 5px; transition: 0.3s;">
+                <h4 style="margin:0; color: white;">{'✅' if st.session_state[done_key] else '🎬'} Adegan {res['id']}</h4>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Bagian Konten
+        with st.container():
+            col_check, col_content = st.columns([1, 9])
             
-            # Tombol Konfirmasi Manual (Besar & Jelas)
-            if st.button(f"✔️ SELESAI COPY ADEGAN {res['id']}", key=f"btn_done_{res['id']}", use_container_width=True, type="secondary"):
-                st.session_state[done_key] = True
-                st.rerun()
+            with col_check:
+                # Checkbox diletakkan paling pinggir sebagai saklar
+                st.checkbox("Done", key=done_key, label_visibility="collapsed")
+            
+            with col_content:
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.code(res['img'], language="text")
+                with c2:
+                    st.code(res['vid'], language="text")
         
-        st.divider()
+        st.write("") # Spacer kecil
