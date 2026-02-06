@@ -53,16 +53,17 @@ if not st.session_state.logged_in:
 def record_to_sheets(user, first_visual, total_scenes):
     """Mencatat aktivitas karyawan menggunakan Service Account Secrets"""
     try:
-        # Membangun koneksi ke Google Sheets melalui Secrets
+        # Hubungkan ke Google Sheets
         conn = st.connection("gsheets", type=GSheetsConnection)
         
-        # Membaca data lama (Worksheet harus bernama Sheet1)
+        # Ambil data yang sudah ada
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
         
-        # Membuat baris data baru secara eksplisit
-tz = pytz.timezone('Asia/Jakarta')
-current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
+        # --- SETTING WAKTU JAKARTA (PASTIKAN SEJAJAR) ---
+        tz = pytz.timezone('Asia/Jakarta')
+        current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         
+        # Siapkan baris baru
         new_row = pd.DataFrame([{
             "Waktu": current_time,
             "User": user,
@@ -70,10 +71,8 @@ current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
             "Visual Utama": first_visual[:150]
         }])
         
-        # Menggabungkan data lama dan baru
+        # Gabungkan dan Update
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
-        
-        # Menulis kembali ke Cloud (Update)
         conn.update(worksheet="Sheet1", data=updated_df)
         
     except Exception as e:
@@ -498,4 +497,5 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
