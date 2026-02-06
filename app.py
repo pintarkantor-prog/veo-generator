@@ -343,7 +343,7 @@ with st.sidebar:
     # Kalimat penjelas sudah dihapus, langsung ke tombol
     
     # 1. TOMBOL SIMPAN
-    if st.button("💾 SIMPAN SEMUA DATA", use_container_width=True):
+    if st.button("💾 SAVE DATA", use_container_width=True):
         import json
         try:
             captured_scenes = {}
@@ -366,7 +366,7 @@ with st.sidebar:
             st.error(f"Gagal simpan draft: {e}")
 
     # 2. TOMBOL TARIK
-    if st.button("🔄 TARIK DATA DRAFT", use_container_width=True):
+    if st.button("🔄 RESTORE DATA", use_container_width=True):
         import json
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
@@ -693,3 +693,4 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
