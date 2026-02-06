@@ -471,15 +471,28 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT (FULL MEGA STRUCTURE - ANTI-ERROR & ANTI-HILANG)
+# 10. GENERATOR PROMPT & AUTO-DRAFT (ANTI-PANIK & ANTI-HILANG)
 # ==============================================================================
 
 # 1. Siapkan Lemari Penyimpanan (Jika belum ada)
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
+# --- FITUR TAMBAHAN: TOMBOL SIMPAN DRAFT ---
+# Kita letakkan sebelum Generate agar staf bisa mengamankan ketikan mereka
+col_draft, col_empty = st.columns([3, 7])
+with col_draft:
+    if st.button("💾 SIMPAN DRAFT (Google Sheets)", use_container_width=True):
+        # Ambil visual pertama sebagai tanda di database
+        first_vis_text = adegan_storage[0]["visual"] if adegan_storage else "Draft Kosong"
+        # Kirim ke Sheets dengan tanda DRAFT_ agar Admin tahu ini belum difinalisasi
+        record_to_sheets(f"DRAFT_{st.session_state.active_user}", first_vis_text, len(adegan_storage))
+        st.toast("Draft berhasil dikunci ke Cloud! Aman. ✅")
+
+st.write("") # Spasi kecil
+
 # 2. PROSES GENERATE (Saat tombol diklik)
-if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
+if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
     
@@ -492,7 +505,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD
+            # LOGGING CLOUD (FINAL VERSION)
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
@@ -530,7 +543,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- FULL LIGHTING MAPPING (MANUAL EXPLICIT - NO REDUCTION) ---
+                # --- FULL LIGHTING MAPPING ---
                 if "Bening" in light_type:
                     l_cmd = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                     a_cmd = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -613,11 +626,3 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
-
-
-
-
-
-
-
-
