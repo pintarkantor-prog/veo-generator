@@ -535,7 +535,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
     
     if not nama_tokoh_utama:
-        st.warning("⚠️ **Nama Tokoh 1 belum diisi!** Mohon isi nama karakter di bagian Identitas agar AI mengenal subjeknya.")
+        st.warning("⚠️ **Nama Karakter 1 belum diisi!** Mohon isi nama karakter dan detail fisik.")
     
     elif not active_scenes:
         st.warning("⚠️ **Mohon isi deskripsi visual adegan!** Minimal satu adegan harus memiliki deskripsi.")
@@ -670,6 +670,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
