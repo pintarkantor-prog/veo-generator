@@ -336,7 +336,17 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + DOUBLE NOTIF SUCCESS)
 # ==============================================================================
 with st.sidebar:
-    st.title("📸 PINTAR MEDIA")
+    # --- GANTI TEKS JADI LOGO ---
+    try:
+        st.image("PINTAR.png", use_container_width=True)
+    except:
+        st.title("📸 PINTAR MEDIA")
+    
+    st.write("") # Kasih jarak dikit di bawah logo
+    
+    # --- A. LOGIKA ADMIN ---
+    if st.session_state.active_user == "admin":
+        # ... (lanjutkan ke kode checkbox admin kamu)
     
     # --- A. LOGIKA ADMIN ---
     if st.session_state.active_user == "admin":
@@ -716,6 +726,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
