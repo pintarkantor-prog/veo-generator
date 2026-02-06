@@ -369,11 +369,12 @@ def global_sync_v920():
     try:
         count = st.session_state.get("restore_counter", 0)
         
-        # Ambil nilai dari widget Adegan 1
-        lt1 = st.session_state.get(f"light_input_1_{count}")
-        cm1 = st.session_state.get(f"camera_input_1_{count}")
-        sh1 = st.session_state.get(f"shot_input_1_{count}")
-        an1 = st.session_state.get(f"angle_input_1_{count}")
+        # Ambil nilai dari widget Adegan 1 (Master)
+        # Nama key di sini HARUS sama dengan key di selectbox (l_i, c_i, s_i, a_i)
+        lt1 = st.session_state.get(f"l_i_1_{count}")
+        cm1 = st.session_state.get(f"c_i_1_{count}")
+        sh1 = st.session_state.get(f"s_i_1_{count}")
+        an1 = st.session_state.get(f"a_i_1_{count}")
 
         # Update Master State Global
         st.session_state.m_light = lt1
@@ -383,10 +384,10 @@ def global_sync_v920():
 
         # Sebarkan ke adegan 2 sampai seterusnya
         for i in range(2, int(num_scenes) + 1):
-            st.session_state[f"light_input_{i}_{count}"] = lt1
-            st.session_state[f"camera_input_{i}_{count}"] = cm1
-            st.session_state[f"shot_input_{i}_{count}"] = sh1
-            st.session_state[f"angle_input_{i}_{count}"] = an1
+            st.session_state[f"l_i_{i}_{count}"] = lt1
+            st.session_state[f"c_i_{i}_{count}"] = cm1
+            st.session_state[f"s_i_{i}_{count}"] = sh1
+            st.session_state[f"a_i_{i}_{count}"] = an1
     except:
         pass
 
@@ -492,30 +493,33 @@ for i_s in range(1, int(num_scenes) + 1):
             visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state.get(v_key, ""), key=f"w_vis_{i_s}_{count}", height=180)
             st.session_state[v_key] = visual_input
         
-        with col_ctrl:
+with col_ctrl:
             # --- BARIS 1: CAHAYA & GERAK ---
-            r1 = st.columns(2)
+            r1, r2 = st.columns(2), st.columns(2)
+            
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                # Ambil index dari m_light (Master)
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
                 st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+            
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
                 st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             
             # --- BARIS 2: SHOT & ANGLE ---
-            r2 = st.columns(2)
             with r2[0]:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
                 st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+            
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # --- DIALOG ---
+        # --- DIALOG --- (Tetap utuh seperti kodemu)
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
@@ -526,9 +530,10 @@ for i_s in range(1, int(num_scenes) + 1):
                 st.session_state[d_key] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
-        # Simpan state pilihan dropdown (L, C, S, A) agar bisa dibaca saat generate
+        # Ambil data terbaru langsung dari session_state untuk Generate
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, 
+            "num": i_s, 
+            "visual": visual_input, 
             "light": st.session_state.get(f"l_i_{i_s}_{count}", st.session_state.m_light),
             "cam": st.session_state.get(f"c_i_{i_s}_{count}", st.session_state.m_cam),
             "shot": st.session_state.get(f"s_i_{i_s}_{count}", st.session_state.m_shot),
@@ -712,6 +717,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
