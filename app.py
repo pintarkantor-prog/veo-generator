@@ -104,10 +104,21 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
+# 4. CUSTOM CSS (VERSION: STICKY SUB-HEADER)
 # ==============================================================================
 st.markdown("""
     <style>
+    /* Mengunci baris info staf di atas */
+    .sticky-bar {
+        position: sticky;
+        top: 2.875rem;
+        background-color: #0e1117; /* Warna gelap tema Streamlit */
+        z-index: 999;
+        padding: 10px 0px;
+        border-bottom: 1px solid #31333f;
+    }
+    
+    /* --- STYLE SIDEBAR & WIDGET SEBELUMNYA --- */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
@@ -130,36 +141,35 @@ st.markdown("""
         min-height: 180px !important; 
     }
     .small-label {
-        font-size: 12px;
-        font-weight: bold;
-        color: #a1a1a1;
-        margin-bottom: 2px;
+        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
     </style>
     """, unsafe_allow_html=True)
 
-
 # ==============================================================================
-# 5. HEADER APLIKASI (LOGOUT BERSIH TOTAL)
+# 5. STICKY INFO BAR (GANTI TOTAL BAGIAN 5 LAMA DENGAN INI)
 # ==============================================================================
-c_header1, c_header2 = st.columns([8, 2])
-with c_header1:
-    st.title("📸 PINTAR MEDIA")
-    # Nama staf otomatis menyesuaikan siapa yang login
-    nama_display = st.session_state.active_user.capitalize()
-    st.info(f"Staf Aktif: {nama_display} | Konten yang mantap lahir dari detail adegan yang tepat. Semangat kerjanya! 🚀❤️")
+with st.container():
+    # Memasukkan ke dalam div sticky-bar (CSS-nya sudah kamu pasang di Bagian 4 tadi)
+    st.markdown('<div class="sticky-bar">', unsafe_allow_html=True)
+    
+    col_staf, col_logout = st.columns([8, 2])
+    
+    with col_staf:
+        nama_display = st.session_state.active_user.capitalize()
+        # Menggunakan st.success agar lebih ramping dan warnanya segar
+        st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
-with c_header2:
-    # Tombol Logout yang membersihkan segalanya
-    if st.button("Logout 🚪", use_container_width=True):
-        # 1. Bersihkan jejak URL browser
-        st.query_params.clear()
-        # 2. Reset status login aplikasi
-        st.session_state.logged_in = False
-        st.session_state.active_user = ""
-        # 3. Bersihkan hasil generate agar tidak nyangkut ke staf lain
-        st.session_state.last_generated_results = []
-        st.rerun()
+    with col_logout:
+        # Tombol Logout sekarang sejajar dengan info staf
+        if st.button("Logout 🚪", use_container_width=True):
+            st.query_params.clear()
+            st.session_state.logged_in = False
+            st.session_state.active_user = ""
+            st.session_state.last_generated_results = []
+            st.rerun()
+            
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -266,6 +276,8 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI UTAMA (V.1.2.2 - PROGRESS TRACKER & STANDARD BUTTONS)
 # ==============================================================================
 with st.sidebar:
+    st.title("📸 PINTAR MEDIA") # Judul sekarang di sini
+    st.divider()
     if st.session_state.active_user == "admin":
         st.header("🔍 CEK KERJAAN")
         
@@ -703,6 +715,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
