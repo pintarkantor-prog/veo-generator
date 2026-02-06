@@ -354,7 +354,7 @@ with st.sidebar:
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
                 
                 # TITIP PESAN SUKSES SAVE
-                st.session_state["sidebar_success_msg"] = "Berhasil Disimpan! ✅"
+                st.session_state["sidebar_success_msg"] = "Data Berhasil Disimpan! ✅"
                 st.rerun()
             except Exception as e:
                 st.error(f"Gagal simpan: {str(e)}")
@@ -388,7 +388,7 @@ with st.sidebar:
                             st.session_state[d_key] = d_text
                         
                         # TITIP PESAN SUKSES RESTORE
-                        st.session_state["sidebar_success_msg"] = "Berhasil Dipulihkan! 🔄"
+                        st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
                         st.session_state.restore_counter += 1
                         st.rerun()
                     else:
@@ -663,6 +663,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
