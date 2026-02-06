@@ -518,11 +518,22 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         nama_staf = st.session_state.active_user.capitalize()
         
+        # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP SEBELUM GENERATE] ---
+        try:
+            captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+            auto_packet = {
+                "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                "scenes": captured_scenes_auto
+            }
+            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+        except: pass
+        
         with st.spinner(f"⏳ Sedang meracik prompt Vivid 4K untuk {nama_staf}..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD
+            # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
@@ -597,13 +608,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 # --- SIMPAN KE LEMARI ---
                 st.session_state.last_generated_results.append({
-                    "id": scene_id,
-                    "img": img_final,
-                    "vid": vid_final,
-                    "cam_info": f"{e_shot_size} + {e_cam_move}"
+                    "id": scene_id, "img": img_final, "vid": vid_final, "cam_info": f"{e_shot_size} + {e_cam_move}"
                 })
 
-        st.toast("Prompt Vivid & Crystal Clear Berhasil! 🚀", icon="🎨")
+        st.toast("Prompt Berhasil & Cadangan Otomatis Disimpan! 🚀", icon="🎨")
+        
+        # --- [RAHASIA SAKTI: REFRESH HALAMAN AGAR SIDEBAR LANGSUNG MUNCUL] ---
+        st.rerun()
 
 # ==============================================================================
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
@@ -615,18 +626,14 @@ if st.session_state.last_generated_results:
     
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
-        
-        # LOGIKA: Cukup cek statusnya saja
         is_done = st.session_state.get(done_key, False)
         
         if is_done:
-            # Jika SUDAH DICENTANG: Menciut (Collapse)
             with st.expander(f"✅ ADEGAN {res['id']} (DONE)", expanded=False):
                 st.info("Prompt ini sudah ditandai selesai di sidebar.")
                 st.code(res['img'], language="text")
                 st.code(res['vid'], language="text")
         else:
-            # Jika BELUM DICENTANG: Terbuka lebar (Focus)
             with st.container():
                 st.subheader(f"🚀 ADEGAN {res['id']}")
                 c1, c2 = st.columns(2)
@@ -637,5 +644,3 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
-
-
