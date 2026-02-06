@@ -476,18 +476,37 @@ for i_s in range(1, int(num_scenes) + 1):
         
         with col_ctrl:
             r1, r2 = st.columns(2), st.columns(2)
-            # CAHAYA
-            idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
-            l_val = r1[0].selectbox(f"💡 L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
-            # GERAK
-            idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
-            c_val = r1[1].selectbox(f"🎥 C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
-            # SHOT
-            idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
-            s_val = r2[0].selectbox(f"📐 S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
-            # ANGLE
-            idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
-            a_val = r2[1].selectbox(f"✨ A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None))
+            
+            # --- BARIS 1: CAHAYA & GERAK ---
+            with r1[0]:
+                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                # HAPUS index=idx_l, biarkan session_state yang pegang kendali
+                st.selectbox(f"L{i_s}", options_lighting, 
+                             key=f"l_i_{i_s}_{count}", 
+                             on_change=(global_sync_v920 if i_s == 1 else None),
+                             label_visibility="collapsed")
+            
+            with r1[1]:
+                st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
+                st.selectbox(f"C{i_s}", indonesia_camera, 
+                             key=f"c_i_{i_s}_{count}", 
+                             on_change=(global_sync_v920 if i_s == 1 else None),
+                             label_visibility="collapsed")
+            
+            # --- BARIS 2: SHOT & ANGLE ---
+            with r2[0]:
+                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
+                st.selectbox(f"S{i_s}", indonesia_shot, 
+                             key=f"s_i_{i_s}_{count}", 
+                             on_change=(global_sync_v920 if i_s == 1 else None),
+                             label_visibility="collapsed")
+            
+            with r2[1]:
+                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
+                st.selectbox(f"A{i_s}", indonesia_angle, 
+                             key=f"a_i_{i_s}_{count}", 
+                             on_change=(global_sync_v920 if i_s == 1 else None),
+                             label_visibility="collapsed")
 
         # --- BAGIAN DIALOG (INDENTASI DIPERBAIKI) ---
         diag_cols = st.columns(len(all_chars_list))
@@ -685,6 +704,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
