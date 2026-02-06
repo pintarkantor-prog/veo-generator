@@ -236,59 +236,68 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION PRO DASHBOARD)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
         st.header("📊 Admin Monitor")
         
-        # Checkbox untuk mengintip aktivitas
-        show_log = st.checkbox("Buka Log Produksi")
+        show_log = st.checkbox("Buka Dashboard Produksi")
         
         if show_log:
             try:
-                # Koneksi ke GSheets
                 conn_a = st.connection("gsheets", type=GSheetsConnection)
                 df_a = conn_a.read(worksheet="Sheet1", ttl=0)
                 
                 if not df_a.empty:
-                    # Urutan: Balik data agar yang terbaru di PALING ATAS
-                    df_show = df_a.iloc[::-1] 
+                    # --- BAGIAN STATISTIK (HIGHLIGHTS) ---
+                    total_prod = len(df_a)
+                    # Menghitung total adegan yang sudah dibuat
+                    total_scenes_made = df_a["Total Adegan"].sum()
                     
-                    # Tampilan Tabel Cantik
+                    col_m1, col_m2 = st.columns(2)
+                    with col_m1:
+                        st.metric("Total Log", f"{total_prod}")
+                    with col_m2:
+                        st.metric("Total Adegan", f"{total_scenes_made}")
+                    
+                    st.markdown("---")
+                    
+                    # --- TABEL AKTIVITAS TERBARU ---
+                    st.write("📂 **Aktivitas Terbaru:**")
+                    df_show = df_a.iloc[::-1] # Terbaru di atas
+                    
                     st.dataframe(
                         df_show, 
                         use_container_width=True,
                         hide_index=True,
                         column_config={
-                            "Waktu": st.column_config.TextColumn("⏰ Waktu (WIB)"),
+                            "Waktu": st.column_config.TextColumn("⏰ Waktu"),
                             "User": st.column_config.TextColumn("👤 Staf"),
-                            "Total Adegan": st.column_config.NumberColumn("🎬 Adegan"),
-                            "Visual Utama": st.column_config.TextColumn("📝 Detail Visual")
+                            "Total Adegan": st.column_config.NumberColumn("🎬 Jml"),
+                            "Visual Utama": st.column_config.TextColumn("📝 Visual")
                         }
                     )
                     
-                    # Tombol Pembersih Manual
+                    # --- TOMBOL ACTION ---
                     st.divider()
-                    if st.button("🗑️ Kosongkan Semua Log", use_container_width=True):
-                        # Membuat dataframe kosong dengan kolom yang sama
+                    if st.button("🗑️ Reset Database Log", use_container_width=True):
                         empty_df = pd.DataFrame(columns=["Waktu", "User", "Total Adegan", "Visual Utama"])
                         conn_a.update(worksheet="Sheet1", data=empty_df)
-                        st.success("Log berhasil dibersihkan!")
+                        st.success("Log dibersihkan!")
                         st.rerun()
                 else:
-                    st.info("Belum ada riwayat produksi.")
+                    st.info("Belum ada aktivitas tercatat.")
                     
             except Exception as e:
-                st.error(f"Gagal memuat log: {e}")
+                st.error(f"Koneksi GSheets Sibuk: {e}")
                 
         st.divider()
 
-    # Pengaturan Jumlah Adegan (Untuk Semua User)
+    # Pengaturan Global (Berlaku untuk Icha & Nissa)
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
-
-
+    
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
 # ==============================================================================
@@ -537,3 +546,4 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
