@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (SUPPORT ENTER KEY & LOGO ONLY)
+# 0. SISTEM LOGIN TUNGGAL (FULL STABLE: ENTER KEY + LOGO + PLACEHOLDER)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -14,13 +14,13 @@ USER_PASSWORDS = {
     "lisa": "tung66"
 }
 
-# --- 1. FITUR AUTO-LOGIN ---
+# --- 1. FITUR AUTO-LOGIN (Cek URL saat Refresh) ---
 if 'active_user' not in st.session_state:
     q_user = st.query_params.get("u")
     if q_user in USER_PASSWORDS:
         st.session_state.active_user = q_user
 
-# --- 2. LAYAR LOGIN ---
+# --- 2. LAYAR LOGIN (Muncul jika belum login) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
@@ -31,21 +31,28 @@ if 'active_user' not in st.session_state:
         _, col_login, _ = st.columns([1, 2, 1])
         
         with col_login:
+            # Tampilan Logo PINTAR.png
             try:
                 st.image("PINTAR.png", use_container_width=True) 
             except:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
+            st.write("---")
             
-            # --- MENGGUNAKAN FORM AGAR BISA ENTER ---
+            # --- FORM LOGIN (Dukungan Enter Key) ---
             with st.form("login_form", clear_on_submit=False):
                 user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
-                pass_input = st.text_input("Password", type="password", placeholder="••••••••")
                 
-                # Di dalam form, tombol harus menggunakan st.form_submit_button
+                # Placeholder password sudah diubah dari titik-titik menjadi teks
+                pass_input = st.text_input(
+                    "Password", 
+                    type="password", 
+                    placeholder="Masukkan password Anda..."
+                )
+                
                 submit_button = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary")
             
-            # Logika pengecekan setelah tombol diklik atau Enter ditekan
+            # Logika Pengecekan
             if submit_button:
                 user_clean = user_input.lower().strip()
                 
@@ -53,6 +60,7 @@ if 'active_user' not in st.session_state:
                     st.query_params["u"] = user_clean
                     st.session_state.active_user = user_clean
                     
+                    # Efek Transisi Sukses
                     placeholder.empty() 
                     with placeholder.container():
                         st.write("")
@@ -60,11 +68,12 @@ if 'active_user' not in st.session_state:
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
                         st.markdown("<p style='text-align: center; color: gray;'>Menyiapkan dashboard...</p>", unsafe_allow_html=True)
+                        
                         _, col_spin, _ = st.columns([2, 1, 2])
                         with col_spin:
                             with st.spinner(""):
                                 import time
-                                time.sleep(3.0) 
+                                time.sleep(2.5) # Saya kembalikan ke 1.2 detik agar tidak kelamaan menunggu
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
@@ -73,7 +82,7 @@ if 'active_user' not in st.session_state:
             st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
     st.stop() 
 
-# --- 3. SETELAH LOGIN ---
+# --- 3. SETELAH LOGIN (Konfigurasi Dashboard) ---
 st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
@@ -710,6 +719,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
