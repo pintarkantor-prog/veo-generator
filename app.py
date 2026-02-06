@@ -353,7 +353,7 @@ with st.sidebar:
                 st.toast("Draft Tersimpan! ✅")
             except: st.error("Gagal simpan")
 
-    with c_r:
+with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
@@ -361,37 +361,44 @@ with st.sidebar:
                 df_log = conn.read(worksheet="Sheet1", ttl="5s")
                 
                 if not df_log.empty:
-                    # Paksa semua jadi string dulu biar gak error .str accessor
+                    # Amankan format string agar tidak error accessor
                     df_log['User'] = df_log['User'].astype(str)
                     df_log['Visual Utama'] = df_log['Visual Utama'].astype(str)
                     
-                    # Filter data milik user ini (baik DRAFT_ maupun AUTO_)
+                    # Filter data milik user (icha / AUTO_icha / DRAFT_icha)
                     user_tag = st.session_state.active_user
                     my_data = df_log[df_log['User'].str.contains(user_tag, na=False)].copy()
                     
-                    # Filter hanya yang format JSON
-                    my_data = my_data[my_data['Visual Utama'].str.startswith("{", na=False)]
-                    
                     if not my_data.empty:
-                        raw_data = my_data.iloc[-1]['Visual Utama']
-                        data = json.loads(raw_data)
+                        # Ambil baris paling terakhir (terbaru)
+                        raw_data = my_data.iloc[-1]['Visual Utama'].strip()
                         
-                        st.session_state.c_name_1_input = data.get("n1", "")
-                        st.session_state.c_desc_1_input = data.get("p1", "")
-                        st.session_state.c_name_2_input = data.get("n2", "")
-                        st.session_state.c_desc_2_input = data.get("p2", "")
-                        
-                        for k, v in data.get("scenes", {}).items():
-                            st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                        # --- LOGIKA SMART RESTORE ---
+                        if raw_data.startswith("{"):
+                            # JIKA FORMAT JSON (KOPER DATA)
+                            data = json.loads(raw_data)
+                            st.session_state.c_name_1_input = data.get("n1", "")
+                            st.session_state.c_desc_1_input = data.get("p1", "")
+                            st.session_state.c_name_2_input = data.get("n2", "")
+                            st.session_state.c_desc_2_input = data.get("p2", "")
+                            
+                            scenes_data = data.get("scenes", {})
+                            for k, v in scenes_data.items():
+                                st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                        else:
+                            # JIKA FORMAT TEKS BIASA (SEPERTI 11111111)
+                            # Masukkan ke kotak Adegan 1 sebagai cadangan darurat
+                            st.session_state["vis_input_1"] = raw_data
                         
                         st.session_state.restore_counter += 1
+                        st.success("Data Berhasil Ditarik! ✅")
                         st.rerun()
                     else:
                         st.warning("Data cadangan tidak ditemukan.")
                 else:
-                    st.warning("Database kosong.")
+                    st.warning("Database masih kosong.")
             except Exception as e: 
-                st.error(f"Gagal tarik: {e}")
+                st.error(f"Gagal tarik data: {e}")
 
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
 
@@ -678,5 +685,6 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
