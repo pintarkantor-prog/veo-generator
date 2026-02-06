@@ -420,21 +420,22 @@ with st.sidebar:
     st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
-# 8. PARAMETER KUALITAS (VERSION: LEAN & SHARP)
+# 8. PARAMETER KUALITAS (VERSION: LEAN BUT PROTECTED)
 # ==============================================================================
-# Kita fokus pada kata kunci yang benar-benar berefek pada AI modern
+# Fokus pada kualitas tajam tanpa mengulang-ulang kata yang sama
 sharp_natural_stack = (
     "8k ultra-detailed, cinematic photography, sharp focus, high-fidelity textures, "
     "vibrant organic colors, hyper-realistic skin, clear background, professional lighting."
 )
 
+# Pagar larangan yang kamu minta tetap dijaga ketat di sini
 no_text_strict = (
-    "NO text, NO watermark, NO speech bubbles, NO subtitles, NO typography."
+    "STRICTLY NO rain, NO wet ground, NO raindrops, NO speech bubbles, NO text, "
+    "NO typography, NO watermark, NO letters, NO black bars on top and bottom, NO subtitles."
 )
 
 img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"60fps, fluid motion, {sharp_natural_stack} {no_text_strict}"
-
 # ==============================================================================
 # 8.5 FUNGSI SINKRONISASI OTOMATIS (TARUH DI SINI)
 # ==============================================================================
@@ -601,7 +602,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK (Kunci Identitas Karakter) ---
-            char_defs = ", ".join([f"{c['name']}: {c['desc']}" for c in all_chars_list if c['name']])
+            # Mengambil nama dan fisik karakter agar konsisten
+            char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = f"STRICT CHARACTER FIDELITY. Consistent appearances for: {char_defs}. "
 
             for item in active_scenes:
@@ -652,8 +654,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Expression: reacting to '{d_all_text}'. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (METODE LEAN & POWERFUL) ---
-                # Master Lock diletakkan di awal agar menjadi prioritas AI
+                # --- RAKIT PROMPT AKHIR ---
                 img_final = (
                     f"{master_lock_instruction} Professional photo, 9:16 vertical. {e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. Lighting: {l_cmd}. {img_quality_base} --ar 9:16"
