@@ -289,7 +289,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI - NO DEFAULT HINT)
+# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + CELEBRATION EFFECT)
 # ==============================================================================
 with st.sidebar:
     st.title("📸 PINTAR MEDIA")
@@ -308,14 +308,21 @@ with st.sidebar:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         total_p = len(st.session_state.last_generated_results)
         done_p = 0
+        
+        # List adegan dengan checkbox
         for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
             if st.checkbox(f"Adegan {res['id']}", key=done_key):
                 done_p += 1
+        
+        # Progress Bar
         st.progress(done_p / total_p)
+        
+        # --- EFEK SELEBRASI (BALON) ---
+        if done_p == total_p and total_p > 0:
+            st.balloons() # Munculkan balon di layar
+            st.success("🎉 Semua Adegan Selesai!")
     
-    # Bagian 'else' (Klik Generate untuk munculkan peta) sudah dihapus agar bersih
-
     st.divider()
 
     # --- C. TOMBOL SAVE & RESTORE ---
@@ -358,7 +365,6 @@ with st.sidebar:
                         for k, v in data.get("scenes", {}).items():
                             st.session_state[f"vis_input_{k.replace('v','')}"] = v
                         
-                        # Simpan pesan sukses ke memori
                         st.session_state["restore_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
                         st.session_state.restore_counter += 1
                         st.rerun()
@@ -371,7 +377,7 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Gagal koneksi: {str(e)}")
 
-    # --- MENAMPILKAN NOTIFIKASI BERHASIL ---
+    # --- MENAMPILKAN NOTIFIKASI RESTORE BERHASIL ---
     if "restore_success_msg" in st.session_state:
         st.success(st.session_state["restore_success_msg"])
         del st.session_state["restore_success_msg"]
@@ -634,6 +640,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
