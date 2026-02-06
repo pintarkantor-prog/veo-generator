@@ -396,63 +396,51 @@ img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL VERSION - CLEAN UI & AUTO-SYNC)
+# 9. FORM INPUT ADEGAN (FIXED: ANTI-HILANG & AUTO-SYNC)
 # ==============================================================================
 
-# 1. Inisialisasi Counter & Memori (WAJIB ADA untuk sinkronisasi)
+# 1. Inisialisasi Counter (Tetap ada untuk fungsi Restore di Sidebar)
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
 
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (FULL VERSION - UTUH) ---
+# --- IDENTITAS TOKOH (FULL VERSION - KUNCI MATI) ---
 with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.markdown("### Karakter 1")
-        # Gunakan key dinamis untuk restore, tapi langsung simpan ke memori utama
-        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}")
-        c_p1_v = st.text_area("Detail Fisik Karakter 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
-        # SINKRONISASI: Kunci ke memori utama
-        st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
+        # Menggunakan key langsung ke session_state agar tidak hilang saat refresh
+        st.text_input("Nama Karakter 1", key="c_name_1_input")
+        st.text_area("Detail Fisik Karakter 1", key="c_desc_1_input", height=100)
         
     with col_c2:
         st.markdown("### Karakter 2")
-        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
-        c_p2_v = st.text_area("Detail Fisik Karakter 2", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
-        st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
+        st.text_input("Nama Karakter 2", key="c_name_2_input")
+        st.text_area("Detail Fisik Karakter 2", key="c_desc_2_input", height=100)
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=6, value=2)
     st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
     
-    all_chars_list = [{"name": c_n1_v, "desc": c_p1_v}, {"name": c_n2_v, "desc": c_p2_v}]
-    
-    if num_extra > 2:
-        extra_cols = st.columns(num_extra - 2)
-        for ex_idx in range(2, int(num_extra)):
-            with extra_cols[ex_idx - 2]:
-                kn, kp = f"ex_name_{ex_idx}", f"ex_phys_{ex_idx}"
-                ex_name = st.text_input(f"Nama Karakter {ex_idx+1}", value=st.session_state.get(kn, ""), key=f"w_en_{ex_idx}_{st.session_state.restore_counter}")
-                ex_phys = st.text_area(f"Detail Fisik Karakter {ex_idx+1}", value=st.session_state.get(kp, ""), key=f"w_ep_{ex_idx}_{st.session_state.restore_counter}", height=100)
-                st.session_state[kn], st.session_state[kp] = ex_name, ex_phys
-                all_chars_list.append({"name": ex_name, "desc": ex_phys})
+    # Ambil data dari session_state untuk list dialog
+    all_chars_list = [
+        {"name": st.session_state.c_name_1_input, "desc": st.session_state.c_desc_1_input}, 
+        {"name": st.session_state.c_name_2_input, "desc": st.session_state.c_desc_2_input}
+    ]
 
-# --- LIST ADEGAN (FULL VERSION + SYNC LOGIC) ---
+# --- LIST ADEGAN (ANTI-HILANG MODE) ---
 adegan_storage = []
-count = st.session_state.restore_counter
 
 for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     with st.expander(l_box_title, expanded=(i_s == 1)):
         col_v, col_ctrl = st.columns([6.5, 3.5])
+        
         with col_v:
             v_key = f"vis_input_{i_s}"
-            # Kita ambil nilai terakhir dari session_state supaya tidak hilang saat rerun
-            val_sekarang = st.session_state.get(v_key, "")
-            visual_input = st.text_area(f"Visual Adegan {i_s}", value=val_sekarang, key=f"w_vis_{i_s}_{count}", height=180)
-            # SIMPAN BALIK: Ini yang menjaga data tidak hilang saat klik Generate
-            st.session_state[v_key] = visual_input
+            # KUNCI: Key statis membuat teks nempel permanen di browser
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=v_key, height=180)
         
         with col_ctrl:
             r1, r2 = st.columns(2), st.columns(2)
@@ -460,23 +448,23 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 1: CAHAYA & GERAK ---
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                l_key = f"l_i_{i_s}_{count}"
+                l_key = f"light_input_{i_s}"
                 light_val = st.selectbox(f"L{i_s}", options_lighting, key=l_key, label_visibility="collapsed")
             
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
-                c_key = f"c_i_{i_s}_{count}"
+                c_key = f"camera_input_{i_s}"
                 cam_val = st.selectbox(f"C{i_s}", indonesia_camera, key=c_key, label_visibility="collapsed")
             
             # --- BARIS 2: SHOT & ANGLE ---
             with r2[0]:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
-                s_key = f"s_i_{i_s}_{count}"
+                s_key = f"shot_input_{i_s}"
                 shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=s_key, label_visibility="collapsed")
             
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
-                a_key = f"a_i_{i_s}_{count}"
+                a_key = f"angle_input_{i_s}"
                 angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=a_key, label_visibility="collapsed")
 
         # --- BAGIAN DIALOG ---
@@ -485,10 +473,9 @@ for i_s in range(1, int(num_scenes) + 1):
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_key_mem = f"diag_{i_s}_{i_char}"
-                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state.get(d_key_mem, ""), key=f"wd_{i_s}_{i_char}_{count}")
-                # SIMPAN BALIK
-                st.session_state[d_key_mem] = d_in
+                # Dialog juga dikunci pakai key statis
+                d_key = f"diag_{i_s}_{i_char}"
+                d_in = st.text_input(f"Dialog {char_label}", key=d_key)
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
@@ -647,4 +634,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
