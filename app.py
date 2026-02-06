@@ -51,19 +51,19 @@ if not st.session_state.logged_in:
 # 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE)
 # ==============================================================================
 def record_to_sheets(user, first_visual, total_scenes):
-    """Mencatat aktivitas karyawan menggunakan Service Account Secrets"""
+    """Mencatat aktivitas dan membatasi log maksimal 100 baris"""
     try:
-        # Hubungkan ke Google Sheets
+        # 1. Koneksi
         conn = st.connection("gsheets", type=GSheetsConnection)
         
-        # Ambil data yang sudah ada
+        # 2. Baca data lama
         existing_data = conn.read(worksheet="Sheet1", ttl=0)
         
-        # --- SETTING WAKTU JAKARTA (PASTIKAN SEJAJAR) ---
+        # 3. Setting Waktu Jakarta (WIB)
         tz = pytz.timezone('Asia/Jakarta')
         current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         
-        # Siapkan baris baru
+        # 4. Buat baris baru
         new_row = pd.DataFrame([{
             "Waktu": current_time,
             "User": user,
@@ -71,17 +71,20 @@ def record_to_sheets(user, first_visual, total_scenes):
             "Visual Utama": first_visual[:150]
         }])
         
-        # Gabungkan dan Update
+        # 5. Gabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
-        # --- FITUR OTOMATIS HAPUS (Keep last 100) ---
+        
+        # 6. FITUR OTOMATIS HAPUS: Hanya simpan 100 data terakhir
         if len(updated_df) > 100:
             updated_df = updated_df.tail(100)
         
+        # 7. Update kembali ke Google Sheets
         conn.update(worksheet="Sheet1", data=updated_df)
         
-        except Exception as e:
+    except Exception as e:
+        # Jika error, tampilkan pesan agar mudah didebug
         st.error(f"Gagal mencatat riwayat ke Google Sheets: {e}")
-
+        
 # ==============================================================================
 # 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
 # ==============================================================================
@@ -500,6 +503,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
