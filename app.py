@@ -405,12 +405,12 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
     with col_c1:
         st.markdown("### Karakter 1")
         c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}")
-        c_p1_v = st.text_area("Fisik Karakter 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
+        c_p1_v = st.text_area("Detail Fisik 1", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
     with col_c2:
         st.markdown("### Karakter 2")
         c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}")
-        c_p2_v = st.text_area("Fisik Karakter 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
+        c_p2_v = st.text_area("Detail Fisik 2", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
     st.divider()
@@ -633,6 +633,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
