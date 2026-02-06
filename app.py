@@ -410,24 +410,22 @@ img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
 vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_strict}"
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FIXED: ANTI-HILANG & AUTO-SYNC)
+# 9. FORM INPUT ADEGAN (FINAL: ANTI-HILANG & CLEAN STATE)
 # ==============================================================================
 
-# 1. Inisialisasi Counter (Tetap ada untuk fungsi Restore di Sidebar)
+# 1. Inisialisasi Counter
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
 
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (FULL VERSION - KUNCI MATI) ---
+# --- IDENTITAS TOKOH (Gunakan key saja, jangan diisi manual ke state) ---
 with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.markdown("### Karakter 1")
-        # Menggunakan key langsung ke session_state agar tidak hilang saat refresh
         st.text_input("Nama Karakter 1", key="c_name_1_input")
         st.text_area("Detail Fisik Karakter 1", key="c_desc_1_input", height=100)
-        
     with col_c2:
         st.markdown("### Karakter 2")
         st.text_input("Nama Karakter 2", key="c_name_2_input")
@@ -435,15 +433,14 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=6, value=2)
-    st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
     
-    # Ambil data dari session_state untuk list dialog
+    # Ambil data dari state untuk list dialog
     all_chars_list = [
-        {"name": st.session_state.c_name_1_input, "desc": st.session_state.c_desc_1_input}, 
-        {"name": st.session_state.c_name_2_input, "desc": st.session_state.c_desc_2_input}
+        {"name": st.session_state.get("c_name_1_input", ""), "desc": st.session_state.get("c_desc_1_input", "")},
+        {"name": st.session_state.get("c_name_2_input", ""), "desc": st.session_state.get("c_desc_2_input", "")}
     ]
 
-# --- LIST ADEGAN (ANTI-HILANG MODE) ---
+# --- LIST ADEGAN (MURNI MENGGUNAKAN KEY PERSISTENCE) ---
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
@@ -452,34 +449,24 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            v_key = f"vis_input_{i_s}"
-            # KUNCI: Key statis membuat teks nempel permanen di browser
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=v_key, height=180)
+            # PENTING: Cukup pakai key. Streamlit akan menjaga datanya otomatis.
+            # Jangan tambahkan baris st.session_state[v_key] = visual_input di bawahnya!
+            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180)
         
         with col_ctrl:
             r1, r2 = st.columns(2), st.columns(2)
-            
-            # --- BARIS 1: CAHAYA & GERAK ---
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
-                l_key = f"light_input_{i_s}"
-                light_val = st.selectbox(f"L{i_s}", options_lighting, key=l_key, label_visibility="collapsed")
-            
+                l_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
-                c_key = f"camera_input_{i_s}"
-                cam_val = st.selectbox(f"C{i_s}", indonesia_camera, key=c_key, label_visibility="collapsed")
-            
-            # --- BARIS 2: SHOT & ANGLE ---
+                c_val = st.selectbox(f"C{i_s}", indonesia_camera, key=f"camera_input_{i_s}", label_visibility="collapsed")
             with r2[0]:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
-                s_key = f"shot_input_{i_s}"
-                shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=s_key, label_visibility="collapsed")
-            
+                s_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
-                a_key = f"angle_input_{i_s}"
-                angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=a_key, label_visibility="collapsed")
+                a_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
 
         # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -487,18 +474,17 @@ for i_s in range(1, int(num_scenes) + 1):
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                # Dialog juga dikunci pakai key statis
-                d_key = f"diag_{i_s}_{i_char}"
-                d_in = st.text_input(f"Dialog {char_label}", key=d_key)
+                d_in = st.text_input(f"Dialog {char_label}", key=f"diag_{i_s}_{i_char}")
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
+        # Simpan ke storage untuk diproses tombol Generate
         adegan_storage.append({
             "num": i_s, 
             "visual": visual_input, 
-            "light": light_val,
-            "cam": cam_val,
-            "shot": shot_val,
-            "angle": angle_val,
+            "light": l_val, 
+            "cam": c_val, 
+            "shot": s_val, 
+            "angle": a_val,
             "dialogs": scene_dialogs_list
         })
 # ==============================================================================
@@ -648,6 +634,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
