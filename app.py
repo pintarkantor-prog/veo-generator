@@ -276,8 +276,7 @@ def global_sync_v920():
 # 7. SIDEBAR: KONFIGURASI UTAMA (V.1.2.2 - PROGRESS TRACKER & STANDARD BUTTONS)
 # ==============================================================================
 with st.sidebar:
-    st.title("📸 PINTAR MEDIA") # Judul sekarang di sini
-    st.divider()
+    st.title("📸 PINTAR MEDIA")
     if st.session_state.active_user == "admin":
         st.header("🔍 CEK KERJAAN")
         
@@ -715,6 +714,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
