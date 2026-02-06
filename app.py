@@ -435,8 +435,14 @@ st.divider()
 
 
 # ==============================================================================
-# 10. GENERATOR PROMPT (MEGA STRUCTURE - WITH PERSONALIZED LOADING, NOTIF & COPY BUTTON)
+# 10. GENERATOR PROMPT (MEGA STRUCTURE - ANTI-HILANG & FULL MAPPING)
 # ==============================================================================
+
+# 1. Siapkan Lemari Penyimpanan (Jika belum ada)
+if 'last_generated_results' not in st.session_state:
+    st.session_state.last_generated_results = []
+
+# 2. PROSES GENERATE (Saat tombol diklik)
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -444,21 +450,20 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
     if not active_scenes:
         st.warning("Mohon isi deskripsi visual adegan!")
     else:
-        # Ambil nama staf untuk personalisasi
         nama_staf = st.session_state.active_user.capitalize()
         
-        # --- EFEK LOADING BERDASARKAN USER ---
         with st.spinner(f"⏳ Sedang meracik prompt AI untuk {nama_staf}..."):
+            # Reset isi lemari sebelum diisi yang baru
+            st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD (Mencatat ke Google Sheets)
+            # LOGGING CLOUD
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK (HANYA UNTUK ADEGAN 1) ---
+            # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"Karakter {idx+1} ({c['name']}: {c['desc']})" for idx, c in enumerate(all_chars_list) if c['name']])
             master_lock_instruction = f"IMPORTANT: Remember these characters and their physical traits for this entire session. Do not deviate from these visuals: {char_defs}. "
 
             for item in active_scenes:
-                
                 # --- LOGIKA SMART CAMERA MOVEMENT ---
                 vis_core = item["visual"]
                 vis_lower = vis_core.lower()
@@ -483,13 +488,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 else:
                     vis_core_final = vis_core
 
-                # Konversi Teknis Lainnya
+                # Konversi Teknis
                 e_shot_size = shot_map.get(item["shot"], "Medium Shot")
                 e_angle_cmd = angle_map.get(item["angle"], "")
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- FULL LIGHTING MAPPING ---
+                # --- FULL LIGHTING MAPPING (MANUAL EXPLICIT - NO REDUCTION) ---
                 if "Bening" in light_type:
                     l_cmd = "Ultra-high altitude light visibility, thin air clarity, extreme micro-contrast, zero haze."
                     a_cmd = "10:00 AM mountain altitude sun, deepest cobalt blue sky, authentic wispy clouds, bone-dry environment."
@@ -525,9 +530,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                 # Logika Penyuntikan Master Lock
                 current_lock = master_lock_instruction if scene_id == 1 else ""
 
-                # --- DISPLAY HASIL AKHIR ---
-                st.subheader(f"✅ Hasil Adegan {scene_id}")
-                
+                # --- RAKIT PROMPT AKHIR ---
                 img_final = (
                     f"{current_lock}create a STATIC high-quality photograph, 9:16 vertical aspect ratio, edge-to-edge full frame coverage. "
                     f"{e_angle_cmd} {emotion_ctx}{dna_str} Visual: {vis_core_final}. "
@@ -539,42 +542,44 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
                     f"{emotion_ctx}{dna_str} Visual: {vis_core_final}. "
                     f"Lighting: {l_cmd}. {vid_quality_base}"
                 )
-                
-                c1, c2 = st.columns(2)
-                with c1:
-                    st.caption("📸 PROMPT GAMBAR (STATIC)")
-                    st.code(img_final, language="text")
-                    # Tombol Salin Gambar
-                    if st.button(f"📋 Salin Gambar {scene_id}", key=f"btn_copy_img_{scene_id}", use_container_width=True):
-                        st.copy_to_clipboard(img_final)
-                        st.toast(f"Gambar Adegan {scene_id} Tersalin! ✅")
 
-                with c2:
-                    st.caption(f"🎥 PROMPT VIDEO ({e_shot_size} + {e_cam_move})")
-                    st.code(vid_final, language="text")
-                    # Tombol Salin Video
-                    if st.button(f"📋 Salin Video {scene_id}", key=f"btn_copy_vid_{scene_id}", use_container_width=True):
-                        st.copy_to_clipboard(vid_final)
-                        st.toast(f"Video Adegan {scene_id} Tersalin! ✅")
-                
-                st.divider()
+                # --- SIMPAN KE LEMARI (SESSION STATE) ---
+                st.session_state.last_generated_results.append({
+                    "id": scene_id,
+                    "img": img_final,
+                    "vid": vid_final,
+                    "cam_info": f"{e_shot_size} + {e_cam_move}"
+                })
 
-        # --- NOTIFIKASI TOAST DINAMIS ---
-        if st.session_state.active_user == "admin":
-            pesan_toast = "Prompt Berhasil Dibuat! 🚀"
-        else:
-            pesan_toast = f"Kerjaan {nama_staf} Berhasil Dibuat! 🚀"
-            
+        # Notifikasi Berhasil
+        pesan_toast = "Prompt Berhasil Dibuat! 🚀" if st.session_state.active_user == "admin" else f"Kerjaan {nama_staf} Berhasil Dibuat! 🚀"
         st.toast(pesan_toast, icon="🎨")
-        st.success(f"Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
+
+# 3. AREA TAMPILAN (Di luar blok button - Agar tetap ada saat disalin)
+if st.session_state.last_generated_results:
+    st.divider()
+    nama_staf = st.session_state.active_user.capitalize()
+    st.success(f"Mantap! Prompt untuk {nama_staf} sudah siap digunakan.")
+
+    for res in st.session_state.last_generated_results:
+        st.subheader(f"✅ Hasil Adegan {res['id']}")
+        
+        c1, c2 = st.columns(2)
+        with c1:
+            st.caption("📸 PROMPT GAMBAR (STATIC)")
+            st.code(res['img'], language="text")
+            if st.button(f"📋 Salin Gambar {res['id']}", key=f"btn_copy_img_{res['id']}", use_container_width=True):
+                st.copy_to_clipboard(res['img'])
+                st.toast(f"Gambar Adegan {res['id']} Tersalin! ✅")
+
+        with c2:
+            st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
+            st.code(res['vid'], language="text")
+            if st.button(f"📋 Salin Video {res['id']}", key=f"btn_copy_vid_{res['id']}", use_container_width=True):
+                st.copy_to_clipboard(res['vid'])
+                st.toast(f"Video Adegan {res['id']} Tersalin! ✅")
+        
+        st.divider()
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
-
-
-
-
-
-
-
-
