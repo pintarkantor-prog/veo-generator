@@ -461,11 +461,20 @@ with st.sidebar:
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
-sharp_natural_stack = (
+# --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
+img_quality_stack = (
     "photorealistic raw photo, 8k UHD, extremely high-resolution, shot on 35mm lens, f/1.8, ISO 100, "
     "ultra-sharp focus, crystal clear optical clarity, vibrant organic colors, deep color saturation, "
     "ray-traced global illumination, hyper-detailed skin pores and fabric fibers, "
     "zero digital noise, clean pixels, masterpiece quality."
+)
+
+# --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
+vid_quality_stack = (
+    "ultra-high definition cinematic video, 8k UHD, high dynamic range, "
+    "professional color grading, vibrant organic colors, ray-traced reflections, "
+    "hyper-detailed textures, zero digital noise, clean pixels, "
+    "smooth motion, professional cinematography, masterpiece quality."
 )
 
 no_text_strict = (
@@ -473,8 +482,9 @@ no_text_strict = (
     "NO captions, NO speech bubbles, NO labels, NO black bars, NO grain, NO blur."
 )
 
-img_quality_base = f"{sharp_natural_stack} {no_text_strict}"
-vid_quality_base = f"60fps, ultra-clear motion, {sharp_natural_stack} {no_text_strict}"
+# --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
+img_quality_base = f"{img_quality_stack} {no_text_strict}"
+vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict}"
 
 # ==============================================================================
 # 9. FORM INPUT ADEGAN (FIXED: ANTI-HILANG & AUTO-SYNC)
@@ -728,6 +738,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
