@@ -236,11 +236,11 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: ULTIMATE CONTROL UPDATED)
+# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: CLEAN EXPANDER)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
-        st.header("🔍 CEK KERJAAN") # <--- Perubahan Nama Header
+        st.header("🔍 CEK KERJAAN")
         
         if st.checkbox("🚀 Buka Dashboard Utama", value=True):
             try:
@@ -255,43 +255,46 @@ with st.sidebar:
                     
                     c1, c2 = st.columns(2)
                     with c1:
-                        st.metric("Total Klik", total_prod, delta="Live")
+                        st.metric("Total Klik", total_prod)
                     with c2:
                         top_staf = user_counts.idxmax() if not user_counts.empty else "-"
-                        st.metric("MVP Staf", top_staf, delta="Top")
+                        st.metric("MVP Staf", top_staf)
 
-                    # --- 2. FITUR SEARCH & FILTER ---
-                    st.markdown("---")
-                    search = st.text_input("🔍 Filter Nama Staf atau Cerita", placeholder="Cari...")
+                    st.divider()
 
-                    # --- 3. TABEL LOG DENGAN ICON STATUS ---
-                    df_show = df_a.iloc[::-1].copy() 
-                    df_show["Status"] = "✅ Done"
-                    
-                    if search:
-                        df_show = df_show[
-                            df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
-                            df_show['User'].str.contains(search, case=False, na=False)
-                        ]
+                    # --- 2. VISUAL TRICK: EXPANDER UNTUK DETAIL LOG ---
+                    with st.expander("👁️ Lihat Detail Log", expanded=False):
+                        # Filter Search ditaruh di dalam expander agar rapi
+                        search = st.text_input("🔍 Filter Nama/Cerita", placeholder="Cari...")
+                        
+                        df_show = df_a.iloc[::-1].copy()
+                        df_show["Status"] = "✅ Done"
+                        
+                        if search:
+                            df_show = df_show[
+                                df_show['Visual Utama'].str.contains(search, case=False, na=False) | 
+                                df_show['User'].str.contains(search, case=False, na=False)
+                            ]
 
-                    st.dataframe(
-                        df_show, 
-                        use_container_width=True,
-                        hide_index=True,
-                        column_config={
-                            "Status": st.column_config.TextColumn("Stat"),
-                            "Waktu": st.column_config.TextColumn("⏰ Jam"),
-                            "User": st.column_config.TextColumn("👤 Staf"),
-                            "Total Adegan": st.column_config.NumberColumn("🎬"),
-                            "Visual Utama": st.column_config.TextColumn("📝 Ringkasan")
-                        }
-                    )
+                        # Tabel Log
+                        st.dataframe(
+                            df_show, 
+                            use_container_width=True,
+                            hide_index=True,
+                            column_config={
+                                "Status": st.column_config.TextColumn("Stat"),
+                                "Waktu": st.column_config.TextColumn("⏰ Jam"),
+                                "User": st.column_config.TextColumn("👤 Staf"),
+                                "Total Adegan": st.column_config.NumberColumn("🎬"),
+                                "Visual Utama": st.column_config.TextColumn("📝 Ringkasan")
+                            }
+                        )
 
-                    # --- 4. ACTION BUTTONS (DOWNLOAD & RESET) ---
+                    # --- 3. ACTION BUTTONS (DI LUAR EXPANDER) ---
+                    st.write("") # Spasi kecil
                     col_btn1, col_btn2 = st.columns(2)
                     with col_btn1:
                         csv = df_a.to_csv(index=False).encode('utf-8')
-                        # --- Perubahan Nama Tombol Export ---
                         st.download_button("📥 Export", data=csv, file_name="log_produksi.csv", mime="text/csv", use_container_width=True)
                     
                     with col_btn2:
@@ -560,6 +563,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary"):
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
