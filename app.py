@@ -444,17 +444,15 @@ with st.sidebar:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
-    st.write("---") # Opsional: Kasih garis tipis biar rapi
-
-    # 1. Tampilkan Caption dulu
-    st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2")
-    
-    # 2. Baru tampilkan Tombol Logout di bawahnya
+    # 1. Tampilkan Tombol Logout dulu
     if st.sidebar.button("Log Out 🚪", use_container_width=True):
         st.query_params.clear() 
         if 'active_user' in st.session_state:
             del st.session_state.active_user
         st.rerun()
+
+    # 2. Baru tampilkan Caption di paling bawah
+    st.sidebar.caption(f"📸 PINTAR MEDIA V.1.2.2")
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -719,6 +717,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
