@@ -439,42 +439,19 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Gagal koneksi: {str(e)}")
 
-# --- BAGIAN PALING BAWAH (SETELAH NOTIFIKASI SUKSES) ---
+    # --- MENAMPILKAN NOTIFIKASI SUKSES ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
     st.divider()
 
-    # 1. Tombol Logout (Tetap di urutan kode biasa)
+    # --- TOMBOL LOGOUT (PENUTUP SIDEBAR) ---
     if st.sidebar.button("Log Out 🚪", use_container_width=True):
         st.query_params.clear() 
         if 'active_user' in st.session_state:
             del st.session_state.active_user
         st.rerun()
-
-    # 2. TEMPEL KODE CSS INI DI SINI (Agar nempel di dasar banget)
-    st.markdown("""
-        <style>
-            /* Trik agar sidebar punya area fleksibel */
-            [data-testid="stSidebarUserContent"] {
-                display: flex;
-                flex-direction: column;
-                min-height: 90vh; /* Mengambil hampir seluruh tinggi layar */
-            }
-            .sidebar-footer {
-                margin-top: auto; /* Mendorong konten di bawahnya ke paling dasar */
-                padding-top: 10px;
-                padding-bottom: 10px;
-                font-size: 12px;
-                color: #808495;
-                text-align: center;
-            }
-        </style>
-        <div class="sidebar-footer">
-            📸 PINTAR MEDIA V.1.2.2
-        </div>
-    """, unsafe_allow_html=True)
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -739,6 +716,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
