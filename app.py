@@ -516,21 +516,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # --- LOGIKA AUTO-SAVE (SUNTIKAN AMAN) ---
-            try:
-                # Ambil semua visual yang sudah diketik staf
-                auto_v = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
-                # Bungkus jadi koper JSON
-                koper_data = json.dumps({
-                    "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
-                    "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
-                    "scenes": auto_v
-                })
-                # Simpan ke Sheets (menggantikan log teks biasa menjadi log koper lengkap)
-                record_to_sheets(st.session_state.active_user, koper_data, len(active_scenes))
-            except:
-                # Jika gagal, pakai cara lama agar tidak eror
-                record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))            
+            # LOGGING CLOUD
+            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+            
             # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = (
@@ -643,4 +631,3 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
-
