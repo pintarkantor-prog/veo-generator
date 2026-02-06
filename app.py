@@ -391,7 +391,7 @@ def global_sync_v920():
         pass
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (TAMPILAN ASLI + AUTO-SYNC + FULL RESTORE)
+# 9. FORM INPUT ADEGAN (FULL RESTORE & AUTO-SYNC VERSION)
 # ==============================================================================
 
 # 1. Inisialisasi Counter & Memori (WAJIB ADA)
@@ -433,7 +433,7 @@ with col_res:
                 else:
                     # Logika data lama (teks biasa)
                     st.session_state["vis_input_1"] = raw_data
-                    st.info("Data lama: Hanya Adegan 1 yang dipulihkan. ⚠️")
+                    st.info("Data lama terdeteksi. Hanya Adegan 1 yang dipulihkan. ⚠️")
                 
                 # 3. Paksa Widget Reset agar data muncul di layar
                 st.session_state.restore_counter += 1 
@@ -451,15 +451,13 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     
     with col_c1:
         st.markdown("### Karakter 1")
-        if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
-        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.c_name_1_input, key=f"w_n1_{st.session_state.restore_counter}", placeholder="Contoh: UDIN")
+        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.get("c_name_1_input", ""), key=f"w_n1_{st.session_state.restore_counter}", placeholder="Contoh: UDIN")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state.get("c_desc_1_input", ""), key=f"w_p1_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_1_input, st.session_state.c_desc_1_input = c_n1_v, c_p1_v
     
     with col_c2:
         st.markdown("### Karakter 2")
-        if "c_name_2_input" not in st.session_state: st.session_state.c_name_2_input = ""
-        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.c_name_2_input, key=f"w_n2_{st.session_state.restore_counter}", placeholder="Contoh: TUNG")
+        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.get("c_name_2_input", ""), key=f"w_n2_{st.session_state.restore_counter}", placeholder="Contoh: TUNG")
         c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=st.session_state.get("c_desc_2_input", ""), key=f"w_p2_{st.session_state.restore_counter}", height=100)
         st.session_state.c_name_2_input, st.session_state.c_desc_2_input = c_n2_v, c_p2_v
 
@@ -500,22 +498,22 @@ for i_s in range(1, int(num_scenes) + 1):
             with r1[0]:
                 st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
                 idx_l = options_lighting.index(st.session_state.m_light) if st.session_state.m_light in options_lighting else 0
-                l_val = st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+                st.selectbox(f"L{i_s}", options_lighting, index=idx_l, key=f"l_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r1[1]:
                 st.markdown('<p class="small-label">🎥 Gerak</p>', unsafe_allow_html=True)
                 idx_c = indonesia_camera.index(st.session_state.m_cam) if st.session_state.m_cam in indonesia_camera else 0
-                c_val = st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+                st.selectbox(f"C{i_s}", indonesia_camera, index=idx_c, key=f"c_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             
             # --- BARIS 2: SHOT & ANGLE ---
             r2 = st.columns(2)
             with r2[0]:
                 st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
                 idx_s = indonesia_shot.index(st.session_state.m_shot) if st.session_state.m_shot in indonesia_shot else 2
-                s_val = st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+                st.selectbox(f"S{i_s}", indonesia_shot, index=idx_s, key=f"s_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
             with r2[1]:
                 st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
-                a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
+                st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"a_i_{i_s}_{count}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
         # --- DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -528,7 +526,15 @@ for i_s in range(1, int(num_scenes) + 1):
                 st.session_state[d_key] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
-        adegan_storage.append({"num": i_s, "visual": visual_input, "light": l_val, "cam": c_val, "shot": s_val, "angle": a_val, "dialogs": scene_dialogs_list})
+        # Simpan state pilihan dropdown (L, C, S, A) agar bisa dibaca saat generate
+        adegan_storage.append({
+            "num": i_s, "visual": visual_input, 
+            "light": st.session_state.get(f"l_i_{i_s}_{count}", st.session_state.m_light),
+            "cam": st.session_state.get(f"c_i_{i_s}_{count}", st.session_state.m_cam),
+            "shot": st.session_state.get(f"s_i_{i_s}_{count}", st.session_state.m_shot),
+            "angle": st.session_state.get(f"a_i_{i_s}_{count}", st.session_state.m_angle),
+            "dialogs": scene_dialogs_list
+        })
         
 # ==============================================================================
 # 10. GENERATOR PROMPT & MEGA-DRAFT (FULL VERSION - UTUH TANPA POTONGAN)
@@ -706,6 +712,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
