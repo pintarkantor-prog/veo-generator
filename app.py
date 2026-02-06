@@ -75,7 +75,7 @@ def record_to_sheets(user, data_packet, total_scenes):
         conn = st.connection("gsheets", type=GSheetsConnection)
         
         # 2. Baca data lama (Kasih TTL agar tidak kena Error 429)
-        existing_data = conn.read(worksheet="Sheet1", ttl="1m")
+        existing_data = conn.read(worksheet="Sheet1", ttl="5m")
         
         # 3. Setting Waktu Jakarta (WIB)
         tz = pytz.timezone('Asia/Jakarta')
@@ -699,3 +699,4 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
