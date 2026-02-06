@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL (AESTHETIC & STABLE)
+# 0. SISTEM LOGIN TUNGGAL (CLEAN & STABLE VERSION)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -20,76 +20,50 @@ if 'active_user' not in st.session_state:
     if q_user in USER_PASSWORDS:
         st.session_state.active_user = q_user
 
-# --- 2. LAYAR LOGIN TERBARU ---
+# --- 2. LAYAR LOGIN (Versi Bersih Tanpa CSS Ribet) ---
 if 'active_user' not in st.session_state:
-    st.set_page_config(page_title="PINTAR MEDIA | Login", page_icon="📸", layout="centered")
+    st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
-    # CSS yang lebih kuat untuk memastikan tampilan kotak login putih
-    st.markdown("""
-        <style>
-        .stApp {
-            background-color: #f0f2f6;
-        }
-        .login-card {
-            background-color: #ffffff;
-            padding: 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            text-align: center;
-            border: 1px solid #e6e9ef;
-        }
-        .main-title {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: #262730;
-            margin-bottom: 5px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+    st.write("")
+    st.write("")
     
-    placeholder = st.empty()
-    
-    with placeholder.container():
-        # Membungkus semua dalam satu blok agar rapi
-        st.markdown('<div class="login-card">', unsafe_allow_html=True)
-        st.markdown("<h1 class='main-title'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='color: #555; margin-bottom: 30px;'>Production Management System v1.2</p>", unsafe_allow_html=True)
+    # Gunakan Container bawaan agar rapi
+    with st.container():
+        _, col_login, _ = st.columns([1, 2, 1])
         
-        # Form Input
-        user_input = st.text_input("Username", placeholder="Ketik nama user...")
-        pass_input = st.text_input("Password", type="password", placeholder="••••••••")
-        
-        st.write("")
-        if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
-            user_clean = user_input.lower().strip()
+        with col_login:
+            st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
+            st.markdown("<p style='text-align: center; color: gray;'>Production Management System v1.2</p>", unsafe_allow_html=True)
+            st.write("---")
             
-            if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                st.query_params["u"] = user_clean
-                st.session_state.active_user = user_clean
+            # Inputan Standar (Teks Hitam di atas Putih, Jelas!)
+            user_input = st.text_input("Username", placeholder="Ketik nama user...")
+            pass_input = st.text_input("Password", type="password", placeholder="••••••••")
+            
+            st.write("")
+            if st.button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary"):
+                user_clean = user_input.lower().strip()
                 
-                # Notif Tengah Layar yang Pasti Center
-                placeholder.empty()
-                with placeholder.container():
-                    st.write("")
-                    st.write("")
-                    st.markdown("<div style='text-align:center; padding: 50px;'>", unsafe_allow_html=True)
-                    st.success("✅ AKSES DITERIMA")
-                    st.markdown(f"<h1>Selamat berkarya, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
-                    st.markdown("<p>Membuka Dashboard Utama...</p>", unsafe_allow_html=True)
-                    st.markdown("</div>", unsafe_allow_html=True)
+                if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                    # Simpan status
+                    st.query_params["u"] = user_clean
+                    st.session_state.active_user = user_clean
                     
-                    with st.spinner(""):
+                    # Notif Sukses yang Jelas
+                    st.success(f"✅ Akses Diterima! Selamat bekerja, {user_clean.capitalize()}.")
+                    
+                    with st.spinner("Membuka ruang kerja..."):
                         import time
                         time.sleep(1.2)
-                st.rerun()
-            else:
-                st.error("❌ Username atau Password salah.")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #999; font-size: 12px; margin-top: 30px;'>© 2026 PINTAR MEDIA Production • Secure Access</p>", unsafe_allow_html=True)
+                    
+                    st.rerun()
+                else:
+                    st.error("❌ Username atau Password salah.")
+            
+            st.write("---")
+            st.caption("<p style='text-align: center;'>© 2026 PINTAR MEDIA Production • Secure Access</p>", unsafe_allow_html=True)
 
-    st.stop()
+    st.stop() 
 
 # --- 3. KONFIGURASI DASHBOARD (WIDE) ---
 st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
@@ -728,6 +702,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
