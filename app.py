@@ -716,20 +716,3 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
