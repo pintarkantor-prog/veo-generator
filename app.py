@@ -263,7 +263,7 @@ def global_sync_v920():
         if key.startswith("angle_input_"): st.session_state[key] = ag1
 
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (VERSION: CLEAN UI - NO EXTRA TEXT)
+# 7. SIDEBAR: KONFIGURASI UTAMA (V.1.2.1 - PROGRESS TRACKER & SYNC READY)
 # ==============================================================================
 with st.sidebar:
     if st.session_state.active_user == "admin":
@@ -339,11 +339,19 @@ with st.sidebar:
     st.header("⚙️ Konfigurasi Utama")
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
+    # --- FITUR BARU: PROGRESS TRACKER ---
     st.divider()
-    # Kalimat penjelas sudah dihapus, langsung ke tombol
+    # Menghitung adegan yang sudah diisi visualnya secara real-time
+    filled_scenes = sum(1 for i in range(1, int(num_scenes) + 1) 
+                        if f"vis_input_{i}" in st.session_state and st.session_state[f"vis_input_{i}"].strip() != "")
     
-    # 1. TOMBOL SIMPAN
-    if st.button("💾 SAVE DATA", use_container_width=True):
+    progress_val = filled_scenes / int(num_scenes)
+    st.markdown(f"📊 **Progress: {filled_scenes} / {num_scenes} Adegan**")
+    st.progress(progress_val)
+    st.write("") # Jarak kecil
+    
+    # 1. TOMBOL SIMPAN (Type secondary = warna putih/abu standar)
+    if st.button("💾 SAVE DATA", use_container_width=True, type="secondary"):
         import json
         try:
             captured_scenes = {}
@@ -365,8 +373,8 @@ with st.sidebar:
         except Exception as e:
             st.error(f"Gagal simpan draft: {e}")
 
-    # 2. TOMBOL TARIK
-    if st.button("🔄 RESTORE DATA", use_container_width=True):
+    # 2. TOMBOL TARIK (Type primary = warna merah/warna utama tema)
+    if st.button("🔄 RESTORE DATA", use_container_width=True, type="primary"):
         import json
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
@@ -396,7 +404,7 @@ with st.sidebar:
             st.error(f"Gagal tarik draft: {e}")
 
     st.markdown("---")
-st.sidebar.caption(f"🎨 PINTAR MEDIA | V.1.2.0 | 👤 {st.session_state.active_user.upper()}")
+    st.sidebar.caption(f"🎨 PINTAR MEDIA | V.1.2.1 | 👤 {st.session_state.active_user.upper()}")
     
 # ==============================================================================
 # 8. PARAMETER KUALITAS (V.1.0.3 - MASTER LIGHTING & FULL-BLEED)
@@ -694,6 +702,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
