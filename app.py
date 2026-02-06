@@ -363,7 +363,7 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FORCED PERSISTENCE - ANTI-HILANG 100%)
+# 9. FORM INPUT ADEGAN (FULL VERSION - ANTI-HILANG REFRESH TOTAL)
 # ==============================================================================
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -373,28 +373,27 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     
     with col_c1:
         st.markdown("### Karakter 1")
-        # Inisialisasi memori
-        if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
-        if "c_desc_1_input" not in st.session_state: st.session_state.c_desc_1_input = ""
+        # Tarik data dari URL jika ada
+        val_n1 = st.query_params.get("n1", "")
+        val_p1 = st.query_params.get("p1", "")
         
-        # PENTING: value mengambil dari session_state, key harus BEDA agar tidak bentrok
-        c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.c_name_1_input, key="w_c_name_1", placeholder="Contoh: UDIN")
-        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state.c_desc_1_input, key="w_c_desc_1", height=100)
+        c_n1_v = st.text_input("Nama Karakter 1", value=val_n1, key="w_n1")
+        c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=val_p1, key="w_p1", height=100)
         
-        # Simpan balik ke state utama
-        st.session_state.c_name_1_input = c_n1_v
-        st.session_state.c_desc_1_input = c_p1_v
+        # Simpan ke URL link browser
+        if c_n1_v: st.query_params["n1"] = c_n1_v
+        if c_p1_v: st.query_params["p1"] = c_p1_v
     
     with col_c2:
         st.markdown("### Karakter 2")
-        if "c_name_2_input" not in st.session_state: st.session_state.c_name_2_input = ""
-        if "c_desc_2_input" not in st.session_state: st.session_state.c_desc_2_input = ""
+        val_n2 = st.query_params.get("n2", "")
+        val_p2 = st.query_params.get("p2", "")
         
-        c_n2_v = st.text_input("Nama Karakter 2", value=st.session_state.c_name_2_input, key="w_c_name_2", placeholder="Contoh: TUNG")
-        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=st.session_state.c_desc_2_input, key="w_c_desc_2", height=100)
+        c_n2_v = st.text_input("Nama Karakter 2", value=val_n2, key="w_n2")
+        c_p2_v = st.text_area("Fisik Karakter 2 (STRICT DNA)", value=val_p2, key="w_p2", height=100)
         
-        st.session_state.c_name_2_input = c_n2_v
-        st.session_state.c_desc_2_input = c_p2_v
+        if c_n2_v: st.query_params["n2"] = c_n2_v
+        if c_p2_v: st.query_params["p2"] = c_p2_v
 
     st.divider()
     num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=10, value=2)
@@ -403,21 +402,20 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
     all_chars_list.append({"name": c_n1_v, "desc": c_p1_v})
     all_chars_list.append({"name": c_n2_v, "desc": c_p2_v})
 
+    # --- KARAKTER TAMBAHAN (DENGAN MEMORI URL) ---
     if num_extra > 2:
         extra_cols = st.columns(num_extra - 2)
         for ex_idx in range(2, int(num_extra)):
             with extra_cols[ex_idx - 2]:
                 st.markdown(f"### Karakter {ex_idx + 1}")
-                k_name = f"ex_name_{ex_idx}"
-                k_phys = f"ex_phys_{ex_idx}"
-                if k_name not in st.session_state: st.session_state[k_name] = ""
-                if k_phys not in st.session_state: st.session_state[k_phys] = ""
+                u_en = f"en{ex_idx}" # URL Key Nama
+                u_ep = f"ep{ex_idx}" # URL Key Fisik
                 
-                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", value=st.session_state[k_name], key=f"w_{k_name}")
-                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", value=st.session_state[k_phys], key=f"w_{k_phys}", height=100)
+                ex_name = st.text_input(f"Nama Karakter {ex_idx + 1}", value=st.query_params.get(u_en, ""), key=f"w_en_{ex_idx}")
+                ex_phys = st.text_area(f"Fisik Karakter {ex_idx + 1}", value=st.query_params.get(u_ep, ""), key=f"w_ep_{ex_idx}", height=100)
                 
-                st.session_state[k_name] = ex_name
-                st.session_state[k_phys] = ex_phys
+                if ex_name: st.query_params[u_en] = ex_name
+                if ex_phys: st.query_params[u_ep] = ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
 # --- LIST ADEGAN ---
@@ -430,12 +428,10 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            v_key = f"vis_input_{i_s}"
-            if v_key not in st.session_state: st.session_state[v_key] = ""
-            
-            # PAKSA VALUE mengambil dari lemari session_state
-            visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state[v_key], key=f"w_{v_key}", height=180)
-            st.session_state[v_key] = visual_input
+            # MEMORI VISUAL URL
+            u_vis = f"v{i_s}"
+            visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.query_params.get(u_vis, ""), key=f"w_vis_{i_s}", height=180)
+            if visual_input: st.query_params[u_vis] = visual_input
         
         with col_ctrl:
             r1_c1, r1_c2 = st.columns(2)
@@ -458,18 +454,16 @@ for i_s in range(1, int(num_scenes) + 1):
                 idx_a = indonesia_angle.index(st.session_state.m_angle) if st.session_state.m_angle in indonesia_angle else 0
                 a_val = st.selectbox(f"A{i_s}", indonesia_angle, index=idx_a, key=f"angle_input_{i_s}", on_change=(global_sync_v920 if i_s==1 else None), label_visibility="collapsed")
 
-        # Dialog Dinamis
+        # --- DIALOG DINAMIS (DENGAN MEMORI URL) ---
         diag_cols = st.columns(len(all_chars_list))
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
-                d_key = f"diag_{i_s}_{i_char}"
-                if d_key not in st.session_state: st.session_state[d_key] = ""
+                u_diag = f"d{i_s}_{i_char}" # URL Key Dialog
                 
-                # Gunakan value=st.session_state[d_key]
-                d_in = st.text_input(f"Dialog {char_label}", value=st.session_state[d_key], key=f"w_{d_key}")
-                st.session_state[d_key] = d_in
+                d_in = st.text_input(f"Dialog {char_label}", value=st.query_params.get(u_diag, ""), key=f"w_diag_{i_s}_{i_char}")
+                if d_in: st.query_params[u_diag] = d_in
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
@@ -619,6 +613,7 @@ if st.session_state.last_generated_results:
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
