@@ -66,33 +66,34 @@ if not st.session_state.logged_in:
     st.stop()
     
 # ==============================================================================
-# 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE - FIXED UTUH)
+# 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE - FULL DATA)
 # ==============================================================================
-def record_to_sheets(user, first_visual, total_scenes):
-    """Mencatat aktivitas dan menyimpan visual secara utuh agar bisa ditarik balik"""
+def record_to_sheets(user, data_packet, total_scenes):
+    """Mencatat aktivitas. Jika data_packet adalah JSON (Draft), simpan utuh."""
     try:
-        # 1. Koneksi
+        # 1. Koneksi (Gunakan TTL agar hemat kuota)
         conn = st.connection("gsheets", type=GSheetsConnection)
         
         # 2. Baca data lama
-        existing_data = conn.read(worksheet="Sheet1", ttl=0)
+        existing_data = conn.read(worksheet="Sheet1", ttl="1m")
         
         # 3. Setting Waktu Jakarta (WIB)
         tz = pytz.timezone('Asia/Jakarta')
         current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
         
-        # 4. Buat baris baru (Visual Utama disimpan UTUH tanpa dipotong [:150])
+        # 4. Buat baris baru
+        # Jika data_packet sangat panjang (JSON), kita simpan apa adanya di 'Visual Utama'
         new_row = pd.DataFrame([{
             "Waktu": current_time,
             "User": user,
             "Total Adegan": total_scenes,
-            "Visual Utama": first_visual  # <--- SUDAH UTUH SEKARANG
+            "Visual Utama": data_packet 
         }])
         
         # 5. Gabungkan data lama dan baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         
-        # 6. FITUR OTOMATIS HAPUS: Simpan 150-300 data terakhir
+        # 6. Batasi history maksimal 300 baris
         if len(updated_df) > 300:
             updated_df = updated_df.tail(300)
         
@@ -100,8 +101,7 @@ def record_to_sheets(user, first_visual, total_scenes):
         conn.update(worksheet="Sheet1", data=updated_df)
         
     except Exception as e:
-        # Tampilkan pesan jika gagal agar mudah didebug
-        st.error(f"Gagal mencatat/menyimpan draft: {e}")
+        st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
 # 4. CUSTOM CSS (FULL EXPLICIT STYLE - NO REDUCTION)
@@ -363,41 +363,51 @@ vid_quality_base = f"vertical 9:16 full-screen mobile video, 60fps, fluid organi
 
 
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (FULL VERSION - ANTI-QUOTA EXCEEDED & FORCED RESTORE)
+# 9. FORM INPUT ADEGAN (FULL RESTORE VERSION - NO REDUCTION)
 # ==============================================================================
 
-# 1. Inisialisasi Counter & Memori (WAJIB ADA UNTUK ANTI-GAGAL)
+# 1. Inisialisasi Counter & Memori (WAJIB ADA)
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
-if "draft_restored_text" not in st.session_state:
-    st.session_state.draft_restored_text = ""
 
-# --- TOMBOL RESTORE SAKTI (OPTIMALISASI KUOTA GSHEETS) ---
+# --- TOMBOL RESTORE (VERSI PEMBONGKAR PAKET LENGKAP) ---
 col_res, col_space = st.columns([4, 6])
 with col_res:
-    if st.button("🔄 TARIK DRAFT TERAKHIR", use_container_width=True):
+    if st.button("🔄 TARIK SEMUA DATA DRAFT", use_container_width=True):
+        import json
         try:
             conn = st.connection("gsheets", type=GSheetsConnection)
-            # Menggunakan ttl="5s" untuk menghindari error Quota Exceeded 429
             df_log = conn.read(worksheet="Sheet1", ttl="5s")
             
-            # Filter user aktif
+            # Cari data terakhir milik user aktif (berupa paket JSON)
             my_data = df_log[df_log['User'].str.contains(st.session_state.active_user, na=False)]
             
             if not my_data.empty:
-                teks_terakhir = my_data.iloc[-1]['Visual Utama']
-                st.session_state.draft_restored_text = teks_terakhir
-                # KUNCINYA: Naikkan angka counter untuk memaksa widget reset total
+                packet_string = my_data.iloc[-1]['Visual Utama']
+                # Bongkar paket JSON
+                data = json.loads(packet_string)
+                
+                # 1. Masukkan Nama & Fisik Karakter Utama
+                st.session_state.c_name_1_input = data.get("n1", "")
+                st.session_state.c_desc_1_input = data.get("p1", "")
+                st.session_state.c_name_2_input = data.get("n2", "")
+                st.session_state.c_desc_2_input = data.get("p2", "")
+                
+                # 2. Masukkan Semua Visual Adegan secara otomatis
+                scenes_data = data.get("scenes", {})
+                for key_v, val_v in scenes_data.items():
+                    # Mengubah 'v1' menjadi 'vis_input_1', dst
+                    real_key = f"vis_input_{key_v.replace('v', '')}"
+                    st.session_state[real_key] = val_v
+                
+                # 3. Paksa Widget Reset agar data muncul di layar
                 st.session_state.restore_counter += 1 
-                st.success("Draft Ditemukan! Memuat data ke form...")
+                st.success("Semua Adegan & Karakter Berhasil Dimuat Ulang! ✅")
                 st.rerun()
             else:
-                st.warning("Belum ada draft tersimpan untuk user ini.")
+                st.warning("Belum ada draft tersimpan.")
         except Exception as e:
-            if "429" in str(e):
-                st.error("⚠️ Google Sheets Limit! Tunggu 1 menit baru klik lagi.")
-            else:
-                st.error(f"Error Koneksi: {e}")
+            st.error(f"Gagal membongkar draft: {e}")
 
 st.subheader("📝 Detail Adegan Storyboard")
 
@@ -410,7 +420,6 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
         if "c_name_1_input" not in st.session_state: st.session_state.c_name_1_input = ""
         if "c_desc_1_input" not in st.session_state: st.session_state.c_desc_1_input = ""
         
-        # Key menggunakan counter agar ikut reset saat restore
         c_n1_v = st.text_input("Nama Karakter 1", value=st.session_state.c_name_1_input, key=f"w_n1_{st.session_state.restore_counter}", placeholder="Contoh: UDIN")
         c_p1_v = st.text_area("Fisik Karakter 1 (STRICT DNA)", value=st.session_state.c_desc_1_input, key=f"w_p1_{st.session_state.restore_counter}", height=100)
         
@@ -443,7 +452,6 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.markdown(f"### Karakter {ex_idx + 1}")
                 k_name_key = f"ex_name_{ex_idx}"
                 k_phys_key = f"ex_phys_{ex_idx}"
-                
                 if k_name_key not in st.session_state: st.session_state[k_name_key] = ""
                 if k_phys_key not in st.session_state: st.session_state[k_phys_key] = ""
                 
@@ -454,7 +462,7 @@ with st.expander("👥 Identitas & Fisik Karakter (WAJIB ISI)", expanded=True):
                 st.session_state[k_phys_key] = ex_phys
                 all_chars_list.append({"name": ex_name, "desc": ex_phys})
 
-# --- LIST ADEGAN (DENGAN LOGIKA FORCED RESET) ---
+# --- LIST ADEGAN (FULL RESTORE LOGIC) ---
 adegan_storage = []
 
 for i_s in range(1, int(num_scenes) + 1):
@@ -467,14 +475,8 @@ for i_s in range(1, int(num_scenes) + 1):
             v_key = f"vis_input_{i_s}"
             if v_key not in st.session_state: st.session_state[v_key] = ""
             
-            # LOGIKA RESTORE: Jika adegan 1 dan ada data ditarik, paksa isi ke value
-            if i_s == 1 and st.session_state.draft_restored_text != "":
-                current_val = st.session_state.draft_restored_text
-            else:
-                current_val = st.session_state[v_key]
-
-            # Key menggunakan counter agar widget dibuat ulang saat restore
-            visual_input = st.text_area(f"Visual Adegan {i_s}", value=current_val, key=f"w_vis_{i_s}_{st.session_state.restore_counter}", height=180)
+            # Widget menarik value langsung dari session_state yang sudah diisi oleh tombol Restore
+            visual_input = st.text_area(f"Visual Adegan {i_s}", value=st.session_state[v_key], key=f"w_vis_{i_s}_{st.session_state.restore_counter}", height=180)
             st.session_state[v_key] = visual_input
         
         with col_ctrl:
@@ -505,7 +507,6 @@ for i_s in range(1, int(num_scenes) + 1):
             with diag_cols[i_char]:
                 char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
                 d_key = f"diag_{i_s}_{i_char}"
-                
                 if d_key not in st.session_state: st.session_state[d_key] = ""
                 
                 d_in = st.text_input(f"Dialog {char_label}", value=st.session_state[d_key], key=f"wd_{i_s}_{i_char}_{st.session_state.restore_counter}")
@@ -517,23 +518,38 @@ for i_s in range(1, int(num_scenes) + 1):
         })
         
 # ==============================================================================
-# 10. GENERATOR PROMPT & AUTO-DRAFT (ANTI-PANIK & ANTI-HILANG)
+# 10. GENERATOR PROMPT & AUTO-DRAFT (ANTI-PANIK & FULL DATA RESTORE)
 # ==============================================================================
+import json  # Penting untuk membungkus data
 
-# 1. Siapkan Lemari Penyimpanan (Jika belum ada)
+# 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# --- FITUR TAMBAHAN: TOMBOL SIMPAN DRAFT ---
-# Kita letakkan sebelum Generate agar staf bisa mengamankan ketikan mereka
-col_draft, col_empty = st.columns([3, 7])
+# --- FITUR UTAMA: TOMBOL SIMPAN DRAFT (PAKET LENGKAP) ---
+col_draft, col_empty = st.columns([4, 6])
 with col_draft:
-    if st.button("💾 SIMPAN DRAFT (Google Sheets)", use_container_width=True):
-        # Ambil visual pertama sebagai tanda di database
-        first_vis_text = adegan_storage[0]["visual"] if adegan_storage else "Draft Kosong"
-        # Kirim ke Sheets dengan tanda DRAFT_ agar Admin tahu ini belum difinalisasi
-        record_to_sheets(f"DRAFT_{st.session_state.active_user}", first_vis_text, len(adegan_storage))
-        st.toast("Draft berhasil dikunci ke Cloud! Aman. ✅")
+    if st.button("💾 SIMPAN SEMUA ADEGAN & KARAKTER", use_container_width=True):
+        try:
+            # 1. Bungkus SEMUA data ke dalam satu paket (Karakter + Semua Adegan)
+            draft_packet = {
+                "n1": st.session_state.c_name_1_input,
+                "p1": st.session_state.c_desc_1_input,
+                "n2": st.session_state.c_name_2_input,
+                "p2": st.session_state.c_desc_2_input,
+                # Ambil semua visual adegan yang sudah diketik
+                "scenes": {f"v{i+1}": a["visual"] for i, a in enumerate(adegan_storage)}
+            }
+            
+            # 2. Ubah jadi teks (String) agar bisa masuk ke 1 kolom Google Sheets
+            packet_string = json.dumps(draft_packet)
+            
+            # 3. Kirim ke Google Sheets lewat fungsi record_to_sheets
+            # Kita beri tanda DRAFT_ agar admin tahu ini simpanan sementara
+            record_to_sheets(f"DRAFT_{st.session_state.active_user}", packet_string, len(adegan_storage))
+            st.toast("Semua Adegan & Karakter Berhasil Dikunci ke Cloud! ✅")
+        except Exception as e:
+            st.error(f"Gagal mengemas draft: {e}")
 
 st.write("") # Spasi kecil
 
@@ -551,7 +567,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
-            # LOGGING CLOUD (FINAL VERSION)
+            # LOGGING CLOUD (FINAL VERSION - Simpan visual utama saja untuk log harian)
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- LOGIKA MASTER LOCK ---
@@ -650,7 +666,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         pesan_toast = "Prompt Berhasil Dibuat! 🚀" if st.session_state.active_user == "admin" else f"Kerjaan {nama_staf} Berhasil Dibuat! 🚀"
         st.toast(pesan_toast, icon="🎨")
 
-# 3. AREA TAMPILAN (Di luar blok button - Agar tetap ada saat disalin)
+# 3. AREA TAMPILAN
 if st.session_state.last_generated_results:
     st.divider()
     nama_staf = st.session_state.active_user.capitalize()
@@ -658,20 +674,18 @@ if st.session_state.last_generated_results:
 
     for res in st.session_state.last_generated_results:
         st.subheader(f"🎬 Hasil Adegan {res['id']}")
-        
         c1, c2 = st.columns(2)
         with c1:
             st.caption("📸 PROMPT GAMBAR (STATIC)")
-            st.code(res['img'], language="text") # Salin lewat ikon pojok kanan kotak ini
-
+            st.code(res['img'], language="text")
         with c2:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
-            st.code(res['vid'], language="text") # Salin lewat ikon pojok kanan kotak ini
-        
+            st.code(res['vid'], language="text")
         st.divider()
 
 st.sidebar.markdown("---")
 st.sidebar.caption("PINTAR MEDIA | V.1.1.8")
+
 
 
 
