@@ -352,15 +352,6 @@ with st.sidebar:
     # st.header("⚙️ Konfigurasi Utama") # Baris ini dimatikan agar tulisan hilang
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
-    # --- PROGRESS TRACKER ---
-    filled_scenes = sum(1 for i in range(1, int(num_scenes) + 1) 
-                        if f"vis_input_{i}" in st.session_state and st.session_state[f"vis_input_{i}"].strip() != "")
-    
-    progress_val = filled_scenes / int(num_scenes)
-    st.markdown(f"📊 **Progress: {filled_scenes} / {num_scenes} Adegan**")
-    st.progress(progress_val)
-    st.write("") 
-    
     # --- TOMBOL DRAFT (KEMBALI KE STANDAR TANPA TYPE) ---
     
     # 1. TOMBOL SIMPAN
@@ -709,4 +700,5 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO (MOTION)")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
