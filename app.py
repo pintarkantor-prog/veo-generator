@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import pytz #
 # ==============================================================================
-# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (WITH LOADING EFFECT)
+# 0. SISTEM LOGIN TUNGGAL & KONFIGURASI HALAMAN (FULL STABLE VERSION)
 # ==============================================================================
 USER_PASSWORDS = {
     "admin": "QWERTY21ab",
@@ -18,6 +18,7 @@ USER_PASSWORDS = {
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
+    st.write("")
     st.write("")
     _, col_login, _ = st.columns([1, 2, 1])
     
@@ -33,23 +34,21 @@ if 'active_user' not in st.session_state:
             user_clean = user_input.lower().strip()
             
             if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                # --- EFEK LOADING ---
-                with st.spinner("Mengautentikasi... Mohon tunggu sebentar."):
-                    import time
-                    time.sleep(1.5) # Jeda loading agar terasa prosesnya
-                
-                # Simpan status login
+                # 1. Simpan user ke memori
                 st.session_state.active_user = user_clean
                 
-                # --- PESAN SAMBUTAN CUSTOM ---
-                if user_clean == "admin":
-                    st.toast(f"Selamat datang kembali, Boss! Dashboard siap dipantau. 😎")
-                else:
-                    st.toast(f"Halo {user_clean.capitalize()}! Selamat bekerja & terus semangat buat hari ini! 🔥")
+                # 2. Tampilkan notif sukses (pasti terlihat karena di dalam kolom login)
+                st.success(f"✅ Akses Diterima! Selamat bekerja, {user_clean.capitalize()}.")
                 
+                # 3. Efek Loading
+                with st.spinner("Membuka Dashboard Utama..."):
+                    import time
+                    time.sleep(1.5) 
+                
+                # 4. Pindah ke Dashboard
                 st.rerun()
             else:
-                st.error("❌ Username atau Password salah.")
+                st.error("❌ Username atau Password salah. Silakan cek kembali.")
         
         st.write("---")
         st.caption("🛡️ Sistem Manajemen Produksi Privat - PINTAR MEDIA")
@@ -700,6 +699,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
