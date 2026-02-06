@@ -353,7 +353,6 @@ with st.sidebar:
     num_scenes = st.number_input("Jumlah Adegan Total", min_value=1, max_value=50, value=10)
     
     # --- PROGRESS TRACKER ---
-    st.divider()
     filled_scenes = sum(1 for i in range(1, int(num_scenes) + 1) 
                         if f"vis_input_{i}" in st.session_state and st.session_state[f"vis_input_{i}"].strip() != "")
     
@@ -716,4 +715,5 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
