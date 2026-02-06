@@ -104,31 +104,27 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: BRUTE FORCE FIXED HEADER)
+# 4. CUSTOM CSS (FIXED HEADER STRATEGY)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. PAKSA BARIS PERTAMA (INFO STAF) UNTUK FIXED */
-    /* Kita tembak container urutan pertama di area main */
-    [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
-        position: fixed;
+    /* Strategi: Paksa baris pertama di dalam block container jadi sticky */
+    div[data-testid="stVerticalBlock"] > div:first-child {
+        position: -webkit-sticky;
+        position: sticky;
         top: 0;
-        left: 310px; /* Lebar Sidebar */
-        right: 0;
-        z-index: 99999;
-        background-color: #0e1117;
-        padding: 10px 2rem;
+        z-index: 1001;
+        background-color: #0e1117; /* Pastikan sesuai warna background app */
+        padding: 10px 0px;
         border-bottom: 2px solid #31333f;
     }
-
-    /* Penyesuaian Mobile */
-    @media (max-width: 768px) {
-        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
-            left: 0;
-        }
+    
+    /* Perbaikan lebar kolom agar tidak berantakan saat sticky */
+    div[data-testid="stVerticalBlock"] > div:first-child div[data-testid="column"] {
+        background-color: #0e1117;
     }
 
-    /* 2. STYLE SIDEBAR & WIDGET (TETAP SAMA) */
+    /* STYLE SIDEBAR & WIDGET (Punya Dian sebelumnya) */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
@@ -157,30 +153,24 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 5. HEADER STAF (AUTO-FIXED BY CSS)
+# 5. HEADER STAF (DIPAKSA STICKY OLEH CSS BAGIAN 4)
 # ==============================================================================
-# Elemen ini otomatis akan diam di atas karena CSS nth-child(1) di atas
-col_staf, col_logout = st.columns([8, 2])
+# Pastikan kode ini adalah kode pertama yang muncul di bawah Bagian 4
+header_col1, header_col2 = st.columns([8, 2])
 
-with col_staf:
+with header_col1:
     nama_display = st.session_state.active_user.capitalize()
     st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
 
-with col_logout:
-    if st.button("Logout 🚪", use_container_width=True, key="btn_logout_fix"):
+with header_col2:
+    if st.button("Logout 🚪", use_container_width=True, key="main_logout"):
         st.query_params.clear()
         st.session_state.logged_in = False
         st.session_state.active_user = ""
         st.session_state.last_generated_results = []
         st.rerun()
 
-# --- GANJALAN (PENTING) ---
-# Beri jarak agar Form Karakter di bawahnya tidak tertutup
-st.write("")
-st.write("")
-st.write("")
-st.write("")
-st.divider()
+st.divider() # Sebagai batas visual
 
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -725,6 +715,7 @@ if st.session_state.last_generated_results:
             st.caption(f"🎥 PROMPT VIDEO ({res['cam_info']})")
             st.code(res['vid'], language="text")
         st.divider()
+
 
 
 
