@@ -175,11 +175,11 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: CLEAN & CLASSIC GREEN)
+# 4. CUSTOM CSS (VERSION: PREMIUM CLEAN GREEN & ELEGANT HEADER)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. FIXED HEADER */
+    /* 1. FIXED HEADER (INFO STAF DI ATAS) */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
         position: fixed;
         top: 0;
@@ -205,57 +205,86 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* 3. TOMBOL GENERATE (HIJAU SOFT - TIDAK SILAU) */
+    /* 3. TOMBOL GENERATE (HIJAU PREMIUM - TIDAK SILAU) */
     div.stButton > button[kind="primary"] {
-        background-color: #1d976c !important;
+        background: linear-gradient(to right, #1d976c, #11998e) !important;
         color: white !important;
         border: none !important;
         border-radius: 8px !important;
         padding: 0.6rem 1.2rem !important;
         font-weight: bold !important;
         font-size: 16px !important;
-        transition: 0.3s !important;
+        transition: 0.3s all ease !important;
+        box-shadow: 0 4px 15px rgba(29, 151, 108, 0.2) !important;
         width: 100%;
     }
 
     div.stButton > button[kind="primary"]:hover {
-        background-color: #11998e !important;
-        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.3) !important;
+        transform: translateY(-2px) !important;
+        background: linear-gradient(to right, #11998e, #1d976c) !important;
+        box-shadow: 0 6px 20px rgba(29, 151, 108, 0.4) !important;
     }
 
-    /* 4. TOMBOL SECONDARY (SAVE & RESTORE) */
-    div.stButton > button:not([kind="primary"]) {
+    /* 4. PREMIUM STAFF HEADER (BOX STAF AKTIF) */
+    .staff-header {
+        background: rgba(29, 151, 108, 0.08) !important;
+        border-left: 4px solid #1d976c !important;
         border-radius: 8px !important;
-        transition: 0.2s !important;
-    }
-
-    /* 5. KEMBALIKAN TEXT KE SEMULA (NO GRADIENT) */
-    h1, h2, h3, .stMarkdown h3 {
-        background: none !important;
-        -webkit-text-fill-color: initial !important;
+        padding: 15px 20px !important;
+        margin-bottom: 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
         color: #ffffff !important;
+        border-top: 1px solid rgba(255,255,255,0.05) !important;
+        border-right: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    .staff-header b {
+        color: #1d976c !important;
+        font-size: 1.1em !important;
+    }
+    .staff-header i {
+        color: #888 !important;
+        font-size: 0.9em !important;
     }
 
-    /* 6. STYLE LAINNYA */
+    /* 5. STYLE INPUT & TEXTAREA */
+    .stTextArea textarea {
+        font-size: 14px !important;
+        border-radius: 10px !important;
+        background-color: #0e1117 !important;
+    }
+    
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
-        opacity: 1 !important; 
         border-radius: 6px !important;
         border: 2px solid #ffffff !important;
-        transform: scale(1.1); 
+        transform: scale(1.1);
         box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
-    .stTextArea textarea {
-        font-size: 14px !important;
-        line-height: 1.5 !important;
-        font-family: 'Inter', sans-serif !important;
-        min-height: 180px !important; 
-    }
+
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
 
+    /* 6. CUSTOM FOOTER */
+    .custom-footer {
+        position: fixed;
+        left: 310px;
+        bottom: 0;
+        width: calc(100% - 310px);
+        background-color: rgba(14, 17, 23, 0.9);
+        color: #555;
+        text-align: center;
+        padding: 8px;
+        font-size: 11px;
+        border-top: 1px solid #31333f;
+        z-index: 999;
+    }
+    @media (max-width: 768px) {
+        .custom-footer { left: 0; width: 100%; }
+    }
     </style>
     """, unsafe_allow_html=True)
 # ==============================================================================
@@ -821,6 +850,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
