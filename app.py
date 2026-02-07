@@ -756,7 +756,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             
             # Base lock yang lebih tegas
-            base_character_lock = f"ACTOR REFERENCE: {ref_images}. Maintain strict facial identity for: {char_defs}."
+            base_character_lock = f"ACTOR REFERENCE: {ref_images}. Maintain strict character design and non-human anatomy for: {char_defs}."
 
             for item in active_scenes:
                 raw_loc = item["location"].lower()
@@ -812,6 +812,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
