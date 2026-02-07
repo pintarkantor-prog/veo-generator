@@ -194,7 +194,7 @@ st.markdown("""
         color: #1d976c !important;
         letter-spacing: 1px;
         text-transform: uppercase;
-        font-size: 14px !important;
+        font-size: 10px !important;
         font-weight: 800 !important;
         margin-bottom: 5px !important;
         display: block;
@@ -223,6 +223,12 @@ st.markdown("""
         border-bottom: 2px solid #31333f;
     }
 
+    @media (max-width: 768px) {
+        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
+            left: 0;
+        }
+    }
+
     /* 6. STYLE SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
@@ -242,6 +248,12 @@ st.markdown("""
         font-weight: bold !important;
         font-size: 16px !important;
         width: 100%;
+        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
+    }
+
+    div.stButton > button[kind="primary"]:hover {
+        background: #11998e !important;
+        box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
     }
 
     /* 8. BOX STAF AKTIF */
@@ -253,14 +265,54 @@ st.markdown("""
         margin-bottom: 25px !important;
         display: flex !important;
         align-items: center !important;
+        gap: 12px !important;
+        box-shadow: none !important; 
+    }
+    
+    .staff-header-premium b {
+        color: #1d976c !important;
+        font-size: 1.15em !important;
+        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 9. OPTIMASI KOTAK ADEGAN */
+    .staff-header-premium span {
+        color: #1d976c !important;
+    }
+
+    .staff-header-premium i {
+        color: #e0e0e0 !important;
+        font-style: normal !important;
+    }
+
+    /* 9. OPTIMASI KOTAK ADEGAN & EFEK FOKUS */
     .stExpander {
         border: 1px solid rgba(29, 151, 108, 0.3) !important;
         border-radius: 12px !important;
         background-color: #161922 !important;
         margin-bottom: 15px !important;
+    }
+
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border: 1px solid #1d976c !important;
+        background-color: #0e1117 !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    /* 10. STYLE LAINNYA */
+    h1, h2, h3, .stMarkdown h3 {
+        color: #ffffff !important;
+    }
+    button[title="Copy to clipboard"] {
+        background-color: #28a745 !important;
+        color: white !important;
+        border-radius: 6px !important;
+        transform: scale(1.1);
+    }
+
+    hr {
+        margin: 2em 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -897,6 +949,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
