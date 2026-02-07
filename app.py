@@ -508,71 +508,45 @@ with st.sidebar:
     
     st.divider()
 
-# --- C. TOMBOL SAVE & RESTORE (VERSI ANTI-REFRESH & ANTI-ERROR) ---
+# --- C. TOMBOL SAVE & LOAD (SIMETRIS) ---
     st.write("---")
-    c_s, c_r = st.columns(2)
+    # Gunakan perbandingan kolom yang sama rata (1, 1)
+    btn_col1, btn_col2 = st.columns(2)
     
-    with c_s:
-        if st.button("💾 SAVE", use_container_width=True):
+    with btn_col1:
+        # Tombol Simpan
+        save_trigger = st.button("💾 SAVE", use_container_width=True)
+        if save_trigger:
             import json
             try:
-                # 1. Ambil data karakter
-                char_data = {}
-                num_char = st.session_state.get("num_total_char", 2)
-                for idx in range(1, 11):
-                    c_n = st.session_state.get(f"c_name_{idx}_input", "")
-                    c_d = st.session_state.get(f"c_desc_{idx}_input", "")
-                    if c_n: char_data[str(idx)] = {"name": c_n, "desc": c_d}
-
-                # 2. Ambil data adegan
-                scene_data = {}
-                for i in range(1, 51):
-                    v_val = st.session_state.get(f"vis_input_{i}", "")
-                    if v_val:
-                        scene_data[str(i)] = {
-                            "vis": v_val,
-                            "light": st.session_state.get(f"light_input_{i}", "Siang"),
-                            "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
-                            "angle": st.session_state.get(f"angle_input_{i}", "Normal"),
-                            "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
-                        }
-                
-                # 3. Ambil dialog
+                # ... (logika save kamu tetap sama seperti sebelumnya)
+                char_data = {str(idx): {"name": st.session_state.get(f"c_name_{idx}_input", ""), "desc": st.session_state.get(f"c_desc_{idx}_input", "")} for idx in range(1, 11)}
+                scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")} for i in range(1, 51)}
                 dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
-
-                master_packet = {
-                    "num_char": num_char,
-                    "chars": char_data,
-                    "scenes": scene_data,
-                    "dialogs": dialog_data
-                }
-
-                # 4. Kirim ke Sheets
-                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
-                st.toast("Project Berhasil Disimpan! ✅")
+                
+                master_packet = {"num_char": st.session_state.get("num_total_char", 2), "chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
+                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len([s for s in scene_data.values() if s['vis']]))
+                st.toast("Project Tersimpan! ✅")
             except Exception as e:
-                st.error(f"Gagal simpan: {str(e)}")
+                st.error(f"Gagal simpan: {e}")
 
-    with c_r:
-        if st.button("🔄BACK", use_container_width=True):
+    with btn_col2:
+        # Kita ganti teksnya jadi 'LOAD' agar sejajar dengan 'SAVE'
+        load_trigger = st.button("🔄 LOAD", use_container_width=True)
+        if load_trigger:
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_log = conn.read(worksheet="Sheet1", ttl="1s")
-                user_draft_tag = f"DRAFT_{st.session_state.active_user}"
-                my_data = df_log[df_log['User'] == user_draft_tag]
+                my_data = df_log[df_log['User'] == f"DRAFT_{st.session_state.active_user}"]
                 
                 if not my_data.empty:
-                    raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
-                    data = json.loads(raw_data)
-                    
-                    if "num_char" in data:
-                        st.session_state["num_total_char"] = data["num_char"]
-                    
+                    data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
+                    # ... (logika restore kamu tetap sama)
+                    st.session_state["num_total_char"] = data.get("num_char", 2)
                     for i_str, val in data.get("chars", {}).items():
                         st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
                         st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
-                    
                     for i_str, val in data.get("scenes", {}).items():
                         if isinstance(val, dict):
                             st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
@@ -580,16 +554,14 @@ with st.sidebar:
                             st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
                             st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
                             st.session_state[f"loc_input_{i_str}"] = val.get("loc", "jalan kampung")
+                    for k, v in data.get("dialogs", {}).items(): st.session_state[k] = v
                     
-                    for d_key, d_text in data.get("dialogs", {}).items():
-                        st.session_state[d_key] = d_text
-                    
-                    st.toast("Data Berhasil Dipulihkan! 🔄")
+                    st.toast("Data Dipulihkan! 🔄")
                     st.rerun()
                 else:
-                    st.error("Draft tidak ditemukan.")
+                    st.error("Draft kosong.")
             except Exception as e:
-                st.error(f"Gagal restore: {str(e)}")
+                st.error(f"Gagal: {e}")
                 
     # --- NOTIFIKASI SUKSES ---
     if "sidebar_success_msg" in st.session_state:
@@ -807,6 +779,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
