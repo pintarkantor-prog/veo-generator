@@ -744,44 +744,46 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.rerun()
 
 # ==============================================================================
-# 11. DISPLAY MEGA-DRAFT (VERSI FIX - ANTI ERROR DUPLICATE)
+# 11. DISPLAY MEGA-DRAFT (HASIL AKHIR YANG RAPI & PROFESIONAL)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
-    st.markdown(f"### 🎬 HASIL PROMPT: {st.session_state.active_user.upper()} ❤️")
-    st.caption("Gunakan checkbox di Sidebar (Status Produksi) untuk menandai progres.")
+    st.markdown(f"### 🎬 HASIL PROMPT MEGA-DRAFT: {st.session_state.active_user.upper()} ❤️")
+    st.info("💡 **Tips:** Klik icon di pojok kanan atas kotak hitam untuk menyalin prompt secara instan.")
 
     for res in st.session_state.last_generated_results:
         # Ambil status dari checkbox yang ada di sidebar (Bagian 7)
         done_key_sidebar = f"mark_done_{res['id']}"
         is_done = st.session_state.get(done_key_sidebar, False)
         
-        # Label Status
+        # Penentuan Tema Warna Expander
         status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
+        header_label = f"{status_tag} | ADEGAN {res['id']} | 🎥 {res['cam_info']}"
         
-        # Tampilan Expander (Otomatis tertutup jika sudah selesai)
-        with st.expander(f"{status_tag} | ADEGAN {res['id']} | 🎥 {res['cam_info']}", expanded=not is_done):
+        with st.expander(header_label, expanded=not is_done):
             if is_done:
-                st.success(f"Adegan {res['id']} sudah selesai. Cek progress bar di sidebar!")
+                st.success(f"Adegan {res['id']} Selesai! Kerja bagus, {nama_display}!")
             
+            # --- LAYOUT PROMPT ---
             col_img, col_vid = st.columns(2)
             
             with col_img:
-                st.markdown("**📸 IMAGE PROMPT**")
+                st.markdown("#### 📸 IMAGE PROMPT (Midjourney/Flux)")
+                st.markdown('<p style="color:#1d976c; font-size:12px; font-weight:bold;">COPY & PASTE KE GENERATOR GAMBAR:</p>', unsafe_allow_html=True)
+                # Gunakan kotak code dengan bahasa 'text' agar tidak ada warna-warni coding yang mengganggu
                 st.code(res['img'], language="text")
                 
             with col_vid:
-                st.markdown("**🎥 VIDEO PROMPT**")
+                st.markdown("#### 🎥 VIDEO PROMPT (Veo/Luma/Runway)")
+                st.markdown('<p style="color:#11998e; font-size:12px; font-weight:bold;">COPY & PASTE KE GENERATOR VIDEO:</p>', unsafe_allow_html=True)
                 st.code(res['vid'], language="text")
-            
-            # Info tambahan agar staf tidak bingung
+
+            # --- FOOTER INFO ---
             if not is_done:
-                st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
-
-
-
-
-
-
-
-
+                st.divider()
+                c1, c2 = st.columns([1, 4])
+                with c1:
+                    st.button(f"Mark Adegan {res['id']} Done", key=f"btn_done_{res['id']}", 
+                              on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}))
+                with c2:
+                    st.caption(f"📌 Pastikan detail karakter tetap konsisten dengan referensi image yang digunakan.")
