@@ -508,7 +508,42 @@ with st.sidebar:
     
     st.divider()
 
-with c_r:
+# --- C. TOMBOL SAVE & RESTORE (FULL FIXED) ---
+    c_s, c_r = st.columns(2)
+    
+    with c_s:
+        if st.button("💾 SAVE", use_container_width=True):
+            import json
+            try:
+                # Simpan Karakter (1-10)
+                char_data = {}
+                for idx in range(1, 11):
+                    n_val = st.session_state.get(f"c_name_{idx}_input", "")
+                    d_val = st.session_state.get(f"c_desc_{idx}_input", "")
+                    if n_val: char_data[str(idx)] = {"name": n_val, "desc": d_val}
+
+                # Simpan Adegan (1-num_scenes)
+                scene_data = {}
+                for i in range(1, int(num_scenes) + 1):
+                    scene_data[str(i)] = {
+                        "vis": st.session_state.get(f"vis_input_{i}", ""),
+                        "light": st.session_state.get(f"light_input_{i}", "Siang"),
+                        "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
+                        "angle": st.session_state.get(f"angle_input_{i}", "Normal"),
+                        "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
+                    }
+                
+                # Simpan Dialog
+                dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
+
+                master_packet = {"chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
+                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
+                st.session_state["sidebar_success_msg"] = "Semua Data Berhasil Disimpan! ✅"
+                st.rerun()
+            except Exception as e:
+                st.error(f"Gagal simpan: {str(e)}")
+
+    with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
@@ -521,44 +556,37 @@ with c_r:
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     data = json.loads(raw_data)
                     
-                    # --- A. PEMULIHAN KARAKTER ---
+                    # Balikin Karakter
                     chars = data.get("chars", {})
-                    if isinstance(chars, dict):
-                        for idx_s, val in chars.items():
-                            if isinstance(val, dict):
-                                st.session_state[f"c_name_{idx_s}_input"] = val.get("name", "")
-                                st.session_state[f"c_desc_{idx_s}_input"] = val.get("desc", "")
-
-                    # --- B. PEMULIHAN ADEGAN (LOGIKA HYBRID) ---
-                    scenes = data.get("scenes", {})
-                    if isinstance(scenes, dict):
-                        for idx_s, val in scenes.items():
-                            # Cek: Apakah ini format baru (Dictionary) atau format lama (Hanya Teks/String)?
-                            if isinstance(val, dict):
-                                # FORMAT BARU: Balikin semua atribut
-                                st.session_state[f"vis_input_{idx_s}"] = val.get("vis", "")
-                                st.session_state[f"light_input_{idx_s}"] = val.get("light", "Siang")
-                                st.session_state[f"shot_input_{idx_s}"] = val.get("shot", "Setengah Badan")
-                                st.session_state[f"angle_input_{idx_s}"] = val.get("angle", "Normal")
-                                st.session_state[f"loc_input_{idx_s}"] = val.get("loc", "jalan kampung")
-                            else:
-                                # FORMAT LAMA: val cuma string visual, masukkan saja ke kotak visual
-                                st.session_state[f"vis_input_{idx_s}"] = str(val)
+                    for idx_s, val in chars.items():
+                        st.session_state[f"c_name_{idx_s}_input"] = val.get("name", "")
+                        st.session_state[f"c_desc_{idx_s}_input"] = val.get("desc", "")
                     
-                    # --- C. PEMULIHAN DIALOG ---
+                    # Balikin Adegan
+                    scenes = data.get("scenes", {})
+                    for idx_s, val in scenes.items():
+                        if isinstance(val, dict):
+                            st.session_state[f"vis_input_{idx_s}"] = val.get("vis", "")
+                            st.session_state[f"light_input_{idx_s}"] = val.get("light", "Siang")
+                            st.session_state[f"shot_input_{idx_s}"] = val.get("shot", "Setengah Badan")
+                            st.session_state[f"angle_input_{idx_s}"] = val.get("angle", "Normal")
+                            st.session_state[f"loc_input_{idx_s}"] = val.get("loc", "jalan kampung")
+                        else:
+                            st.session_state[f"vis_input_{idx_s}"] = str(val)
+                    
+                    # Balikin Dialog
                     dialogs = data.get("dialogs", {})
-                    if isinstance(dialogs, dict):
-                        for d_key, d_text in dialogs.items():
-                            st.session_state[d_key] = d_text
+                    for d_key, d_text in dialogs.items():
+                        st.session_state[d_key] = d_text
                     
                     st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
                     st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
-                st.error(f"Gagal memulihkan data: {str(e)}")
-                
-    # --- MENAMPILKAN NOTIFIKASI SUKSES (LURUSKAN INDENTASI DI SINI) ---
+                st.error(f"Gagal restore: {str(e)}")
+
+    # --- NOTIFIKASI SUKSES (SEJAJAR DENGAN TOMBOL DI ATAS) ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
@@ -774,6 +802,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
