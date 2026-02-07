@@ -4,31 +4,6 @@ import pandas as pd
 from datetime import datetime
 import pytz
 import time
-# --- TAMBAHKAN DI BAWAH IMPORT ---
-st.markdown("""
-    <style>
-    /* 1. Memperbesar tulisan di dalam kotak Cerita Visual */
-    .stTextArea textarea {
-        font-size: 22px !important;    /* Ukuran font diperbesar jadi 22px */
-        font-weight: 500 !important;   /* Agak tebal supaya jelas */
-        color: #FFFFFF !important;     /* Warna putih bersih */
-        line-height: 1.6 !important;   /* Jarak antar baris biar enak dibaca */
-        font-family: 'Source Sans Pro', sans-serif;
-    }
-
-    /* 2. Opsional: Memperbesar tulisan di dalam dropdown (Selectbox) */
-    .stSelectbox div[data-baseweb="select"] {
-        font-size: 16px !important;
-    }
-    
-    /* 3. Memberikan warna background sedikit gelap pada area input agar teks makin kontras */
-    .stTextArea textarea {
-        background-color: #1E1E1E !important;
-        border: 1px solid #444 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 # ==============================================================================
 # 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
@@ -202,6 +177,43 @@ def record_to_sheets(user, data_packet, total_scenes):
 # 4. CUSTOM CSS (VERSION: BOLD FOCUS & INSTANT RESPONSE)
 # ==============================================================================
 st.markdown("""
+    <style>
+    /* 1. Memperbesar tulisan di Cerita Visual (TextArea) */
+    .stTextArea textarea {
+        font-size: 22px !important;
+        font-weight: 500 !important;
+        color: #FFFFFF !important;
+        line-height: 1.6 !important;
+        background-color: #1E1E1E !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* 2. Memperbesar tulisan Nama & Karakter (TextInput) */
+    .stTextInput input {
+        font-size: 22px !important;
+        font-weight: 500 !important;
+        background-color: #1E1E1E !important;
+        border: 1px solid #444 !important;
+    }
+
+    /* 3. Memperbesar Label (Suasana, Lokasi, dll.) */
+    .small-label {
+        font-size: 18px !important; /* Ukuran label diperbesar */
+        font-weight: bold !important;
+        color: #FFFFFF !important;
+        margin-bottom: 5px !important;
+        display: block;
+    }
+
+    /* 4. Memperbesar tulisan di dalam Dropdown (Selectbox) */
+    .stSelectbox div[data-baseweb="select"] {
+        font-size: 16px !important;
+    }
+
+    /* CSS tambahan kamu yang lama tetap biarkan di bawahnya... */
+    </style>
+    """, unsafe_allow_html=True)
+
     <style>
     /* A. CUSTOM SCROLLBAR */
     ::-webkit-scrollbar { width: 8px; }
@@ -835,6 +847,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
