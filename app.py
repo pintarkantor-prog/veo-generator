@@ -707,7 +707,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (NOIR ENGINE)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (NOIR ENGINE) - FIXED VERSION
 # ==============================================================================
 st.write("")
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
@@ -723,7 +723,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             st.session_state.last_generated_results = []
             
             # --- [MASTER ASSETS & DNA] ---
-            URL_UDIN, URL_TUNG, URL_RUMI = "https://i.ibb.co.com/4w8sJ0rR/UDIN.png", "https://i.ibb.co.com/v7Hpd1b/TUNGG.png", "https://i.ibb.co.com/DHGc9X9y/RUMI.png"
+            URL_UDIN = "https://i.ibb.co.com/4w8sJ0rR/UDIN.png"
+            URL_TUNG = "https://i.ibb.co.com/v7Hpd1b/TUNGG.png"
+            URL_RUMI = "https://i.ibb.co.com/DHGc9X9y/RUMI.png"
+            
             LOKASI_DNA = {
                 "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, simple wooden fences, late afternoon sun.",
                 "jalan kota kecil": "small town asphalt road, old 90s shophouses (ruko), electricity poles with messy wires, tropical town vibe.",
@@ -739,28 +742,31 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa, chandelier lighting, polished atmosphere."
             }
 
-            ref_images = ""
-            all_names_joined = " ".join([c['name'] for c in all_chars_list]).lower()
-            if "udin" in all_names_joined: ref_images += f"{URL_UDIN} "
-            if "tung" in all_names_joined: ref_images += f"{URL_TUNG} "
-            if "rumi" in all_names_joined: ref_images += f"{URL_RUMI} "
-
+            # --- LOGIKA PENANGKAP URL (DIPERBAIKI) ---
+            ref_images_list = []
+            # Cek semua karakter yang diinput
+            for c in all_chars_list:
+                name_low = c['name'].lower().strip()
+                if "udin" in name_low: ref_images_list.append(URL_UDIN)
+                if "tung" in name_low: ref_images_list.append(URL_TUNG)
+                if "rumi" in name_low: ref_images_list.append(URL_RUMI)
+            
+            # Gabungkan URL jadi string bersih
+            ref_images = " ".join(list(set(ref_images_list))) # set() biar gak double kalau ngetik nama mirip
+            
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
+            
+            # Base lock yang lebih tegas
             base_character_lock = f"ACTOR REFERENCE: {ref_images}. Maintain strict facial identity for: {char_defs}."
 
             for item in active_scenes:
-                # 1. LOGIKA LOKASI (Bisa deteksi hasil ketikan manual)
                 raw_loc = item["location"].lower()
-                # Jika lokasi ada di daftar LOKASI_DNA, ambil deskripsinya. 
-                # Jika tidak ada (hasil ketikan manual), gunakan teks aslinya.
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
                 
-                # 2. LOGIKA SHOT, ANGLE, & CAMERA
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
                 
-                # Lighting Logic
                 if "Malam" in item["light"]: l_cmd = "cinematic night noir, heavy shadows, flickering tungsten."
                 elif "Siang" in item["light"]: l_cmd = "harsh midday sun, high-contrast, gritty heat haze."
                 else: l_cmd = "moody low-light, mysterious silhouettes."
@@ -770,10 +776,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 master_lock = f"{base_character_lock} ENVIRONMENT DNA: {dna_env}."
                 
-                # --- PROMPT GAMBAR (Gak pake e_cam biar gak blur) ---
                 img_final = f"{master_lock} RAW film still, Arri Alexa, 35mm. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --style raw"
-                
-                # --- PROMPT VIDEO (Pake e_cam biar gerak) ---
                 vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
 
                 st.session_state.last_generated_results.append({
@@ -781,7 +784,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 })
         st.toast("Prompt Sudah Siap! 🚀")
         st.rerun()
-
 # ==============================================================================
 # 11. DISPLAY MEGA-DRAFT (VERSI BERSIH)
 # ==============================================================================
@@ -811,6 +813,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
