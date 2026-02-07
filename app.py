@@ -763,17 +763,18 @@ if st.session_state.last_generated_results:
             # --- GRID PROMPT ---
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown("**📸 IMAGE**")
+                st.markdown("**📸 PROMPT IMAGE**")
                 st.code(res['img'], language="text")
             with c2:
-                st.markdown("**🎥 VIDEO**")
+                st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
 
-            # --- TOMBOL KONFIRMASI (TANPA CAPTION/TEKS RAME) ---
+            # --- FOOTER MINIMALIS ---
             if not is_done:
-                st.button(
-                    f"KONFIRMASI SELESAI ADEGAN {res['id']} ✅", 
-                    key=f"btn_done_{res['id']}", 
-                    on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
-                    use_container_width=True
-                )
+                st.write("") # Spasi tipis
+                _, col_ok = st.columns([3, 1]) # Dorong ke pojok kanan
+                with col_ok:
+                    st.button("SELESAI", key=f"btn_done_{res['id']}", 
+                              on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
+                              use_container_width=True)
+
