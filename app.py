@@ -558,14 +558,15 @@ with c_r:
             except Exception as e:
                 st.error(f"Gagal memulihkan data: {str(e)}")
                 
+    # --- MENAMPILKAN NOTIFIKASI SUKSES (LURUSKAN INDENTASI DI SINI) ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
     st.divider()
 
-    # --- TOMBOL LOGOUT (ICON BARU: POWER OFF) ---
-    if st.sidebar.button("LOGOUT⚡", use_container_width=True):
+    # --- TOMBOL LOGOUT ---
+    if st.sidebar.button("KELUAR SISTEM ⚡", use_container_width=True):
         st.query_params.clear() 
         if 'active_user' in st.session_state:
             del st.session_state.active_user
@@ -773,6 +774,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
