@@ -743,7 +743,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
         except: pass
         
-        with st.spinner(f"⏳ Sedang meracik prompt untuk {nama_staf}..."):
+        with st.spinner(f"⏳ Sedang membuat prompt..."):
             # Reset isi lemari sebelum diisi yang baru
             st.session_state.last_generated_results = []
             
@@ -835,6 +835,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
