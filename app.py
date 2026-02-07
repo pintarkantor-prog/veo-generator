@@ -526,35 +526,49 @@ if "restore_counter" not in st.session_state:
 
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (VERSI PROFESSIONAL GRID) ---
+# --- IDENTITAS TOKOH (VERSI GRID PRO: BERJEJER KE SAMPING) ---
 with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
-    # 1. Input jumlah karakter tetap di atas
+    # 1. Input jumlah karakter
     num_total_char = st.number_input("Total Karakter dalam Project", min_value=1, max_value=10, value=2)
-    st.write("") # Kasih jarak
+    st.write("") 
 
     all_chars_list = []
 
-    # 2. LOOPING DENGAN GRID
-    for i in range(1, num_total_char + 1):
-        # Frame pembungkus tiap karakter agar rapi
-        st.markdown(f"##### 👤 Karakter {i}")
+    # 2. LOOPING DENGAN LOGIKA BARIS (Samping-sampingan)
+    # Kita buat looping yang melompat setiap 2 angka agar bisa bikin baris baru
+    for i in range(1, num_total_char + 1, 2):
+        cols = st.columns(2) # Bikin 2 kolom utama (Kiri & Kanan)
         
-        # Kita bagi 2 kolom: Nama dan Detail Fisik
-        c_col1, c_col2 = st.columns([1, 2]) 
-        
-        with c_col1:
-            n_key = f"c_name_{i}_input"
+        # --- Kolom Kiri (Karakter Ganjil: 1, 3, 5...) ---
+        with cols[0]:
+            idx = i
+            st.markdown(f"##### 👤 Karakter {idx}")
+            n_key = f"c_name_{idx}_input"
+            d_key = f"c_desc_{idx}_input"
             if n_key not in st.session_state: st.session_state[n_key] = ""
-            # Label disembunyikan (collapsed) agar lebih bersih
-            name = st.text_input("Nama", key=n_key, placeholder=f"Nama Tokoh {i}", label_visibility="collapsed")
-            
-        with c_col2:
-            d_key = f"c_desc_{i}_input"
             if d_key not in st.session_state: st.session_state[d_key] = ""
-            desc = st.text_area("Detail Fisik", key=d_key, height=68, placeholder=f"Deskripsi fisik Karakter {i}...", label_visibility="collapsed")
+            
+            c1, c2 = st.columns([1, 2])
+            with c1: name = st.text_input(f"N{idx}", key=n_key, placeholder="Nama", label_visibility="collapsed")
+            with c2: desc = st.text_area(f"D{idx}", key=d_key, height=68, placeholder="Detail Fisik", label_visibility="collapsed")
+            all_chars_list.append({"name": name, "desc": desc})
+
+        # --- Kolom Kanan (Karakter Genap: 2, 4, 6...) ---
+        with cols[1]:
+            idx = i + 1
+            if idx <= num_total_char: # Cek apakah karakternya ada
+                st.markdown(f"##### 👤 Karakter {idx}")
+                n_key = f"c_name_{idx}_input"
+                d_key = f"c_desc_{idx}_input"
+                if n_key not in st.session_state: st.session_state[n_key] = ""
+                if d_key not in st.session_state: st.session_state[d_key] = ""
+                
+                c1, c2 = st.columns([1, 2])
+                with c1: name = st.text_input(f"N{idx}", key=n_key, placeholder="Nama", label_visibility="collapsed")
+                with c2: desc = st.text_area(f"D{idx}", key=d_key, height=68, placeholder="Detail Fisik", label_visibility="collapsed")
+                all_chars_list.append({"name": name, "desc": desc})
         
-        all_chars_list.append({"name": name, "desc": desc})
-        st.markdown("<hr style='margin:10px 0px; border-top: 1px solid #333;'>", unsafe_allow_html=True)
+        st.write("---") # Garis pemisah antar baris
 
     st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
 
@@ -778,6 +792,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
