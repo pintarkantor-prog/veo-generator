@@ -751,11 +751,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 master_lock = f"{base_character_lock} ENVIRONMENT DNA: {dna_env}."
                 
+                # --- PROMPT GAMBAR (Gak pake e_cam biar gak blur) ---
                 img_final = f"{master_lock} RAW film still, Arri Alexa, 35mm. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --style raw"
-                vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_cam}. {l_cmd}. {vid_quality_base}"
+                
+                # --- PROMPT VIDEO (Pake e_cam biar gerak) ---
+                vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
 
                 st.session_state.last_generated_results.append({
-                    "id": item["num"], "img": img_final, "vid": vid_final, "cam_info": f"{e_shot} + {e_cam}"
+                    "id": item["num"], "img": img_final, "vid": vid_final, "cam_info": f"{e_shot} | {e_angle} | {e_cam}"
                 })
         st.toast("Prompt Sudah Siap! 🚀")
         st.rerun()
@@ -789,6 +792,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
