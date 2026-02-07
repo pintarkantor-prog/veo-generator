@@ -1,4 +1,4 @@
-import streamlit as st
+🎬 Gerakan Kameraimport streamlit as st
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 from datetime import datetime
@@ -665,7 +665,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
                 angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
             with r2[1]:
-                st.markdown('<p class="small-label">🎬 Gerakan Kamera</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🎬 Gerakan Kamera (untuk video)</p>', unsafe_allow_html=True)
                 cam_val = st.selectbox(f"C{i_s}", indonesia_camera, index=0, key=f"camera_input_{i_s}", label_visibility="collapsed")
             
             # --- BARIS 3 ---
@@ -804,6 +804,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
