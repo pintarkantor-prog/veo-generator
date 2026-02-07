@@ -775,7 +775,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 master_lock = f"{base_character_lock} ENVIRONMENT DNA: {dna_env}."
                 
-                img_final = f"{master_lock} RAW film still, Arri Alexa, 35mm. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --style raw"
+                img_final = f"{ref_images} . {char_defs} . Full body 3D stylized character render, octane render, high fidelity, 8k, Visual: {item['visual']}. --ar 9:16 --style raw"
                 vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
 
                 st.session_state.last_generated_results.append({
@@ -812,6 +812,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
