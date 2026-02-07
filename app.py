@@ -756,34 +756,39 @@ if st.session_state.last_generated_results:
         done_key_sidebar = f"mark_done_{res['id']}"
         is_done = st.session_state.get(done_key_sidebar, False)
         
-        # Penentuan Tema Warna Expander
+        # Penentuan Label (Super Ringkas)
         status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
-        header_label = f"{status_tag} | ADEGAN {res['id']} | 🎥 {res['cam_info']}"
+        header_label = f"{status_tag} | ADEGAN {res['id']}"
         
         with st.expander(header_label, expanded=not is_done):
             if is_done:
-                st.success(f"Adegan {res['id']} Selesai! Kerja bagus, {nama_display}!")
+                st.success(f"Adegan {res['id']} Selesai! Kerja bagus!")
             
-            # --- LAYOUT PROMPT ---
+            # Info Kamera ditaruh di dalam agar Judul tetap pendek
+            if not is_done:
+                st.caption(f"🎥 Shot: {res['cam_info']}")
+            
+            # --- LAYOUT PROMPT (GRID 2 KOLOM) ---
             col_img, col_vid = st.columns(2)
             
             with col_img:
-                st.markdown("#### 📸 IMAGE PROMPT (Midjourney/Flux)")
-                st.markdown('<p style="color:#1d976c; font-size:12px; font-weight:bold;">COPY & PASTE KE GENERATOR GAMBAR:</p>', unsafe_allow_html=True)
-                # Gunakan kotak code dengan bahasa 'text' agar tidak ada warna-warni coding yang mengganggu
+                st.markdown("#### 📸 IMAGE PROMPT")
+                st.markdown('<p style="color:#1d976c; font-size:12px; font-weight:bold;">MIDJOURNEY / FLUX:</p>', unsafe_allow_html=True)
                 st.code(res['img'], language="text")
                 
             with col_vid:
-                st.markdown("#### 🎥 VIDEO PROMPT (Veo/Luma/Runway)")
-                st.markdown('<p style="color:#11998e; font-size:12px; font-weight:bold;">COPY & PASTE KE GENERATOR VIDEO:</p>', unsafe_allow_html=True)
+                st.markdown("#### 🎥 VIDEO PROMPT")
+                st.markdown('<p style="color:#11998e; font-size:12px; font-weight:bold;">VEO / LUMA / RUNWAY:</p>', unsafe_allow_html=True)
                 st.code(res['vid'], language="text")
 
-            # --- FOOTER INFO ---
+            # --- FOOTER INFO (CLEAN & TOOLTIP STYLE) ---
             if not is_done:
-                st.divider()
-                c1, c2 = st.columns([1, 4])
-                with c1:
-                    st.button(f"Mark Adegan {res['id']} Done", key=f"btn_done_{res['id']}", 
-                              on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}))
-                with c2:
-                    st.caption(f"📌 Pastikan detail karakter tetap konsisten dengan referensi image yang digunakan.")
+                st.write("") # Memberi sedikit ruang napas
+                # Tombol konfirmasi dengan instruksi tersembunyi (Tooltip)
+                st.button(
+                    f"KONFIRMASI ADEGAN {res['id']} SELESAI ✅", 
+                    key=f"btn_done_{res['id']}", 
+                    help="Klik untuk menandai adegan ini selesai. Pastikan detail karakter tetap konsisten!",
+                    on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
+                    use_container_width=True
+                )
