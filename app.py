@@ -617,7 +617,7 @@ st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH (VERSI ELEGANT GRID) ---
 with st.expander("👥 Nama Tokoh Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
-    num_total_char = st.number_input("Total Karakter dalam Project", min_value=1, max_value=10, value=2)
+    num_total_char = st.number_input("Total Karakter Utama dalam Project", min_value=1, max_value=10, value=2)
     st.write("") 
 
     all_chars_list = []
@@ -772,6 +772,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
