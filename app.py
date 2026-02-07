@@ -295,7 +295,7 @@ st.markdown("""
         transform: scale(1.1);
     }
     .stTextArea textarea {
-        font-size: 14px !important;
+        font-size: 16px !important;
         border-radius: 10px !important;
         background-color: #0e1117 !important;
         border: 1px solid #31333f !important;
@@ -826,4 +826,5 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
