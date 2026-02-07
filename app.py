@@ -640,22 +640,32 @@ for i_s in range(1, int(num_scenes) + 1):
             visual_input = st.text_area(f"Cerita Visual {i_s}", key=f"vis_input_{i_s}", height=180, placeholder="Ceritakan detail adegannya di sini...")
         
         with col_ctrl:
-            r1 = st.columns(2)
-            r2 = st.columns(2)
+            # Kita bagi jadi 3 baris supaya tidak sesak
+            r1 = st.columns(2) # Baris 1: Suasana & Ukuran
+            r2 = st.columns(2) # Baris 2: Arah & Gerakan
+            r3 = st.columns(1) # Baris 3: Lokasi (Full Width/Lebar)
+            
+            # --- BARIS 1 ---
             with r1[0]:
+                # SUDAH DIGANTI JADI 'SUASANA' SAJA
                 st.markdown('<p class="small-label">💡 Suasana</p>', unsafe_allow_html=True)
                 light_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1[1]:
                 st.markdown('<p class="small-label">📐 Ukuran Gambar</p>', unsafe_allow_html=True)
                 shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+            
+            # --- BARIS 2 ---
             with r2[0]:
                 st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
                 angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
             with r2[1]:
+                st.markdown('<p class="small-label">🎬 Gerakan Kamera</p>', unsafe_allow_html=True)
+                cam_val = st.selectbox(f"C{i_s}", indonesia_camera, index=0, key=f"camera_input_{i_s}", label_visibility="collapsed")
+            
+            # --- BARIS 3 ---
+            with r3[0]:
                 st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
-                options_lokasi = ["jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", "halaman rumah", "teras rumah", "pinggir sawah", "sawah", "teras rumah miskin", "dalam rumah kayu", "teras rumah kaya", "dalam rumah kaya"]
                 location_val = st.selectbox(f"Loc{i_s}", options=options_lokasi, key=f"loc_input_{i_s}", label_visibility="collapsed")
-            cam_val = "Ikuti Karakter"
 
         # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -768,6 +778,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
