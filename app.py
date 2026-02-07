@@ -180,7 +180,7 @@ st.markdown("""
     <style>
     /* 1. Memperbesar tulisan di Cerita Visual (TextArea) */
     .stTextArea textarea {
-        font-size: 22px !important;
+        font-size: 18px !important;
         font-weight: 500 !important;
         color: #FFFFFF !important;
         line-height: 1.6 !important;
@@ -190,7 +190,7 @@ st.markdown("""
 
     /* 2. Memperbesar tulisan Nama & Karakter (TextInput) */
     .stTextInput input {
-        font-size: 22px !important;
+        font-size: 18px !important;
         font-weight: 500 !important;
         background-color: #1E1E1E !important;
         border: 1px solid #444 !important;
@@ -803,6 +803,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
