@@ -616,7 +616,7 @@ if "restore_counter" not in st.session_state:
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH (VERSI ELEGANT GRID) ---
-with st.expander("👥 Nama Tokoh Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
+with st.expander("👥 Nama Karakter Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
     num_total_char = st.number_input("Total Karakter Utama dalam Project", min_value=1, max_value=10, value=2)
     st.write("") 
 
@@ -627,9 +627,9 @@ with st.expander("👥 Nama Tokoh Utama & Penampilan Fisik! (WAJIB ISI)", expand
             idx = i + idx_offset
             if idx <= num_total_char:
                 with cols[idx_offset]:
-                    st.markdown(f"##### 👤 Tokoh Utama {idx}")
-                    name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Tokoh Utama {idx}", label_visibility="collapsed")
-                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Tokoh Utama {idx}...", label_visibility="collapsed")
+                    st.markdown(f"##### 👤 Karakter Utama {idx}")
+                    name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Karakter Utama {idx}", label_visibility="collapsed")
+                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Karakter Utama {idx}...", label_visibility="collapsed")
                     all_chars_list.append({"name": name, "desc": desc})
         st.write("---") 
 
@@ -666,7 +666,7 @@ for i_s in range(1, int(num_scenes) + 1):
         scene_dialogs_list = []
         for i_char, char_data in enumerate(all_chars_list):
             with diag_cols[i_char]:
-                char_label = char_data['name'] if char_data['name'] else f"Tokoh {i_char+1}"
+                char_label = char_data['name'] if char_data['name'] else f"Karakter {i_char+1}"
                 d_in = st.text_input(f"Dialog {char_label}", key=f"diag_{i_s}_{i_char}")
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
@@ -772,6 +772,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
