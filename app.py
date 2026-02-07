@@ -771,10 +771,6 @@ if st.session_state.last_generated_results:
 
             # --- FOOTER MINIMALIS ---
             if not is_done:
-                st.write("") # Spasi tipis
-                _, col_ok = st.columns([3, 1]) # Dorong ke pojok kanan
-                with col_ok:
-                    st.button("SELESAI", key=f"btn_done_{res['id']}", 
-                              on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
-                              use_container_width=True)
-
+                st.button(f"DONE ADEGAN {res['id']} ✅", key=f"btn_done_{res['id']}", 
+                          on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
+                          use_container_width=True)
