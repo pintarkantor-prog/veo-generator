@@ -214,7 +214,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-    <style>
     /* A. CUSTOM SCROLLBAR */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0e1117; }
@@ -847,6 +846,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
