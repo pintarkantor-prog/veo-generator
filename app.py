@@ -178,38 +178,6 @@ def record_to_sheets(user, data_packet, total_scenes):
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. Memperbesar tulisan di Cerita Visual (TextArea) */
-    .stTextArea textarea {
-        font-size: 16px !important;
-        font-weight: 350 !important;
-        color: #FFFFFF !important;
-        line-height: 1.6 !important;
-        background-color: #1E1E1E !important;
-        border: 1px solid #444 !important;
-    }
-
-    /* 2. Memperbesar tulisan Nama & Karakter (TextInput) */
-    .stTextInput input {
-        font-size: 16px !important;
-        font-weight: 350 !important;
-        background-color: #1E1E1E !important;
-        border: 1px solid #444 !important;
-    }
-
-    /* 3. Memperbesar Label (Suasana, Lokasi, dll.) */
-    .small-label {
-        font-size: 12px !important; /* Ukuran label diperbesar */
-        font-weight: bold !important;
-        color: #FFFFFF !important;
-        margin-bottom: 5px !important;
-        display: block;
-    }
-
-    /* 4. Memperbesar tulisan di dalam Dropdown (Selectbox) */
-    .stSelectbox div[data-baseweb="select"] {
-        font-size: 16px !important;
-    }
-
     /* A. CUSTOM SCROLLBAR */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0e1117; }
@@ -254,6 +222,7 @@ st.markdown("""
         font-size: 16px !important;
         width: 100%;
         box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
+        /* Transition dihapus agar kembali instan */
     }
 
     div.stButton > button[kind="primary"]:hover {
@@ -261,38 +230,53 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 4. MODIFIKASI BOX STAF AKTIF (HIJAU TEGAS & FLAT) */
+    /* 4. MODIFIKASI BOX STAF AKTIF (HIJAU TEGAS & FLAT - TANPA EFEK SAMPING) */
     .staff-header-premium {
-        background: rgba(29, 151, 108, 0.2) !important;
-        border: 2px solid #1d976c !important;
+        background: rgba(29, 151, 108, 0.2) !important; /* Warna hijau background lebih nyata */
+        border: 2px solid #1d976c !important; /* Garis bingkai rata di semua sisi */
         border-radius: 10px !important;
         padding: 15px 20px !important;
         margin-bottom: 25px !important;
         display: flex !important;
         align-items: center !important;
         gap: 12px !important;
+        /* Menghilangkan efek shadow dan border-left tebal agar terlihat flat/rata */
         box-shadow: none !important; 
     }
     
     .staff-header-premium b {
-        color: #1d976c !important;
-        font-size: 1.15em !important;
-        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important;
+        color: #ffffff !important; /* Nama Staf dibuat putih agar kontras dan jelas */
+        font-size: 1.1em !important;
     }
 
     .staff-header-premium span {
-        color: #1d976c !important;
+        color: #1d976c !important; /* Icon orangnya yang diberi warna hijau */
     }
 
     .staff-header-premium i {
         color: #e0e0e0 !important;
-        font-style: normal !important;
+        font-style: normal !important; /* Menghilangkan miring jika ingin lebih tegas */
+    }
+    
+    .staff-header-premium b {
+        color: #1d976c !important; /* Nama Admin jadi hijau terang */
+        font-size: 1.15em !important;
+        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important; /* Efek glow halus pada teks */
+    }
+
+    .staff-header-premium i {
+        color: #e0e0e0 !important; /* Quote jadi lebih putih agar mudah dibaca */
+    }
+    
+    .staff-header-premium b {
+        color: #1d976c;
+        font-size: 1.1em;
     }
 
     /* 5. EFEK FOKUS (DIKEMBALIKAN KE STANDAR) */
     .stTextArea textarea:focus, .stTextInput input:focus {
-        border: 1px solid #31333f !important;
-        background-color: #0e1117 !important;
+        border: 1px solid #31333f !important; /* Kembali ke warna border asli */
+        background-color: #0e1117 !important; /* Tetap gelap */
         box-shadow: none !important;
         outline: none !important;
     }
@@ -309,21 +293,45 @@ st.markdown("""
         border-radius: 6px !important;
         transform: scale(1.1);
     }
-
+    .stTextArea textarea {
+        font-size: 14px !important;
+        border-radius: 10px !important;
+        background-color: #0e1117 !important;
+        border: 1px solid #31333f !important;
+    }
     .small-label {
-        color: #1d976c !important;
+        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
+    }
+    /* 7. OPTIMASI KOTAK ADEGAN */
+    .stExpander {
+        border: 1px solid rgba(29, 151, 108, 0.3) !important;
+        border-radius: 12px !important;
+        background-color: #161922 !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* Label dropdown agar lebih tegas dan sinematik */
+    .small-label {
+        color: #1d976c !important; /* Hijau branding kamu */
         letter-spacing: 1px;
         text-transform: uppercase;
         font-size: 10px !important;
         font-weight: 800 !important;
     }
 
+    /* Membuat garis pemisah adegan lebih halus */
     hr {
         margin: 2em 0 !important;
         border-bottom: 1px solid rgba(255,255,255,0.05) !important;
     }
+
+    /* Menjaga teks area visual tetap rapi */
+    .stTextArea textarea {
+        border: 1px solid rgba(255,255,255,0.1) !important;
+    }
     </style>
     """, unsafe_allow_html=True)
+
 
 # ==============================================================================
 # 5. HEADER STAF (ELEGANT VERSION)
@@ -803,6 +811,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
