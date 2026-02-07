@@ -581,10 +581,9 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "photorealistic RAW photo, shot on Fujifilm XT-4, " # Merk kamera tetap ada
-    "extremely detailed natural skin texture, visible pores and slight blemishes, "
-    "subsurface scattering, authentic skin tones, natural film grain, "
-    "cinematic lighting, masterpiece quality."
+    "cinematic film still, high-end production design, "
+    "sharp focus, hyper-detailed textures, vibrant colors, "
+    "atmospheric lighting, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -813,6 +812,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
