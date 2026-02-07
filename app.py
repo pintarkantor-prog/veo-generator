@@ -16,7 +16,7 @@ st.markdown("""
 
     /* 2. Memperbesar tulisan di input Nama Karakter */
     .stTextInput input {
-        font-size: 22px !important;
+        font-size: 20px !important;
         font-weight: 600 !important;
     }
 
@@ -835,6 +835,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
