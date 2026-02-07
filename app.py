@@ -175,10 +175,16 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: CLEAN & CLASSIC GREEN - ELEGANT EDITION)
+# 4. CUSTOM CSS (VERSION: CLEAN GREEN - NO FOOTER EDITION)
 # ==============================================================================
 st.markdown("""
     <style>
+    /* A. CUSTOM SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0e1117; }
+    ::-webkit-scrollbar-thumb { background: #31333f; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #1d976c; }
+
     /* 1. FIXED HEADER */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
         position: fixed;
@@ -200,12 +206,13 @@ st.markdown("""
     /* 2. STYLE SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
+        border-right: 1px solid rgba(29, 151, 108, 0.1) !important;
     }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
 
-    /* 3. TOMBOL GENERATE (HIJAU PREMIUM - SOFT) */
+    /* 3. TOMBOL GENERATE (HIJAU PREMIUM) */
     div.stButton > button[kind="primary"] {
         background: linear-gradient(to right, #1d976c, #11998e) !important;
         color: white !important;
@@ -224,10 +231,10 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 4. MODIFIKASI BOX STAF AKTIF (BIAR ELEGAN) */
+    /* 4. MODIFIKASI BOX STAF AKTIF */
     .staff-header-premium {
-        background: rgba(29, 151, 108, 0.05); /* Hijau transparan tipis */
-        border-left: 4px solid #1d976c; /* Garis hijau tegas di kiri */
+        background: rgba(29, 151, 108, 0.05);
+        border-left: 4px solid #1d976c;
         border-radius: 8px;
         padding: 15px 20px;
         margin-bottom: 25px;
@@ -244,14 +251,18 @@ st.markdown("""
         font-size: 1.1em;
     }
 
-    /* 5. KEMBALIKAN TEXT LAIN KE STANDAR (TIDAK GRADIENT) */
+    /* 5. EFEK FOKUS INPUT */
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border-color: #1d976c !important;
+        box-shadow: 0 0 8px rgba(29, 151, 108, 0.2) !important;
+    }
+
+    /* 6. STYLE LAINNYA */
     h1, h2, h3, .stMarkdown h3 {
         color: #ffffff !important;
         background: none !important;
         -webkit-text-fill-color: initial !important;
     }
-
-    /* 6. STYLE LAINNYA */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -268,8 +279,9 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+
 # ==============================================================================
-# 5. HEADER STAF (PREMIUM ELEGANT VERSION)
+# 5. HEADER STAF (ELEGANT VERSION)
 # ==============================================================================
 nama_display = st.session_state.active_user.capitalize()
 
@@ -279,11 +291,10 @@ st.markdown(f"""
         <div>
             <b>Staf Aktif: {nama_display}</b> 
             <span style="color:rgba(255,255,255,0.1); margin: 0 10px;">|</span>
-            <span style="color:#aaa; font-style:italic;">Konten yang mantap lahir dari detail adegan yang tepat 🚀</span>
+            <span style="color:#aaa; font-style:italic;">Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
-        
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
@@ -841,6 +852,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
