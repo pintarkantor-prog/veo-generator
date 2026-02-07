@@ -488,10 +488,10 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "photorealistic raw photo, 8k UHD, extremely high-resolution, shot on 35mm lens, f/1.8, ISO 100, "
-    "ultra-sharp focus, crystal clear optical clarity, vibrant organic colors, deep color saturation, "
-    "ray-traced global illumination, hyper-detailed skin pores and fabric fibers, "
-    "zero digital noise, clean pixels, masterpiece quality."
+    "photorealistic RAW photo, shot on 35mm lens, f/2.8, ISO 400, "
+    "natural skin texture, visible pores, subtle skin imperfections, "
+    "hyper-detailed eyes with realistic reflections, natural film grain, "
+    "cinematic depth of field, authentic color science, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -505,7 +505,7 @@ vid_quality_stack = (
 # --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
 no_text_strict = (
     "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
-    "NO captions, NO speech bubbles, NO labels, NO black bars, NO grain, NO blur."
+    "NO captions, NO speech bubbles, NO labels, NO black bars."
 )
 
 negative_motion_strict = (
@@ -712,10 +712,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 # --- RAKIT PROMPT AKHIR (OPTIMIZED FOR VEO) ---
                 img_final = (
-                    f"{master_lock_instruction} NO TEXT, Clean of any lettering, extremely detailed raw color photography, cinematic still, 9:16 vertical. "
-                    f"Masterpiece quality, uncompressed 8k, vivid color punch, edge-to-edge sharpness. {e_angle_cmd} {emotion_ctx} "
-                    f"Visual: {vis_core_final}. Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --q 2 --stylize 250 --no text typography watermark characters letters captions subtitles"
+                    f"{master_lock_instruction} Candid RAW photography, NO TEXT, "
+                    f"extremely detailed natural skin texture, 8k resolution, cinematic still. "
+                    f"{e_angle_cmd} {emotion_ctx} "
+                    f"Visual: {vis_core_final}. "
+                    f"Atmosphere: {l_cmd}. "
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 75"
                 )
                 
                 # Kita tambahkan penguat gerakan khusus untuk video
@@ -768,6 +770,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
