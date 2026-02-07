@@ -810,7 +810,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
 # ==============================================================================
 if st.session_state.last_generated_results:
-
+    st.divider()
     st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
     
     for res in st.session_state.last_generated_results:
@@ -835,4 +835,5 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
