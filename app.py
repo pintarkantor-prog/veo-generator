@@ -175,15 +175,27 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: CLEAN GREEN - NO FOOTER EDITION)
+# 4. CUSTOM CSS (VERSION: HIGH CONTRAST & FORCED STYLE)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* A. CUSTOM SCROLLBAR */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0e1117; }
-    ::-webkit-scrollbar-thumb { background: #31333f; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #1d976c; }
+    /* A. FORCED CUSTOM SCROLLBAR (Area Utama & Sidebar) */
+    /* Kita tembak semua elemen agar pakai scrollbar ini */
+    *::-webkit-scrollbar {
+        width: 10px !important;
+        height: 10px !important;
+    }
+    *::-webkit-scrollbar-track {
+        background: #0e1117 !important;
+    }
+    *::-webkit-scrollbar-thumb {
+        background: #31333f !important;
+        border-radius: 10px !important;
+        border: 2px solid #0e1117 !important;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+        background: #1d976c !important; /* Hijau saat disentuh */
+    }
 
     /* 1. FIXED HEADER */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
@@ -206,13 +218,10 @@ st.markdown("""
     /* 2. STYLE SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
-        border-right: 1px solid rgba(29, 151, 108, 0.1) !important;
-    }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
-        color: #ffffff !important;
+        border-right: 1px solid rgba(29, 151, 108, 0.2) !important;
     }
 
-    /* 3. TOMBOL GENERATE (HIJAU PREMIUM) */
+    /* 3. TOMBOL GENERATE (INSTAN & TEGAS) */
     div.stButton > button[kind="primary"] {
         background: linear-gradient(to right, #1d976c, #11998e) !important;
         color: white !important;
@@ -221,17 +230,14 @@ st.markdown("""
         padding: 0.6rem 1.2rem !important;
         font-weight: bold !important;
         font-size: 16px !important;
-        transition: 0.3s all ease !important;
         width: 100%;
-        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
     }
-
     div.stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
+        background: #11998e !important;
+        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 4. MODIFIKASI BOX STAF AKTIF */
+    /* 4. PREMIUM STAFF HEADER */
     .staff-header-premium {
         background: rgba(29, 151, 108, 0.05);
         border-left: 4px solid #1d976c;
@@ -241,45 +247,35 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 12px;
-        border-top: 1px solid rgba(255,255,255,0.05);
-        border-right: 1px solid rgba(255,255,255,0.05);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.05);
     }
-    
-    .staff-header-premium b {
-        color: #1d976c;
-        font-size: 1.1em;
-    }
+    .staff-header-premium b { color: #1d976c; font-size: 1.1em; }
 
-    /* 5. EFEK FOKUS INPUT */
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #1d976c !important;
-        box-shadow: 0 0 8px rgba(29, 151, 108, 0.2) !important;
+    /* 5. EFEK FOKUS (BORDER HIJAU TEBAL) */
+    /* Kita tambahkan selector yang lebih kuat agar terlihat */
+    .stTextArea textarea:focus, .stTextInput input:focus, .stNumberInput input:focus {
+        border: 2px solid #1d976c !important;
+        color: #ffffff !important;
+        background-color: #161a1f !important;
+        box-shadow: 0 0 10px rgba(29, 151, 108, 0.2) !important;
+        outline: none !important;
     }
 
     /* 6. STYLE LAINNYA */
-    h1, h2, h3, .stMarkdown h3 {
-        color: #ffffff !important;
-        background: none !important;
-        -webkit-text-fill-color: initial !important;
+    h1, h2, h3, .stMarkdown h3 { color: #ffffff !important; }
+    
+    .stTextArea textarea {
+        background-color: #0e1117 !important;
+        border: 1px solid #31333f !important;
+        border-radius: 8px !important;
     }
+    
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
-        color: white !important;
         border-radius: 6px !important;
-        transform: scale(1.1);
-    }
-    .stTextArea textarea {
-        font-size: 14px !important;
-        border-radius: 10px !important;
-        background-color: #0e1117 !important;
-    }
-    .small-label {
-        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
     </style>
     """, unsafe_allow_html=True)
-
 # ==============================================================================
 # 5. HEADER STAF (ELEGANT VERSION)
 # ==============================================================================
@@ -852,6 +848,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
