@@ -744,51 +744,36 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.rerun()
 
 # ==============================================================================
-# 11. DISPLAY MEGA-DRAFT (HASIL AKHIR YANG RAPI & PROFESIONAL)
+# 11. DISPLAY MEGA-DRAFT (VERSI BERSIH)
 # ==============================================================================
 if st.session_state.last_generated_results:
-    st.divider()
-    st.markdown(f"### 🎬 HASIL PROMPT MEGA-DRAFT: {st.session_state.active_user.upper()} ❤️")
-    st.info("💡 **Tips:** Klik icon di pojok kanan atas kotak hitam untuk menyalin prompt secara instan.")
+    st.write("") 
+    st.markdown(f"### 🎬 PROMPT: {st.session_state.active_user.upper()} ❤️")
 
     for res in st.session_state.last_generated_results:
-        # Ambil status dari checkbox yang ada di sidebar (Bagian 7)
-        done_key_sidebar = f"mark_done_{res['id']}"
-        is_done = st.session_state.get(done_key_sidebar, False)
+        done_key = f"mark_done_{res['id']}"
+        is_done = st.session_state.get(done_key, False)
         
-        # Penentuan Label (Super Ringkas)
         status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
-        header_label = f"{status_tag} | ADEGAN {res['id']}"
         
-        with st.expander(header_label, expanded=not is_done):
+        with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
             if is_done:
-                st.success(f"Adegan {res['id']} Selesai! Kerja bagus!")
+                st.success(f"Adegan {res['id']} Selesai!")
             
-            # Info Kamera ditaruh di dalam agar Judul tetap pendek
-            if not is_done:
-                st.caption(f"🎥 Shot: {res['cam_info']}")
-            
-            # --- LAYOUT PROMPT (GRID 2 KOLOM) ---
-            col_img, col_vid = st.columns(2)
-            
-            with col_img:
-                st.markdown("#### 📸 IMAGE PROMPT")
-                st.markdown('<p style="color:#1d976c; font-size:12px; font-weight:bold;">MIDJOURNEY / FLUX:</p>', unsafe_allow_html=True)
+            # --- GRID PROMPT ---
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown("**📸 IMAGE**")
                 st.code(res['img'], language="text")
-                
-            with col_vid:
-                st.markdown("#### 🎥 VIDEO PROMPT")
-                st.markdown('<p style="color:#11998e; font-size:12px; font-weight:bold;">VEO / LUMA / RUNWAY:</p>', unsafe_allow_html=True)
+            with c2:
+                st.markdown("**🎥 VIDEO**")
                 st.code(res['vid'], language="text")
 
-            # --- FOOTER INFO (CLEAN & TOOLTIP STYLE) ---
+            # --- TOMBOL KONFIRMASI (TANPA CAPTION/TEKS RAME) ---
             if not is_done:
-                st.write("") # Memberi sedikit ruang napas
-                # Tombol konfirmasi dengan instruksi tersembunyi (Tooltip)
                 st.button(
-                    f"KONFIRMASI ADEGAN {res['id']} SELESAI ✅", 
+                    f"KONFIRMASI SELESAI ADEGAN {res['id']} ✅", 
                     key=f"btn_done_{res['id']}", 
-                    help="Klik untuk menandai adegan ini selesai. Pastikan detail karakter tetap konsisten!",
                     on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
                     use_container_width=True
                 )
