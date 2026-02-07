@@ -508,6 +508,39 @@ with st.sidebar:
     
     st.divider()
 
+# --- C. TOMBOL SAVE & RESTORE ---
+    st.write("---")
+    c_s, c_r = st.columns(2)
+    
+    with c_s:
+        if st.button("💾 SAVE", use_container_width=True):
+            import json
+            try:
+                char_data = {}
+                for idx in range(1, 11):
+                    n_val = st.session_state.get(f"c_name_{idx}_input", "")
+                    d_val = st.session_state.get(f"c_desc_{idx}_input", "")
+                    if n_val: char_data[str(idx)] = {"name": n_val, "desc": d_val}
+
+                scene_data = {}
+                for i in range(1, int(num_scenes) + 1):
+                    scene_data[str(i)] = {
+                        "vis": st.session_state.get(f"vis_input_{i}", ""),
+                        "light": st.session_state.get(f"light_input_{i}", "Siang"),
+                        "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
+                        "angle": st.session_state.get(f"angle_input_{i}", "Normal"),
+                        "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
+                    }
+                
+                dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
+                master_packet = {"chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
+                
+                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
+                st.session_state["sidebar_success_msg"] = "Project Berhasil Disimpan! ✅"
+                st.rerun()
+            except Exception as e:
+                st.error(f"Gagal simpan: {str(e)}")
+
     with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
@@ -521,16 +554,11 @@ with st.sidebar:
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     data = json.loads(raw_data)
                     
-                    # --- 1. PULIHKAN KARAKTER ---
-                    chars = data.get("chars", {})
-                    for idx_s, val in chars.items():
+                    for idx_s, val in data.get("chars", {}).items():
                         st.session_state[f"c_name_{idx_s}_input"] = val.get("name", "")
                         st.session_state[f"c_desc_{idx_s}_input"] = val.get("desc", "")
                     
-                    # --- 2. PULIHKAN ADEGAN ---
-                    scenes = data.get("scenes", {})
-                    for idx_s, val in scenes.items():
-                        # Pastikan index adegan diproses sebagai string untuk kecocokan JSON
+                    for idx_s, val in data.get("scenes", {}).items():
                         s_idx = str(idx_s)
                         if isinstance(val, dict):
                             st.session_state[f"vis_input_{s_idx}"] = val.get("vis", "")
@@ -539,21 +567,31 @@ with st.sidebar:
                             st.session_state[f"angle_input_{s_idx}"] = val.get("angle", "Normal")
                             st.session_state[f"loc_input_{s_idx}"] = val.get("loc", "jalan kampung")
                         else:
-                            # Jika data lama (teks saja)
                             st.session_state[f"vis_input_{s_idx}"] = str(val)
                     
-                    # --- 3. PULIHKAN DIALOG ---
-                    dialogs = data.get("dialogs", {})
-                    for d_key, d_text in dialogs.items():
+                    for d_key, d_text in data.get("dialogs", {}).items():
                         st.session_state[d_key] = d_text
                     
-                    # --- 4. PAKSA REFRESH AGAR MUNCUL ---
                     st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
-                    st.rerun() # Ini wajib agar UI membaca data terbaru dari session_state
+                    st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
                 st.error(f"Gagal restore: {str(e)}")
+
+    # --- NOTIFIKASI SUKSES ---
+    if "sidebar_success_msg" in st.session_state:
+        st.success(st.session_state["sidebar_success_msg"])
+        del st.session_state["sidebar_success_msg"]
+
+    st.divider()
+
+    # --- TOMBOL LOGOUT (Power Off Icon) ---
+    if st.button("KELUAR SISTEM ⚡", use_container_width=True):
+        st.query_params.clear() 
+        if 'active_user' in st.session_state:
+            del st.session_state.active_user
+        st.rerun()
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
 # ==============================================================================
@@ -757,6 +795,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
