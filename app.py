@@ -821,12 +821,8 @@ if st.session_state.last_generated_results:
             # --- GRID PROMPT ---
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown("**📸 PROMPT IMAGE**")
+                st.markdown("**📸 PROMPT GAMBAR**")
                 st.code(res['img'], language="text")
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-            # Info Kamera ditaruh tipis di bawah
-            if not is_done:
-                st.caption(f"🎥 {res['cam_info']}")
