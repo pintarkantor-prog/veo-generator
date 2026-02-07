@@ -710,14 +710,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (OPTIMIZED FOR VEO) ---
+                # --- RAKIT PROMPT AKHIR (FOKUS REALISME MANUSIA) ---
                 img_final = (
-                    f"{master_lock_instruction} Candid RAW photography, NO TEXT, "
-                    f"extremely detailed natural skin texture, 8k resolution, cinematic still. "
+                    f"{master_lock_instruction} Candid RAW photo, shot on 35mm, f/2.8, "
+                    f"natural skin with visible pores and imperfections, "
                     f"{e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. "
                     f"Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 75"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 50"
                 )
                 
                 # Kita tambahkan penguat gerakan khusus untuk video
@@ -770,6 +770,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
