@@ -9,14 +9,14 @@ st.markdown("""
     <style>
     /* 1. Memperbesar tulisan di Cerita Visual & Penampilan Fisik Karakter */
     .stTextArea textarea {
-        font-size: 20px !important;    /* Ukuran teks lebih besar */
+        font-size: 22px !important;    /* Ukuran teks lebih besar */
         font-weight: 500 !important;   /* Teks lebih tegas */
         line-height: 1.5 !important;
     }
 
     /* 2. Memperbesar tulisan di input Nama Karakter */
     .stTextInput input {
-        font-size: 20px !important;
+        font-size: 22px !important;
         font-weight: 600 !important;
     }
 
@@ -672,7 +672,7 @@ for i_s in range(1, int(num_scenes) + 1):
             visual_input = st.text_area(
                 f"Cerita Visual {i_s}", 
                 key=f"vis_input_{i_s}", 
-                height=265, 
+                height=285, 
                 placeholder="Ceritakan detail adegannya di sini..."
             )
         
@@ -835,6 +835,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
