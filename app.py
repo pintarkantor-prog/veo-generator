@@ -449,30 +449,35 @@ with st.sidebar:
     except:
         st.title("📸 PINTAR MEDIA")
     
-    st.write("") # Kasih jarak dikit di bawah logo
+    st.write("") 
     
-    # --- 2. LOGIKA ADMIN (Satu kali saja) ---
+    # --- 2. LOGIKA ADMIN ---
     if st.session_state.active_user == "admin":
         if st.checkbox("🚀 Buka Dashboard Utama", value=False):
             st.info("Log aktivitas tercatat di Cloud.")
             
             try:
-                # 1. Koneksi ke GSheets
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                # 2. Baca data (Sheet1)
                 df_monitor = conn.read(worksheet="Sheet1", ttl="0")
                 
                 if not df_monitor.empty:
-                    # --- FITUR CEK MVP (Siapa paling rajin) ---
                     st.markdown("#### 🏆 Top Staf (MVP)")
                     mvp_count = df_monitor['User'].value_counts().reset_index()
                     mvp_count.columns = ['Staf', 'Total Input']
                     st.dataframe(mvp_count, use_container_width=True, hide_index=True)
                     
-                    # --- TABEL AKTIVITAS LENGKAP ---
+                    # --- TABEL AKTIVITAS DENGAN ICON (DIKEMBALIKAN) ---
                     st.markdown("#### 📅 Log Aktivitas Terbaru")
-                    # Tampilkan 10 data terbaru saja biar gak berat
-                    st.dataframe(df_monitor.tail(10), use_container_width=True, hide_index=True)
+                    
+                    # Kita beri nama kolom yang ada icon-nya agar keren
+                    df_display = df_monitor.tail(10).copy()
+                    df_display.columns = ["🕒 Waktu", "👤 User", "🎬 Total", "📝 Visual Utama"]
+                    
+                    st.dataframe(
+                        df_display, 
+                        use_container_width=True, 
+                        hide_index=True
+                    )
                 else:
                     st.warning("Belum ada data aktivitas tercatat.")
             
@@ -484,22 +489,19 @@ with st.sidebar:
     # --- 3. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # --- 4. STATUS PRODUKSI (Hanya muncul jika sudah ada hasil) ---
+    # --- 4. STATUS PRODUKSI ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
         total_p = len(st.session_state.last_generated_results)
         done_p = 0
         
-        # List adegan dengan checkbox
         for res in st.session_state.last_generated_results:
             done_key = f"mark_done_{res['id']}"
             if st.checkbox(f"Adegan {res['id']}", key=done_key):
                 done_p += 1
         
-        # Progress Bar
         st.progress(done_p / total_p)
         
-        # --- EFEK SELEBRASI (BALON) ---
         if done_p == total_p and total_p > 0:
             st.balloons() 
             st.success("🎉 Semua Adegan Selesai!")
@@ -513,16 +515,16 @@ with st.sidebar:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # 1. Ambil Visual yang terisi
-                captured_scenes = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+                captured_scenes = {}
+                for i in range(1, int(num_scenes) + 1):
+                    v_val = st.session_state.get(f"vis_input_{i}", "")
+                    if v_val:
+                        captured_scenes[f"v{i}"] = {
+                            "vis": v_val,
+                            "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
+                        }
                 
-                # 2. Ambil SEMUA Dialog
-                captured_dialogs = {}
-                for i_s in range(1, int(num_scenes) + 1):
-                    for i_char in range(7): 
-                        d_key = f"diag_{i_s}_{i_char}"
-                        if d_key in st.session_state and st.session_state[d_key]:
-                            captured_dialogs[d_key] = st.session_state[d_key]
+                captured_dialogs = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
 
                 draft_packet = {
                     "n1": st.session_state.get("c_name_1_input", ""), 
@@ -533,7 +535,6 @@ with st.sidebar:
                     "dialogs": captured_dialogs 
                 }
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
-                
                 st.session_state["sidebar_success_msg"] = "Data Berhasil Disimpan! ✅"
                 st.rerun()
             except Exception as e:
@@ -552,39 +553,37 @@ with st.sidebar:
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     if raw_data.startswith("{"):
                         data = json.loads(raw_data)
-                        
                         st.session_state.c_name_1_input = data.get("n1", "")
                         st.session_state.c_desc_1_input = data.get("p1", "")
                         st.session_state.c_name_2_input = data.get("n2", "")
                         st.session_state.c_desc_2_input = data.get("p2", "")
                         
                         for k, v in data.get("scenes", {}).items():
-                            st.session_state[f"vis_input_{k.replace('v','')}"] = v
+                            idx = k.replace('v','')
+                            if isinstance(v, dict):
+                                st.session_state[f"vis_input_{idx}"] = v.get("vis", "")
+                                st.session_state[f"loc_input_{idx}"] = v.get("loc", "jalan kampung")
+                            else:
+                                st.session_state[f"vis_input_{idx}"] = v
                         
                         for d_key, d_text in data.get("dialogs", {}).items():
                             st.session_state[d_key] = d_text
                         
                         st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
-                        st.session_state.restore_counter += 1
-                        st.rerun()
-                    else:
-                        st.session_state["vis_input_1"] = raw_data
-                        st.session_state["sidebar_success_msg"] = "Data Lama Dipulihkan ke Adegan 1! ⚠️"
                         st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
-                st.error(f"Gagal koneksi: {str(e)}")
+                st.error(f"Gagal restore: {str(e)}")
 
-    # --- MENAMPILKAN NOTIFIKASI SUKSES ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
         del st.session_state["sidebar_success_msg"]
 
     st.divider()
 
-    # --- TOMBOL LOGOUT (PENUTUP SIDEBAR) ---
-    if st.sidebar.button("Log Out 🚪", use_container_width=True):
+    # --- TOMBOL LOGOUT (ICON BARU: POWER OFF) ---
+    if st.sidebar.button("LOGOUT⚡", use_container_width=True):
         st.query_params.clear() 
         if 'active_user' in st.session_state:
             del st.session_state.active_user
@@ -792,3 +791,4 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
