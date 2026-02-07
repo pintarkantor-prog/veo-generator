@@ -759,28 +759,26 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.rerun()
 
 # ==============================================================================
-# 11. MEGA-DRAFT & STATUS PRODUKSI (INTEGRATED VIEW)
+# 11. DISPLAY MEGA-DRAFT (VERSI FIX - ANTI ERROR DUPLICATE)
 # ==============================================================================
 if st.session_state.last_generated_results:
     st.divider()
-    # Menampilkan Header Hasil sesuai User
     st.markdown(f"### 🎬 HASIL PROMPT: {st.session_state.active_user.upper()} ❤️")
-    st.caption("Salin prompt di bawah dan tandai jika sudah selesai diproduksi.")
+    st.caption("Gunakan checkbox di Sidebar (Status Produksi) untuk menandai progres.")
 
     for res in st.session_state.last_generated_results:
-        # Kunci centang (Checkbox) sinkron dengan sidebar
-        done_key = f"mark_done_{res['id']}"
-        is_done = st.session_state.get(done_key, False)
+        # Ambil status dari checkbox yang ada di sidebar (Bagian 7)
+        done_key_sidebar = f"mark_done_{res['id']}"
+        is_done = st.session_state.get(done_key_sidebar, False)
         
-        # Label Status untuk judul expander
+        # Label Status
         status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
         
-        # Tampilan Expander yang Ringkas
+        # Tampilan Expander (Otomatis tertutup jika sudah selesai)
         with st.expander(f"{status_tag} | ADEGAN {res['id']} | 🎥 {res['cam_info']}", expanded=not is_done):
             if is_done:
-                st.success(f"Adegan {res['id']} sudah selesai diproduksi!")
+                st.success(f"Adegan {res['id']} sudah selesai. Cek progress bar di sidebar!")
             
-            # Layout Kolom untuk Copy Prompt
             col_img, col_vid = st.columns(2)
             
             with col_img:
@@ -791,10 +789,6 @@ if st.session_state.last_generated_results:
                 st.markdown("**🎥 VIDEO PROMPT**")
                 st.code(res['vid'], language="text")
             
-            # Checkbox Utama: Menentukan status di sini akan merubah Progress Bar di sidebar
-            st.checkbox("Tandai adegan ini sebagai 'Selesai'", key=done_key)
-
-    # Footer tambahan agar tampilan tidak terpotong
-    st.write("")
-    st.divider()
-    st.caption("🛡️ Warung Tungtung Noir Engine | Powered by Pintar Media")
+            # Info tambahan agar staf tidak bingung
+            if not is_done:
+                st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
