@@ -509,8 +509,6 @@ with st.sidebar:
     st.divider()
 
 # --- C. TOMBOL SAVE & LOAD (SIMETRIS) ---
-    st.write("---")
-    # Gunakan perbandingan kolom yang sama rata (1, 1)
     btn_col1, btn_col2 = st.columns(2)
     
     with btn_col1:
@@ -779,6 +777,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
