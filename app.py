@@ -255,6 +255,40 @@ st.markdown("""
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
+    /* --- SIDEBAR CUSTOMIZATION --- */
+    [data-testid="stSidebar"] {
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Mempercantik input angka dan slider di sidebar */
+    [data-testid="stSidebar"] .stNumberInput, [data-testid="stSidebar"] .stSelectbox {
+        background-color: #262730 !important;
+        border-radius: 10px !important;
+        border: 1px solid #31333f !important;
+    }
+
+    /* --- FOOTER CUSTOMIZATION --- */
+    .custom-footer {
+        position: fixed;
+        left: 310px; /* Menyesuaikan lebar sidebar */
+        bottom: 0;
+        width: calc(100% - 310px);
+        background-color: rgba(14, 17, 23, 0.9);
+        backdrop-filter: blur(5px);
+        color: #555;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        border-top: 1px solid #31333f;
+        z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+        .custom-footer {
+            left: 0;
+            width: 100%;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 # ==============================================================================
@@ -820,6 +854,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
