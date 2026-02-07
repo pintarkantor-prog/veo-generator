@@ -383,6 +383,7 @@ indonesia_angle = [
 
 options_lighting = ["Siang", "Malam", "Remang-remang"]
 options_lokasi = [
+    "--- KETIK MANUAL ---", # Taruh di paling atas
     "jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", 
     "halaman rumah", "teras rumah", "pinggir sawah", "sawah", 
     "teras rumah miskin", "dalam rumah kayu", "teras rumah kaya", "dalam rumah kaya"
@@ -670,13 +671,24 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 3 ---
             with r3[0]:
                 st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
-                # Sekarang options_lokasi sudah dikenali karena ada di Bagian 6
-                location_val = st.selectbox(
-                    f"Loc{i_s}", 
+                
+                # Dropdown pilihan
+                loc_choice = st.selectbox(
+                    f"LocSelect{i_s}", 
                     options=options_lokasi, 
-                    key=f"loc_input_{i_s}", 
+                    key=f"loc_sel_{i_s}", 
                     label_visibility="collapsed"
                 )
+                
+                # Logika: Jika pilih paling atas, munculkan tempat ngetik
+                if loc_choice == "--- KETIK MANUAL ---":
+                    location_val = st.text_input(
+                        "Tulis lokasi spesifik di sini:", 
+                        key=f"loc_custom_{i_s}", 
+                        placeholder="Contoh: di dalam gerbong kereta api tua..."
+                    )
+                else:
+                    location_val = loc_choice
 
         # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -792,6 +804,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
