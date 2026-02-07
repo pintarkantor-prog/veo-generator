@@ -683,7 +683,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 # Logika: Jika pilih paling atas, munculkan tempat ngetik
                 if loc_choice == "--- KETIK MANUAL ---":
                     location_val = st.text_input(
-                        "Tulis lokasi spesifik di sini:", 
+                        "Tulis lokasi spesifik latar cerita di sini:", 
                         key=f"loc_custom_{i_s}", 
                         placeholder="Contoh: di dalam gerbong kereta api tua..."
                     )
@@ -804,6 +804,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
