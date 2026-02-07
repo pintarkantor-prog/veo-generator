@@ -802,44 +802,28 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.rerun()
 
 # ==============================================================================
-# 11. DISPLAY MEGA-DRAFT (VERSI PREMIUM GRID)
+# AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
 # ==============================================================================
 if st.session_state.last_generated_results:
-    st.write("---")
-    st.markdown(f"### 🎬 HASIL RACIKAN PROMPT: {st.session_state.active_user.upper()}")
 
+    st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
+    
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
         is_done = st.session_state.get(done_key, False)
-        status_color = "#28a745" if is_done else "#1d976c"
         
-        # Container per adegan agar rapi
-        with st.container():
-            col_title, col_check = st.columns([8, 2])
-            with col_title:
-                st.markdown(f"#### 📍 ADEGAN {res['id']}")
-            with col_check:
-                st.checkbox("Selesai", key=done_key)
-
-            # Grid berdampingan untuk Image dan Video
+        status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
+        
+        with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
+            if is_done:
+                st.success(f"Adegan {res['id']} Selesai!")
+            
+            # --- GRID PROMPT ---
             c1, c2 = st.columns(2)
-            
             with c1:
-                st.markdown(
-                    f"<div style='border-left: 4px solid {status_color}; padding-left: 10px; margin-bottom: 5px;'>"
-                    f"<b>📸 IMAGE PROMPT</b></div>", 
-                    unsafe_allow_html=True
-                )
-                # Gunakan height agar kotak code simetris antara kiri dan kanan
+                st.markdown("**📸 PROMPT GAMBAR**")
                 st.code(res['img'], language="text")
-                
             with c2:
-                st.markdown(
-                    f"<div style='border-left: 4px solid #007bff; padding-left: 10px; margin-bottom: 5px;'>"
-                    f"<b>🎥 VIDEO PROMPT</b></div>", 
-                    unsafe_allow_html=True
-                )
+                st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-            
-            st.write("") # Memberi jarak antar adegan
-            st.markdown("---")
+
