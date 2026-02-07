@@ -581,10 +581,10 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "photorealistic RAW photo, shot on Fujifilm XT-4, " # Merk kamera tetap ada
-    "extremely detailed natural skin texture, visible pores and slight blemishes, "
-    "subsurface scattering, authentic skin tones, natural film grain, "
-    "cinematic lighting, masterpiece quality."
+    "photorealistic RAW photo, shot on 35mm lens, f/2.8, ISO 400, "
+    "natural skin texture, visible pores, subtle skin imperfections, "
+    "hyper-detailed eyes with realistic reflections, natural film grain, "
+    "cinematic depth of field, authentic color science, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -609,6 +609,7 @@ negative_motion_strict = (
 # --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
 img_quality_base = f"{img_quality_stack} {no_text_strict}"
 vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict} {negative_motion_strict}"
+
 # ==============================================================================
 # 9. FORM INPUT ADEGAN
 # ==============================================================================
@@ -707,8 +708,17 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (NOIR ENGINE)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
 # ==============================================================================
+import json
+
+# 1. Siapkan Lemari Penyimpanan Hasil Generate
+if 'last_generated_results' not in st.session_state:
+    st.session_state.last_generated_results = []
+
+st.write("")
+
+# 2. PROSES GENERATE (Saat tombol diklik)
 st.write("")
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
@@ -721,9 +731,25 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     else:
         with st.spinner(f"⏳ Sedang meracik prompt..."):
             st.session_state.last_generated_results = []
+        
+        # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP SEBELUM GENERATE] ---
+        try:
+            captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+            auto_packet = {
+                "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                "scenes": captured_scenes_auto
+            }
+            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+        except: pass
+        
+        with st.spinner(f"⏳ Sedang meracik prompt untuk {nama_staf}..."):
+            # Reset isi lemari sebelum diisi yang baru
+            st.session_state.last_generated_results = []
             
-            # --- [MASTER ASSETS & DNA] ---
-            URL_UDIN, URL_TUNG, URL_RUMI = "https://i.ibb.co.com/4w8sJ0rR/UDIN.png", "https://i.ibb.co.com/v7Hpd1b/TUNGG.png", "https://i.ibb.co.com/DHGc9X9y/RUMI.png"
+            # LOGGING CLOUD UTAMA
+            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+            
             LOKASI_DNA = {
                 "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, simple wooden fences, late afternoon sun.",
                 "jalan kota kecil": "small town asphalt road, old 90s shophouses (ruko), electricity poles with messy wires, tropical town vibe.",
@@ -738,15 +764,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 "teras rumah kaya": "modern luxury mansion terrace, marble flooring, minimalist outdoor furniture, manicured garden, elite aesthetic.",
                 "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa, chandelier lighting, polished atmosphere."
             }
-
-            ref_images = ""
-            all_names_joined = " ".join([c['name'] for c in all_chars_list]).lower()
-            if "udin" in all_names_joined: ref_images += f"{URL_UDIN} "
-            if "tung" in all_names_joined: ref_images += f"{URL_TUNG} "
-            if "rumi" in all_names_joined: ref_images += f"{URL_RUMI} "
-
+            
+            # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
-            base_character_lock = f"ACTOR REFERENCE: {ref_images}. Maintain strict facial identity for: {char_defs}."
+            master_lock_instruction = (
+                f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
+                f"Do not deviate from these visuals: {char_defs}. "
+                f"Maintain strict facial identity and clothing structure from the initial references. "
+            )
 
             for item in active_scenes:
                 # 1. LOGIKA LOKASI (Bisa deteksi hasil ketikan manual)
@@ -759,20 +784,19 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
-                
+                    
                 # Lighting Logic
-                if "Malam" in item["light"]: l_cmd = "cinematic night noir, heavy shadows, flickering tungsten."
-                elif "Siang" in item["light"]: l_cmd = "harsh midday sun, high-contrast, gritty heat haze."
-                else: l_cmd = "moody low-light, mysterious silhouettes."
+                if "Malam" in item["light"]: l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors."
+                elif "Siang" in item["light"]: l_cmd = "ivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch."
+                else: l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting: '{d_text}'." if d_text else ""
 
                 master_lock = f"{base_character_lock} ENVIRONMENT DNA: {dna_env}."
-                
-                # --- PROMPT GAMBAR (Gak pake e_cam biar gak blur) ---
-                img_final = f"{master_lock} RAW film still, Arri Alexa, 35mm. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --style raw"
-                
+
+                 # --- PROMPT GAMBAR (Gak pake e_cam biar gak blur) ---
+                img_final = f"{master_lock} Candid RAW photo, shot on 35mm, f/2.8. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 50"
                 # --- PROMPT VIDEO (Pake e_cam biar gerak) ---
                 vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
 
@@ -783,12 +807,12 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         st.rerun()
 
 # ==============================================================================
-# 11. DISPLAY MEGA-DRAFT (VERSI BERSIH)
+# AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
 # ==============================================================================
 if st.session_state.last_generated_results:
-    st.write("") 
-    st.markdown(f"### 🎬 PROMPT: {st.session_state.active_user.upper()} ❤️")
-
+    st.divider()
+    st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
+    
     for res in st.session_state.last_generated_results:
         done_key = f"mark_done_{res['id']}"
         is_done = st.session_state.get(done_key, False)
