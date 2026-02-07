@@ -382,6 +382,11 @@ indonesia_angle = [
 ]
 
 options_lighting = ["Siang", "Malam", "Remang-remang"]
+options_lokasi = [
+    "jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", 
+    "halaman rumah", "teras rumah", "pinggir sawah", "sawah", 
+    "teras rumah miskin", "dalam rumah kayu", "teras rumah kaya", "dalam rumah kaya"
+]
 
 # --- KAMUS TERJEMAHAN UNTUK AI ---
 camera_map = {
@@ -665,7 +670,13 @@ for i_s in range(1, int(num_scenes) + 1):
             # --- BARIS 3 ---
             with r3[0]:
                 st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
-                location_val = st.selectbox(f"Loc{i_s}", options=options_lokasi, key=f"loc_input_{i_s}", label_visibility="collapsed")
+                # Sekarang options_lokasi sudah dikenali karena ada di Bagian 6
+                location_val = st.selectbox(
+                    f"Loc{i_s}", 
+                    options=options_lokasi, 
+                    key=f"loc_input_{i_s}", 
+                    label_visibility="collapsed"
+                )
 
         # --- BAGIAN DIALOG ---
         diag_cols = st.columns(len(all_chars_list))
@@ -778,6 +789,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
