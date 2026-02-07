@@ -770,7 +770,11 @@ if st.session_state.last_generated_results:
                 st.code(res['vid'], language="text")
 
             # --- FOOTER MINIMALIS ---
-            if not is_done:
-                st.button(f"DONE ADEGAN {res['id']} ✅", key=f"btn_done_{res['id']}", 
-                          on_click=lambda r=res['id']: st.session_state.update({f"mark_done_{r}": True}),
-                          use_container_width=True)
+            with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
+                if not is_done:
+                    # Toggle kecil di pojok kanan atas dalam expander
+                    c_txt, c_tog = st.columns([4, 1])
+                    with c_tog:
+                        if st.toggle("DONE", key=f"tog_done_{res['id']}"):
+                            st.session_state[f"mark_done_{res['id']}"] = True
+                            st.rerun()
