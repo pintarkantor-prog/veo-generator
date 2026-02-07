@@ -175,7 +175,7 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: MIDNIGHT OCEAN - SOFT & ELEGANT)
+# 4. CUSTOM CSS (VERSION: ECO-PREMIUM GREEN - SOFT & CALM)
 # ==============================================================================
 st.markdown("""
     <style>
@@ -203,15 +203,15 @@ st.markdown("""
         background-color: #1a1c24 !important;
     }
 
-    /* 3. GRADIENT TEXT UNTUK SUBHEADER (SOFT BLUE-TEAL) */
+    /* 3. GRADIENT TEXT UNTUK SUBHEADER (SOFT GREEN-MINT) */
     h3, .stMarkdown h3 {
-        background: linear-gradient(to right, #4b6cb7, #182848) !important;
+        background: linear-gradient(to right, #1d976c, #11998e) !important;
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
         font-weight: 800 !important;
     }
 
-    /* 4. PREMIUM EXPANDER (SOFT BORDER) */
+    /* 4. PREMIUM EXPANDER (SOFT GREEN BORDER) */
     .streamlit-expanderHeader {
         background-color: #1e2129 !important;
         border-radius: 12px !important;
@@ -220,7 +220,7 @@ st.markdown("""
         transition: 0.3s;
     }
     .streamlit-expanderHeader:hover {
-        border-color: #4b6cb7 !important;
+        border-color: #1d976c !important;
     }
     .streamlit-expanderContent {
         background-color: rgba(30, 33, 41, 0.3) !important;
@@ -229,9 +229,9 @@ st.markdown("""
         border-top: none !important;
     }
 
-    /* 5. TOMBOL GENERATE (PRIMARY) - MIDNIGHT BLUE SOFT */
+    /* 5. TOMBOL GENERATE (PRIMARY) - FOREST GREEN SOFT */
     div.stButton > button[kind="primary"] {
-        background: linear-gradient(to right, #2c3e50, #4b6cb7) !important;
+        background: linear-gradient(to right, #1d976c, #11998e) !important;
         color: #ffffff !important;
         border: none !important;
         border-radius: 12px !important;
@@ -246,8 +246,8 @@ st.markdown("""
 
     div.stButton > button[kind="primary"]:hover {
         transform: translateY(-2px) !important;
-        background: linear-gradient(to right, #4b6cb7, #182848) !important;
-        box-shadow: 0 6px 20px rgba(75, 108, 183, 0.3) !important;
+        background: linear-gradient(to right, #11998e, #1d976c) !important;
+        box-shadow: 0 6px 20px rgba(29, 151, 108, 0.3) !important;
     }
 
     /* 6. TOMBOL SECONDARY */
@@ -258,11 +258,11 @@ st.markdown("""
     }
 
     div.stButton > button:not([kind="primary"]):hover {
-        border-color: #4b6cb7 !important;
-        color: #4b6cb7 !important;
+        border-color: #1d976c !important;
+        color: #1d976c !important;
     }
 
-    /* 7. ANIMASI FADE IN UNTUK HASIL PROMPT */
+    /* 7. ANIMASI FADE IN */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -273,9 +273,8 @@ st.markdown("""
 
     /* 8. STYLE LAINNYA */
     button[title="Copy to clipboard"] {
-        background-color: #28a745 !important;
+        background-color: #1d976c !important;
         border-radius: 6px !important;
-        transform: scale(1.1); 
     }
     .stTextArea textarea {
         background-color: #0e1117 !important;
@@ -850,6 +849,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
