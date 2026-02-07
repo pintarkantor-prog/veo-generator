@@ -512,35 +512,35 @@ with st.sidebar:
     st.write("---")
     c_s, c_r = st.columns(2)
     
-    with c_s:
+with c_s:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # 1. Simpan Jumlah Karakter & Data Karakter
+                # 1. Ambil data karakter secara aman
                 char_data = {}
                 num_char = st.session_state.get("num_total_char", 2)
                 for idx in range(1, 11):
-                    char_data[str(idx)] = {
-                        "name": st.session_state.get(f"c_name_{idx}_input", ""),
-                        "desc": st.session_state.get(f"c_desc_{idx}_input", "")
-                    }
+                    c_n = st.session_state.get(f"c_name_{idx}_input", "")
+                    c_d = st.session_state.get(f"c_desc_{idx}_input", "")
+                    if c_n: char_data[str(idx)] = {"name": c_n, "desc": c_d}
 
-                # 2. Simpan Detail Adegan Lengkap (1-50)
+                # 2. Ambil data adegan secara lengkap
                 scene_data = {}
                 for i in range(1, 51):
-                    # Kita simpan semua variabel yang ada di session_state
-                    scene_data[str(i)] = {
-                        "vis": st.session_state.get(f"vis_input_{i}", ""),
-                        "light": st.session_state.get(f"light_input_{i}", "Siang"),
-                        "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
-                        "angle": st.session_state.get(f"angle_input_{i}", "Normal"),
-                        "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
-                    }
+                    # Kita ambil langsung dari session_state
+                    v_val = st.session_state.get(f"vis_input_{i}", "")
+                    if v_val: # Hanya simpan yang ada isinya
+                        scene_data[str(i)] = {
+                            "vis": v_val,
+                            "light": st.session_state.get(f"light_input_{i}", "Siang"),
+                            "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
+                            "angle": st.session_state.get(f"angle_input_{i}", "Normal"),
+                            "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
+                        }
                 
-                # 3. Simpan Dialog
+                # 3. Ambil dialog
                 dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
 
-                # BUNGKUS SEMUA DALAM SATU KOPER
                 master_packet = {
                     "num_char": num_char,
                     "chars": char_data,
@@ -548,10 +548,12 @@ with st.sidebar:
                     "dialogs": dialog_data
                 }
 
-                # Simpan ke Google Sheets
-                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), num_scenes)
-                st.session_state["sidebar_success_msg"] = "Project Berhasil Disimpan! ✅"
-                st.rerun()
+                # 4. Kirim ke Sheets
+                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
+                
+                # --- JANGAN PAKAI ST.RERUN DI SINI ---
+                st.toast("Project Berhasil Disimpan! ✅") 
+                # Pakai toast agar ada notifikasi kecil di pojok tanpa refresh layar
             except Exception as e:
                 st.error(f"Gagal simpan: {str(e)}")
 
@@ -817,5 +819,6 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
