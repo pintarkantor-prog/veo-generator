@@ -261,7 +261,7 @@ st.markdown("""
 # 5. HEADER STAF (CLEAN & MINIMALIST)
 # ==============================================================================
 nama_display = st.session_state.active_user.capitalize()
-st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️")
+st.success(f"👤 **Staf Aktif: {nama_display}** | Konten yang mantap lahir dari detail adegan yang tepat 🚀")
         
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
@@ -820,6 +820,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
