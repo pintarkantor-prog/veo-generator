@@ -488,10 +488,10 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "photorealistic RAW photo, shot on 35mm lens, f/2.8, ISO 400, "
-    "natural skin texture, visible pores, subtle skin imperfections, "
-    "hyper-detailed eyes with realistic reflections, natural film grain, "
-    "cinematic depth of field, authentic color science, masterpiece quality."
+    "photorealistic RAW photo, shot on Fujifilm XT-4, 50mm lens, f/1.2, ISO 800, "
+    "extremely detailed natural skin texture, visible pores and slight blemishes, "
+    "subsurface scattering, authentic skin tones, natural film grain, "
+    "cinematic lighting, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -710,14 +710,14 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (FOKUS REALISME MANUSIA) ---
+                # --- RAKIT PROMPT AKHIR (ULTIMATE HUMAN REALISM) ---
                 img_final = (
-                    f"{master_lock_instruction} Candid RAW photo, shot on 35mm, f/2.8, "
-                    f"natural skin with visible pores and imperfections, "
+                    f"{master_lock_instruction} Candid RAW photo, shot on Fujifilm XT-4, 50mm lens, f/1.2, ISO 800, "
+                    f"ultra-detailed natural skin with authentic imperfections, varied facial features, "
                     f"{e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. "
                     f"Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 50"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 20"
                 )
                 
                 # Kita tambahkan penguat gerakan khusus untuk video
@@ -770,6 +770,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
