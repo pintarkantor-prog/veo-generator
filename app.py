@@ -365,9 +365,14 @@ indonesia_camera = [
 ]
 
 indonesia_shot = [
-    "Fokus Karakter", 
-    "Detail Wajah", 
-    "Sinematik Luas"
+    "Sangat Dekat",
+    "Dekat Wajah",
+    "Setengah Badan",
+    "Seluruh Badan",
+    "Pemandangan Luas",
+    "Sudut Rendah",
+    "Sudut Tinggi",
+    "Drone Shot"
 ]
 
 indonesia_angle = [
@@ -392,13 +397,14 @@ camera_map = {
 }
 
 shot_map = {
-    "Sangat Dekat (Detail)": "Extreme Close-Up", 
-    "Dekat (Wajah)": "Close-Up", 
-    "Setengah Badan": "Medium Shot",
-    "Seluruh Badan": "Full Body Shot", 
-    "Pemandangan Luas": "Wide Landscape Shot", 
-    "Sudut Rendah (Gagah)": "Low Angle Shot",
-    "Sudut Tinggi (Kecil)": "High Angle Shot"
+    "Sangat Dekat": "Extreme Close-Up shot, focusing on micro details, textures, or a single feature",
+    "Dekat Wajah": "Close-Up shot, focus on facial expression and emotion",
+    "Setengah Badan": "Medium Shot, waist up, showing body language and interaction",
+    "Seluruh Badan": "Full Body Shot, showing the character from head to toe",
+    "Pemandangan Luas": "Wide Landscape Shot, establishing the environment and vast scale",
+    "Sudut Rendah": "Low Angle Shot, camera looking up at the subject to show power and dominance",
+    "Sudut Tinggi": "High Angle Shot, camera looking down at the subject to show vulnerability",
+    "Drone Shot": "Cinematic Aerial Drone shot, high altitude panoramic view"
 }
 
 angle_map = {
@@ -772,6 +778,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
