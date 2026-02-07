@@ -769,12 +769,7 @@ if st.session_state.last_generated_results:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
 
-            # --- FOOTER MINIMALIS ---
-            with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
-                if not is_done:
-                    # Toggle kecil di pojok kanan atas dalam expander
-                    c_txt, c_tog = st.columns([4, 1])
-                    with c_tog:
-                        if st.toggle("DONE", key=f"tog_done_{res['id']}"):
-                            st.session_state[f"mark_done_{res['id']}"] = True
-                            st.rerun()
+            # Info Kamera ditaruh tipis di bawah
+            if not is_done:
+                st.caption(f"🎥 {res['cam_info']}")
+
