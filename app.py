@@ -631,7 +631,7 @@ with st.expander("👥 Nama Karakter Utama & Penampilan Fisik! (WAJIB ISI)", exp
                 with cols[idx_offset]:
                     st.markdown(f"##### 👤 Karakter Utama {idx}")
                     name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Karakter Utama {idx}", label_visibility="collapsed")
-                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Contoh: kaos putih polos, celana jeans denim pendek, sepatu hitam{idx}...", label_visibility="collapsed")
+                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Contoh: kaos putih polos, celana jeans denim pendek, sepatu hitam...", label_visibility="collapsed")
                     all_chars_list.append({"name": name, "desc": desc})
         st.write("---") 
 
@@ -811,6 +811,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
