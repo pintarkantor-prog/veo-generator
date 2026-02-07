@@ -231,18 +231,32 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 4. MODIFIKASI BOX STAF AKTIF (HIJAU LEBIH TEGAS) */
+    /* 4. MODIFIKASI BOX STAF AKTIF (HIJAU TEGAS & FLAT - TANPA EFEK SAMPING) */
     .staff-header-premium {
-        background: rgba(29, 151, 108, 0.15) !important; /* Hijau lebih pekat dari sebelumnya */
-        border: 1px solid rgba(29, 151, 108, 0.4) !important; /* Border hijau lebih kelihatan */
-        border-left: 5px solid #1d976c !important; /* Garis samping kiri lebih tebal & terang */
-        border-radius: 12px !important;
-        padding: 15px 25px !important;
+        background: rgba(29, 151, 108, 0.2) !important; /* Warna hijau background lebih nyata */
+        border: 2px solid #1d976c !important; /* Garis bingkai rata di semua sisi */
+        border-radius: 10px !important;
+        padding: 15px 20px !important;
         margin-bottom: 25px !important;
         display: flex !important;
         align-items: center !important;
         gap: 12px !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important; /* Shadow agar box lebih timbul */
+        /* Menghilangkan efek shadow dan border-left tebal agar terlihat flat/rata */
+        box-shadow: none !important; 
+    }
+    
+    .staff-header-premium b {
+        color: #ffffff !important; /* Nama Staf dibuat putih agar kontras dan jelas */
+        font-size: 1.1em !important;
+    }
+
+    .staff-header-premium span {
+        color: #1d976c !important; /* Icon orangnya yang diberi warna hijau */
+    }
+
+    .staff-header-premium i {
+        color: #e0e0e0 !important;
+        font-style: normal !important; /* Menghilangkan miring jika ingin lebih tegas */
     }
     
     .staff-header-premium b {
@@ -864,6 +878,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
