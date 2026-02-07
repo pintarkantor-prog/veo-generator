@@ -231,19 +231,28 @@ st.markdown("""
         box-shadow: 0 6px 15px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 4. MODIFIKASI BOX STAF AKTIF */
+    /* 4. MODIFIKASI BOX STAF AKTIF (HIJAU LEBIH TEGAS) */
     .staff-header-premium {
-        background: rgba(29, 151, 108, 0.05);
-        border-left: 4px solid #1d976c;
-        border-radius: 8px;
-        padding: 15px 20px;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border-top: 1px solid rgba(255,255,255,0.05);
-        border-right: 1px solid rgba(255,255,255,0.05);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        background: rgba(29, 151, 108, 0.15) !important; /* Hijau lebih pekat dari sebelumnya */
+        border: 1px solid rgba(29, 151, 108, 0.4) !important; /* Border hijau lebih kelihatan */
+        border-left: 5px solid #1d976c !important; /* Garis samping kiri lebih tebal & terang */
+        border-radius: 12px !important;
+        padding: 15px 25px !important;
+        margin-bottom: 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important; /* Shadow agar box lebih timbul */
+    }
+    
+    .staff-header-premium b {
+        color: #1d976c !important; /* Nama Admin jadi hijau terang */
+        font-size: 1.15em !important;
+        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important; /* Efek glow halus pada teks */
+    }
+
+    .staff-header-premium i {
+        color: #e0e0e0 !important; /* Quote jadi lebih putih agar mudah dibaca */
     }
     
     .staff-header-premium b {
@@ -855,6 +864,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
