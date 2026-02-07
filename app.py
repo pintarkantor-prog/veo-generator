@@ -640,20 +640,22 @@ adegan_storage = []
 for i_s in range(1, int(num_scenes) + 1):
     l_box_title = f"🟢 ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
     with st.expander(l_box_title, expanded=(i_s == 1)):
-        col_v, col_ctrl = st.columns([6.5, 3.5])
+        # Saya ubah sedikit ke [6, 4] agar kolom kontrol punya ruang lebih untuk teks manual
+        col_v, col_ctrl = st.columns([6, 4])
         
         with col_v:
-            visual_input = st.text_area(f"Cerita Visual {i_s}", key=f"vis_input_{i_s}", height=180, placeholder="Ceritakan detail adegannya di sini...")
+            # UBAH TINGGI DI SINI (265 adalah perkiraan sejajar dengan input manual)
+            visual_input = st.text_area(
+                f"Cerita Visual {i_s}", 
+                key=f"vis_input_{i_s}", 
+                height=265, 
+                placeholder="Ceritakan detail adegannya di sini..."
+            )
         
         with col_ctrl:
-            # Kita bagi jadi 3 baris supaya tidak sesak
-            r1 = st.columns(2) # Baris 1: Suasana & Ukuran
-            r2 = st.columns(2) # Baris 2: Arah & Gerakan
-            r3 = st.columns(1) # Baris 3: Lokasi (Full Width/Lebar)
-            
             # --- BARIS 1 ---
+            r1 = st.columns(2)
             with r1[0]:
-                # SUDAH DIGANTI JADI 'SUASANA' SAJA
                 st.markdown('<p class="small-label">💡 Suasana</p>', unsafe_allow_html=True)
                 light_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1[1]:
@@ -661,6 +663,7 @@ for i_s in range(1, int(num_scenes) + 1):
                 shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
             
             # --- BARIS 2 ---
+            r2 = st.columns(2)
             with r2[0]:
                 st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
                 angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
@@ -669,18 +672,11 @@ for i_s in range(1, int(num_scenes) + 1):
                 cam_val = st.selectbox(f"C{i_s}", indonesia_camera, index=0, key=f"camera_input_{i_s}", label_visibility="collapsed")
             
             # --- BARIS 3 ---
+            r3 = st.columns(1)
             with r3[0]:
                 st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
+                loc_choice = st.selectbox(f"LocSelect{i_s}", options=options_lokasi, key=f"loc_sel_{i_s}", label_visibility="collapsed")
                 
-                # Dropdown pilihan
-                loc_choice = st.selectbox(
-                    f"LocSelect{i_s}", 
-                    options=options_lokasi, 
-                    key=f"loc_sel_{i_s}", 
-                    label_visibility="collapsed"
-                )
-                
-                # Logika: Jika pilih paling atas, munculkan tempat ngetik
                 if loc_choice == "--- KETIK MANUAL ---":
                     location_val = st.text_input(
                         "Tulis lokasi spesifik latar cerita di sini:", 
@@ -815,6 +811,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
