@@ -251,10 +251,10 @@ st.markdown("""
         font-size: 1.1em;
     }
 
-    /* 5. EFEK FOKUS DIPERTEGAS (HIJAU SOLID SAAT DIKLIK) */
+    /* 5. EFEK FOKUS (DIKEMBALIKAN KE STANDAR) */
     .stTextArea textarea:focus, .stTextInput input:focus {
-        border: 2px solid #1d976c !important; /* Paksa border jadi hijau tegas */
-        background-color: #161a1f !important;
+        border: 1px solid #31333f !important; /* Kembali ke warna border asli */
+        background-color: #0e1117 !important; /* Tetap gelap */
         box-shadow: none !important;
         outline: none !important;
     }
@@ -855,6 +855,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
