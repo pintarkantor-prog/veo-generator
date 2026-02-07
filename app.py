@@ -508,7 +508,7 @@ with st.sidebar:
     
     st.divider()
 
-with c_r:
+    with c_r:
         if st.button("🔄 RESTORE", use_container_width=True):
             import json
             try:
@@ -757,6 +757,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
