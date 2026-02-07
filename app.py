@@ -700,9 +700,14 @@ for i_s in range(1, int(num_scenes) + 1):
                 scene_dialogs_list.append({"name": char_label, "text": d_in})
         
         adegan_storage.append({
-            "num": i_s, "visual": visual_input, "light": light_val,
-            "location": location_val, "cam": cam_val, "shot": shot_val,
-            "angle": angle_val, "dialogs": scene_dialogs_list
+            "num": i_s, 
+            "visual": visual_input, 
+            "light": light_val,
+            "location": location_val, # Ini akan berisi 'Pasar' ATAU hasil ketikan manual
+            "cam": cam_val, 
+            "shot": shot_val,
+            "angle": angle_val, 
+            "dialogs": scene_dialogs_list
         })
 
 # ==============================================================================
@@ -810,6 +815,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
