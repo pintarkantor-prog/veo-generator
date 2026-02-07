@@ -351,16 +351,13 @@ st.markdown(f"""
 # ==============================================================================
 # 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
 # ==============================================================================
+
+# --- DAFTAR PILIHAN (Dipangkas jadi yang paling penting) ---
 indonesia_camera = [
-    "Ikuti Karakter", 
     "Diam (Tanpa Gerak)", 
-    "Zoom Masuk Pelan", 
-    "Zoom Keluar Pelan", 
-    "Geser Kiri ke Nanan", 
-    "Geser Kanan ke Kiri", 
-    "Dongak ke Atas", 
-    "Tunduk ke Bawah", 
-    "Ikuti Objek (Tracking)", 
+    "Ikuti Karakter", 
+    "Zoom Masuk", 
+    "Zoom Keluar", 
     "Memutar (Orbit)"
 ]
 
@@ -378,73 +375,66 @@ indonesia_shot = [
 indonesia_angle = [
     "Normal",
     "Wibawa",
-    "Intip",
+    "Intip Bahu",
     "Samping",
     "Berhadapan",
     "Belakang"
 ]
+
+options_lighting = ["Siang", "Malam", "Remang-remang"]
+
+# --- KAMUS TERJEMAHAN UNTUK AI ---
 camera_map = {
-    "Ikuti Karakter": "Dynamic tracking shot following the subject's movement", 
-    "Diam (Tanpa Gerak)": "Locked-off static camera, no movement", 
-    "Zoom Masuk Pelan": "Slow cinematic zoom-in, intensifying the focus", 
-    "Zoom Keluar Pelan": "Slow cinematic zoom-out, revealing the environment",
-    "Geser Kiri ke Nanan": "Smooth cinematic pan from left to right", 
-    "Geser Kanan ke Kiri": "Smooth cinematic pan from right to left", 
-    "Dongak ke Atas": "Cinematic tilt-up movement",
-    "Tunduk ke Bawah": "Cinematic tilt-down movement", 
-    "Ikuti Objek (Tracking)": "Smooth tracking shot with parallax depth", 
+    "Diam (Tanpa Gerak)": "Static camera, no movement, stable shot",
+    "Ikuti Karakter": "Dynamic tracking shot following the subject's movement",
+    "Zoom Masuk": "Slow cinematic zoom-in, intensifying focus",
+    "Zoom Keluar": "Slow cinematic zoom-out, revealing environment",
     "Memutar (Orbit)": "360-degree orbital circular camera rotation"
 }
 
 shot_map = {
-    "Sangat Dekat": "Extreme Close-Up shot, focusing on micro details, textures, or a single feature",
-    "Dekat Wajah": "Close-Up shot, focus on facial expression and emotion",
-    "Setengah Badan": "Medium Shot, waist up, showing body language and interaction",
-    "Seluruh Badan": "Full Body Shot, showing the character from head to toe",
-    "Pemandangan Luas": "Wide Landscape Shot, establishing the environment and vast scale",
-    "Sudut Rendah": "Low Angle Shot, camera looking up at the subject to show power and dominance",
-    "Sudut Tinggi": "High Angle Shot, camera looking down at the subject to show vulnerability",
-    "Drone Shot": "Cinematic Aerial Drone shot, high altitude panoramic view"
+    "Sangat Dekat": "Extreme Close-Up shot, focus on micro details",
+    "Dekat Wajah": "Close-Up shot, focus on facial expressions",
+    "Setengah Badan": "Medium Shot, waist up",
+    "Seluruh Badan": "Full Body Shot",
+    "Pemandangan Luas": "Wide Landscape Shot",
+    "Sudut Rendah": "Low Angle Shot, looking up at the subject",
+    "Sudut Tinggi": "High Angle Shot, looking down at the subject",
+    "Drone Shot": "Cinematic Aerial Drone shot, high altitude"
 }
 
 angle_map = {
-    "Normal": "eye-level shot, straight on perspective, balanced composition.",
-    "Wibawa": "heroic low angle shot, looking up at the subject to create a powerful presence.",
-    "Intip": "over-the-shoulder framing, voyeuristic depth, foreground element blocking part of the frame.",
-    "Samping": "side profile view, 90-degree angle, showing the subject from the side.",
-    "Berhadapan": "profile view of two subjects facing each other directly, intense eye contact.",
-    "Belakang": "shot from behind the subject, back view, the character is facing away from the camera looking into the distance, emphasizing what the character sees."
+    "Normal": "eye-level shot, straight on perspective",
+    "Wibawa": "heroic low angle shot, looking up at the subject",
+    "Intip Bahu": "over-the-shoulder framing, cinematic dialogue depth",
+    "Samping": "side profile view",
+    "Berhadapan": "profile view of two subjects facing each other",
+    "Belakang": "shot from behind the subject"
 }
 
-options_lighting = [
-    "Malam", 
-    "Siang", 
-    "Remang-remang"
-]
-
-# INISIALISASI SESSION STATE AWAL (Mencegah ValueError)
-if 'm_light' not in st.session_state: st.session_state.m_light = "Bening dan Tajam"
-if 'm_cam' not in st.session_state: st.session_state.m_cam = "Ikuti Karakter"
+# --- INISIALISASI SESSION STATE AWAL (Setting Default) ---
+if 'm_light' not in st.session_state: st.session_state.m_light = "Siang"
+if 'm_cam' not in st.session_state: st.session_state.m_cam = "Diam (Tanpa Gerak)"
 if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
-if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal (Depan)"
+if 'm_angle' not in st.session_state: st.session_state.m_angle = "Normal"
 
 def global_sync_v920():
-    lt1 = st.session_state.light_input_1
-    cm1 = st.session_state.camera_input_1
-    st1 = st.session_state.shot_input_1
-    ag1 = st.session_state.angle_input_1
-    
-    st.session_state.m_light = lt1
-    st.session_state.m_cam = cm1
-    st.session_state.m_shot = st1
-    st.session_state.m_angle = ag1
-    
-    for key in st.session_state.keys():
-        if key.startswith("light_input_"): st.session_state[key] = lt1
-        if key.startswith("camera_input_"): st.session_state[key] = cm1
-        if key.startswith("shot_input_"): st.session_state[key] = st1
-        if key.startswith("angle_input_"): st.session_state[key] = ag1
-
+    if "light_input_1" in st.session_state:
+        lt1 = st.session_state.light_input_1
+        cm1 = st.session_state.camera_input_1
+        st1 = st.session_state.shot_input_1
+        ag1 = st.session_state.angle_input_1
+        
+        st.session_state.m_light = lt1
+        st.session_state.m_cam = cm1
+        st.session_state.m_shot = st1
+        st.session_state.m_angle = ag1
+        
+        for key in st.session_state.keys():
+            if key.startswith("light_input_"): st.session_state[key] = lt1
+            if key.startswith("camera_input_"): st.session_state[key] = cm1
+            if key.startswith("shot_input_"): st.session_state[key] = st1
+            if key.startswith("angle_input_"): st.session_state[key] = ag1
 # ==============================================================================
 # 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + LOGO)
 # ==============================================================================
@@ -778,6 +768,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
