@@ -255,26 +255,30 @@ st.markdown("""
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
-    /* 7. MEMPERCANTIK BOX STAF AKTIF (SUCCESS BOX) */
+/* 7. VERSI CYBER-STUDIO (BEYOND ELEGANT) */
     div[data-testid="stNotification"] {
-        background: rgba(29, 151, 108, 0.1) !important; /* Hijau transparan sangat tipis */
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(29, 151, 108, 0.3) !important;
-        border-radius: 12px !important;
-        color: #ffffff !important;
-        padding: 15px !important;
+        background: linear-gradient(135deg, rgba(29, 151, 108, 0.15) 0%, rgba(14, 17, 23, 0.8) 100%) !important;
+        border-left: 5px solid #1d976c !important; /* Aksen garis tebal di kiri */
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        border-right: 1px solid rgba(255,255,255,0.1) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        border-radius: 4px 15px 15px 4px !important; /* Sudut asimetris yang unik */
+        box-shadow: 10px 10px 20px rgba(0,0,0,0.3), inset 0px 0px 10px rgba(29, 151, 108, 0.1) !important;
+        padding: 20px !important;
+        transition: 0.5s all;
     }
 
-    /* Bikin teks "Staf Aktif" jadi sedikit bercahaya */
-    div[data-testid="stNotification"] p {
-        font-size: 15px !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.5px;
+    div[data-testid="stNotification"]:hover {
+        border-left: 5px solid #11998e !important;
+        box-shadow: 15px 15px 30px rgba(0,0,0,0.5) !important;
+        transform: scale(1.005);
     }
 
-    /* Ngilangin ikon bawaan success kalau mau tampil lebih clean */
-    div[data-testid="stNotification"] svg {
-        fill: #1d976c !important;
+    /* Bikin Nama User (Admin) Punya Glow Hijau */
+    div[data-testid="stNotification"] strong {
+        color: #1d976c !important;
+        text-shadow: 0 0 10px rgba(29, 151, 108, 0.5);
+        font-size: 1.1em;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -841,6 +845,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
