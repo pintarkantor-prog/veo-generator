@@ -616,7 +616,7 @@ if "restore_counter" not in st.session_state:
 st.subheader("📝 Detail Adegan Storyboard")
 
 # --- IDENTITAS TOKOH (VERSI ELEGANT GRID) ---
-with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
+with st.expander("👥 Nama Tokoh Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
     num_total_char = st.number_input("Total Karakter dalam Project", min_value=1, max_value=10, value=2)
     st.write("") 
 
@@ -627,9 +627,9 @@ with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True
             idx = i + idx_offset
             if idx <= num_total_char:
                 with cols[idx_offset]:
-                    st.markdown(f"##### 👤 Karakter {idx}")
-                    name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Tokoh {idx}", label_visibility="collapsed")
-                    desc = st.text_area("Detail Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Karakter {idx}...", label_visibility="collapsed")
+                    st.markdown(f"##### 👤 Tokoh Utama {idx}")
+                    name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Tokoh Utama {idx}", label_visibility="collapsed")
+                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Tokoh Utama {idx}...", label_visibility="collapsed")
                     all_chars_list.append({"name": name, "desc": desc})
         st.write("---") 
 
@@ -641,19 +641,19 @@ for i_s in range(1, int(num_scenes) + 1):
         col_v, col_ctrl = st.columns([6.5, 3.5])
         
         with col_v:
-            visual_input = st.text_area(f"Visual Adegan {i_s}", key=f"vis_input_{i_s}", height=180, placeholder="Ceritakan detail adegannya di sini...")
+            visual_input = st.text_area(f"Cerita Visual {i_s}", key=f"vis_input_{i_s}", height=180, placeholder="Ceritakan detail adegannya di sini...")
         
         with col_ctrl:
             r1 = st.columns(2)
             r2 = st.columns(2)
             with r1[0]:
-                st.markdown('<p class="small-label">💡 Cahaya</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">💡 Suasana</p>', unsafe_allow_html=True)
                 light_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
             with r1[1]:
-                st.markdown('<p class="small-label">📐 Shot</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">📐 Ukuran Gambar</p>', unsafe_allow_html=True)
                 shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
             with r2[0]:
-                st.markdown('<p class="small-label">✨ Angle</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
                 angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
             with r2[1]:
                 st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
@@ -687,7 +687,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     if not nama_tokoh_utama:
         st.warning("⚠️ **Nama Karakter 1 belum diisi!**")
     elif not active_scenes:
-        st.warning("⚠️ **Mohon isi deskripsi visual adegan!**")
+        st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
     else:
         with st.spinner(f"⏳ Sedang meracik prompt..."):
             st.session_state.last_generated_results = []
@@ -772,5 +772,6 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
