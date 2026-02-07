@@ -303,7 +303,7 @@ st.markdown("""
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
-    /* 7. OPTIMASI KOTAK ADEGAN (WARUNG TUNGTUNG NOIR) */
+    /* 7. OPTIMASI KOTAK ADEGAN */
     .stExpander {
         border: 1px solid rgba(29, 151, 108, 0.3) !important;
         border-radius: 12px !important;
@@ -608,7 +608,7 @@ negative_motion_strict = (
 img_quality_base = f"{img_quality_stack} {no_text_strict}"
 vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict} {negative_motion_strict}"
 # ==============================================================================
-# 9. FORM INPUT ADEGAN (OPTIMIZED FOR WARUNG TUNGTUNG)
+# 9. FORM INPUT ADEGAN
 # ==============================================================================
 if "restore_counter" not in st.session_state:
     st.session_state.restore_counter = 0
@@ -689,7 +689,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     elif not active_scenes:
         st.warning("⚠️ **Mohon isi deskripsi visual adegan!**")
     else:
-        with st.spinner(f"⏳ Sedang meracik prompt Warung Tungtung..."):
+        with st.spinner(f"⏳ Sedang meracik prompt..."):
             st.session_state.last_generated_results = []
             
             # --- [MASTER ASSETS & DNA] ---
@@ -740,7 +740,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 st.session_state.last_generated_results.append({
                     "id": item["num"], "img": img_final, "vid": vid_final, "cam_info": f"{e_shot} + {e_cam}"
                 })
-        st.toast("Prompt Warung Tungtung Siap! 🚀")
+        st.toast("Prompt Sudah Siap! 🚀")
         st.rerun()
 
 # ==============================================================================
@@ -772,4 +772,5 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
