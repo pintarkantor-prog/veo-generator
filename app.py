@@ -710,10 +710,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (ULTIMATE HUMAN REALISM) ---
+                # --- RAKIT PROMPT AKHIR (DEEP FOCUS & REALISM) ---
                 img_final = (
-                    f"{master_lock_instruction} Candid RAW photo, shot on Fujifilm XT-4, 50mm lens, f/1.2, ISO 800, "
-                    f"ultra-detailed natural skin with authentic imperfections, varied facial features, "
+                    f"{master_lock_instruction} Candid RAW photo, shot on Fujifilm XT-4, 35mm lens, f/8.0, ISO 400, "
+                    f"deep focus with sharp background, natural skin texture with visible pores, "
                     f"{e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. "
                     f"Atmosphere: {l_cmd}. "
@@ -770,6 +770,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
