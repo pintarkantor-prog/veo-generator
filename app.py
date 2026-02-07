@@ -554,7 +554,7 @@ with st.sidebar:
                 st.error(f"Gagal simpan: {str(e)}")
 
     with c_r:
-        if st.button("🔄RESTORE", use_container_width=True):
+        if st.button("🔄BACK", use_container_width=True):
             import json
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -807,6 +807,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
