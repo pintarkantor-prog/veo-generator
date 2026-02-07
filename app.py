@@ -526,29 +526,36 @@ if "restore_counter" not in st.session_state:
 
 st.subheader("📝 Detail Adegan Storyboard")
 
-# --- IDENTITAS TOKOH (FULL VERSION - KUNCI MATI) ---
+# --- IDENTITAS TOKOH (DINAMIS: BERTAUT DENGAN JUMLAH KARAKTER) ---
 with st.expander("👥 Nama Karakter & Detail Fisik! (WAJIB ISI)", expanded=True):
-    col_c1, col_c2 = st.columns(2)
-    with col_c1:
-        st.markdown("### Karakter 1")
-        # Menggunakan key langsung ke session_state agar tidak hilang saat refresh
-        st.text_input("Nama Karakter 1", key="c_name_1_input")
-        st.text_area("Detail Fisik Karakter 1", key="c_desc_1_input", height=100)
-        
-    with col_c2:
-        st.markdown("### Karakter 2")
-        st.text_input("Nama Karakter 2", key="c_name_2_input")
-        st.text_area("Detail Fisik Karakter 2", key="c_desc_2_input", height=100)
-
+    # 1. Taruh input jumlah karakter di paling atas agar loop tahu harus bikin berapa kotak
+    num_total_char = st.number_input("Total Karakter dalam Project", min_value=1, max_value=10, value=2)
     st.divider()
-    num_extra = st.number_input("Tambah Karakter Lain", min_value=2, max_value=6, value=2)
+
+    # 2. Siapkan list kosong untuk menampung data
+    all_chars_list = []
+
+    # 3. LOOPING: Bikin kotak input sebanyak jumlah num_total_char
+    for i in range(1, num_total_char + 1):
+        st.markdown(f"#### 👤 Karakter {i}")
+        c_col1, c_col2 = st.columns([3, 7]) # Kolom Nama lebih kecil, Detail lebih lebar
+        
+        with c_col1:
+            n_key = f"c_name_{i}_input"
+            # Inisialisasi session state jika belum ada agar tidak error
+            if n_key not in st.session_state: st.session_state[n_key] = ""
+            name = st.text_input(f"Nama Karakter {i}", key=n_key, placeholder="Misal: UDIN")
+            
+        with c_col2:
+            d_key = f"c_desc_{i}_input"
+            if d_key not in st.session_state: st.session_state[d_key] = ""
+            desc = st.text_area(f"Detail Fisik Karakter {i}", key=d_key, height=100, placeholder="Deskripsikan ciri fisiknya...")
+        
+        # Masukkan ke list untuk sistem dialog di bagian Adegan nanti
+        all_chars_list.append({"name": name, "desc": desc})
+        st.write("---")
+
     st.caption("⚠️ *Pastikan Nama Karakter diisi agar muncul di pilihan dialog adegan.*")
-    
-    # Ambil data dari session_state untuk list dialog
-    all_chars_list = [
-        {"name": st.session_state.c_name_1_input, "desc": st.session_state.c_desc_1_input}, 
-        {"name": st.session_state.c_name_2_input, "desc": st.session_state.c_desc_2_input}
-    ]
 
 # --- LIST ADEGAN (ANTI-HILANG MODE) ---
 adegan_storage = []
@@ -770,6 +777,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
