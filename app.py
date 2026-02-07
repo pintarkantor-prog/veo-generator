@@ -708,7 +708,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSION: ANTI-CAPTION & APEX SHARPNESS)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (FIXED & SYNCHRONIZED)
 # ==============================================================================
 import json
 
@@ -719,7 +719,6 @@ if 'last_generated_results' not in st.session_state:
 st.write("")
 
 # 2. PROSES GENERATE (Saat tombol diklik)
-st.write("")
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -732,21 +731,17 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         with st.spinner(f"⏳ Sedang meracik prompt..."):
             st.session_state.last_generated_results = []
         
-        # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP SEBELUM GENERATE] ---
-        try:
-            captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
-            auto_packet = {
-                "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
-                "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
-                "scenes": captured_scenes_auto
-            }
-            record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
-        except: pass
+            # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
+            try:
+                captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+                auto_packet = {
+                    "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                    "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                    "scenes": captured_scenes_auto
+                }
+                record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+            except: pass
         
-        with st.spinner(f"⏳ Sedang membuat prompt..."):
-            # Reset isi lemari sebelum diisi yang baru
-            st.session_state.last_generated_results = []
-            
             # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
@@ -765,7 +760,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa, chandelier lighting, polished atmosphere."
             }
             
-            # --- LOGIKA MASTER LOCK ---
+# --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = (
                 f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
@@ -774,10 +769,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             )
 
             for item in active_scenes:
-                # 1. LOGIKA LOKASI (Bisa deteksi hasil ketikan manual)
+                # 1. LOGIKA LOKASI
                 raw_loc = item["location"].lower()
-                # Jika lokasi ada di daftar LOKASI_DNA, ambil deskripsinya. 
-                # Jika tidak ada (hasil ketikan manual), gunakan teks aslinya.
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
                 
                 # 2. LOGIKA SHOT, ANGLE, & CAMERA
@@ -785,19 +778,21 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
                     
-                # Lighting Logic
-                if "Malam" in item["light"]: l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors."
-                elif "Siang" in item["light"]: l_cmd = "ivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch."
-                else: l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures."
+                # 3. Lighting Logic (Typo Fixed)
+                if "Malam" in item["light"]: 
+                    l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors."
+                elif "Siang" in item["light"]: 
+                    l_cmd = "Vivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch."
+                else: 
+                    l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting: '{d_text}'." if d_text else ""
 
-                master_lock = f"{base_character_lock} ENVIRONMENT DNA: {dna_env}."
+                # --- 4. MERAKIT PROMPT AKHIR (Variabel Synchronized) ---
+                master_lock = f"{master_lock_instruction} ENVIRONMENT DNA: {dna_env}."
 
-                 # --- PROMPT GAMBAR (Gak pake e_cam biar gak blur) ---
                 img_final = f"{master_lock} Candid RAW photo, shot on 35mm, f/2.8. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 50"
-                # --- PROMPT VIDEO (Pake e_cam biar gerak) ---
                 vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
 
                 st.session_state.last_generated_results.append({
@@ -835,7 +830,3 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
-
-
-
-
