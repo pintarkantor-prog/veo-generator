@@ -577,29 +577,27 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "photorealistic RAW photo, shot on Fujifilm XT-4, " # Merk kamera tetap ada
-    "extremely detailed natural skin texture, visible pores and slight blemishes, "
-    "subsurface scattering, authentic skin tones, natural film grain, "
-    "cinematic lighting, masterpiece quality."
+    "hyper-realistic RAW film still, shot on Arri Alexa 65, anamorphic lens, "
+    "extremely detailed organic skin textures, visible pores, micro-sweat, "
+    "cinematic film grain, authentic color science, global illumination, "
+    "volumetric dust particles, 8k resolution, masterpiece quality."
 )
 
-# --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
 vid_quality_stack = (
-    "ultra-high definition cinematic video, 8k UHD, high dynamic range, "
-    "professional color grading, vibrant organic colors, ray-traced reflections, "
-    "hyper-detailed textures, zero digital noise, clean pixels, "
-    "smooth motion, professional cinematography, masterpiece quality."
+    "ultra-high definition cinematic 9:16 video, authentic film aesthetic, "
+    "natural motion blur, realistic lighting physics, 60fps high-bitrate, "
+    "professional color grading, no digital artifacts, lifelike textures."
 )
 
-# --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
+# --- PENGUAT NEGATIF (Mencegah Hasil Terlihat 'AI Banget') ---
+no_ai_style = (
+    "plastic skin, cartoon, anime, airbrushed, CGI, render, doll-like, "
+    "fake texture, blurry, low resolution, distorted anatomy, over-saturated colors."
+)
+
 no_text_strict = (
-    "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
-    "NO captions, NO speech bubbles, NO labels, NO black bars."
-)
-
-negative_motion_strict = (
-    "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-    "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+    f"{no_ai_style}, STRICTLY NO text, NO typography, NO watermark, NO letters, "
+    "NO subtitles, NO captions, NO speech bubbles, NO labels, NO black bars."
 )
 
 # --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
@@ -762,12 +760,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK ---
+            # --- LOGIKA MASTER LOCK (REVISED: ABSOLUTE CONSISTENCY) ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = (
-                f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
-                f"Do not deviate from these visuals: {char_defs}. "
-                f"Maintain strict facial identity and clothing structure from the initial references. "
+                f"ACTOR DATABASE: {char_defs}. "
+                "INSTRUCTION: Maintain absolute facial identity, bone structure, and clothing consistency. "
+                "The characters must look identical in every shot, as if played by the same human actor. "
+                "No variations in features allowed. "
             )
 
             for item in active_scenes:
@@ -796,46 +795,49 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 scene_id = item["num"]
                 light_type = item["light"]
                 
-                # --- LIGHTING MAPPING ---
+                # --- LIGHTING MAPPING (REVISED FOR ULTRA REALISM) ---
                 if "Bening" in light_type:
-                    l_cmd = "Hard sunlight photography, vivid high-contrast, realistic shadows, sharp optical clarity, color-graded foliage."
+                    l_cmd = "High-key cinematic lighting, sharp sunlight, hyper-clear optical transparency, vivid natural colors, deep black levels."
                 elif "Sejuk" in light_type:
-                    l_cmd = "8000k cold daylight, vibrant color temperature, crisp shadows, refreshing morning atmosphere."
+                    l_cmd = "8000k frosty daylight, cool atmospheric haze, crisp shadows, refreshing morning clarity, clean teal-and-orange grade."
                 elif "Dramatis" in light_type:
-                    l_cmd = "Cinematic side-lighting, deep realistic high-contrast shadows, chiaroscuro effect, saturated mood."
+                    l_cmd = "Cinematic side-lighting, chiaroscuro effect, extreme high-contrast, moody volumetric shadows, rich saturated tones."
                 elif "Jelas" in light_type:
-                    l_cmd = "Vivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch."
+                    l_cmd = "Brilliant midday sun, harsh realistic shadows, high dynamic range, raw color punch, sharp texture definition."
                 elif "Mendung" in light_type:
-                    l_cmd = "Soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures."
+                    l_cmd = "Soft diffused overcast lighting, realistic gray-cobalt sky, moody atmospheric depth, muted but rich cinematic tones."
                 elif "Suasana Malam" in light_type:
-                    l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors."
+                    l_cmd = "Cinematic night noir, warm tungsten street lamp glow, flickering neon accents, deep indigo shadows, volumetric fog, rim lighting."
                 elif "Suasana Alami" in light_type:
-                    l_cmd = "Natural sunlight, golden hour highlights, vibrant forest green, realistic humidity, intricate organic textures."
+                    l_cmd = "Organic natural light, golden hour ray-tracing, realistic humidity, intricate leaf-dappled shadows, soft sun flares."
                 else: # Suasana Sore
-                    l_cmd = "4:00 PM sunset, long sharp high-contrast shadows, golden-indigo gradient, high-fidelity rim lighting."
+                    l_cmd = "Deep golden hour, 4:00 PM long sharp shadows, amber-indigo gradient, high-fidelity rim lighting, warm atmospheric glow."
 
                 # Logika Dialog
                 d_all_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emotion_ctx = f"Invisible Mood (DO NOT RENDER TEXT): Acting based on '{d_all_text}'. Focus on authentic facial muscle tension. " if d_all_text else ""
 
-                # --- RAKIT PROMPT AKHIR (DEEP FOCUS & REALISM) ---
+                # --- RAKIT PROMPT AKHIR ---
                 img_final = (
-                    f"{master_lock_instruction} Candid RAW photo, shot on Fujifilm XT-4, 35mm lens, f/8.0, ISO 400, "
-                    f"deep focus, sharp distant background, natural skin with visible pores, "
+                    f"{master_lock_instruction} Authentic RAW film still, shot on Arri Alexa 65, 35mm anamorphic lens, f/1.8, "
+                    f"shallow depth of field, creamy bokeh, cinematic film grain, visible skin pores and organic textures, "
                     f"{e_angle_cmd} {emotion_ctx} "
                     f"Visual: {vis_core_final}. "
                     f"Atmosphere: {l_cmd}. "
-                    f"Final Rendering: {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 20"
+                    f"Final Rendering: {img_quality_base} --ar 9:16 --style raw --v 6.0"
                 )
                 
-                # Kita tambahkan penguat gerakan khusus untuk video
-                motion_boost = "Ensure natural subject movement. The scene is alive, with organic secondary motion and micro-expressions."
+                # Penguat gerakan agar Veo menghasilkan video yang "hidup"
+                motion_boost = (
+                    "Focus on high-fidelity fluid motion, realistic clothing physics, "
+                    "subtle secondary movements, and authentic facial muscle tension."
+                )
                 
                 vid_final = (
-                    f"{master_lock_instruction} " # 1. IDENTITAS (Kunci Karakter)
-                    f"9:16 VERTICAL CINEMATOGRAPHY. " # 2. FORMAT (Kunci Kanvas)
-                    f"CAMERA MOVEMENT: {e_shot_size}, {e_cam_move}. {motion_boost} " # 3. PERGERAKAN
-                    f"ACTING & ACTION: {vis_core_final}. {emotion_ctx} " # 4. CERITA & EMOSI
+                    f"{master_lock_instruction} " # 1. IDENTITAS
+                    f"9:16 VERTICAL CINEMATOGRAPHY. " # 2. FORMAT
+                    f"CAMERA & MOTION: {e_shot_size}, {e_cam_move}. {motion_boost} " # 3. PERGERAKAN
+                    f"ACTING & ACTION: {vis_core_final}. {emotion_ctx} " # 4. CERITA
                     f"ENVIRONMENT & LIGHTING: {l_cmd}. " # 5. ATMOSFER
                     f"TECHNICAL SPEC: {vid_quality_base}" # 6. KUALITAS FINAL
                 )
@@ -878,3 +880,4 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
