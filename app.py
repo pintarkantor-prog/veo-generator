@@ -508,43 +508,46 @@ with st.sidebar:
     
     st.divider()
 
-# --- C. TOMBOL SAVE & RESTORE (MASTER LOGIC VERSION) ---
+# --- C. TOMBOL SAVE & RESTORE (FIXED & SYNCHRONIZED) ---
     c_s, c_r = st.columns(2)
     
     with c_s:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # 1. Ambil SEMUA Detail Adegan secara utuh
+                # 1. Kumpulkan data karakter secara presisi
+                char_data = {}
+                for i in range(1, 11): # Mengcover hingga 10 karakter jika ada
+                    n_val = st.session_state.get(f"c_name_{i}_input", "")
+                    d_val = st.session_state.get(f"c_desc_{i}_input", "")
+                    if n_val: char_data[f"char_{i}"] = {"n": n_val, "d": d_val}
+
+                # 2. Kumpulkan data ADEGAN (Sangat Penting: Harus Lengkap)
                 captured_scenes = {}
                 for i in range(1, int(num_scenes) + 1):
                     v_val = st.session_state.get(f"vis_input_{i}", "")
                     if v_val:
-                        # Kita simpan semua atribut per adegan dalam satu folder (v1, v2, dst)
                         captured_scenes[f"v{i}"] = {
                             "vis": v_val,
                             "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung"),
-                            "light": st.session_state.get(f"light_input_{i}", "Siang"),
+                            "light": st.session_state.get(f"light_input_{i}", "Malam"),
                             "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
                             "angle": st.session_state.get(f"angle_input_{i}", "Normal")
                         }
                 
-                # 2. Ambil Dialog
+                # 3. Kumpulkan DIALOG
                 captured_dialogs = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
 
+                # Masukkan ke dalam satu paket besar (Koper Data)
                 draft_packet = {
-                    "n1": st.session_state.get("c_name_1_input", ""), 
-                    "p1": st.session_state.get("c_desc_1_input", ""),
-                    "n2": st.session_state.get("c_name_2_input", ""), 
-                    "p2": st.session_state.get("c_desc_2_input", ""),
+                    "chars": char_data,
                     "scenes": captured_scenes,
                     "dialogs": captured_dialogs 
                 }
                 
-                # Simpan ke GSheets (Visual Utama sekarang berisi paket JSON lengkap)
+                # Rekam ke Cloud
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(draft_packet), len(captured_scenes))
-                
-                st.session_state["sidebar_success_msg"] = "Project Berhasil Disimpan! ✅"
+                st.session_state["sidebar_success_msg"] = "Project Disimpan dengan Sempurna! ✅"
                 st.rerun()
             except Exception as e:
                 st.error(f"Gagal simpan: {str(e)}")
@@ -559,37 +562,32 @@ with st.sidebar:
                 my_data = df_log[df_log['User'] == user_draft_tag]
                 
                 if not my_data.empty:
-                    raw_json = str(my_data.iloc[-1]['Visual Utama']).strip()
-                    if raw_json.startswith("{"):
-                        data = json.loads(raw_json)
-                        
-                        # Pulihkan Nama & Fisik Karakter
-                        st.session_state.c_name_1_input = data.get("n1", "")
-                        st.session_state.c_desc_1_input = data.get("p1", "")
-                        st.session_state.c_name_2_input = data.get("n2", "")
-                        st.session_state.c_desc_2_input = data.get("p2", "")
-                        
-                        # --- PULIHKAN SETIAP KOTAK INPUT (VIS, LOC, LIGHT, SHOT, ANGLE) ---
-                        for k, v in data.get("scenes", {}).items():
-                            idx = k.replace('v','')
-                            if isinstance(v, dict):
-                                st.session_state[f"vis_input_{idx}"] = v.get("vis", "")
-                                st.session_state[f"loc_input_{idx}"] = v.get("loc", "jalan kampung")
-                                st.session_state[f"light_input_{idx}"] = v.get("light", "Siang")
-                                st.session_state[f"shot_input_{idx}"] = v.get("shot", "Setengah Badan")
-                                st.session_state[f"angle_input_{idx}"] = v.get("angle", "Normal")
-                            else:
-                                # Jika data lama (hanya string visual), masukkan ke visual saja
-                                st.session_state[f"vis_input_{idx}"] = v
-                        
-                        # Pulihkan Dialog
-                        for d_key, d_text in data.get("dialogs", {}).items():
-                            st.session_state[d_key] = d_text
-                        
-                        st.session_state["sidebar_success_msg"] = "Project Berhasil Dipulihkan! 🔄"
-                        st.rerun()
-                    else:
-                        st.error("Format data lama tidak didukung untuk pemulihan otomatis.")
+                    data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
+                    
+                    # A. Pulihkan Karakter
+                    for k, v in data.get("chars", {}).items():
+                        idx = k.replace("char_", "")
+                        st.session_state[f"c_name_{idx}_input"] = v.get("n", "")
+                        st.session_state[f"c_desc_{idx}_input"] = v.get("d", "")
+                    
+                    # B. Pulihkan Adegan (VIS, LOC, LIGHT, SHOT, ANGLE)
+                    for k, v in data.get("scenes", {}).items():
+                        idx = k.replace('v','')
+                        if isinstance(v, dict):
+                            st.session_state[f"vis_input_{idx}"] = v.get("vis", "")
+                            st.session_state[f"loc_input_{idx}"] = v.get("loc", "jalan kampung")
+                            st.session_state[f"light_input_{idx}"] = v.get("light", "Malam")
+                            st.session_state[f"shot_input_{idx}"] = v.get("shot", "Setengah Badan")
+                            st.session_state[f"angle_input_{idx}"] = v.get("angle", "Normal")
+                        else:
+                            st.session_state[f"vis_input_{idx}"] = v
+                    
+                    # C. Pulihkan Dialog
+                    for d_key, d_text in data.get("dialogs", {}).items():
+                        st.session_state[d_key] = d_text
+                    
+                    st.session_state["sidebar_success_msg"] = "Project Dipulihkan 100%! 🔄"
+                    st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
@@ -810,5 +808,6 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
