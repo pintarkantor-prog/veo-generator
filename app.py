@@ -9,7 +9,7 @@ import time
 st.markdown("""
     <style>
     /* 1. Memperbesar tulisan di dalam kotak input (Cerita & Karakter) */
-    .stTextArea textarea, .stTextInput input {
+    .stTextArea textarea {
         font-size: 22px !important;
         font-weight: 500 !important;
         color: #FFFFFF !important;
@@ -844,6 +844,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
