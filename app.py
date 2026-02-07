@@ -175,21 +175,20 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: ECO-PREMIUM GREEN - SOFT & CALM)
+# 4. CUSTOM CSS (VERSION: CLEAN & CLASSIC GREEN)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. FIXED HEADER CUSTOM (SOFT BLUR) */
+    /* 1. FIXED HEADER */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
         position: fixed;
         top: 0;
         left: 310px;
         right: 0;
         z-index: 99999;
-        background-color: rgba(14, 17, 23, 0.9);
-        backdrop-filter: blur(12px);
+        background-color: #0e1117;
         padding: 10px 2rem;
-        border-bottom: 1px solid #31333f;
+        border-bottom: 2px solid #31333f;
     }
 
     @media (max-width: 768px) {
@@ -202,84 +201,56 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
-
-    /* 3. GRADIENT TEXT UNTUK SUBHEADER (SOFT GREEN-MINT) */
-    h3, .stMarkdown h3 {
-        background: linear-gradient(to right, #1d976c, #11998e) !important;
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-        font-weight: 800 !important;
-    }
-
-    /* 4. PREMIUM EXPANDER (SOFT GREEN BORDER) */
-    .streamlit-expanderHeader {
-        background-color: #1e2129 !important;
-        border-radius: 12px !important;
-        border: 1px solid #31333f !important;
-        color: #eee !important;
-        transition: 0.3s;
-    }
-    .streamlit-expanderHeader:hover {
-        border-color: #1d976c !important;
-    }
-    .streamlit-expanderContent {
-        background-color: rgba(30, 33, 41, 0.3) !important;
-        border-radius: 0 0 12px 12px !important;
-        border: 1px solid #31333f !important;
-        border-top: none !important;
-    }
-
-    /* 5. TOMBOL GENERATE (PRIMARY) - FOREST GREEN SOFT */
-    div.stButton > button[kind="primary"] {
-        background: linear-gradient(to right, #1d976c, #11998e) !important;
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
+    }
+
+    /* 3. TOMBOL GENERATE (HIJAU SOFT - TIDAK SILAU) */
+    div.stButton > button[kind="primary"] {
+        background-color: #1d976c !important;
+        color: white !important;
         border: none !important;
-        border-radius: 12px !important;
+        border-radius: 8px !important;
         padding: 0.6rem 1.2rem !important;
-        font-weight: 600 !important;
-        font-size: 17px !important;
-        transition: 0.4s all ease !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        transition: 0.3s !important;
+        width: 100%;
     }
 
     div.stButton > button[kind="primary"]:hover {
-        transform: translateY(-2px) !important;
-        background: linear-gradient(to right, #11998e, #1d976c) !important;
-        box-shadow: 0 6px 20px rgba(29, 151, 108, 0.3) !important;
+        background-color: #11998e !important;
+        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.3) !important;
     }
 
-    /* 6. TOMBOL SECONDARY */
+    /* 4. TOMBOL SECONDARY (SAVE & RESTORE) */
     div.stButton > button:not([kind="primary"]) {
-        border-radius: 10px !important;
-        border: 1px solid #4a4a4a !important;
-        transition: 0.3s !important;
+        border-radius: 8px !important;
+        transition: 0.2s !important;
     }
 
-    div.stButton > button:not([kind="primary"]):hover {
-        border-color: #1d976c !important;
-        color: #1d976c !important;
+    /* 5. KEMBALIKAN TEXT KE SEMULA (NO GRADIENT) */
+    h1, h2, h3, .stMarkdown h3 {
+        background: none !important;
+        -webkit-text-fill-color: initial !important;
+        color: #ffffff !important;
     }
 
-    /* 7. ANIMASI FADE IN */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    div[data-testid="stVerticalBlock"] > div:has(div.stCode) {
-        animation: fadeIn 0.6s ease-out;
-    }
-
-    /* 8. STYLE LAINNYA */
+    /* 6. STYLE LAINNYA */
     button[title="Copy to clipboard"] {
-        background-color: #1d976c !important;
+        background-color: #28a745 !important;
+        color: white !important;
+        opacity: 1 !important; 
         border-radius: 6px !important;
+        border: 2px solid #ffffff !important;
+        transform: scale(1.1); 
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.4);
     }
     .stTextArea textarea {
-        background-color: #0e1117 !important;
-        border-radius: 10px !important;
-        border: 1px solid #31333f !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        font-family: 'Inter', sans-serif !important;
+        min-height: 180px !important; 
     }
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
@@ -849,6 +820,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
