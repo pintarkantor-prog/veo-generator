@@ -508,15 +508,15 @@ with st.sidebar:
     
     st.divider()
 
-# --- C. TOMBOL SAVE & RESTORE (VERSI FIX TOTAL) ---
+# --- C. TOMBOL SAVE & RESTORE (VERSI ANTI-REFRESH & ANTI-ERROR) ---
     st.write("---")
     c_s, c_r = st.columns(2)
     
-with c_s:
+    with c_s:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
-                # 1. Ambil data karakter secara aman
+                # 1. Ambil data karakter
                 char_data = {}
                 num_char = st.session_state.get("num_total_char", 2)
                 for idx in range(1, 11):
@@ -524,12 +524,11 @@ with c_s:
                     c_d = st.session_state.get(f"c_desc_{idx}_input", "")
                     if c_n: char_data[str(idx)] = {"name": c_n, "desc": c_d}
 
-                # 2. Ambil data adegan secara lengkap
+                # 2. Ambil data adegan
                 scene_data = {}
                 for i in range(1, 51):
-                    # Kita ambil langsung dari session_state
                     v_val = st.session_state.get(f"vis_input_{i}", "")
-                    if v_val: # Hanya simpan yang ada isinya
+                    if v_val:
                         scene_data[str(i)] = {
                             "vis": v_val,
                             "light": st.session_state.get(f"light_input_{i}", "Siang"),
@@ -550,10 +549,7 @@ with c_s:
 
                 # 4. Kirim ke Sheets
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
-                
-                # --- JANGAN PAKAI ST.RERUN DI SINI ---
-                st.toast("Project Berhasil Disimpan! ✅") 
-                # Pakai toast agar ada notifikasi kecil di pojok tanpa refresh layar
+                st.toast("Project Berhasil Disimpan! ✅")
             except Exception as e:
                 st.error(f"Gagal simpan: {str(e)}")
 
@@ -570,20 +566,14 @@ with c_s:
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     data = json.loads(raw_data)
                     
-                    # --- MULAI PROSES PEMULIHAN (SINKRONISASI KOTAK) ---
-                    
-                    # A. Balikin Jumlah & Detail Karakter
                     if "num_char" in data:
                         st.session_state["num_total_char"] = data["num_char"]
                     
-                    chars = data.get("chars", {})
-                    for i_str, val in chars.items():
+                    for i_str, val in data.get("chars", {}).items():
                         st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
                         st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
                     
-                    # B. Balikin Detail Adegan (Vis, Loc, Light, Shot, Angle)
-                    scenes = data.get("scenes", {})
-                    for i_str, val in scenes.items():
+                    for i_str, val in data.get("scenes", {}).items():
                         if isinstance(val, dict):
                             st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
                             st.session_state[f"light_input_{i_str}"] = val.get("light", "Siang")
@@ -591,18 +581,16 @@ with c_s:
                             st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
                             st.session_state[f"loc_input_{i_str}"] = val.get("loc", "jalan kampung")
                     
-                    # C. Balikin Dialog
-                    dialogs = data.get("dialogs", {})
-                    for d_key, d_text in dialogs.items():
+                    for d_key, d_text in data.get("dialogs", {}).items():
                         st.session_state[d_key] = d_text
                     
-                    st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
+                    st.toast("Data Berhasil Dipulihkan! 🔄")
                     st.rerun()
                 else:
                     st.error("Draft tidak ditemukan.")
             except Exception as e:
                 st.error(f"Gagal restore: {str(e)}")
-
+                
     # --- NOTIFIKASI SUKSES ---
     if "sidebar_success_msg" in st.session_state:
         st.success(st.session_state["sidebar_success_msg"])
@@ -819,6 +807,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
