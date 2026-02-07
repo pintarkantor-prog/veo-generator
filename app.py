@@ -748,7 +748,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             base_character_lock = f"ACTOR REFERENCE: {ref_images}. Maintain strict facial identity for: {char_defs}."
 
             for item in active_scenes:
-                dna_env = LOKASI_DNA.get(item["location"].lower(), "neutral studio.")
+                # 1. LOGIKA LOKASI (Bisa deteksi hasil ketikan manual)
+                raw_loc = item["location"].lower()
+                # Jika lokasi ada di daftar LOKASI_DNA, ambil deskripsinya. 
+                # Jika tidak ada (hasil ketikan manual), gunakan teks aslinya.
+                dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
+                
+                # 2. LOGIKA SHOT, ANGLE, & CAMERA
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
@@ -804,6 +810,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
