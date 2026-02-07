@@ -4,27 +4,27 @@ import pandas as pd
 from datetime import datetime
 import pytz
 import time
-# --- TAMBAHKAN DI BAWAH IMPORT ---
+# --- CSS UNTUK MEMPERBESAR TEXT INPUT & AREA ---
 st.markdown("""
     <style>
-    /* 1. Memperbesar tulisan di dalam kotak Cerita Visual */
+    /* 1. Memperbesar tulisan di Cerita Visual & Penampilan Fisik Karakter */
     .stTextArea textarea {
-        font-size: 22px !important;    /* Ukuran font diperbesar jadi 22px */
-        font-weight: 500 !important;   /* Agak tebal supaya jelas */
-        color: #FFFFFF !important;     /* Warna putih bersih */
-        line-height: 1.6 !important;   /* Jarak antar baris biar enak dibaca */
-        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 20px !important;    /* Ukuran teks lebih besar */
+        font-weight: 500 !important;   /* Teks lebih tegas */
+        line-height: 1.5 !important;
     }
 
-    /* 2. Opsional: Memperbesar tulisan di dalam dropdown (Selectbox) */
-    .stSelectbox div[data-baseweb="select"] {
-        font-size: 16px !important;
+    /* 2. Memperbesar tulisan di input Nama Karakter */
+    .stTextInput input {
+        font-size: 20px !important;
+        font-weight: 600 !important;
     }
-    
-    /* 3. Memberikan warna background sedikit gelap pada area input agar teks makin kontras */
-    .stTextArea textarea {
-        background-color: #1E1E1E !important;
-        border: 1px solid #444 !important;
+
+    /* 3. Memperbesar label judul adegan & karakter */
+    .small-label, label {
+        font-size: 16px !important;
+        font-weight: bold !important;
+        color: #00ffcc !important; /* Warna hijau neon khas Noir */
     }
     </style>
     """, unsafe_allow_html=True)
@@ -835,6 +835,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
