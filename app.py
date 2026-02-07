@@ -178,39 +178,110 @@ def record_to_sheets(user, data_packet, total_scenes):
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. Memperbesar tulisan di Cerita Visual (TextArea) */
-    .stTextArea textarea {
-        font-size: 22px !important;
+    /* 1. KOTAK INPUT (Cerita Visual, Nama, Karakter) */
+    .stTextArea textarea, .stTextInput input {
+        font-size: 22px !important;    /* Tulisan jadi Gede */
         font-weight: 500 !important;
         color: #FFFFFF !important;
         line-height: 1.6 !important;
         background-color: #1E1E1E !important;
         border: 1px solid #444 !important;
+        border-radius: 10px !important;
     }
 
-    /* 2. Memperbesar tulisan Nama & Karakter (TextInput) */
-    .stTextInput input {
-        font-size: 22px !important;
-        font-weight: 500 !important;
-        background-color: #1E1E1E !important;
-        border: 1px solid #444 !important;
-    }
-
-    /* 3. Memperbesar Label (Suasana, Lokasi, dll.) */
+    /* 2. LABEL DROPDOWN (Suasana, Lokasi, dll.) */
     .small-label {
-        font-size: 18px !important; /* Ukuran label diperbesar */
-        font-weight: bold !important;
-        color: #FFFFFF !important;
+        color: #1d976c !important;     /* Hijau Branding */
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 14px !important;    /* Agak dibesarkan dari 10px biar kebaca */
+        font-weight: 800 !important;
         margin-bottom: 5px !important;
         display: block;
     }
 
-    /* 4. Memperbesar tulisan di dalam Dropdown (Selectbox) */
+    /* 3. DROPDOWN (Selectbox) */
     .stSelectbox div[data-baseweb="select"] {
-        font-size: 16px !important;
+        font-size: 18px !important;
     }
 
-    /* CSS tambahan kamu yang lama tetap biarkan di bawahnya... */
+    /* 4. CUSTOM SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0e1117; }
+    ::-webkit-scrollbar-thumb { background: #31333f; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #1d976c; }
+
+    /* 5. FIXED HEADER */
+    [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
+        position: fixed;
+        top: 0;
+        left: 310px;
+        right: 0;
+        z-index: 99999;
+        background-color: #0e1117;
+        padding: 10px 2rem;
+        border-bottom: 2px solid #31333f;
+    }
+
+    @media (max-width: 768px) {
+        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
+            left: 0;
+        }
+    }
+
+    /* 6. STYLE SIDEBAR */
+    [data-testid="stSidebar"] {
+        background-color: #1a1c24 !important;
+        border-right: 1px solid rgba(29, 151, 108, 0.1) !important;
+    }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
+        color: #ffffff !important;
+    }
+
+    /* 7. TOMBOL GENERATE */
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(to right, #1d976c, #11998e) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 1.2rem !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        width: 100%;
+        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
+    }
+
+    /* 8. BOX STAF AKTIF */
+    .staff-header-premium {
+        background: rgba(29, 151, 108, 0.2) !important;
+        border: 2px solid #1d976c !important;
+        border-radius: 10px !important;
+        padding: 15px 20px !important;
+        margin-bottom: 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+    .staff-header-premium b {
+        color: #1d976c !important;
+        font-size: 1.15em !important;
+        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important;
+    }
+
+    /* 9. OPTIMASI KOTAK ADEGAN */
+    .stExpander {
+        border: 1px solid rgba(29, 151, 108, 0.3) !important;
+        border-radius: 12px !important;
+        background-color: #161922 !important;
+        margin-bottom: 15px !important;
+    }
+
+    /* 10. EFEK FOKUS */
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border: 1px solid #1d976c !important;
+        background-color: #0e1117 !important;
+        box-shadow: 0 0 10px rgba(29, 151, 108, 0.2) !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -846,6 +917,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
