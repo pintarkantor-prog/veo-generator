@@ -290,7 +290,7 @@ st.markdown("""
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
-        border-radius: 6px !important;
+        border-radius: 10px !important;
         transform: scale(1.1);
     }
     .stTextArea textarea {
@@ -811,6 +811,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
