@@ -300,7 +300,7 @@ st.markdown("""
         border: 1px solid #31333f !important;
     }
     .small-label {
-        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
+        font-size: 15px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
     /* 7. OPTIMASI KOTAK ADEGAN */
     .stExpander {
@@ -811,6 +811,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
