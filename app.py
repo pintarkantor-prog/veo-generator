@@ -175,97 +175,57 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: CLEAN & PURE - NO DISTRACTIONS)
+# 4. CUSTOM CSS (FINAL STABLE VERSION)
 # ==============================================================================
 st.markdown("""
     <style>
     /* 1. FIXED HEADER */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
-        position: fixed;
-        top: 0;
-        left: 310px;
-        right: 0;
-        z-index: 99999;
-        background-color: #0e1117;
-        padding: 10px 2rem;
-        border-bottom: 2px solid #31333f;
+        position: fixed; top: 0; left: 310px; right: 0; z-index: 99999;
+        background-color: #0e1117; padding: 10px 2rem; border-bottom: 2px solid #31333f;
     }
 
     @media (max-width: 768px) {
-        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
-            left: 0;
-        }
+        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) { left: 0; }
     }
 
     /* 2. STYLE SIDEBAR */
-    [data-testid="stSidebar"] {
-        background-color: #1a1c24 !important;
-    }
-    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
-        color: #ffffff !important;
-    }
+    [data-testid="stSidebar"] { background-color: #1a1c24 !important; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { color: #ffffff !important; }
 
-    /* 3. TOMBOL GENERATE (INSTAN & CLEAN) */
+    /* 3. TOMBOL GENERATE (HIJAU PREMIUM) */
     div.stButton > button[kind="primary"] {
         background: linear-gradient(to right, #1d976c, #11998e) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 8px !important;
-        padding: 0.6rem 1.2rem !important;
-        font-weight: bold !important;
-        font-size: 16px !important;
-        width: 100%;
+        color: white !important; border: none !important; border-radius: 8px !important;
+        padding: 0.6rem 1.2rem !important; font-weight: bold !important;
+        width: 100%; box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
     }
 
     /* 4. PREMIUM STAFF HEADER (BOX STAF AKTIF) */
     .staff-header-premium {
-        background: rgba(29, 151, 108, 0.05);
-        border-left: 4px solid #1d976c;
-        border-radius: 8px;
-        padding: 15px 20px;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border: 1px solid rgba(255,255,255,0.05);
+        background: rgba(29, 151, 108, 0.05); border-left: 4px solid #1d976c;
+        border-radius: 8px; padding: 15px 20px; margin-bottom: 25px;
+        display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,0.05);
     }
-    .staff-header-premium b {
-        color: #1d976c;
-        font-size: 1.1em;
-    }
+    .staff-header-premium b { color: #1d976c; font-size: 1.1em; }
 
-    /* 5. MEMBERSIHKAN INPUT (HAPUS MERAH & HIJAU) */
-    .stTextArea textarea, .stTextInput input {
-        background-color: #0e1117 !important;
-        border: 1px solid #31333f !important;
-        border-radius: 8px !important;
-        color: #ffffff !important;
-        /* Menghapus garis merah spellcheck */
-        spellcheck: false !important;
-    }
-
-    /* Menghapus outline hijau/biru saat diklik */
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #31333f !important; /* Kembali ke warna asli */
-        box-shadow: none !important;
-        outline: none !important;
-    }
-
-    /* 6. STYLE LAINNYA */
-    h1, h2, h3, .stMarkdown h3 {
-        color: #ffffff !important;
+    /* 5. TEXT SETTINGS */
+    h1, h2, h3, .stMarkdown h3 { color: #ffffff !important; }
+    .stTextArea textarea { 
+        background-color: #0e1117 !important; border-radius: 10px !important; 
+        border: 1px solid #31333f !important; color: #ffffff !important;
     }
     
-    button[title="Copy to clipboard"] {
-        background-color: #28a745 !important;
-        border-radius: 6px !important;
+    /* RESET FOCUS BIAR GAK ANEH */
+    .stTextArea textarea:focus, .stTextInput input:focus {
+        border-color: #1d976c !important;
+        box-shadow: none !important;
     }
 
-    .small-label {
-        font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
-    }
+    .small-label { font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px; }
     </style>
     """, unsafe_allow_html=True)
+
 # ==============================================================================
 # 5. HEADER STAF (ELEGANT VERSION)
 # ==============================================================================
@@ -838,6 +798,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
