@@ -181,7 +181,7 @@ st.markdown("""
     /* 1. Memperbesar tulisan di Cerita Visual (TextArea) */
     .stTextArea textarea {
         font-size: 16px !important;
-        font-weight: 400 !important;
+        font-weight: 350 !important;
         color: #FFFFFF !important;
         line-height: 1.6 !important;
         background-color: #1E1E1E !important;
@@ -191,14 +191,14 @@ st.markdown("""
     /* 2. Memperbesar tulisan Nama & Karakter (TextInput) */
     .stTextInput input {
         font-size: 16px !important;
-        font-weight: 400 !important;
+        font-weight: 350 !important;
         background-color: #1E1E1E !important;
         border: 1px solid #444 !important;
     }
 
     /* 3. Memperbesar Label (Suasana, Lokasi, dll.) */
     .small-label {
-        font-size: 14px !important; /* Ukuran label diperbesar */
+        font-size: 12px !important; /* Ukuran label diperbesar */
         font-weight: bold !important;
         color: #FFFFFF !important;
         margin-bottom: 5px !important;
@@ -803,6 +803,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
