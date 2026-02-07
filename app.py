@@ -508,7 +508,7 @@ with st.sidebar:
     
     st.divider()
 
-# --- C. TOMBOL SAVE & RESTORE ---
+# --- C. TOMBOL SAVE & RESTORE (VERSI FIX TOTAL) ---
     st.write("---")
     c_s, c_r = st.columns(2)
     
@@ -516,14 +516,19 @@ with st.sidebar:
         if st.button("💾 SAVE", use_container_width=True):
             import json
             try:
+                # 1. Simpan Jumlah Karakter & Data Karakter
                 char_data = {}
+                num_char = st.session_state.get("num_total_char", 2)
                 for idx in range(1, 11):
-                    n_val = st.session_state.get(f"c_name_{idx}_input", "")
-                    d_val = st.session_state.get(f"c_desc_{idx}_input", "")
-                    if n_val: char_data[str(idx)] = {"name": n_val, "desc": d_val}
+                    char_data[str(idx)] = {
+                        "name": st.session_state.get(f"c_name_{idx}_input", ""),
+                        "desc": st.session_state.get(f"c_desc_{idx}_input", "")
+                    }
 
+                # 2. Simpan Detail Adegan Lengkap (1-50)
                 scene_data = {}
-                for i in range(1, int(num_scenes) + 1):
+                for i in range(1, 51):
+                    # Kita simpan semua variabel yang ada di session_state
                     scene_data[str(i)] = {
                         "vis": st.session_state.get(f"vis_input_{i}", ""),
                         "light": st.session_state.get(f"light_input_{i}", "Siang"),
@@ -532,10 +537,19 @@ with st.sidebar:
                         "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")
                     }
                 
+                # 3. Simpan Dialog
                 dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
-                master_packet = {"chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
-                
-                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
+
+                # BUNGKUS SEMUA DALAM SATU KOPER
+                master_packet = {
+                    "num_char": num_char,
+                    "chars": char_data,
+                    "scenes": scene_data,
+                    "dialogs": dialog_data
+                }
+
+                # Simpan ke Google Sheets
+                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), num_scenes)
                 st.session_state["sidebar_success_msg"] = "Project Berhasil Disimpan! ✅"
                 st.rerun()
             except Exception as e:
@@ -554,22 +568,30 @@ with st.sidebar:
                     raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
                     data = json.loads(raw_data)
                     
-                    for idx_s, val in data.get("chars", {}).items():
-                        st.session_state[f"c_name_{idx_s}_input"] = val.get("name", "")
-                        st.session_state[f"c_desc_{idx_s}_input"] = val.get("desc", "")
+                    # --- MULAI PROSES PEMULIHAN (SINKRONISASI KOTAK) ---
                     
-                    for idx_s, val in data.get("scenes", {}).items():
-                        s_idx = str(idx_s)
+                    # A. Balikin Jumlah & Detail Karakter
+                    if "num_char" in data:
+                        st.session_state["num_total_char"] = data["num_char"]
+                    
+                    chars = data.get("chars", {})
+                    for i_str, val in chars.items():
+                        st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
+                        st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
+                    
+                    # B. Balikin Detail Adegan (Vis, Loc, Light, Shot, Angle)
+                    scenes = data.get("scenes", {})
+                    for i_str, val in scenes.items():
                         if isinstance(val, dict):
-                            st.session_state[f"vis_input_{s_idx}"] = val.get("vis", "")
-                            st.session_state[f"light_input_{s_idx}"] = val.get("light", "Siang")
-                            st.session_state[f"shot_input_{s_idx}"] = val.get("shot", "Setengah Badan")
-                            st.session_state[f"angle_input_{s_idx}"] = val.get("angle", "Normal")
-                            st.session_state[f"loc_input_{s_idx}"] = val.get("loc", "jalan kampung")
-                        else:
-                            st.session_state[f"vis_input_{s_idx}"] = str(val)
+                            st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
+                            st.session_state[f"light_input_{i_str}"] = val.get("light", "Siang")
+                            st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
+                            st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
+                            st.session_state[f"loc_input_{i_str}"] = val.get("loc", "jalan kampung")
                     
-                    for d_key, d_text in data.get("dialogs", {}).items():
+                    # C. Balikin Dialog
+                    dialogs = data.get("dialogs", {})
+                    for d_key, d_text in dialogs.items():
                         st.session_state[d_key] = d_text
                     
                     st.session_state["sidebar_success_msg"] = "Data Berhasil Dipulihkan! 🔄"
@@ -795,14 +817,5 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
-
-
-
-
-
-
-
-
-
 
 
