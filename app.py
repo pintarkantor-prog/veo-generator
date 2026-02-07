@@ -177,10 +177,10 @@ def record_to_sheets(user, data_packet, total_scenes):
 # 4. CUSTOM CSS (VERSION: BOLD FOCUS & INSTANT RESPONSE)
 # ==============================================================================
 st.markdown("""
-    <style>
+<style>
     /* 1. KOTAK INPUT (Cerita Visual, Nama, Karakter) */
     .stTextArea textarea, .stTextInput input {
-        font-size: 22px !important;    /* Tulisan jadi Gede */
+        font-size: 22px !important;
         font-weight: 500 !important;
         color: #FFFFFF !important;
         line-height: 1.6 !important;
@@ -191,10 +191,10 @@ st.markdown("""
 
     /* 2. LABEL DROPDOWN (Suasana, Lokasi, dll.) */
     .small-label {
-        color: #1d976c !important;     /* Hijau Branding */
+        color: #1d976c !important;
         letter-spacing: 1px;
         text-transform: uppercase;
-        font-size: 14px !important;    /* Agak dibesarkan dari 10px biar kebaca */
+        font-size: 14px !important;
         font-weight: 800 !important;
         margin-bottom: 5px !important;
         display: block;
@@ -223,12 +223,6 @@ st.markdown("""
         border-bottom: 2px solid #31333f;
     }
 
-    @media (max-width: 768px) {
-        [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
-            left: 0;
-        }
-    }
-
     /* 6. STYLE SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
@@ -248,7 +242,6 @@ st.markdown("""
         font-weight: bold !important;
         font-size: 16px !important;
         width: 100%;
-        box-shadow: 0 4px 12px rgba(29, 151, 108, 0.2) !important;
     }
 
     /* 8. BOX STAF AKTIF */
@@ -260,12 +253,6 @@ st.markdown("""
         margin-bottom: 25px !important;
         display: flex !important;
         align-items: center !important;
-        gap: 12px !important;
-    }
-    .staff-header-premium b {
-        color: #1d976c !important;
-        font-size: 1.15em !important;
-        text-shadow: 0 0 10px rgba(29, 151, 108, 0.3) !important;
     }
 
     /* 9. OPTIMASI KOTAK ADEGAN */
@@ -275,15 +262,8 @@ st.markdown("""
         background-color: #161922 !important;
         margin-bottom: 15px !important;
     }
-
-    /* 10. EFEK FOKUS */
-    .stTextArea textarea:focus, .stTextInput input:focus {
-        border: 1px solid #1d976c !important;
-        background-color: #0e1117 !important;
-        box-shadow: 0 0 10px rgba(29, 151, 108, 0.2) !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
     /* A. CUSTOM SCROLLBAR */
     ::-webkit-scrollbar { width: 8px; }
@@ -917,6 +897,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
