@@ -175,16 +175,15 @@ def record_to_sheets(user, data_packet, total_scenes):
         st.error(f"Gagal mencatat ke Cloud: {e}")
         
 # ==============================================================================
-# 4. CUSTOM CSS (VERSION: BRUTE FORCE FIXED HEADER)
+# 4. CUSTOM CSS (VERSION: APEX SHARPNESS & PREMIUM UI)
 # ==============================================================================
 st.markdown("""
     <style>
-    /* 1. PAKSA BARIS PERTAMA (INFO STAF) UNTUK FIXED */
-    /* Kita tembak container urutan pertama di area main */
+    /* 1. FIXED HEADER */
     [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
         position: fixed;
         top: 0;
-        left: 310px; /* Lebar Sidebar */
+        left: 310px;
         right: 0;
         z-index: 99999;
         background-color: #0e1117;
@@ -192,20 +191,56 @@ st.markdown("""
         border-bottom: 2px solid #31333f;
     }
 
-    /* Penyesuaian Mobile */
     @media (max-width: 768px) {
         [data-testid="stMainViewContainer"] section.main div.block-container > div:nth-child(1) {
             left: 0;
         }
     }
 
-    /* 2. STYLE SIDEBAR & WIDGET (TETAP SAMA) */
+    /* 2. STYLE SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: #1a1c24 !important;
     }
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label {
         color: #ffffff !important;
     }
+
+    /* 3. TOMBOL GENERATE (PRIMARY) - BIAR GAGAH */
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(to right, #FF4B2B, #FF416C) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 0.6rem 1.2rem !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+        transition: 0.3s all ease !important;
+        box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4) !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    div.stButton > button[kind="primary"]:hover {
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 8px 25px rgba(255, 75, 43, 0.6) !important;
+        background: linear-gradient(to right, #FF416C, #FF4B2B) !important;
+    }
+
+    /* 4. TOMBOL SAVE & RESTORE (SECONDARY) - BIAR ELEGAN */
+    div.stButton > button[kind="secondary"], div.stButton > button:not([kind="primary"]) {
+        border-radius: 10px !important;
+        border: 1px solid #4a4a4a !important;
+        background-color: transparent !important;
+        transition: 0.3s !important;
+    }
+
+    div.stButton > button:not([kind="primary"]):hover {
+        border-color: #FF4B2B !important;
+        color: #FF4B2B !important;
+        background-color: rgba(255, 75, 43, 0.05) !important;
+    }
+
+    /* 5. STYLE LAINNYA */
     button[title="Copy to clipboard"] {
         background-color: #28a745 !important;
         color: white !important;
@@ -219,7 +254,7 @@ st.markdown("""
         font-size: 14px !important;
         line-height: 1.5 !important;
         font-family: 'Inter', sans-serif !important;
-        min-height: 180px !important; 
+        border-radius: 10px !important;
     }
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
@@ -789,6 +824,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
