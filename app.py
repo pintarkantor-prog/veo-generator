@@ -508,7 +508,7 @@ with st.sidebar:
     
     st.divider()
 
-# --- C. TOMBOL SAVE & RESTORE (FULL MEMORY VERSION) ---
+# --- C. TOMBOL SAVE & RESTORE (FIXED: ANTI-STRING INDICES ERROR) ---
     c_s, c_r = st.columns(2)
     
     with c_s:
@@ -520,12 +520,13 @@ with st.sidebar:
                 for idx in range(1, 11):
                     n_val = st.session_state.get(f"c_name_{idx}_input", "")
                     d_val = st.session_state.get(f"c_desc_{idx}_input", "")
-                    if n_val: char_data[idx] = {"name": n_val, "desc": d_val}
+                    if n_val: 
+                        char_data[str(idx)] = {"name": n_val, "desc": d_val}
 
-                # 2. Simpan Detail Adegan (Visual, Light, Shot, Angle, Loc)
+                # 2. Simpan Detail Adegan Lengkap (Visual, Light, Shot, Angle, Loc)
                 scene_data = {}
                 for i in range(1, int(num_scenes) + 1):
-                    scene_data[i] = {
+                    scene_data[str(i)] = {
                         "vis": st.session_state.get(f"vis_input_{i}", ""),
                         "light": st.session_state.get(f"light_input_{i}", "Siang"),
                         "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"),
@@ -540,8 +541,7 @@ with st.sidebar:
                 master_packet = {
                     "chars": char_data,
                     "scenes": scene_data,
-                    "dialogs": dialog_data,
-                    "total_scenes": num_scenes
+                    "dialogs": dialog_data
                 }
 
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len(scene_data))
@@ -560,32 +560,38 @@ with st.sidebar:
                 my_data = df_log[df_log['User'] == user_draft_tag]
                 
                 if not my_data.empty:
-                    data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
+                    # Ambil data terbaru dari cloud
+                    raw_data = str(my_data.iloc[-1]['Visual Utama']).strip()
+                    data = json.loads(raw_data)
                     
-                    # --- MULAI PEMULIHAN TOTAL ---
+                    # --- PEMULIHAN TOTAL ---
                     
                     # A. Balikin Karakter
-                    for idx, val in data.get("chars", {}).items():
-                        st.session_state[f"c_name_{idx}_input"] = val["name"]
-                        st.session_state[f"c_desc_{idx}_input"] = val["desc"]
+                    chars = data.get("chars", {})
+                    for idx_s, val in chars.items():
+                        st.session_state[f"c_name_{idx_s}_input"] = val.get("name", "")
+                        st.session_state[f"c_desc_{idx_s}_input"] = val.get("desc", "")
                     
-                    # B. Balikin Semua Atribut Adegan
-                    for idx, val in data.get("scenes", {}).items():
-                        st.session_state[f"vis_input_{idx}"] = val["vis"]
-                        st.session_state[f"light_input_{idx}"] = val["light"]
-                        st.session_state[f"shot_input_{idx}"] = val["shot"]
-                        st.session_state[f"angle_input_{idx}"] = val["angle"]
-                        st.session_state[f"loc_input_{idx}"] = val.get("loc", "jalan kampung")
+                    # B. Balikin Semua Atribut Adegan (Vis, Light, Shot, Angle, Loc)
+                    scenes = data.get("scenes", {})
+                    for idx_s, val in scenes.items():
+                        st.session_state[f"vis_input_{idx_s}"] = val.get("vis", "")
+                        st.session_state[f"light_input_{idx_s}"] = val.get("light", "Siang")
+                        st.session_state[f"shot_input_{idx_s}"] = val.get("shot", "Setengah Badan")
+                        st.session_state[f"angle_input_{idx_s}"] = val.get("angle", "Normal")
+                        st.session_state[f"loc_input_{idx_s}"] = val.get("loc", "jalan kampung")
                     
                     # C. Balikin Semua Dialog
-                    for d_key, d_text in data.get("dialogs", {}).items():
+                    dialogs = data.get("dialogs", {})
+                    for d_key, d_text in dialogs.items():
                         st.session_state[d_key] = d_text
                     
-                    st.session_state["sidebar_success_msg"] = "Berhasil! 🔄"
+                    st.session_state["sidebar_success_msg"] = "Data Adegan Kembali Utuh! 🔄"
                     st.rerun()
                 else:
-                    st.error("Draft tidak ditemukan di Cloud.")
+                    st.error("Draft tidak ditemukan.")
             except Exception as e:
+                # Error "string indices must be integers" tidak akan muncul lagi di sini
                 st.error(f"Gagal memulihkan data: {str(e)}")
                 
     if "sidebar_success_msg" in st.session_state:
@@ -803,6 +809,7 @@ if st.session_state.last_generated_results:
             # Info tambahan agar staf tidak bingung
             if not is_done:
                 st.info("💡 Klik checkbox di sidebar sebelah kiri jika adegan ini sudah selesai.")
+
 
 
 
