@@ -5,33 +5,24 @@ from datetime import datetime
 import pytz
 import time
 # --- TAMBAHKAN DI BAWAH IMPORT ---
-# --- TAMBAHKAN DI BAWAH IMPORT ---
 st.markdown("""
     <style>
-    /* 1. Memperbesar tulisan di dalam kotak input (Cerita & Karakter) */
+    /* 1. Memperbesar tulisan di dalam kotak Cerita Visual */
     .stTextArea textarea {
-        font-size: 22px !important;
-        font-weight: 500 !important;
-        color: #FFFFFF !important;
-        line-height: 1.6 !important;
+        font-size: 22px !important;    /* Ukuran font diperbesar jadi 22px */
+        font-weight: 500 !important;   /* Agak tebal supaya jelas */
+        color: #FFFFFF !important;     /* Warna putih bersih */
+        line-height: 1.6 !important;   /* Jarak antar baris biar enak dibaca */
+        font-family: 'Source Sans Pro', sans-serif;
     }
 
-    /* 2. MEMPERBESAR LABEL (Suasana, Ukuran Gambar, dll.) */
-    .small-label {
-        font-size: 18px !important; /* Ukuran label diperbesar */
-        font-weight: bold !important; /* Dibuat tebal */
-        color: #00ffcc !important; /* Warna hijau neon supaya kontras, atau ganti #FFFFFF jika ingin putih */
-        margin-bottom: 8px !important;
-        display: block;
-    }
-
-    /* 3. Memperbesar tulisan di dalam dropdown (Selectbox) */
+    /* 2. Opsional: Memperbesar tulisan di dalam dropdown (Selectbox) */
     .stSelectbox div[data-baseweb="select"] {
-        font-size: 18px !important; /* Tulisan di dalam menu pilihannya juga digedein dikit */
+        font-size: 16px !important;
     }
     
-    /* 4. Warna background kotak input */
-    .stTextArea textarea, .stTextInput input {
+    /* 3. Memberikan warna background sedikit gelap pada area input agar teks makin kontras */
+    .stTextArea textarea {
         background-color: #1E1E1E !important;
         border: 1px solid #444 !important;
     }
@@ -844,6 +835,7 @@ if st.session_state.last_generated_results:
             # Info Kamera ditaruh tipis di bawah
             if not is_done:
                 st.caption(f"🎥 {res['cam_info']}")
+
 
 
 
