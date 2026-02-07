@@ -255,6 +255,27 @@ st.markdown("""
     .small-label {
         font-size: 12px; font-weight: bold; color: #a1a1a1; margin-bottom: 2px;
     }
+    /* 7. MEMPERCANTIK BOX STAF AKTIF (SUCCESS BOX) */
+    div[data-testid="stNotification"] {
+        background: rgba(29, 151, 108, 0.1) !important; /* Hijau transparan sangat tipis */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(29, 151, 108, 0.3) !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
+        padding: 15px !important;
+    }
+
+    /* Bikin teks "Staf Aktif" jadi sedikit bercahaya */
+    div[data-testid="stNotification"] p {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.5px;
+    }
+
+    /* Ngilangin ikon bawaan success kalau mau tampil lebih clean */
+    div[data-testid="stNotification"] svg {
+        fill: #1d976c !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 # ==============================================================================
@@ -820,6 +841,7 @@ if st.session_state.last_generated_results:
                     st.caption("🎥 PROMPT VIDEO")
                     st.code(res['vid'], language="text")
                 st.divider()
+
 
 
 
