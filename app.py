@@ -790,29 +790,39 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else: 
                     l_cmd = "Natural lighting, high contrast, balanced exposure, sharp focus."
 
-                # --- 1. PROSES DIALOG & EMOSI ---
+                # --- 1. PROSES DIALOG & EMOSI (OPERASI ANTI-TEKS) ---
                 try:
-                    d_text = " ".join([f"{d['name']}: {d['text']}" for d in item.get('dialogs', []) if d.get('text')])
+                    # Ambil semua teks dialog untuk referensi akting
+                    d_text_full = " ".join([f"{d['name']}: {d['text']}" for d in item.get('dialogs', []) if d.get('text')])
                 except:
-                    d_text = ""
-                emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
+                    d_text_full = ""
 
-                # --- 4. OUTPUT AKHIR (VERSI ANTI-BLUR & LANGIT TAJAM) ---
+                # Kita buat instruksi emosi untuk GAMBAR (Tanpa menyertakan teks dialognya)
+                if d_text_full:
+                    # AI hanya diberi tahu "mood" dari dialognya saja, dilarang nulis teks
+                    image_emo = f"The characters must show facial expressions reflecting this mood: '{d_text_full}'. STRICTLY NO TEXT OR SPEECH BUBBLES ON IMAGE."
+                else:
+                    image_emo = "Natural cinematic facial expression."
+
+                # --- 4. OUTPUT AKHIR (VERSI BERSIH & TAJAM) ---
                 img_final = (
                     f"{instruction_header}\n\n"
+                    f"STRICT VISUAL RULE: CLEAN PHOTOGRAPHY. NO WRITTEN TEXT. NO SUBTITLES. NO SPEECH BUBBLES.\n"
                     f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
                     f"CHARACTER DATA: {char_info}\n"
-                    f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, and realistic wood grain. NO SOFTENING.\n"
+                    f"VISUAL ACTION: {item['visual']}. {image_emo}\n"
+                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, NO SOFTENING.\n"
                     f"CAMERA: {camera_final}\n"
                     f"TECHNICAL: {img_quality_stack}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
                 )
 
+                # Untuk VIDEO, dialog tetap boleh disertakan secara utuh
                 vid_final = (
                     f"{instruction_header}\n"
-                    f"Action: {item['visual']}. {char_info}. Environment: {dna_env}. {l_cmd}"
+                    f"Action: {item['visual']}. Dialogue Context: {d_text_full}. {char_info}. Environment: {dna_env}. {l_cmd}"
                 )
 
+                # --- SIMPAN HASIL ---
                 st.session_state.last_generated_results.append({
                     "id": item["num"], 
                     "img": img_final, 
@@ -847,6 +857,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
