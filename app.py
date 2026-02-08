@@ -803,42 +803,50 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
-                # --- LOGIKA GAYA VISUAL OTOMATIS (VERSI SUPER NENDANG) ---
+                # --- LOGIKA GAYA VISUAL OTOMATIS (VERSI ANTI-TABRAKAN) ---
                 if genre_pilihan == "Pixar 3D":
-                    bumbu_gaya = "Disney Pixar style 3D animation, Octane render, ray-traced global illumination, large expressive eyes, vibrant colors, premium subsurface scattering, soft tactile clay-like textures, whimsical lighting, 8k resolution"
+                    bumbu_gaya = "Disney Pixar style 3D animation, Octane render, ray-traced global illumination, premium subsurface scattering, soft tactile textures"
                 
                 elif genre_pilihan == "Marvel Superhero":
-                    bumbu_gaya = "Marvel Cinematic Universe aesthetic, 8k RAW photo, heroic cinematic lighting, tactical suit textures (Kevlar and carbon fiber), high-contrast, professional teal and orange color grading, epic movie poster vibe, realistic skin pores"
+                    bumbu_gaya = "Marvel Cinematic Universe aesthetic, heroic cinematic lighting, tactical suit textures, professional teal and orange color grading"
 
                 elif genre_pilihan == "Transformers (Mecha)":
-                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, complex moving gears, weathered and scratched metal textures, anamorphic lens flares, sparks and debris, ray-traced metallic reflections, industrial atmosphere"
+                    # Kita hapus efek 'Matahari Siang' secara paksa di sini agar Flare & Ledakan lebih kelihatan
+                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, complex moving gears, anamorphic lens flares, sparks and debris"
+                    l_cmd = l_cmd.replace("Direct harsh midday sunlight,", "Dramatic cinematic lighting,")
 
                 elif genre_pilihan == "KingKong (VFX Monster)":
-                    bumbu_gaya = "Photorealistic CGI, ILM blockbuster VFX quality, hyper-detailed creature rendering, wet fur and skin micro-textures, massive scale, dramatic cinematic lighting, atmospheric dust and smoke particles, masterpiece quality"
+                    bumbu_gaya = "Photorealistic CGI, ILM blockbuster VFX quality, hyper-detailed creature rendering, wet fur and skin micro-textures, volumetric lighting"
 
                 elif genre_pilihan == "Asphalt (Balap/Glossy)":
-                    bumbu_gaya = "Asphalt 9 gaming aesthetic, ultra-glossy metallic paint, ray-traced reflections on car body, cinematic motion blur, high-end automotive studio lighting, neon light streaks, wet asphalt road with reflections, 8k gaming render"
+                    # TRIK KHUSUS: Kita buang perintah 'Zero Blur' dan 'Midday' agar Motion Blur-nya jalan
+                    bumbu_gaya = "Asphalt 9 gaming aesthetic, ultra-glossy metallic paint, ray-traced reflections, cinematic motion blur, neon light streaks"
+                    # Membersihkan instruksi matahari siang agar neon & glossy studio lebih keluar
+                    l_cmd = l_cmd.replace("Direct harsh midday sunlight,", "Automotive studio lighting,")
+                    # Membersihkan perintah 'Zero Blur' di prompt final nanti
+                    img_quality_stack = img_quality_stack.replace("zero background blur,", "").replace("zero bokeh,", "")
 
                 elif genre_pilihan == "Ghibli (Estetik/Indah)":
-                    bumbu_gaya = "Studio Ghibli hand-painted style, watercolor textures, soft cel shading, lush nature aesthetic, nostalgic atmosphere, whimsical lighting, Makoto Shinkai-inspired sky, peaceful vibes, hand-drawn masterpiece"
+                    bumbu_gaya = "Studio Ghibli hand-painted style, watercolor textures, soft cel shading, lush nature aesthetic, whimsical lighting"
 
                 elif genre_pilihan == "Dragon Ball":
-                    bumbu_gaya = "Dragon Ball Super anime style, sharp ink lineart, intense cel shading, muscular definition, vibrant energy aura with bloom effect, dynamic action perspective, explosive visual impact"
+                    bumbu_gaya = "Dragon Ball Super anime style, sharp ink lineart, intense cel shading, vibrant energy aura with bloom effect"
 
                 elif genre_pilihan == "Doraemon 3D":
-                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI animation, soft rounded shapes, warm pastel colors, nostalgic toy-like textures, subsurface scattering on skin, cinematic lighting"
+                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI, soft rounded shapes, warm pastel colors, subsurface scattering"
 
                 elif genre_pilihan == "Naruto (Ninja)":
-                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading, dynamic speed lines, traditional Japanese art influence, intense facial expressions, cinematic combat composition"
+                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading, traditional Japanese art influence"
 
                 elif genre_pilihan == "Tayo (Anak-anak)":
-                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, rounded friendly shapes, clean plastic-like surfaces, bright cheerful environment, simple high-quality render"
+                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, clean plastic surfaces"
 
                 elif genre_pilihan == "Sakura School (Anime)":
-                    bumbu_gaya = "Sakura School Simulator style, high-quality 3D anime game graphics, cel-shaded characters, bright sunny lighting, smooth plastic textures, vibrant school atmosphere, clean game-engine aesthetic"
+                    bumbu_gaya = "Sakura School Simulator style, high-quality 3D anime game graphics, bright sunny lighting, smooth plastic textures"
 
                 else:
                     # Default: Kembali ke gaya Realistik (Foto)
+                    # Biarkan instruksi tajam/matahari siang kamu bekerja di sini
                     bumbu_gaya = img_quality_stack
 
                 # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
@@ -977,6 +985,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
