@@ -18,26 +18,29 @@ USER_PASSWORDS = {
     "ezaalma": "aprihgino"
 }
 
-# --- 1. FITUR SINKRONISASI SESI & PRE-FILL ---
+# --- 1. FITUR SINKRONISASI SESI & AUTO-RECOVERY (SOLUSI REFRESH) ---
 if 'active_user' not in st.session_state:
     q_user = st.query_params.get("u")
     if q_user and q_user.lower() in USER_PASSWORDS:
-        st.session_state.prefill_user = q_user.lower()
+        # LOGIKA PENYELAMAT: Jika user ada di URL, langsung pulihkan sesi
+        # Ini yang membuat REFRESH tidak logout
+        st.session_state.active_user = q_user.lower()
+        if 'login_time' not in st.session_state:
+            st.session_state.login_time = time.time()
+        st.rerun() 
 else:
-    # Ini kuncinya supaya REFRESH tetap lebar dan tetap login
-    st.query_params["u"] = st.session_state.active_user
+    # Jaga agar URL tetap sinkron saat sedang bekerja
+    if st.query_params.get("u") != st.session_state.active_user:
+        st.query_params["u"] = st.session_state.active_user
 
-# --- 2. LAYAR LOGIN ---
+# --- 2. LAYAR LOGIN (Hanya muncul jika recovery di atas gagal) ---
 if 'active_user' not in st.session_state:
-    # DI SINI SUDAH TIDAK ADA st.set_page_config LAGI (Sudah dihapus)
-    
     placeholder = st.empty()
     with placeholder.container():
         st.write("")
         st.write("")
         
-        # GUNAKAN RASIO INI: Karena layout dasar adalah WIDE, 
-        # kita butuh penjepit [1, 1, 1] agar form login di tengah tidak melar.
+        # Penjepit tetap 1.8 agar ramping di layout Wide
         _, col_login, _ = st.columns([1.8, 1.0, 1.8]) 
         
         with col_login:
@@ -47,7 +50,8 @@ if 'active_user' not in st.session_state:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
             with st.form("login_form", clear_on_submit=False):
-                default_user = st.session_state.get("prefill_user", "")
+                # Prefill tetap ada buat user baru yang pertama kali masuk lewat link
+                default_user = st.query_params.get("u", "")
                 st.markdown("<p style='text-align:center; color:#aaa; font-size:13px; margin-bottom: -10px;'>🛡️ Masukkan password untuk akses sistem</p>", unsafe_allow_html=True)
                 
                 user_input = st.text_input("Username", value=default_user, placeholder="Username...")
@@ -68,7 +72,7 @@ if 'active_user' not in st.session_state:
                         st.write("")
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
-                        time.sleep(1.5)
+                        time.sleep(1.0)
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
@@ -323,7 +327,7 @@ st.markdown(f"""
         <div>
             <b>Staf Aktif: {nama_display}</b> 
             <span style="color:rgba(255,255,255,0.1); margin: 0 10px;">|</span>
-            <span style="color:#aaa; font-style:italic;">Konten yang mantap lahir dari detail adegan yang tepat. 🚀❤️</span>
+            <span style="color:#aaa; font-style:italic;">Konten yang mantap lahir dari detail adegan yang tepat 🚀🚀</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -971,6 +975,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
