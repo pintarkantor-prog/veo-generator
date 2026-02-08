@@ -714,8 +714,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # Sistem akan memindai teks di 'Cerita Visual' untuk mencari nama tokoh
             mentioned_chars = []
             for c in all_chars_list:
-                # Cek apakah nama karakter ada dalam teks visual (tidak peka huruf besar/kecil)
-                if c['name'] and c['name'].lower() in item['visual'].lower():
+            # Cek apakah item['visual'] ada isinya sebelum mencari nama karakter
+                if item['visual'] and c['name'] and c['name'].lower() in item['visual'].lower():
                     mentioned_chars.append(f"{c['name']} ({c['desc']})")
             
             # Jika ada nama tokoh yang disebut di visual, hanya kirim tokoh tersebut ke AI
@@ -811,5 +811,6 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
