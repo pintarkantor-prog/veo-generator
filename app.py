@@ -739,14 +739,23 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
-                # 3. RAKITAN LOKASI & TEKNIKAL
-                raw_loc = item["location"].lower()
+                # 3. RAKITAN LOKASI & TEKNIKAL (SINKRONISASI MANUAL & DNA)
+                # Ambil pilihan dari dropdown
+                loc_choice = item["location"] 
                 
-                # Jika lokasi ada di DNA, ambil DNA-nya. Jika tidak ada (Manual), kasih bumbu tajam.
-                if raw_loc in LOKASI_DNA:
-                    dna_env = LOKASI_DNA[raw_loc]
+                # Logika: Jika user pilih '--- KETIK MANUAL ---'
+                if loc_choice == "--- KETIK MANUAL ---":
+                    # Kita ambil hasil ketikan dari session_state loc_custom
+                    manual_text = st.session_state.get(f"loc_custom_{item['num']}", "").strip()
+                    if manual_text:
+                        dna_env = f"{manual_text}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
+                    else:
+                        # Jika manual dipilih tapi kotak kosong, kasih default agar tidak error
+                        dna_env = "cinematic environment, highly detailed textures, sharp focus."
                 else:
-                    dna_env = f"{raw_loc}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
+                    # Jika user pilih lokasi yang sudah ada di daftar LOKASI_DNA
+                    # Kita gunakan .get() dengan huruf kecil karena keys di LOKASI_DNA biasanya kecil
+                    dna_env = LOKASI_DNA.get(loc_choice.lower(), f"{loc_choice}, sharp focus.")
 
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
@@ -867,6 +876,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
