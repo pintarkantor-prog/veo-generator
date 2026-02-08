@@ -50,8 +50,11 @@ if 'active_user' not in st.session_state:
                 user_clean = user_input.lower().strip()
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
                     st.query_params["u"] = user_clean
+                    
+                    # --- PERBAIKAN DI SINI ---
                     st.session_state.active_user = user_clean
-                    st.session_state.login_time = time.time() # CATAT WAKTU LOGIN
+                    st.session_state.login_time = time.time() 
+                    # -------------------------
                     
                     placeholder.empty() 
                     with placeholder.container():
@@ -83,58 +86,34 @@ if 'active_user' in st.session_state and 'login_time' in st.session_state:
 # --- 4. CONFIG DASHBOARD (Area Kerja Utama) ---
 st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
-# 1. INISIALISASI MEMORI (ANTI-HILANG SAAT REFRESH)
+# 1 & 2. INISIALISASI MEMORI & SINKRONISASI (CLEAN VERSION)
 # ==============================================================================
-active_user = st.session_state.active_user # Kunci identitas tunggal
+# Mengambil user aktif dari session login
+active_user = st.session_state.active_user 
 
+# 1. Siapkan Lemari Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
-# Ambil data Identitas Tokoh
+# 2. Inisialisasi Identitas Tokoh (Default Kosong)
 if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
 if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
 if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
 if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
 
-# Ambil data Adegan (v1 sampai v50)
+# 3. Inisialisasi Adegan v1 - v50 (SINKRON DENGAN BAGIAN 6)
+# Kita pastikan nilai default-nya ada di dalam pilihan menu kamu
 for i in range(1, 51):
     for key, default in [
         (f"vis_input_{i}", ""),
-        (f"light_input_{i}", "Bening dan Tajam"),
-        (f"camera_input_{i}", "Ikuti Karakter"),
-        (f"shot_input_{i}", "Setengah Badan"),
-        (f"angle_input_{i}", "Normal (Depan)")
+        (f"light_input_{i}", "Siang"),       # Sesuai options_lighting
+        (f"camera_input_{i}", "Diam (Tanpa Gerak)"), # Sesuai indonesia_camera
+        (f"shot_input_{i}", "Setengah Badan"),       # Sesuai indonesia_shot
+        (f"angle_input_{i}", "Normal"),      # Sesuai indonesia_angle
+        (f"loc_input_{i}", "jalan kampung")  # Sesuai options_lokasi
     ]:
-        if key not in st.session_state: st.session_state[key] = default
-# ==============================================================================
-# 2. SISTEM LOGIN & DATABASE USER (SINKRONISASI MEMORI TOTAL)
-# ==============================================================================
-# (Variabel USERS boleh tetap ada atau dihapus karena sudah ada di Bagian 0)
-
-# --- 1. INISIALISASI DASAR (KITA SEDERHANAKAN) ---
-if 'last_generated_results' not in st.session_state:
-    st.session_state.last_generated_results = []
-
-# --- 2. BOOKING MEMORI UNTUK INPUT (TETAP PERTAHANKAN INI) ---
-if 'c_name_1_input' not in st.session_state: st.session_state.c_name_1_input = ""
-if 'c_desc_1_input' not in st.session_state: st.session_state.c_desc_1_input = ""
-if 'c_name_2_input' not in st.session_state: st.session_state.c_name_2_input = ""
-if 'c_desc_2_input' not in st.session_state: st.session_state.c_desc_2_input = ""
-
-for i in range(1, 51):
-    vk = f"vis_input_{i}"
-    lk = f"light_input_{i}"
-    ck = f"camera_input_{i}"
-    sk = f"shot_input_{i}"
-    ak = f"angle_input_{i}"
-    if vk not in st.session_state: st.session_state[vk] = ""
-    if lk not in st.session_state: st.session_state[lk] = "Bening dan Tajam"
-    if ck not in st.session_state: st.session_state[ck] = "Ikuti Karakter"
-    if sk not in st.session_state: st.session_state[sk] = "Setengah Badan"
-    if ak not in st.session_state: st.session_state[ak] = "Normal (Depan)"
-
-# --- 3. KUNCI AKSES (HANYA SATU BARIS) ---
-active_user = st.session_state.active_user
+        if key not in st.session_state: 
+            st.session_state[key] = default
     
 # ==============================================================================
 # 3. LOGIKA LOGGING GOOGLE SHEETS (SERVICE ACCOUNT MODE - FULL DATA)
@@ -812,3 +791,4 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
