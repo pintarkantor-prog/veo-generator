@@ -108,7 +108,7 @@ for i in range(1, 51):
         (f"camera_input_{i}", "Diam (Tanpa Gerak)"), # Sesuai indonesia_camera
         (f"shot_input_{i}", "Setengah Badan"),       # Sesuai indonesia_shot
         (f"angle_input_{i}", "Normal"),      # Sesuai indonesia_angle
-        (f"loc_input_{i}", "jalan kampung")  # Sesuai options_lokasi
+        (f"loc_sel_{i}", "jalan kampung")  # Sesuai options_lokasi
     ]:
         if key not in st.session_state: 
             st.session_state[key] = default
@@ -331,8 +331,8 @@ st.markdown(f"""
 
 # --- DAFTAR PILIHAN (Apa yang muncul di tombol) ---
 indonesia_camera = ["Diam (Tanpa Gerak)", "Ikuti Karakter", "Zoom Masuk", "Zoom Keluar", "Memutar (Orbit)"]
-indonesia_shot   = ["Sangat Dekat", "Dekat Wajah", "Setengah Badan", "Seluruh Badan", "Pemandangan Luas", "Drone Shot"]
-indonesia_angle  = ["Normal", "Sudut Rendah", "Sudut Tinggi", "Samping", "Berhadapan", "Intip Bahu", "Belakang"]
+indonesia_shot = ["Sangat Dekat", "Dekat Wajah", "Setengah Badan", "Seluruh Badan", "Pemandangan Luas", "Drone Shot"]
+indonesia_angle = ["Normal", "Sudut Rendah", "Sudut Tinggi", "Samping", "Berhadapan", "Intip Bahu", "Belakang"]
 options_lighting = ["Pagi", "Siang", "Sore", "Malam"]
 
 # --- DNA LOKASI (Gudang Data Lokasi) ---
@@ -742,27 +742,30 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
-                # --- 4. MERAKIT PROMPT AKHIR (URUTAN BARU: KAMERA DI DEPAN) ---
-                # Menjahit agar AI memprioritaskan Posisi Kamera (Angle) dan Tekstur (Raw)
+                # --- 4. MERAKIT PROMPT AKHIR (REVISI: ANGLE DI DEPAN) ---
+                # Menempatkan Angle & Shot di depan agar AI memprioritaskan sudut pandang kamera
                 base_context = f"{master_lock_instruction} {dna_env}"
 
-                # Prompt Gambar
+                # Prompt Gambar (Prioritas: Angle -> Shot -> Visual -> Lighting)
                 img_final = (
-                    f"{base_context} Candid RAW photo, {e_shot}, {e_angle}. "
+                    f"{base_context} {e_angle}, {e_shot}, Candid RAW photo. "
                     f"Visual: {item['visual']}. {emo} "
                     f"Technical: shot on 35mm, f/2.8, {l_cmd}. "
                     f"{img_quality_base} --ar 9:16 --v 6.0 --style raw"
                 )
 
-                # Prompt Video
+                # Prompt Video (Prioritas: Angle -> Shot -> Camera Motion -> Action)
                 vid_final = (
-                    f"{base_context} 9:16 Vertical Cinematography, {e_shot}, {e_angle}, Camera {e_cam}. "
+                    f"{base_context} {e_angle} view, {e_shot}, Camera {e_cam}, 9:16 Vertical Cinematography. "
                     f"Action: {item['visual']}. {emo} "
                     f"Atmosphere: {l_cmd}. {vid_quality_base}"
                 )
 
                 st.session_state.last_generated_results.append({
-                    "id": item["num"], "img": img_final, "vid": vid_final, "cam_info": f"{e_shot} | {e_angle} | {e_cam}"
+                    "id": item["num"], 
+                    "img": img_final, 
+                    "vid": vid_final, 
+                    "cam_info": f"{e_shot} | {e_angle} | {e_cam}"
                 })
 
         st.toast("Prompt Berhasil Diracik! 🚀")
@@ -793,6 +796,3 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-
-
