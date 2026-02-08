@@ -38,8 +38,7 @@ if 'active_user' not in st.session_state:
     with placeholder.container():
         st.write("")
         st.write("")
-        # Menggunakan perbandingan 2.0 di pinggir agar tengahnya (1.0) jadi kecil/ramping
-        _, col_login, _ = st.columns([2.0, 1.0, 2.0]) 
+        _, col_login, _ = st.columns([1.0, 1.0, 1.0]) 
         
         with col_login:
             try:
@@ -974,6 +973,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
