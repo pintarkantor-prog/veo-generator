@@ -546,11 +546,10 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "hyper-realistic 8k RAW photo, ultra-sharp focus, infinite depth of field, "
-    "tactile surface textures, micro-contrast enhancement, high local contrast, "
-    "shot on Sony A7R IV, 35mm lens, f/11, ISO 100, zero motion blur, "
-    "vivid natural colors, professional color grading, realistic soil and gravel detail, "
-    "hyper-detailed organic materials, masterpiece quality."
+    "photorealistic raw photo, 8k UHD, extremely high-resolution, shot on 35mm lens, f/1.8, ISO 100, "
+    "ultra-sharp focus, crystal clear optical clarity, vibrant organic colors, deep color saturation, "
+    "ray-traced global illumination, hyper-detailed skin pores and fabric fibers, "
+    "zero digital noise, clean pixels, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -833,6 +832,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
