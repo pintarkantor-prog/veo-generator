@@ -715,47 +715,40 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
                 
-            # --- 1. LOGIKA FILTER DINAMIS (VERSI CERDAS & KATA UTUH) ---
+            # --- LOGIKA FILTER PATEN (TOKEN ISOLATION) ---
                 import re
                 mentioned_chars = []
                 v_text_low = str(item.get('visual', "")).lower().strip()
                 
-                # Scan karakter yang disebut di visual
                 for c in all_chars_list:
                     c_name_raw = str(c.get('name', "")).strip()
                     if c_name_raw:
-                        c_name_lower = c_name_raw.lower()
-                        # Deteksi kata utuh (\b) agar 'tung' di 'menghitung' tidak terpicu
-                        if re.search(rf'\b{re.escape(c_name_lower)}\b', v_text_low):
-                            mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
+                        if re.search(rf'\b{re.escape(c_name_raw.lower())}\b', v_text_low):
+                            # Kita buatkan 'kotak' deskripsi yang sangat kaku
+                            mentioned_chars.append(f"[[ CHARACTER_{c_name_raw.upper()}: {c.get('desc', '')} ]]")
                 
-                # --- LOGIKA OTOMATIS BERDASARKAN JUMLAH KARAKTER ---
                 neg_params = ""
                 if len(mentioned_chars) == 1:
-                    # KASUS: Hanya 1 Karakter (Solo)
+                    # MODE SOLO: Hapus semua memori tentang orang lain
                     final_char_context = mentioned_chars[0]
-                    focus_cmd = "SUBJECT: Focus STRICTLY on this single character only. Solo shot. NO other people."
-                    # Paksa AI buang karakter lain
-                    neg_params = " --no group, crowd, multiple people, two people, extra characters"
+                    focus_cmd = "SCENE_RULE: SINGLE_SUBJECT_ONLY. No partners. No group. Solo portrait."
+                    neg_params = " --no group, crowd, duo, two people, multiple, extra characters"
                 
                 elif len(mentioned_chars) > 1:
-                    # KASUS: 2 Karakter atau lebih (Interaction)
-                    final_char_context = " and ".join(mentioned_chars)
-                    focus_cmd = f"SUBJECT: Group shot of {len(mentioned_chars)} characters interacting in one frame."
-                    # Hilangkan --no agar semua karakter bisa muncul
+                    # MODE GRUP: Gabungkan dengan separator kaku
+                    final_char_context = " AND ".join(mentioned_chars)
+                    focus_cmd = f"SCENE_RULE: MULTI_SUBJECT_SCENE ({len(mentioned_chars)} persons). Interaction required."
                     neg_params = ""
                 
                 else:
-                    # KASUS: Tidak ada nama disebut (Fallback/Backup)
-                    # Ambil semua karakter tapi tanpa instruksi 'Solo' yang galak
-                    final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
-                    focus_cmd = "SUBJECT: Main characters in frame."
-                    neg_params = ""
+                    # FALLBACK
+                    final_char_context = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
+                    focus_cmd = "SCENE_RULE: DEFAULT_CHARACTER."
 
-                # RAKIT MASTER LOCK
+                # RAKITAN MASTER LOCK DENGAN FORMAT 'CLEAN'
                 master_lock_instruction = (
-                    f"IMPORTANT: {final_char_context}. {focus_cmd} "
-                    f"Maintain strict facial identity and raw textures. "
+                    f"### {final_char_context} ### {focus_cmd} ### "
+                    f"Maintain strict facial identity. "
                 )
 
                 # 2. LOGIKA LOKASI, SHOT, ANGLE, LIGHTING
@@ -830,6 +823,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
