@@ -710,29 +710,29 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- 1. LOGIKA FILTER KARAKTER (UPDATE: HANYA YANG DISEBUT) ---
-            # Sistem akan memindai teks di 'Cerita Visual' untuk mencari nama tokoh
-            mentioned_chars = []
-            for c in all_chars_list:
-            # Cek apakah item['visual'] ada isinya sebelum mencari nama karakter
-                if item['visual'] and c['name'] and c['name'].lower() in item['visual'].lower():
-                    mentioned_chars.append(f"{c['name']} ({c['desc']})")
-            
-            # Jika ada nama tokoh yang disebut di visual, hanya kirim tokoh tersebut ke AI
-            if mentioned_chars:
-                final_char_context = ", ".join(mentioned_chars)
-                focus_cmd = "ONLY the mentioned character(s) must be in the frame. DO NOT include other main characters."
-            else:
-                # Jika tidak ada nama disebut (opsional), kirim semua sebagai cadangan
-                final_char_context = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
-                focus_cmd = ""
-
-            master_lock_instruction = (
-                f"IMPORTANT: Remember character traits: {final_char_context}. {focus_cmd} "
-                f"Maintain strict facial identity and raw textures. "
-            )
-
+            # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
+                # --- 1. LOGIKA FILTER KARAKTER (PINDAH KE DALAM SINI AGAR 'item' TERBACA) ---
+                mentioned_chars = []
+                for c in all_chars_list:
+                    # Cek isinya agar tidak error
+                    v_text = item.get('visual', "")
+                    c_name = c.get('name', "")
+                    if v_text and c_name and c_name.lower() in v_text.lower():
+                        mentioned_chars.append(f"{c_name} ({c.get('desc', '')})")
+                
+                if mentioned_chars:
+                    final_char_context = ", ".join(mentioned_chars)
+                    focus_cmd = "ONLY the mentioned character(s) must be in the frame. DO NOT include other main characters."
+                else:
+                    final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
+                    focus_cmd = ""
+
+                master_lock_instruction = (
+                    f"IMPORTANT: Remember character traits: {final_char_context}. {focus_cmd} "
+                    f"Maintain strict facial identity and raw textures. "
+                )
+
                 # 1. LOGIKA LOKASI (Mengambil dari LOKASI_DNA di Bagian 6)
                 raw_loc = item["location"].lower()
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
@@ -758,10 +758,9 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
                 # --- 4. MERAKIT PROMPT AKHIR (REVISI: ANGLE DI DEPAN) ---
-                # Menempatkan Angle & Shot di depan agar AI memprioritaskan sudut pandang kamera
                 base_context = f"{master_lock_instruction} {dna_env}"
 
-                # Prompt Gambar (Prioritas: Angle -> Shot -> Visual -> Lighting)
+                # Prompt Gambar
                 img_final = (
                     f"{base_context} {e_angle}, {e_shot}, Candid RAW photo. "
                     f"Visual: {item['visual']}. {emo} "
@@ -769,7 +768,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"{img_quality_base} --ar 9:16 --v 6.0 --style raw"
                 )
 
-                # Prompt Video (Prioritas: Angle -> Shot -> Camera Motion -> Action)
+                # Prompt Video
                 vid_final = (
                     f"{base_context} {e_angle} view, {e_shot}, Camera {e_cam}, 9:16 Vertical Cinematography. "
                     f"Action: {item['visual']}. {emo} "
@@ -811,6 +810,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
