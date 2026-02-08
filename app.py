@@ -455,16 +455,44 @@ with st.sidebar:
     # --- 3. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
-    # --- TAMBAHAN SAKLAR GAYA VISUAL (OPSIONAL) ---
+    # --- MENU GENRE VISUAL (MULTIVERSE MODE) ---
     st.write("") 
-    st.markdown("#### 🎭 MODIFIKASI GAYA")
-    # Variabel 'opsi_pixar' ini yang nanti akan dibaca oleh Bagian 10
-    opsi_pixar = st.toggle(
-        "Aktifkan Gaya Pixar 3D", 
-        value=False, 
-        help="Geser ke kanan untuk mengubah visual realistik menjadi gaya animasi 3D Pixar secara otomatis."
+    st.markdown("#### 🎨 GENRE VISUAL")
+
+    # 1. Kita buat list-nya dalam variabel agar rapi
+    list_genre = [
+        "Realistik (Nyata)", 
+        "Pixar 3D", 
+        "Marvel Superhero", 
+        "Transformers (Mecha)",
+        "KingKong (VFX Monster)", 
+        "Asphalt (Balap/Glossy)", 
+        "Ghibli (Estetik/Indah)", 
+        "Dragon Ball", 
+        "Doraemon 3D", 
+        "Naruto (Ninja)", 
+        "Tayo (Anak-anak)", 
+        "Sakura School (Anime)"
+    ]
+
+    # 2. Cek apakah ada data genre dari hasil tombol LOAD
+    # Jika tidak ada, dia akan pakai default "Realistik (Nyata)"
+    genre_saved = st.session_state.get("genre_pilihan_saved", "Realistik (Nyata)")
+
+    # 3. Cari posisi index-nya (nomor urutnya)
+    try:
+        idx_default = list_genre.index(genre_saved)
+    except:
+        idx_default = 0
+
+    # 4. Tampilkan menu dropdown dengan index yang sudah disesuaikan otomatis
+    genre_pilihan = st.selectbox(
+        "Pilih Gaya Film:",
+        options=list_genre,
+        index=idx_default,
+        help="Pilih genre visual. Jika pilih Realistik, hasil akan seperti foto asli."
     )
-    st.write("") 
+    st.write("")
     # ----------------------------------------------
     
     # --- 4. STATUS PRODUKSI ---
@@ -495,19 +523,26 @@ with st.sidebar:
         if save_trigger:
             import json
             try:
-                # ... (logika save kamu tetap sama seperti sebelumnya)
                 char_data = {str(idx): {"name": st.session_state.get(f"c_name_{idx}_input", ""), "desc": st.session_state.get(f"c_desc_{idx}_input", "")} for idx in range(1, 11)}
                 scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_sel_{i}", "jalan kampung")} for i in range(1, 51)}
                 dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
                 
-                master_packet = {"num_char": st.session_state.get("num_total_char", 2), "chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
+                # --- TAMBAHKAN 'genre' KE DALAM PAKET ---
+                master_packet = {
+                    "num_char": st.session_state.get("num_total_char", 2), 
+                    "genre": genre_pilihan,  # <--- Menyimpan pilihan dropdown genre kamu
+                    "chars": char_data, 
+                    "scenes": scene_data, 
+                    "dialogs": dialog_data
+                }
+                
                 record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len([s for s in scene_data.values() if s['vis']]))
                 st.toast("Project Tersimpan! ✅")
             except Exception as e:
                 st.error(f"Gagal simpan: {e}")
 
     with btn_col2:
-        # Kita ganti teksnya jadi 'LOAD' agar sejajar dengan 'SAVE'
+        # Tombol Load
         load_trigger = st.button("🔄 LOAD", use_container_width=True)
         if load_trigger:
             import json
@@ -518,11 +553,17 @@ with st.sidebar:
                 
                 if not my_data.empty:
                     data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
-                    # ... (logika restore kamu tetap sama)
+                    
+                    # --- RESTORE DATA KE SESSION STATE ---
                     st.session_state["num_total_char"] = data.get("num_char", 2)
+                    
+                    # Masukkan genre yang di-load ke session state agar dibaca selectbox
+                    st.session_state["genre_pilihan_saved"] = data.get("genre", "Realistik (Nyata)")
+                    
                     for i_str, val in data.get("chars", {}).items():
                         st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
                         st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
+                    
                     for i_str, val in data.get("scenes", {}).items():
                         if isinstance(val, dict):
                             st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
@@ -530,7 +571,9 @@ with st.sidebar:
                             st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
                             st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
                             st.session_state[f"loc_sel_{i_str}"] = val.get("loc", "jalan kampung")
-                    for k, v in data.get("dialogs", {}).items(): st.session_state[k] = v
+                    
+                    for k, v in data.get("dialogs", {}).items(): 
+                        st.session_state[k] = v
                     
                     st.toast("Data Dipulihkan! 🔄")
                     st.rerun()
@@ -752,18 +795,42 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
-                # --- [TAMBAHAN: LOGIKA GAYA VISUAL OPSIONAL] ---
-                if opsi_pixar:
-                    # Mantra Pixar 3D (Aktif jika Toggle di Sidebar ON)
-                    bumbu_gaya = (
-                        "Disney Pixar style 3D animation, iconic character design, "
-                        "smooth stylized skin textures, large expressive eyes, vibrant colors, "
-                        "subsurface scattering, cinematic 3D render, high-end animation movie quality"
-                    )
-                    # Jika Pixar ON, kita kasih instruksi tambahan agar AI merombak foto referensi jadi animasi
-                    instruction_header += "\nSTYLE RULE: Stylize the character from the photo into a 3D Pixar-style animation character."
+                # --- LOGIKA GAYA VISUAL OTOMATIS ---
+                if genre_pilihan == "Pixar 3D":
+                    bumbu_gaya = "Disney Pixar style 3D animation, smooth stylized textures, large expressive eyes, vibrant colors, subsurface scattering"
+                
+                elif genre_pilihan == "Marvel Superhero":
+                    bumbu_gaya = "Marvel Cinematic Universe style, heroic cinematic lighting, highly detailed suit textures, high-contrast, epic movie poster vibe"
+
+                elif genre_pilihan == "Transformers (Mecha)":
+                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, detailed metal parts, anamorphic lens flares, sparks and debris"
+
+                elif genre_pilihan == "KingKong (VFX Monster)":
+                    bumbu_gaya = "Photorealistic CGI, blockbuster movie VFX quality, highly detailed creature rendering (scales, fur, skin), dramatic cinematic lighting"
+
+                elif genre_pilihan == "Asphalt (Balap/Glossy)":
+                    bumbu_gaya = "Asphalt 9 gaming aesthetic, glossy metallic reflections, cinematic motion blur, high-end automotive lighting"
+
+                elif genre_pilihan == "Ghibli (Estetik/Indah)":
+                    bumbu_gaya = "Studio Ghibli hand-painted style, soft cel shading, lush nature aesthetic, nostalgic atmosphere"
+
+                elif genre_pilihan == "Dragon Ball":
+                    bumbu_gaya = "Dragon Ball Super anime style, sharp lineart, intense cel shading, muscular definition, vibrant energy aura"
+
+                elif genre_pilihan == "Doraemon 3D":
+                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI animation, soft rounded shapes, pastel colors"
+
+                elif genre_pilihan == "Naruto (Ninja)":
+                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading"
+
+                elif genre_pilihan == "Tayo (Anak-anak)":
+                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, rounded friendly shapes"
+
+                elif genre_pilihan == "Sakura School (Anime)":
+                    bumbu_gaya = "Sakura School Simulator style, 3D anime game graphics, bright sunny lighting, smooth plastic textures"
+
                 else:
-                    # Kembali ke Realistik (Aktif jika Toggle OFF)
+                    # Default: Kembali ke gaya Realistik (Foto)
                     bumbu_gaya = img_quality_stack
 
                 # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
@@ -863,7 +930,8 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"CHARACTER CONSISTENCY: {char_info}. Maintain 100% facial identity consistency, high-fidelity facial features, no face morphing, look exactly like the reference.\n"
                     f"ENVIRONMENT: {dna_env}.\n"
                     f"LIGHTING: {l_cmd}.\n"
-                    f"ACTING CUE (STRICTLY NO TEXT ON SCREEN): Use this dialogue for emotional reference only: '{d_text_full}'." 
+                    f"ACTING CUE (STRICTLY NO TEXT ON SCREEN): Use this dialogue for emotional reference only: '{d_text_full}'.\n"
+                    f"TECHNICAL: {bumbu_gaya}, {vid_quality_base}" # <--- TAMBAHKAN BARIS INI
                 )
 
                 # --- SIMPAN HASIL ---
@@ -901,3 +969,4 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
