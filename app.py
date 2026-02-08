@@ -108,7 +108,8 @@ for i in range(1, 51):
         (f"camera_input_{i}", "Diam (Tanpa Gerak)"), # Sesuai indonesia_camera
         (f"shot_input_{i}", "Setengah Badan"),       # Sesuai indonesia_shot
         (f"angle_input_{i}", "Normal"),      # Sesuai indonesia_angle
-        (f"loc_sel_{i}", "--- KETIK MANUAL ---")  # Sesuai options_lokasi
+        (f"loc_sel_{i}", "--- KETIK MANUAL ---"),  # Sesuai options_lokasi
+        (f"loc_custom_{i}", "")  # <--- WAJIB TAMBAH INI! Agar input manual punya wadah
     ]:
         if key not in st.session_state: 
             st.session_state[key] = default
@@ -454,6 +455,18 @@ with st.sidebar:
     # --- 3. KONFIGURASI UMUM ---
     num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
     
+    # --- TAMBAHAN SAKLAR GAYA VISUAL (OPSIONAL) ---
+    st.write("") 
+    st.markdown("#### 🎭 MODIFIKASI GAYA")
+    # Variabel 'opsi_pixar' ini yang nanti akan dibaca oleh Bagian 10
+    opsi_pixar = st.toggle(
+        "Aktifkan Gaya Pixar 3D", 
+        value=False, 
+        help="Geser ke kanan untuk mengubah visual realistik menjadi gaya animasi 3D Pixar secara otomatis."
+    )
+    st.write("") 
+    # ----------------------------------------------
+    
     # --- 4. STATUS PRODUKSI ---
     if st.session_state.last_generated_results:
         st.markdown("### 🗺️ STATUS PRODUKSI")
@@ -739,6 +752,20 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
+                # --- [TAMBAHAN: LOGIKA GAYA VISUAL OPSIONAL] ---
+                if opsi_pixar:
+                    # Mantra Pixar 3D (Aktif jika Toggle di Sidebar ON)
+                    bumbu_gaya = (
+                        "Disney Pixar style 3D animation, iconic character design, "
+                        "smooth stylized skin textures, large expressive eyes, vibrant colors, "
+                        "subsurface scattering, cinematic 3D render, high-end animation movie quality"
+                    )
+                    # Jika Pixar ON, kita kasih instruksi tambahan agar AI merombak foto referensi jadi animasi
+                    instruction_header += "\nSTYLE RULE: Stylize the character from the photo into a 3D Pixar-style animation character."
+                else:
+                    # Kembali ke Realistik (Aktif jika Toggle OFF)
+                    bumbu_gaya = img_quality_stack
+
                 # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
                 # Jangan ambil dari 'item', tapi langsung tembak ke session_state pusat
                 pilihan_dropdown = st.session_state.get(f"loc_sel_{item['num']}", "")
@@ -826,7 +853,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"VISUAL ACTION: {item['visual']}. {image_emo}\n"
                     f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, NO SOFTENING.\n"
                     f"CAMERA: {camera_final}\n"
-                    f"TECHNICAL: {img_quality_stack}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
+                    f"TECHNICAL: {bumbu_gaya}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
                 )
 
                 # Untuk VIDEO, dialog tetap boleh disertakan secara utuh
@@ -874,22 +901,3 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
