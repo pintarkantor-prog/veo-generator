@@ -546,12 +546,11 @@ with st.sidebar:
 # ==============================================================================
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
-    "hyper-realistic 8k RAW photo, f/11 aperture for infinite focus, "
-    "ultra-sharp edge-enhancement, supersampled textures, tactile surface detail, "
-    "micro-contrast enhancement, CPL filter effect, vivid naturalism, "
-    "realistic grit and sand particles, hyper-detailed wood grain and leaf veins, "
-    "zero motion blur, crystal clear optical clarity from foreground to background, "
-    "shot on Sony A7R IV, 35mm lens, sharpest optics, masterpiece quality."
+    "hyper-realistic 8k RAW photo, infinite depth of field, f/11 aperture, "
+    "zero bokeh, zero background blur, hyper-sharp focus on every object, "
+    "ultra-clear optical clarity, tactile textures on sand and gravel, "
+    "CPL filter effect, deep blue sky, high local contrast, "
+    "vivid naturalism, realistic shadow recovery, masterpiece quality."
 )
 
 # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
@@ -783,14 +782,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     d_text = ""
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
-                # --- 4. OUTPUT AKHIR (OPTIMASI APEX SHARPNESS & TEKSTUR) ---
+                # --- 4. OUTPUT AKHIR (VERSI ANTI-BLUR & LANGIT TAJAM) ---
                 img_final = (
                     f"{instruction_header}\n\n"
+                    f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
                     f"CHARACTER DATA: {char_info}\n"
                     f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, and realistic wood grain textures.\n"
+                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, and realistic wood grain textures. NO BLURRY BACKGROUND.\n"
                     f"CAMERA: {camera_final}\n"
-                    f"TECHNICAL: {img_quality_base}, {l_cmd}, tactile surface detail, extreme edge-enhancement, every object is sharp."
+                    f"TECHNICAL: {img_quality_stack}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
                 )
 
                 vid_final = (
@@ -832,6 +832,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
