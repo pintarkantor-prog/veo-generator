@@ -349,45 +349,14 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 # ==============================================================================
-# 6. MAPPING TRANSLATION (FULL EXPLICIT MANUAL)
+# 6. MAPPING TRANSLATION (REVISED & SYNCHRONIZED)
 # ==============================================================================
 
-# --- DAFTAR PILIHAN (Dipangkas jadi yang paling penting) ---
-indonesia_camera = [
-    "Diam (Tanpa Gerak)", 
-    "Ikuti Karakter", 
-    "Zoom Masuk", 
-    "Zoom Keluar", 
-    "Memutar (Orbit)"
-]
-
-indonesia_shot = [
-    "Sangat Dekat",
-    "Dekat Wajah",
-    "Setengah Badan",
-    "Seluruh Badan",
-    "Pemandangan Luas",
-    "Sudut Rendah",
-    "Sudut Tinggi",
-    "Drone Shot"
-]
-
-indonesia_angle = [
-    "Normal",
-    "Wibawa",
-    "Intip Bahu",
-    "Samping",
-    "Berhadapan",
-    "Belakang"
-]
-
+# --- DAFTAR PILIHAN (Apa yang muncul di tombol) ---
+indonesia_camera = ["Diam (Tanpa Gerak)", "Ikuti Karakter", "Zoom Masuk", "Zoom Keluar", "Memutar (Orbit)"]
+indonesia_shot   = ["Sangat Dekat", "Dekat Wajah", "Setengah Badan", "Seluruh Badan", "Pemandangan Luas", "Drone Shot"]
+indonesia_angle  = ["Normal", "Sudut Rendah", "Sudut Tinggi", "Samping", "Berhadapan", "Intip Bahu", "Belakang"]
 options_lighting = ["Pagi", "Siang", "Sore", "Malam"]
-options_lokasi = [
-    "--- KETIK MANUAL ---", 
-    "jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", 
-    "halaman rumah", "teras rumah", "pinggir sawah", "sawah", 
-    "teras rumah miskin", "dalam rumah kayu", "teras rumah kaya", "dalam rumah kaya"
-]
 
 # --- KAMUS TERJEMAHAN UNTUK AI ---
 camera_map = {
@@ -399,23 +368,38 @@ camera_map = {
 }
 
 shot_map = {
-    "Sangat Dekat": "Extreme Close-Up shot, focus on micro details",
-    "Dekat Wajah": "Close-Up shot, focus on facial expressions",
-    "Setengah Badan": "Medium Shot, waist up",
-    "Seluruh Badan": "Full Body Shot",
-    "Pemandangan Luas": "Wide Landscape Shot",
-    "Sudut Rendah": "Low Angle Shot, looking up at the subject",
-    "Sudut Tinggi": "High Angle Shot, looking down at the subject",
-    "Drone Shot": "Cinematic Aerial Drone shot, high altitude"
+    "Sangat Dekat": "Extreme Close-Up shot, macro photography, hyper-detailed micro textures",
+    "Dekat Wajah": "Close-Up shot, focus on facial expressions and skin details",
+    "Setengah Badan": "Medium Shot, waist-up framing, cinematic depth",
+    "Seluruh Badan": "Full body shot, head-to-toe framing, environment visible",
+    "Pemandangan Luas": "Wide landscape shot, expansive scenery, subject is small in frame",
+    "Drone Shot": "Cinematic Aerial Drone shot, high altitude, bird's-eye view from above"
 }
 
 angle_map = {
-    "Normal": "eye-level shot, straight on perspective",
-    "Wibawa": "heroic low angle shot, looking up at the subject",
-    "Intip Bahu": "over-the-shoulder framing, cinematic dialogue depth",
-    "Samping": "Side profile view, 90-degree profile shot, profile perspective, looking from the side.",
-    "Berhadapan": "profile view of two subjects facing each other",
-    "Belakang": "shot from behind the subject"
+    "Normal": "eye-level shot, straight on perspective, natural head-on view",
+    "Sudut Rendah": "heroic low angle shot, looking up from below, monumental framing",
+    "Sudut Tinggi": "high angle shot, looking down at the subject, making it look smaller",
+    "Samping": "side profile view, 90-degree side angle, parallel to camera, full profile perspective",
+    "Berhadapan": "dual profile view, two subjects facing each other, face-to-face, symmetrical",
+    "Intip Bahu": "over-the-shoulder shot, foreground shoulder blur, cinematic dialogue depth",
+    "Belakang": "shot from behind, back view, following the subject, looking away from camera"
+}
+
+# --- DNA LOKASI (Sudah dipertajam untuk warna & kontras) ---
+LOKASI_DNA = {
+    "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, raw textures, 8k resolution.",
+    "jalan kota kecil": "small town asphalt road, old 90s shophouses, messy electricity wires, high-contrast, sharp focus.",
+    "jalan kota besar": "busy metropolitan highway, skyscrapers background, heavy traffic, cinematic city contrast.",
+    "pasar": "crowded traditional wet market, colorful fruit stalls, vibrant organic colors, sharp muddy textures, realistic.",
+    "halaman rumah": "simple front yard, potted frangipani trees, cracked cement textures, sharp daylight, natural shadows.",
+    "teras rumah": "comfortable house terrace, tiled floor, wooden chairs, jasmine flowers, sharp morning light, realistic depth.",
+    "pinggir sawah": "narrow paved path, endless green rice fields, coconut trees, vibrant natural greens, sharp horizon.",
+    "sawah": "lush green rice paddy fields, mud irrigation, realistic organic textures, mountains on the horizon.",
+    "teras rumah miskin": "humble wooden porch, weathered grey timber grain, dusty floor, raw poverty aesthetic.",
+    "dalam rumah kayu": "dim interior, old wood grain textures, dust motes in light beams, sharp focus on timber, raw photo.",
+    "teras rumah kaya": "modern luxury mansion terrace, marble flooring textures, manicured garden, elite aesthetic.",
+    "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa textures, sharp chandelier lighting."
 }
 
 # --- INISIALISASI SESSION STATE AWAL (Setting Default) ---
@@ -708,7 +692,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (FIXED & SYNCHRONIZED)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (CLEAN & OPTIMIZED)
 # ==============================================================================
 import json
 
@@ -728,7 +712,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     elif not active_scenes:
         st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
     else:
-        with st.spinner(f"⏳ Sedang meracik prompt..."):
+        with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
             st.session_state.last_generated_results = []
         
             # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
@@ -745,31 +729,15 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            LOKASI_DNA = {
-                "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, simple wooden fences, late afternoon sun.",
-                "jalan kota kecil": "small town asphalt road, old 90s shophouses (ruko), electricity poles with messy wires, tropical town vibe.",
-                "jalan kota besar": "busy metropolitan highway like Jakarta, skyscrapers background, heavy traffic, hazy atmosphere, hot sunny day.",
-                "pasar": "crowded traditional wet market, colorful fruit stalls, hanging meat, muddy floor, busy vendors, vibrant chaotic atmosphere.",
-                "halaman rumah": "simple front yard, potted frangipani trees, chickens roaming, cracked cement floor, bright daylight.",
-                "teras rumah": "comfortable house terrace, tiled floor, wooden chairs, jasmine flowers in pots, peaceful morning vibe.",
-                "pinggir sawah": "narrow paved path beside endless green rice fields, coconut trees, wide open blue sky, windy and bright.",
-                "sawah": "lush green rice paddy fields, mud irrigation, mountains on the horizon, panoramic rural view.",
-                "teras rumah miskin": "humble wooden porch of a shack, weathered grey timber, dusty floor, hanging tattered clothes, rural poverty aesthetic.",
-                "dalam rumah kayu": "dim interior of a traditional wooden house, bamboo floor, old oil lamps, dust motes in the air, warm nostalgic vibe.",
-                "teras rumah kaya": "modern luxury mansion terrace, marble flooring, minimalist outdoor furniture, manicured garden, elite aesthetic.",
-                "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa, chandelier lighting, polished atmosphere."
-            }
-            
-# --- LOGIKA MASTER LOCK ---
+            # --- LOGIKA MASTER LOCK ---
             char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
             master_lock_instruction = (
-                f"IMPORTANT: Remember these characters and their physical traits for this entire session. "
-                f"Do not deviate from these visuals: {char_defs}. "
-                f"Maintain strict facial identity and clothing structure from the initial references. "
+                f"IMPORTANT: Remember these characters and their physical traits: {char_defs}. "
+                f"Do not deviate. Maintain strict facial identity and raw textures. "
             )
 
             for item in active_scenes:
-                # 1. LOGIKA LOKASI
+                # 1. LOGIKA LOKASI (Mengambil dari LOKASI_DNA di Bagian 6)
                 raw_loc = item["location"].lower()
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
                 
@@ -778,40 +746,45 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
                     
-                # 3. Lighting Logic (Pagi, Siang, Sore, Malam - Ultra Raw)
+                # 3. Lighting Logic (Ultra Raw)
                 if "Pagi" in item["light"]: 
-                    # Jam 6 pagi, dingin, kontras, tekstur kulit nyata
-                    l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, rising sun glow, ultra-sharp skin textures, unfiltered, raw photo, dew-drenched environment, deep natural pigments, 8k resolution."
-                
+                    l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, unfiltered, raw photo, 8k."
                 elif "Siang" in item["light"]: 
-                    # Default: Sangat tajam, kontras tinggi, warna pekat tapi natural
-                    l_cmd = "Vivid midday sun, high-contrast, polarizing filter, realistic deep colors, unfiltered skin pores, raw texture definition, vibrant natural greens, sharp wood grain, 8k UHD, hyper-realistic."
-                
+                    l_cmd = "Vivid midday sun, high-contrast, polarizing filter, realistic deep colors, unfiltered, raw photo, 8k."
                 elif "Sore" in item["light"]: 
-                    # Jam 4 sore, matahari tenggelam, hangat tapi tekstur tetap kasar
-                    l_cmd = "4 PM golden hour, long dramatic shadows, warm setting sun, high contrast, deep amber tones, sharp realistic textures, unfiltered faces, cinematic lighting, rich organic colors."
-                
+                    l_cmd = "4 PM golden hour, warm setting sun, high contrast, sharp realistic textures, unfiltered, raw photo."
                 elif "Malam" in item["light"]: 
-                    # Efek cahaya bulan indigo tanpa memperlihatkan bulan, pekat & tajam
-                    l_cmd = "Cinematic night, moonlit indigo atmosphere, no moon in frame, sharp rim lighting, high contrast shadows, vivid night colors, unfiltered textures, realistic low-light noise, 8k."
-                
+                    l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, vivid night colors, unfiltered, raw photo."
                 else: 
-                    # Cadangan jika input kosong
-                    l_cmd = "Raw photography, high contrast, natural sharp textures, unfiltered, organic colors."
+                    l_cmd = "Raw photography, high contrast, natural sharp textures, unfiltered."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
-                emo = f"Acting: '{d_text}'." if d_text else ""
+                emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
-                # --- 4. MERAKIT PROMPT AKHIR (Variabel Synchronized) ---
-                master_lock = f"{master_lock_instruction} ENVIRONMENT DNA: {dna_env}."
+                # --- 4. MERAKIT PROMPT AKHIR (URUTAN BARU: KAMERA DI DEPAN) ---
+                # Menjahit agar AI memprioritaskan Posisi Kamera (Angle) dan Tekstur (Raw)
+                base_context = f"{master_lock_instruction} {dna_env}"
 
-                img_final = f"{master_lock} Candid RAW photo, shot on 35mm, f/2.8. Visual: {item['visual']}. {e_angle} {e_shot}. {emo} {l_cmd}. {img_quality_base} --ar 9:16 --v 6.0 --style raw --stylize 50"
-                vid_final = f"{master_lock} 9:16 Vertical Cinematography. Action: {item['visual']}. {emo} Camera: {e_shot}, {e_angle}, {e_cam}. {l_cmd}. {vid_quality_base}"
+                # Prompt Gambar
+                img_final = (
+                    f"{base_context} Candid RAW photo, {e_shot}, {e_angle}. "
+                    f"Visual: {item['visual']}. {emo} "
+                    f"Technical: shot on 35mm, f/2.8, {l_cmd}. "
+                    f"{img_quality_base} --ar 9:16 --v 6.0 --style raw"
+                )
+
+                # Prompt Video
+                vid_final = (
+                    f"{base_context} 9:16 Vertical Cinematography, {e_shot}, {e_angle}, Camera {e_cam}. "
+                    f"Action: {item['visual']}. {emo} "
+                    f"Atmosphere: {l_cmd}. {vid_quality_base}"
+                )
 
                 st.session_state.last_generated_results.append({
                     "id": item["num"], "img": img_final, "vid": vid_final, "cam_info": f"{e_shot} | {e_angle} | {e_cam}"
                 })
-        st.toast("Prompt Sudah Siap! 🚀")
+
+        st.toast("Prompt Berhasil Diracik! 🚀")
         st.rerun()
 
 # ==============================================================================
@@ -839,12 +812,3 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-
-
-
-
-
-
-
-
