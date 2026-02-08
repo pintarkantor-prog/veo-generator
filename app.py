@@ -381,9 +381,9 @@ indonesia_angle = [
     "Belakang"
 ]
 
-options_lighting = ["Siang", "Malam", "Remang"]
+options_lighting = ["Pagi", "Siang", "Sore", "Malam"]
 options_lokasi = [
-    "--- KETIK MANUAL ---", # Taruh di paling atas
+    "--- KETIK MANUAL ---", 
     "jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", 
     "halaman rumah", "teras rumah", "pinggir sawah", "sawah", 
     "teras rumah miskin", "dalam rumah kayu", "teras rumah kaya", "dalam rumah kaya"
@@ -778,15 +778,26 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
                     
-                # 3. Lighting Logic (Fixed)
-                if "Malam" in item["light"]: 
-                    l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors, volumetric atmosphere."
+                # 3. Lighting Logic (Pagi, Siang, Sore, Malam - Ultra Raw)
+                if "Pagi" in item["light"]: 
+                    # Jam 6 pagi, dingin, kontras, tekstur kulit nyata
+                    l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, rising sun glow, ultra-sharp skin textures, unfiltered, raw photo, dew-drenched environment, deep natural pigments, 8k resolution."
+                
                 elif "Siang" in item["light"]: 
-                    l_cmd = "Vivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch, high octane render."
-                elif "Remang" in item["light"]: # <--- Gunakan ELIF kalau ada syaratnya
-                    l_cmd = "Low-key lighting, soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures, mystery vibe."
-                else: # Cadangan terakhir jika input kosong
-                    l_cmd = "Natural ambient lighting."
+                    # Default: Sangat tajam, kontras tinggi, warna pekat tapi natural
+                    l_cmd = "Vivid midday sun, high-contrast, polarizing filter, realistic deep colors, unfiltered skin pores, raw texture definition, vibrant natural greens, sharp wood grain, 8k UHD, hyper-realistic."
+                
+                elif "Sore" in item["light"]: 
+                    # Jam 4 sore, matahari tenggelam, hangat tapi tekstur tetap kasar
+                    l_cmd = "4 PM golden hour, long dramatic shadows, warm setting sun, high contrast, deep amber tones, sharp realistic textures, unfiltered faces, cinematic lighting, rich organic colors."
+                
+                elif "Malam" in item["light"]: 
+                    # Efek cahaya bulan indigo tanpa memperlihatkan bulan, pekat & tajam
+                    l_cmd = "Cinematic night, moonlit indigo atmosphere, no moon in frame, sharp rim lighting, high contrast shadows, vivid night colors, unfiltered textures, realistic low-light noise, 8k."
+                
+                else: 
+                    # Cadangan jika input kosong
+                    l_cmd = "Raw photography, high contrast, natural sharp textures, unfiltered, organic colors."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting: '{d_text}'." if d_text else ""
@@ -828,6 +839,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
