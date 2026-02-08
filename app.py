@@ -707,14 +707,19 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             for item in active_scenes:
-                # --- [LOGIKA FILTER DINAMIS: HANYA YANG DISEBUT] ---
+            # --- [LOGIKA FILTER DINAMIS: VERSI ANTI-GAGAL] ---
                 mentioned_chars = []
-                visual_text_lower = item.get('visual', "").lower()
+                # Ambil teks visual, hapus spasi di ujung, kecilkan semua huruf
+                visual_text_lower = item.get('visual', "").lower().strip()
                 
                 for c in all_chars_list:
-                    c_name = c.get('name', "")
-                    if c_name and c_name.lower() in visual_text_lower:
-                        mentioned_chars.append(f"{c_name} ({c.get('desc', '')})")
+                    # Ambil nama karakter, hapus spasi, kecilkan semua huruf
+                    c_name_raw = c.get('name', "").strip()
+                    if c_name_raw:
+                        c_name_lower = c_name_raw.lower()
+                        # CEK: Apakah nama tersebut ada di dalam teks visual?
+                        if c_name_lower in visual_text_lower:
+                            mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
                 
                 # JIKA CUMA 1 ORANG: Tambahkan perintah pengusir orang lain (Negative Prompt)
                 neg_params = ""
@@ -805,6 +810,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
