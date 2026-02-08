@@ -673,17 +673,15 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (CLEAN & OPTIMIZED)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (HANYA FILTER KARAKTER & NEGATIVE PROMPT)
 # ==============================================================================
 import json
 
-# 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
 st.write("")
 
-# 2. PROSES GENERATE (Saat tombol diklik)
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -696,7 +694,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
         with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
             st.session_state.last_generated_results = []
         
-            # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
             try:
                 captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
                 auto_packet = {
@@ -707,28 +704,28 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
             except: pass
         
-            # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
-            # --- 1. LOGIKA FILTER DINAMIS (BERLAKU UNTUK SEMUA KARAKTER) ---
+                # --- [LOGIKA FILTER DINAMIS: HANYA YANG DISEBUT] ---
                 mentioned_chars = []
                 visual_text_lower = item.get('visual', "").lower()
                 
                 for c in all_chars_list:
                     c_name = c.get('name', "")
-                    # Jika nama karakter ada di dalam cerita visual adegan ini...
                     if c_name and c_name.lower() in visual_text_lower:
                         mentioned_chars.append(f"{c_name} ({c.get('desc', '')})")
                 
-                # JIKA ADA NAMA DISEBUT: Hanya kirim karakter tersebut (Sangat Akurat)
-                if mentioned_chars:
+                # JIKA CUMA 1 ORANG: Tambahkan perintah pengusir orang lain (Negative Prompt)
+                neg_params = ""
+                if len(mentioned_chars) == 1:
+                    final_char_context = mentioned_chars[0]
+                    focus_cmd = "Focus STRICTLY on this single character only. Solo portrait. NO other people."
+                    neg_params = " --no group, crowd, multiple people, extra characters, two people"
+                elif len(mentioned_chars) > 1:
                     final_char_context = ", ".join(mentioned_chars)
-                    # Jika cuma 1 orang, paksa AI fokus ke satu orang saja
-                    focus_cmd = "ONLY the mentioned character must be in the frame." if len(mentioned_chars) == 1 else ""
+                    focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
                 else:
-                    # JIKA TIDAK ADA NAMA DISEBUT: Kirim semua sebagai cadangan (Default)
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
                     focus_cmd = ""
 
@@ -737,16 +734,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"Maintain strict facial identity and raw textures. "
                 )
 
-                # 1. LOGIKA LOKASI (Mengambil dari LOKASI_DNA di Bagian 6)
                 raw_loc = item["location"].lower()
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
                 
-                # 2. LOGIKA SHOT, ANGLE, & CAMERA
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 e_cam = camera_map.get(item["cam"], "Static")
                     
-                # 3. Lighting Logic (Ultra Raw)
                 if "Pagi" in item["light"]: 
                     l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, unfiltered, raw photo, 8k."
                 elif "Siang" in item["light"]: 
@@ -761,18 +755,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
-                # --- 4. MERAKIT PROMPT AKHIR (REVISI: ANGLE DI DEPAN) ---
                 base_context = f"{master_lock_instruction} {dna_env}"
 
-                # Prompt Gambar
+                # Prompt Gambar (Sekarang pakai neg_params untuk mengusir Tung jika tidak dipanggil)
                 img_final = (
                     f"{base_context} {e_angle}, {e_shot}, Candid RAW photo. "
                     f"Visual: {item['visual']}. {emo} "
                     f"Technical: shot on 35mm, f/2.8, {l_cmd}. "
-                    f"{img_quality_base} --ar 9:16 --v 6.0 --style raw"
+                    f"{img_quality_base} --ar 9:16 --v 6.0 --style raw{neg_params}"
                 )
 
-                # Prompt Video
                 vid_final = (
                     f"{base_context} {e_angle} view, {e_shot}, Camera {e_cam}, 9:16 Vertical Cinematography. "
                     f"Action: {item['visual']}. {emo} "
@@ -788,7 +780,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
         st.toast("Prompt Berhasil Diracik! 🚀")
         st.rerun()
-
 # ==============================================================================
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
 # ==============================================================================
@@ -814,6 +805,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
