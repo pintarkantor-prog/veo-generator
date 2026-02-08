@@ -712,24 +712,28 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
-                # --- 1. LOGIKA FILTER KARAKTER (PINDAH KE DALAM SINI AGAR 'item' TERBACA) ---
+            # --- 1. LOGIKA FILTER DINAMIS (BERLAKU UNTUK SEMUA KARAKTER) ---
                 mentioned_chars = []
+                visual_text_lower = item.get('visual', "").lower()
+                
                 for c in all_chars_list:
-                    # Cek isinya agar tidak error
-                    v_text = item.get('visual', "")
                     c_name = c.get('name', "")
-                    if v_text and c_name and c_name.lower() in v_text.lower():
+                    # Jika nama karakter ada di dalam cerita visual adegan ini...
+                    if c_name and c_name.lower() in visual_text_lower:
                         mentioned_chars.append(f"{c_name} ({c.get('desc', '')})")
                 
+                # JIKA ADA NAMA DISEBUT: Hanya kirim karakter tersebut (Sangat Akurat)
                 if mentioned_chars:
                     final_char_context = ", ".join(mentioned_chars)
-                    focus_cmd = "ONLY the mentioned character(s) must be in the frame. DO NOT include other main characters."
+                    # Jika cuma 1 orang, paksa AI fokus ke satu orang saja
+                    focus_cmd = "ONLY the mentioned character must be in the frame." if len(mentioned_chars) == 1 else ""
                 else:
+                    # JIKA TIDAK ADA NAMA DISEBUT: Kirim semua sebagai cadangan (Default)
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
                     focus_cmd = ""
 
                 master_lock_instruction = (
-                    f"IMPORTANT: Remember character traits: {final_char_context}. {focus_cmd} "
+                    f"IMPORTANT: Character traits: {final_char_context}. {focus_cmd} "
                     f"Maintain strict facial identity and raw textures. "
                 )
 
@@ -810,6 +814,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
