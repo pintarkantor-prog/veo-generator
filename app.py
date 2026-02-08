@@ -725,21 +725,18 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 
                 # 2. LOGIKA HEADER INSTRUKSI (UNTUK GEMINI)
                 if len(mentioned_chars_list) == 1:
-                    # MODE SOLO: Gemini dipaksa lupakan Tung jika cuma ada Udin
                     target_name = mentioned_chars_list[0]['name']
                     char_info = f"[[ CHARACTER_{target_name}: {mentioned_chars_list[0]['desc']} ]]"
                     instruction_header = (
                         f"IMAGE REFERENCE RULE: Use the uploaded photo for {target_name}'s face and body.\n"
                         f"STRICT LIMIT: This scene MUST ONLY feature {target_name}. Do NOT add other characters."
                     )
-                    neg_params = " --no group, crowd, duo, multiple people" # Tetap simpan buat jaga-jaga
+                    neg_params = " --no group, crowd, duo, multiple people"
                 elif len(mentioned_chars_list) > 1:
-                    # MODE GRUP
                     char_info = " AND ".join([f"[[ CHARACTER_{m['name']}: {m['desc']} ]]" for m in mentioned_chars_list])
                     instruction_header = "IMAGE REFERENCE RULE: Use uploaded photos for each character. Interaction required."
                     neg_params = ""
                 else:
-                    # FALLBACK
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
                     neg_params = ""
@@ -751,13 +748,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_angle = angle_map.get(item["angle"], "")
                 
                 # --- LOGIKA CERDAS CAMERA (SOLO VS OTS DUO) ---
-                v_text_low = item['visual'].lower()
                 if len(mentioned_chars_list) == 1:
-                    # MODE SOLO: Bersihkan pundak hantu
                     clean_shot = e_shot.replace("over-the-shoulder", "Close-up").replace("OTS", "Close-up")
                     camera_final = f"{clean_shot}, {e_angle}, Shallow depth of field, 85mm lens, sharp focus on subject"
                 elif len(mentioned_chars_list) > 1:
-                    # MODE DUO: Jika pakai OTS, tentukan siapa yang ditatap (Fokus Wajah)
                     if "over-the-shoulder" in e_shot.lower() or "ots" in e_shot.lower():
                         target_focus = "the character"
                         for m in mentioned_chars_list:
@@ -774,7 +768,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 if "Pagi" in item["light"]: 
                     l_cmd = "6 AM crisp morning light, high-contrast, deep shadows, cold atmosphere."
                 elif "Siang" in item["light"]: 
-                    # Fokus pada kontras tinggi tapi cahaya lembut (tidak silau)
                     l_cmd = "Bright diffused midday light, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich colors."
                 elif "Sore" in item["light"]: 
                     l_cmd = "4 PM golden hour, warm saturated colors, long dramatic shadows, high-contrast glow."
@@ -783,12 +776,19 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else: 
                     l_cmd = "Natural lighting, high contrast, balanced exposure."
 
+                # --- 1. PROSES DIALOG & EMOSI (PENYEMBUH NAMEERROR) ---
+                try:
+                    d_text = " ".join([f"{d['name']}: {d['text']}" for d in item.get('dialogs', []) if d.get('text')])
+                except:
+                    d_text = ""
+                emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
+
                 # --- 4. OUTPUT AKHIR (OPTIMASI KETAJAMAN TEKSTUR & WARNA) ---
                 img_final = (
                     f"{instruction_header}\n\n"
                     f"CHARACTER DATA: {char_info}\n"
                     f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}. Ultra-detailed organic textures, vivid greenery, realistic mud and asphalt grain.\n" # Tambahan ketajaman lingkungan
+                    f"ENVIRONMENT: {dna_env}. Ultra-detailed organic textures, vivid greenery, realistic mud and asphalt grain.\n"
                     f"CAMERA: {camera_final}\n"
                     f"TECHNICAL: shot on 35mm, f/2.8, {l_cmd}. photorealistic RAW photo, 8k, hyper-detailed skin pores, ultra-sharp focus, rich color saturation, professional color grading, vivid natural colors."
                 )
@@ -802,7 +802,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "id": item["num"], 
                     "img": img_final, 
                     "vid": vid_final, 
-                    "cam_info": f"{camera_final}" # Biar info di UI juga ikut update
+                    "cam_info": f"{camera_final}"
                 })
 
         st.toast("Prompt Berhasil Diracik! 🚀")
@@ -832,4 +832,5 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
