@@ -486,7 +486,7 @@ with st.sidebar:
             try:
                 # ... (logika save kamu tetap sama seperti sebelumnya)
                 char_data = {str(idx): {"name": st.session_state.get(f"c_name_{idx}_input", ""), "desc": st.session_state.get(f"c_desc_{idx}_input", "")} for idx in range(1, 11)}
-                scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_input_{i}", "jalan kampung")} for i in range(1, 51)}
+                scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_sel_{i}", "jalan kampung")} for i in range(1, 51)}
                 dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
                 
                 master_packet = {"num_char": st.session_state.get("num_total_char", 2), "chars": char_data, "scenes": scene_data, "dialogs": dialog_data}
@@ -518,7 +518,7 @@ with st.sidebar:
                             st.session_state[f"light_input_{i_str}"] = val.get("light", "Siang")
                             st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
                             st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
-                            st.session_state[f"loc_input_{i_str}"] = val.get("loc", "jalan kampung")
+                            st.session_state[f"loc_sel_{i_str}"] = val.get("loc", "jalan kampung")
                     for k, v in data.get("dialogs", {}).items(): st.session_state[k] = v
                     
                     st.toast("Data Dipulihkan! 🔄")
@@ -796,3 +796,4 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
