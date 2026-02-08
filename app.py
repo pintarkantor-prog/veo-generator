@@ -673,15 +673,17 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (HANYA FILTER KARAKTER & NEGATIVE PROMPT)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSI FINAL - FIX INDENTASI & FILTER)
 # ==============================================================================
 import json
 
+# 1. Siapkan Lemari Penyimpanan Hasil Generate
 if 'last_generated_results' not in st.session_state:
     st.session_state.last_generated_results = []
 
 st.write("")
 
+# 2. PROSES GENERATE (Saat tombol diklik)
 if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
     nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
     active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
@@ -691,15 +693,29 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     elif not active_scenes:
         st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
     else:
-    with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
+        # --- PERBAIKAN SPASI DI SINI ---
+        with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
             st.session_state.last_generated_results = []
         
-            # ... (kode auto-save & logging tetap di sini) ...
-
+            # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
+            try:
+                captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+                auto_packet = {
+                    "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                    "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                    "scenes": captured_scenes_auto
+                }
+                record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+            except: 
+                pass
+        
+            # LOGGING CLOUD UTAMA
+            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+            
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
                 
-                # 1. LOGIKA FILTER DINAMIS (WAJIB DI DALAM SINI)
+                # 1. LOGIKA FILTER DINAMIS (MEMILIH KARAKTER BERDASARKAN VISUAL)
                 mentioned_chars = []
                 v_text_low = str(item.get('visual', "")).lower()
                 
@@ -708,21 +724,21 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     if c_name_raw and c_name_raw.lower() in v_text_low:
                         mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
                 
-                # Penentuan Instruksi Karakter
+                # Penentuan Instruksi Karakter & Negative Prompt
                 neg_params = ""
                 if len(mentioned_chars) == 1:
                     final_char_context = mentioned_chars[0]
                     focus_cmd = "Focus STRICTLY on this single character only. NO other people."
-                    neg_params = " --no group, crowd, multiple people, two people"
+                    neg_params = " --no group, crowd, multiple people, two people, extra characters"
                 elif len(mentioned_chars) > 1:
                     final_char_context = ", ".join(mentioned_chars)
                     focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
                 else:
-                    # Jika tidak ada nama disebut, panggil semua (backup)
+                    # Jika tidak ada nama disebut, panggil semua sebagai backup
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
                     focus_cmd = ""
 
-                # RAKIT MASTER LOCK (Harus di dalam for-loop!)
+                # RAKIT MASTER LOCK (Di dalam loop agar berubah tiap adegan)
                 master_lock_instruction = (
                     f"IMPORTANT: Character traits: {final_char_context}. {focus_cmd} "
                     f"Maintain strict facial identity and raw textures. "
@@ -736,11 +752,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_cam = camera_map.get(item["cam"], "Static")
                 
                 # Lighting Logic
-                if "Pagi" in item["light"]: l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, raw photo."
-                elif "Siang" in item["light"]: l_cmd = "Vivid midday sun, high-contrast, polarizing filter, raw photo."
-                elif "Sore" in item["light"]: l_cmd = "4 PM golden hour, warm setting sun, high contrast, raw photo."
-                elif "Malam" in item["light"]: l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, raw photo."
-                else: l_cmd = "Raw photography, high contrast, natural sharp textures."
+                if "Pagi" in item["light"]: 
+                    l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, raw photo."
+                elif "Siang" in item["light"]: 
+                    l_cmd = "Vivid midday sun, high-contrast, polarizing filter, raw photo."
+                elif "Sore" in item["light"]: 
+                    l_cmd = "4 PM golden hour, warm setting sun, high contrast, raw photo."
+                elif "Malam" in item["light"]: 
+                    l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, raw photo."
+                else: 
+                    l_cmd = "Raw photography, high contrast, natural sharp textures."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
@@ -795,6 +816,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
