@@ -673,7 +673,7 @@ for i_s in range(1, int(num_scenes) + 1):
         })
 
 # ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (VERSI FINAL - FIX INDENTASI & FILTER)
+# 10. GENERATOR PROMPT & MEGA-DRAFT (OPTIMASI GEMINI IDENTITY)
 # ==============================================================================
 import json
 
@@ -693,7 +693,6 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
     elif not active_scenes:
         st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
     else:
-        # --- PERBAIKAN SPASI DI SINI ---
         with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
             st.session_state.last_generated_results = []
         
@@ -709,91 +708,77 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             except: 
                 pass
         
-            # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
-                
-            # --- LOGIKA FILTER PATEN (TOKEN ISOLATION) ---
                 import re
-                mentioned_chars = []
+                mentioned_chars_list = []
                 v_text_low = str(item.get('visual', "")).lower().strip()
                 
+                # 1. SCAN KARAKTER (LOGIKA KATA UTUH)
                 for c in all_chars_list:
                     c_name_raw = str(c.get('name', "")).strip()
                     if c_name_raw:
                         if re.search(rf'\b{re.escape(c_name_raw.lower())}\b', v_text_low):
-                            # Kita buatkan 'kotak' deskripsi yang sangat kaku
-                            mentioned_chars.append(f"[[ CHARACTER_{c_name_raw.upper()}: {c.get('desc', '')} ]]")
+                            mentioned_chars_list.append({"name": c_name_raw.upper(), "desc": c.get('desc', '')})
                 
-                neg_params = ""
-                if len(mentioned_chars) == 1:
-                    # MODE SOLO: Hapus semua memori tentang orang lain
-                    final_char_context = mentioned_chars[0]
-                    focus_cmd = "SCENE_RULE: SINGLE_SUBJECT_ONLY. No partners. No group. Solo portrait."
-                    neg_params = " --no group, crowd, duo, two people, multiple, extra characters"
-                
-                elif len(mentioned_chars) > 1:
-                    # MODE GRUP: Gabungkan dengan separator kaku
-                    final_char_context = " AND ".join(mentioned_chars)
-                    focus_cmd = f"SCENE_RULE: MULTI_SUBJECT_SCENE ({len(mentioned_chars)} persons). Interaction required."
+                # 2. LOGIKA HEADER INSTRUKSI (UNTUK GEMINI)
+                if len(mentioned_chars_list) == 1:
+                    # MODE SOLO: Gemini dipaksa lupakan Tung jika cuma ada Udin
+                    target_name = mentioned_chars_list[0]['name']
+                    char_info = f"[[ CHARACTER_{target_name}: {mentioned_chars_list[0]['desc']} ]]"
+                    instruction_header = (
+                        f"IMAGE REFERENCE RULE: Use the uploaded photo for {target_name}'s face and body.\n"
+                        f"STRICT LIMIT: This scene MUST ONLY feature {target_name}. Do NOT add other characters."
+                    )
+                    neg_params = " --no group, crowd, duo, multiple people" # Tetap simpan buat jaga-jaga
+                elif len(mentioned_chars_list) > 1:
+                    # MODE GRUP
+                    char_info = " AND ".join([f"[[ CHARACTER_{m['name']}: {m['desc']} ]]" for m in mentioned_chars_list])
+                    instruction_header = "IMAGE REFERENCE RULE: Use uploaded photos for each character. Interaction required."
                     neg_params = ""
-                
                 else:
                     # FALLBACK
-                    final_char_context = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
-                    focus_cmd = "SCENE_RULE: DEFAULT_CHARACTER."
+                    char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
+                    instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
+                    neg_params = ""
 
-                # RAKITAN MASTER LOCK DENGAN FORMAT 'CLEAN'
-                master_lock_instruction = (
-                    f"### {final_char_context} ### {focus_cmd} ### "
-                    f"Maintain strict facial identity. "
-                )
-
-                # 2. LOGIKA LOKASI, SHOT, ANGLE, LIGHTING
+                # 3. RAKITAN LOKASI & TEKNIKAL
                 raw_loc = item["location"].lower()
                 dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
-                e_cam = camera_map.get(item["cam"], "Static")
                 
-                # Lighting Logic
-                if "Pagi" in item["light"]: 
-                    l_cmd = "6 AM early morning light, cold crisp atmosphere, high contrast, raw photo."
-                elif "Siang" in item["light"]: 
-                    l_cmd = "Vivid midday sun, high-contrast, polarizing filter, raw photo."
-                elif "Sore" in item["light"]: 
-                    l_cmd = "4 PM golden hour, warm setting sun, high contrast, raw photo."
-                elif "Malam" in item["light"]: 
-                    l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, raw photo."
-                else: 
-                    l_cmd = "Raw photography, high contrast, natural sharp textures."
+                if "Pagi" in item["light"]: l_cmd = "6 AM morning light, crisp cold atmosphere."
+                elif "Siang" in item["light"]: l_cmd = "Vivid midday sun, high contrast, raw photo."
+                elif "Sore" in item["light"]: l_cmd = "4 PM golden hour, warm sunset glow."
+                elif "Malam" in item["light"]: l_cmd = "Cinematic night, moonlit indigo atmosphere."
+                else: l_cmd = "Natural lighting, high contrast."
 
                 d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
                 emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
 
-                # --- 3. MERAKIT PROMPT AKHIR ---
-                base_context = f"{master_lock_instruction} {dna_env}"
-
+                # --- 4. OUTPUT AKHIR (FORMAT CHAT GEMINI) ---
                 img_final = (
-                    f"{base_context} {e_angle}, {e_shot}, Candid RAW photo. "
-                    f"Visual: {item['visual']}. {emo} "
-                    f"Technical: shot on 35mm, f/2.8, {l_cmd}. "
-                    f"{img_quality_base} --ar 9:16 --v 6.0 --style raw{neg_params}"
+                    f"{instruction_header}\n\n"
+                    f"CHARACTER DATA: {char_info}\n"
+                    f"VISUAL ACTION: {item['visual']}. {emo}\n"
+                    f"ENVIRONMENT: {dna_env}\n"
+                    f"CAMERA: {e_shot}, {e_angle}\n"
+                    f"TECHNICAL: shot on 35mm, f/2.8, {l_cmd}. photorealistic RAW photo, 8k.{neg_params} --ar 9:16 --v 6.0 --style raw"
                 )
 
                 vid_final = (
-                    f"{base_context} {e_angle} view, {e_shot}, Camera {e_cam}, 9:16 Vertical Cinematography. "
-                    f"Action: {item['visual']}. {emo} "
-                    f"Atmosphere: {l_cmd}. {vid_quality_base}"
+                    f"{instruction_header}\n"
+                    f"Action: {item['visual']}. {char_info}. Environment: {dna_env}. {l_cmd}"
                 )
 
                 st.session_state.last_generated_results.append({
                     "id": item["num"], 
                     "img": img_final, 
                     "vid": vid_final, 
-                    "cam_info": f"{e_shot} | {e_angle} | {e_cam}"
+                    "cam_info": f"{e_shot} | {e_angle}"
                 })
 
         st.toast("Prompt Berhasil Diracik! 🚀")
@@ -823,17 +808,3 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
