@@ -715,41 +715,46 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
                 
-            # --- 1. LOGIKA FILTER DINAMIS (VERSI KATA UTUH / WHOLE WORD) ---
-                import re # Tambahkan ini di paling atas loop jika belum ada
-                
+            # --- 1. LOGIKA FILTER DINAMIS (VERSI CERDAS & KATA UTUH) ---
+                import re
                 mentioned_chars = []
                 v_text_low = str(item.get('visual', "")).lower().strip()
                 
+                # Scan karakter yang disebut di visual
                 for c in all_chars_list:
                     c_name_raw = str(c.get('name', "")).strip()
                     if c_name_raw:
                         c_name_lower = c_name_raw.lower()
-                        
-                        # LOGIKA SAKTI: Hanya deteksi jika nama adalah kata utuh
-                        # \b memastikan tidak ada huruf lain yang menempel (seperti di 'menghitung')
+                        # Deteksi kata utuh (\b) agar 'tung' di 'menghitung' tidak terpicu
                         if re.search(rf'\b{re.escape(c_name_lower)}\b', v_text_low):
                             mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
                 
-                # JIKA HASIL DETEKSI MENEMUKAN NAMA
+                # --- LOGIKA OTOMATIS BERDASARKAN JUMLAH KARAKTER ---
                 neg_params = ""
-                if mentioned_chars:
-                    final_char_context = ", ".join(mentioned_chars)
-                    
-                    if len(mentioned_chars) == 1:
-                        focus_cmd = "Focus STRICTLY on this single character only. NO other people."
-                        neg_params = " --no group, crowd, multiple people, two people, extra characters"
-                    else:
-                        focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
-                        neg_params = ""
+                if len(mentioned_chars) == 1:
+                    # KASUS: Hanya 1 Karakter (Solo)
+                    final_char_context = mentioned_chars[0]
+                    focus_cmd = "SUBJECT: Focus STRICTLY on this single character only. Solo shot. NO other people."
+                    # Paksa AI buang karakter lain
+                    neg_params = " --no group, crowd, multiple people, two people, extra characters"
+                
+                elif len(mentioned_chars) > 1:
+                    # KASUS: 2 Karakter atau lebih (Interaction)
+                    final_char_context = " and ".join(mentioned_chars)
+                    focus_cmd = f"SUBJECT: Group shot of {len(mentioned_chars)} characters interacting in one frame."
+                    # Hilangkan --no agar semua karakter bisa muncul
+                    neg_params = ""
+                
                 else:
-                    # JIKA TIDAK ADA NAMA SAMA SEKALI (Fallback)
+                    # KASUS: Tidak ada nama disebut (Fallback/Backup)
+                    # Ambil semua karakter tapi tanpa instruksi 'Solo' yang galak
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
-                    focus_cmd = ""
+                    focus_cmd = "SUBJECT: Main characters in frame."
                     neg_params = ""
 
+                # RAKIT MASTER LOCK
                 master_lock_instruction = (
-                    f"IMPORTANT: Character traits: {final_char_context}. {focus_cmd} "
+                    f"IMPORTANT: {final_char_context}. {focus_cmd} "
                     f"Maintain strict facial identity and raw textures. "
                 )
 
@@ -825,6 +830,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
