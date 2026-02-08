@@ -819,7 +819,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 # Untuk VIDEO, dialog tetap boleh disertakan secara utuh
                 vid_final = (
                     f"{instruction_header}\n"
-                    f"Action: {item['visual']}. Dialogue Context: {d_text_full}. {char_info}. Environment: {dna_env}. {l_cmd}"
+                    f"ACTION & MOTION: {item['visual']}. Character must move naturally with fluid cinematic motion, no robotic movement, no stiffness.\n"
+                    f"CHARACTER CONSISTENCY: {char_info}. Maintain 100% facial identity consistency, high-fidelity facial features, no face morphing, look exactly like the reference.\n"
+                    f"ENVIRONMENT: {dna_env}.\n"
+                    f"LIGHTING: {l_cmd}.\n"
+                    f"ACTING CUE (STRICTLY NO TEXT ON SCREEN): Use this dialogue for emotional reference only: '{d_text_full}'." 
                 )
 
                 # --- SIMPAN HASIL ---
@@ -857,6 +861,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
