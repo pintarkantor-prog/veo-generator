@@ -18,15 +18,15 @@ USER_PASSWORDS = {
     "ezaalma": "aprihgino"
 }
 
-# --- 1. FITUR AUTO-LOGIN & SESSION CHECK ---
+# --- 1. FITUR PRE-FILL USERNAME (PINTU BELAKANG DITUTUP) ---
 if 'active_user' not in st.session_state:
+    # Kita ambil nama dari URL cuma buat bantu ngetik nama di kotak Username (Prefill)
     q_user = st.query_params.get("u")
-    if q_user in USER_PASSWORDS:
-        st.session_state.active_user = q_user
-        if 'login_time' not in st.session_state:
-            st.session_state.login_time = time.time()
+    if q_user and q_user.lower() in USER_PASSWORDS:
+        # Simpan nama dari URL ke memori sementara (prefill), BUKAN login otomatis
+        st.session_state.prefill_user = q_user.lower()
 
-# --- 2. LAYAR LOGIN (Muncul jika belum login) ---
+# --- 2. LAYAR LOGIN (Pintu Belakang Tertutup - Wajib Password) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
@@ -43,7 +43,11 @@ if 'active_user' not in st.session_state:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
             with st.form("login_form", clear_on_submit=False):
-                user_input = st.text_input("Username", placeholder="Masukkan nama user Anda...")
+                # Ambil nama bantuan dari URL (jika ada)
+                default_user = st.session_state.get("prefill_user", "")
+                
+                # Username otomatis terisi, tapi Password WAJIB diisi manual
+                user_input = st.text_input("Username", value=default_user, placeholder="Masukkan nama user Anda...")
                 pass_input = st.text_input("Password", type="password", placeholder="Masukkan password Anda...")
                 submit_button = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary")
             
@@ -52,10 +56,9 @@ if 'active_user' not in st.session_state:
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
                     st.query_params["u"] = user_clean
                     
-                    # --- PERBAIKAN DI SINI ---
+                    # Simpan sesi login
                     st.session_state.active_user = user_clean
                     st.session_state.login_time = time.time() 
-                    # -------------------------
                     
                     placeholder.empty() 
                     with placeholder.container():
@@ -71,7 +74,7 @@ if 'active_user' not in st.session_state:
                     st.error("❌ Username atau Password salah.")
             
             st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
-    st.stop() 
+    st.stop()
 
 # --- 3. PROTEKSI SESI (AUTO-LOGOUT 10 JAM) ---
 if 'active_user' in st.session_state and 'login_time' in st.session_state:
@@ -969,4 +972,5 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
