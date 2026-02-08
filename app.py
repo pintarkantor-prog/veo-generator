@@ -335,24 +335,22 @@ indonesia_shot = ["Sangat Dekat", "Dekat Wajah", "Setengah Badan", "Seluruh Bada
 indonesia_angle = ["Normal", "Sudut Rendah", "Sudut Tinggi", "Samping", "Berhadapan", "Intip Bahu", "Belakang"]
 options_lighting = ["Pagi", "Siang", "Sore", "Malam"]
 
-# --- DNA LOKASI (Gudang Data Lokasi) ---
+# --- DNA LOKASI (Gudang Data Lokasi - ULTIMATE TEXTURE & NEUTRAL LIGHT) ---
 LOKASI_DNA = {
-    "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, raw textures, 8k resolution.",
-    "jalan kota kecil": "small town asphalt road, old 90s shophouses, messy electricity wires, high-contrast, sharp focus.",
-    "jalan kota besar": "busy metropolitan highway, skyscrapers background, heavy traffic, cinematic city contrast.",
-    "pasar": "crowded traditional wet market, colorful fruit stalls, vibrant organic colors, sharp muddy textures, realistic.",
-    "halaman rumah": "simple front yard, potted frangipani trees, cracked cement textures, sharp daylight, natural shadows.",
-    "teras rumah": "comfortable house terrace, tiled floor, wooden chairs, jasmine flowers, sharp morning light, realistic depth.",
-    "pinggir sawah": "narrow paved path, endless green rice fields, coconut trees, vibrant natural greens, sharp horizon.",
-    "sawah": "lush green rice paddy fields, mud irrigation, realistic organic textures, mountains on the horizon.",
-    "teras rumah miskin": "humble wooden porch, weathered grey timber grain, dusty floor, raw poverty aesthetic.",
-    "dalam rumah kayu": "dim interior, old wood grain textures, dust motes in light beams, sharp focus on timber, raw photo.",
-    "teras rumah kaya": "modern luxury mansion terrace, marble flooring textures, manicured garden, elite aesthetic.",
-    "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa textures, sharp chandelier lighting."
+    "jalan kampung": "shabby dirt road in Indonesian village, dense banana trees, microscopic dust particles, weathered textures, ultra-detailed gravel and soil.",
+    "jalan kota kecil": "rugged asphalt road, weathered 90s shophouses with peeling paint, messy tangled electricity wires, sharp urban grit, high-contrast textures.",
+    "jalan kota besar": "metropolitan concrete highway, towering skyscrapers, hazy city smog, heavy metallic traffic, cinematic urban depth, sharp architectural edges.",
+    "pasar": "authentic Indonesian wet market, wet muddy floor textures, vibrant organic produce, detailed wicker baskets, crowded stall textures, hyper-realistic.",
+    "halaman rumah": "old front yard, potted frangipani trees with detailed bark, cracked cement floor with moss, tactile ground grit, ultra-sharp outdoor environment.",
+    "teras rumah": "traditional house porch, vintage tiled floor, intricate wood grain on chairs, delicate jasmine flowers, sharp depth of field, realistic textures.",
+    "pinggir sawah": "narrow cracked paved path, vast emerald rice fields, sharp palm tree silhouettes, vibrant natural greenery, infinite horizon clarity.",
+    "sawah": "lush terraced rice paddies, detailed mud irrigation, realistic organic water reflections, sharp mountain peaks on the horizon, tactile nature textures.",
+    "teras rumah miskin": "humble wooden porch, old grey weathered timber, dusty floor boards, raw rustic poverty aesthetic, hyper-detailed wood cracks and splinters.",
+    "dalam rumah kayu": "vintage timber interior, hyper-detailed wood grain, ancient furniture textures, sharp focus on carpentry, raw atmospheric photo, zero smoothing.",
+    "teras rumah kaya": "modern minimalist mansion terrace, premium marble floor reflections, manicured garden details, sleek luxury aesthetic, sharp clean lines.",
+    "dalam rumah kaya": "high-end luxury living room, polished stone textures, floor-to-ceiling glass walls, premium leather sofa grain, sharp interior design clarity."
 }
 
-# --- PERBAIKAN: DAFTAR OPSI LOKASI UNTUK DROP DOWN ---
-# Ini yang tadi hilang! Kita ambil otomatis dari kunci LOKASI_DNA di atas
 options_lokasi = ["--- KETIK MANUAL ---"] + list(LOKASI_DNA.keys())
 
 # --- KAMUS TERJEMAHAN UNTUK AI ---
@@ -847,6 +845,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
