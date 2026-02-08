@@ -337,6 +337,26 @@ indonesia_shot   = ["Sangat Dekat", "Dekat Wajah", "Setengah Badan", "Seluruh Ba
 indonesia_angle  = ["Normal", "Sudut Rendah", "Sudut Tinggi", "Samping", "Berhadapan", "Intip Bahu", "Belakang"]
 options_lighting = ["Pagi", "Siang", "Sore", "Malam"]
 
+# --- DNA LOKASI (Gudang Data Lokasi) ---
+LOKASI_DNA = {
+    "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, raw textures, 8k resolution.",
+    "jalan kota kecil": "small town asphalt road, old 90s shophouses, messy electricity wires, high-contrast, sharp focus.",
+    "jalan kota besar": "busy metropolitan highway, skyscrapers background, heavy traffic, cinematic city contrast.",
+    "pasar": "crowded traditional wet market, colorful fruit stalls, vibrant organic colors, sharp muddy textures, realistic.",
+    "halaman rumah": "simple front yard, potted frangipani trees, cracked cement textures, sharp daylight, natural shadows.",
+    "teras rumah": "comfortable house terrace, tiled floor, wooden chairs, jasmine flowers, sharp morning light, realistic depth.",
+    "pinggir sawah": "narrow paved path, endless green rice fields, coconut trees, vibrant natural greens, sharp horizon.",
+    "sawah": "lush green rice paddy fields, mud irrigation, realistic organic textures, mountains on the horizon.",
+    "teras rumah miskin": "humble wooden porch, weathered grey timber grain, dusty floor, raw poverty aesthetic.",
+    "dalam rumah kayu": "dim interior, old wood grain textures, dust motes in light beams, sharp focus on timber, raw photo.",
+    "teras rumah kaya": "modern luxury mansion terrace, marble flooring textures, manicured garden, elite aesthetic.",
+    "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa textures, sharp chandelier lighting."
+}
+
+# --- PERBAIKAN: DAFTAR OPSI LOKASI UNTUK DROP DOWN ---
+# Ini yang tadi hilang! Kita ambil otomatis dari kunci LOKASI_DNA di atas
+options_lokasi = ["--- KETIK MANUAL ---"] + list(LOKASI_DNA.keys())
+
 # --- KAMUS TERJEMAHAN UNTUK AI ---
 camera_map = {
     "Diam (Tanpa Gerak)": "Static camera, no movement, stable shot",
@@ -365,23 +385,7 @@ angle_map = {
     "Belakang": "shot from behind, back view, following the subject, looking away from camera"
 }
 
-# --- DNA LOKASI (Sudah dipertajam untuk warna & kontras) ---
-LOKASI_DNA = {
-    "jalan kampung": "narrow dirt road in a quiet Indonesian village, lush banana trees, dusty atmosphere, raw textures, 8k resolution.",
-    "jalan kota kecil": "small town asphalt road, old 90s shophouses, messy electricity wires, high-contrast, sharp focus.",
-    "jalan kota besar": "busy metropolitan highway, skyscrapers background, heavy traffic, cinematic city contrast.",
-    "pasar": "crowded traditional wet market, colorful fruit stalls, vibrant organic colors, sharp muddy textures, realistic.",
-    "halaman rumah": "simple front yard, potted frangipani trees, cracked cement textures, sharp daylight, natural shadows.",
-    "teras rumah": "comfortable house terrace, tiled floor, wooden chairs, jasmine flowers, sharp morning light, realistic depth.",
-    "pinggir sawah": "narrow paved path, endless green rice fields, coconut trees, vibrant natural greens, sharp horizon.",
-    "sawah": "lush green rice paddy fields, mud irrigation, realistic organic textures, mountains on the horizon.",
-    "teras rumah miskin": "humble wooden porch, weathered grey timber grain, dusty floor, raw poverty aesthetic.",
-    "dalam rumah kayu": "dim interior, old wood grain textures, dust motes in light beams, sharp focus on timber, raw photo.",
-    "teras rumah kaya": "modern luxury mansion terrace, marble flooring textures, manicured garden, elite aesthetic.",
-    "dalam rumah kaya": "spacious luxury living room, high ceiling, glass walls, premium sofa textures, sharp chandelier lighting."
-}
-
-# --- INISIALISASI SESSION STATE AWAL (Setting Default) ---
+# --- INISIALISASI SESSION STATE AWAL ---
 if 'm_light' not in st.session_state: st.session_state.m_light = "Siang"
 if 'm_cam' not in st.session_state: st.session_state.m_cam = "Diam (Tanpa Gerak)"
 if 'm_shot' not in st.session_state: st.session_state.m_shot = "Setengah Badan"
@@ -791,4 +795,5 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
