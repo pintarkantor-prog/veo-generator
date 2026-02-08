@@ -782,8 +782,10 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     )
                 elif "Malam" in item["light"]: 
                     l_cmd = (
-                        "Cinematic night, moonlit indigo atmosphere, bright moonlight, "
-                        "sharp rim lighting, deep shadows with visible ground textures, zero digital noise."
+                        "Cinematic night, realistic dim moonlight, no rim light, no glow, "
+                        "natural ambient shadows, high local contrast on textures, "
+                        "visible ground grit and soil details, deep indigo sky, "
+                        "clean silhouettes, zero digital noise, professional night photography."
                     )
                 else: 
                     l_cmd = "Natural lighting, high contrast, balanced exposure, sharp focus."
@@ -845,6 +847,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
