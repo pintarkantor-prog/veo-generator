@@ -803,39 +803,39 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
-                # --- LOGIKA GAYA VISUAL OTOMATIS ---
+                # --- LOGIKA GAYA VISUAL OTOMATIS (VERSI SUPER NENDANG) ---
                 if genre_pilihan == "Pixar 3D":
-                    bumbu_gaya = "Disney Pixar style 3D animation, smooth stylized textures, large expressive eyes, vibrant colors, subsurface scattering"
+                    bumbu_gaya = "Disney Pixar style 3D animation, Octane render, ray-traced global illumination, large expressive eyes, vibrant colors, premium subsurface scattering, soft tactile clay-like textures, whimsical lighting, 8k resolution"
                 
                 elif genre_pilihan == "Marvel Superhero":
-                    bumbu_gaya = "Marvel Cinematic Universe style, heroic cinematic lighting, highly detailed suit textures, high-contrast, epic movie poster vibe"
+                    bumbu_gaya = "Marvel Cinematic Universe aesthetic, 8k RAW photo, heroic cinematic lighting, tactical suit textures (Kevlar and carbon fiber), high-contrast, professional teal and orange color grading, epic movie poster vibe, realistic skin pores"
 
                 elif genre_pilihan == "Transformers (Mecha)":
-                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, detailed metal parts, anamorphic lens flares, sparks and debris"
+                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, complex moving gears, weathered and scratched metal textures, anamorphic lens flares, sparks and debris, ray-traced metallic reflections, industrial atmosphere"
 
                 elif genre_pilihan == "KingKong (VFX Monster)":
-                    bumbu_gaya = "Photorealistic CGI, blockbuster movie VFX quality, highly detailed creature rendering (scales, fur, skin), dramatic cinematic lighting"
+                    bumbu_gaya = "Photorealistic CGI, ILM blockbuster VFX quality, hyper-detailed creature rendering, wet fur and skin micro-textures, massive scale, dramatic cinematic lighting, atmospheric dust and smoke particles, masterpiece quality"
 
                 elif genre_pilihan == "Asphalt (Balap/Glossy)":
-                    bumbu_gaya = "Asphalt 9 gaming aesthetic, glossy metallic reflections, cinematic motion blur, high-end automotive lighting"
+                    bumbu_gaya = "Asphalt 9 gaming aesthetic, ultra-glossy metallic paint, ray-traced reflections on car body, cinematic motion blur, high-end automotive studio lighting, neon light streaks, wet asphalt road with reflections, 8k gaming render"
 
                 elif genre_pilihan == "Ghibli (Estetik/Indah)":
-                    bumbu_gaya = "Studio Ghibli hand-painted style, soft cel shading, lush nature aesthetic, nostalgic atmosphere"
+                    bumbu_gaya = "Studio Ghibli hand-painted style, watercolor textures, soft cel shading, lush nature aesthetic, nostalgic atmosphere, whimsical lighting, Makoto Shinkai-inspired sky, peaceful vibes, hand-drawn masterpiece"
 
                 elif genre_pilihan == "Dragon Ball":
-                    bumbu_gaya = "Dragon Ball Super anime style, sharp lineart, intense cel shading, muscular definition, vibrant energy aura"
+                    bumbu_gaya = "Dragon Ball Super anime style, sharp ink lineart, intense cel shading, muscular definition, vibrant energy aura with bloom effect, dynamic action perspective, explosive visual impact"
 
                 elif genre_pilihan == "Doraemon 3D":
-                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI animation, soft rounded shapes, pastel colors"
+                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI animation, soft rounded shapes, warm pastel colors, nostalgic toy-like textures, subsurface scattering on skin, cinematic lighting"
 
                 elif genre_pilihan == "Naruto (Ninja)":
-                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading"
+                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading, dynamic speed lines, traditional Japanese art influence, intense facial expressions, cinematic combat composition"
 
                 elif genre_pilihan == "Tayo (Anak-anak)":
-                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, rounded friendly shapes"
+                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, rounded friendly shapes, clean plastic-like surfaces, bright cheerful environment, simple high-quality render"
 
                 elif genre_pilihan == "Sakura School (Anime)":
-                    bumbu_gaya = "Sakura School Simulator style, 3D anime game graphics, bright sunny lighting, smooth plastic textures"
+                    bumbu_gaya = "Sakura School Simulator style, high-quality 3D anime game graphics, cel-shaded characters, bright sunny lighting, smooth plastic textures, vibrant school atmosphere, clean game-engine aesthetic"
 
                 else:
                     # Default: Kembali ke gaya Realistik (Foto)
@@ -977,6 +977,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
