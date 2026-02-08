@@ -63,8 +63,12 @@ if 'active_user' not in st.session_state:
             if submit_button:
                 user_clean = user_input.lower().strip()
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
+                    # 1. Simpan ke session
                     st.session_state.active_user = user_clean
                     st.session_state.login_time = time.time()
+                    # 2. BERSIHKAN URL (Buang password & sampah lainnya)
+                    st.query_params.clear() 
+                    # 3. SET ULANG URL (Hanya nama user)
                     st.query_params["u"] = user_clean
                     
                     placeholder.empty() 
@@ -975,6 +979,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
