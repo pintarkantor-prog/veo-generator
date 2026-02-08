@@ -413,7 +413,7 @@ angle_map = {
     "Normal": "eye-level shot, straight on perspective",
     "Wibawa": "heroic low angle shot, looking up at the subject",
     "Intip Bahu": "over-the-shoulder framing, cinematic dialogue depth",
-    "Samping": "side profile view",
+    "Samping": "Side profile view, 90-degree profile shot, profile perspective, looking from the side.",
     "Berhadapan": "profile view of two subjects facing each other",
     "Belakang": "shot from behind the subject"
 }
@@ -839,6 +839,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
