@@ -741,7 +741,13 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
 
                 # 3. RAKITAN LOKASI & TEKNIKAL
                 raw_loc = item["location"].lower()
-                dna_env = LOKASI_DNA.get(raw_loc, f"Location: {raw_loc}.")
+                
+                # Jika lokasi ada di DNA, ambil DNA-nya. Jika tidak ada (Manual), kasih bumbu tajam.
+                if raw_loc in LOKASI_DNA:
+                    dna_env = LOKASI_DNA[raw_loc]
+                else:
+                    dna_env = f"{raw_loc}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
+
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 
@@ -861,6 +867,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
