@@ -707,32 +707,34 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
             for item in active_scenes:
-            # --- [LOGIKA FILTER DINAMIS: VERSI ANTI-GAGAL] ---
+                # --- 1. LOGIKA FILTER DINAMIS (VERSI FIX) ---
                 mentioned_chars = []
-                # Ambil teks visual, hapus spasi di ujung, kecilkan semua huruf
-                visual_text_lower = item.get('visual', "").lower().strip()
+                # Pastikan teks visual bersih dari spasi gaib
+                visual_text_lower = str(item.get('visual', "")).lower().strip()
                 
                 for c in all_chars_list:
-                    # Ambil nama karakter, hapus spasi, kecilkan semua huruf
-                    c_name_raw = c.get('name', "").strip()
-                    if c_name_raw:
-                        c_name_lower = c_name_raw.lower()
-                        # CEK: Apakah nama tersebut ada di dalam teks visual?
-                        if c_name_lower in visual_text_lower:
-                            mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
+                    c_name_orig = c.get('name', "").strip()
+                    if c_name_orig:
+                        # Cek apakah nama (misal: udin) ada di dalam teks visual
+                        if c_name_orig.lower() in visual_text_lower:
+                            mentioned_chars.append(f"{c_name_orig} ({c.get('desc', '')})")
                 
-                # JIKA CUMA 1 ORANG: Tambahkan perintah pengusir orang lain (Negative Prompt)
+                # JIKA HANYA 1 ORANG DISEBUT
                 neg_params = ""
                 if len(mentioned_chars) == 1:
                     final_char_context = mentioned_chars[0]
                     focus_cmd = "Focus STRICTLY on this single character only. Solo portrait. NO other people."
                     neg_params = " --no group, crowd, multiple people, extra characters, two people"
+                # JIKA LEBIH DARI 1 ORANG
                 elif len(mentioned_chars) > 1:
                     final_char_context = ", ".join(mentioned_chars)
                     focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
+                    neg_params = ""
+                # JIKA TIDAK ADA NAMA SAMA SEKALI (Backup)
                 else:
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
-                    focus_cmd = ""
+                    focus_cmd = "Focus on the main characters."
+                    neg_params = ""
 
                 master_lock_instruction = (
                     f"IMPORTANT: Character traits: {final_char_context}. {focus_cmd} "
@@ -810,6 +812,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
