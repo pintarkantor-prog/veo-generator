@@ -710,11 +710,26 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # LOGGING CLOUD UTAMA
             record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
             
-            # --- LOGIKA MASTER LOCK ---
-            char_defs = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
+            # --- 1. LOGIKA FILTER KARAKTER (UPDATE: HANYA YANG DISEBUT) ---
+            # Sistem akan memindai teks di 'Cerita Visual' untuk mencari nama tokoh
+            mentioned_chars = []
+            for c in all_chars_list:
+                # Cek apakah nama karakter ada dalam teks visual (tidak peka huruf besar/kecil)
+                if c['name'] and c['name'].lower() in item['visual'].lower():
+                    mentioned_chars.append(f"{c['name']} ({c['desc']})")
+            
+            # Jika ada nama tokoh yang disebut di visual, hanya kirim tokoh tersebut ke AI
+            if mentioned_chars:
+                final_char_context = ", ".join(mentioned_chars)
+                focus_cmd = "ONLY the mentioned character(s) must be in the frame. DO NOT include other main characters."
+            else:
+                # Jika tidak ada nama disebut (opsional), kirim semua sebagai cadangan
+                final_char_context = ", ".join([f"{c['name']} ({c['desc']})" for c in all_chars_list if c['name']])
+                focus_cmd = ""
+
             master_lock_instruction = (
-                f"IMPORTANT: Remember these characters and their physical traits: {char_defs}. "
-                f"Do not deviate. Maintain strict facial identity and raw textures. "
+                f"IMPORTANT: Remember character traits: {final_char_context}. {focus_cmd} "
+                f"Maintain strict facial identity and raw textures. "
             )
 
             for item in active_scenes:
@@ -796,4 +811,5 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
