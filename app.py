@@ -788,7 +788,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
                     f"CHARACTER DATA: {char_info}\n"
                     f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, and realistic wood grain textures. NO BLURRY BACKGROUND.\n"
+                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, and realistic wood grain. NO SOFTENING."
                     f"CAMERA: {camera_final}\n"
                     f"TECHNICAL: {img_quality_stack}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
                 )
@@ -832,6 +832,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
