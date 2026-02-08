@@ -18,15 +18,19 @@ USER_PASSWORDS = {
     "ezaalma": "aprihgino"
 }
 
-# --- 1. FITUR PRE-FILL USERNAME (PINTU BELAKANG DITUTUP) ---
+# --- 1. FITUR SINKRONISASI SESI & PRE-FILL ---
 if 'active_user' not in st.session_state:
-    # Kita ambil nama dari URL cuma buat bantu ngetik nama di kotak Username (Prefill)
+    # Cek apakah ada parameter user di URL untuk bantuan ketik
     q_user = st.query_params.get("u")
     if q_user and q_user.lower() in USER_PASSWORDS:
-        # Simpan nama dari URL ke memori sementara (prefill), BUKAN login otomatis
+        # Hanya simpan untuk pre-fill di kotak login, BUKAN untuk login otomatis
         st.session_state.prefill_user = q_user.lower()
+else:
+    # JIKA SUDAH LOGIN: Pastikan URL tetap sinkron dengan user aktif
+    # Ini kuncinya supaya saat REFRESH, Streamlit tahu user ini masih aktif
+    st.query_params["u"] = st.session_state.active_user
 
-# --- 2. LAYAR LOGIN (Pintu Belakang Tertutup - Wajib Password) ---
+# --- 2. LAYAR LOGIN (Pintu Belakang Tertutup & Tampilan Ramping) ---
 if 'active_user' not in st.session_state:
     st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
     
@@ -34,7 +38,8 @@ if 'active_user' not in st.session_state:
     with placeholder.container():
         st.write("")
         st.write("")
-        _, col_login, _ = st.columns([1, 2, 1])
+        # Menggunakan perbandingan 2.0 di pinggir agar tengahnya (1.0) jadi kecil/ramping
+        _, col_login, _ = st.columns([2.0, 1.0, 2.0]) 
         
         with col_login:
             try:
@@ -46,34 +51,33 @@ if 'active_user' not in st.session_state:
                 # Ambil nama bantuan dari URL (jika ada)
                 default_user = st.session_state.get("prefill_user", "")
                 
-                # Username otomatis terisi, tapi Password WAJIB diisi manual
-                user_input = st.text_input("Username", value=default_user, placeholder="Masukkan nama user Anda...")
-                pass_input = st.text_input("Password", type="password", placeholder="Masukkan password Anda...")
+                st.markdown("<p style='text-align:center; color:#aaa; font-size:13px; margin-bottom: -10px;'>🛡️ Masukkan password untuk akses sistem</p>", unsafe_allow_html=True)
+                
+                user_input = st.text_input("Username", value=default_user, placeholder="Username...")
+                pass_input = st.text_input("Password", type="password", placeholder="Password...")
+                
+                st.write("")
                 submit_button = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True, type="primary")
             
             if submit_button:
                 user_clean = user_input.lower().strip()
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                    st.query_params["u"] = user_clean
-                    
-                    # Simpan sesi login
+                    # Berhasil Login
                     st.session_state.active_user = user_clean
-                    st.session_state.login_time = time.time() 
+                    st.session_state.login_time = time.time()
+                    st.query_params["u"] = user_clean
                     
                     placeholder.empty() 
                     with placeholder.container():
                         st.write("")
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
-                        _, col_spin, _ = st.columns([2, 1, 2])
-                        with col_spin:
-                            with st.spinner(""):
-                                time.sleep(3.0)
+                        time.sleep(1.5)
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah.")
             
-            st.caption("<p style='text-align: center;'>🛡️ Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
+            st.caption("<p style='text-align: center;'>Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
     st.stop()
 
 # --- 3. PROTEKSI SESI (AUTO-LOGOUT 10 JAM) ---
@@ -83,8 +87,6 @@ if 'active_user' in st.session_state and 'login_time' in st.session_state:
         st.query_params.clear()
         for key in list(st.session_state.keys()):
             del st.session_state[key]
-        st.warning("Sesi Anda telah berakhir (Batas 10 jam). Silakan login kembali.")
-        time.sleep(2.5)
         st.rerun()
 # ==============================================================================
 # 1 & 2. INISIALISASI MEMORI & SINKRONISASI (CLEAN VERSION)
@@ -972,5 +974,6 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
