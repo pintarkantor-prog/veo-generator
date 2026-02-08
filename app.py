@@ -547,9 +547,9 @@ with st.sidebar:
 # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
 img_quality_stack = (
     "hyper-realistic 8k RAW photo, infinite depth of field, f/11 aperture, "
-    "zero bokeh, zero background blur, hyper-sharp focus on every object, "
-    "ultra-clear optical clarity, tactile textures on sand and gravel, "
-    "CPL filter effect, deep blue sky, high local contrast, "
+    "zero bokeh, zero background blur, sharp edge-enhancement, non-filtered, "
+    "ultra-clear optical clarity, tactile textures on sand, gravel, and wood, "
+    "CPL filter, deep blue sky, polarized colors, high local contrast, "
     "vivid naturalism, realistic shadow recovery, masterpiece quality."
 )
 
@@ -767,7 +767,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 if "Pagi" in item["light"]: 
                     l_cmd = "6 AM crisp morning light, high-contrast, deep shadows, cold atmosphere."
                 elif "Siang" in item["light"]: 
-                    l_cmd = "Bright diffused midday light, vivid naturalism, cinematic contrast, deep black levels, polarizing filter for rich colors."
+                    l_cmd = "Direct harsh midday sunlight, clear blue sky, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich saturated colors."
                 elif "Sore" in item["light"]: 
                     l_cmd = "4 PM golden hour, warm saturated colors, long dramatic shadows, high-contrast glow."
                 elif "Malam" in item["light"]: 
@@ -832,6 +832,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
