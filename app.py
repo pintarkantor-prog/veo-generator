@@ -750,23 +750,47 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 
-                if "Pagi" in item["light"]: l_cmd = "6 AM morning light, crisp cold atmosphere."
-                elif "Siang" in item["light"]: l_cmd = "Vivid midday sun, high contrast, raw photo."
-                elif "Sore" in item["light"]: l_cmd = "4 PM golden hour, warm sunset glow."
-                elif "Malam" in item["light"]: l_cmd = "Cinematic night, moonlit indigo atmosphere."
-                else: l_cmd = "Natural lighting, high contrast."
+                # --- LOGIKA CERDAS CAMERA (SOLO VS OTS DUO) ---
+                v_text_low = item['visual'].lower()
+                if len(mentioned_chars_list) == 1:
+                    # MODE SOLO: Bersihkan pundak hantu
+                    clean_shot = e_shot.replace("over-the-shoulder", "Close-up").replace("OTS", "Close-up")
+                    camera_final = f"{clean_shot}, {e_angle}, Shallow depth of field, 85mm lens, sharp focus on subject"
+                elif len(mentioned_chars_list) > 1:
+                    # MODE DUO: Jika pakai OTS, tentukan siapa yang ditatap (Fokus Wajah)
+                    if "over-the-shoulder" in e_shot.lower() or "ots" in e_shot.lower():
+                        target_focus = "the character"
+                        for m in mentioned_chars_list:
+                            if m['name'].lower() in v_text_low:
+                                target_focus = m['name']
+                                break
+                        camera_final = f"{e_shot} looking at {target_focus}, focus on {target_focus}'s face, blurry foreground shoulder"
+                    else:
+                        camera_final = f"{e_shot}, {e_angle}"
+                else:
+                    camera_final = f"{e_shot}, {e_angle}"
+                
+                # --- LIGHTING LOGIC (WARNA TAJAM & KONTRAS MANTAP) ---
+                if "Pagi" in item["light"]: 
+                    l_cmd = "6 AM crisp morning light, high-contrast, deep shadows, cold atmosphere."
+                elif "Siang" in item["light"]: 
+                    # Fokus pada kontras tinggi tapi cahaya lembut (tidak silau)
+                    l_cmd = "Bright diffused midday light, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich colors."
+                elif "Sore" in item["light"]: 
+                    l_cmd = "4 PM golden hour, warm saturated colors, long dramatic shadows, high-contrast glow."
+                elif "Malam" in item["light"]: 
+                    l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, deep shadows."
+                else: 
+                    l_cmd = "Natural lighting, high contrast, balanced exposure."
 
-                d_text = " ".join([f"{d['name']}: {d['text']}" for d in item['dialogs'] if d['text']])
-                emo = f"Acting/Emotion: '{d_text}'." if d_text else ""
-
-                # --- 4. OUTPUT AKHIR (FORMAT CHAT GEMINI) ---
+                # --- 4. OUTPUT AKHIR (OPTIMASI KETAJAMAN TEKSTUR & WARNA) ---
                 img_final = (
                     f"{instruction_header}\n\n"
                     f"CHARACTER DATA: {char_info}\n"
                     f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}\n"
-                    f"CAMERA: {e_shot}, {e_angle}\n"
-                    f"TECHNICAL: shot on 35mm, f/2.8, {l_cmd}. photorealistic RAW photo, 8k.{neg_params} --ar 9:16 --v 6.0 --style raw"
+                    f"ENVIRONMENT: {dna_env}. Ultra-detailed organic textures, vivid greenery, realistic mud and asphalt grain.\n" # Tambahan ketajaman lingkungan
+                    f"CAMERA: {camera_final}\n"
+                    f"TECHNICAL: shot on 35mm, f/2.8, {l_cmd}. photorealistic RAW photo, 8k, hyper-detailed skin pores, ultra-sharp focus, rich color saturation, professional color grading, vivid natural colors."
                 )
 
                 vid_final = (
@@ -778,7 +802,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     "id": item["num"], 
                     "img": img_final, 
                     "vid": vid_final, 
-                    "cam_info": f"{e_shot} | {e_angle}"
+                    "cam_info": f"{camera_final}" # Biar info di UI juga ikut update
                 })
 
         st.toast("Prompt Berhasil Diracik! 🚀")
@@ -808,3 +832,4 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
