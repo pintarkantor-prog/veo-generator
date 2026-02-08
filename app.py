@@ -38,7 +38,7 @@ if 'active_user' not in st.session_state:
     with placeholder.container():
         st.write("")
         st.write("")
-        _, col_login, _ = st.columns([1.0, 1.2, 1.0]) 
+        _, col_login, _ = st.columns([1.0, 1.1, 1.0]) 
         
         with col_login:
             try:
@@ -973,6 +973,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
