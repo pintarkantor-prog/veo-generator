@@ -108,7 +108,7 @@ for i in range(1, 51):
         (f"camera_input_{i}", "Diam (Tanpa Gerak)"), # Sesuai indonesia_camera
         (f"shot_input_{i}", "Setengah Badan"),       # Sesuai indonesia_shot
         (f"angle_input_{i}", "Normal"),      # Sesuai indonesia_angle
-        (f"loc_sel_{i}", "jalan kampung")  # Sesuai options_lokasi
+        (f"loc_sel_{i}", "--- KETIK MANUAL ---")  # Sesuai options_lokasi
     ]:
         if key not in st.session_state: 
             st.session_state[key] = default
@@ -739,24 +739,22 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
                     instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
 
-                # 3. RAKITAN LOKASI & TEKNIKAL (SINKRONISASI MANUAL & DNA)
-                # Ambil pilihan dari dropdown
-                loc_choice = item["location"] 
+                # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
+                # Jangan ambil dari 'item', tapi langsung tembak ke session_state pusat
+                pilihan_dropdown = st.session_state.get(f"loc_sel_{item['num']}", "")
                 
-                # Logika: Jika user pilih '--- KETIK MANUAL ---'
-                if loc_choice == "--- KETIK MANUAL ---":
-                    # Kita ambil hasil ketikan dari session_state loc_custom
+                if pilihan_dropdown == "--- KETIK MANUAL ---":
+                    # Tembak langsung ke kotak ketikan manualnya
                     manual_text = st.session_state.get(f"loc_custom_{item['num']}", "").strip()
                     if manual_text:
                         dna_env = f"{manual_text}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
                     else:
-                        # Jika manual dipilih tapi kotak kosong, kasih default agar tidak error
                         dna_env = "cinematic environment, highly detailed textures, sharp focus."
                 else:
-                    # Jika user pilih lokasi yang sudah ada di daftar LOKASI_DNA
-                    # Kita gunakan .get() dengan huruf kecil karena keys di LOKASI_DNA biasanya kecil
-                    dna_env = LOKASI_DNA.get(loc_choice.lower(), f"{loc_choice}, sharp focus.")
+                    # Ambil dari DNA, gunakan .lower() supaya sinkron dengan key di LOKASI_DNA
+                    dna_env = LOKASI_DNA.get(pilihan_dropdown.lower(), f"{pilihan_dropdown}, sharp focus.")
 
+                # Penentuan shot dan angle tetap sama
                 e_shot = shot_map.get(item["shot"], "Medium Shot")
                 e_angle = angle_map.get(item["angle"], "")
                 
@@ -876,6 +874,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
