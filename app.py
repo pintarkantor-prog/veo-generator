@@ -51,9 +51,7 @@ if 'active_user' not in st.session_state:
             
             with st.form("login_form", clear_on_submit=False):
                 # Prefill tetap ada buat user baru yang pertama kali masuk lewat link
-                default_user = st.query_params.get("u", "")
-                st.markdown("<p style='text-align:center; color:#aaa; font-size:13px; margin-bottom: -10px;'>🛡️ Masukkan password untuk akses sistem</p>", unsafe_allow_html=True)
-                
+                default_user = st.query_params.get("u", "")                
                 user_input = st.text_input("Username", value=default_user, placeholder="Username...")
                 pass_input = st.text_input("Password", type="password", placeholder="Password...")
                 
@@ -979,6 +977,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
