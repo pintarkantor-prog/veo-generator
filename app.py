@@ -763,21 +763,30 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 else:
                     camera_final = f"{e_shot}, {e_angle}, infinite depth of field, f/11 aperture, ultra-sharp focus everywhere"
                 
-                # --- LIGHTING LOGIC (WARNA TAJAM & KONTRAS MANTAP) ---
+                # --- LIGHTING LOGIC (VERSION: APEX SHARPNESS & CONTROLLED LIGHT) ---
                 if "Pagi" in item["light"]: 
                     l_cmd = (
-                        "6 AM early morning golden-hour sunlight, cinematic sunbeams piercing through mist, "
-                        "low-angle side lighting to emphasize textures, dewy surfaces, "
-                        "vibrant organic greens, high local contrast, crystal clear atmosphere."
+                        "6 AM early morning sunlight, subtle sunbeams, anti-glare, "
+                        "no lens flare, low-angle side lighting to emphasize textures, "
+                        "vibrant dewy surfaces, high local contrast, crystal clear air."
                     )
                 elif "Siang" in item["light"]: 
-                    l_cmd = "Direct harsh midday sunlight, clear blue sky, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich saturated colors."
+                    l_cmd = (
+                        "Direct harsh midday sunlight, clear blue sky, vibrant naturalism, "
+                        "cinematic contrast, deep black levels, polarizing filter for rich saturated colors."
+                    )
                 elif "Sore" in item["light"]: 
-                    l_cmd = "4 PM golden hour, warm saturated colors, long dramatic shadows, high-contrast glow."
+                    l_cmd = (
+                        "4 PM golden hour, warm saturated colors, long dramatic sharp shadows, "
+                        "sharp amber highlights, high local contrast, no haze, ultra-clear atmosphere."
+                    )
                 elif "Malam" in item["light"]: 
-                    l_cmd = "Cinematic night, moonlit indigo atmosphere, sharp rim lighting, deep shadows."
+                    l_cmd = (
+                        "Cinematic night, moonlit indigo atmosphere, bright moonlight, "
+                        "sharp rim lighting, deep shadows with visible ground textures, zero digital noise."
+                    )
                 else: 
-                    l_cmd = "Natural lighting, high contrast, balanced exposure."
+                    l_cmd = "Natural lighting, high contrast, balanced exposure, sharp focus."
 
                 # --- 1. PROSES DIALOG & EMOSI ---
                 try:
@@ -792,7 +801,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
                     f"CHARACTER DATA: {char_info}\n"
                     f"VISUAL ACTION: {item['visual']}. {emo}\n"
-                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, and realistic wood grain. NO SOFTENING."
+                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, and realistic wood grain. NO SOFTENING.\n"
                     f"CAMERA: {camera_final}\n"
                     f"TECHNICAL: {img_quality_stack}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
                 )
@@ -836,6 +845,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
