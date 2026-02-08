@@ -562,7 +562,9 @@ vid_quality_stack = (
 # --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
 no_text_strict = (
     "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
-    "NO captions, NO speech bubbles, NO labels, NO black bars."
+    "NO captions, NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
+    "NO burned-in text, NO characters speaking with visible words, "
+    "the image must be a CLEAN cinematic shot without any written characters."
 )
 
 negative_motion_strict = (
@@ -845,6 +847,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
