@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 import time
 
+st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
@@ -82,9 +83,6 @@ if 'active_user' in st.session_state and 'login_time' in st.session_state:
         st.warning("Sesi Anda telah berakhir (Batas 10 jam). Silakan login kembali.")
         time.sleep(2.5)
         st.rerun()
-
-# --- 4. CONFIG DASHBOARD (Area Kerja Utama) ---
-st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 1 & 2. INISIALISASI MEMORI & SINKRONISASI (CLEAN VERSION)
 # ==============================================================================
@@ -795,5 +793,6 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
