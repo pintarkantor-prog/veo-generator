@@ -5,7 +5,6 @@ from datetime import datetime
 import pytz
 import time
 
-st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
@@ -38,7 +37,7 @@ if 'active_user' not in st.session_state:
     with placeholder.container():
         st.write("")
         st.write("")
-        _, col_login, _ = st.columns([1.0, 1.0, 1.0]) 
+        _, col_login, _ = st.columns([1.1, 1.0, 1.1]) 
         
         with col_login:
             try:
@@ -593,11 +592,12 @@ with st.sidebar:
 
     st.divider()
 
-    # --- TOMBOL LOGOUT (Power Off Icon) ---
+# --- TOMBOL LOGOUT (Power Off Icon) ---
     if st.button("KELUAR SISTEM ⚡", use_container_width=True):
         st.query_params.clear() 
-        if 'active_user' in st.session_state:
-            del st.session_state.active_user
+        # Menghapus seluruh memori sesi agar benar-benar bersih
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
         st.rerun()
 # ==============================================================================
 # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
@@ -973,6 +973,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
