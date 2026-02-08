@@ -715,30 +715,41 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
                 
-                # 1. LOGIKA FILTER DINAMIS (MEMILIH KARAKTER BERDASARKAN VISUAL)
+# --- 1. LOGIKA FILTER DINAMIS (VERSI PALING AKURAT) ---
                 mentioned_chars = []
-                v_text_low = str(item.get('visual', "")).lower()
+                v_text_low = str(item.get('visual', "")).lower().strip()
                 
+                # Kita cek setiap karakter yang terdaftar
                 for c in all_chars_list:
-                    c_name_raw = c.get('name', "")
-                    if c_name_raw and c_name_raw.lower() in v_text_low:
-                        mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
+                    c_name_raw = str(c.get('name', "")).strip()
+                    if c_name_raw:
+                        # Kita pecah nama jadi kata-kata (untuk antisipasi nama panjang)
+                        # Contoh: "Udin Sedunia" akan terdeteksi jika kamu tulis "Udin"
+                        c_name_lower = c_name_raw.lower()
+                        
+                        # CEK: Apakah nama karakter ada di dalam cerita visual?
+                        if c_name_lower in v_text_low:
+                            mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
                 
-                # Penentuan Instruksi Karakter & Negative Prompt
+                # JIKA HASIL DETEKSI MENEMUKAN NAMA
                 neg_params = ""
-                if len(mentioned_chars) == 1:
-                    final_char_context = mentioned_chars[0]
-                    focus_cmd = "Focus STRICTLY on this single character only. NO other people."
-                    neg_params = " --no group, crowd, multiple people, two people, extra characters"
-                elif len(mentioned_chars) > 1:
+                if mentioned_chars:
+                    # Gabungkan hanya karakter yang dipanggil
                     final_char_context = ", ".join(mentioned_chars)
-                    focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
+                    
+                    if len(mentioned_chars) == 1:
+                        focus_cmd = "Focus STRICTLY on this single character only. NO other people."
+                        neg_params = " --no group, crowd, multiple people, two people, extra characters"
+                    else:
+                        focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
+                        neg_params = ""
                 else:
-                    # Jika tidak ada nama disebut, panggil semua sebagai backup
+                    # JIKA TIDAK ADA NAMA SAMA SEKALI (Fallback ke Karakter 1)
+                    # Ini supaya kalau kamu lupa tulis nama, dia ga error tapi panggil semua
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
                     focus_cmd = ""
+                    neg_params = ""
 
-                # RAKIT MASTER LOCK (Di dalam loop agar berubah tiap adegan)
                 master_lock_instruction = (
                     f"IMPORTANT: Character traits: {final_char_context}. {focus_cmd} "
                     f"Maintain strict facial identity and raw textures. "
@@ -816,6 +827,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
