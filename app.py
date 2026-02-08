@@ -715,26 +715,25 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
             # --- MULAI PERULANGAN ADEGAN ---
             for item in active_scenes:
                 
-# --- 1. LOGIKA FILTER DINAMIS (VERSI PALING AKURAT) ---
+            # --- 1. LOGIKA FILTER DINAMIS (VERSI KATA UTUH / WHOLE WORD) ---
+                import re # Tambahkan ini di paling atas loop jika belum ada
+                
                 mentioned_chars = []
                 v_text_low = str(item.get('visual', "")).lower().strip()
                 
-                # Kita cek setiap karakter yang terdaftar
                 for c in all_chars_list:
                     c_name_raw = str(c.get('name', "")).strip()
                     if c_name_raw:
-                        # Kita pecah nama jadi kata-kata (untuk antisipasi nama panjang)
-                        # Contoh: "Udin Sedunia" akan terdeteksi jika kamu tulis "Udin"
                         c_name_lower = c_name_raw.lower()
                         
-                        # CEK: Apakah nama karakter ada di dalam cerita visual?
-                        if c_name_lower in v_text_low:
+                        # LOGIKA SAKTI: Hanya deteksi jika nama adalah kata utuh
+                        # \b memastikan tidak ada huruf lain yang menempel (seperti di 'menghitung')
+                        if re.search(rf'\b{re.escape(c_name_lower)}\b', v_text_low):
                             mentioned_chars.append(f"{c_name_raw} ({c.get('desc', '')})")
                 
                 # JIKA HASIL DETEKSI MENEMUKAN NAMA
                 neg_params = ""
                 if mentioned_chars:
-                    # Gabungkan hanya karakter yang dipanggil
                     final_char_context = ", ".join(mentioned_chars)
                     
                     if len(mentioned_chars) == 1:
@@ -744,8 +743,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                         focus_cmd = f"Group shot with {len(mentioned_chars)} characters."
                         neg_params = ""
                 else:
-                    # JIKA TIDAK ADA NAMA SAMA SEKALI (Fallback ke Karakter 1)
-                    # Ini supaya kalau kamu lupa tulis nama, dia ga error tapi panggil semua
+                    # JIKA TIDAK ADA NAMA SAMA SEKALI (Fallback)
                     final_char_context = ", ".join([f"{ch['name']} ({ch['desc']})" for ch in all_chars_list if ch['name']])
                     focus_cmd = ""
                     neg_params = ""
@@ -827,6 +825,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
