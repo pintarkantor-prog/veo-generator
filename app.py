@@ -381,7 +381,7 @@ indonesia_angle = [
     "Belakang"
 ]
 
-options_lighting = ["Siang", "Malam", "Remang-remang"]
+options_lighting = ["Siang", "Malam", "Remang"]
 options_lokasi = [
     "--- KETIK MANUAL ---", # Taruh di paling atas
     "jalan kampung", "jalan kota kecil", "jalan kota besar", "pasar", 
@@ -783,7 +783,7 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     l_cmd = "Cinematic night photography, indigo moonlit shadows, dual-tone spotlighting, sharp rim lights, vivid night colors, volumetric atmosphere."
                 elif "Siang" in item["light"]: 
                     l_cmd = "Vivid midday sun, realistic deep pigments, morning sun brilliance, sharp texture definition, raw color punch, high octane render."
-                elif "Remang-remang" in item["light"]: # <--- Gunakan ELIF kalau ada syaratnya
+                elif "Remang" in item["light"]: # <--- Gunakan ELIF kalau ada syaratnya
                     l_cmd = "Low-key lighting, soft diffused overcast light, realistic gray-cobalt sky, rich cinematic tones, moody but sharp textures, mystery vibe."
                 else: # Cadangan terakhir jika input kosong
                     l_cmd = "Natural ambient lighting."
@@ -828,6 +828,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
