@@ -38,7 +38,7 @@ if 'active_user' not in st.session_state:
         
         # GUNAKAN RASIO INI: Karena layout dasar adalah WIDE, 
         # kita butuh penjepit [1, 1, 1] agar form login di tengah tidak melar.
-        _, col_login, _ = st.columns([1, 1, 1]) 
+        _, col_login, _ = st.columns([1.8, 1.0, 1.8]) 
         
         with col_login:
             try:
@@ -971,6 +971,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
