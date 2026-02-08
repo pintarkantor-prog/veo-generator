@@ -765,7 +765,11 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                 
                 # --- LIGHTING LOGIC (WARNA TAJAM & KONTRAS MANTAP) ---
                 if "Pagi" in item["light"]: 
-                    l_cmd = "6 AM crisp morning light, high-contrast, deep shadows, cold atmosphere."
+                    l_cmd = (
+                        "6 AM early morning golden-hour sunlight, cinematic sunbeams piercing through mist, "
+                        "low-angle side lighting to emphasize textures, dewy surfaces, "
+                        "vibrant organic greens, high local contrast, crystal clear atmosphere."
+                    )
                 elif "Siang" in item["light"]: 
                     l_cmd = "Direct harsh midday sunlight, clear blue sky, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich saturated colors."
                 elif "Sore" in item["light"]: 
@@ -832,6 +836,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
