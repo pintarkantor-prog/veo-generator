@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 import time
 
+st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", initial_sidebar_state="expanded")
 # ==============================================================================
 # 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
@@ -19,25 +20,25 @@ USER_PASSWORDS = {
 
 # --- 1. FITUR SINKRONISASI SESI & PRE-FILL ---
 if 'active_user' not in st.session_state:
-    # Cek apakah ada parameter user di URL untuk bantuan ketik
     q_user = st.query_params.get("u")
     if q_user and q_user.lower() in USER_PASSWORDS:
-        # Hanya simpan untuk pre-fill di kotak login, BUKAN untuk login otomatis
         st.session_state.prefill_user = q_user.lower()
 else:
-    # JIKA SUDAH LOGIN: Pastikan URL tetap sinkron dengan user aktif
-    # Ini kuncinya supaya saat REFRESH, Streamlit tahu user ini masih aktif
+    # Ini kuncinya supaya REFRESH tetap lebar dan tetap login
     st.query_params["u"] = st.session_state.active_user
 
-# --- 2. LAYAR LOGIN (Pintu Belakang Tertutup & Tampilan Ramping) ---
+# --- 2. LAYAR LOGIN ---
 if 'active_user' not in st.session_state:
-    st.set_page_config(page_title="Login | PINTAR MEDIA", page_icon="🔐", layout="centered")
+    # DI SINI SUDAH TIDAK ADA st.set_page_config LAGI (Sudah dihapus)
     
     placeholder = st.empty()
     with placeholder.container():
         st.write("")
         st.write("")
-        _, col_login, _ = st.columns([0.8, 1.2, 0.8]) 
+        
+        # GUNAKAN RASIO INI: Karena layout dasar adalah WIDE, 
+        # kita butuh penjepit [1, 1, 1] agar form login di tengah tidak melar.
+        _, col_login, _ = st.columns([1, 1, 1]) 
         
         with col_login:
             try:
@@ -46,9 +47,7 @@ if 'active_user' not in st.session_state:
                 st.markdown("<h1 style='text-align: center;'>📸 PINTAR MEDIA</h1>", unsafe_allow_html=True)
             
             with st.form("login_form", clear_on_submit=False):
-                # Ambil nama bantuan dari URL (jika ada)
                 default_user = st.session_state.get("prefill_user", "")
-                
                 st.markdown("<p style='text-align:center; color:#aaa; font-size:13px; margin-bottom: -10px;'>🛡️ Masukkan password untuk akses sistem</p>", unsafe_allow_html=True)
                 
                 user_input = st.text_input("Username", value=default_user, placeholder="Username...")
@@ -60,7 +59,6 @@ if 'active_user' not in st.session_state:
             if submit_button:
                 user_clean = user_input.lower().strip()
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                    # Berhasil Login
                     st.session_state.active_user = user_clean
                     st.session_state.login_time = time.time()
                     st.query_params["u"] = user_clean
@@ -973,6 +971,7 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
+
 
 
 
