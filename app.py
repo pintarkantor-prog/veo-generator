@@ -1069,7 +1069,7 @@ IDE OWNER: "{owner_core}"
             st.caption("💡 Silakan salin teks di atas dan tempel di Gemini secara manual.")
 
     elif mode_lab == "⚡ AI PINTAR":
-        if st.button("SULAP JADI ALUR & TEKNIS KAMERA 🚀", use_container_width=True, type="primary"):
+        if st.button("BUAT JADI ALUR CERITA OTOMATIS 🚀", use_container_width=True, type="primary"):
             if not owner_core:
                 st.error("Garis Besar Cerita wajib diisi!")
             else:
@@ -1258,3 +1258,4 @@ elif menu_select == "⚡ KENDALI TIM":
         # Nanti kita isi kodenya di sini
     else:
         st.error("Akses Ditolak!")
+
