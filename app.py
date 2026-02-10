@@ -990,7 +990,7 @@ elif menu_select == "🧠 PINTAR AI LAB":
     """, unsafe_allow_html=True)
 
     st.title("🧠 PINTAR AI LAB")
-    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba!")
+    st.info("⚠️ INFO PENTING: Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
     
     mode_lab = st.segmented_control(
         "Pilih Jalur Produksi Ide:",
@@ -1258,4 +1258,5 @@ elif menu_select == "⚡ KENDALI TIM":
         # Nanti kita isi kodenya di sini
     else:
         st.error("Akses Ditolak!")
+
 
