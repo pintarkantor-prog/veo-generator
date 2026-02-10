@@ -990,11 +990,11 @@ elif menu_select == "🧠 PINTAR AI LAB":
     """, unsafe_allow_html=True)
 
     st.title("🧠 PINTAR AI LAB")
-    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
+    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba!")
     
     mode_lab = st.segmented_control(
         "Pilih Jalur Produksi Ide:",
-        ["📋 MANUAL PROMPT", "⚡ OTOMATIS (PINTAR AI)"],
+        ["📋 MANUAL PROMPT", "⚡ AI PINTAR"],
         default="📋 MANUAL PROMPT",
         label_visibility="collapsed"
     )
@@ -1013,8 +1013,8 @@ elif menu_select == "🧠 PINTAR AI LAB":
 
     st.divider()
 
-    # --- PROMPT SYSTEM (KITA KUNCI DI SINI AGAR AI JADI SUTRADARA) ---
-    sys_instruction = f"""
+    # --- 1. FORMAT UNTUK OTOMATIS (LENGKAP PAKE KAMERA DLL) ---
+    sys_instruction_ai = f"""
     Kamu adalah Sutradara & Scriptwriter Senior PINTAR MEDIA. 
     Tugasmu memecah ide owner menjadi {jml_sc} adegan visual teknis.
     
@@ -1038,38 +1038,67 @@ elif menu_select == "🧠 PINTAR AI LAB":
     JANGAN improvisasi plot di luar tema owner!
     """
 
-    if mode_lab == "📋 MANUAL PROMPT":
-        mega_prompt = f"{sys_instruction}\n\nIDE OWNER: \"{owner_core}\""
-        if owner_core:
-            st.code(mega_prompt, language="text")
-            st.markdown(f'<a href="https://gemini.google.com/" target="_blank" style="text-decoration:none;"><div style="background: linear-gradient(to right, #1d976c, #11998e); color:white; padding:10px; border-radius:8px; text-align:center; font-weight:bold;">COPY & BUKA GEMINI WEB</div></a>', unsafe_allow_html=True)
+    # --- 2. FORMAT UNTUK MANUAL (RINGKAS SESUAI REQUEST) ---
+    sys_instruction_manual = f"""Kamu adalah Sutradara & Scriptwriter Senior PINTAR MEDIA. 
+Tugasmu memecah ide owner menjadi {jml_sc} adegan visual teknis.
 
-    elif mode_lab == "⚡ OTOMATIS (AI PINTAR)":
+WAJIB MENGGUNAKAN FORMAT BERIKUT (DENGAN SPASI ANTAR POIN):
+
+Adegan [X]:
+Suasana: [Isi]
+
+Alur Cerita: [Deskripsi kejadian/aksi karakter]
+
+Lokasi Detail: [Gambarkan latar belakang secara super lengkap & spesifik]
+
+Dialog: [Tuliskan dialog jika ada, jika tidak ada tulis "-"]
+
+--------------------------------------------------
+
+Mood Utama: {mood_cerita}. Audiens: {target_audien}.
+JANGAN improvisasi plot di luar tema owner!
+
+IDE OWNER: "{owner_core}"
+"""
+
+    # --- EKSEKUSI MENU ---
+    if mode_lab == "📋 MANUAL PROMPT":
+        if owner_core:
+            st.markdown("### 🚀 Prompt Siap Salin:")
+            st.code(sys_instruction_manual, language="text")
+            st.caption("💡 Silakan salin teks di atas dan tempel di Gemini secara manual.")
+
+    elif mode_lab == "⚡ AI PINTAR":
         if st.button("SULAP JADI ALUR & TEKNIS KAMERA 🚀", use_container_width=True, type="primary"):
             if not owner_core:
                 st.error("Garis Besar Cerita wajib diisi!")
             else:
                 try:
                     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-                    with st.status("🎬 Lagi ngeracik alur cerita buat kamu...", expanded=True) as status:
+                    with st.status("🎬 Lagi ngeracik alur...", expanded=True) as status:
                         completion = client.chat.completions.create(
                             model="llama-3.3-70b-versatile",
-                            messages=[{"role": "system", "content": sys_instruction}, {"role": "user", "content": owner_core}],
+                            messages=[
+                                {"role": "system", "content": sys_instruction_ai}, 
+                                {"role": "user", "content": owner_core}
+                            ],
                             temperature=0.7
                         )
                         st.session_state['last_ai_result'] = completion.choices[0].message.content
-                        status.update(label="✅ Beres! Alur cerita udah siap.", state="complete", expanded=False)
+                        status.update(label="✅ Beres!", state="complete", expanded=False)
                     
                     st.markdown("---")
                     st.code(st.session_state['last_ai_result'], language="text")
-
                 except Exception as e:
                     st.error(f"Gagal memproses AI: {e}")
 
+        # --- TOMBOL KIRIM KE PRODUKSI (JANGAN SAMPAI KETINGGALAN LAGI) ---
         if 'last_ai_result' in st.session_state:
+            st.write("")
             if st.button("📥 KIRIM HASIL KE RUANG PRODUKSI", use_container_width=True, type="secondary"):
                 st.session_state['draft_from_lab'] = st.session_state['last_ai_result']
                 st.success("✅ Berhasil dikirim! Lanjut ke ruang produksi ya..")
+
 
 elif menu_select == "⚡ QUICK PROMPT":
     st.title("⚡ QUICK PROMPT")
@@ -1127,7 +1156,7 @@ elif menu_select == "⚡ QUICK PROMPT":
             st.markdown('<p class="small-label">📍 Lokasi (Manual)</p>', unsafe_allow_html=True)
             lokasi_v = st.text_input("loc_input", placeholder="Misal: dark cave, abandoned house...", label_visibility="collapsed")
 
-    # --- TOMBOL RAKIT MEMANJANG (Di dalam container tapi di bawah kedua kolom) ---
+        # --- TOMBOL RAKIT MEMANJANG (Di dalam container tapi di bawah kedua kolom) ---
         st.write("") 
         rakit_btn = st.button("🚀 RAKIT PROMPT SEKARANG", use_container_width=True, type="primary")
 
