@@ -10,12 +10,12 @@ st.set_page_config(page_title="PINTAR MEDIA", page_icon="🎬", layout="wide", i
 # 0. SISTEM LOGIN TUNGGAL (FULL STABLE: 10-HOUR SESSION + NEW USER)
 # ==============================================================================
 USER_PASSWORDS = {
-    "admin": "QWERTY21ab",
+    "dian": "QWERTY21ab",  # Sudah dirubah dari admin jadi dian
     "icha": "udin99",
     "nissa": "tung22",
     "inggi": "udin33",
     "lisa": "tung66",
-    "ezaalma": "aprihgino"
+    "tamu": "123"
 }
 
 # --- 1. FITUR SINKRONISASI SESI & AUTO-RECOVERY (SOLUSI REFRESH) ---
@@ -23,8 +23,13 @@ if 'active_user' not in st.session_state:
     q_user = st.query_params.get("u")
     if q_user and q_user.lower() in USER_PASSWORDS:
         # LOGIKA PENYELAMAT: Jika user ada di URL, langsung pulihkan sesi
-        # Ini yang membuat REFRESH tidak logout
-        st.session_state.active_user = q_user.lower()
+        user_fix = q_user.lower()
+        st.session_state.active_user = user_fix
+        
+        # --- JEMBATAN UNTUK TUGAS KERJA ---
+        # Kita simpan versi Uppercase agar sistem Tab tidak error
+        st.session_state['username'] = user_fix.upper()
+        
         if 'login_time' not in st.session_state:
             st.session_state.login_time = time.time()
         st.rerun() 
@@ -61,9 +66,14 @@ if 'active_user' not in st.session_state:
             if submit_button:
                 user_clean = user_input.lower().strip()
                 if user_clean in USER_PASSWORDS and pass_input == USER_PASSWORDS[user_clean]:
-                    # 1. Simpan ke session
+                    # 1. Simpan ke session original
                     st.session_state.active_user = user_clean
                     st.session_state.login_time = time.time()
+                    
+                    # --- JEMBATAN UNTUK TUGAS KERJA ---
+                    # Menyimpan identitas kapital untuk sistem akses tab
+                    st.session_state['username'] = user_clean.upper()
+                    
                     # 2. BERSIHKAN URL (Buang password & sampah lainnya)
                     st.query_params.clear() 
                     # 3. SET ULANG URL (Hanya nama user)
@@ -73,6 +83,7 @@ if 'active_user' not in st.session_state:
                     with placeholder.container():
                         st.write("")
                         st.markdown("<h3 style='text-align: center; color: #28a745;'>✅ AKSES DITERIMA!</h3>", unsafe_allow_html=True)
+                        # Menampilkan nama yang rapi saat sukses login
                         st.markdown(f"<h1 style='text-align: center;'>Selamat bekerja, {user_clean.capitalize()}!</h1>", unsafe_allow_html=True)
                         time.sleep(1.0)
                     st.rerun()
@@ -90,6 +101,7 @@ if 'active_user' in st.session_state and 'login_time' in st.session_state:
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+        
 # ==============================================================================
 # 1 & 2. INISIALISASI MEMORI & SINKRONISASI (CLEAN VERSION)
 # ==============================================================================
@@ -145,7 +157,7 @@ def record_to_sheets(user, data_packet, total_scenes):
             "Visual Utama": data_packet # <--- Di sini data koper disimpan utuh
         }])
         
-        # 5. Gabungkan data lama dan baru
+        # 5. Gabungkan data lama and baru
         updated_df = pd.concat([existing_data, new_row], ignore_index=True)
         
         # 6. Batasi history maksimal 300 baris agar tidak berat
@@ -315,6 +327,37 @@ st.markdown("""
     .stTextArea textarea {
         border: 1px solid rgba(255,255,255,0.1) !important;
     }
+    /* MENGHAPUS SEMUA PERINTAH DUPLIKAT DI BAWAH */
+    div[data-baseweb="input"], div[data-baseweb="textarea"] { border: none !important; }
+    @media (max-width: 1024px) {
+        /* Sembunyikan semua konten utama */
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stSidebar"], 
+        .main {
+            display: none !important;
+        }
+
+        /* Tampilkan pesan peringatan di layar HP/Tab */
+        body::before {
+            content: "⚠️ Gunakan PC! \A";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: #0e1117;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-weight: bold;
+            text-align: center;
+            padding: 40px;
+            font-size: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -413,575 +456,776 @@ def global_sync_v920():
             if key.startswith("shot_input_"): st.session_state[key] = st1
             if key.startswith("angle_input_"): st.session_state[key] = ag1
 # ==============================================================================
-# 7. SIDEBAR: KONFIGURASI UTAMA (CLEAN UI + LOGO)
+# 7. SIDEBAR: KONFIGURASI UTAMA (MODIFIKASI NAVIGASI RUANGAN)
 # ==============================================================================
 with st.sidebar:
-    # --- 1. LOGO SIDEBAR ---
+    
+    # 1. LOGO SIDEBAR (DARI KODE ASLI)
     try:
         st.image("PINTAR.png", use_container_width=True)
     except:
         st.title("📸 PINTAR MEDIA")
-    
     st.write("") 
-    
-    # --- 2. LOGIKA ADMIN ---
-    if st.session_state.active_user == "admin":
+
+    # 2. LOGIKA ADMIN (DARI KODE ASLI)
+    if st.session_state.active_user == "dian":
         if st.checkbox("🚀 Buka Dashboard Utama", value=False):
             st.info("Log aktivitas tercatat di Cloud.")
-            
             try:
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df_monitor = conn.read(worksheet="Sheet1", ttl="0")
-                
                 if not df_monitor.empty:
                     st.markdown("#### 🏆 Top Staf (MVP)")
                     mvp_count = df_monitor['User'].value_counts().reset_index()
                     mvp_count.columns = ['Staf', 'Total Input']
                     st.dataframe(mvp_count, use_container_width=True, hide_index=True)
-                    
-                    # --- TABEL AKTIVITAS DENGAN ICON (DIKEMBALIKAN) ---
                     st.markdown("#### 📅 Log Aktivitas Terbaru")
-                    
-                    # Kita beri nama kolom yang ada icon-nya agar keren
                     df_display = df_monitor.tail(10).copy()
                     df_display.columns = ["🕒 Waktu", "👤 User", "🎬 Total", "📝 Visual Utama"]
-                    
-                    st.dataframe(
-                        df_display, 
-                        use_container_width=True, 
-                        hide_index=True
-                    )
+                    st.dataframe(df_display, use_container_width=True, hide_index=True)
                 else:
                     st.warning("Belum ada data aktivitas tercatat.")
-            
             except Exception as e:
                 st.error(f"Gagal memuat data Cloud: {e}")
-                
         st.divider()
 
-    # --- 3. KONFIGURASI UMUM ---
-    num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
+    # --- A. MENU NAVIGASI ---
+    st.markdown("#### 🖥️ MAIN COMMAND")
     
-    # --- MENU GENRE VISUAL (MULTIVERSE MODE) ---
-    st.write("") 
-    st.markdown("#### 🎨 GENRE VISUAL")
-
-    # 1. Kita buat list-nya dalam variabel agar rapi
-    list_genre = [
-        "Realistik (Nyata)", 
-        "Pixar 3D", 
-        "Marvel Superhero", 
-        "Transformers (Mecha)",
-        "KingKong (VFX Monster)", 
-        "Asphalt (Balap/Glossy)", 
-        "Ghibli (Estetik/Indah)", 
-        "Dragon Ball", 
-        "Doraemon 3D", 
-        "Naruto (Ninja)", 
-        "Tayo (Anak-anak)", 
-        "Sakura School (Anime)"
+    # List menu umum untuk semua staf
+    menu_umum = [
+        "🚀 RUANG PRODUKSI", 
+        "🧠 PINTAR AI LAB", 
+        "⚡ QUICK PROMPT", 
+        "📋 TUGAS KERJA"
     ]
-
-    # 2. Cek apakah ada data genre dari hasil tombol LOAD
-    # Jika tidak ada, dia akan pakai default "Realistik (Nyata)"
-    genre_saved = st.session_state.get("genre_pilihan_saved", "Realistik (Nyata)")
-
-    # 3. Cari posisi index-nya (nomor urutnya)
-    try:
-        idx_default = list_genre.index(genre_saved)
-    except:
-        idx_default = 0
-
-    # 4. Tampilkan menu dropdown dengan index yang sudah disesuaikan otomatis
-    genre_pilihan = st.selectbox(
-        "Pilih Gaya Film:",
-        options=list_genre,
-        index=idx_default,
-        help="Pilih genre visual. Jika pilih Realistik, hasil akan seperti foto asli."
-    )
-    st.write("")
-    # ----------------------------------------------
     
-    # --- 4. STATUS PRODUKSI ---
-    if st.session_state.last_generated_results:
-        st.markdown("### 🗺️ STATUS PRODUKSI")
-        total_p = len(st.session_state.last_generated_results)
-        done_p = 0
+    # Tambahkan menu rahasia HANYA jika usernya 'admin'
+    if st.session_state.active_user == "dian":
+        menu_final = menu_umum + ["⚡ KENDALI TIM"]
+    else:
+        menu_final = menu_umum
         
-        for res in st.session_state.last_generated_results:
-            done_key = f"mark_done_{res['id']}"
-            if st.checkbox(f"Adegan {res['id']}", key=done_key):
-                done_p += 1
-        
-        st.progress(done_p / total_p)
-        
-        if done_p == total_p and total_p > 0:
-            st.balloons() 
-            st.success("🎉 Semua Adegan Selesai!")
-    
+    # Tombol radio untuk memilih menu
+    menu_select = st.radio("Pilih Ruangan:", menu_final, label_visibility="collapsed")
     st.divider()
+    # --- KONTROL TAMBAHAN (Hanya muncul jika memilih Ruang Produksi) ---
+    if menu_select == "🚀 RUANG PRODUKSI":
+        # 3. KONFIGURASI UMUM (DARI KODE ASLI)
+        num_scenes = st.number_input("Tambah Jumlah Adegan", min_value=1, max_value=50, value=6)
+        st.write("") 
+        st.markdown("#### 🎨 GAYA VISUAL")
+        list_genre = ["Realistik (Nyata)", "Pixar 3D", "Marvel Superhero", "Transformers (Mecha)", "KingKong (VFX Monster)", "Asphalt (Balap/Glossy)", "Ghibli (Estetik/Indah)", "Dragon Ball", "Doraemon 3D", "Naruto (Ninja)", "Tayo (Anak-anak)", "Sakura School (Anime)"]
+        genre_saved = st.session_state.get("genre_pilihan_saved", "Realistik (Nyata)")
+        try: idx_default = list_genre.index(genre_saved)
+        except: idx_default = 0
+        genre_pilihan = st.selectbox("Pilih Gaya Film:", options=list_genre, index=idx_default, help="Pilih gaya visual sesuai tema!")
+        st.write("")
+        
+        # 4. STATUS PRODUKSI (DARI KODE ASLI)
+        if st.session_state.last_generated_results:
+            st.markdown("### 🗺️ STATUS PRODUKSI")
+            total_p = len(st.session_state.last_generated_results)
+            done_p = 0
+            for res in st.session_state.last_generated_results:
+                done_key = f"mark_done_{res['id']}"
+                if st.checkbox(f"Adegan {res['id']}", key=done_key):
+                    done_p += 1
+            st.progress(done_p / total_p)
+            if done_p == total_p and total_p > 0:
+                st.balloons() 
+                st.success("🎉 Semua Adegan Selesai!")
+        st.divider()
 
-# --- C. TOMBOL SAVE & LOAD (SIMETRIS) ---
-    btn_col1, btn_col2 = st.columns(2)
-    
-    with btn_col1:
-        # Tombol Simpan
-        save_trigger = st.button("💾 SAVE", use_container_width=True)
-        if save_trigger:
-            import json
-            try:
-                char_data = {str(idx): {"name": st.session_state.get(f"c_name_{idx}_input", ""), "desc": st.session_state.get(f"c_desc_{idx}_input", "")} for idx in range(1, 11)}
-                scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_sel_{i}", "jalan kampung")} for i in range(1, 51)}
-                dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
-                
-                # --- TAMBAHKAN 'genre' KE DALAM PAKET ---
-                master_packet = {
-                    "num_char": st.session_state.get("num_total_char", 2), 
-                    "genre": genre_pilihan,  # <--- Menyimpan pilihan dropdown genre kamu
-                    "chars": char_data, 
-                    "scenes": scene_data, 
-                    "dialogs": dialog_data
-                }
-                
-                record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len([s for s in scene_data.values() if s['vis']]))
-                st.toast("Project Tersimpan! ✅")
-            except Exception as e:
-                st.error(f"Gagal simpan: {e}")
+        # C. TOMBOL SAVE & LOAD (DARI KODE ASLI - UTUH)
+        btn_col1, btn_col2 = st.columns(2)
+        with btn_col1:
+            save_trigger = st.button("💾 SAVE", use_container_width=True)
+            if save_trigger:
+                import json
+                try:
+                    char_data = {str(idx): {"name": st.session_state.get(f"c_name_{idx}_input", ""), "desc": st.session_state.get(f"c_desc_{idx}_input", "")} for idx in range(1, 11)}
+                    scene_data = {str(i): {"vis": st.session_state.get(f"vis_input_{i}", ""), "light": st.session_state.get(f"light_input_{i}", "Siang"), "shot": st.session_state.get(f"shot_input_{i}", "Setengah Badan"), "angle": st.session_state.get(f"angle_input_{i}", "Normal"), "loc": st.session_state.get(f"loc_sel_{i}", "jalan kampung")} for i in range(1, 51)}
+                    dialog_data = {k: v for k, v in st.session_state.items() if k.startswith("diag_") and v}
+                    master_packet = {
+                        "num_char": st.session_state.get("num_total_char", 2), 
+                        "genre": genre_pilihan, 
+                        "chars": char_data, 
+                        "scenes": scene_data, 
+                        "dialogs": dialog_data
+                    }
+                    record_to_sheets(f"DRAFT_{st.session_state.active_user}", json.dumps(master_packet), len([s for s in scene_data.values() if s['vis']]))
+                    st.toast("Project Tersimpan! ✅")
+                except Exception as e:
+                    st.error(f"Gagal simpan: {e}")
 
-    with btn_col2:
-        # Tombol Load
-        load_trigger = st.button("🔄 LOAD", use_container_width=True)
-        if load_trigger:
-            import json
-            try:
-                conn = st.connection("gsheets", type=GSheetsConnection)
-                df_log = conn.read(worksheet="Sheet1", ttl="1s")
-                my_data = df_log[df_log['User'] == f"DRAFT_{st.session_state.active_user}"]
-                
-                if not my_data.empty:
-                    data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
-                    
-                    # --- RESTORE DATA KE SESSION STATE ---
-                    st.session_state["num_total_char"] = data.get("num_char", 2)
-                    
-                    # Masukkan genre yang di-load ke session state agar dibaca selectbox
-                    st.session_state["genre_pilihan_saved"] = data.get("genre", "Realistik (Nyata)")
-                    
-                    for i_str, val in data.get("chars", {}).items():
-                        st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
-                        st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
-                    
-                    for i_str, val in data.get("scenes", {}).items():
-                        if isinstance(val, dict):
-                            st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
-                            st.session_state[f"light_input_{i_str}"] = val.get("light", "Siang")
-                            st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
-                            st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
-                            st.session_state[f"loc_sel_{i_str}"] = val.get("loc", "jalan kampung")
-                    
-                    for k, v in data.get("dialogs", {}).items(): 
-                        st.session_state[k] = v
-                    
-                    st.toast("Data Dipulihkan! 🔄")
-                    st.rerun()
-                else:
-                    st.error("Draft kosong.")
-            except Exception as e:
-                st.error(f"Gagal: {e}")
-                
-    # --- NOTIFIKASI SUKSES ---
-    if "sidebar_success_msg" in st.session_state:
-        st.success(st.session_state["sidebar_success_msg"])
-        del st.session_state["sidebar_success_msg"]
+        with btn_col2:
+            load_trigger = st.button("🔄 LOAD", use_container_width=True)
+            if load_trigger:
+                import json
+                try:
+                    conn = st.connection("gsheets", type=GSheetsConnection)
+                    df_log = conn.read(worksheet="Sheet1", ttl="1s")
+                    my_data = df_log[df_log['User'] == f"DRAFT_{st.session_state.active_user}"]
+                    if not my_data.empty:
+                        data = json.loads(str(my_data.iloc[-1]['Visual Utama']))
+                        st.session_state["num_total_char"] = data.get("num_char", 2)
+                        st.session_state["genre_pilihan_saved"] = data.get("genre", "Realistik (Nyata)")
+                        for i_str, val in data.get("chars", {}).items():
+                            st.session_state[f"c_name_{i_str}_input"] = val.get("name", "")
+                            st.session_state[f"c_desc_{i_str}_input"] = val.get("desc", "")
+                        for i_str, val in data.get("scenes", {}).items():
+                            if isinstance(val, dict):
+                                st.session_state[f"vis_input_{i_str}"] = val.get("vis", "")
+                                st.session_state[f"light_input_{i_str}"] = val.get("light", "Siang")
+                                st.session_state[f"shot_input_{i_str}"] = val.get("shot", "Setengah Badan")
+                                st.session_state[f"angle_input_{i_str}"] = val.get("angle", "Normal")
+                                st.session_state[f"loc_sel_{i_str}"] = val.get("loc", "jalan kampung")
+                        for k, v in data.get("dialogs", {}).items(): 
+                            st.session_state[k] = v
+                        st.toast("Data Dipulihkan! 🔄")
+                        st.rerun()
+                    else:
+                        st.error("Draft kosong.")
+                except Exception as e:
+                    st.error(f"Gagal: {e}")
+        st.divider()
 
-    st.divider()
-
-# --- TOMBOL LOGOUT (Power Off Icon) ---
+    # --- TOMBOL LOGOUT (DARI KODE ASLI) ---
     if st.button("KELUAR SISTEM ⚡", use_container_width=True):
         st.query_params.clear() 
-        # Menghapus seluruh memori sesi agar benar-benar bersih
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-# ==============================================================================
-# 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
-# ==============================================================================
-# --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
-img_quality_stack = (
-    "hyper-realistic 8k RAW photo, infinite depth of field, f/11 aperture, "
-    "zero bokeh, zero background blur, sharp edge-enhancement, non-filtered, "
-    "ultra-clear optical clarity, tactile textures on sand, gravel, and wood, "
-    "CPL filter, deep blue sky, polarized colors, high local contrast, "
-    "vivid naturalism, realistic shadow recovery, masterpiece quality."
-)
-
-# --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
-vid_quality_stack = (
-    "ultra-high definition cinematic video, 8k UHD, high dynamic range, "
-    "professional color grading, vibrant organic colors, ray-traced reflections, "
-    "hyper-detailed textures, zero digital noise, clean pixels, "
-    "smooth motion, professional cinematography, masterpiece quality."
-)
-
-# --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
-no_text_strict = (
-    "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
-    "NO captions, NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
-    "NO burned-in text, NO characters speaking with visible words, "
-    "the image must be a CLEAN cinematic shot without any written characters."
-)
-
-negative_motion_strict = (
-    "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-    "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
-)
-
-# --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
-img_quality_base = f"{img_quality_stack} {no_text_strict}"
-vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict} {negative_motion_strict}"
-
-# ==============================================================================
-# 9. FORM INPUT ADEGAN
-# ==============================================================================
-if "restore_counter" not in st.session_state:
-    st.session_state.restore_counter = 0
-
-st.subheader("📝 Detail Adegan Storyboard")
-
-# --- IDENTITAS TOKOH (VERSI ELEGANT GRID) ---
-with st.expander("👥 Nama Karakter Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
-    num_total_char = st.number_input("Total Karakter Utama dalam Project", min_value=1, max_value=10, value=2)
-    st.write("") 
-
-    all_chars_list = []
-    for i in range(1, num_total_char + 1, 2):
-        cols = st.columns(2)
-        for idx_offset in range(2):
-            idx = i + idx_offset
-            if idx <= num_total_char:
-                with cols[idx_offset]:
-                    st.markdown(f"##### 👤 Karakter Utama {idx}")
-                    name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Karakter Utama {idx}", label_visibility="collapsed")
-                    desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Karakter Utama {idx}...", label_visibility="collapsed")
-                    all_chars_list.append({"name": name, "desc": desc})
-        st.write("---") 
-
-# --- LIST ADEGAN ---
-adegan_storage = []
-for i_s in range(1, int(num_scenes) + 1):
-    l_box_title = f"🟢 ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
-    with st.expander(l_box_title, expanded=(i_s == 1)):
-        # Saya ubah sedikit ke [6, 4] agar kolom kontrol punya ruang lebih untuk teks manual
-        col_v, col_ctrl = st.columns([6, 4])
         
-        with col_v:
-            # UBAH TINGGI DI SINI (265 adalah perkiraan sejajar dengan input manual)
-            visual_input = st.text_area(
-                f"Cerita Visual {i_s}", 
-                key=f"vis_input_{i_s}", 
-                height=265, 
-                placeholder="Ceritakan detail adegannya di sini..."
-            )
-        
-        with col_ctrl:
-            # --- BARIS 1 ---
-            r1 = st.columns(2)
-            with r1[0]:
-                st.markdown('<p class="small-label">💡 Suasana</p>', unsafe_allow_html=True)
-                light_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
-            with r1[1]:
-                st.markdown('<p class="small-label">📐 Ukuran Gambar</p>', unsafe_allow_html=True)
-                shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
+# ==============================================================================
+# MAIN PAGE ROUTING (Sistem Navigasi Ruangan)
+# ==============================================================================
+if menu_select == "🚀 RUANG PRODUKSI":
+    # --- LOGIKA REVIEW NASKAH DARI AI LAB ---
+    if st.session_state.get('draft_from_lab'):
+        with st.expander("📄 REVIEW NASKAH DARI AI LAB (BACA SEBELUM PRODUKSI)", expanded=True):
+            st.info("Staf wajib membaca seluruh alur cerita ini agar paham konteks visualnya.")
             
-            # --- BARIS 2 ---
-            r2 = st.columns(2)
-            with r2[0]:
-                st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
-                angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
-            with r2[1]:
-                st.markdown('<p class="small-label">🎬 Gerakan Kamera (khusus video)</p>', unsafe_allow_html=True)
-                cam_val = st.selectbox(f"C{i_s}", indonesia_camera, index=0, key=f"camera_input_{i_s}", label_visibility="collapsed")
+            # Menampilkan naskah utuh dalam satu kotak besar
+            naskah_utuh = st.text_area("Naskah Lengkap:", value=st.session_state['draft_from_lab'], height=300)
             
-            # --- BARIS 3 ---
-            r3 = st.columns(1)
-            with r3[0]:
-                st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
-                loc_choice = st.selectbox(f"LocSelect{i_s}", options=options_lokasi, key=f"loc_sel_{i_s}", label_visibility="collapsed")
-                
-                if loc_choice == "--- KETIK MANUAL ---":
-                    location_val = st.text_input(
-                        "Tulis lokasi spesifik latar cerita di sini:", 
-                        key=f"loc_custom_{i_s}", 
-                        placeholder="Contoh: di dalam gerbong kereta api tua..."
-                    )
-                else:
-                    location_val = loc_choice
-
-        # --- BAGIAN DIALOG ---
-        diag_cols = st.columns(len(all_chars_list))
-        scene_dialogs_list = []
-        for i_char, char_data in enumerate(all_chars_list):
-            with diag_cols[i_char]:
-                char_label = char_data['name'] if char_data['name'] else f"Karakter {i_char+1}"
-                d_in = st.text_input(f"Dialog {char_label}", key=f"diag_{i_s}_{i_char}")
-                scene_dialogs_list.append({"name": char_label, "text": d_in})
-        
-        adegan_storage.append({
-            "num": i_s, 
-            "visual": visual_input, 
-            "light": light_val,
-            "location": location_val, # Ini akan berisi 'Pasar' ATAU hasil ketikan manual
-            "cam": cam_val, 
-            "shot": shot_val,
-            "angle": angle_val, 
-            "dialogs": scene_dialogs_list
-        })
-
-# ==============================================================================
-# 10. GENERATOR PROMPT & MEGA-DRAFT (OPTIMASI GEMINI IDENTITY) - REVISED SHARP
-# ==============================================================================
-import json
-
-# 1. Siapkan Lemari Penyimpanan Hasil Generate
-if 'last_generated_results' not in st.session_state:
-    st.session_state.last_generated_results = []
-
-st.write("")
-
-# 2. PROSES GENERATE (Saat tombol diklik)
-if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
-    nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
-    active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
-    
-    if not nama_tokoh_utama:
-        st.warning("⚠️ **Nama Karakter 1 belum diisi!**")
-    elif not active_scenes:
-        st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
-    else:
-        with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
-            st.session_state.last_generated_results = []
-        
-            # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
-            try:
-                captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
-                auto_packet = {
-                    "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
-                    "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
-                    "scenes": captured_scenes_auto
-                }
-                record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
-            except: 
-                pass
-        
-            record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+            col_apply, col_cancel = st.columns(2)
+            with col_apply:
+                # Warna tombol dibuat sama (secondary) agar elegan dan simpel
+                if st.button("✅ TERAPKAN KE SETIAP ADEGAN", use_container_width=True, type="secondary"):
+                    import re
+                    # Proses pemecahan teks ke session state masing-masing adegan
+                    parts = re.split(r'Adegan \d+[:\- ]+', naskah_utuh)
+                    parts = [p.strip() for p in parts if p.strip()] 
+                    
+                    for idx, isi in enumerate(parts):
+                        if idx < 50: 
+                            st.session_state[f"vis_input_{idx+1}"] = isi
+                    
+                    st.success("Berhasil! Naskah telah disebar ke kolom adegan di bawah.")
+                    st.rerun() 
             
-            # --- MULAI PERULANGAN ADEGAN ---
-            for item in active_scenes:
-                import re
-                mentioned_chars_list = []
-                v_text_low = str(item.get('visual', "")).lower().strip()
+            with col_cancel:
+                # Tombol Hapus Draft
+                if st.button("🗑️ HAPUS DRAFT", use_container_width=True, type="secondary"):
+                    del st.session_state['draft_from_lab']
+                    st.rerun()
+                    
+    # ==============================================================================
+    # 8. PARAMETER KUALITAS (VERSION: APEX SHARPNESS & VIVID)
+    # ==============================================================================
+    # --- STACK UNTUK FOTO (Tajam, Statis, Tekstur Pori-pori) ---
+    img_quality_stack = (
+        "hyper-realistic 8k RAW photo, infinite depth of field, f/11 aperture, "
+        "zero bokeh, zero background blur, sharp edge-enhancement, non-filtered, "
+        "ultra-clear optical clarity, tactile textures on sand, gravel, and wood, "
+        "CPL filter, deep blue sky, polarized colors, high local contrast, "
+        "vivid naturalism, realistic shadow recovery, masterpiece quality."
+    )
+
+    # --- STACK UNTUK VIDEO (Motion Blur Natural, Cinematic, Smooth) ---
+    vid_quality_stack = (
+        "ultra-high definition cinematic video, 8k UHD, high dynamic range, "
+        "professional color grading, vibrant organic colors, ray-traced reflections, "
+        "hyper-detailed textures, zero digital noise, clean pixels, "
+        "smooth motion, professional cinematography, masterpiece quality."
+    )
+
+    # --- PENGUAT NEGATIF (Mencegah Glitch & Teks) ---
+    no_text_strict = (
+        "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
+        "NO captions, NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
+        "NO burned-in text, NO characters speaking with visible words, "
+        "the image must be a CLEAN cinematic shot without any written characters."
+    )
+
+    negative_motion_strict = (
+        "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
+        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+    )
+
+    # --- HASIL AKHIR (SANGAT BERBEDA ANTARA GAMBAR & VIDEO) ---
+    img_quality_base = f"{img_quality_stack} {no_text_strict}"
+    vid_quality_base = f"60fps, ultra-clear motion, {vid_quality_stack} {no_text_strict} {negative_motion_strict}"
+
+    # ==============================================================================
+    # 9. FORM INPUT ADEGAN
+    # ==============================================================================
+    if "restore_counter" not in st.session_state:
+        st.session_state.restore_counter = 0
+
+    st.subheader("📝 Detail Adegan Storyboard")
+
+    # --- IDENTITAS TOKOH (VERSI ELEGANT GRID) ---
+    with st.expander("👥 Nama Karakter Utama & Penampilan Fisik! (WAJIB ISI)", expanded=True):
+        num_total_char = st.number_input("Total Karakter Utama dalam Project", min_value=1, max_value=10, value=2)
+        st.write("") 
+
+        all_chars_list = []
+        for i in range(1, num_total_char + 1, 2):
+            cols = st.columns(2)
+            for idx_offset in range(2):
+                idx = i + idx_offset
+                if idx <= num_total_char:
+                    with cols[idx_offset]:
+                        st.markdown(f"##### 👤 Karakter Utama {idx}")
+                        name = st.text_input("Nama", key=f"c_name_{idx}_input", placeholder=f"Nama Karakter Utama {idx}", label_visibility="collapsed")
+                        desc = st.text_area("Penampilan Fisik", key=f"c_desc_{idx}_input", height=120, placeholder=f"Ciri fisik Karakter Utama {idx}...", label_visibility="collapsed")
+                        all_chars_list.append({"name": name, "desc": desc})
+            st.write("---") 
+
+    # --- LIST ADEGAN ---
+    adegan_storage = []
+    for i_s in range(1, int(num_scenes) + 1):
+        l_box_title = f"🟢 ADEGAN {i_s}" if i_s == 1 else f"🎬 ADEGAN {i_s}"
+        with st.expander(l_box_title, expanded=(i_s == 1)):
+            # Saya ubah sedikit ke [6, 4] agar kolom kontrol punya ruang lebih untuk teks manual
+            col_v, col_ctrl = st.columns([6, 4])
+            
+            with col_v:
+                # UBAH TINGGI DI SINI (265 adalah perkiraan sejajar dengan input manual)
+                visual_input = st.text_area(
+                    f"Cerita Visual {i_s}", 
+                    key=f"vis_input_{i_s}", 
+                    height=265, 
+                    placeholder="Ceritakan detail adegannya di sini..."
+                )
+            
+            with col_ctrl:
+                # --- BARIS 1 ---
+                r1 = st.columns(2)
+                with r1[0]:
+                    st.markdown('<p class="small-label">💡 Suasana</p>', unsafe_allow_html=True)
+                    light_val = st.selectbox(f"L{i_s}", options_lighting, key=f"light_input_{i_s}", label_visibility="collapsed")
+                with r1[1]:
+                    st.markdown('<p class="small-label">📐 Ukuran Gambar</p>', unsafe_allow_html=True)
+                    shot_val = st.selectbox(f"S{i_s}", indonesia_shot, key=f"shot_input_{i_s}", label_visibility="collapsed")
                 
-                # 1. SCAN KARAKTER (LOGIKA KATA UTUH)
-                for c in all_chars_list:
-                    c_name_raw = str(c.get('name', "")).strip()
-                    if c_name_raw:
-                        if re.search(rf'\b{re.escape(c_name_raw.lower())}\b', v_text_low):
-                            mentioned_chars_list.append({"name": c_name_raw.upper(), "desc": c.get('desc', '')})
+                # --- BARIS 2 ---
+                r2 = st.columns(2)
+                with r2[0]:
+                    st.markdown('<p class="small-label">✨ Arah Kamera</p>', unsafe_allow_html=True)
+                    angle_val = st.selectbox(f"A{i_s}", indonesia_angle, key=f"angle_input_{i_s}", label_visibility="collapsed")
+                with r2[1]:
+                    st.markdown('<p class="small-label">🎬 Gerakan Kamera (khusus video)</p>', unsafe_allow_html=True)
+                    cam_val = st.selectbox(f"C{i_s}", indonesia_camera, index=0, key=f"camera_input_{i_s}", label_visibility="collapsed")
                 
-                # 2. LOGIKA HEADER INSTRUKSI (UNTUK GEMINI)
-                if len(mentioned_chars_list) == 1:
-                    target_name = mentioned_chars_list[0]['name']
-                    char_info = f"[[ CHARACTER_{target_name}: {mentioned_chars_list[0]['desc']} ]]"
-                    instruction_header = (
-                        f"IMAGE REFERENCE RULE: Use the uploaded photo for {target_name}'s face and body.\n"
-                        f"STRICT LIMIT: This scene MUST ONLY feature {target_name}. Do NOT add other characters."
-                    )
-                elif len(mentioned_chars_list) > 1:
-                    char_info = " AND ".join([f"[[ CHARACTER_{m['name']}: {m['desc']} ]]" for m in mentioned_chars_list])
-                    instruction_header = "IMAGE REFERENCE RULE: Use uploaded photos for each character. Interaction required."
-                else:
-                    char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
-                    instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
-
-                # --- LOGIKA GAYA VISUAL OTOMATIS (VERSI ANTI-TABRAKAN) ---
-                if genre_pilihan == "Pixar 3D":
-                    bumbu_gaya = "Disney Pixar style 3D animation, Octane render, ray-traced global illumination, premium subsurface scattering, soft tactile textures"
-                
-                elif genre_pilihan == "Marvel Superhero":
-                    bumbu_gaya = "Marvel Cinematic Universe aesthetic, heroic cinematic lighting, tactical suit textures, professional teal and orange color grading"
-
-                elif genre_pilihan == "Transformers (Mecha)":
-                    # Kita hapus efek 'Matahari Siang' secara paksa di sini agar Flare & Ledakan lebih kelihatan
-                    bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, complex moving gears, anamorphic lens flares, sparks and debris"
-                    l_cmd = l_cmd.replace("Direct harsh midday sunlight,", "Dramatic cinematic lighting,")
-
-                elif genre_pilihan == "KingKong (VFX Monster)":
-                    bumbu_gaya = "Photorealistic CGI, ILM blockbuster VFX quality, hyper-detailed creature rendering, wet fur and skin micro-textures, volumetric lighting"
-
-                elif genre_pilihan == "Asphalt (Balap/Glossy)":
-                    # TRIK KHUSUS: Kita buang perintah 'Zero Blur' dan 'Midday' agar Motion Blur-nya jalan
-                    bumbu_gaya = "Asphalt 9 gaming aesthetic, ultra-glossy metallic paint, ray-traced reflections, cinematic motion blur, neon light streaks"
-                    # Membersihkan instruksi matahari siang agar neon & glossy studio lebih keluar
-                    l_cmd = l_cmd.replace("Direct harsh midday sunlight,", "Automotive studio lighting,")
-                    # Membersihkan perintah 'Zero Blur' di prompt final nanti
-                    img_quality_stack = img_quality_stack.replace("zero background blur,", "").replace("zero bokeh,", "")
-
-                elif genre_pilihan == "Ghibli (Estetik/Indah)":
-                    bumbu_gaya = "Studio Ghibli hand-painted style, watercolor textures, soft cel shading, lush nature aesthetic, whimsical lighting"
-
-                elif genre_pilihan == "Dragon Ball":
-                    bumbu_gaya = "Dragon Ball Super anime style, sharp ink lineart, intense cel shading, vibrant energy aura with bloom effect"
-
-                elif genre_pilihan == "Doraemon 3D":
-                    bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI, soft rounded shapes, warm pastel colors, subsurface scattering"
-
-                elif genre_pilihan == "Naruto (Ninja)":
-                    bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading, traditional Japanese art influence"
-
-                elif genre_pilihan == "Tayo (Anak-anak)":
-                    bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, clean plastic surfaces"
-
-                elif genre_pilihan == "Sakura School (Anime)":
-                    bumbu_gaya = "Sakura School Simulator style, high-quality 3D anime game graphics, bright sunny lighting, smooth plastic textures"
-
-                else:
-                    # Default: Kembali ke gaya Realistik (Foto)
-                    # Biarkan instruksi tajam/matahari siang kamu bekerja di sini
-                    bumbu_gaya = img_quality_stack
-
-                # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
-                # Jangan ambil dari 'item', tapi langsung tembak ke session_state pusat
-                pilihan_dropdown = st.session_state.get(f"loc_sel_{item['num']}", "")
-                
-                if pilihan_dropdown == "--- KETIK MANUAL ---":
-                    # Tembak langsung ke kotak ketikan manualnya
-                    manual_text = st.session_state.get(f"loc_custom_{item['num']}", "").strip()
-                    if manual_text:
-                        dna_env = f"{manual_text}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
+                # --- BARIS 3 ---
+                r3 = st.columns(1)
+                with r3[0]:
+                    st.markdown('<p class="small-label">📍 Lokasi</p>', unsafe_allow_html=True)
+                    loc_choice = st.selectbox(f"LocSelect{i_s}", options=options_lokasi, key=f"loc_sel_{i_s}", label_visibility="collapsed")
+                    
+                    if loc_choice == "--- KETIK MANUAL ---":
+                        location_val = st.text_input(
+                            "Tulis lokasi spesifik latar cerita di sini:", 
+                            key=f"loc_custom_{i_s}", 
+                            placeholder="Contoh: di dalam gerbong kereta api tua..."
+                        )
                     else:
-                        dna_env = "cinematic environment, highly detailed textures, sharp focus."
-                else:
-                    # Ambil dari DNA, gunakan .lower() supaya sinkron dengan key di LOKASI_DNA
-                    dna_env = LOKASI_DNA.get(pilihan_dropdown.lower(), f"{pilihan_dropdown}, sharp focus.")
+                        location_val = loc_choice
 
-                # Penentuan shot dan angle tetap sama
-                e_shot = shot_map.get(item["shot"], "Medium Shot")
-                e_angle = angle_map.get(item["angle"], "")
-                
-                # --- [PERBAIKAN BESAR: LOGIKA CERDAS CAMERA SINKRON MENU] ---
-                # A. Logika Drone
-                if "drone" in e_shot.lower():
-                    camera_final = f"{e_shot}, high-altitude view, expansive landscape, infinite focus, f/11"
-                
-                # B. Logika Intip Bahu (Cek dari e_angle sekarang, bukan e_shot)
-                elif "over-the-shoulder" in e_angle.lower():
-                    target_focus = "the character"
-                    for m in mentioned_chars_list:
-                        if m['name'].lower() in v_text_low:
-                            target_focus = m['name']
-                            break
-                    camera_final = f"{e_angle} looking at {target_focus}, focus on {target_focus}'s facial expression, infinite depth of field"
-                
-                # C. Logika Standar (Solo/Duo) - Dibuat SUPER TAJAM
-                else:
-                    camera_final = f"{e_shot}, {e_angle}, infinite depth of field, f/11 aperture, ultra-sharp focus everywhere"
-                
-                # --- LIGHTING LOGIC (VERSION: APEX SHARPNESS & CONTROLLED LIGHT) ---
-                if "Pagi" in item["light"]: 
-                    l_cmd = (
-                        "6 AM early morning sunlight, subtle sunbeams, anti-glare, "
-                        "no lens flare, low-angle side lighting to emphasize textures, "
-                        "vibrant dewy surfaces, high local contrast, crystal clear air."
-                    )
-                elif "Siang" in item["light"]: 
-                    l_cmd = (
-                        "Direct harsh midday sunlight, clear blue sky, vibrant naturalism, "
-                        "cinematic contrast, deep black levels, polarizing filter for rich saturated colors."
-                    )
-                elif "Sore" in item["light"]: 
-                    l_cmd = (
-                        "4 PM golden hour, warm saturated colors, long dramatic sharp shadows, "
-                        "sharp amber highlights, high local contrast, no haze, ultra-clear atmosphere."
-                    )
-                elif "Malam" in item["light"]: 
-                    l_cmd = (
-                        "Cinematic night, realistic dim moonlight, no rim light, no glow, "
-                        "natural ambient shadows, high local contrast on textures, "
-                        "visible ground grit and soil details, deep indigo sky, "
-                        "clean silhouettes, zero digital noise, professional night photography."
-                    )
-                else: 
-                    l_cmd = "Natural lighting, high contrast, balanced exposure, sharp focus."
-
-                # --- 1. PROSES DIALOG & EMOSI (OPERASI ANTI-TEKS) ---
-                try:
-                    # Ambil semua teks dialog untuk referensi akting
-                    d_text_full = " ".join([f"{d['name']}: {d['text']}" for d in item.get('dialogs', []) if d.get('text')])
-                except:
-                    d_text_full = ""
-
-                # Kita buat instruksi emosi untuk GAMBAR (Tanpa menyertakan teks dialognya)
-                if d_text_full:
-                    # AI hanya diberi tahu "mood" dari dialognya saja, dilarang nulis teks
-                    image_emo = f"The characters must show facial expressions reflecting this mood: '{d_text_full}'. STRICTLY NO TEXT OR SPEECH BUBBLES ON IMAGE."
-                else:
-                    image_emo = "Natural cinematic facial expression."
-
-                # --- 4. OUTPUT AKHIR (VERSI BERSIH & TAJAM) ---
-                img_final = (
-                    f"{instruction_header}\n\n"
-                    f"STRICT VISUAL RULE: CLEAN PHOTOGRAPHY. NO WRITTEN TEXT. NO SUBTITLES. NO SPEECH BUBBLES.\n"
-                    f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
-                    f"CHARACTER DATA: {char_info}\n"
-                    f"VISUAL ACTION: {item['visual']}. {image_emo}\n"
-                    f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, NO SOFTENING.\n"
-                    f"CAMERA: {camera_final}\n"
-                    f"TECHNICAL: {bumbu_gaya}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
-                )
-
-                # Untuk VIDEO, dialog tetap boleh disertakan secara utuh
-                vid_final = (
-                    f"{instruction_header}\n"
-                    f"ACTION & MOTION: {item['visual']}. Character must move naturally with fluid cinematic motion, no robotic movement, no stiffness.\n"
-                    f"CHARACTER CONSISTENCY: {char_info}. Maintain 100% facial identity consistency, high-fidelity facial features, no face morphing, look exactly like the reference.\n"
-                    f"ENVIRONMENT: {dna_env}.\n"
-                    f"LIGHTING: {l_cmd}.\n"
-                    f"ACTING CUE (STRICTLY NO TEXT ON SCREEN): Use this dialogue for emotional reference only: '{d_text_full}'.\n"
-                    f"TECHNICAL: {bumbu_gaya}, {vid_quality_base}" # <--- TAMBAHKAN BARIS INI
-                )
-
-                # --- SIMPAN HASIL ---
-                st.session_state.last_generated_results.append({
-                    "id": item["num"], 
-                    "img": img_final, 
-                    "vid": vid_final, 
-                    "cam_info": f"{camera_final}"
-                })
-
-        st.toast("Prompt Berhasil Diracik! 🚀")
-        st.rerun()
-# ==============================================================================
-# AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
-# ==============================================================================
-if st.session_state.last_generated_results:
-
-    st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
-    
-    for res in st.session_state.last_generated_results:
-        done_key = f"mark_done_{res['id']}"
-        is_done = st.session_state.get(done_key, False)
-        
-        status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
-        
-        with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
-            if is_done:
-                st.success(f"Adegan {res['id']} Selesai!")
+            # --- BAGIAN DIALOG ---
+            diag_cols = st.columns(len(all_chars_list))
+            scene_dialogs_list = []
+            for i_char, char_data in enumerate(all_chars_list):
+                with diag_cols[i_char]:
+                    char_label = char_data['name'] if char_data['name'] else f"Karakter {i_char+1}"
+                    d_in = st.text_input(f"Dialog {char_label}", key=f"diag_{i_s}_{i_char}")
+                    scene_dialogs_list.append({"name": char_label, "text": d_in})
             
-            # --- GRID PROMPT ---
+            adegan_storage.append({
+                "num": i_s, 
+                "visual": visual_input, 
+                "light": light_val,
+                "location": location_val, # Ini akan berisi 'Pasar' ATAU hasil ketikan manual
+                "cam": cam_val, 
+                "shot": shot_val,
+                "angle": angle_val, 
+                "dialogs": scene_dialogs_list
+            })
+
+    # ==============================================================================
+    # 10. GENERATOR PROMPT & MEGA-DRAFT (OPTIMASI GEMINI IDENTITY) - REVISED SHARP
+    # ==============================================================================
+    import json
+
+    # 1. Siapkan Lemari Penyimpanan Hasil Generate
+    if 'last_generated_results' not in st.session_state:
+        st.session_state.last_generated_results = []
+
+    st.write("")
+
+    # 2. PROSES GENERATE (Saat tombol diklik)
+    if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
+        nama_tokoh_utama = st.session_state.get("c_name_1_input", "").strip()
+        active_scenes = [a for a in adegan_storage if a["visual"].strip() != ""]
+        
+        if not nama_tokoh_utama:
+            st.warning("⚠️ **Nama Karakter 1 belum diisi!**")
+        elif not active_scenes:
+            st.warning("⚠️ **Mohon isi deskripsi cerita visual!**")
+        else:
+            with st.spinner(f"⏳ Sedang meracik prompt tajam..."):
+                st.session_state.last_generated_results = []
+            
+                # --- [BLOCK 1: AUTO-SAVE KOPER LENGKAP] ---
+                try:
+                    captured_scenes_auto = {f"v{i}": st.session_state.get(f"vis_input_{i}") for i in range(1, int(num_scenes) + 1) if st.session_state.get(f"vis_input_{i}")}
+                    auto_packet = {
+                        "n1": st.session_state.get("c_name_1_input", ""), "p1": st.session_state.get("c_desc_1_input", ""),
+                        "n2": st.session_state.get("c_name_2_input", ""), "p2": st.session_state.get("c_desc_2_input", ""),
+                        "scenes": captured_scenes_auto
+                    }
+                    record_to_sheets(f"AUTO_{st.session_state.active_user}", json.dumps(auto_packet), len(captured_scenes_auto))
+                except: 
+                    pass
+            
+                record_to_sheets(st.session_state.active_user, active_scenes[0]["visual"], len(active_scenes))
+                
+                # --- MULAI PERULANGAN ADEGAN ---
+                for item in active_scenes:
+                    import re
+                    mentioned_chars_list = []
+                    v_text_low = str(item.get('visual', "")).lower().strip()
+                    
+                    # 1. SCAN KARAKTER (LOGIKA KATA UTUH)
+                    for c in all_chars_list:
+                        c_name_raw = str(c.get('name', "")).strip()
+                        if c_name_raw:
+                            if re.search(rf'\b{re.escape(c_name_raw.lower())}\b', v_text_low):
+                                mentioned_chars_list.append({"name": c_name_raw.upper(), "desc": c.get('desc', '')})
+                    
+                    # 2. LOGIKA HEADER INSTRUKSI (UNTUK GEMINI)
+                    if len(mentioned_chars_list) == 1:
+                        target_name = mentioned_chars_list[0]['name']
+                        char_info = f"[[ CHARACTER_{target_name}: {mentioned_chars_list[0]['desc']} ]]"
+                        instruction_header = (
+                            f"IMAGE REFERENCE RULE: Use the uploaded photo for {target_name}'s face and body.\n"
+                            f"STRICT LIMIT: This scene MUST ONLY feature {target_name}. Do NOT add other characters."
+                        )
+                    elif len(mentioned_chars_list) > 1:
+                        char_info = " AND ".join([f"[[ CHARACTER_{m['name']}: {m['desc']} ]]" for m in mentioned_chars_list])
+                        instruction_header = "IMAGE REFERENCE RULE: Use uploaded photos for each character. Interaction required."
+                    else:
+                        char_info = f"[[ CHARACTER_MAIN: {all_chars_list[0]['desc']} ]]"
+                        instruction_header = "IMAGE REFERENCE RULE: Use the main character reference."
+
+                    # --- LOGIKA GAYA VISUAL OTOMATIS (VERSI ANTI-TABRAKAN) ---
+                    if genre_pilihan == "Pixar 3D":
+                        bumbu_gaya = "Disney Pixar style 3D animation, Octane render, ray-traced global illumination, premium subsurface scattering, soft tactile textures"
+                    
+                    elif genre_pilihan == "Marvel Superhero":
+                        bumbu_gaya = "Marvel Cinematic Universe aesthetic, heroic cinematic lighting, tactical suit textures, professional teal and orange color grading"
+
+                    elif genre_pilihan == "Transformers (Mecha)":
+                        # Kita hapus efek 'Matahari Siang' secara paksa di sini agar Flare & Ledakan lebih kelihatan
+                        bumbu_gaya = "Michael Bay cinematic style, Transformers mechanical realism, complex moving gears, anamorphic lens flares, sparks and debris"
+                        l_cmd_temp = "Dramatic cinematic lighting,"
+
+                    elif genre_pilihan == "KingKong (VFX Monster)":
+                        bumbu_gaya = "Photorealistic CGI, ILM blockbuster VFX quality, hyper-detailed creature rendering, wet fur and skin micro-textures, volumetric lighting"
+
+                    elif genre_pilihan == "Asphalt (Balap/Glossy)":
+                        # TRIK KHUSUS: Kita buang perintah 'Zero Blur' dan 'Midday' agar Motion Blur-nya jalan
+                        bumbu_gaya = "Asphalt 9 gaming aesthetic, ultra-glossy metallic paint, ray-traced reflections, cinematic motion blur, neon light streaks"
+                        l_cmd_temp = "Automotive studio lighting,"
+                        img_quality_stack_temp = img_quality_stack.replace("zero background blur,", "").replace("zero bokeh,", "")
+
+                    elif genre_pilihan == "Ghibli (Estetik/Indah)":
+                        bumbu_gaya = "Studio Ghibli hand-painted style, watercolor textures, soft cel shading, lush nature aesthetic, whimsical lighting"
+
+                    elif genre_pilihan == "Dragon Ball":
+                        bumbu_gaya = "Dragon Ball Super anime style, sharp ink lineart, intense cel shading, vibrant energy aura with bloom effect"
+
+                    elif genre_pilihan == "Doraemon 3D":
+                        bumbu_gaya = "Stand By Me Doraemon style, high-end 3D CGI, soft rounded shapes, warm pastel colors, subsurface scattering"
+
+                    elif genre_pilihan == "Naruto (Ninja)":
+                        bumbu_gaya = "Naruto Shippuden anime style, bold ink lines, cinematic cel shading, traditional Japanese art influence"
+
+                    elif genre_pilihan == "Tayo (Anak-anak)":
+                        bumbu_gaya = "3D CGI animation for kids, Tayo the Little Bus aesthetic, vibrant primary colors, clean plastic surfaces"
+
+                    elif genre_pilihan == "Sakura School (Anime)":
+                        bumbu_gaya = "Sakura School Simulator style, high-quality 3D anime game graphics, bright sunny lighting, smooth plastic textures"
+
+                    else:
+                        # Default: Kembali ke gaya Realistik (Foto)
+                        bumbu_gaya = img_quality_stack
+
+                    # --- 3. RAKITAN LOKASI (THE ULTIMATE FIX) ---
+                    pilihan_dropdown = st.session_state.get(f"loc_sel_{item['num']}", "")
+                    
+                    if pilihan_dropdown == "--- KETIK MANUAL ---":
+                        manual_text = st.session_state.get(f"loc_custom_{item['num']}", "").strip()
+                        if manual_text:
+                            dna_env = f"{manual_text}, highly detailed textures, realistic environment, 8k resolution, cinematic sharp focus, tactile surfaces."
+                        else:
+                            dna_env = "cinematic environment, highly detailed textures, sharp focus."
+                    else:
+                        dna_env = LOKASI_DNA.get(pilihan_dropdown.lower(), f"{pilihan_dropdown}, sharp focus.")
+
+                    # Penentuan shot dan angle tetap sama
+                    e_shot = shot_map.get(item["shot"], "Medium Shot")
+                    e_angle = angle_map.get(item["angle"], "")
+                    
+                    # --- [LOGIKA CERDAS CAMERA SINKRON MENU] ---
+                    if "drone" in e_shot.lower():
+                        camera_final = f"{e_shot}, high-altitude view, expansive landscape, infinite focus, f/11"
+                    elif "over-the-shoulder" in e_angle.lower():
+                        target_focus = "the character"
+                        for m in mentioned_chars_list:
+                            if m['name'].lower() in v_text_low:
+                                target_focus = m['name']
+                                break
+                        camera_final = f"{e_angle} looking at {target_focus}, focus on {target_focus}'s facial expression, infinite depth of field"
+                    else:
+                        camera_final = f"{e_shot}, {e_angle}, infinite depth of field, f/11 aperture, ultra-sharp focus everywhere"
+                    
+                    # --- LIGHTING LOGIC ---
+                    if "Pagi" in item["light"]: 
+                        l_cmd = ("6 AM early morning sunlight, subtle sunbeams, anti-glare, no lens flare, low-angle side lighting to emphasize textures, vibrant dewy surfaces, high local contrast, crystal clear air.")
+                    elif "Siang" in item["light"]: 
+                        l_cmd = ("Direct harsh midday sunlight, clear blue sky, vibrant naturalism, cinematic contrast, deep black levels, polarizing filter for rich saturated colors.")
+                    elif "Sore" in item["light"]: 
+                        l_cmd = ("4 PM golden hour, warm saturated colors, long dramatic sharp shadows, sharp amber highlights, high local contrast, no haze, ultra-clear atmosphere.")
+                    elif "Malam" in item["light"]: 
+                        l_cmd = ("Cinematic night, realistic dim moonlight, no rim light, no glow, natural ambient shadows, high local contrast on textures, visible ground grit and soil details, deep indigo sky, clean silhouettes, zero digital noise, professional night photography.")
+                    else: 
+                        l_cmd = "Natural lighting, high contrast, balanced exposure, sharp focus."
+
+                    # --- PROSES DIALOG & EMOSI ---
+                    try:
+                        d_text_full = " ".join([f"{d['name']}: {d['text']}" for d in item.get('dialogs', []) if d.get('text')])
+                    except:
+                        d_text_full = ""
+
+                    if d_text_full:
+                        image_emo = f"The characters must show facial expressions reflecting this mood: '{d_text_full}'. STRICTLY NO TEXT OR SPEECH BUBBLES ON IMAGE."
+                    else:
+                        image_emo = "Natural cinematic facial expression."
+
+                    # --- OUTPUT AKHIR ---
+                    img_final = (
+                        f"{instruction_header}\n\n"
+                        f"STRICT VISUAL RULE: CLEAN PHOTOGRAPHY. NO WRITTEN TEXT. NO SUBTITLES. NO SPEECH BUBBLES.\n"
+                        f"FOCUS RULE: INFINITE DEPTH OF FIELD, EVERYTHING MUST BE ULTRA-SHARP FROM FOREGROUND TO BACKGROUND.\n"
+                        f"CHARACTER DATA: {char_info}\n"
+                        f"VISUAL ACTION: {item['visual']}. {image_emo}\n"
+                        f"ENVIRONMENT: {dna_env}. hyper-detailed grit, sand, leaf veins, tactile micro-textures, NO SOFTENING.\n"
+                        f"CAMERA: {camera_final}\n"
+                        f"TECHNICAL: {bumbu_gaya}, {l_cmd}, extreme edge-enhancement, every pixel is sharp, deep color saturation."
+                    )
+
+                    vid_final = (
+                        f"{instruction_header}\n"
+                        f"ACTION & MOTION: {item['visual']}. Character must move naturally with fluid cinematic motion, no robotic movement, no stiffness.\n"
+                        f"CHARACTER CONSISTENCY: {char_info}. Maintain 100% facial identity consistency, high-fidelity facial features, no face morphing, look exactly like the reference.\n"
+                        f"ENVIRONMENT: {dna_env}.\n"
+                        f"LIGHTING: {l_cmd}.\n"
+                        f"ACTING CUE (STRICTLY NO TEXT ON SCREEN): Use this dialogue for emotional reference only: '{d_text_full}'.\n"
+                        f"TECHNICAL: {bumbu_gaya}, {vid_quality_base}"
+                    )
+
+                    st.session_state.last_generated_results.append({
+                        "id": item["num"], 
+                        "img": img_final, 
+                        "vid": vid_final, 
+                        "cam_info": f"{camera_final}"
+                    })
+
+            st.toast("Prompt Berhasil Diracik! 🚀")
+            st.rerun()
+
+    if st.session_state.last_generated_results:
+        st.markdown(f"### 🎬 Hasil Prompt: {st.session_state.active_user.capitalize()}❤️")
+        for res in st.session_state.last_generated_results:
+            done_key = f"mark_done_{res['id']}"
+            is_done = st.session_state.get(done_key, False)
+            status_tag = "✅ SELESAI" if is_done else "⏳ PROSES"
+            with st.expander(f"{status_tag} | ADEGAN {res['id']}", expanded=not is_done):
+                if is_done: st.success(f"Adegan {res['id']} Selesai!")
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**📸 PROMPT GAMBAR**")
+                    st.code(res['img'], language="text")
+                with c2:
+                    st.markdown("**🎥 PROMPT VIDEO**")
+                    st.code(res['vid'], language="text")
+
+# --------------------------------------------------------------------------
+# HALAMAN LAIN (KOSONGAN UNTUK PENGEMBANGAN)
+# --------------------------------------------------------------------------
+elif menu_select == "🧠 PINTAR AI LAB":
+    from groq import Groq
+
+    # --- STYLE MINIMALIS ELEGAN ---
+    st.markdown("""
+        <style>
+        .stSegmentedControl { gap: 10px; }
+        .sop-text { color: #808495; font-size: 0.9rem; border-left: 3px solid #1d976c; padding-left: 15px; margin: 10px 0 25px 0; }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.title("🧠 PINTAR AI LAB")
+    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
+    
+    mode_lab = st.segmented_control(
+        "Pilih Jalur Produksi Ide:",
+        ["📋 MANUAL PROMPT", "⚡ OTOMATIS (PINTAR AI)"],
+        default="📋 MANUAL PROMPT",
+        label_visibility="collapsed"
+    )
+
+    st.markdown(f'<div class="sop-text"><b>SOP {mode_lab}:</b> otomatis ngeracik detail alur cerita, teknis kamera, gerakan kamera, sampe suasananya.</div>', unsafe_allow_html=True)
+
+    owner_core = st.text_area("📍 SEBAGAI BAHAN IDE CERITA", height=120, placeholder="Tuliskan inti pesan atau alur utama cerita...")
+    
+    col_x, col_y, col_z = st.columns(3)
+    with col_x:
+        jml_sc = st.number_input("Target Adegan", 4, 20, 6)
+    with col_y:
+        mood_cerita = st.selectbox("Mood Visual", ["Drama Emosional", "Komedi Situasi", "Thriller Mencekam", "Aksi Balap", "Horor"])
+    with col_z:
+        target_audien = st.selectbox("Audiens", ["General", "Anak-anak", "Dewasa"])
+
+    st.divider()
+
+    # --- PROMPT SYSTEM (KITA KUNCI DI SINI AGAR AI JADI SUTRADARA) ---
+    sys_instruction = f"""
+    Kamu adalah Sutradara & Scriptwriter Senior PINTAR MEDIA. 
+    Tugasmu memecah ide owner menjadi {jml_sc} adegan visual teknis.
+    
+    WAJIB MENGGUNAKAN FORMAT BERIKUT (DENGAN SPASI ANTAR POIN):
+    
+    Adegan [X]:
+    Suasana: [Isi]
+    Kamera: [Isi]
+    Ukuran: [Isi]
+    Gerak (Video): [Isi]
+
+    Alur Cerita: [Deskripsi kejadian/aksi karakter]
+
+    Lokasi Detail: [Gambarkan latar belakang secara super lengkap & spesifik]
+
+    Dialog: [Tuliskan dialog jika ada, jika tidak ada tulis "-"]
+    
+    --------------------------------------------------
+    
+    Mood Utama: {mood_cerita}. Audiens: {target_audien}.
+    JANGAN improvisasi plot di luar tema owner!
+    """
+
+    if mode_lab == "📋 MANUAL PROMPT":
+        mega_prompt = f"{sys_instruction}\n\nIDE OWNER: \"{owner_core}\""
+        if owner_core:
+            st.code(mega_prompt, language="text")
+            st.markdown(f'<a href="https://gemini.google.com/" target="_blank" style="text-decoration:none;"><div style="background: linear-gradient(to right, #1d976c, #11998e); color:white; padding:10px; border-radius:8px; text-align:center; font-weight:bold;">COPY & BUKA GEMINI WEB</div></a>', unsafe_allow_html=True)
+
+    elif mode_lab == "⚡ OTOMATIS (AI PINTAR)":
+        if st.button("SULAP JADI ALUR & TEKNIS KAMERA 🚀", use_container_width=True, type="primary"):
+            if not owner_core:
+                st.error("Garis Besar Cerita wajib diisi!")
+            else:
+                try:
+                    client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+                    with st.status("🎬 Lagi ngeracik alur cerita buat kamu...", expanded=True) as status:
+                        completion = client.chat.completions.create(
+                            model="llama-3.3-70b-versatile",
+                            messages=[{"role": "system", "content": sys_instruction}, {"role": "user", "content": owner_core}],
+                            temperature=0.7
+                        )
+                        st.session_state['last_ai_result'] = completion.choices[0].message.content
+                        status.update(label="✅ Beres! Alur cerita udah siap.", state="complete", expanded=False)
+                    
+                    st.markdown("---")
+                    st.code(st.session_state['last_ai_result'], language="text")
+
+                except Exception as e:
+                    st.error(f"Gagal memproses AI: {e}")
+
+        if 'last_ai_result' in st.session_state:
+            if st.button("📥 KIRIM HASIL KE RUANG PRODUKSI", use_container_width=True, type="secondary"):
+                st.session_state['draft_from_lab'] = st.session_state['last_ai_result']
+                st.success("✅ Berhasil dikirim! Lanjut ke ruang produksi ya..")
+
+elif menu_select == "⚡ QUICK PROMPT":
+    st.title("⚡ QUICK PROMPT")
+    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
+    st.markdown("Buat prompt singkat satu gambar/video.")
+
+    # --- MAIN INTERFACE ---
+    with st.container(border=True):
+        # Membagi area jadi Kiri (Cerita) dan Kanan (Semua Setting)
+        col_main_left, col_main_right = st.columns([1.2, 1], gap="large")
+        
+        with col_main_left:
+            st.write("📝 **1. KEJADIAN / ALUR CERITA**")
+            isi_cerita = st.text_area(
+                "input_alur",
+                placeholder="Contoh: udin pergi kesekolah naik cerita...",
+                height=225, # Disesuaikan agar sejajar dengan kolom kanan
+                label_visibility="collapsed"
+            )
+            
+        with col_main_right:
+            st.write("⚙️ **2. SETTING VISUAL**")
+            
+            # Baris 1: Style & Lighting
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown("**📸 PROMPT GAMBAR**")
-                st.code(res['img'], language="text")
+                st.markdown('<p class="small-label">🌍 Style / World</p>', unsafe_allow_html=True)
+                vibe_v = st.selectbox("v1", [
+                    "Cinematic Movie", "Ultra Realistic Minecraft", 
+                    "Hyper-Realistic RAW", "CCTV / Found Footage", "Commercial Clean"
+                ], label_visibility="collapsed")
             with c2:
-                st.markdown("**🎥 PROMPT VIDEO**")
-                st.code(res['vid'], language="text")
+                st.markdown('<p class="small-label">💡 Lighting & FX</p>', unsafe_allow_html=True)
+                mood_v = st.selectbox("v2", [
+                    "Dramatic Shadows & Glowing Eyes", "Lava Light Reflections",
+                    "Golden Hour", "Moody Dark", "Bright Studio"
+                ], label_visibility="collapsed")
+            
+            # Baris 2: Motion & Shot Type
+            c3, c4 = st.columns(2)
+            with c3:
+                st.markdown('<p class="small-label">🎬 Motion & Speed</p>', unsafe_allow_html=True)
+                motion_v = st.selectbox("v3", [
+                    "Slow Motion", "High Speed Action", 
+                    "Time-lapse", "Static (Diam)", "Smooth Panning"
+                ], label_visibility="collapsed")
+            with c4:
+                st.markdown('<p class="small-label">🎥 Shot Type</p>', unsafe_allow_html=True)
+                cam_v = st.selectbox("v4", [
+                    "Cinematic Tracking Shot", "Extreme Close-Up", 
+                    "Medium Shot", "Handheld Shaky Cam", "Bird Eye View"
+                ], label_visibility="collapsed")
+            
+            # Baris 3: LOKASI DI PALING BAWAH
+            st.markdown('<p class="small-label">📍 Lokasi (Manual)</p>', unsafe_allow_html=True)
+            lokasi_v = st.text_input("loc_input", placeholder="Misal: dark cave, abandoned house...", label_visibility="collapsed")
+
+    # --- TOMBOL RAKIT MEMANJANG (Di dalam container tapi di bawah kedua kolom) ---
+        st.write("") 
+        rakit_btn = st.button("🚀 RAKIT PROMPT SEKARANG", use_container_width=True, type="primary")
+
+    # --- LOGIKA RAKIT ---
+    if rakit_btn:
+        if not isi_cerita:
+            st.warning("Isi dulu ceritanya, Bos!")
+        else:
+            styles = {
+                "Cinematic Movie": "Cinematic movie scene, high-end film aesthetic,",
+                "Ultra Realistic Minecraft": "Ultra realistic Minecraft cinematic video,",
+                "Hyper-Realistic RAW": "Hyper-realistic RAW photo, f/1.8, high fidelity,",
+                "CCTV / Found Footage": "CCTV grainy security footage,",
+                "Commercial Clean": "High-end commercial clean photography,"
+            }
+            fx = {
+                "Dramatic Shadows & Glowing Eyes": "glowing white eyes, dramatic shadows, dust particles,",
+                "Lava Light Reflections": "lava light reflections, intense heat distortion,",
+                "Golden Hour": "warm cinematic golden hour lighting,",
+                "Moody Dark": "dark moody atmosphere, low-key lighting,",
+                "Bright Studio": "bright studio lighting, vibrant colors,"
+            }
+            motions = {
+                "Slow Motion": "slow-motion moments, fluid movement,",
+                "High Speed Action": "fast-paced action, intense movement,",
+                "Time-lapse": "time-lapse effect, fast forward motion,",
+                "Static (Diam)": "static camera, no movement, stable shot,",
+                "Smooth Panning": "smooth cinematic panning shot,"
+            }
+            
+            detail_lokasi = f"located in {lokasi_v}," if lokasi_v else ""
+            st.session_state.hasil_rakit = f"{styles[vibe_v]} {isi_cerita}, {detail_lokasi} {fx[mood_v]} {motions[motion_v]} {cam_v}, 4K, same character description."
+
+    # --- OUTPUT HASIL ---
+    if 'hasil_rakit' in st.session_state:
+        st.write("")
+        st.markdown('<p class="small-label">✅ HASIL RACIKAN</p>', unsafe_allow_html=True)
+        st.code(st.session_state.hasil_rakit, language="text")
+        
+        c_reset, _ = st.columns([1, 4])
+        with c_reset:
+            if st.button("🗑️ Reset", use_container_width=True):
+                del st.session_state.hasil_rakit
+                st.rerun()
+                
+elif menu_select == "📋 TUGAS KERJA":
+    user_aktif = st.session_state.get("username", "GUEST").upper()
+    
+    st.title("📋 TUGAS KERJA")
+    st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
+    
+    # 1. ATURAN AKSES
+    access_rules = {
+        "DIAN": ["ICHA", "NISSA", "INGGI", "LISA"],
+        "ICHA": ["ICHA"], "NISSA": ["NISSA"], "INGGI": ["INGGI"], "LISA": ["LISA"]
+    }
+    tab_list = access_rules.get(user_aktif, [])
+
+    if not tab_list:
+        st.warning("⚠️ Akses ditolak.")
+    else:
+        # 2. DATA PROFIL TIM (Murni Info)
+        data_profil = {
+            "ICHA": {"p": "Creative Editor", "f": "https://i.imgur.com/zAYESQm.png"},
+            "NISSA": {"p": "Creative Editor", "f": "https://i.imgur.com/zAYESQm.png"},
+            "INGGI": {"p": "Uploader", "f": "https://i.imgur.com/zAYESQm.png"},
+            "LISA": {"p": "Uploader", "f": "https://i.imgur.com/zAYESQm.png"}
+        }
+
+        tabs = st.tabs([f"👤 {nama}" for nama in tab_list])
+        
+        for i, nama_staf in enumerate(tab_list):
+            with tabs[i]:
+                staf = data_profil.get(nama_staf)
+                
+                # --- TAMPILAN CARD MURNI (HANYA INFO) ---
+                st.markdown(f"""
+                <div style="
+                    border: 2px solid #1d976c; 
+                    border-radius: 20px; 
+                    padding: 35px; 
+                    background-color: rgba(29, 151, 108, 0.05); 
+                    margin-top: 15px;
+                ">
+                    <div style="display: flex; align-items: center;">
+                        <img src="{staf['f']}" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #1d976c; object-fit: cover;">
+                        <div style="margin-left: 35px;">
+                            <h1 style="margin: 0; color: white; font-size: 3rem; line-height: 1;">{nama_staf}</h1>
+                            <p style="margin: 10px 0 0 0; color: #808495; font-size: 1.3rem;">{staf['p']}</p>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+elif menu_select == "⚡ KENDALI TIM":
+    if st.session_state.active_user == "dian":
+        st.title("⚡ KENDALI TIM")
+        st.info("⚠️ **INFO PENTING:** Menu ini masih tahap uji coba! Belum siap untuk digunakan!")
+        # Nanti kita isi kodenya di sini
+    else:
+        st.error("Akses Ditolak!")
