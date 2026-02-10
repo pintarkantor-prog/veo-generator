@@ -950,21 +950,16 @@ if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=Tr
                     f"TECHNICAL: {bumbu_gaya}, {vid_quality_base}" # <--- TAMBAHKAN BARIS INI
                 )
 
-                # --- SIMPAN HASIL (BAGIAN 10 - SINKRONISASI TOTAL) ---
-                    # Pastikan baris ini sejajar dengan 'vid_final' di atasnya
-                    st.session_state.last_generated_results.append({
-                        "id": item["num"],
-                        "img": img_final,
-                        "vid": vid_final,
-                        "light": item["light"],  
-                        "shot": item["shot"],    
-                        "angle": item["angle"],  
-                        "motion": item["cam"]    
-                    })
+                # --- SIMPAN HASIL ---
+                st.session_state.last_generated_results.append({
+                    "id": item["num"], 
+                    "img": img_final, 
+                    "vid": vid_final, 
+                    "cam_info": f"{camera_final}"
+                })
 
-            # Baris di bawah ini sejajar dengan 'with st.spinner'
-            st.toast("Prompt Utuh & Paten Berhasil Diracik! 🚀")
-            st.rerun()
+        st.toast("Prompt Berhasil Diracik! 🚀")
+        st.rerun()
 # ==============================================================================
 # AREA TAMPILAN HASIL (REVISED: NO DUPLICATE KEYS)
 # ==============================================================================
@@ -990,23 +985,3 @@ if st.session_state.last_generated_results:
             with c2:
                 st.markdown("**🎥 PROMPT VIDEO**")
                 st.code(res['vid'], language="text")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
