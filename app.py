@@ -1148,7 +1148,7 @@ elif menu_select == "⚡ QUICK PROMPT":
         st.write("📍 **LATAR CERITA (KONSISTEN)**")
         q_loc_select = st.selectbox("Pilih Lokasi:", options_lokasi, label_visibility="collapsed")
         if q_loc_select == "--- KETIK MANUAL ---":
-            q_background = st.text_input("Lokasi Manual:", placeholder="Futuristic alleyway at night...")
+            q_background = st.text_input("Lokasi Manual:", placeholder="Ini akan berisi 'Pasar' ATAU hasil ketikan manual")
         else:
             q_background = LOKASI_DNA.get(q_loc_select.lower(), q_loc_select)
 
@@ -1261,6 +1261,7 @@ elif menu_select == "⚡ KENDALI TIM":
         # Nanti kita isi kodenya di sini
     else:
         st.error("Akses Ditolak!")
+
 
 
 
