@@ -1036,7 +1036,7 @@ def tampilkan_gudang_ide():
             .select("*")\
             .eq("STATUS", "Tersedia")\
             .order("ID_IDE", desc=True)\
-            .limit(100)\
+            .limit(1000)\
             .execute()
         
         df_gudang = pd.DataFrame(res_gudang.data)
@@ -3111,6 +3111,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
