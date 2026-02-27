@@ -665,11 +665,11 @@ def pasang_css_kustom():
 # BAGIAN 4: NAVIGASI SIDEBAR (VERSI CLOUD ONLY)
 # ==============================================================================
 def tampilkan_navigasi_sidebar():
-    # Ambil level user dari session state (Default ke STAFF jika tidak ada)
     user_level = st.session_state.get("user_level", "STAFF")
+    user_aktif = st.session_state.get("user_aktif", "USER").upper()
     
     with st.sidebar:
-        # 1. JUDUL DENGAN IKON
+        # 1. JUDUL
         st.markdown("""
             <div style='display: flex; align-items: center; margin-bottom: 10px; margin-top: 10px;'>
                 <span style='font-size: 20px; margin-right: 10px;'>🖥️</span>
@@ -679,26 +679,12 @@ def tampilkan_navigasi_sidebar():
             </div>
         """, unsafe_allow_html=True)
         
-        # 2. LOGIKA FILTER MENU
-        # Daftar menu dasar untuk semua orang
-        menu_list = [
-            "🚀 RUANG PRODUKSI", 
-            "🧠 PINTAR AI LAB", 
-            "💡 GUDANG IDE", 
-            "📋 TUGAS KERJA"
-        ]
-        
-        # OWNER dan ADMIN bisa lihat menu Kendali Tim
+        # 2. MENU LIST (Admin & Owner bisa liat Kendali Tim)
+        menu_list = ["🚀 RUANG PRODUKSI", "🧠 PINTAR AI LAB", "💡 GUDANG IDE", "📋 TUGAS KERJA"]
         if user_level in ["OWNER", "ADMIN"]:
             menu_list.append("⚡ KENDALI TIM")
 
-        pilihan = st.radio(
-            "COMMAND_MENU",
-            menu_list,
-            label_visibility="collapsed"
-        )
-        
-        # 3. GARIS PEMISAH
+        pilihan = st.radio("COMMAND_MENU", menu_list, label_visibility="collapsed")
         st.markdown("<hr style='margin: 20px 0; border-color: #30363d;'>", unsafe_allow_html=True)
         
         # 4. KOTAK DURASI FILM
@@ -709,9 +695,8 @@ def tampilkan_navigasi_sidebar():
             label_visibility="collapsed"
         )
         
-        # 5. SISTEM DATABASE CLOUD
+        # 5. SISTEM GSHEET (Semua level bisa liat Backup/Restore sesuai fungsinya)
         st.markdown("<p class='small-label'>☁️ CLOUD DATABASE (GSHEET)</p>", unsafe_allow_html=True)
-        
         col1, col2 = st.columns(2)
         with col1:
             if st.button("📤 BACKUP", use_container_width=True): 
@@ -719,18 +704,45 @@ def tampilkan_navigasi_sidebar():
         with col2:
             if st.button("🔄 RESTORE", use_container_width=True): 
                 muat_dari_gsheet()
-                
+
+        # --- EXCLUSIVE OWNER ONLY: SYNC SUPABASE ---
+        # Ini bener-bener dikunci, Admin pun gak bakal liat tombol ini
+        if user_level == "OWNER":
+            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+            st.markdown("<p class='small-label' style='color: #ff4b4b;'>🔥 ROOT ACCESS (SUPABASE)</p>", unsafe_allow_html=True)
+            
+            def pindah_data_ke_supabase():
+                try:
+                    # Nama key harus persis variabel gspread lo ya Yan!
+                    daftar_sheet = {
+                        "tugas": sheet_tugas,
+                        "staff": sheet_staff,
+                        "absensi": sheet_absen,
+                        "arus_kas": sheet_kas
+                    }
+                    for nama_tabel, ws in daftar_sheet.items():
+                        data = ws.get_all_records()
+                        if data:
+                            # upsert pake kolom ID atau Nama sebagai key
+                            supabase.table(nama_tabel).upsert(data).execute()
+                    st.toast("🔥 DATA SINKRON KE SUPABASE!", icon="🚀")
+                except Exception as e:
+                    st.error(f"Error Root Sync: {e}")
+
+            if st.button("🚀 SYNC TO SUPABASE", use_container_width=True, help="Hanya Owner yang bisa eksekusi migrasi data"):
+                with st.spinner("Mengirim data ke Cloud Engine..."):
+                    pindah_data_ke_supabase()
+                    st.success("Database Utama Terupdate!")
+
         st.markdown('<div style="margin-top: 50px;"></div>', unsafe_allow_html=True)   
         
         if st.button("⚡ KELUAR SISTEM", use_container_width=True):
             proses_logout()
         
-        user = st.session_state.get("user_aktif", "USER").upper()
-        # Kita tampilkan levelnya di footer biar kamu gampang ngecek
         st.markdown(f'''
             <div style="border-top: 1px solid #30363d; padding-top: 15px; margin-top: 10px;">
                 <p class="status-footer">
-                    🛰️ STATION: {user}_SESSION<br>
+                    🛰️ STATION: {user_aktif}_SESSION<br>
                     🟢 STATUS: {user_level}
                 </p>
             </div>
@@ -2944,6 +2956,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
