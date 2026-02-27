@@ -2035,47 +2035,43 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # 1. Bikin format filter untuk database (Contoh: '2026-03')
-        filter_period = f"{tahun_dipilih}-{bulan_dipilih:02d}"
-
-        # 2. Fungsi Jalur Khusus Arsip (DIPERKUAT)
-        def ambil_data_kendali(tabel, kolom_tgl):
+        # --- 1. AMBIL DATA (POWERFUL & FLEXIBLE) ---
+        # Kita tarik data 1000 baris terbaru biar performa tetep dapet, tapi arsip aman
+        def tarik_aman(tabel):
             try:
-                res = supabase.table(tabel).select("*").ilike(kolom_tgl, f"{filter_period}%").execute()
-                df_temp = pd.DataFrame(res.data)
-                
-                # DAFTAR KOLOM WAJIB ADA (Biar gak error babi lagi)
-                kolom_wajib = [kolom_tgl.upper(), 'STATUS', 'STAF', 'NOMINAL', 'TIPE', 'KATEGORI', 'NAMA']
-                
-                if not df_temp.empty:
-                    df_temp.columns = [str(c).strip().upper() for c in df_temp.columns]
-                    # Pastikan kolom wajib yang gak ada di DB tetep ada di DF (isi None)
-                    for k in kolom_wajib:
-                        if k not in df_temp.columns: df_temp[k] = None
-                    return df_temp
-                
-                # Jika kosong, balikin DF dengan kolom wajib
-                return pd.DataFrame(columns=kolom_wajib)
+                # Ambil 2000 baris terbaru supaya filter bulan apapun (Feb/Jan) pasti ketarik
+                res = supabase.table(tabel).select("*").order("id", desc=True).limit(2000).execute()
+                df_t = pd.DataFrame(res.data)
+                if not df_t.empty:
+                    df_t.columns = [str(c).strip().upper() for c in df_t.columns]
+                    return df_t
+                return pd.DataFrame(columns=['STATUS', 'STAF', 'TANGGAL', 'DEADLINE', 'NOMINAL', 'TIPE', 'KATEGORI', 'NAMA', 'WAKTU'])
             except:
-                return pd.DataFrame(columns=[kolom_tgl.upper(), 'STATUS', 'STAF', 'NOMINAL', 'TIPE', 'KATEGORI', 'NAMA'])
+                return pd.DataFrame(columns=['STATUS', 'STAF', 'TANGGAL', 'DEADLINE', 'NOMINAL', 'TIPE', 'KATEGORI', 'NAMA', 'WAKTU'])
 
-        # 3. Tarik Data (Ambil segar dari Supabase)
-        df_staff = ambil_data_segar("Staff") 
-        df_absen = ambil_data_kendali("Absensi", "Tanggal")
-        df_kas   = ambil_data_kendali("Arus_Kas", "Tanggal")
-        df_tugas = ambil_data_kendali("Tugas", "DEADLINE")
+        df_staff = ambil_data_segar("Staff")
+        df_absen = tarik_aman("Absensi")
+        df_kas   = tarik_aman("Arus_Kas")
+        df_tugas = tarik_aman("Tugas")
         df_log   = ambil_data_segar("Log_Aktivitas")
 
-        # --- FUNGSI SARING TANGGAL (OPTIMASI) ---
+        # --- 2. FUNGSI SARING TANGGAL (INI KUNCINYA) ---
         def saring_tgl(df, kolom, bln, thn):
             kolom_up = kolom.upper()
             if df.empty or kolom_up not in df.columns: 
                 return pd.DataFrame(columns=df.columns)
             
+            # Konversi ke datetime (Pandas bakal otomatis ngenalin format YYYY-MM-DD atau DD/MM/YYYY)
             df['TGL_TEMP'] = pd.to_datetime(df[kolom_up], errors='coerce')
+            
+            # Buang data yang gagal konversi (NaT)
+            df = df.dropna(subset=['TGL_TEMP'])
+            
+            # Saring berdasarkan bulan dan tahun pilihan UI
             mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
+        # Eksekusi Filter (Sekarang Februari lo bakal dapet data harian, Maret dapet data kosong)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
@@ -3040,5 +3036,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
