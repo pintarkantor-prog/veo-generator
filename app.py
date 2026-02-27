@@ -2095,10 +2095,10 @@ def tampilkan_kendali_tim():
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
             
             # 1. Uang Masuk
-            inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
+            inc = df_k_f[df_k_f['TIPE'].astype(str).str.upper() == 'PENDAPATAN']['NOMINAL'].sum()
             
             # 2. Pengeluaran Umum (Operasional, dll)
-            ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL'].sum()
+            ops = df_k_f[(df_k_f['TIPE'].astype(str).str.upper() == 'PENGELUARAN') & (df_k_f['KATEGORI'].astype(str).str.upper() != 'GAJI TIM')]['NOMINAL'].sum()
             
             # 3. Gaji/Bonus yang SUDAH DIBAYAR (Input via Arus Kas)
             bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOMINAL'].sum()
@@ -3032,6 +3032,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
