@@ -9,6 +9,18 @@ import re
 import plotly.express as px
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
+# --- 1. IMPORT SUPABASE ---
+from supabase import create_client 
+
+# --- 2. INISIALISASI SUPABASE AMAN (VIA SECRETS) ---
+# Memanggil data dari Settings > Secrets yang udah lo isi tadi
+try:
+    SUPABASE_URL = st.secrets["supabase"]["url"]
+    SUPABASE_KEY = st.secrets["supabase"]["key"]
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+except Exception as e:
+    st.error(f"Gagal memuat Secrets Supabase: {e}")
+    st.stop() # Hentikan aplikasi jika secrets belum terpasang dengan benar
 
 # ==============================================================================
 # KONFIGURASI DASAR & KONEKSI (STABIL & HEMAT KUOTA)
@@ -23,35 +35,55 @@ def get_gspread_sh():
     client = gspread.authorize(creds)
     return client.open_by_url(URL_MASTER)
 
-@st.cache_data(ttl=10) # Data tampilan dashboard tahan 10 detik
+# --- AMBIL DATA UNTUK TAMPILAN (DASHBOARD/TABEL) ---
+@st.cache_data(ttl=10) 
 def ambil_data_lokal(nama_sheet):
-    """Gunakan ini di bagian DASHBOARD / TABEL biar hemat kuota."""
-    return ambil_data_beneran_segar(nama_sheet)
+    """Gunakan ini di bagian DASHBOARD biar hemat kuota & kenceng."""
+    return ambil_data_segar(nama_sheet)
 
-def ambil_data_beneran_segar(nama_sheet):
-    """Fungsi asli narik data langsung ke GSheet."""
+# --- MESIN UTAMA HYBRID (SUPABASE + GSHEET) ---
+def ambil_data_segar(nama_sheet):
+    """Fungsi Sakti: Otomatis pilih sumber data tercepat dan teringan."""
     try:
-        sh = get_gspread_sh()
-        ws = sh.worksheet(nama_sheet)
-        data = ws.get_all_records()
-        return bersihkan_data(pd.DataFrame(data))
+        # Daftar tabel yang sudah pindah ke Supabase (Data Berat)
+        tabel_berat = ["absensi", "tugas", "arus_kas", "log_aktivitas", "integrasi_gsheet"]
+        
+        nama_sheet_clean = str(nama_sheet).lower().strip()
+        
+        if nama_sheet_clean in tabel_berat:
+            # NARIK DARI SUPABASE (SAT SET! ANTI LEMOT)
+            res = supabase.table(nama_sheet_clean).select("*").execute()
+            df = pd.DataFrame(res.data)
+            return bersihkan_data(df)
+        else:
+            # TETAP DARI GSHEET (UNTUK STAFF, AKUN_AI, GUDANG_IDE)
+            sh = get_gspread_sh()
+            ws = sh.worksheet(nama_sheet)
+            data = ws.get_all_records()
+            return bersihkan_data(pd.DataFrame(data))
     except Exception as e:
+        st.error(f"Gagal narik data {nama_sheet}: {e}")
         return pd.DataFrame()
 
-# INI KUNCINYA: Menghubungkan nama lama ke fungsi baru
-def ambil_data_segar(nama_sheet):
-    """Alias biar kode lama lo gak error 'Not Defined'."""
-    return ambil_data_beneran_segar(nama_sheet)
-
 def bersihkan_data(df):
-    """Standardisasi data biar Python gak pusing."""
-    if df.empty: return df
+    """Standardisasi data agar logika SP & Gaji lo ngga meleset."""
+    if df.empty: 
+        return df
+    
+    # 1. Buang baris yang bener-bener kosong semua kolomnya
     df = df.dropna(how='all')
+    
+    # 2. Paksa nama kolom jadi UPPERCASE dan buang spasi ujung
     df.columns = [str(c).strip().upper() for c in df.columns]
+    
+    # 3. Bersihkan isi kolom yang sering dipake buat perbandingan
     kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'TANGGAL', 'DEADLINE', 'TIPE']
     for col in df.columns:
         if col in kolom_krusial:
-            df[col] = df[col].astype(str).str.strip().str.upper().replace('NAN', '')
+            # Ubah ke string, buang spasi, jadikan UPPERCASE, hilangkan 'NAN'
+            df[col] = df[col].astype(str).str.strip().str.upper()
+            df[col] = df[col].replace(['NAN', 'NONE', 'NAT', '<NA>'], '')
+            
     return df
 
 # ==============================================================================
@@ -2832,3 +2864,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
