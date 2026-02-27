@@ -1031,7 +1031,7 @@ def tampilkan_gudang_ide():
         sheet_gudang = sh.worksheet("Gudang_Ide")
         sheet_tugas = sh.worksheet("Tugas")
         
-        # --- AMBIL DATA DARI SUPABASE DENGAN LIMIT (BIAR NGGAK LAG) ---
+        # --- AMBIL DATA DARI SUPABASE ---
         res_gudang = supabase.table("Gudang_Ide")\
             .select("*")\
             .eq("STATUS", "Tersedia")\
@@ -1041,13 +1041,21 @@ def tampilkan_gudang_ide():
         
         df_gudang = pd.DataFrame(res_gudang.data)
         
+        # --- PERBAIKAN LOGIKA DI SINI ---
         if df_gudang.empty:
-            df_tampil = df_gudang.drop_duplicates(subset=['ID_IDE'])
-        else:
-            st.warning("📭 Belum ada data di gudang ide.")
+            # Jika Supabase kosong, baru kita coba lari ke GSheet (Fallback)
+            st.info("Searching in Cloud Storage...")
+            df_gudang = ambil_data_beneran_segar("Gudang_Ide")
+            if not df_gudang.empty:
+                # Filter manual yang statusnya 'Tersedia'
+                df_gudang = df_gudang[df_gudang['STATUS'].str.upper() == 'TERSEDIA']
+
+        # Jika setelah cek GSheet pun masih kosong, baru kasih warning
+        if df_gudang.empty:
+            st.warning("📭 Belum ada data di gudang ide (Database & GSheet Kosong).")
             return
 
-        # Ambil 24 JUDUL UNIK (Request lo: Tampilan 24)
+        # Ambil 24 JUDUL UNIK
         df_display = df_gudang.drop_duplicates(subset=['JUDUL']).head(24)
         list_judul_unik = df_display['JUDUL'].tolist()
 
@@ -3103,5 +3111,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
