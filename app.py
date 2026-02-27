@@ -1337,15 +1337,10 @@ def tampilkan_tugas_kerja():
                 
                 with c3:
                     total_semua_bonus = bonus_sudah_cair
-                    txt_delta = []
-                    if b_vid > 0: txt_delta.append(f"Vid: Rp {b_vid:,}")
-                    if u_abs > 0: txt_delta.append(f"Absen: Rp {u_abs:,}")
-                    gabungan_delta = " | ".join(txt_delta) if txt_delta else None
-                    
                     st.metric(
                         "💰 TOTAL BONUS", 
                         f"Rp {total_semua_bonus:,}", 
-                        delta="Data Real Supabase", # Biar lo tau ini angka asli DB
+                        delta="Sesuai Database" if total_semua_bonus > 0 else "Belum Ada Data",
                         delta_color="normal"
                     )
                 
@@ -3038,5 +3033,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
