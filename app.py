@@ -81,6 +81,23 @@ def bersihkan_data(df):
             df[col] = df[col].astype(str).str.strip().str.upper().replace('NAN', '')
     return df
 
+def tambah_log(user, aksi):
+    tz_wib = pytz.timezone('Asia/Jakarta')
+    waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+    try:
+        # Catat ke Supabase
+        supabase.table("Log_Aktivitas").insert({
+            "Waktu": waktu_skrg,
+            "User": user.upper(),
+            "Aksi": aksi
+        }).execute()
+        # Catat ke GSheet
+        sh = get_gspread_sh()
+        ws_log = sh.worksheet("Log_Aktivitas")
+        ws_log.append_row([waktu_skrg, user.upper(), aksi])
+    except Exception as e:
+        print(f"Gagal mencatat log: {e}")
+
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
 # ==============================================================================
@@ -342,6 +359,8 @@ def proses_login(user, pwd):
                 st.session_state.user_aktif = user_key
                 st.session_state.waktu_login = datetime.now()
 
+                tambah_log(user_key, "LOGIN KE SISTEM") # <--- CCTV AKTIF!
+
                 # --- 2. KUNCI KASTA OWNER (BYPASS) ---
                 if user_key == "dian":
                     st.session_state.user_level = "OWNER"
@@ -398,6 +417,10 @@ def cek_autentikasi():
     return False
 
 def proses_logout():
+    # Ambil nama user sebelum dihapus sesinya
+    u = st.session_state.get("user_aktif", "unknown")
+    tambah_log(u, "LOGOUT / KELUAR SISTEM")
+    
     st.session_state.clear()
     st.query_params.clear()
     st.rerun()
@@ -1084,7 +1107,8 @@ def tampilkan_gudang_ide():
                         "", 
                         ""
                     ])
-
+                    tambah_log(user_sekarang, f"AMBIL IDE: {judul_proses}")
+                    
                 # LANJUTAN KODE LO DIBAWAHNYA TETEP SAMA
                 st.session_state.status_sukses = True 
                 st.rerun()
@@ -1420,6 +1444,7 @@ def tampilkan_tugas_kerja():
                             
                             # --- NOTIF WA SIMPEL (MANDIRI) ---
                             kirim_notif_wa(f"📤 *SETORAN MANDIRI*\n👤 *Editor:* {user_sekarang.upper()}\n🆔 *ID:* {t_id_m}\n📝 *Tugas:* {judul_m}")
+                            tambah_log(user_sekarang, f"SETOR MANDIRI: {judul_m} ({t_id_m})")
                             
                             st.success("✅ Setoran Mandiri Berhasil Terkirim!")
                             time.sleep(1)
@@ -1539,6 +1564,7 @@ def tampilkan_tugas_kerja():
                                                 pesan_wa = f"✅ *TUGAS SELESAI (ACC)*\n\n👤 *Editor:* {staf_nama}\n🆔 *ID Tugas:* {id_tugas}\n📅 *Tanggal:* {tgl_tugas}{msg_bonus}\n\n✨ _Hasil kerja sudah masuk ke laporan keuangan._"
                                                 kirim_notif_wa(pesan_wa) 
 
+                                                tambah_log(st.session_state.user_aktif, f"ACC TUGAS: {id_tugas} (Staff: {staf_nama})")
                                                 # 6. REFRESH
                                                 st.success(f"Tugas {id_tugas} Selesai!")
                                                 time.sleep(1)
@@ -1562,7 +1588,8 @@ def tampilkan_tugas_kerja():
                                                 sheet_tugas.update_cell(cell.row, 8, cat_r)
                                                 
                                                 kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 Alasan: {cat_r}")
-                                                
+
+                                                tambah_log(st.session_state.user_aktif, f"REVISI TUGAS: {t['ID']} (Editor: {t['STAF'].upper()}) - Alasan: {cat_r}")
                                                 # --- INI YANG LO MAKSUD (WARNING & RERUN) ---
                                                 st.warning("REVISI!"); time.sleep(1); st.rerun()
 
@@ -1581,7 +1608,8 @@ def tampilkan_tugas_kerja():
                                                 sheet_tugas.update_cell(cell.row, 8, f"BATAL: {cat_r}")
                                                 
                                                 kirim_notif_wa(f"🚫 *DIBATALKAN*\n\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 *Alasan:* {cat_r}")
-                                                
+
+                                                tambah_log(st.session_state.user_aktif, f"MEMBATALKAN TUGAS: {t['ID']} (Editor: {t['STAF'].upper()}) - Alasan: {cat_r}")
                                                 # --- INI YANG LO MAKSUD (ERROR & RERUN) ---
                                                 st.error("BATAL!"); time.sleep(1); st.rerun()
 
@@ -1611,7 +1639,8 @@ def tampilkan_tugas_kerja():
                                                 # --- NOTIF SIMPEL PAKAI INSTRUKSI ---
                                                 txt_tugas = t.get('INSTRUKSI', '-')[:30]
                                                 kirim_notif_wa(f"📤 *SETORAN TUGAS*\n👤 *Editor:* {user_sekarang.upper()}\n🆔 *ID:* {t['ID']}\n📝 {txt_tugas}...")
-                                                
+
+                                                tambah_log(user_sekarang, f"SETOR TUGAS ID: {t['ID']} ({txt_tugas})")
                                                 st.success("Terkirim!"); time.sleep(1); st.rerun()
                                         else:
                                             st.warning("Isi link dulu!")
@@ -1678,7 +1707,8 @@ def tampilkan_tugas_kerja():
                         
                         # Kirim notif WA
                         kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
-                        
+
+                        tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
                         st.success(f"Akun {pilihan_ai} Berhasil Diklaim!")
                         time.sleep(1)
                         st.rerun()
@@ -2937,6 +2967,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
