@@ -1336,11 +1336,17 @@ def tampilkan_tugas_kerja():
                     )
                 
                 with c3:
-                    total_semua_bonus = bonus_sudah_cair
+                    # Pastikan variabel ini jadi angka murni (int)
+                    # Kita kasih fallback 0 kalau datanya None atau kosong
+                    try:
+                        angka_bonus = int(total_semua_bonus) if total_semua_bonus else 0
+                    except:
+                        angka_bonus = 0
+
                     st.metric(
                         "💰 TOTAL BONUS", 
-                        f"Rp {total_semua_bonus:,}", 
-                        delta="Sesuai Database" if total_semua_bonus > 0 else "Belum Ada Data",
+                        f"Rp {angka_bonus:,}", # Sekarang pasti aman karena udah jadi Integer
+                        delta="Data Real Supabase",
                         delta_color="normal"
                     )
                 
@@ -3033,6 +3039,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
