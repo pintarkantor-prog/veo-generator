@@ -1014,12 +1014,10 @@ def tampilkan_gudang_ide():
         df_gudang_raw = ambil_data_segar("Gudang_Ide")
         
         if not df_gudang_raw.empty:
-            # Standarisasi kolom jadi UPPER
             df_gudang_raw.columns = [str(c).strip().upper() for c in df_gudang_raw.columns]
             
-            # OPTIMASI 2: Filter lokal di RAM (Case Insensitive)
-            # Ini bakal nangkep "Tersedia", "TERSEDIA", maupun "tersedia"
-            df_gudang = df_gudang_raw[df_gudang_raw['STATUS'].astype(str).str.upper() == 'TERSEDIA'].copy()
+            # Filter: Buang spasi, jadikan huruf besar semua buat pengecekan
+            df_gudang = df_gudang_raw[df_gudang_raw['STATUS'].astype(str).str.strip().str.upper() == 'TERSEDIA'].copy()
         else:
             df_gudang = pd.DataFrame()
 
@@ -3028,3 +3026,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
