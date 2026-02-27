@@ -46,15 +46,20 @@ def ambil_data_beneran_segar(nama_sheet):
 # --- 4. FUNGSI UTAMA AMBIL DATA (Satu Pintu + Cache 60 Detik) ---
 @st.cache_data(ttl=60) 
 def ambil_data_segar(target):
-    """LOGIKA SATU PINTU: Supabase Utama, GSheet Backup."""
+    """LOGIKA SATU PINTU: Limit cerdas agar data ketarik semua."""
     try:
-        tabel_besar = ["Log_Aktivitas", "Absensi", "Gudang_Ide", "Arus_Kas"]
         query = supabase.table(target).select("*")
         
-        if target in tabel_besar:
-            # Ambil 200 terbaru biar web gak obesitas data
-            res = query.order("Waktu", desc=True).limit(200).execute()
+        if target == "Gudang_Ide":
+            # KHUSUS GUDANG IDE: Tarik limit gede (3000) biar 1.400 data lo aman
+            # Urutkan berdasarkan ID_IDE terbaru
+            res = query.order("ID_IDE", desc=True).limit(3000).execute()
+            
+        elif target in ["Log_Aktivitas", "Absensi", "Arus_Kas"]:
+            # Tabel log/absen biarin 200-500 aja biar gak berat
+            res = query.order("Waktu", desc=True).limit(500).execute()
         else:
+            # Tabel lain (Staff, dsb) tarik semua
             res = query.execute()
             
         df = pd.DataFrame(res.data)
@@ -64,19 +69,15 @@ def ambil_data_segar(target):
                 df = df.drop(columns=['id'])
             return bersihkan_data(df)
         else:
-            # Jika tabel di Supabase kosong, lari ke GSheet
             return ambil_data_beneran_segar(target)
             
     except Exception as e:
-        # Jika query spesifik gagal (misal kolom 'Waktu' gak ada), coba ambil standar
+        # Fallback kalau order "Waktu" atau "ID_IDE" gagal
         try:
-            res = supabase.table(target).select("*").limit(500).execute()
-            df_fallback = pd.DataFrame(res.data)
-            if not df_fallback.empty:
-                return bersihkan_data(df_fallback)
-            return ambil_data_beneran_segar(target)
+            res = supabase.table(target).select("*").limit(3000).execute()
+            df_f = pd.DataFrame(res.data)
+            return bersihkan_data(df_f) if not df_f.empty else ambil_data_beneran_segar(target)
         except:
-            # Jika Supabase beneran mati, lari ke GSheet
             return ambil_data_beneran_segar(target)
 
 # --- 5. FUNGSI PEMBERSIH DATA ---
@@ -3026,4 +3027,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
