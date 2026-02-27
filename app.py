@@ -1498,7 +1498,7 @@ def tampilkan_tugas_kerja():
                                         if st.button("🟢 ACC", key=f"f_{t['ID']}", use_container_width=True):
                                             try:
                                                 # 1. IDENTIFIKASI DATA
-                                                staf_nama = str(t['STAF']).upper().strip()
+                                                staf_nama = str(t['Staf']).upper().strip()
                                                 id_tugas = str(t['ID']).strip()
                                                 tgl_tugas = str(t['DEADLINE'])
 
@@ -1574,7 +1574,7 @@ def tampilkan_tugas_kerja():
                                                 sheet_tugas.update_cell(cell.row, 5, "REVISI")
                                                 sheet_tugas.update_cell(cell.row, 8, cat_r)
                                                 
-                                                kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {id_tugas}\n📝 *Alasan:* {cat_r}")
+                                                kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {t['Staf'].upper()}\n🆔 *ID:* {id_tugas}\n📝 *Alasan:* {cat_r}")
                                                 st.warning("REVISI DICATAT!"); time.sleep(1); st.rerun()
                                             else:
                                                 st.error("Isi alasan revisi dulu!")
@@ -1593,7 +1593,7 @@ def tampilkan_tugas_kerja():
                                                 sheet_tugas.update_cell(cell.row, 5, "CANCELED")
                                                 sheet_tugas.update_cell(cell.row, 8, f"BATAL: {cat_r}")
                                                 
-                                                kirim_notif_wa(f"🚫 *DIBATALKAN*\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {id_tugas}\n📝 *Alasan:* {cat_r}")
+                                                kirim_notif_wa(f"🚫 *DIBATALKAN*\n👤 *Editor:* {t['Staf'].upper()}\n🆔 *ID:* {id_tugas}\n📝 *Alasan:* {cat_r}")
                                                 st.error("TUGAS DIBATALKAN!"); time.sleep(1); st.rerun()
                                             else:
                                                 st.error("Isi alasan pembatalan!")
@@ -2968,6 +2968,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
