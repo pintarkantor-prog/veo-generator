@@ -43,55 +43,45 @@ def ambil_data_lokal(nama_sheet):
 
 # --- MESIN UTAMA HYBRID (SUPABASE + GSHEET) ---
 def ambil_data_segar(nama_sheet):
-    """Fungsi Sakti: Otomatis pilih sumber data tercepat dan teringan dengan kolom proteksi."""
+    """Fungsi Anti-Crash: Kalau gagal narik data, tetep balikin kolom biar sistem gak meledak."""
+    # Definisi kolom wajib tiap tabel
+    kolom_wajib = {
+        "staff": ['NAMA', 'LEVEL', 'GAJI_POKOK', 'TUNJANGAN', 'PASSWORD'],
+        "absensi": ['NAMA', 'TANGGAL', 'JAM_MASUK', 'STATUS'],
+        "tugas": ['STAF', 'DEADLINE', 'STATUS', 'INSTRUKSI', 'ID'],
+        "arus_kas": ['TANGGAL', 'TIPE', 'NOMINAL', 'KETERANGAN', 'KATEGORI'],
+        "gudang_ide": ['ID_IDE', 'JUDUL', 'STATUS', 'NASKAH_VISUAL']
+    }
+    
+    nama_clean = str(nama_sheet).lower().strip()
+    
     try:
         tabel_berat = ["absensi", "tugas", "arus_kas", "log_aktivitas", "integrasi_gsheet"]
-        nama_sheet_clean = str(nama_sheet).lower().strip()
-        
-        df = pd.DataFrame() 
+        df = pd.DataFrame()
 
-        if nama_sheet_clean in tabel_berat:
-            # 1. NARIK DARI SUPABASE
-            query = supabase.table(nama_sheet_clean).select("*")
-            
-            if nama_sheet_clean == "tugas":
-                query = query.order("ID", desc=True)
-            elif nama_sheet_clean == "absensi":
-                query = query.order("Tanggal", desc=True)
-            elif nama_sheet_clean == "arus_kas":
-                query = query.order("id", desc=True)
-            
-            res = query.execute()
+        if nama_clean in tabel_berat:
+            # Narik dari Supabase
+            res = supabase.table(nama_clean).select("*").execute()
             df = pd.DataFrame(res.data)
-            
-            # --- PROTEKSI KHUSUS SUPABASE KOSONG ---
-            # Jika tabel di Supabase kosong, kita kasih kolom default biar gak error 'NAMA'
-            if df.empty:
-                if nama_sheet_clean == "absensi":
-                    df = pd.DataFrame(columns=["Nama", "Tanggal", "Jam_masuk", "Status"])
-                elif nama_sheet_clean == "tugas":
-                    df = pd.DataFrame(columns=["ID", "Staf", "Tanggal", "Instruksi", "Status"])
-        
         else:
-            # 2. TETAP DARI GSHEET
+            # Narik dari GSheet
             sh = get_gspread_sh()
             ws = sh.worksheet(nama_sheet)
             data = ws.get_all_records()
             df = pd.DataFrame(data)
 
-        # --- PROTEKSI ANTI-PUSING ---
-        if not df.empty:
-            df.columns = [str(c).strip().upper() for c in df.columns]
-            return bersihkan_data(df)
-        else:
-            # Balikin dataframe kosong tapi punya kolom biar itungan login/gaji ga meledak
-            df_empty = pd.DataFrame(columns=['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TANGGAL'])
-            return df_empty
-            
-    except Exception as e:
-        st.error(f"Gagal narik data {nama_sheet}: {e}")
-        return pd.DataFrame(columns=['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TANGGAL'])
+        if df.empty:
+            return pd.DataFrame(columns=kolom_wajib.get(nama_clean, ['DATA_KOSONG']))
+        
+        # Paksa kolom jadi UPPERCASE di sini, sebelum keluar dari fungsi
+        df.columns = [str(c).strip().upper() for c in df.columns]
+        return bersihkan_data(df)
 
+    except Exception as e:
+        st.error(f"⚠️ Sistem gagal akses tabel '{nama_sheet}': {e}")
+        # Balikin DF kosong tapi punya kolom biar script bawahnya GAK ERROR
+        return pd.DataFrame(columns=kolom_wajib.get(nama_clean, ['ERROR_KOLOM']))
+        
 def bersihkan_data(df):
     """Standardisasi data agar logika SP & Gaji ngga meleset."""
     if df is None or df.empty: 
@@ -2067,7 +2057,6 @@ def tampilkan_kendali_tim():
             st.rerun()
 
     # 3. KONEKSI & FILTER BULAN
-    sh = get_gspread_sh()
     c_bln, c_thn = st.columns([2, 2])
     daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
     pilihan_nama = c_bln.selectbox("📅 Pilih Bulan Laporan:", list(daftar_bulan.values()), index=sekarang.month - 1)
@@ -2088,40 +2077,42 @@ def tampilkan_kendali_tim():
         fixed_dfs = {}
 
         for nama_df, df in raw_dfs.items():
-            # A. CEK DATA: Kalau kosong atau None, buat dummy kosong agar saring_tgl gak crash
-            if df is None or (isinstance(df, pd.DataFrame) and df.empty) or (isinstance(df, list) and len(df) == 0):
-                kolom_dummy = {
+            # A. Proteksi Awal: Jika None atau bukan DataFrame yang valid
+            if df is None or (isinstance(df, pd.DataFrame) and df.empty):
+                kolom_std = {
                     "Staff": ['NAMA', 'LEVEL', 'GAJI_POKOK', 'TUNJANGAN'],
                     "Absensi": ['NAMA', 'TANGGAL', 'STATUS'],
                     "Tugas": ['STAF', 'DEADLINE', 'STATUS'],
                     "Arus_Kas": ['TANGGAL', 'TIPE', 'NOMINAL', 'KETERANGAN']
                 }
-                fixed_dfs[nama_df] = pd.DataFrame(columns=kolom_dummy.get(nama_df, []))
-                continue # Loncat ke data berikutnya, gak usah diproses upper()
+                fixed_dfs[nama_df] = pd.DataFrame(columns=kolom_std.get(nama_df, []))
+                continue
 
-            # B. KALAU DATA ADA: Baru diproses
-            temp_df = pd.DataFrame(df)
+            # B. Proses Pembersihan (Force String Conversion)
+            temp_df = pd.DataFrame(df).copy()
             
-            # Bersihkan nama kolom
+            # Pastikan nama kolom adalah string dan UPPER
             temp_df.columns = [str(c).strip().upper() for c in temp_df.columns]
             
-            # Bersihkan isi teks (Pake .str agar gak error 'Series object')
-            kolom_teks = ['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TIPE']
-            for col in kolom_teks:
+            # Bersihkan isi data pada kolom-kolom teks kunci
+            kolom_kunci = ['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TIPE']
+            for col in kolom_kunci:
                 if col in temp_df.columns:
-                    temp_df[col] = temp_df[col].astype(str).str.strip().upper()
+                    # Ini obat error 'Series' object: pastikan jadi string dulu baru di-upper
+                    temp_df[col] = temp_df[col].fillna("").astype(str).str.strip().upper()
             
             fixed_dfs[nama_df] = temp_df
 
-        # Balikin ke variabel asli
-        df_staff, df_absen, df_tugas, df_kas = fixed_dfs["Staff"], fixed_dfs["Absensi"], fixed_dfs["Tugas"], fixed_dfs["Arus_Kas"]
+        # Re-assign hasil bersih
+        df_staff = fixed_dfs["Staff"]
+        df_absen = fixed_dfs["Absensi"]
+        df_tugas = fixed_dfs["Tugas"]
+        df_kas   = fixed_dfs["Arus_Kas"]
 
-        # --- 5.1 PROTEKSI NUMERIK (BUMBU PENYEDAP) ---
-        # Pastikan kolom NOMINAL di Arus_Kas jadi angka, bukan string
+        # --- 5.1 PROTEKSI NUMERIK ---
         if not df_kas.empty and 'NOMINAL' in df_kas.columns:
             df_kas['NOMINAL'] = pd.to_numeric(df_kas['NOMINAL'].astype(str).str.replace('.', ''), errors='coerce').fillna(0)
 
-        # Pastikan kolom GAJI_POKOK & TUNJANGAN di Staff juga angka
         for col_fin in ['GAJI_POKOK', 'TUNJANGAN']:
             if not df_staff.empty and col_fin in df_staff.columns:
                 df_staff[col_fin] = pd.to_numeric(df_staff[col_fin].astype(str).str.replace('.', ''), errors='coerce').fillna(0)
@@ -2132,13 +2123,11 @@ def tampilkan_kendali_tim():
             target_col = str(kolom_key).upper()
             if target_col not in df.columns: return pd.DataFrame()
             
-            # Gunakan .copy() agar tidak kena SettingWithCopyWarning
             temp_df = df.copy()
             temp_df['TGL_TEMP'] = pd.to_datetime(temp_df[target_col], dayfirst=True, errors='coerce')
             mask = temp_df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return temp_df[mask].copy()
 
-        # Eksekusi Saring (Sekarang dijamin Aman)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
@@ -2151,7 +2140,6 @@ def tampilkan_kendali_tim():
         rekap_harian_tim = {}
         if not df_f_f.empty:
             df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-            # Gunakan 'STAF' (UPPER) sesuai standarisasi kita
             rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
 
         # --- 8. KALKULASI KEUANGAN ---
@@ -2160,13 +2148,11 @@ def tampilkan_kendali_tim():
         bonus_terbayar_kas = 0
         
         if not df_k_f.empty:
-            df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'], errors='coerce').fillna(0)
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
-            # Filter bonus supaya pengeluaran operasional murni kelihatan
             ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (~df_k_f['KETERANGAN'].str.contains('BONUS', case=False, na=False))]['NOMINAL'].sum()
             bonus_terbayar_kas = df_k_f[df_k_f['KETERANGAN'].str.contains('BONUS', case=False, na=False)]['NOMINAL'].sum()
 
-        # --- 9. ESTIMASI GAJI POKOK (VIP SYNCED) ---
+        # --- 9. ESTIMASI GAJI POKOK ---
         total_gaji_pokok_tim = 0
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         
@@ -2181,14 +2167,13 @@ def tampilkan_kendali_tim():
                 df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
                 df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
 
-                # Panggil mesin hitung bonus (Suntik Level Asli buat deteksi Kebal SP Lisa/Admin)
+                # Panggil mesin hitung bonus (Asumsi fungsi ini sudah ada di script lo)
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
                     df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
                 )
                 
-                g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
-                t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
-                
+                g_pokok = s.get('GAJI_POKOK', 0)
+                t_tunj = s.get('TUNJANGAN', 0)
                 gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
                 
                 if bulan_dipilih == sekarang.month:
@@ -2998,6 +2983,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
