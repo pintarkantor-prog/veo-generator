@@ -1034,7 +1034,7 @@ def tampilkan_gudang_ide():
         # --- AMBIL DATA DARI SUPABASE DENGAN LIMIT (BIAR NGGAK LAG) ---
         res_gudang = supabase.table("Gudang_Ide")\
             .select("*")\
-            .eq("STATUS", "TERSEDIA")\
+            .eq("STATUS", "Tersedia")\
             .order("ID_IDE", desc=True)\
             .limit(100)\
             .execute()
@@ -1042,6 +1042,8 @@ def tampilkan_gudang_ide():
         df_gudang = pd.DataFrame(res_gudang.data)
         
         if df_gudang.empty:
+            df_tampil = df_gudang.drop_duplicates(subset=['ID_IDE'])
+        else:
             st.warning("📭 Belum ada data di gudang ide.")
             return
 
@@ -3101,4 +3103,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
