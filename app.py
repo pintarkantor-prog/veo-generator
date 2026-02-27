@@ -46,39 +46,26 @@ def ambil_data_beneran_segar(nama_sheet):
 # --- 4. FUNGSI UTAMA AMBIL DATA (Satu Pintu + Cache 60 Detik) ---
 @st.cache_data(ttl=60) 
 def ambil_data_segar(target):
-    """LOGIKA SATU PINTU: Limit cerdas agar data ketarik semua."""
     try:
         query = supabase.table(target).select("*")
         
-        if target == "Gudang_Ide":
-            # KHUSUS GUDANG IDE: Tarik limit gede (3000) biar 1.400 data lo aman
-            # Urutkan berdasarkan ID_IDE terbaru
-            res = query.order("ID_IDE", desc=True).limit(3000).execute()
-            
-        elif target in ["Log_Aktivitas", "Absensi", "Arus_Kas"]:
-            # Tabel log/absen biarin 200-500 aja biar gak berat
-            res = query.order("Waktu", desc=True).limit(500).execute()
-        else:
-            # Tabel lain (Staff, dsb) tarik semua
-            res = query.execute()
-            
-        df = pd.DataFrame(res.data)
+        # --- HARIAN: Batasi 90 Hari ---
+        if target in ["Arus_Kas", "Tugas", "Absensi"]:
+            tgl_limit = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
+            kolom = "DEADLINE" if target == "Tugas" else "Tanggal"
+            res = query.filter(kolom, "gte", tgl_limit).order(kolom, desc=True).execute()
+
+        # --- KATALOG & CCTV: Batasi Baris ---
+        elif target in ["Gudang_Ide", "Log_Aktivitas"]:
+            res = query.order("id", desc=True).limit(3000).execute()
         
-        if not df.empty:
-            if 'id' in df.columns: 
-                df = df.drop(columns=['id'])
-            return bersihkan_data(df)
         else:
-            return ambil_data_beneran_segar(target)
-            
-    except Exception as e:
-        # Fallback kalau order "Waktu" atau "ID_IDE" gagal
-        try:
-            res = supabase.table(target).select("*").limit(3000).execute()
-            df_f = pd.DataFrame(res.data)
-            return bersihkan_data(df_f) if not df_f.empty else ambil_data_beneran_segar(target)
-        except:
-            return ambil_data_beneran_segar(target)
+            res = query.execute()
+
+        df = pd.DataFrame(res.data)
+        return bersihkan_data(df) if not df.empty else ambil_data_beneran_segar(target)
+    except:
+        return ambil_data_beneran_segar(target)
 
 # --- 5. FUNGSI PEMBERSIH DATA ---
 def bersihkan_data(df):
@@ -2023,11 +2010,9 @@ def tampilkan_kendali_tim():
         st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
         st.stop()
 
-    # 2. SETUP WAKTU (Wajib di atas agar variabel 'sekarang' terbaca semua modul)
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # 3. HEADER HALAMAN
     col_h1, col_h2 = st.columns([3, 1])
     with col_h1:
         st.title("⚡ PUSAT KENDALI TIM")
@@ -2036,7 +2021,6 @@ def tampilkan_kendali_tim():
             st.cache_data.clear()
             st.rerun()
 
-    # 4. KONEKSI MASTER (Satu koneksi untuk semua expander di bawah)
     sh = get_gspread_sh()
     
     c_bln, c_thn = st.columns([2, 2])
@@ -2048,87 +2032,103 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
-        df_staff = ambil_data_segar("Staff")
-        df_absen = ambil_data_segar("Absensi")
-        df_kas   = ambil_data_segar("Arus_Kas")
-        df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
+        # --- 1. LOGIKA TARIK DATA (DENGAN JALUR KHUSUS ARSIP) ---
+        filter_period = f"{tahun_dipilih}-{bulan_dipilih:02d}"
 
-        # Hitung target display (logika lo tetep jalan)
-        t_target_display = len(df_staff) * 40
+        def ambil_data_kendali(tabel, kolom_tgl):
+            # Coba ambil data berdasarkan bulan yang dipilih di UI
+            try:
+                res = supabase.table(tabel).select("*").ilike(kolom_tgl, f"{filter_period}%").execute()
+                df_temp = pd.DataFrame(res.data)
+                if not df_temp.empty:
+                    # Paksa kolom jadi UPPER agar sinkron dengan kode lo
+                    df_temp.columns = [str(c).strip().upper() for c in df_temp.columns]
+                    return df_temp
+                return pd.DataFrame()
+            except:
+                return pd.DataFrame()
 
-        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
+        # Eksekusi penarikan data on-demand
+        df_staff = ambil_data_segar("Staff") # Staff tetap ambil semua (data kecil)
+        df_absen = ambil_data_kendali("Absensi", "Tanggal")
+        df_kas   = ambil_data_kendali("Arus_Kas", "Tanggal")
+        df_tugas = ambil_data_kendali("Tugas", "DEADLINE")
+        df_log   = ambil_data_segar("Log_Aktivitas") # Log ambil 500 terbaru saja
+
+        # --- 2. FUNGSI SARING TANGGAL (PENGAMAN) ---
         def saring_tgl(df, kolom, bln, thn):
             if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            # Pastikan kolom tanggal jadi format waktu Python yang benar
             df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
-            mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
+            mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
-        # Jalankan filter untuk semua tabel (Data otomatis tersaring sesuai bulan/tahun pilihan lo)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
-        # Logika Finish & Rekap
-        df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
+        # --- 3. LOGIKA FINISH & REKAP (PENGAMAN KOLOM STAF) ---
+        df_f_f = pd.DataFrame()
+        if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
+            df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
         
         rekap_harian_tim = {}
         rekap_total_video = {}
-        if not df_f_f.empty:
+        
+        # PENGAMAN: Cek apakah kolom STAF eksis sebelum diolah
+        if not df_f_f.empty and 'STAF' in df_f_f.columns:
             df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
             df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
             rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
             rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
         # --- KALKULASI KEUANGAN RIIL ---
-        inc = 0
-        ops = 0
-        bonus_terbayar_kas = 0
+        inc, ops, bonus_terbayar_kas = 0, 0, 0
         
         if not df_k_f.empty:
+            # Bersihkan nominal (hapus titik/karakter aneh)
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
+            
+            # 1. Uang Masuk
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
-            # Ops adalah pengeluaran SELAIN Gaji Tim
+            
+            # 2. Pengeluaran Umum (Operasional, dll)
             ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL'].sum()
-            # Bonus Terbayar adalah yang sudah masuk ke Arus Kas via tombol ACC
+            
+            # 3. Gaji/Bonus yang SUDAH DIBAYAR (Input via Arus Kas)
             bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOMINAL'].sum()
 
         # --- HITUNG ESTIMASI GAJI POKOK REAL (STAFF & ADMIN) ---
         total_gaji_pokok_tim = 0
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         
-        # FILTER: Ambil STAFF dan ADMIN. OWNER (Dian) jangan dimasukkan agar saldo tetap rahasia.
-        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
+        # Filter: Hanya STAFF dan ADMIN
+        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])] if not df_staff.empty else pd.DataFrame()
 
-        if not is_masa_depan:
+        if not is_masa_depan and not df_staff_real.empty:
             for _, s in df_staff_real.iterrows():
                 n_up = str(s.get('NAMA', '')).strip().upper()
-                if n_up == "" or n_up == "NAN": continue
+                if n_up in ["", "NAN"]: continue
                 
-                # --- 1. IDENTIFIKASI LEVEL TARGET (KUNCI UTAMA) ---
                 lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
                 
-                # --- 2. SINKRON: Ambil Data Harian ---
-                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
+                # Ambil data performa buat hitung Potongan SP (Hanya jika tabel gak kosong)
+                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
+                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
 
-                # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
+                # Panggil mesin hitung potongan SP
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
-                    level_target=lv_asli # <--- LISA SEKARANG AMAN (KEBAL)
+                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
                 )
                 
-                # --- 4. HITUNG GAJI NETT ---
-                g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
-                t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
+                # Ambil Angka Gaji dari Master Staff
+                g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK', 0)).replace('.',''), errors='coerce') or 0)
+                t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN', 0)).replace('.',''), errors='coerce') or 0)
                 
-                # Admin pasti pot_sp_real = 0 karena level_target="ADMIN" sudah dikirim ke mesin
                 gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
                 
-                if bulan_dipilih == sekarang.month:
+                # Logic: Kalau bulan ini, hitung harian. Kalau bulan lalu, hitung full.
+                if bulan_dipilih == sekarang.month and tahun_dipilih == sekarang.year:
                     total_gaji_pokok_tim += (gaji_nett / 25) * min(sekarang.day, 25)
                 else:
                     total_gaji_pokok_tim += gaji_nett
@@ -3027,5 +3027,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
