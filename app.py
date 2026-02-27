@@ -2072,9 +2072,10 @@ def tampilkan_kendali_tim():
         df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
         # --- 3. LOGIKA FINISH & REKAP (PENGAMAN KOLOM STAF) ---
-        df_f_f = pd.DataFrame()
         if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
             df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
+        else:
+            df_f_f = pd.DataFrame()
         
         rekap_harian_tim = {}
         rekap_total_video = {}
@@ -3031,6 +3032,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
