@@ -9,11 +9,18 @@ import re
 import plotly.express as px
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
+from supabase import create_client, Client # <--- Library Supabase
 
 # ==============================================================================
 # KONFIGURASI DASAR & KONEKSI (STABIL & HEMAT KUOTA)
 # ==============================================================================
 URL_MASTER = "https://docs.google.com/spreadsheets/d/16xcIqG2z78yH_OxY5RC2oQmLwcJpTs637kPY-hewTTY/edit?usp=sharing"
+
+# --- KONEKSI SUPABASE (PANGGIL DARI SECRETS) ---
+# Pastikan di Secrets Streamlit sudah ada [supabase] url dan key
+url: str = st.secrets["supabase"]["url"]
+key: str = st.secrets["supabase"]["key"]
+supabase: Client = create_client(url, key)
 
 @st.cache_resource
 def get_gspread_sh():
@@ -23,13 +30,13 @@ def get_gspread_sh():
     client = gspread.authorize(creds)
     return client.open_by_url(URL_MASTER)
 
-@st.cache_data(ttl=10) # Data tampilan dashboard tahan 10 detik
+@st.cache_data(ttl=10) 
 def ambil_data_lokal(nama_sheet):
     """Gunakan ini di bagian DASHBOARD / TABEL biar hemat kuota."""
-    return ambil_data_beneran_segar(nama_sheet)
+    return ambil_data_segar(nama_sheet)
 
 def ambil_data_beneran_segar(nama_sheet):
-    """Fungsi asli narik data langsung ke GSheet."""
+    """Fungsi asli narik data langsung ke GSheet (Backup)."""
     try:
         sh = get_gspread_sh()
         ws = sh.worksheet(nama_sheet)
@@ -38,10 +45,30 @@ def ambil_data_beneran_segar(nama_sheet):
     except Exception as e:
         return pd.DataFrame()
 
-# INI KUNCINYA: Menghubungkan nama lama ke fungsi baru
+# --- SAKLAR OTOMATIS: SEMUA TABEL LEWAT SUPABASE ---
 def ambil_data_segar(nama_sheet):
-    """Alias biar kode lama lo gak error 'Not Defined'."""
-    return ambil_data_beneran_segar(nama_sheet)
+    """
+    LOGIKA SAKLAR TOTAL:
+    Semua tabel ditarik dari Supabase agar dashboard kencang.
+    GSheet hanya jadi cadangan (backup) jika Supabase bermasalah.
+    """
+    try:
+        # Coba tarik data dari Supabase
+        res = supabase.table(nama_sheet).select("*").execute()
+        df = pd.DataFrame(res.data)
+        
+        if not df.empty:
+            # Buang kolom 'id' bawaan supabase agar tidak bentrok dengan kodingan lama
+            if 'id' in df.columns: 
+                df = df.drop(columns=['id'])
+            return bersihkan_data(df)
+        else:
+            # Jika tabel di Supabase kosong, ambil dari GSheet
+            return ambil_data_beneran_segar(nama_sheet)
+            
+    except Exception as e:
+        # Jika tabel belum dibuat di Supabase, otomatis lari ke GSheet
+        return ambil_data_beneran_segar(nama_sheet)
 
 def bersihkan_data(df):
     """Standardisasi data biar Python gak pusing."""
@@ -200,17 +227,15 @@ MASTER_CHAR = {
 st.set_page_config(page_title="PINTAR MEDIA | Studio", layout="wide")
 
 # ==============================================================================
-# FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP
+# FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP + SUPABASE
 # ==============================================================================
 def log_absen_otomatis(nama_user):
     # 1. REM SESSION
     if st.session_state.get('absen_done_today', False):
         return
 
-    # 2. FILTER OWNER (Jalur VIP - Langsung anggap beres tanpa catat log)
+    # 2. FILTER OWNER
     user_level = st.session_state.get("user_level", "STAFF")
-    
-    # REVISI: Cuma OWNER yang dapet privilege skip absen. ADMIN & STAFF wajib absen.
     if user_level == "OWNER" or nama_user.lower() == "tamu":
         st.session_state.absen_done_today = True
         return
@@ -222,13 +247,11 @@ def log_absen_otomatis(nama_user):
     tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
-    # 3. RANGE JAM KERJA (Admin & Staff wajib masuk radar jam 8-10 pagi)
+    # 3. RANGE JAM KERJA
     if 8 <= jam < 22: 
         try:
-            sh = get_gspread_sh() 
-            sheet_absen = sh.worksheet("Absensi")
+            # PANGGIL DATA DARI SUPABASE (Biar cepet ngeceknya)
             df_absen = ambil_data_segar("Absensi")
-            
             nama_up = str(nama_user).upper().strip()
             
             sudah_absen = False
@@ -239,8 +262,20 @@ def log_absen_otomatis(nama_user):
                 sudah_absen = not df_absen[mask].empty
             
             if not sudah_absen:
-                # Logika Telat tetap berlaku buat Admin & Staff
                 status_final = "HADIR" if jam < 10 else f"TELAT ({jam_skrg})"
+                
+                # --- A. KIRIM KE SUPABASE (UTAMA) ---
+                data_supabase = {
+                    "NAMA": nama_up, 
+                    "TANGGAL": tgl_skrg, 
+                    "JAM MASUK": jam_skrg, 
+                    "STATUS": status_final
+                }
+                supabase.table("Absensi").insert(data_supabase).execute()
+
+                # --- B. KIRIM KE GSHEET (BACKUP) ---
+                sh = get_gspread_sh() 
+                sheet_absen = sh.worksheet("Absensi")
                 sheet_absen.append_row([nama_up, tgl_skrg, jam_skrg, status_final])
                 
                 st.session_state.absen_done_today = True
@@ -250,7 +285,7 @@ def log_absen_otomatis(nama_user):
                 st.session_state.absen_done_today = True
 
         except Exception as e:
-            print(f"Error Absen: {e}")
+            st.error(f"Gagal Absen: {e}")
     else:
         st.session_state.absen_done_today = False 
         st.toast(f"Sistem Absen Tutup (Jam {jam_skrg}). Akses Terbatas.", icon="🚫")
@@ -281,11 +316,9 @@ def inisialisasi_keamanan():
             "form_version": 0
         }
 
-    # --- KEAMANAN TINGGI: CABUT FITUR LOGIN VIA URL ---
-    # Bagian params auth dihapus agar tidak bisa bypass login lewat link.
-
 def proses_login(user, pwd):
     try:
+        # Pake ambil_data_segar agar otomatis cek Supabase (Sheet: Staff)
         df_staff = ambil_data_segar("Staff")
         
         if df_staff.empty:
@@ -325,10 +358,9 @@ def proses_login(user, pwd):
                     st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
 
                 # --- 4. PAKSA SISTEM REFRESH (BERSIHKAN URL) ---
-                # Bersihkan URL agar tidak ada celah login duplikat via link
                 st.query_params.clear() 
                 
-                time.sleep(1) # Kasih nafas buat Toast nongol
+                time.sleep(1) 
                 st.rerun()
             else:
                 st.error("Password salah.")
@@ -938,13 +970,11 @@ def tampilkan_gudang_ide():
     tz_wib = pytz.timezone('Asia/Jakarta')
 
     try:
-        # --- PERBAIKAN: GUNAKAN CACHE RESOURCE ---
-        sh = get_gspread_sh() # INSTAN! Ambil dari RAM
+        sh = get_gspread_sh() 
         
-        # Gunakan fungsi ambil_data_segar agar sinkron & efisien
+        # GUNAKAN SAKLAR (Cek Supabase dulu baru GSheet)
         df_gudang = ambil_data_segar("Gudang_Ide")
         
-        # Kita tetep butuh objek worksheet buat proses 'update_cell' nanti
         sheet_gudang = sh.worksheet("Gudang_Ide")
         sheet_tugas = sh.worksheet("Tugas")
         
@@ -960,7 +990,6 @@ def tampilkan_gudang_ide():
         else:
             is_loading = st.session_state.sedang_proses_id is not None
             
-            # RENDER GRID 3 KOLOM
             for i in range(0, len(list_judul_unik), 3):
                 cols = st.columns(3)
                 batch_judul = list_judul_unik[i:i+3]
@@ -971,7 +1000,6 @@ def tampilkan_gudang_ide():
                         id_ini = str(row_info['ID_IDE'])
                         
                         with st.container(border=True):
-                            # UI Styling tetap sama (Aksen Hijau)
                             st.markdown(f'<div style="height: 3px; background-color: #1d976c; border-radius: 10px; margin-bottom: 10px;"></div>', unsafe_allow_html=True)
                             st.markdown(f"<p style='color: #888; font-size: 15px; margin-bottom: -10px;'>ID: {id_ini}</p>", unsafe_allow_html=True)
                             st.markdown(f"### {judul}")
@@ -984,33 +1012,37 @@ def tampilkan_gudang_ide():
 
                             if user_level == "OWNER":
                                 if st.button(f"🗑️ HAPUS IDE", key=f"del_{id_ini}", use_container_width=True):
-                                    # Logika hapus baris di GSheet
+                                    # SUPABASE DELETE
+                                    supabase.table("Gudang_Ide").delete().eq("ID_IDE", id_ini).execute()
+                                    # GSHEET DELETE
                                     cell_del = sheet_gudang.find(id_ini)
                                     sheet_gudang.delete_rows(cell_del.row)
                                     st.success("Ide Berhasil Dihapus!")
                                     time.sleep(1)
                                     st.rerun()
-                                
-            # --- 4. PROSES DATA (VERSI MINIMALIS: HANYA LIST ADEGAN) ---
+                                    
+            # --- 4. PROSES DATA ---
             if st.session_state.sedang_proses_id and not st.session_state.status_sukses:
                 target_id = st.session_state.sedang_proses_id
                 row_proses = df_tersedia[df_tersedia['ID_IDE'].astype(str) == target_id].iloc[0]
                 judul_proses = row_proses['JUDUL']
                 
-                # A. Tandai di GSheet Gudang
+                # A. Tandai di GSheet & Supabase
+                status_update = f"DIAMBIL ({user_sekarang.upper()})"
+                # Update Supabase
+                supabase.table("Gudang_Ide").update({"STATUS": status_update}).eq("ID_IDE", target_id).execute()
+                # Update GSheet
                 cells = sheet_gudang.findall(target_id)
                 for cell in cells:
-                    sheet_gudang.update_cell(cell.row, 3, f"DIAMBIL ({user_sekarang.upper()})")
+                    sheet_gudang.update_cell(cell.row, 3, status_update)
                 
                 # B. Ambil semua baris adegan
                 adegan_rows = df_gudang[df_gudang['ID_IDE'].astype(str) == target_id]
                 st.session_state.data_produksi["jumlah_adegan"] = len(adegan_rows)
                 
-                # C. Wadah untuk teks minimalis di expander
                 naskah_bersih = ""
                 
                 for idx, (_, a_row) in enumerate(adegan_rows.iterrows(), 1):
-                    # --- 1. OTOMATIS MASUK KE INPUT PRODUKSI ---
                     st.session_state.data_produksi["adegan"][idx] = {
                         "aksi": a_row['NASKAH_VISUAL'], 
                         "dialogs": [str(a_row.get('DIALOG_ACTOR_1','')), str(a_row.get('DIALOG_ACTOR_2','')), "", ""],
@@ -1021,24 +1053,23 @@ def tampilkan_gudang_ide():
                         "cam": a_row.get('GERAKAN', OPTS_CAM[0]), 
                         "loc": a_row.get('LOKASI', '')
                     }
-                    
-                    # --- 2. RAKIT TEKS MINIMALIS (Hanya Adegan & Visual) ---
                     naskah_bersih += f"**{idx}.** {a_row['NASKAH_VISUAL']}\n\n"
 
-                # D. Simpan ke naskah_siap_produksi
                 st.session_state.naskah_siap_produksi = naskah_bersih
                 
-                # E. Log Tugas (MANTRA GHOST: OWNER TIDAK DICATAT)
                 if user_level != "OWNER":
                     t_id = f"T{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
-                    sheet_tugas.append_row([
-                        t_id, 
-                        user_sekarang.upper(), 
-                        datetime.now(tz_wib).strftime("%Y-%m-%d"), 
-                        f"TUGAS: {judul_proses}", 
-                        "PROSES", 
-                        "-", "", ""
-                    ])
+                    tgl_tugas = datetime.now(tz_wib).strftime("%Y-%m-%d")
+                    nama_tugas = f"TUGAS: {judul_proses}"
+                    
+                    # Update Supabase Tugas
+                    supabase.table("Tugas").insert({
+                        "ID_TUGAS": t_id, "STAF": user_sekarang.upper(), 
+                        "TANGGAL": tgl_tugas, "NAMA_TUGAS": nama_tugas, "STATUS": "PROSES"
+                    }).execute()
+                    
+                    # Update GSheet Tugas
+                    sheet_tugas.append_row([t_id, user_sekarang.upper(), tgl_tugas, nama_tugas, "PROSES", "-", "", ""])
 
                 st.session_state.status_sukses = True 
                 st.rerun()
@@ -1048,7 +1079,6 @@ def tampilkan_gudang_ide():
         st.session_state.sedang_proses_id = None
         st.rerun()
 
-    # --- 5. CLEANUP ---
     if st.session_state.status_sukses:
         time.sleep(3) 
         st.session_state.sedang_proses_id = None
@@ -2832,3 +2862,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
