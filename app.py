@@ -285,10 +285,10 @@ def log_absen_otomatis(nama_user):
                 
                 # 1. TULIS KE SUPABASE (Buat performa itung-itungan di web)
                 data_supabase = {
-                    "nama": nama_up,
-                    "tanggal": tgl_skrg,
-                    "jam_masuk": jam_skrg,
-                    "status": status_final
+                    "Nama": nama_up,
+                    "Tanggal": tgl_skrg,
+                    "Jam_masuk": jam_skrg,
+                    "Status": status_final
                 }
                 supabase.table("absensi").insert(data_supabase).execute()
                 
@@ -662,7 +662,7 @@ def pasang_css_kustom():
     """, unsafe_allow_html=True)
 
 # ==============================================================================
-# BAGIAN 4: NAVIGASI SIDEBAR (VERSI CLOUD ONLY)
+# BAGIAN 4: NAVIGASI SIDEBAR (VERSI CLOUD ONLY - FIXED BY GEMINI)
 # ==============================================================================
 def tampilkan_navigasi_sidebar():
     user_level = st.session_state.get("user_level", "STAFF")
@@ -679,7 +679,7 @@ def tampilkan_navigasi_sidebar():
             </div>
         """, unsafe_allow_html=True)
         
-        # 2. MENU LIST (Admin & Owner bisa liat Kendali Tim)
+        # 2. MENU LIST
         menu_list = ["🚀 RUANG PRODUKSI", "🧠 PINTAR AI LAB", "💡 GUDANG IDE", "📋 TUGAS KERJA"]
         if user_level in ["OWNER", "ADMIN"]:
             menu_list.append("⚡ KENDALI TIM")
@@ -695,7 +695,7 @@ def tampilkan_navigasi_sidebar():
             label_visibility="collapsed"
         )
         
-        # 5. SISTEM GSHEET (Semua level bisa liat Backup/Restore sesuai fungsinya)
+        # 5. SISTEM GSHEET
         st.markdown("<p class='small-label'>☁️ CLOUD DATABASE (GSHEET)</p>", unsafe_allow_html=True)
         col1, col2 = st.columns(2)
         with col1:
@@ -710,15 +710,17 @@ def tampilkan_navigasi_sidebar():
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
             st.markdown("<p class='small-label' style='color: #ff4b4b;'>🔥 ROOT ACCESS (SUPABASE)</p>", unsafe_allow_html=True)
             
+            # Definisikan fungsi di dalam sini dengan indentasi yang benar
             def pindah_data_ke_supabase():
                 try:
                     global sh
-                    # Ambil data segar langsung dari worksheet
+                    # Panggil worksheet secara manual biar ngga name error
                     st_tugas = sh.worksheet("Tugas")
                     st_staff = sh.worksheet("Staff")
                     st_absen = sh.worksheet("Absensi")
                     st_kas   = sh.worksheet("Arus_Kas")
 
+                    # Key harus lowercase sesuai nama tabel di SQL tadi
                     daftar_sheet = {
                         "tugas": st_tugas,
                         "staff": st_staff,
@@ -729,10 +731,10 @@ def tampilkan_navigasi_sidebar():
                     for nama_tabel, ws in daftar_sheet.items():
                         raw_data = ws.get_all_records()
                         if raw_data:
-                            # MEMBERSIHKAN DATA
+                            # Bersihkan data dari baris kosong
                             clean_data = [row for row in raw_data if any(row.values())]
-                            
                             if clean_data:
+                                # Kirim ke Supabase
                                 supabase.table(nama_tabel).upsert(clean_data).execute()
                                 
                     st.toast("🔥 DATA SINKRON KE SUPABASE!", icon="🚀")
@@ -740,11 +742,11 @@ def tampilkan_navigasi_sidebar():
                 except Exception as e:
                     st.error(f"Error Root Sync: {e}")
 
-            # Tombol pemicu (Sejajar dengan definisi fungsi di atas)
-            if st.button("🚀 SYNC TO SUPABASE", use_container_width=True, help="Hanya Owner yang bisa eksekusi migrasi data"):
-                with st.spinner("Mengirim data ke Cloud Engine..."):
+            # Tombol pemicu
+            if st.button("🚀 SYNC TO SUPABASE", use_container_width=True):
+                with st.spinner("Mengirim data ke Supabase..."):
                     pindah_data_ke_supabase()
-                    st.rerun() # Ditambah rerun biar data baru langsung kelihatan
+                    st.rerun()
 
         st.markdown('<div style="margin-top: 50px;"></div>', unsafe_allow_html=True)   
         
@@ -2968,6 +2970,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
