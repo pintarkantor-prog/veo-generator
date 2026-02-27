@@ -713,7 +713,8 @@ def tampilkan_navigasi_sidebar():
             
             def pindah_data_ke_supabase():
                 try:
-                    # Panggil koneksi sheet lo di sini (asumsi sh adalah variabel spreadsheet lo)
+                    global sh
+                    # Ambil data segar langsung dari worksheet
                     st_tugas = sh.worksheet("Tugas")
                     st_staff = sh.worksheet("Staff")
                     st_absen = sh.worksheet("Absensi")
@@ -725,11 +726,23 @@ def tampilkan_navigasi_sidebar():
                         "absensi": st_absen,
                         "arus_kas": st_kas
                     }
+                    
                     for nama_tabel, ws in daftar_sheet.items():
-                        data = ws.get_all_records()
-                        if data:
-                            supabase.table(nama_tabel).upsert(data).execute()
+                        raw_data = ws.get_all_records()
+                        if raw_data:
+                            # MEMBERSIHKAN DATA: Hapus baris yang ID/Nama-nya kosong
+                            # Biar Supabase gak protes pas proses Upsert
+                            clean_data = []
+                            for row in raw_data:
+                                # Cek jika baris tidak kosong (minimal ada satu nilai)
+                                if any(row.values()):
+                                    clean_data.append(row)
+                            
+                            if clean_data:
+                                supabase.table(nama_tabel).upsert(clean_data).execute()
+                                
                     st.toast("🔥 DATA SINKRON KE SUPABASE!", icon="🚀")
+                    st.success("Migrasi Berhasil!")
                 except Exception as e:
                     st.error(f"Error Root Sync: {e}")
 
@@ -2960,6 +2973,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
