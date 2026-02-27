@@ -706,7 +706,6 @@ def tampilkan_navigasi_sidebar():
                 muat_dari_gsheet()
 
         # --- EXCLUSIVE OWNER ONLY: SYNC SUPABASE ---
-        # Ini bener-bener dikunci, Admin pun gak bakal liat tombol ini
         if user_level == "OWNER":
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
             st.markdown("<p class='small-label' style='color: #ff4b4b;'>🔥 ROOT ACCESS (SUPABASE)</p>", unsafe_allow_html=True)
@@ -730,13 +729,8 @@ def tampilkan_navigasi_sidebar():
                     for nama_tabel, ws in daftar_sheet.items():
                         raw_data = ws.get_all_records()
                         if raw_data:
-                            # MEMBERSIHKAN DATA: Hapus baris yang ID/Nama-nya kosong
-                            # Biar Supabase gak protes pas proses Upsert
-                            clean_data = []
-                            for row in raw_data:
-                                # Cek jika baris tidak kosong (minimal ada satu nilai)
-                                if any(row.values()):
-                                    clean_data.append(row)
+                            # MEMBERSIHKAN DATA
+                            clean_data = [row for row in raw_data if any(row.values())]
                             
                             if clean_data:
                                 supabase.table(nama_tabel).upsert(clean_data).execute()
@@ -746,10 +740,11 @@ def tampilkan_navigasi_sidebar():
                 except Exception as e:
                     st.error(f"Error Root Sync: {e}")
 
+            # Tombol pemicu (Sejajar dengan definisi fungsi di atas)
             if st.button("🚀 SYNC TO SUPABASE", use_container_width=True, help="Hanya Owner yang bisa eksekusi migrasi data"):
                 with st.spinner("Mengirim data ke Cloud Engine..."):
                     pindah_data_ke_supabase()
-                    st.success("Database Utama Terupdate!")
+                    st.rerun() # Ditambah rerun biar data baru langsung kelihatan
 
         st.markdown('<div style="margin-top: 50px;"></div>', unsafe_allow_html=True)   
         
@@ -2973,6 +2968,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
