@@ -2057,8 +2057,12 @@ def tampilkan_kendali_tim():
 
         # --- 2. FUNGSI SARING TANGGAL (PENGAMAN) ---
         def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
+            if df.empty: return pd.DataFrame()
+            # Cari kolomnya mau huruf besar atau kecil tetep ketemu
+            kolom_found = [c for c in df.columns if c.upper() == kolom.upper()]
+            if not kolom_found: return pd.DataFrame()
+    
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom_found[0]], errors='coerce')
             mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
@@ -3027,6 +3031,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
