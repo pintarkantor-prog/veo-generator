@@ -1441,7 +1441,7 @@ def tampilkan_tugas_kerja():
     if user_level == "STAFF":
         with st.container(border=True):
             st.markdown("### 🚀 SETOR TUGAS MANDIRI")
-            st.info("💡 **PENTING:** Setor 1 video per 1 kiriman agar bonus lembur & target bulanan terhitung otomatis oleh sistem.")
+            st.info("💡 **PENTING:** Setor 1 video per 1 kiriman agar bonus video & target bulanan terhitung otomatis oleh sistem.")
             
             with st.form("form_mandiri", clear_on_submit=True):
                 judul_m = st.text_input("📝 Judul Video/Pekerjaan:", placeholder="Contoh: Video Konten A Part 1")
@@ -1916,8 +1916,8 @@ def tampilkan_tugas_kerja():
                 Selamat bekerja! Agar penghasilan kamu maksimal, mohon perhatikan aturan berikut:
                 
                 * ⏰ **Bonus Kehadiran:** Tambahan **Rp 30.000** diberikan setiap hari jika kamu menyelesaikan minimal **3 video** (FINISH).
-                * 🎬 **Apresiasi Produksi (Lembur):** Bonus tambahan **Rp 30.000** per video baru mulai diberikan pada **video ke-5** dan seterusnya dalam satu hari.
-                * ⚠️ **Batas Minimal Bonus:** Jika hanya menyelesaikan **2 video** sehari, status **Aman**, namun Bonus Kehadiran & Lembur **TIDAK CAIR**.
+                * 🎬 **Apresiasi Produksi (Video):** Bonus tambahan **Rp 30.000** per video baru mulai diberikan pada **video ke-5** dan seterusnya dalam satu hari.
+                * ⚠️ **Batas Minimal Bonus:** Jika hanya menyelesaikan **2 video** sehari, status **Aman**, namun Bonus Kehadiran & Video **TIDAK CAIR**.
                 * 📌 **Penting:** Perhitungan bonus dilakukan secara harian. Mari jaga konsistensi setiap hari agar bonus tidak terlewat.
                 
                 ---
@@ -2027,7 +2027,7 @@ def tampilkan_tugas_kerja():
                                 df_staf_cair['NOM_FIX'] = pd.to_numeric(df_staf_cair['NOMINAL'], errors='coerce').fillna(0)
                                 
                                 # Ambil bonus yang beneran sudah di-input Admin/Owner di Arus Kas
-                                v_b_video = int(df_staf_cair[df_staf_cair['KETERANGAN'].str.upper().str.contains('LEMBUR', na=False)]['NOM_FIX'].sum())
+                                v_b_video = int(df_staf_cair[df_staf_cair['KETERANGAN'].str.upper().str.contains('VIDEO', na=False)]['NOM_FIX'].sum())
                                 v_u_hadir = int(df_staf_cair[df_staf_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)]['NOM_FIX'].sum())
 
                         # Potongan tetap hitung dari performa (Biar staff tau ada sanksi)
@@ -2067,8 +2067,8 @@ def tampilkan_tugas_kerja():
                             <table style="width: 100%; font-size: 13px; line-height: 2.2; border-collapse: collapse;">
                                 <tr><td style="color: #666;">Gaji Pokok</td><td align="right" style="font-weight: 600;">Rp {S_VAR_GAPOK:,}</td></tr>
                                 <tr><td style="color: #666;">Tunjangan</td><td align="right" style="font-weight: 600;">Rp {S_VAR_TUNJ:,}</td></tr>
-                                <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen (Real)</td><td align="right">+ {v_u_hadir:,}</td></tr>
-                                <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video (Real)</td><td align="right">+ {v_b_video:,}</td></tr>
+                                <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen </td><td align="right">+ {v_u_hadir:,}</td></tr>
+                                <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video </td><td align="right">+ {v_b_video:,}</td></tr>
                                 
                                 <tr style="border-top: 1px solid #f0f0f0; color: #e74c3c; font-weight: 600;">
                                     <td style="padding-top: 5px;">Potongan SP ({display_hari_lemah} Hari){label_vip}</td>
@@ -2448,7 +2448,7 @@ def tampilkan_kendali_tim():
                     # Hitung dengan filter yang lebih LUAS (Upper case agar sinkron)
                     real_b_lembur = df_cair[
                         (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & 
-                        (df_cair['KETERANGAN'].str.upper().str.contains('LEMBUR', na=False))
+                        (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO', na=False))
                     ]['NOMINAL_FIX'].sum()
                     
                     real_b_absen = df_cair[
@@ -2469,7 +2469,7 @@ def tampilkan_kendali_tim():
             c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}% Capaian")
             
             # 4. Bonus (Sumber data ganti ke REAL_B SUPABASE)
-            c_r3.metric("🔥 BONUS LEMBUR", f"Rp {int(real_b_lembur):,}", delta="LIVE SYNC")
+            c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_lembur):,}", delta="LIVE SYNC")
             c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen):,}", delta="LIVE SYNC")
             
             # 5. Total Hari Lemah (Otomatis 0 buat Admin karena Mantra Kebal)
@@ -2530,7 +2530,7 @@ def tampilkan_kendali_tim():
                     df_bonus_cair = df_k_slip[mask_slip]
                     
                     # Ambil angka riil dari database (Filter Keterangan Lembur & Absen)
-                    bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('LEMBUR', na=False)]['NOMINAL_INT'].sum())
+                    bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('VIDEO', na=False)]['NOMINAL_INT'].sum())
                     bonus_absen_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)]['NOMINAL_INT'].sum())
 
                     # --- 5. RUMUS FINAL (MENGGUNAKAN DATA SUPABASE) ---
@@ -2577,8 +2577,8 @@ def tampilkan_kendali_tim():
                                     <table style="width: 100%; font-size: 13px; line-height: 2.2; border-collapse: collapse;">
                                         <tr><td style="color: #666;">Gaji Pokok</td><td align="right" style="font-weight: 600;">Rp {v_gapok:,}</td></tr>
                                         <tr><td style="color: #666;">Tunjangan</td><td align="right" style="font-weight: 600;">Rp {v_tunjangan:,}</td></tr>
-                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen (Real)</td><td align="right">+ {bonus_absen_real:,}</td></tr>
-                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video (Real)</td><td align="right">+ {bonus_video_real:,}</td></tr>
+                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen </td><td align="right">+ {bonus_absen_real:,}</td></tr>
+                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video </td><td align="right">+ {bonus_video_real:,}</td></tr>
                                         <tr style="border-top: 1px solid #f0f0f0; color: #e74c3c; font-weight: 600;"><td style="padding-top: 5px;">Potongan SP ({hari_lemah} Hari)</td><td align="right" style="padding-top: 5px;">- {pot_sp_admin:,}</td></tr>
                                     </table>
 
@@ -3111,6 +3111,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
