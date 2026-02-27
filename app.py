@@ -1346,7 +1346,7 @@ def tampilkan_tugas_kerja():
                     st.metric(
                         "💰 TOTAL BONUS", 
                         f"Rp {angka_bonus:,}", # Sekarang pasti aman karena udah jadi Integer
-                        delta="📊 LIVE SYNC",
+                        delta="LIVE SYNC",
                         delta_color="normal"
                     )
                 
@@ -3078,6 +3078,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
