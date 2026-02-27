@@ -2100,101 +2100,53 @@ def tampilkan_kendali_tim():
             rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
         # --- KALKULASI KEUANGAN RIIL (ANTI ERROR 'f' & 'NOT DEFINED') ---
-        inc, ops, bonus_terbayar_kas = 0.0, 0.0, 0.0
+def aman_angka(nilai):
+            try:
+                if nilai is None or str(nilai).strip() == "" or str(nilai).lower() == "nan":
+                    return 0.0
+                # Hapus karakter non-angka kecuali titik untuk desimal
+                bersih = "".join(c for c in str(nilai) if c.isdigit() or c == '.')
+                return float(bersih) if bersih else 0.0
+            except:
+                return 0.0
+
+        # --- 2. KALKULASI KEUANGAN ---
+        inc_raw, ops_raw, bonus_raw = 0.0, 0.0, 0.0
         
-        if not df_k_f.empty and 'NOMINAL' in df_k_f.columns:
-            df_k_f['NOMINAL_CLEAN'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
-            inc = float(df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL_CLEAN'].sum())
-            ops = float(df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL_CLEAN'].sum())
-            bonus_terbayar_kas = float(df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOMINAL_CLEAN'].sum())
-
-        # --- HITUNG ESTIMASI GAJI POKOK REAL ---
-        total_gaji_pokok_tim = 0.0
-        is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
-        
-        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])] if not df_staff.empty else pd.DataFrame()
-
-        if not is_masa_depan and not df_staff_real.empty:
-            for _, s in df_staff_real.iterrows():
-                n_up = str(s.get('NAMA', '')).strip().upper()
-                if n_up in ["", "NAN"]: continue
-                
-                lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
-                
-                # SINKRON: Ambil Data Harian
-                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty and 'NAMA' in df_a_f.columns else pd.DataFrame()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty and 'STAF' in df_f_f.columns else pd.DataFrame()
-
-                # PANGGIL MESIN
-                _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
-                )
-                
-                g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
-                t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
-                
-                gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
-                
-                if bulan_dipilih == sekarang.month:
-                    total_gaji_pokok_tim += (gaji_nett / 25) * min(sekarang.day, 25)
-                else:
-                    total_gaji_pokok_tim += gaji_nett
-
-        # FINAL CALCULATION
-        inc_val = float(inc)
-        total_out_riil = float(total_gaji_pokok_tim + bonus_terbayar_kas + ops)
-        saldo_riil = float(inc_val - total_out_riil)
-        
-        # ======================================================================
-        # --- 4. VARIABEL FINAL UNTUK UI (PROTEKSI TOTAL FORMAT 'f') ---
-        # ======================================================================
-        # Kita paksa SEMUA jadi float di sini. Kalau gagal, jadi 0.0.
-        try:
-            inc_val = float(inc) if 'inc' in locals() else 0.0
-        except:
-            inc_val = 0.0
+        if not df_k_f.empty:
+            # Pastikan kolom TIPE dan NOMINAL ada
+            df_k_f['NOM_NUM'] = df_k_f['NOMINAL'].apply(aman_angka)
             
-        try:
-            # Pastikan total_gaji_pokok_tim sudah ada
-            gaji_pokok_fix = float(total_gaji_pokok_tim) if 'total_gaji_pokok_tim' in locals() else 0.0
-            bonus_val = float(bonus_terbayar_kas) if 'bonus_terbayar_kas' in locals() else 0.0
-            ops_val = float(ops) if 'ops' in locals() else 0.0
-            
-            total_out_riil = gaji_pokok_fix + bonus_val + ops_val
-        except:
-            total_out_riil = 0.0
+            inc_raw = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOM_NUM'].sum()
+            ops_raw = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'GAJI TIM')]['NOM_NUM'].sum()
+            bonus_raw = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'GAJI TIM')]['NOM_NUM'].sum()
 
-        saldo_riil = float(inc_val - total_out_riil)
+        # --- 3. ESTIMASI GAJI POKOK ---
+        # Pastikan total_gaji_pokok_tim yang dihitung di loop atas adalah angka
+        gaji_pokok_final = aman_angka(total_gaji_pokok_tim) if 'total_gaji_pokok_tim' in locals() else 0.0
+        
+        # Variabel Akhir (PASTI FLOAT)
+        v_inc = float(inc_raw)
+        v_out = float(gaji_pokok_final + aman_angka(bonus_raw) + aman_angka(ops_raw))
+        v_saldo = float(v_inc - v_out)
 
-        # --- UI: METRIK UTAMA (DENGAN TRY-EXCEPT PER BARIS) ---
+        # --- 4. TAMPILAN UI (ANTI-ERROR 'f') ---
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
             m1, m2, m3, m4 = st.columns(4)
             
-            # M1: INCOME
-            try:
-                m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
-            except:
-                m1.metric("💰 INCOME", "Rp 0")
-
-            # M2: OUTCOME
-            try:
-                m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}")
-            except:
-                m2.metric("💸 OUTCOME", "Rp 0")
+            # Kita bungkus f-string dengan pengaman tambahan
+            txt_inc = f"Rp {v_inc:,.0f}" if isinstance(v_inc, (int, float)) else "Rp 0"
+            txt_out = f"Rp {v_out:,.0f}" if isinstance(v_out, (int, float)) else "Rp 0"
+            txt_saldo = f"Rp {v_saldo:,.0f}" if isinstance(v_saldo, (int, float)) else "Rp 0"
             
-            # M3: SALDO
-            try:
-                status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
-                m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta=status_saldo)
-            except:
-                m3.metric("📈 SALDO BERSIH", "Rp 0")
+            m1.metric("💰 INCOME", txt_inc)
+            m2.metric("💸 OUTCOME", txt_out)
             
-            # M4: MARGIN
-            try:
-                margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
-                m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
-            except:
-                m4.metric("📊 MARGIN", "0%")
+            status_txt = "SURPLUS" if v_saldo >= 0 else "DEFISIT"
+            m3.metric("📈 SALDO BERSIH", txt_saldo, delta=status_txt)
+            
+            v_margin = (v_saldo / v_inc * 100) if v_inc > 0 else 0.0
+            m4.metric("📊 MARGIN", f"{v_margin:.1f}%")
 
             st.divider()
             
@@ -3051,6 +3003,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
