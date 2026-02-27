@@ -2146,38 +2146,55 @@ def tampilkan_kendali_tim():
         saldo_riil = float(inc_val - total_out_riil)
         
         # ======================================================================
-        # --- UI: FINANCIAL COMMAND CENTER (CUSTOM LAYOUT) ---
+        # --- 4. VARIABEL FINAL UNTUK UI (PROTEKSI TOTAL FORMAT 'f') ---
         # ======================================================================
+        # Kita paksa SEMUA jadi float di sini. Kalau gagal, jadi 0.0.
+        try:
+            inc_val = float(inc) if 'inc' in locals() else 0.0
+        except:
+            inc_val = 0.0
+            
+        try:
+            # Pastikan total_gaji_pokok_tim sudah ada
+            gaji_pokok_fix = float(total_gaji_pokok_tim) if 'total_gaji_pokok_tim' in locals() else 0.0
+            bonus_val = float(bonus_terbayar_kas) if 'bonus_terbayar_kas' in locals() else 0.0
+            ops_val = float(ops) if 'ops' in locals() else 0.0
+            
+            total_out_riil = gaji_pokok_fix + bonus_val + ops_val
+        except:
+            total_out_riil = 0.0
+
+        saldo_riil = float(inc_val - total_out_riil)
+
+        # --- UI: METRIK UTAMA (DENGAN TRY-EXCEPT PER BARIS) ---
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
-            
-            # --- FIX TIPE DATA FINANSIAL SEBELUM TAMPIL ---
-            inc_val = float(inc)
-            # Pastikan bonus terbayar dan ops sudah angka murni
-            bonus_val = float(bonus_terbayar_kas) if bonus_terbayar_kas else 0
-            ops_val = float(ops) if ops else 0
-            
-            # Outcome total gabungan (Riil)
-            total_out_riil = total_gaji_pokok_tim + bonus_val + ops_val
-            saldo_riil = inc_val - total_out_riil
-            
-            # --- METRIK UTAMA ---
             m1, m2, m3, m4 = st.columns(4)
             
-            m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
+            # M1: INCOME
+            try:
+                m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
+            except:
+                m1.metric("💰 INCOME", "Rp 0")
+
+            # M2: OUTCOME
+            try:
+                m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}")
+            except:
+                m2.metric("💸 OUTCOME", "Rp 0")
             
-            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", 
-                      delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, 
-                      delta_color="normal")
+            # M3: SALDO
+            try:
+                status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
+                m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta=status_saldo)
+            except:
+                m3.metric("📈 SALDO BERSIH", "Rp 0")
             
-            status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
-            warna_delta = "normal" if saldo_riil >= 0 else "inverse"
-            
-            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", 
-                      delta=status_saldo,
-                      delta_color=warna_delta)
-            
-            margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
-            m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
+            # M4: MARGIN
+            try:
+                margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
+                m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
+            except:
+                m4.metric("📊 MARGIN", "0%")
 
             st.divider()
             
@@ -3034,5 +3051,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
