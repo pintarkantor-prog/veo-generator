@@ -350,60 +350,44 @@ def inisialisasi_keamanan():
             "form_version": 0
         }
 
-    # --- KEAMANAN TINGGI: CABUT FITUR LOGIN VIA URL ---
-    # Bagian params auth dihapus agar tidak bisa bypass login lewat link.
-
 def proses_login(user, pwd):
     try:
+        # Panggil mesin hybrid (Sudah otomatis UPPERCASE & Bersih)
         df_staff = ambil_data_segar("Staff")
         
         if df_staff.empty:
-            st.error("Database Staff tidak terbaca.")
+            st.error("Database Staff tidak terbaca atau kosong.")
             return
 
-        df_staff.columns = [str(c).strip().upper() for c in df_staff.columns]
         u_input = str(user).strip().upper()
         p_input = str(pwd).strip()
 
+        # Karena ambil_data_segar sudah paksa UPPERCASE, kolom 'NAMA' pasti ada
         user_row = df_staff[df_staff['NAMA'] == u_input]
 
         if not user_row.empty:
             pwd_sheet = str(user_row.iloc[0]['PASSWORD']).strip()
-            user_level = str(user_row.iloc[0]['LEVEL']).strip().upper()
+            # Gunakan .get() biar aman kalau kolom LEVEL typo
+            user_level = str(user_row.iloc[0].get('LEVEL', 'STAFF')).strip().upper()
             
             if pwd_sheet == p_input:
-                # --- 1. SET STATUS LOGIN ---
                 st.session_state.sudah_login = True
                 user_key = user.lower().strip() 
                 st.session_state.user_aktif = user_key
                 st.session_state.waktu_login = datetime.now()
 
-                # --- 2. KUNCI KASTA OWNER (BYPASS) ---
                 if user_key == "dian":
                     st.session_state.user_level = "OWNER"
                 else:
                     st.session_state.user_level = user_level
 
-                current_lv = st.session_state.user_level
-
-                # --- 3. LOGIKA ABSEN & NOTIF ---
-                if current_lv in ["STAFF", "ADMIN"]:
-                    log_absen_otomatis(user_key)
-                    st.toast(f"Selamat bekerja, {user_key}!", icon="✅")
-                elif current_lv == "OWNER":
-                    st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
-
-                # --- 4. PAKSA SISTEM REFRESH (BERSIHKAN URL) ---
-                # Bersihkan URL agar tidak ada celah login duplikat via link
+                log_absen_otomatis(user_key)
                 st.query_params.clear() 
-                
-                time.sleep(1) # Kasih nafas buat Toast nongol
                 st.rerun()
             else:
                 st.error("Password salah.")
         else:
             st.error("Username tidak terdaftar.")
-
     except Exception as e:
         st.error(f"Sistem Login Error: {e}")
         
@@ -2064,18 +2048,18 @@ def tampilkan_tugas_kerja():
         else:
             st.info("🔒 **Menu Klaim Gaji** akan terbuka otomatis pada tanggal 26 setiap bulannya.")
                 
-def tampilkan_kendali_tim():    
+def tampilkan_kendali_tim():   
     user_level = st.session_state.get("user_level", "STAFF")
 
     if user_level not in ["OWNER", "ADMIN"]:
         st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
         st.stop()
 
-    # 2. SETUP WAKTU (Wajib di atas agar variabel 'sekarang' terbaca semua modul)
+    # 1. SETUP WAKTU
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # 3. HEADER HALAMAN
+    # 2. HEADER HALAMAN
     col_h1, col_h2 = st.columns([3, 1])
     with col_h1:
         st.title("⚡ PUSAT KENDALI TIM")
@@ -2084,9 +2068,8 @@ def tampilkan_kendali_tim():
             st.cache_data.clear()
             st.rerun()
 
-    # 4. KONEKSI MASTER (Satu koneksi untuk semua expander di bawah)
+    # 3. KONEKSI & FILTER BULAN
     sh = get_gspread_sh()
-    
     c_bln, c_thn = st.columns([2, 2])
     daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
     pilihan_nama = c_bln.selectbox("📅 Pilih Bulan Laporan:", list(daftar_bulan.values()), index=sekarang.month - 1)
@@ -2096,60 +2079,62 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # 1. AMBIL SEMUA DATA VIA HYBRID (OTOMATIS SUPABASE/GSHEET)
+        # --- 4. AMBIL DATA (SINKRONISASI SUPABASE) ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
-        df_tugas = ambil_data_segar("Tugas")  # <-- SEKARANG SUDAH HYBRID (KENCENG!)
-        df_kas   = ambil_data_segar("Arus_Kas") # <-- SEKARANG SUDAH HYBRID
+        df_tugas = ambil_data_segar("Tugas")  
+        df_kas   = ambil_data_segar("Arus_Kas")
 
-        # 2. HITUNG TARGET KOLEKTIF
-        # Menghitung: Jumlah baris di df_staff dikali 40 video
-        t_target_display = len(df_staff) * 40
-        
-        # 3. FILTER TANGGAL (Gunakan Fungsi Saring Tunggal)
-        def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            # Pastikan kolom tanggal jadi datetime
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], dayfirst=True, errors='coerce')
+        # --- 5. STANDARISASI KOLOM (WAJIB: SEBELUM LOGIKA LAIN JALAN) ---
+        # Ini kuncinya, Yan. Semua dataframe dipaksa UPPERCASE supaya filter gak KeyError.
+        for d in [df_staff, df_absen, df_tugas, df_kas]:
+            if not d.empty:
+                d.columns = [str(c).strip().upper() for c in d.columns]
+
+        # --- 6. DEFINISI FILTER TANGGAL (VERSI AMAN) ---
+        def saring_tgl(df, kolom_key, bln, thn):
+            if df.empty: return pd.DataFrame()
+            # Karena sudah di-upper di atas, kita cari kolom dengan nama UPPER
+            target_col = str(kolom_key).upper()
+            if target_col not in df.columns:
+                return pd.DataFrame() # Balikin kosong kalau kolom ga ada
+            
+            df['TGL_TEMP'] = pd.to_datetime(df[target_col], dayfirst=True, errors='coerce')
             mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return df[mask].copy()
 
-        # Eksekusi Saring untuk laporan bulan yang dipilih
+        # Eksekusi Saring
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
 
-        # 4. LOGIKA FINISH & REKAP (Untuk grafik/tabel performa tim)
-        df_f_f = df_t_bln[df_t_bln['STATUS'] == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
+        # --- 7. LOGIKA FINISH & REKAP ---
+        df_f_f = pd.DataFrame()
+        if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
+            df_f_f = df_t_bln[df_t_bln['STATUS'] == "FINISH"].copy()
         
         rekap_harian_tim = {}
-        rekap_total_video = {}
         if not df_f_f.empty:
             df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-            # Grouping performa per staf per hari
+            # Gunakan 'STAF' (UPPER) sesuai standarisasi kita
             rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-            rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
-        # 5. KALKULASI KEUANGAN RIIL
+        # --- 8. KALKULASI KEUANGAN ---
         inc = 0
         ops = 0
         bonus_terbayar_kas = 0
         
         if not df_k_f.empty:
-            # Pastikan NOMINAL adalah angka
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'], errors='coerce').fillna(0)
-            
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
-            # Ops adalah pengeluaran SELAIN Gaji/Bonus Tim
+            # Filter bonus supaya pengeluaran operasional murni kelihatan
             ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (~df_k_f['KETERANGAN'].str.contains('BONUS', case=False, na=False))]['NOMINAL'].sum()
-            # Bonus Terbayar adalah yang sudah di-ACC owner dan masuk Arus Kas
             bonus_terbayar_kas = df_k_f[df_k_f['KETERANGAN'].str.contains('BONUS', case=False, na=False)]['NOMINAL'].sum()
-            
-        # --- HITUNG ESTIMASI GAJI POKOK REAL (STAFF & ADMIN) ---
+
+        # --- 9. ESTIMASI GAJI POKOK (VIP SYNCED) ---
         total_gaji_pokok_tim = 0
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         
-        # FILTER: Ambil STAFF dan ADMIN. OWNER (Dian) jangan dimasukkan agar saldo tetap rahasia.
         df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
 
         if not is_masa_depan:
@@ -2157,24 +2142,18 @@ def tampilkan_kendali_tim():
                 n_up = str(s.get('NAMA', '')).strip().upper()
                 if n_up == "" or n_up == "NAN": continue
                 
-                # --- 1. IDENTIFIKASI LEVEL TARGET (KUNCI UTAMA) ---
                 lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
-                
-                # --- 2. SINKRON: Ambil Data Harian ---
-                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
+                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
+                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
 
-                # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
+                # Panggil mesin hitung bonus (Suntik Level Asli buat deteksi Kebal SP Lisa/Admin)
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
-                    level_target=lv_asli # <--- LISA SEKARANG AMAN (KEBAL)
+                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
                 )
                 
-                # --- 4. HITUNG GAJI NETT ---
                 g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
                 t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
                 
-                # Admin pasti pot_sp_real = 0 karena level_target="ADMIN" sudah dikirim ke mesin
                 gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
                 
                 if bulan_dipilih == sekarang.month:
@@ -2182,7 +2161,7 @@ def tampilkan_kendali_tim():
                 else:
                     total_gaji_pokok_tim += gaji_nett
 
-        # TOTAL OUTCOME SINKRON (Uang Keluar Real: Staff + Admin)
+        # FINAL CALCULATION
         total_pengeluaran_gaji = total_gaji_pokok_tim + bonus_terbayar_kas
         total_out = total_pengeluaran_gaji + ops
         saldo_bersih = inc - total_out
@@ -2984,6 +2963,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
