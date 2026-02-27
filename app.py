@@ -2495,17 +2495,24 @@ def tampilkan_kendali_tim():
                     v_gapok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
                     v_tunjangan = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
                     
-                    # --- 4. FILTER DATA BONUS RIIL DARI SUPABASE (DINAMIS) ---
-                    mask_slip = (df_kas_master['KATEGORI'] == 'GAJI TIM') & \
-                                (df_kas_master['KETERANGAN'].str.contains(n_up, case=False, na=False)) & \
-                                (pd.to_datetime(df_kas_master['TANGGAL']).dt.month == bulan_dipilih) & \
-                                (pd.to_datetime(df_kas_master['TANGGAL']).dt.year == tahun_dipilih)
+                    # --- 4. FILTER DATA BONUS RIIL DARI SUPABASE (DINAMIS & ANTI-ERROR) ---
+                    # Kita buat salinan buat difilter biar gak ngerusak data master
+                    df_k_slip = df_kas_master.copy()
                     
-                    df_bonus_cair = df_kas_master[mask_slip]
+                    # Paksa NOMINAL jadi angka biar bisa dijumlah (KUNCINYA DISINI)
+                    df_k_slip['NOMINAL_INT'] = pd.to_numeric(df_k_slip['NOMINAL'], errors='coerce').fillna(0)
                     
-                    # Ambil angka riil dari database (Ganti prediksi b_lembur_staf & u_absen_staf)
-                    bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.contains('Lembur', case=False, na=False)]['NOMINAL'].sum())
-                    bonus_absen_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.contains('Absen', case=False, na=False)]['NOMINAL'].sum())
+                    # Filter: Hanya Gaji Tim, Milik Nama Staff ini, dan Periode Bulan/Tahun
+                    mask_slip = (df_k_slip['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                                (df_k_slip['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
+                                (pd.to_datetime(df_k_slip['TANGGAL']).dt.month == bulan_dipilih) & \
+                                (pd.to_datetime(df_k_slip['TANGGAL']).dt.year == tahun_dipilih)
+                    
+                    df_bonus_cair = df_k_slip[mask_slip]
+                    
+                    # Ambil angka riil dari database (Filter Keterangan Lembur & Absen)
+                    bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('LEMBUR', na=False)]['NOMINAL_INT'].sum())
+                    bonus_absen_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)]['NOMINAL_INT'].sum())
 
                     # --- 5. RUMUS FINAL (MENGGUNAKAN DATA SUPABASE) ---
                     v_total_terima = max(0, (v_gapok + v_tunjangan + bonus_absen_real + bonus_video_real) - pot_sp_admin)
@@ -3085,6 +3092,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
