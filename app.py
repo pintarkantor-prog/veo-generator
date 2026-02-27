@@ -2084,48 +2084,37 @@ def tampilkan_kendali_tim():
         df_kas   = ambil_data_segar("Arus_Kas")
 
         # --- 5. STANDARISASI KOLOM (KEBAL ERROR) ---
-        # Masukkan semua ke dictionary untuk diproses massal
-        raw_dfs = {
-            "Staff": df_staff, 
-            "Absensi": df_absen, 
-            "Tugas": df_tugas, 
-            "Arus_Kas": df_kas
-        }
-        
-        # Dictionary untuk menampung hasil yang sudah bersih
+        raw_dfs = {"Staff": df_staff, "Absensi": df_absen, "Tugas": df_tugas, "Arus_Kas": df_kas}
         fixed_dfs = {}
 
         for nama_df, df in raw_dfs.items():
-            # Pastikan objek adalah DataFrame
-            if isinstance(df, list):
-                df = pd.DataFrame(df)
-            
-            if df is not None and not df.empty:
-                # 1. Bersihkan Nama Kolom (Paksa String & Upper)
-                df.columns = [str(c).strip().upper() for c in df.columns]
-                
-                # 2. Bersihkan Isi Data (PENTING: Gunakan str.upper() bukan upper())
-                # Kita hanya bersihkan kolom teks utama agar tidak lemot
-                for col in ['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TIPE']:
-                    if col in df.columns:
-                        df[col] = df[col].astype(str).str.strip().upper()
-                
-                fixed_dfs[nama_df] = df
-            else:
-                # Fallback: Buat DF kosong dengan kolom standar supaya filter tidak KeyError
-                kolom_std = {
+            # A. CEK DATA: Kalau kosong atau None, buat dummy kosong agar saring_tgl gak crash
+            if df is None or (isinstance(df, pd.DataFrame) and df.empty) or (isinstance(df, list) and len(df) == 0):
+                kolom_dummy = {
                     "Staff": ['NAMA', 'LEVEL', 'GAJI_POKOK', 'TUNJANGAN'],
                     "Absensi": ['NAMA', 'TANGGAL', 'STATUS'],
-                    "Tugas": ['STAF', 'DEADLINE', 'STATUS', 'INSTRUKSI'],
+                    "Tugas": ['STAF', 'DEADLINE', 'STATUS'],
                     "Arus_Kas": ['TANGGAL', 'TIPE', 'NOMINAL', 'KETERANGAN']
                 }
-                fixed_dfs[nama_df] = pd.DataFrame(columns=kolom_std.get(nama_df, []))
+                fixed_dfs[nama_df] = pd.DataFrame(columns=kolom_dummy.get(nama_df, []))
+                continue # Loncat ke data berikutnya, gak usah diproses upper()
 
-        # Re-assign kembali ke variabel utama agar dipakai di logika bawah
-        df_staff = fixed_dfs["Staff"]
-        df_absen = fixed_dfs["Absensi"]
-        df_tugas = fixed_dfs["Tugas"]
-        df_kas   = fixed_dfs["Arus_Kas"]
+            # B. KALAU DATA ADA: Baru diproses
+            temp_df = pd.DataFrame(df)
+            
+            # Bersihkan nama kolom
+            temp_df.columns = [str(c).strip().upper() for c in temp_df.columns]
+            
+            # Bersihkan isi teks (Pake .str agar gak error 'Series object')
+            kolom_teks = ['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TIPE']
+            for col in kolom_teks:
+                if col in temp_df.columns:
+                    temp_df[col] = temp_df[col].astype(str).str.strip().upper()
+            
+            fixed_dfs[nama_df] = temp_df
+
+        # Balikin ke variabel asli
+        df_staff, df_absen, df_tugas, df_kas = fixed_dfs["Staff"], fixed_dfs["Absensi"], fixed_dfs["Tugas"], fixed_dfs["Arus_Kas"]
 
         # --- 5.1 PROTEKSI NUMERIK (BUMBU PENYEDAP) ---
         # Pastikan kolom NOMINAL di Arus_Kas jadi angka, bukan string
@@ -3009,6 +2998,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
