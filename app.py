@@ -1282,15 +1282,28 @@ def tampilkan_tugas_kerja():
                 df_absen_all.columns = [str(c).strip().upper() for c in df_absen_all.columns]
                 df_u_absen = df_absen_all[df_absen_all['NAMA'] == target_user].copy()
 
-            # HITUNG LOGIKA (Sekarang kita kirim 'level_target' nya)
-            b_vid, u_abs, pot_sp_r, level_sp_r, h_kurang = hitung_logika_performa_dan_bonus(
+            # --- 1. AMBIL DATA REAL DARI ARUS KAS SUPABASE ---
+            df_kas_all = ambil_data_segar("Arus_Kas")
+            df_kas_all.columns = [str(c).strip().upper() for c in df_kas_all.columns]
+            
+            # Cari baris yang kategorinya 'Gaji Tim' dan di keterangannya ada nama staf tersebut
+            mask_bonus_real = (df_kas_all['KATEGORI'] == 'Gaji Tim') & \
+                              (df_kas_all['KETERANGAN'].str.contains(target_user, case=False, na=False))
+            
+            bonus_sudah_cair = df_kas_all[mask_bonus_real]['NOMINAL'].sum()
+
+            # --- 2. HITUNG LOGIKA (Cuma buat nyari Status SP & Hari Kurang) ---
+            # Kita abaikan hasil b_vid dan u_abs dari sini karena kita pake data real database
+            _, _, pot_sp_r, level_sp_r, h_kurang = hitung_logika_performa_dan_bonus(
                 df_arsip_user, 
                 df_u_absen, 
                 sekarang.month, 
                 sekarang.year,
-                level_target=level_asli_target # <--- SUNTIKAN KASTA KE MESIN HITUNG
+                level_target=level_asli_target 
             )
             
+            # --- 3. SET VARIABLE UNTUK UI ---
+            total_semua_bonus = bonus_sudah_cair # <--- INI KUNCI SINKRONISASINYA
             # --- SISIRAN FINAL: PENENTU PESAN & RADAR UI (KASTA VERSION) ---
             if level_asli_target in ["OWNER", "ADMIN"]:
                 status_ikon = "✨ VIP"
@@ -1323,7 +1336,7 @@ def tampilkan_tugas_kerja():
                     )
                 
                 with c3:
-                    total_semua_bonus = b_vid + u_abs
+                    total_semua_bonus = bonus_sudah_cair
                     txt_delta = []
                     if b_vid > 0: txt_delta.append(f"Vid: Rp {b_vid:,}")
                     if u_abs > 0: txt_delta.append(f"Absen: Rp {u_abs:,}")
@@ -1332,7 +1345,7 @@ def tampilkan_tugas_kerja():
                     st.metric(
                         "💰 TOTAL BONUS", 
                         f"Rp {total_semua_bonus:,}", 
-                        delta=gabungan_delta,
+                        delta="Data Real Supabase", # Biar lo tau ini angka asli DB
                         delta_color="normal"
                     )
                 
@@ -1549,14 +1562,42 @@ def tampilkan_tugas_kerja():
 
                                                 msg_bonus = "" # Buat nambahin info di WA nanti
 
-                                                # --- LOGIKA BONUS (Gak Gue Sentuh Sama Sekali) ---
+                                                # --- LOGIKA BONUS (Gue tambahin Sinkronisasi Supabase) ---
                                                 if jml_video == 3:
-                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", 30000, f"Bonus Absen: {staf_nama}", "SISTEM (AUTO-ACC)"])
+                                                    nom_bonus = 30000
+                                                    ket_bonus = f"Bonus Absen: {staf_nama}"
+                                                    # 1. GSHEET
+                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
+                                                    
+                                                    # 2. SUPABASE (TAMBAHKAN INI)
+                                                    supabase.table("Arus_Kas").insert({
+                                                        "Tanggal": tgl_tugas,
+                                                        "Tipe": "PENGELUARAN",
+                                                        "Kategori": "Gaji Tim",
+                                                        "Nominal": nom_bonus,
+                                                        "Keterangan": ket_bonus,
+                                                        "Pencatat": "SISTEM (AUTO-ACC)" # Pastikan nama kolom 'Pencatat' sesuai DB lo
+                                                    }).execute()
+
                                                     msg_bonus = "\n💰 *BONUS ABSEN:* Rp 30,000"
                                                     st.toast(f"💰 Bonus Absen {staf_nama} dicatat!", icon="💸")
 
                                                 elif jml_video >= 5:
-                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", 30000, f"Bonus Lembur: {staf_nama} ({id_tugas})", "SISTEM (AUTO-ACC)"])
+                                                    nom_bonus = 30000
+                                                    ket_bonus = f"Bonus Lembur: {staf_nama} ({id_tugas})"
+                                                    # 1. GSHEET
+                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
+                                                    
+                                                    # 2. SUPABASE (TAMBAHKAN INI)
+                                                    supabase.table("Arus_Kas").insert({
+                                                        "Tanggal": tgl_tugas,
+                                                        "Tipe": "PENGELUARAN",
+                                                        "Kategori": "Gaji Tim",
+                                                        "Nominal": nom_bonus,
+                                                        "Keterangan": ket_bonus,
+                                                        "Pencatat": "SISTEM (AUTO-ACC)"
+                                                    }).execute()
+
                                                     msg_bonus = f"\n🔥 *BONUS LEMBUR:* Rp 30,000 (ID: {id_tugas})"
                                                     st.toast(f"🔥 Bonus Lembur {staf_nama} dicatat!", icon="🚀")
 
@@ -2943,15 +2984,14 @@ def tampilkan_ruang_produksi():
     # --- 5. FOOTER & PENGAMAN SESSION ---
     st.write("")
     st.divider()
-    with st.expander("🛠️ DEVELOPER TOOLS", expanded=False):
-        if st.button("♻️ Reset Form Produksi", use_container_width=True):
-            # Reset state produksi tanpa menghapus data karakter utama
+    # Tombol Reset ditaruh di sini (Keluar dari expander)
+    col_reset, col_spacer = st.columns([1, 2]) # Pakai kolom biar nggak menuhin layar
+    with col_reset:
+        if st.button("♻️ RESET FORM", use_container_width=True, help="Klik untuk mengosongkan semua adegan"):
             st.session_state.data_produksi["adegan"] = {}
             st.session_state.form_version = ver + 1
             st.rerun()
-            
-    st.caption("© 2026 PINTAR MEDIA - System Secured with Supabase Cloud Sync")
-                
+                            
 # ==============================================================================
 # BAGIAN 7: PENGENDALI UTAMA (PINTAR MEDIA OS) - SUPABASE READY
 # ==============================================================================
@@ -2998,4 +3038,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
