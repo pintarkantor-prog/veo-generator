@@ -55,10 +55,10 @@ def ambil_data_segar(nama_sheet):
             # --- PENYESUAIAN KOLOM SESUAI SQL LO ---
             if nama_sheet_clean == "tugas":
                 # Di SQL lo namanya 'id_tugas' dan 'deadline'
-                query = query.order("id_tugas", desc=True)
+                query = query.order("ID", desc=True)
             elif nama_sheet_clean == "absensi":
                 # Di SQL lo namanya 'tanggal'
-                query = query.order("tanggal", desc=True)
+                query = query.order("Tanggal", desc=True)
             elif nama_sheet_clean == "arus_kas":
                 # Di SQL lo namanya 'id' dan 'tanggal'
                 query = query.order("id", desc=True)
@@ -2968,6 +2968,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
