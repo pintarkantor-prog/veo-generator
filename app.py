@@ -43,18 +43,17 @@ def ambil_data_lokal(nama_sheet):
 
 # --- MESIN UTAMA HYBRID (SUPABASE + GSHEET) ---
 def ambil_data_segar(nama_sheet):
-    """Fungsi Sakti: Otomatis pilih sumber data tercepat dan teringan."""
+    """Fungsi Sakti: Otomatis pilih sumber data tercepat dan teringan dengan kolom proteksi."""
     try:
         tabel_berat = ["absensi", "tugas", "arus_kas", "log_aktivitas", "integrasi_gsheet"]
         nama_sheet_clean = str(nama_sheet).lower().strip()
         
-        df = pd.DataFrame() # Inisialisasi awal
+        df = pd.DataFrame() 
 
         if nama_sheet_clean in tabel_berat:
             # 1. NARIK DARI SUPABASE
             query = supabase.table(nama_sheet_clean).select("*")
             
-            # Pengurutan kolom (Sesuaikan dengan nama kolom di DB Supabase)
             if nama_sheet_clean == "tugas":
                 query = query.order("ID", desc=True)
             elif nama_sheet_clean == "absensi":
@@ -65,6 +64,14 @@ def ambil_data_segar(nama_sheet):
             res = query.execute()
             df = pd.DataFrame(res.data)
             
+            # --- PROTEKSI KHUSUS SUPABASE KOSONG ---
+            # Jika tabel di Supabase kosong, kita kasih kolom default biar gak error 'NAMA'
+            if df.empty:
+                if nama_sheet_clean == "absensi":
+                    df = pd.DataFrame(columns=["Nama", "Tanggal", "Jam_masuk", "Status"])
+                elif nama_sheet_clean == "tugas":
+                    df = pd.DataFrame(columns=["ID", "Staf", "Tanggal", "Instruksi", "Status"])
+        
         else:
             # 2. TETAP DARI GSHEET
             sh = get_gspread_sh()
@@ -72,41 +79,38 @@ def ambil_data_segar(nama_sheet):
             data = ws.get_all_records()
             df = pd.DataFrame(data)
 
-        # --- PROTEKSI ANTI-PUSING (LAKUKAN SEBELUM RETURN) ---
+        # --- PROTEKSI ANTI-PUSING ---
         if not df.empty:
-            # Paksa semua nama kolom jadi UPPERCASE di sini!
             df.columns = [str(c).strip().upper() for c in df.columns]
-            # Baru kirim ke fungsi pembersihan detail
             return bersihkan_data(df)
         else:
-            return pd.DataFrame()
+            # Balikin dataframe kosong tapi punya kolom biar itungan login/gaji ga meledak
+            df_empty = pd.DataFrame(columns=['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TANGGAL'])
+            return df_empty
             
     except Exception as e:
         st.error(f"Gagal narik data {nama_sheet}: {e}")
-        return pd.DataFrame()
+        return pd.DataFrame(columns=['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TANGGAL'])
 
 def bersihkan_data(df):
     """Standardisasi data agar logika SP & Gaji lo ngga meleset."""
     if df is None or df.empty: 
-        return pd.DataFrame() # Balikin DF kosong yang aman
+        return pd.DataFrame() 
     
     # 1. Buang baris yang bener-bener kosong
     df = df.dropna(how='all')
     
-    # 2. PAKSA NAMA KOLOM JADI UPPERCASE (PENTING!)
-    # Ini biar kodingan lo yang manggil df['NAMA'] atau df['STAF'] tetep jalan 
-    # walaupun di Supabase namanya 'Nama' atau 'Staf'.
+    # 2. Redundant check: Pastikan lagi kolom adalah UPPERCASE
     df.columns = [str(c).strip().upper() for c in df.columns]
     
     # 3. Bersihkan isi data di dalam kolomnya
-    # Kita cek dulu kolomnya ada apa ngga, baru dibersihin.
     kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'TANGGAL', 'DEADLINE', 'TIPE']
     for col in df.columns:
         if col in kolom_krusial:
             # Paksa isinya jadi string, buang spasi, dan jadiin huruf besar
             df[col] = df[col].astype(str).str.strip().upper()
             
-            # Buang sampah data yang sering bikin error perhitungan
+            # Ganti nilai sampah jadi string kosong agar tidak error saat filter
             df[col] = df[col].replace(['NAN', 'NONE', 'NAT', '<NA>', ''], pd.NA).fillna('')
             
     return df
@@ -2980,6 +2984,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
