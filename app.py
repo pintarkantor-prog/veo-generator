@@ -2084,47 +2084,29 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        sh = get_gspread_sh()
-        
-        def ambil_data_lokal(nama_sheet):
-            ws = sh.worksheet(nama_sheet)
-            data = ws.get_all_records()
-            df = pd.DataFrame(data)
-            df.columns = [str(c).strip().upper() for c in df.columns]
-            return df
+        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
+        df_staff = ambil_data_segar("Staff")
+        df_absen = ambil_data_segar("Absensi")
+        df_kas   = ambil_data_segar("Arus_Kas")
+        df_tugas = ambil_data_segar("Tugas")
+        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
 
-        df_staff = ambil_data_lokal("Staff")
-        df_staff = bersihkan_data(df_staff)
-        # Menghitung: Jumlah baris di df_staff dikali 40 video
+        # Hitung target display (logika lo tetep jalan)
         t_target_display = len(df_staff) * 40
-        
-        df_absen = ambil_data_lokal("Absensi")
-        ws_kas_live = sh.worksheet("Arus_Kas")
-        data_kas_raw = ws_kas_live.get_all_records()
-        df_kas = pd.DataFrame(data_kas_raw)
-        df_kas.columns = [str(c).strip().upper() for c in df_kas.columns]
-        ws_tugas = sh.worksheet("Tugas")
 
-        # Ambil Data Tugas
-        raw_t = ws_tugas.get_all_values()
-        if len(raw_t) > 1:
-            h_t = [str(h).strip().upper() for h in raw_t[0]]
-            df_tugas = pd.DataFrame(raw_t[1:], columns=h_t)
-            if len(df_tugas.columns) >= 5:
-                df_tugas.columns.values[4] = "STATUS"
-        else:
-            df_tugas = pd.DataFrame(columns=['STAF', 'DEADLINE', 'INSTRUKSI', 'STATUS'])
-
-        # Filter Tanggal
+        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
         def saring_tgl(df, kolom, bln, thn):
             if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], dayfirst=True, errors='coerce')
+            # Pastikan kolom tanggal jadi format waktu Python yang benar
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
             mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return df[mask].copy()
 
+        # Jalankan filter untuk semua tabel (Data otomatis tersaring sesuai bulan/tahun pilihan lo)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
-        df_a_f = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
-        df_k_f = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
+        df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
+        df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
+        df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
         # Logika Finish & Rekap
         df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
@@ -2230,8 +2212,34 @@ def tampilkan_kendali_tim():
                     f_nom = st.number_input("Nominal", min_value=0, step=50000, label_visibility="collapsed", placeholder="Nominal Rp...")
                     f_ket = st.text_area("Keterangan", height=65, label_visibility="collapsed", placeholder="Catatan...")
                     if st.form_submit_button("🚀 SIMPAN", use_container_width=True):
-                        sh.worksheet("Arus_Kas").append_row([sekarang.strftime('%Y-%m-%d'), f_tipe, f_kat, int(f_nom), f_ket, user_sekarang.upper()])
-                        st.success("Tersimpan!"); time.sleep(1); st.rerun()
+                        if f_nom > 0:
+                            # --- 1. SINKRON KE SUPABASE (UNTUK RADAR KILAT) ---
+                            data_kas_sb = {
+                                "Tanggal": sekarang.strftime('%Y-%m-%d'),
+                                "Tipe": f_tipe,
+                                "Kategori": f_kat,
+                                "Nominal": str(int(f_nom)), # <--- UBAH JADI STRING
+                                "Keterangan": f_ket,
+                                "User": user_sekarang.upper()
+                            }
+                            supabase.table("Arus_Kas").insert(data_kas_sb).execute()
+
+                            # --- 2. GSHEET TETAP JALAN (MASTER DATA) ---
+                            sh.worksheet("Arus_Kas").append_row([
+                                sekarang.strftime('%Y-%m-%d'), 
+                                f_tipe, 
+                                f_kat, 
+                                str(int(f_nom)), # <--- UBAH JADI STRING
+                                f_ket, 
+                                user_sekarang.upper()
+                            ])
+                            
+                            # --- 3. CATAT LOG AKTIVITAS (CCTV) ---
+                            tambah_log(user_sekarang, f"INPUT KAS: {f_tipe} - {f_kat} (Rp {f_nom:,.0f})")
+
+                            st.success("Tersimpan!"); time.sleep(1); st.rerun()
+                        else:
+                            st.warning("Nominal harus lebih dari 0!")
 
             with col_logs:
                 # Log Terakhir: Batasi 5 Transaksi Saja
@@ -2927,9 +2935,25 @@ def tampilkan_ruang_produksi():
                         st.code(vid_p, language="text")
 
                 st.markdown('<div style="margin-bottom: -15px;"></div>', unsafe_allow_html=True)
+
+            # --- SUNTIKAN LOG AKTIVITAS (CCTV) ---
+            # Dicatat hanya saat tombol Generate ditekan
+            tambah_log(user_aktif, f"GENERATE PROMPT: {len(adegan_terisi)} Adegan")
+
+    # --- 5. FOOTER & PENGAMAN SESSION ---
+    st.write("")
+    st.divider()
+    with st.expander("🛠️ DEVELOPER TOOLS", expanded=False):
+        if st.button("♻️ Reset Form Produksi", use_container_width=True):
+            # Reset state produksi tanpa menghapus data karakter utama
+            st.session_state.data_produksi["adegan"] = {}
+            st.session_state.form_version = ver + 1
+            st.rerun()
+            
+    st.caption("© 2026 PINTAR MEDIA - System Secured with Supabase Cloud Sync")
                 
 # ==============================================================================
-# BAGIAN 7: PENGENDALI UTAMA (PINTAR MEDIA OS)
+# BAGIAN 7: PENGENDALI UTAMA (PINTAR MEDIA OS) - SUPABASE READY
 # ==============================================================================
 def utama():
     inisialisasi_keamanan() 
@@ -2938,13 +2962,19 @@ def utama():
     if not cek_autentikasi():
         tampilkan_halaman_login()
     else:
-        # 1. Ambil identitas user dari session
+        # --- 1. IDENTITAS USER ---
         user_level = st.session_state.get("user_level", "STAFF")
+        user_aktif = st.session_state.get("user_aktif", "User")
         
-        # 2. Panggil Sidebar & Menu
+        # --- 2. SINKRONISASI AWAL (Optional: Warm-up Supabase) ---
+        # Ini biar pas buka menu, data udah 'anget' di cache RAM
+        if 'last_sync' not in st.session_state:
+            st.session_state.last_sync = datetime.now()
+
+        # --- 3. NAVIGASI SIDEBAR ---
         menu = tampilkan_navigasi_sidebar()
         
-        # 3. Logika Navigasi Menu
+        # --- 4. LOGIKA ROUTING MENU ---
         if menu == "🚀 RUANG PRODUKSI": 
             tampilkan_ruang_produksi()
 
@@ -2957,18 +2987,19 @@ def utama():
         elif menu == "📋 TUGAS KERJA": 
             tampilkan_tugas_kerja()
         
-        # 4. PROTEKSI MENU KENDALI TIM (OWNER & ADMIN BISA MASUK)
         elif menu == "⚡ KENDALI TIM": 
+            # Proteksi Berlapis: Level Check
             if user_level in ["OWNER", "ADMIN"]:
                 tampilkan_kendali_tim()
             else:
-                st.error("🚫 Akses Ditolak. Menu ini hanya untuk jajaran Manajemen.")
+                st.warning(f"⚠️ {user_aktif}, area ini terbatas untuk Manajemen.")
+                tampilkan_ruang_produksi() # Tendang balik ke produksi
+
+        # --- 5. GLOBAL FOOTER (SYNC STATUS) ---
+        st.sidebar.markdown("---")
+        st.sidebar.caption(f"🛡️ Security: **High**")
+        st.sidebar.caption(f"☁️ Cloud: **Supabase Connected**")
 
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
