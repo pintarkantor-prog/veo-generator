@@ -16,12 +16,12 @@ from supabase import create_client, Client # <--- Library Supabase
 # ==============================================================================
 URL_MASTER = "https://docs.google.com/spreadsheets/d/16xcIqG2z78yH_OxY5RC2oQmLwcJpTs637kPY-hewTTY/edit?usp=sharing"
 
-# --- KONEKSI SUPABASE (PANGGIL DARI SECRETS) ---
-# Pastikan di Secrets Streamlit sudah ada [supabase] url dan key
+# --- 1. KONEKSI SUPABASE ---
 url: str = st.secrets["supabase"]["url"]
 key: str = st.secrets["supabase"]["key"]
 supabase: Client = create_client(url, key)
 
+# --- 2. KONEKSI GSHEET (DI-CACHE BIAR RAMAH RAM) ---
 @st.cache_resource
 def get_gspread_sh():
     """Koneksi Google Sheets yang disimpan di RAM."""
@@ -30,95 +30,75 @@ def get_gspread_sh():
     client = gspread.authorize(creds)
     return client.open_by_url(URL_MASTER)
 
-@st.cache_data(ttl=60) # <--- INI MATRA SAKTI NYA, COK! (Simpen di memori 60 detik)
-def ambil_data_segar(nama_tabel):
-    # Isi fungsinya tetep sama kayak punya lo sekarang
-    res = supabase.table(nama_tabel).select("*").execute()
-    return pd.DataFrame(res.data)
-
+# --- 3. FUNGSI BACKUP GSHEET (YANG TADI ILANG) ---
 def ambil_data_beneran_segar(nama_sheet):
-    """Fungsi asli narik data langsung ke GSheet (Backup)."""
+    """Fungsi asli narik data langsung ke GSheet (Backup kalau Supabase mati)."""
     try:
         sh = get_gspread_sh()
         ws = sh.worksheet(nama_sheet)
         data = ws.get_all_records()
+        # Kita kembalikan DataFrame yang sudah dibersihkan
         return bersihkan_data(pd.DataFrame(data))
     except Exception as e:
+        print(f"GSheet Backup Error: {e}")
         return pd.DataFrame()
 
-def ambil_data_segar(nama_sheet):
-    """
-    LOGIKA SAKLAR TOTAL (OPTIMIZED):
-    Menarik data dari Supabase dengan limitasi cerdas untuk efisiensi RAM & Bandwidth.
-    """
+# --- 4. FUNGSI UTAMA AMBIL DATA (Satu Pintu + Cache 60 Detik) ---
+@st.cache_data(ttl=60) 
+def ambil_data_segar(target):
+    """LOGIKA SATU PINTU: Supabase Utama, GSheet Backup."""
     try:
-        # 1. Tentukan tabel mana yang datanya besar dan butuh limit
         tabel_besar = ["Log_Aktivitas", "Absensi", "Gudang_Ide", "Arus_Kas"]
+        query = supabase.table(target).select("*")
         
-        query = supabase.table(nama_sheet).select("*")
-        
-        # 2. Jika tabel termasuk kategori 'besar', kita ambil 200 data terbaru saja
-        # Ini mencegah aplikasi download ribuan data sampah dari tahun lalu
-        if nama_sheet in tabel_besar:
-            # Kita asumsikan data terbaru ada di paling atas (descending order)
-            # Catatan: Gunakan kolom 'created_at' atau 'Waktu' jika 'id' dibuang
+        if target in tabel_besar:
+            # Ambil 200 terbaru biar web gak obesitas data
             res = query.order("Waktu", desc=True).limit(200).execute()
         else:
-            # Untuk tabel kecil seperti 'Staff' atau 'Pilihan_Menu', ambil semua
             res = query.execute()
             
         df = pd.DataFrame(res.data)
         
         if not df.empty:
-            # Buang kolom 'id' bawaan supabase agar tidak bentrok
             if 'id' in df.columns: 
                 df = df.drop(columns=['id'])
             return bersihkan_data(df)
         else:
-            return ambil_data_beneran_segar(nama_sheet)
+            # Jika tabel di Supabase kosong, lari ke GSheet
+            return ambil_data_beneran_segar(target)
             
     except Exception as e:
-        # Jika gagal (misal kolom 'Waktu' gak ada), coba ambil tanpa filter
+        # Jika query spesifik gagal (misal kolom 'Waktu' gak ada), coba ambil standar
         try:
-            res = supabase.table(nama_sheet).select("*").limit(500).execute()
-            return bersihkan_data(pd.DataFrame(res.data))
+            res = supabase.table(target).select("*").limit(500).execute()
+            df_fallback = pd.DataFrame(res.data)
+            if not df_fallback.empty:
+                return bersihkan_data(df_fallback)
+            return ambil_data_beneran_segar(target)
         except:
-            return ambil_data_beneran_segar(nama_sheet)
+            # Jika Supabase beneran mati, lari ke GSheet
+            return ambil_data_beneran_segar(target)
 
+# --- 5. FUNGSI PEMBERSIH DATA ---
 def bersihkan_data(df):
     """Standardisasi data biar Python gak pusing (Versi Anti-NAN)."""
-    if df.empty: 
-        return df
-        
-    # 1. Buang baris yang isinya benar-benar kosong semua kolomnya
+    if df.empty: return df
     df = df.dropna(how='all')
-    
-    # 2. Paksa semua kolom Nama Header jadi UPPER dan tanpa spasi liar
     df.columns = [str(c).strip().upper() for c in df.columns]
-    
-    # 3. KUNCI UTAMA: Ubah SEMUA nilai None/NaN menjadi string kosong dulu
-    # Ini mencegah munculnya teks 'nan' atau 'None' saat diconvert ke string
     df = df.fillna('')
-    
     kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'TANGGAL', 'DEADLINE', 'TIPE']
-    
     for col in df.columns:
-        # Kita proses semua kolom yang ada di daftar krusial
         if col in kolom_krusial:
-            # - astype(str): pastikan jadi teks
-            # - strip(): buang spasi hantu di awal/akhir
-            # - upper(): samakan semua jadi huruf besar
-            # - replace: jaga-jaga kalau ada sisa teks 'NAN' atau 'NONE' dari GSheet
             df[col] = df[col].astype(str).str.strip().str.upper()
             df[col] = df[col].replace(['NAN', 'NONE', '<NA>'], '')
-            
     return df
 
 def tambah_log(user, aksi):
     tz_wib = pytz.timezone('Asia/Jakarta')
     waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
     
-    # 1. Catat ke Supabase (UTAMA - Harus Cepat)
+    # 1. Catat ke Supabase (WAJIB & CEPAT)
+    # Ini cuma butuh milidetik, gak kerasa sama user
     try:
         supabase.table("Log_Aktivitas").insert({
             "Waktu": waktu_skrg,
@@ -128,16 +108,18 @@ def tambah_log(user, aksi):
     except Exception as e:
         print(f"Supabase Log Error: {e}")
 
-    # 2. Catat ke GSheet (BACKUP - Jangan Bebani User)
-    # Kita pakai logika: Kalau GSheet lagi sibuk, skip aja atau biarkan gagal tanpa error di layar
+    # 2. Catat ke GSheet (BACKUP - SI BIANG KEROK LEMOT)
+    # SARAN GUE: Matikan GSheet log kalau mau web beneran enteng.
+    # Supabase udah cukup aman buat Log.
+    # Kalau mau tetep ada, bungkus begini:
+    """
     try:
         sh = get_gspread_sh()
         ws_log = sh.worksheet("Log_Aktivitas")
-        # Gunakan append_row dengan timeout singkat atau biarkan error ditangkap
         ws_log.append_row([waktu_skrg, user.upper(), aksi])
     except:
-        # Kita sengaja diam (pass) agar user nggak dapet pesan error merah cuma gara-gara log
         pass
+    """
 
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3044,6 +3026,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
