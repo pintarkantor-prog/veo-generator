@@ -1057,20 +1057,35 @@ def tampilkan_gudang_ide():
 
                 st.session_state.naskah_siap_produksi = naskah_bersih
                 
+                # B. LOGIKA AUTO-TUGAS (KHUSUS STAFF)
                 if user_level != "OWNER":
                     t_id = f"T{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
                     tgl_tugas = datetime.now(tz_wib).strftime("%Y-%m-%d")
                     nama_tugas = f"TUGAS: {judul_proses}"
                     
-                    # Update Supabase Tugas
+                    # --- 1. UPDATE SUPABASE TUGAS (SINKRON RADAR) ---
+                    # Kita pakai key yang SAMA dengan kolom di foto Supabase lo
                     supabase.table("Tugas").insert({
-                        "ID_TUGAS": t_id, "STAF": user_sekarang.upper(), 
-                        "TANGGAL": tgl_tugas, "NAMA_TUGAS": nama_tugas, "STATUS": "PROSES"
+                        "ID": t_id, 
+                        "Staf": user_sekarang.upper(), 
+                        "Deadline": tgl_tugas, 
+                        "Instruksi": nama_tugas, 
+                        "Status": "PROSES"
                     }).execute()
                     
-                    # Update GSheet Tugas
-                    sheet_tugas.append_row([t_id, user_sekarang.upper(), tgl_tugas, nama_tugas, "PROSES", "-", "", ""])
+                    # --- 2. UPDATE GSHEET TUGAS (BACKUP) ---
+                    sheet_tugas.append_row([
+                        t_id, 
+                        user_sekarang.upper(), 
+                        tgl_tugas, 
+                        nama_tugas, 
+                        "PROSES", 
+                        "-", 
+                        "", 
+                        ""
+                    ])
 
+                # LANJUTAN KODE LO DIBAWAHNYA TETEP SAMA
                 st.session_state.status_sukses = True 
                 st.rerun()
 
@@ -2922,6 +2937,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
