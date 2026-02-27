@@ -1,5 +1,8 @@
 streamlit
 pandas
-st-gsheets-connection
+gspread
+google-auth
+requests
 pytz
-groq
+plotly
+supabase
