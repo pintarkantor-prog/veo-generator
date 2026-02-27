@@ -2097,24 +2097,12 @@ def tampilkan_kendali_tim():
                 rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
                 rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
-        # --- KALKULASI KEUANGAN (DENGAN PENGAMAN) ---
-        inc, ops, bonus_terbayar_kas = 0, 0, 0
-        
-        if not df_k_f.empty and 'NOMINAL' in df_k_f.columns:
-            df_k_f['NOM_NUM'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
-            
-            if 'TIPE' in df_k_f.columns:
-                inc = df_k_f[df_k_f['TIPE'].astype(str).str.upper() == 'PENDAPATAN']['NOM_NUM'].sum()
-                
-                if 'KATEGORI' in df_k_f.columns:
-                    ops = df_k_f[(df_k_f['TIPE'].astype(str).str.upper() == 'PENGELUARAN') & (df_k_f['KATEGORI'].astype(str).str.upper() != 'GAJI TIM')]['NOM_NUM'].sum()
-                    bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'].astype(str).str.upper() == 'PENGELUARAN') & (df_k_f['KATEGORI'].astype(str).str.upper() == 'GAJI TIM')]['NOM_NUM'].sum()
-
-        # --- HITUNG ESTIMASI GAJI POKOK (DENGAN PENGAMAN) ---
-        total_gaji_pokok_tim = 0
+        # --- HITUNG ESTIMASI GAJI POKOK (DENGAN PENGAMAN TYPE DATA) ---
+        total_gaji_pokok_tim = 0.0 # Paksa jadi float dari awal
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         
         if not df_staff.empty and 'LEVEL' in df_staff.columns:
+            # Filter: Hanya STAFF dan ADMIN
             df_staff_real = df_staff[df_staff['LEVEL'].astype(str).str.upper().isin(['STAFF', 'ADMIN'])]
 
             if not is_masa_depan and not df_staff_real.empty:
@@ -2128,24 +2116,36 @@ def tampilkan_kendali_tim():
                     df_a_staf = df_a_f[df_a_f['NAMA'].astype(str).str.upper() == n_up].copy() if not df_a_f.empty and 'NAMA' in df_a_f.columns else pd.DataFrame()
                     df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty and 'STAF' in df_f_f.columns else pd.DataFrame()
 
-                    # Panggil Mesin
-                    _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                        df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
-                    )
+                    # Panggil Mesin (Pastikan pot_sp_real keluar sebagai angka)
+                    try:
+                        _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
+                            df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli
+                        )
+                        pot_sp_real = float(pot_sp_real)
+                    except:
+                        pot_sp_real = 0.0
                     
-                    g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK', 0)).replace('.',''), errors='coerce') or 0)
-                    t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN', 0)).replace('.',''), errors='coerce') or 0)
+                    # Bersihkan angka Gaji Pokok & Tunjangan dari karakter non-digit
+                    def clean_money(val):
+                        if pd.isna(val) or val == "": return 0.0
+                        cleaned = "".join(filter(str.isdigit, str(val)))
+                        return float(cleaned) if cleaned else 0.0
+
+                    g_pokok = clean_money(s.get('GAJI_POKOK', 0))
+                    t_tunj = clean_money(s.get('TUNJANGAN', 0))
                     
-                    gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
+                    # Hitung Gaji Nett (Pastikan angka murni)
+                    gaji_nett = float(max(0.0, (g_pokok + t_tunj) - pot_sp_real))
                     
                     if bulan_dipilih == sekarang.month and tahun_dipilih == sekarang.year:
-                        total_gaji_pokok_tim += (gaji_nett / 25) * min(sekarang.day, 25)
+                        # Estimasi berjalan (Proporsional)
+                        total_gaji_pokok_tim += float((gaji_nett / 25) * min(sekarang.day, 25))
                     else:
+                        # Bulan lalu (Full)
                         total_gaji_pokok_tim += gaji_nett
 
-        total_pengeluaran_gaji = total_gaji_pokok_tim + bonus_terbayar_kas
-        total_out = total_pengeluaran_gaji + ops
-        saldo_bersih = inc - total_out
+        # Final check biar gak ada 'None' yang lolos
+        total_gaji_pokok_tim = float(total_gaji_pokok_tim)
         
         # ======================================================================
         # --- UI: FINANCIAL COMMAND CENTER (CUSTOM LAYOUT) ---
@@ -3036,6 +3036,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
