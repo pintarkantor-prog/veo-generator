@@ -45,50 +45,59 @@ def ambil_data_lokal(nama_sheet):
 def ambil_data_segar(nama_sheet):
     """Fungsi Sakti: Otomatis pilih sumber data tercepat dan teringan."""
     try:
-        # Daftar tabel yang sudah pindah ke Supabase (Data Berat)
         tabel_berat = ["absensi", "tugas", "arus_kas", "log_aktivitas", "integrasi_gsheet"]
-        
         nama_sheet_clean = str(nama_sheet).lower().strip()
         
         if nama_sheet_clean in tabel_berat:
-            # NARIK DARI SUPABASE + DITAMBAH ORDER BY (Opsional tapi disarankan)
+            # NARIK DARI SUPABASE
             query = supabase.table(nama_sheet_clean).select("*")
             
-            # Kalau narik tabel tugas, kita urutin berdasarkan tanggal/id biar ngga acak
+            # --- PENYESUAIAN KOLOM SESUAI SQL LO ---
             if nama_sheet_clean == "tugas":
+                # Di SQL lo namanya 'id_tugas' dan 'deadline'
+                query = query.order("id_tugas", desc=True)
+            elif nama_sheet_clean == "absensi":
+                # Di SQL lo namanya 'tanggal'
                 query = query.order("tanggal", desc=True)
+            elif nama_sheet_clean == "arus_kas":
+                # Di SQL lo namanya 'id' dan 'tanggal'
+                query = query.order("id", desc=True)
+            elif nama_sheet_clean == "integrasi_gsheet":
+                # Di SQL lo namanya 'waktu'
+                query = query.order("waktu", desc=True)
                 
             res = query.execute()
             df = pd.DataFrame(res.data)
             return bersihkan_data(df)
+            
         else:
-            # TETAP DARI GSHEET (UNTUK STAFF, AKUN_AI, GUDANG_IDE)
+            # TETAP DARI GSHEET (Staff, Akun_AI, Gudang_Ide)
             sh = get_gspread_sh()
             ws = sh.worksheet(nama_sheet)
             data = ws.get_all_records()
             return bersihkan_data(pd.DataFrame(data))
+            
     except Exception as e:
         st.error(f"Gagal narik data {nama_sheet}: {e}")
         return pd.DataFrame()
 
 def bersihkan_data(df):
     """Standardisasi data agar logika SP & Gaji lo ngga meleset."""
-    if df.empty: 
-        return df
+    if df is None or df.empty: 
+        return pd.DataFrame() # Balikin DF kosong yang aman
     
-    # 1. Buang baris yang bener-bener kosong semua kolomnya
+    # 1. Buang baris kosong
     df = df.dropna(how='all')
     
-    # 2. Paksa nama kolom jadi UPPERCASE dan buang spasi ujung
+    # 2. Paksa nama kolom jadi UPPERCASE
     df.columns = [str(c).strip().upper() for c in df.columns]
     
-    # 3. Bersihkan isi kolom yang sering dipake buat perbandingan
+    # 3. Bersihkan isi kolom krusial (hanya jika kolomnya ada)
     kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'TANGGAL', 'DEADLINE', 'TIPE']
     for col in df.columns:
         if col in kolom_krusial:
-            # Ubah ke string, buang spasi, jadikan UPPERCASE, hilangkan 'NAN'
             df[col] = df[col].astype(str).str.strip().str.upper()
-            df[col] = df[col].replace(['NAN', 'NONE', 'NAT', '<NA>'], '')
+            df[col] = df[col].replace(['NAN', 'NONE', 'NAT', '<NA>', ''], pd.NA).fillna('')
             
     return df
 
@@ -2935,5 +2944,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
