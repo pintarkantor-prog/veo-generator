@@ -2995,11 +2995,7 @@ def utama():
                 st.warning(f"⚠️ {user_aktif}, area ini terbatas untuk Manajemen.")
                 tampilkan_ruang_produksi() # Tendang balik ke produksi
 
-        # --- 5. GLOBAL FOOTER (SYNC STATUS) ---
-        st.sidebar.markdown("---")
-        st.sidebar.caption(f"🛡️ Security: **High**")
-        st.sidebar.caption(f"☁️ Cloud: **Supabase Connected**")
-
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
