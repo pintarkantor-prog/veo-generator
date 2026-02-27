@@ -93,24 +93,24 @@ def ambil_data_segar(nama_sheet):
         return pd.DataFrame(columns=['NAMA', 'STAF', 'STATUS', 'LEVEL', 'TANGGAL'])
 
 def bersihkan_data(df):
-    """Standardisasi data agar logika SP & Gaji lo ngga meleset."""
+    """Standardisasi data agar logika SP & Gaji ngga meleset."""
     if df is None or df.empty: 
         return pd.DataFrame() 
     
     # 1. Buang baris yang bener-bener kosong
     df = df.dropna(how='all')
     
-    # 2. Redundant check: Pastikan lagi kolom adalah UPPERCASE
+    # 2. Paksa nama kolom jadi UPPERCASE
     df.columns = [str(c).strip().upper() for c in df.columns]
     
-    # 3. Bersihkan isi data di dalam kolomnya
-    kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'TANGGAL', 'DEADLINE', 'TIPE']
+    # 3. Bersihkan isi data di dalam kolom krusial
+    kolom_krusial = ['NAMA', 'STAF', 'STATUS', 'USERNAME', 'LEVEL', 'TANGGAL', 'DEADLINE']
     for col in df.columns:
         if col in kolom_krusial:
-            # Paksa isinya jadi string, buang spasi, dan jadiin huruf besar
+            # PENTING: Gunakan .str agar fungsi upper jalan di dalam Series
             df[col] = df[col].astype(str).str.strip().upper()
             
-            # Ganti nilai sampah jadi string kosong agar tidak error saat filter
+            # Ganti nilai sampah jadi string kosong
             df[col] = df[col].replace(['NAN', 'NONE', 'NAT', '<NA>', ''], pd.NA).fillna('')
             
     return df
@@ -2079,31 +2079,54 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 4. AMBIL DATA (SINKRONISASI SUPABASE) ---
+        # --- 4. AMBIL DATA ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_tugas = ambil_data_segar("Tugas")  
         df_kas   = ambil_data_segar("Arus_Kas")
 
-        # --- 5. STANDARISASI KOLOM (WAJIB: SEBELUM LOGIKA LAIN JALAN) ---
-        # Ini kuncinya, Yan. Semua dataframe dipaksa UPPERCASE supaya filter gak KeyError.
-        for d in [df_staff, df_absen, df_tugas, df_kas]:
-            if not d.empty:
-                d.columns = [str(c).strip().upper() for c in d.columns]
+        # --- 5. STANDARISASI KOLOM (KEBAL ERROR) ---
+        dataframes = {
+            "Staff": df_staff, 
+            "Absensi": df_absen, 
+            "Tugas": df_tugas, 
+            "Arus_Kas": df_kas
+        }
 
-        # --- 6. DEFINISI FILTER TANGGAL (VERSI AMAN) ---
+        for nama_df, df in dataframes.items():
+            if df is not None and not df.empty:
+                # Pastikan ini DataFrame, bukan list
+                if isinstance(df, list):
+                    df = pd.DataFrame(df)
+                
+                # Paksa judul kolom jadi UPPER dan String
+                df.columns = [str(c).strip().upper() for c in df.columns]
+                
+                # Update kembali ke variabel asli
+                if nama_df == "Staff": df_staff = df
+                elif nama_df == "Absensi": df_absen = df
+                elif nama_df == "Tugas": df_tugas = df
+                elif nama_df == "Arus_Kas": df_kas = df
+            else:
+                # Jika data kosong, buat DF kosong dengan kolom standar agar saring_tgl tidak error
+                if nama_df == "Staff": df_staff = pd.DataFrame(columns=['NAMA', 'LEVEL', 'GAJI_POKOK'])
+                elif nama_df == "Absensi": df_absen = pd.DataFrame(columns=['NAMA', 'TANGGAL'])
+                elif nama_df == "Tugas": df_tugas = pd.DataFrame(columns=['STAF', 'DEADLINE', 'STATUS'])
+                elif nama_df == "Arus_Kas": df_kas = pd.DataFrame(columns=['TANGGAL', 'TIPE', 'NOMINAL'])
+
+        # --- 6. DEFINISI FILTER TANGGAL ---
         def saring_tgl(df, kolom_key, bln, thn):
-            if df.empty: return pd.DataFrame()
-            # Karena sudah di-upper di atas, kita cari kolom dengan nama UPPER
+            if df is None or df.empty: return pd.DataFrame()
             target_col = str(kolom_key).upper()
-            if target_col not in df.columns:
-                return pd.DataFrame() # Balikin kosong kalau kolom ga ada
+            if target_col not in df.columns: return pd.DataFrame()
             
-            df['TGL_TEMP'] = pd.to_datetime(df[target_col], dayfirst=True, errors='coerce')
-            mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
-            return df[mask].copy()
+            # Gunakan .copy() agar tidak kena SettingWithCopyWarning
+            temp_df = df.copy()
+            temp_df['TGL_TEMP'] = pd.to_datetime(temp_df[target_col], dayfirst=True, errors='coerce')
+            mask = temp_df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
+            return temp_df[mask].copy()
 
-        # Eksekusi Saring
+        # Eksekusi Saring (Sekarang dijamin Aman)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
@@ -2963,6 +2986,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
