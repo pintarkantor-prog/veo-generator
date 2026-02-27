@@ -1264,13 +1264,18 @@ def tampilkan_tugas_kerja():
     # ------------------------------------------------
     
     try:
-        # --- 1. AMBIL DATA (Mesin Baru & Sinkron) ---
+        # --- 1. AMBIL DATA ---
         df_all_tugas = ambil_data_segar("Tugas")
         df_absen_all = ambil_data_segar("Absensi")
         
+        # JIKA KOSONG TOTAL, BARU KASIH WARNING
         if df_all_tugas.empty:
-            st.warning("Data tugas tidak ditemukan.")
+            st.warning("📭 Belum ada data tugas di database.")
             return
+
+        # JIKA ADA, STANDARISASI (JANGAN DI-RETURN)
+        df_all_tugas.columns = [str(c).strip().upper() for c in df_all_tugas.columns]
+        df_all_tugas['DEADLINE'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce').dt.strftime('%Y-%m-%d')
 
         # Standarisasi Header & Bikin Variabel biar GAK NAME ERROR
         df_all_tugas.columns = [str(c).strip().upper() for c in df_all_tugas.columns]
@@ -1511,7 +1516,8 @@ def tampilkan_tugas_kerja():
 
     # 2. CEK HASIL FILTER (Logika yang bener: kalau kosong kasih info, kalau ada gambar kartu)
     if not tugas_terfilter:
-        st.info(f"☕ Belum ada tugas aktif.")
+        pass
+
     else:
         # --- MODE 2 KOLOM (GRID) ---
         tugas_list = list(reversed(tugas_terfilter))
@@ -1520,205 +1526,156 @@ def tampilkan_tugas_kerja():
             for j in range(2):
                 if i + j < len(tugas_list):
                     t = tugas_list[i + j]
+                    
+                    # --- [PENTING] DEFINISI VARIABEL DI SINI (AGAR SEMUA TOMBOL BISA BACA) ---
                     status = str(t["STATUS"]).upper()
-                    url_foto = foto_staff.get(str(t.get("STAF", "")).lower(), foto_staff_default)
+                    id_tugas = str(t.get('ID', '')).strip()
+                    staf_nama = str(t.get('STAF', '')).upper().strip()
+                    tgl_tugas = str(t.get('DEADLINE', ''))
+                    url_foto = foto_staff.get(staf_nama.lower(), foto_staff_default)
                     
                     with cols[j]:
                         with st.container(border=True):
                             # HEADER SLIM
                             c1, c2 = st.columns([0.8, 3])
                             with c1: 
-                                st.image(url_foto, width=50) # Ukuran foto dikecilin dikit
+                                st.image(url_foto, width=50)
                             with c2:
-                                # Nama & ID dalam baris yang sama biar ringkas
-                                st.markdown(f"**{str(t.get('STAF', '')).upper()}** | `ID: {t.get('ID', '')}`")
-                                # Badge Status tipis
+                                st.markdown(f"**{staf_nama}** | `ID: {id_tugas}`")
                                 color_ball = "🔴" if status == "REVISI" else "🟡" if status == "WAITING QC" else "🟢"
                                 st.markdown(f"{color_ball} `{status}`")
                             
-                            # Toggle ditaruh mepet biar gak boros tempat
-                            olah = st.toggle("🔍 Buka Detail", key=f"tgl_{t['ID']}")
+                            olah = st.toggle("🔍 Buka Detail", key=f"tgl_{id_tugas}")
                             
                             if olah:
                                 st.divider()
-                                # Bagian instruksi tetep pake Quote biar rapi
                                 if t.get("CATATAN_REVISI"): 
                                     st.warning(f"⚠️ **REVISI:** {t['CATATAN_REVISI']}")
-                                st.markdown(f"> **INSTRUKSI:** \n> {t['INSTRUKSI']}")
+                                st.markdown(f"> **INSTRUKSI:** \n> {t.get('INSTRUKSI', '-')}")
                                 
-                                # --- BAGIAN MONITORING & EKSEKUSI ---
-                                
-                                # 1. LINK QC (Bisa dilihat OWNER & ADMIN biar bisa bantu cek)
+                                # 1. LINK QC
                                 if t.get("LINK_HASIL") and t["LINK_HASIL"] != "-":
                                     link_qc = str(t["LINK_HASIL"]).strip()
                                     st.link_button("🚀 BUKA VIDEO (QC)", link_qc, use_container_width=True)
 
-                                # 2. PANEL VETO (KHUSUS OWNER: Tombol Duit & Status)
+                                # 2. PANEL VETO (KHUSUS OWNER)
                                 if user_level == "OWNER":
                                     st.write("---")
-                                    cat_r = st.text_area("Catatan Admin:", key=f"cat_{t['ID']}", placeholder="Alasan Revisi/Batal...")
+                                    cat_r = st.text_area("Catatan Admin:", key=f"cat_{id_tugas}", placeholder="Alasan Revisi/Batal...")
                                     
                                     b1, b2, b3 = st.columns(3)
-                                    with b1:
-                                        if st.button("🟢 ACC", key=f"f_{t['ID']}", use_container_width=True):
-                                            try:
-                                                # 1. IDENTIFIKASI DATA
-                                                staf_nama = str(t['STAF']).upper().strip()
-                                                id_tugas = str(t['ID']).strip()
-                                                tgl_tugas = str(t['DEADLINE'])
-
-                                                # --- TAMBAHAN SUPABASE (Agar Radar Langsung Update) ---
-                                                supabase.table("Tugas").update({"Status": "FINISH"}).eq("ID", id_tugas).execute()
-
-                                                # 2. UPDATE STATUS TUGAS DI GSHEET (Tetap Seperti Kode Lo)
-                                                cell = sheet_tugas.find(id_tugas)
-                                                sheet_tugas.update_cell(cell.row, 5, "FINISH")
-
-                                                # 3. HITUNG JUMLAH VIDEO SELESAI HARI INI
-                                                df_cek = ambil_data_segar("Tugas")
-                                                df_cek.columns = [str(c).strip().upper() for c in df_cek.columns]
-                                                
-                                                df_hari_ini = df_cek[(df_cek['STAF'] == staf_nama) & 
-                                                                     (df_cek['DEADLINE'] == tgl_tugas) & 
-                                                                     (df_cek['STATUS'] == 'FINISH')]
-                                                
-                                                jml_video = len(df_hari_ini)
-
-                                                # 4. CATAT BONUS KE ARUS_KAS
-                                                ws_kas = sh.worksheet("Arus_Kas")
-                                                data_raw_kas = ws_kas.get_all_records() # Gue jaga variabel asli lo
-                                                df_kas_cek = pd.DataFrame(data_raw_kas)
-                                                if not df_kas_cek.empty:
-                                                    df_kas_cek.columns = [str(c).strip().upper() for c in df_kas_cek.columns]
-
-                                                msg_bonus = "" # Buat nambahin info di WA nanti
-
-                                                # --- LOGIKA BONUS (Gue tambahin Sinkronisasi Supabase) ---
-                                                if jml_video == 3:
-                                                    nom_bonus = 30000
-                                                    ket_bonus = f"Bonus Absen: {staf_nama}"
-                                                    # 1. GSHEET
-                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
-                                                    
-                                                    # 2. SUPABASE (TAMBAHKAN INI)
-                                                    supabase.table("Arus_Kas").insert({
-                                                        "Tanggal": tgl_tugas,
-                                                        "Tipe": "PENGELUARAN",
-                                                        "Kategori": "Gaji Tim",
-                                                        "Nominal": nom_bonus,
-                                                        "Keterangan": ket_bonus,
-                                                        "Pencatat": "SISTEM (AUTO-ACC)" # Pastikan nama kolom 'Pencatat' sesuai DB lo
-                                                    }).execute()
-
-                                                    msg_bonus = "\n💰 *BONUS ABSEN:* Rp 30,000"
-                                                    st.toast(f"💰 Bonus Absen {staf_nama} dicatat!", icon="💸")
-
-                                                elif jml_video >= 5:
-                                                    nom_bonus = 30000
-                                                    # GANTI: Dari 'Lembur' jadi 'Video'
-                                                    ket_bonus = f"Bonus Video: {staf_nama} ({id_tugas})"
-                                                    
-                                                    # 1. GSHEET
-                                                    ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
-                                                    
-                                                    # 2. SUPABASE (GANTI KETERANGANNYA DI SINI JUGA)
-                                                    supabase.table("Arus_Kas").insert({
-                                                        "Tanggal": tgl_tugas,
-                                                        "Tipe": "PENGELUARAN",
-                                                        "Kategori": "Gaji Tim",
-                                                        "Nominal": nom_bonus,
-                                                        "Keterangan": ket_bonus, # Variabel ini otomatis udah 'Bonus Video'
-                                                        "Pencatat": "SISTEM (AUTO-ACC)"
-                                                    }).execute()
-
-                                                    # UPDATE NOTIF WA & TOAST
-                                                    msg_bonus = f"\n🔥 *BONUS VIDEO:* Rp 30,000 (ID: {id_tugas})"
-                                                    st.toast(f"🔥 Bonus Video {staf_nama} dicatat!", icon="🚀")
-
-                                                # 5. KIRIM NOTIF WA
-                                                pesan_wa = f"✅ *TUGAS SELESAI (ACC)*\n\n👤 *Editor:* {staf_nama}\n🆔 *ID Tugas:* {id_tugas}\n📅 *Tanggal:* {tgl_tugas}{msg_bonus}\n\n✨ _Hasil kerja sudah masuk ke laporan keuangan._"
-                                                kirim_notif_wa(pesan_wa) 
-
-                                                tambah_log(st.session_state.user_aktif, f"ACC TUGAS: {id_tugas} (Staff: {staf_nama})")
-                                                # 6. REFRESH
-                                                st.success(f"Tugas {id_tugas} Selesai!")
-                                                time.sleep(1)
-                                                st.rerun()
-
-                                            except Exception as e:
-                                                st.error(f"Gagal ACC: {e}")
-
-                                    with b2:
-                                        if st.button("🔴 REV", key=f"r_{t['ID']}", use_container_width=True):
-                                            if cat_r:
-                                                # --- SYNC SUPABASE ---
-                                                supabase.table("Tugas").update({
-                                                    "Status": "REVISI",
-                                                    "Catatan_Revisi": cat_r
-                                                }).eq("ID", str(t['ID']).strip()).execute()
-
-                                                # --- KODE ASLI LO (GSHEET) ---
-                                                cell = sheet_tugas.find(str(t['ID']).strip())
-                                                sheet_tugas.update_cell(cell.row, 5, "REVISI")
-                                                sheet_tugas.update_cell(cell.row, 8, cat_r)
-                                                
-                                                kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 Alasan: {cat_r}")
-
-                                                tambah_log(st.session_state.user_aktif, f"REVISI TUGAS: {t['ID']} (Editor: {t['STAF'].upper()}) - Alasan: {cat_r}")
-                                                # --- INI YANG LO MAKSUD (WARNING & RERUN) ---
-                                                st.warning("REVISI!"); time.sleep(1); st.rerun()
-
-                                    with b3:
-                                        if st.button("🚫 BATAL", key=f"c_{t['ID']}", use_container_width=True):
-                                            if cat_r:
-                                                # --- SYNC SUPABASE ---
-                                                supabase.table("Tugas").update({
-                                                    "Status": "CANCELED",
-                                                    "Catatan_Revisi": f"BATAL: {cat_r}"
-                                                }).eq("ID", str(t['ID']).strip()).execute()
-
-                                                # --- KODE ASLI LO (GSHEET) ---
-                                                cell = sheet_tugas.find(str(t['ID']).strip())
-                                                sheet_tugas.update_cell(cell.row, 5, "CANCELED")
-                                                sheet_tugas.update_cell(cell.row, 8, f"BATAL: {cat_r}")
-                                                
-                                                kirim_notif_wa(f"🚫 *DIBATALKAN*\n\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 *Alasan:* {cat_r}")
-
-                                                tambah_log(st.session_state.user_aktif, f"MEMBATALKAN TUGAS: {t['ID']} (Editor: {t['STAF'].upper()}) - Alasan: {cat_r}")
-                                                # --- INI YANG LO MAKSUD (ERROR & RERUN) ---
-                                                st.error("BATAL!"); time.sleep(1); st.rerun()
-
-                                # --- BAGIAN KHUSUS STAFF (SETOR) ---
-                                elif user_level == "STAFF": 
-                                    st.markdown('<p class="small-label">🔗 LINK GDRIVE (1 VIDEO = 1 LINK)</p>', unsafe_allow_html=True)
-                                    l_in = st.text_input("Paste Link di sini:", value=t.get("LINK_HASIL", ""), key=f"l_{t['ID']}")
                                     
-                                    if st.button("🚀 SETOR", key=f"b_{t['ID']}", use_container_width=True):
-                                        if l_in.strip():
-                                            # Proteksi agar tidak kirim banyak link pake koma
-                                            if "," in l_in or l_in.lower().count("https://") > 1:
-                                                st.error("❌ Hanya boleh 1 link! Gunakan Setor Mandiri untuk video lainnya.")
+                                    with b1: # --- TOMBOL ACC ---
+                                        if st.button("🟢 ACC", key=f"f_{id_tugas}", use_container_width=True):
+                                            # PROTEKSI: Cegah klik ganda (Double Bonus)
+                                            if f"lock_{id_tugas}" in st.session_state:
+                                                st.warning("Sedang diproses...")
                                             else:
-                                                # --- 1. UPDATE SUPABASE (WAJIB BIAR PANEL OWNER UPDATE) ---
-                                                supabase.table("Tugas").update({
-                                                    "Status": "WAITING QC",
-                                                    "Link_Hasil": l_in,
-                                                    "Waktu_Kirim": sekarang.strftime("%d/%m/%Y %H:%M")
-                                                }).eq("ID", str(t['ID']).strip()).execute()
+                                                st.session_state[f"lock_{id_tugas}"] = True # Kunci
+                                                try:
+                                                    # 1. UPDATE SUPABASE (Database Utama)
+                                                    supabase.table("Tugas").update({"Status": "FINISH"}).eq("ID", id_tugas).execute()
+                                                    
+                                                    # 2. UPDATE GSHEET (Backup - Silent Error biar gak lag)
+                                                    try:
+                                                        cell = sheet_tugas.find(id_tugas)
+                                                        if cell: sheet_tugas.update_cell(cell.row, 5, "FINISH")
+                                                    except: pass
 
-                                                # --- 2. UPDATE GSHEET (KODE ASLI LO) ---
-                                                cell = sheet_tugas.find(str(t['ID']).strip())
-                                                sheet_tugas.update_cell(cell.row, 5, "WAITING QC")
-                                                sheet_tugas.update_cell(cell.row, 7, l_in)
-                                                
-                                                # --- NOTIF SIMPEL PAKAI INSTRUKSI ---
-                                                txt_tugas = t.get('INSTRUKSI', '-')[:30]
-                                                kirim_notif_wa(f"📤 *SETORAN TUGAS*\n👤 *Editor:* {user_sekarang.upper()}\n🆔 *ID:* {t['ID']}\n📝 {txt_tugas}...")
+                                                    # 3. HITUNG BONUS (PAKAI MEMORI - ANTI LAG)
+                                                    df_selesai = df_all_tugas[
+                                                        (df_all_tugas['STAF'].str.upper() == staf_nama) &
+                                                        (df_all_tugas['DEADLINE'] == tgl_tugas) &
+                                                        (df_all_tugas['STATUS'].str.upper() == 'FINISH')
+                                                    ]
+                                                    jml_video = len(df_selesai) + 1 # +1 untuk tugas yang diproses sekarang
 
-                                                tambah_log(user_sekarang, f"SETOR TUGAS ID: {t['ID']} ({txt_tugas})")
-                                                st.success("Terkirim!"); time.sleep(1); st.rerun()
+                                                    # 4. LOGIKA BONUS & ARUS KAS
+                                                    msg_bonus = ""
+                                                    if jml_video == 3 or jml_video >= 5:
+                                                        nom_bonus = 30000
+                                                        ket_bonus = f"Bonus {'Absen' if jml_video == 3 else 'Video'}: {staf_nama} ({id_tugas})"
+                                                        
+                                                        # Kirim ke Arus Kas Supabase
+                                                        supabase.table("Arus_Kas").insert({
+                                                            "Tanggal": tgl_tugas, "Tipe": "PENGELUARAN", 
+                                                            "Kategori": "Gaji Tim", "Nominal": nom_bonus, 
+                                                            "Keterangan": ket_bonus, "Pencatat": "SISTEM (AUTO-ACC)"
+                                                        }).execute()
+                                                        
+                                                        # Kirim ke Arus Kas GSheet
+                                                        try:
+                                                            ws_kas = sh.worksheet("Arus_Kas")
+                                                            ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
+                                                        except: pass
+                                                        
+                                                        msg_bonus = f"\n💰 *BONUS:* Rp 30,000"
+                                                        st.toast(f"Bonus {staf_nama} dicatat!", icon="💸")
+
+                                                    # 5. NOTIF & REFRESH
+                                                    kirim_notif_wa(f"✅ *TUGAS ACC*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}{msg_bonus}")
+                                                    tambah_log(st.session_state.user_aktif, f"ACC TUGAS: {id_tugas}")
+                                                    st.success("Tugas Selesai!"); time.sleep(1); st.rerun()
+                                                    
+                                                except Exception as e:
+                                                    # Buka kunci jika gagal total biar bisa diulang
+                                                    if f"lock_{id_tugas}" in st.session_state:
+                                                        del st.session_state[f"lock_{id_tugas}"]
+                                                    st.error(f"Gagal ACC: {e}")
+
+                                    with b2: # --- TOMBOL REVISI ---
+                                        if st.button("🔴 REV", key=f"r_{id_tugas}", use_container_width=True):
+                                            if cat_r:
+                                                supabase.table("Tugas").update({"Status": "REVISI", "Catatan_Revisi": cat_r}).eq("ID", id_tugas).execute()
+                                                try:
+                                                    cell = sheet_tugas.find(id_tugas)
+                                                    if cell:
+                                                        sheet_tugas.update_cell(cell.row, 5, "REVISI")
+                                                        sheet_tugas.update_cell(cell.row, 8, cat_r)
+                                                except: pass
+                                                kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}\n📝: {cat_r}")
+                                                st.warning("REVISI!"); time.sleep(1); st.rerun()
+                                            else:
+                                                st.error("Isi alasan revisi di kolom catatan!")
+
+                                    with b3: # --- TOMBOL BATAL ---
+                                        if st.button("🚫 BATAL", key=f"c_{id_tugas}", use_container_width=True):
+                                            if cat_r:
+                                                supabase.table("Tugas").update({"Status": "CANCELED", "Catatan_Revisi": f"BATAL: {cat_r}"}).eq("ID", id_tugas).execute()
+                                                try:
+                                                    cell = sheet_tugas.find(id_tugas)
+                                                    if cell: sheet_tugas.update_cell(cell.row, 5, "CANCELED")
+                                                except: pass
+                                                kirim_notif_wa(f"🚫 *BATAL*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}\n📝: {cat_r}")
+                                                st.error("BATAL!"); time.sleep(1); st.rerun()
+                                            else:
+                                                st.error("Isi alasan batal di kolom catatan!")
+
+                                # --- PANEL STAFF (SETOR) ---
+                                elif user_level == "STAFF": 
+                                    st.markdown("---")
+                                    l_in = st.text_input("Paste Link GDrive:", value=t.get("LINK_HASIL", ""), key=f"l_{id_tugas}")
+                                    if st.button("🚀 SETOR", key=f"b_{id_tugas}", use_container_width=True):
+                                        if l_in.strip() and "drive.google.com" in l_in.lower():
+                                            # Update Supabase
+                                            supabase.table("Tugas").update({
+                                                "Status": "WAITING QC", 
+                                                "Link_Hasil": l_in, 
+                                                "Waktu_Kirim": sekarang.strftime("%d/%m/%Y %H:%M")
+                                            }).eq("ID", id_tugas).execute()
+                                            
+                                            # Update GSheet (Silent)
+                                            try:
+                                                cell = sheet_tugas.find(id_tugas)
+                                                if cell:
+                                                    sheet_tugas.update_cell(cell.row, 5, "WAITING QC")
+                                                    sheet_tugas.update_cell(cell.row, 7, l_in)
+                                            except: pass
+                                            
+                                            kirim_notif_wa(f"📤 *SETORAN*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}")
+                                            st.success("Terkirim!"); time.sleep(1); st.rerun()
                                         else:
-                                            st.warning("Isi link dulu!")
+                                            st.error("Hanya boleh Link Google Drive!")
 
     # =========================================================
     # --- 4.5. SISTEM KLAIM AI (FIXED INDENTATION) ---
@@ -3110,6 +3067,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
