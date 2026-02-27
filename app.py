@@ -713,17 +713,21 @@ def tampilkan_navigasi_sidebar():
             
             def pindah_data_ke_supabase():
                 try:
-                    # Nama key harus persis variabel gspread lo ya Yan!
+                    # Panggil koneksi sheet lo di sini (asumsi sh adalah variabel spreadsheet lo)
+                    st_tugas = sh.worksheet("Tugas")
+                    st_staff = sh.worksheet("Staff")
+                    st_absen = sh.worksheet("Absensi")
+                    st_kas   = sh.worksheet("Arus_Kas")
+
                     daftar_sheet = {
-                        "tugas": sheet_tugas,
-                        "staff": sheet_staff,
-                        "absensi": sheet_absen,
-                        "arus_kas": sheet_kas
+                        "tugas": st_tugas,
+                        "staff": st_staff,
+                        "absensi": st_absen,
+                        "arus_kas": st_kas
                     }
                     for nama_tabel, ws in daftar_sheet.items():
                         data = ws.get_all_records()
                         if data:
-                            # upsert pake kolom ID atau Nama sebagai key
                             supabase.table(nama_tabel).upsert(data).execute()
                     st.toast("🔥 DATA SINKRON KE SUPABASE!", icon="🚀")
                 except Exception as e:
@@ -2956,6 +2960,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
