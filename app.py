@@ -1204,6 +1204,8 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
     
 def tampilkan_tugas_kerja():
     st.title("📋 TUGAS KERJA & MONITORING")
+    sh = get_gspread_sh() 
+    sheet_tugas = sh.worksheet("Tugas")
     wadah_radar = st.empty()
     
     # --- 1. DATABASE FOTO STAFF ---
@@ -3026,6 +3028,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
