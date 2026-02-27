@@ -1439,8 +1439,7 @@ def tampilkan_tugas_kerja():
 
     # --- 4. SETOR MANDIRI (VERSI SUPER LOCK) ---
     if user_level == "STAFF":
-        with st.container(border=False):
-            st.markdown("### 🚀 SETOR TUGAS MANDIRI")
+        with st.expander("🚀 SETOR TUGAS MANDIRI", expanded=False):
             st.info("💡 **PENTING:** Setor 1 video per 1 kiriman agar bonus video & target bulanan terhitung otomatis oleh sistem.")
             
             with st.form("form_mandiri", clear_on_submit=True):
@@ -3111,6 +3110,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
