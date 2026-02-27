@@ -548,6 +548,11 @@ def muat_dari_gsheet():
             st.session_state.form_version = st.session_state.get('form_version', 0) + 1
             st.success(f"🔄 Data {user_up} Berhasil Dipulihkan!")
             st.rerun()
+        else:
+            st.error("⚠️ Data ditemukan, tapi kolom naskah kosong.")
+
+    except Exception as e: # <--- PENUTUP Pintu 1 (Ini yang tadi hilang!)
+        st.error(f"Gagal memuat dari Cloud: {e}")
         
 # ==============================================================================
 # BAGIAN 3: PENGATURAN TAMPILAN (CSS) - TOTAL BORDERLESS & STATIC
@@ -3096,3 +3101,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
