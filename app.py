@@ -969,7 +969,7 @@ Balas HANYA tabel Markdown tanpa penjelasan apa pun.
                     st.download_button("📥 DOWNLOAD (.txt)", st.session_state.lab_hasil_otomatis, file_name="naskah.txt", use_container_width=True)
                 
 def tampilkan_gudang_ide():
-    # --- 1. CSS OVERLAY (TETEP ADA UNTUK PROSES) ---
+    # --- 1. CSS OVERLAY ---
     st.markdown("""
         <style>
         .loading-overlay {
@@ -1005,7 +1005,7 @@ def tampilkan_gudang_ide():
     # --- 2. LOGIKA TAMPILAN OVERLAY ---
     if st.session_state.sedang_proses_id:
         if st.session_state.status_sukses:
-            st.markdown(f"""
+            st.markdown("""
                 <div class="loading-overlay">
                     <h1 style="font-size: 60px; margin-bottom: 10px;">✅</h1>
                     <h2 style='color: white; letter-spacing: 2px;'>BERHASIL TERPASANG</h2>
@@ -1013,7 +1013,7 @@ def tampilkan_gudang_ide():
                 </div>
             """, unsafe_allow_html=True)
         else:
-            st.markdown(f"""
+            st.markdown("""
                 <div class="loading-overlay">
                     <div class="spinner"></div>
                     <h2 style='color: white; letter-spacing: 2px;'>MENGAMBIL DATA...</h2>
@@ -1021,7 +1021,7 @@ def tampilkan_gudang_ide():
                 </div>
             """, unsafe_allow_html=True)
             
-    # --- 3. DATA & GRID RENDER (OPTIMASI SUPABASE) ---
+    # --- 3. DATA & GRID RENDER ---
     user_sekarang = st.session_state.get("user_aktif", "tamu").lower()
     user_level = st.session_state.get("user_level", "STAFF") 
     tz_wib = pytz.timezone('Asia/Jakarta')
@@ -1031,51 +1031,37 @@ def tampilkan_gudang_ide():
         sheet_gudang = sh.worksheet("Gudang_Ide")
         sheet_tugas = sh.worksheet("Tugas")
         
-        # --- AMBIL DATA DARI SUPABASE ---
-        res_gudang = supabase.table("Gudang_Ide")\
-            .select("*")\
-            .eq("STATUS", "Tersedia")\
-            .order("ID_IDE", desc=True)\
-            .limit(1000)\
-            .execute()
-        
+        # Ambil Data Supabase (Limit dikit aja biar enteng)
+        res_gudang = supabase.table("Gudang_Ide").select("*").eq("STATUS", "Tersedia").order("ID_IDE", desc=True).limit(500).execute()
         df_gudang = pd.DataFrame(res_gudang.data)
         
-        # --- PERBAIKAN LOGIKA DI SINI ---
         if df_gudang.empty:
-            # Jika Supabase kosong, baru kita coba lari ke GSheet (Fallback)
-            st.info("Searching in Cloud Storage...")
             df_gudang = ambil_data_beneran_segar("Gudang_Ide")
             if not df_gudang.empty:
-                # Filter manual yang statusnya 'Tersedia'
                 df_gudang = df_gudang[df_gudang['STATUS'].str.upper() == 'TERSEDIA']
 
-        # Jika setelah cek GSheet pun masih kosong, baru kasih warning
         if df_gudang.empty:
-            st.warning("📭 Belum ada data di gudang ide (Database & GSheet Kosong).")
+            st.warning("📭 Belum ada data di gudang ide.")
             return
 
-        # Ambil 24 JUDUL UNIK
+        # OPTIMASI UTAMA: Ambil data utuh untuk 24 judul pertama
         df_display = df_gudang.drop_duplicates(subset=['JUDUL']).head(24)
-        list_judul_unik = df_display['JUDUL'].tolist()
-
         is_loading = st.session_state.sedang_proses_id is not None
         
-        for i in range(0, len(list_judul_unik), 3):
+        # Loop Grid dari df_display (Gak pake filter-filteran di dalem loop!)
+        for i in range(0, len(df_display), 3):
             cols = st.columns(3)
-            batch_judul = list_judul_unik[i:i+3]
+            batch = df_display.iloc[i:i+3]
             
-            for j, judul in enumerate(batch_judul):
+            for j, (_, row) in enumerate(batch.iterrows()):
                 with cols[j]:
-                    # Cari info row asli dari df_gudang
-                    row_info = df_gudang[df_gudang['JUDUL'] == judul].iloc[0]
-                    id_ini = str(row_info['ID_IDE'])
+                    id_ini = str(row['ID_IDE'])
+                    judul = row['JUDUL']
                     
                     with st.container(border=True):
-                        st.markdown(f'<div style="height: 3px; background-color: #1d976c; border-radius: 10px; margin-bottom: 10px;"></div>', unsafe_allow_html=True)
+                        st.markdown('<div style="height: 3px; background-color: #1d976c; border-radius: 10px; margin-bottom: 10px;"></div>', unsafe_allow_html=True)
                         st.markdown(f"<p style='color: #888; font-size: 13px; margin-bottom: -10px;'>ID: {id_ini}</p>", unsafe_allow_html=True)
                         
-                        # Rapikan tampilan judul
                         judul_tampil = (judul[:45] + '..') if len(judul) > 45 else judul
                         st.markdown(f"### {judul_tampil}")
                         
@@ -1085,36 +1071,30 @@ def tampilkan_gudang_ide():
                             st.session_state.status_sukses = False
                             st.rerun()
 
-                        if user_level == "OWNER":
-                            if st.button(f"🗑️ HAPUS IDE", key=f"del_{id_ini}", use_container_width=True):
-                                supabase.table("Gudang_Ide").delete().eq("ID_IDE", id_ini).execute()
-                                cell_del = sheet_gudang.find(id_ini)
-                                if cell_del: sheet_gudang.delete_rows(cell_del.row)
-                                st.success("Ide Berhasil Dihapus!")
-                                time.sleep(0.5)
-                                st.rerun()
-                                    
-        # --- 4. PROSES DATA (KODE ASLI LO YANG SUDAH OKE) ---
+        # --- 4. PROSES DATA (SETELAH KLIK) ---
         if st.session_state.sedang_proses_id and not st.session_state.status_sukses:
             target_id = st.session_state.sedang_proses_id
-            # Ambil semua baris adegan untuk ID ini
+            # Ambil semua adegan (mau 10 atau 100 baris tuntas di sini)
             adegan_rows = df_gudang[df_gudang['ID_IDE'].astype(str) == target_id]
             judul_proses = adegan_rows.iloc[0]['JUDUL']
             
-            # A. Tandai di GSheet & Supabase
             status_update = f"DIAMBIL ({user_sekarang.upper()})"
+            
+            # Update Supabase
             supabase.table("Gudang_Ide").update({"STATUS": status_update}).eq("ID_IDE", target_id).execute()
             
-            cells = sheet_gudang.findall(target_id)
-            for cell in cells:
-                sheet_gudang.update_cell(cell.row, 3, status_update)
+            # Update GSheet (Gak pake findall biar gak lemot, cukup cari satu baris tanda)
+            try:
+                cell = sheet_gudang.find(target_id)
+                if cell: sheet_gudang.update_cell(cell.row, 3, status_update)
+            except: pass
             
-            # B. Pindahkan ke Session State Produksi (Kode Asli Lo)
+            # Pindahkan ke Produksi
             st.session_state.data_produksi["jumlah_adegan"] = len(adegan_rows)
             naskah_bersih = ""
             for idx, (_, a_row) in enumerate(adegan_rows.iterrows(), 1):
                 st.session_state.data_produksi["adegan"][idx] = {
-                    "aksi": a_row['NASKAH_VISUAL'], 
+                    "aksi": a_row.get('NASKAH_VISUAL',''), 
                     "dialogs": [str(a_row.get('DIALOG_ACTOR_1','')), str(a_row.get('DIALOG_ACTOR_2','')), "", ""],
                     "style": a_row.get('STYLE', 'CINEMATIC'), 
                     "shot": a_row.get('UKURAN_GAMBAR', 'MEDIUM SHOT'), 
@@ -1123,10 +1103,11 @@ def tampilkan_gudang_ide():
                     "cam": a_row.get('GERAKAN', 'STILL'), 
                     "loc": a_row.get('LOKASI', '')
                 }
-                naskah_bersih += f"**{idx}.** {a_row['NASKAH_VISUAL']}\n\n"
+                naskah_bersih += f"**{idx}.** {a_row.get('NASKAH_VISUAL','')}\n\n"
 
             st.session_state.naskah_siap_produksi = naskah_bersih
             
+            # Tugas & Log
             if user_level != "OWNER":
                 t_id = f"T{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
                 tgl_tugas = datetime.now(tz_wib).strftime("%Y-%m-%d")
@@ -1146,7 +1127,7 @@ def tampilkan_gudang_ide():
         st.rerun()
 
     if st.session_state.status_sukses:
-        time.sleep(3) 
+        time.sleep(2) # Delay centang hijau 2 detik aja cukup
         st.session_state.sedang_proses_id = None
         st.session_state.status_sukses = False
         st.rerun()
@@ -1431,7 +1412,7 @@ def tampilkan_tugas_kerja():
                     sheet_tugas.append_row([t_id, staf_tujuan, tgl_skrg, isi_tugas, "PROSES", "-", "", ""])
                     
                     # --- 3. LOG & NOTIF ---
-                    catat_log(f"Kirim Tugas Baru {t_id}")
+                    tambah_log(st.session_state.user_aktif, f"Kirim Tugas Baru {t_id}")
                     
                     if pake_wa:
                         kirim_notif_wa(f"✨ *INFO TUGAS*\n\n👤 *Untuk:* {staf_tujuan.upper()}\n🆔 *ID:* {t_id}\n📝 *Detail:* {isi_tugas[:30]}...")
@@ -3067,6 +3048,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
