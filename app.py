@@ -30,10 +30,11 @@ def get_gspread_sh():
     client = gspread.authorize(creds)
     return client.open_by_url(URL_MASTER)
 
-@st.cache_data(ttl=10) 
-def ambil_data_lokal(nama_sheet):
-    """Gunakan ini di bagian DASHBOARD / TABEL biar hemat kuota."""
-    return ambil_data_segar(nama_sheet)
+@st.cache_data(ttl=60) # <--- INI MATRA SAKTI NYA, COK! (Simpen di memori 60 detik)
+def ambil_data_segar(nama_tabel):
+    # Isi fungsinya tetep sama kayak punya lo sekarang
+    res = supabase.table(nama_tabel).select("*").execute()
+    return pd.DataFrame(res.data)
 
 def ambil_data_beneran_segar(nama_sheet):
     """Fungsi asli narik data langsung ke GSheet (Backup)."""
@@ -1223,7 +1224,7 @@ def tampilkan_tugas_kerja():
     st.title("📋 TUGAS KERJA & MONITORING")
     wadah_radar = st.empty()
     
-    # --- 1. DATABASE FOTO STAFF (WAJIB ADA BIAR GAK NAMEERROR) ---
+    # --- 1. DATABASE FOTO STAFF ---
     foto_staff_default = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
     foto_staff = {
         "icha": "https://cdn-icons-png.flaticon.com/512/149/149074.png",
@@ -1233,48 +1234,45 @@ def tampilkan_tugas_kerja():
         "dian": "https://cdn-icons-png.flaticon.com/512/149/149071.png"
     }
     
+    # --- 1. SETUP IDENTITAS ---
     user_sekarang = st.session_state.get("user_aktif", "tamu").lower()
     user_level = st.session_state.get("user_level", "STAFF")
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # --- TAMBAHKAN INI BIAR GAK ERROR PAS ACC/REV ---
-    sh = get_gspread_sh() # Panggil koneksi filenya
-    sheet_tugas = sh.worksheet("Tugas")
-    sheet_absensi = sh.worksheet("Absensi")
-    # ------------------------------------------------
-    
+    # --- 2. AMBIL DATA (PAKET KILAT - SEMUA TARIK DI SINI) ---
     try:
-        # --- 1. AMBIL DATA ---
+        # Optimasi: Tarik semua tabel di awal supaya nggak nembak internet berkali-kali
         df_all_tugas = ambil_data_segar("Tugas")
         df_absen_all = ambil_data_segar("Absensi")
+        df_kas_all   = ambil_data_segar("Arus_Kas")
+        st_raw       = ambil_data_segar("Staff")
         
         # JIKA KOSONG TOTAL, BARU KASIH WARNING
         if df_all_tugas.empty:
             st.warning("📭 Belum ada data tugas di database.")
             return
 
-        # JIKA ADA, STANDARISASI (JANGAN DI-RETURN)
-        df_all_tugas.columns = [str(c).strip().upper() for c in df_all_tugas.columns]
-        df_all_tugas['DEADLINE'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce').dt.strftime('%Y-%m-%d')
+        # --- STANDARISASI HEADER SEMUA DATAFRAME (SEKALI JALAN) ---
+        for df_item in [df_all_tugas, df_absen_all, df_kas_all, st_raw]:
+            if not df_item.empty:
+                df_item.columns = [str(c).strip().upper() for c in df_item.columns]
 
-        # Standarisasi Header & Bikin Variabel biar GAK NAME ERROR
-        df_all_tugas.columns = [str(c).strip().upper() for c in df_all_tugas.columns]
+        # --- PROSES KOLOM DEADLINE ---
+        df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
+        df_all_tugas['DEADLINE'] = df_all_tugas['DEADLINE_DT'].dt.strftime('%Y-%m-%d')
+        
+        # Variabel bantu agar kartu tugas nggak NameError
         data_tugas = df_all_tugas.to_dict('records') 
         status_buang = ["ARSIP", "DONE", "BATAL"]
 
-        # 2. SETUP FILTER BULAN
-        df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
+        # --- 2. SETUP FILTER BULAN ---
         mask_bulan = (df_all_tugas['DEADLINE_DT'].dt.month == sekarang.month) & \
                      (df_all_tugas['DEADLINE_DT'].dt.year == sekarang.year)
 
-        # 3. LOGIKA RADAR (SUNTIKAN PRIVASI OWNER)
-        st_raw = ambil_data_segar("Staff")
-        st_raw.columns = [str(c).strip().upper() for c in st_raw.columns]
-
-        # --- REVISI: HANYA OWNER YANG BISA INTIP SEMUA ---
+        # --- 3. LOGIKA RADAR (Gunakan st_raw yang sudah ditarik di atas) ---
         if user_level == "OWNER":
-            # List staf yang muncul di dropdown (kecuali Owner biar tetap GHOST)
+            # REVISI: Pakai data st_raw yang sudah ada (Gak usah panggil ambil_data_segar lagi)
             list_staf = st_raw[st_raw['LEVEL'] != 'OWNER']['NAMA'].unique().tolist()
             target_user = st.selectbox("🎯 Intip Radar Staf:", list_staf).upper()
         else:
@@ -1298,7 +1296,6 @@ def tampilkan_tugas_kerja():
                 df_u_absen = df_absen_all[df_absen_all['NAMA'] == target_user].copy()
 
             # --- 1. AMBIL DATA REAL DARI ARUS KAS SUPABASE ---
-            df_kas_all = ambil_data_segar("Arus_Kas")
             df_kas_all.columns = [str(c).strip().upper() for c in df_kas_all.columns]
             
             # Cari baris yang kategorinya 'Gaji Tim', ada nama staf, DAN di periode bulan/tahun yang dipilih
@@ -1380,7 +1377,6 @@ def tampilkan_tugas_kerja():
     if user_level == "OWNER": # <--- Cuma Dian yang punya akses kirim tugas
         
         # Ambil data staff untuk dropdown
-        st_raw = ambil_data_segar("Staff")
         st_raw.columns = [str(c).strip().upper() for c in st_raw.columns]
         staf_options = st_raw['NAMA'].unique().tolist()
         
@@ -3048,6 +3044,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
