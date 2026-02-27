@@ -1325,13 +1325,29 @@ def tampilkan_tugas_kerja():
             if st.button("🚀 KIRIM KE EDITOR", use_container_width=True):
                 if isi_tugas:
                     t_id = f"ID{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
-                    sheet_tugas.append_row([t_id, staf_tujuan, sekarang.strftime("%Y-%m-%d"), isi_tugas, "PROSES", "-", "", ""])
+                    tgl_skrg = sekarang.strftime("%Y-%m-%d")
+                    
+                    # --- 1. KIRIM KE SUPABASE (Biar Radar Langsung Update) ---
+                    # Sesuaikan key dengan nama kolom asli di DB lo (Staf, Deadline, dll)
+                    data_tugas_supabase = {
+                        "ID": t_id,
+                        "Staf": staf_tujuan,
+                        "Deadline": tgl_skrg,
+                        "Instruksi": isi_tugas,
+                        "Status": "PROSES"
+                    }
+                    supabase.table("Tugas").insert(data_tugas_supabase).execute()
+                    
+                    # --- 2. KIRIM KE GSHEET (Backup Kesayangan Lo) ---
+                    sheet_tugas.append_row([t_id, staf_tujuan, tgl_skrg, isi_tugas, "PROSES", "-", "", ""])
+                    
+                    # --- 3. LOG & NOTIF ---
                     catat_log(f"Kirim Tugas Baru {t_id}")
                     
                     if pake_wa:
                         kirim_notif_wa(f"✨ *INFO TUGAS*\n\n👤 *Untuk:* {staf_tujuan.upper()}\n🆔 *ID:* {t_id}\n📝 *Detail:* {isi_tugas[:30]}...")
                     
-                    st.success("✅ Terkirim!")
+                    st.success("✅ Terkirim ke Supabase & GSheet!")
                     time.sleep(1)
                     st.rerun()
                 else:
@@ -1359,13 +1375,30 @@ def tampilkan_tugas_kerja():
                             st.warning("⚠️ **LINK TIDAK VALID!** Pastikan kamu memasukkan link Google Drive yang benar.")
                         else:
                             t_id_m = f"M{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
+                            tgl_hari_ini = sekarang.strftime("%Y-%m-%d")
+                            waktu_setor = sekarang.strftime("%d/%m/%Y %H:%M")
+                            
+                            # --- 1. SINKRON KE SUPABASE ---
+                            # Kita masukkan data minimalis tapi penting buat Radar & SP
+                            data_mandiri_sb = {
+                                "ID": t_id_m,
+                                "Staf": user_sekarang.upper(),
+                                "Deadline": tgl_hari_ini, # Setoran mandiri dianggap selesai hari ini
+                                "Instruksi": judul_m,
+                                "Status": "WAITING QC", # Status awal biar lo cek dulu
+                                "Waktu_Kirim": waktu_setor,
+                                "Link_Hasil": link_m
+                            }
+                            supabase.table("Tugas").insert(data_mandiri_sb).execute()
+
+                            # --- 2. GSHEET TETAP JALAN (BACKUP) ---
                             sheet_tugas.append_row([
                                 t_id_m, 
                                 user_sekarang.upper(), 
-                                sekarang.strftime("%Y-%m-%d"), 
+                                tgl_hari_ini, 
                                 judul_m, 
                                 "WAITING QC", 
-                                sekarang.strftime("%d/%m/%Y %H:%M"), 
+                                waktu_setor, 
                                 link_m, 
                                 "" 
                             ])
@@ -1450,7 +1483,10 @@ def tampilkan_tugas_kerja():
                                                 id_tugas = str(t['ID']).strip()
                                                 tgl_tugas = str(t['DEADLINE'])
 
-                                                # 2. UPDATE STATUS TUGAS DI GSHEET
+                                                # --- TAMBAHAN SUPABASE (Agar Radar Langsung Update) ---
+                                                supabase.table("Tugas").update({"Status": "FINISH"}).eq("ID", id_tugas).execute()
+
+                                                # 2. UPDATE STATUS TUGAS DI GSHEET (Tetap Seperti Kode Lo)
                                                 cell = sheet_tugas.find(id_tugas)
                                                 sheet_tugas.update_cell(cell.row, 5, "FINISH")
 
@@ -1466,14 +1502,14 @@ def tampilkan_tugas_kerja():
 
                                                 # 4. CATAT BONUS KE ARUS_KAS
                                                 ws_kas = sh.worksheet("Arus_Kas")
-                                                data_kas_raw = ws_kas.get_all_records()
-                                                df_kas_cek = pd.DataFrame(data_kas_raw)
+                                                data_raw_kas = ws_kas.get_all_records() # Gue jaga variabel asli lo
+                                                df_kas_cek = pd.DataFrame(data_raw_kas)
                                                 if not df_kas_cek.empty:
                                                     df_kas_cek.columns = [str(c).strip().upper() for c in df_kas_cek.columns]
 
                                                 msg_bonus = "" # Buat nambahin info di WA nanti
 
-                                                # --- LOGIKA BONUS ---
+                                                # --- LOGIKA BONUS (Gak Gue Sentuh Sama Sekali) ---
                                                 if jml_video == 3:
                                                     ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", 30000, f"Bonus Absen: {staf_nama}", "SISTEM (AUTO-ACC)"])
                                                     msg_bonus = "\n💰 *BONUS ABSEN:* Rp 30,000"
@@ -1499,18 +1535,39 @@ def tampilkan_tugas_kerja():
                                     with b2:
                                         if st.button("🔴 REV", key=f"r_{t['ID']}", use_container_width=True):
                                             if cat_r:
+                                                # --- SYNC SUPABASE ---
+                                                supabase.table("Tugas").update({
+                                                    "Status": "REVISI",
+                                                    "Catatan_Revisi": cat_r
+                                                }).eq("ID", str(t['ID']).strip()).execute()
+
+                                                # --- KODE ASLI LO (GSHEET) ---
                                                 cell = sheet_tugas.find(str(t['ID']).strip())
                                                 sheet_tugas.update_cell(cell.row, 5, "REVISI")
                                                 sheet_tugas.update_cell(cell.row, 8, cat_r)
+                                                
                                                 kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 Alasan: {cat_r}")
+                                                
+                                                # --- INI YANG LO MAKSUD (WARNING & RERUN) ---
                                                 st.warning("REVISI!"); time.sleep(1); st.rerun()
+
                                     with b3:
                                         if st.button("🚫 BATAL", key=f"c_{t['ID']}", use_container_width=True):
                                             if cat_r:
+                                                # --- SYNC SUPABASE ---
+                                                supabase.table("Tugas").update({
+                                                    "Status": "CANCELED",
+                                                    "Catatan_Revisi": f"BATAL: {cat_r}"
+                                                }).eq("ID", str(t['ID']).strip()).execute()
+
+                                                # --- KODE ASLI LO (GSHEET) ---
                                                 cell = sheet_tugas.find(str(t['ID']).strip())
                                                 sheet_tugas.update_cell(cell.row, 5, "CANCELED")
                                                 sheet_tugas.update_cell(cell.row, 8, f"BATAL: {cat_r}")
+                                                
                                                 kirim_notif_wa(f"🚫 *DIBATALKAN*\n\n👤 *Editor:* {t['STAF'].upper()}\n🆔 *ID:* {t['ID']}\n📝 *Alasan:* {cat_r}")
+                                                
+                                                # --- INI YANG LO MAKSUD (ERROR & RERUN) ---
                                                 st.error("BATAL!"); time.sleep(1); st.rerun()
 
                                 # --- BAGIAN KHUSUS STAFF (SETOR) ---
@@ -1524,6 +1581,14 @@ def tampilkan_tugas_kerja():
                                             if "," in l_in or l_in.lower().count("https://") > 1:
                                                 st.error("❌ Hanya boleh 1 link! Gunakan Setor Mandiri untuk video lainnya.")
                                             else:
+                                                # --- 1. UPDATE SUPABASE (WAJIB BIAR PANEL OWNER UPDATE) ---
+                                                supabase.table("Tugas").update({
+                                                    "Status": "WAITING QC",
+                                                    "Link_Hasil": l_in,
+                                                    "Waktu_Kirim": sekarang.strftime("%d/%m/%Y %H:%M")
+                                                }).eq("ID", str(t['ID']).strip()).execute()
+
+                                                # --- 2. UPDATE GSHEET (KODE ASLI LO) ---
                                                 cell = sheet_tugas.find(str(t['ID']).strip())
                                                 sheet_tugas.update_cell(cell.row, 5, "WAITING QC")
                                                 sheet_tugas.update_cell(cell.row, 7, l_in)
@@ -1733,39 +1798,34 @@ def tampilkan_tugas_kerja():
                 
     # --- 5. GAJIAN (VERSI UTUH & SAKTI - FIX INDENTASI) ---
     if user_level in ["STAFF", "ADMIN"]:
-        # A. AMBIL DATA ABSENSI DULU (Agar bisa dipakai untuk Radar & Slip)
         try:
-            data_absensi = sheet_absensi.get_all_records()
-            df_absensi = pd.DataFrame(data_absensi)
-            
-            # --- Bersihkan data sebelum di-filter ---
-            df_absensi = bersihkan_data(df_absensi) 
+            # --- Ganti penarikan data ke Supabase biar ngebut & sinkron ---
+            df_absensi = ambil_data_segar("Absensi") 
             
             if not df_absensi.empty:
-                # Pastikan kolom NAMA sudah menjadi UPPERCASE karena bersihkan_data
+                # Standarisasi kolom jadi BESAR (ID, NAMA, TANGGAL, dll)
+                df_absensi.columns = [str(c).strip().upper() for c in df_absensi.columns]
                 user_up = user_sekarang.upper().strip()
                 mask_ab = (df_absensi['NAMA'] == user_up)
                 df_absen_user = df_absensi[mask_ab].copy()
             else:
-                # Beri kolom default agar fungsi hitung_logika tidak KeyError TANGGAL
                 df_absen_user = pd.DataFrame(columns=['NAMA', 'TANGGAL', 'JAM', 'STATUS'])
         except Exception as e:
-            # Jika gagal, buat DataFrame kosong dengan struktur kolom yang benar
             df_absen_user = pd.DataFrame(columns=['NAMA', 'TANGGAL', 'JAM', 'STATUS'])
 
-        # --- PENYARINGAN DATA TUGAS (AGAR TIDAK NAME ERROR) ---
-        # Saring data tugas milik staf ini yang statusnya FINISH di bulan ini
+        # --- PENYARINGAN DATA TUGAS (Data dari Supabase via df_all_tugas) ---
         mask_user_arsip = df_all_tugas['STAF'].str.strip() == user_sekarang.upper()
         mask_finish_arsip = df_all_tugas['STATUS'].str.strip() == 'FINISH'
         df_arsip_user = df_all_tugas[mask_user_arsip & mask_finish_arsip & mask_bulan].copy()
 
         # B. HITUNG LOGIKA (Bonus, Hadir, SP)
-        # Sekarang df_arsip_user sudah terisi dan siap dihitung mesin
+        # Sesuai revisi sebelumnya, kita kirim level_target agar OWNER tidak kena potong SP
         b_video, u_hadir, pot_sp, level_sp, hari_lemah = hitung_logika_performa_dan_bonus(
             df_arsip_user,
             df_absen_user, 
             sekarang.month, 
-            sekarang.year
+            sekarang.year,
+            level_target=user_level # SUNTIKAN KASTA BIAR GAJI GAK KEZALIMAN
         )
 
         # --- TAMPILAN ATURAN GAJI (VERSI REVISI FINAL - KONSISTENSI) ---
@@ -2862,5 +2922,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
