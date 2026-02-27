@@ -1010,25 +1010,25 @@ def tampilkan_gudang_ide():
     tz_wib = pytz.timezone('Asia/Jakarta')
 
     try:
-        sh = get_gspread_sh() 
-        sheet_gudang = sh.worksheet("Gudang_Ide")
-        sheet_tugas = sh.worksheet("Tugas")
+        # OPTIMASI 1: Pake fungsi cache biar ganti menu instan
+        df_gudang_raw = ambil_data_segar("Gudang_Ide")
         
-        # Ambil Data Supabase (Limit dikit aja biar enteng)
-        res_gudang = supabase.table("Gudang_Ide").select("*").eq("STATUS", "Tersedia").order("ID_IDE", desc=True).limit(500).execute()
-        df_gudang = pd.DataFrame(res_gudang.data)
-        
-        if df_gudang.empty:
-            df_gudang = ambil_data_beneran_segar("Gudang_Ide")
-            if not df_gudang.empty:
-                df_gudang = df_gudang[df_gudang['STATUS'].str.upper() == 'TERSEDIA']
+        if not df_gudang_raw.empty:
+            # Standarisasi kolom jadi UPPER
+            df_gudang_raw.columns = [str(c).strip().upper() for c in df_gudang_raw.columns]
+            
+            # OPTIMASI 2: Filter lokal di RAM (Case Insensitive)
+            # Ini bakal nangkep "Tersedia", "TERSEDIA", maupun "tersedia"
+            df_gudang = df_gudang_raw[df_gudang_raw['STATUS'].astype(str).str.upper() == 'TERSEDIA'].copy()
+        else:
+            df_gudang = pd.DataFrame()
 
         if df_gudang.empty:
-            st.warning("📭 Belum ada data di gudang ide.")
+            st.warning("📭 Belum ada data 'Tersedia' di gudang ide.")
             return
 
-        # OPTIMASI UTAMA: Ambil data utuh untuk 24 judul pertama
-        df_display = df_gudang.drop_duplicates(subset=['JUDUL']).head(24)
+        # OPTIMASI 3: Turunkan ke 12 judul unik biar render web kenceng
+        df_display = df_gudang.drop_duplicates(subset=['JUDUL']).head(18)
         is_loading = st.session_state.sedang_proses_id is not None
         
         # Loop Grid dari df_display (Gak pake filter-filteran di dalem loop!)
@@ -3028,16 +3028,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
