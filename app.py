@@ -1346,7 +1346,7 @@ def tampilkan_tugas_kerja():
                     st.metric(
                         "💰 TOTAL BONUS", 
                         f"Rp {angka_bonus:,}", # Sekarang pasti aman karena udah jadi Integer
-                        delta="Data Real Supabase",
+                        delta="📊 LIVE SYNC",
                         delta_color="normal"
                     )
                 
@@ -2400,28 +2400,51 @@ def tampilkan_kendali_tim():
             st.markdown("<p style='font-size:12px; font-weight:bold; color:#888; margin-bottom:15px;'>📊 RANGKUMAN KOLEKTIF TIM</p>", unsafe_allow_html=True)
             
             # 1. Pastikan MVP & LOW cuma mengambil data dari level STAFF
-            # Kita ambil daftar nama yang emang levelnya STAFF aja
             nama_staff_asli = df_staff[df_staff['LEVEL'] == 'STAFF']['NAMA'].str.upper().tolist()
             performa_hanya_staff = {k: v for k, v in performa_staf.items() if k in nama_staff_asli}
             
             staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             
+            # --- TAMBAHAN LOGIKA SINKRONISASI KAS SUPABASE ---
+            df_kas_kolektif = ambil_data_segar("Arus_Kas")
+            real_b_lembur = 0
+            real_b_absen = 0
+            
+            if not df_kas_kolektif.empty:
+                # Filter Periode Bulan Ini
+                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], errors='coerce')
+                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == sekarang.month) & \
+                               (df_kas_kolektif['TANGGAL_DT'].dt.year == sekarang.year)
+                
+                df_cair = df_kas_kolektif[mask_periode].copy()
+                
+                # Hitung berdasarkan kategori & keterangan (Standardisasi ke Float biar gak error format)
+                real_b_lembur = df_cair[
+                    (df_cair['KATEGORI'] == 'GAJI TIM') & 
+                    (df_cair['KETERANGAN'].str.contains('LEMBUR', case=False, na=False))
+                ]['NOMINAL'].astype(float).sum()
+                
+                real_b_absen = df_cair[
+                    (df_cair['KATEGORI'] == 'GAJI TIM') & 
+                    (df_cair['KETERANGAN'].str.contains('ABSEN', case=False, na=False))
+                ]['NOMINAL'].astype(float).sum()
+            # --------------------------------------------------
+
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
             
             # 2. Target Ideal dinamis (Jumlah Staff x 40)
             jml_staff_asli = len(nama_staff_asli)
             target_fix = jml_staff_asli * 40
-            
             c_r1.metric("🎯 TARGET IDEAL", f"{target_fix} Vid") 
             
             # 3. Total Video & Persentase Capaian
             persen_capaian = (rekap_v_total / target_fix * 100) if target_fix > 0 else 0
             c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}% Capaian")
             
-            # 4. Bonus (Total Gabungan Staff & Admin)
-            c_r3.metric("🔥 BONUS LEMBUR", f"Rp {rekap_b_cair:,}")
-            c_r4.metric("📅 BONUS ABSEN", f"Rp {rekap_b_absen:,}")
+            # 4. Bonus (Sumber data ganti ke REAL_B SUPABASE)
+            c_r3.metric("🔥 BONUS LEMBUR", f"Rp {int(real_b_lembur):,}", delta="LIVE SYNC")
+            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen):,}", delta="LIVE SYNC")
             
             # 5. Total Hari Lemah (Otomatis 0 buat Admin karena Mantra Kebal)
             c_r5.metric("💀 TOTAL HARI LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
@@ -2439,6 +2462,10 @@ def tampilkan_kendali_tim():
                 df_staff_raw_slip = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])].copy()
                 kol_v = st.columns(2) 
                 
+                # --- 0. TARIK DATA KAS MASTER SEKALI SAJA (BIAR KENCENG) ---
+                df_kas_master = ambil_data_segar("Arus_Kas")
+                df_kas_master.columns = [str(c).strip().upper() for c in df_kas_master.columns]
+                
                 for idx, s in df_staff_raw_slip.iterrows():
                     n_up = str(s.get('NAMA', '')).strip().upper()
                     if n_up == "" or n_up == "NAN": continue
@@ -2446,27 +2473,38 @@ def tampilkan_kendali_tim():
                     # --- 1. DATA FILTERING SPESIFIK STAF ---
                     df_absen_staf_slip = df_a_f[df_a_f['NAMA'] == n_up].copy()
                     df_arsip_staf_slip = df_f_f[df_f_f['STAF'] == n_up].copy()
-                    
-                    # --- SISIRAN: KIRIM KASTA KE MESIN SLIP ---
                     lv_slip_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
 
-                    b_lembur_staf, u_absen_staf, pot_sp_admin, level_sp_admin, hari_lemah = hitung_logika_performa_dan_bonus(
+                    # 2. MESIN HITUNG (Cuma buat nyari POTONGAN SP & HARI LEMAH)
+                    _, _, pot_sp_admin, level_sp_admin, hari_lemah = hitung_logika_performa_dan_bonus(
                         df_arsip_staf_slip, 
                         df_absen_staf_slip, 
                         bulan_dipilih, 
                         tahun_dipilih,
-                        level_target=lv_slip_ini # <--- KUNCI KEBAL DI SLIP GAJI
+                        level_target=lv_slip_ini
                     )
 
-                    # --- 3. AMBIL DATA FINANSIAL DARI GSHEET ---
+                    # --- 3. AMBIL DATA FINANSIAL DARI GSHEET (STATIS) ---
                     v_gapok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
                     v_tunjangan = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
                     
-                    # --- 4. RUMUS FINAL (Sesuai Kitab Suci) ---
-                    v_total_terima = max(0, (v_gapok + v_tunjangan + u_absen_staf + b_lembur_staf) - pot_sp_admin)
+                    # --- 4. FILTER DATA BONUS RIIL DARI SUPABASE (DINAMIS) ---
+                    mask_slip = (df_kas_master['KATEGORI'] == 'GAJI TIM') & \
+                                (df_kas_master['KETERANGAN'].str.contains(n_up, case=False, na=False)) & \
+                                (pd.to_datetime(df_kas_master['TANGGAL']).dt.month == bulan_dipilih) & \
+                                (pd.to_datetime(df_kas_master['TANGGAL']).dt.year == tahun_dipilih)
+                    
+                    df_bonus_cair = df_kas_master[mask_slip]
+                    
+                    # Ambil angka riil dari database (Ganti prediksi b_lembur_staf & u_absen_staf)
+                    bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.contains('Lembur', case=False, na=False)]['NOMINAL'].sum())
+                    bonus_absen_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.contains('Absen', case=False, na=False)]['NOMINAL'].sum())
+
+                    # --- 5. RUMUS FINAL (MENGGUNAKAN DATA SUPABASE) ---
+                    v_total_terima = max(0, (v_gapok + v_tunjangan + bonus_absen_real + bonus_video_real) - pot_sp_admin)
                     ada_kerja = True
 
-                    # --- 5. TAMPILAN VCARD ADMIN ---
+                    # --- 6. TAMPILAN VCARD ADMIN ---
                     with kol_v[idx % 2]:
                         with st.container(border=True):
                             st.markdown(f"""
@@ -2486,7 +2524,7 @@ def tampilkan_kendali_tim():
                             st.divider()
 
                             if st.button(f"📄 PREVIEW & PRINT SLIP {n_up}", key=f"vcard_{n_up}", use_container_width=True):
-                                # HTML SLIP (Gaya Premium dengan variabel hari_lemah)
+                                # HTML SLIP (Gaya Premium lo tetep aman, variabel bonus diganti data real)
                                 slip_html = f"""
                                 <div id="slip-gaji-full" style="background: white; padding: 30px; border-radius: 20px; border: 1px solid #eee; font-family: sans-serif; width: 350px; margin: auto; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
                                     <center>
@@ -2506,8 +2544,8 @@ def tampilkan_kendali_tim():
                                     <table style="width: 100%; font-size: 13px; line-height: 2.2; border-collapse: collapse;">
                                         <tr><td style="color: #666;">Gaji Pokok</td><td align="right" style="font-weight: 600;">Rp {v_gapok:,}</td></tr>
                                         <tr><td style="color: #666;">Tunjangan</td><td align="right" style="font-weight: 600;">Rp {v_tunjangan:,}</td></tr>
-                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen (Min 3)</td><td align="right">+ {u_absen_staf:,}</td></tr>
-                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video (Video 5+)</td><td align="right">+ {b_lembur_staf:,}</td></tr>
+                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Absen (Real)</td><td align="right">+ {bonus_absen_real:,}</td></tr>
+                                        <tr style="color: #1d976c; font-weight: 600;"><td>Bonus Video (Real)</td><td align="right">+ {bonus_video_real:,}</td></tr>
                                         <tr style="border-top: 1px solid #f0f0f0; color: #e74c3c; font-weight: 600;"><td style="padding-top: 5px;">Potongan SP ({hari_lemah} Hari)</td><td align="right" style="padding-top: 5px;">- {pot_sp_admin:,}</td></tr>
                                     </table>
 
@@ -2608,24 +2646,25 @@ def tampilkan_kendali_tim():
                                 b2.markdown(f"<p style='margin:0; font-size:11px; color:#888;'>EXPIRED</p><b style='font-size:13px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
                                 b3.markdown(f"<p style='margin:0; font-size:11px; color:#888;'>SISA</p><b style='font-size:15px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
 
-                                # --- TARUH DI SINI (KHUSUS ADMIN) ---
                                 st.write("") # Kasih jarak dikit
-                                if st.button(f"🔄 RESET AKUN", key=f"reset_{r['EMAIL']}", use_container_width=True):
+                                if st.button(f"🔄 RESET AKUN", key=f"reset_{r['EMAIL']}_{idx}", use_container_width=True):
                                     try:
-                                        # Cari baris berdasarkan Email (Kolom B / indeks 2)
+                                        # 1. Cari baris berdasarkan Email (Kolom 2)
+                                        # Kita pake .strip() biar kalau ada spasi gak sengaja di GSheet tetep ketemu
                                         cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
                                         
-                                        # Reset PEMAKAI (Kolom E / indeks 5) jadi 'X'
-                                        ws_akun.update_cell(cell_target.row, 5, "X")
-                                        
-                                        # Kosongkan TANGGAL_KLAIM (Kolom F / indeks 6)
-                                        ws_akun.update_cell(cell_target.row, 6, "")
-                                        
-                                        st.success(f"Akun {r['AI']} berhasil direset!")
-                                        time.sleep(1)
-                                        st.rerun()
+                                        if cell_target:
+                                            # 2. Update status jadi 'X' (Kolom 5) dan hapus tgl klaim (Kolom 6)
+                                            ws_akun.update_cell(cell_target.row, 5, "X")
+                                            ws_akun.update_cell(cell_target.row, 6, "")
+                                            
+                                            st.success(f"✅ Akun {r['AI']} berhasil direset!")
+                                            time.sleep(1)
+                                            st.rerun()
+                                        else:
+                                            st.error("❌ Email tidak ditemukan di database.")
                                     except Exception as e:
-                                        st.error(f"Gagal reset: {e}")
+                                        st.error(f"⚠️ Gagal reset: {e}")
                 else:
                     st.info("Belum ada data akun AI.")
 
@@ -3039,6 +3078,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
