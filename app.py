@@ -266,10 +266,10 @@ def log_absen_otomatis(nama_user):
                 
                 # --- A. KIRIM KE SUPABASE (UTAMA) ---
                 data_supabase = {
-                    "NAMA": nama_up, 
-                    "TANGGAL": tgl_skrg, 
-                    "JAM MASUK": jam_skrg, 
-                    "STATUS": status_final
+                    "Nama": nama_up, 
+                    "Tanggal": tgl_skrg, 
+                    "Jam Masuk": jam_skrg, 
+                    "Status": status_final
                 }
                 supabase.table("Absensi").insert(data_supabase).execute()
 
@@ -2862,4 +2862,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
