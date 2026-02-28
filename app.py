@@ -2414,20 +2414,27 @@ def tampilkan_kendali_tim():
                 st.divider()
                         
                 if not df_ai.empty:
-                    # 1. SETUP DATA & SORTING (Fokus Urutan: X > Otw Expired > Sisanya)
+                    # 1. SETUP DATA & SORTING (FOKUS URUTAN DIAN)
                     h_ini = sekarang.date()
                     df_ai['TGL_OBJ'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                     
-                    # Buat kolom bantuan 'PRIORITAS' buat urutan (1: X, 2: Expired Dekat, 3: Sisanya)
-                    def urutkan(r):
+                    def tentukan_urutan(r):
+                        if pd.isna(r['TGL_OBJ']): return 4
                         sisa_hr = (r['TGL_OBJ'] - h_ini).days
                         pemakai = str(r['PEMAKAI']).strip().upper()
-                        if pemakai == "X": return 1
-                        elif sisa_hr <= 3: return 2
-                        else: return 3
+                        
+                        # URUTAN 1: BELUM ADA PEMAKAI
+                        if pemakai == "X": 
+                            return 1
+                        # URUTAN 2: MAU EXPIRED (Ada pemakai & sisa <= 7 hari)
+                        elif sisa_hr <= 7: 
+                            return 2
+                        # URUTAN 3: MASIH LAMA (Ada pemakai & sisa > 7 hari)
+                        else: 
+                            return 3
 
-                    df_ai['PRIO'] = df_ai.apply(urutkan, axis=1)
-                    # Sortir berdasarkan Prioritas lalu tanggal terdekat
+                    df_ai['PRIO'] = df_ai.apply(tentukan_urutan, axis=1)
+                    # Sortir berdasarkan Prioritas (1-2-3) kemudian tanggal terdekat
                     df_sorted = df_ai.sort_values(['PRIO', 'TGL_OBJ']).copy()
 
                     # 2. TAMPILAN COMPACT 1 BARIS (Gunakan df_sorted)
@@ -2437,10 +2444,11 @@ def tampilkan_kendali_tim():
                         
                         sisa = (tgl_exp - h_ini).days
                         
+                        # Otomatis hilang jika sudah lewat hari (Expired)
                         if sisa < 0: 
                             continue 
                         
-                        # Penentu Warna (Warna tetap sesuai kode asli lo)
+                        # Penentu Warna (Tetap sesuai kode asli lo)
                         if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
                         elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
                         else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
@@ -2453,17 +2461,16 @@ def tampilkan_kendali_tim():
                                 </div>
                             """, unsafe_allow_html=True)
 
-                            # 7 KOLOM DENGAN ICON
+                            # 7 KOLOM DENGAN ICON (Kode Asli Lo)
                             c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
                             
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 USER</p><b style='font-size:12px;'>{r['PEMAKAI']}</b>", unsafe_allow_html=True)
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{r['PEMAKAI']}</b>", unsafe_allow_html=True)
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
-                            # Tombol Reset
                             if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
                                 try:
                                     cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
@@ -2886,6 +2893,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
