@@ -2017,15 +2017,16 @@ def tampilkan_tugas_kerja():
             st.info("🔒 **Menu Klaim Gaji** akan terbuka otomatis pada tanggal 26 setiap bulannya.")
                 
 def tampilkan_kendali_tim():    
+    
+    tz_wib = pytz.timezone('Asia/Jakarta')
+    sekarang = datetime.now(tz_wib)
     user_level = st.session_state.get("user_level", "STAFF")
 
     if user_level not in ["OWNER", "ADMIN"]:
-        st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
+        st.error("🚫 Akses Terbatas.")
         st.stop()
 
-    # 2. SETUP WAKTU (Wajib di atas agar variabel 'sekarang' terbaca semua modul)
-    tz_wib = pytz.timezone('Asia/Jakarta')
-    sekarang = datetime.now(tz_wib)
+    st.title("⚡ PUSAT KENDALI TIM")
     
     # 3. HEADER HALAMAN
     col_h1, col_h2 = st.columns([3, 1])
@@ -3027,5 +3028,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
