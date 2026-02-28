@@ -2574,54 +2574,48 @@ def tampilkan_area_staf():
         # Nanti kita isi cara editing dll
         
     with t2:
-        st.subheader("💵 Kalkulator Simulasi Pendapatan")    
-        # --- INPUT USER ---
-        c1, c2 = st.columns(2)
-        with c1:
-            jumlah_video = st.slider("Target Video Per Hari", 1, 10, 3)
-            hari_kerja = st.number_input("Jumlah Hari Kerja Sebulan", 1, 31, 26)
-    
-        # --- LOGIKA HITUNG (Sesuaikan dengan Rumus Lo) ---
-        # Misal: Gaji Pokok (GP) + (Bonus per Video * Total Video)
-        gp = 1500000  # Contoh Gaji Pokok
-        bonus_per_video = 5000 # Contoh Bonus per Video
-        total_video = jumlah_video * hari_kerja
-        total_bonus = total_video * bonus_per_video
-        estimasi_total = gp + total_bonus
+        st.write("") 
+        st.subheader("💵 Kalkulator Simulasi Pendapatan")
+        
+        t_hari = st.select_slider(
+            "Target setoran video kamu per hari:",
+            options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            value=3,
+            key="slider_simulasi_final"
+        )
+        
+        # --- LOGIKA HITUNG (SINKRON ATURAN 2026) ---
+        gapok_sim = 1500000
+        hari_efektif = 25
+        
+        if t_hari >= 3:
+            b_absen_bln = 30000 * hari_efektif 
+            b_video_bln = max(0, (t_hari - 4)) * 30000 * hari_efektif
+            p_sp = 0
+            status = "🌟 Performa Sangat Baik" if t_hari >= 5 else "✅ Performa Standar"
+        elif t_hari == 2:
+            b_absen_bln, b_video_bln, p_sp = 0, 0, 0
+            status = "⚠️ Performa Cukup (Aman SP, Tanpa Bonus)"
+        else:
+            b_absen_bln, b_video_bln, p_sp = 0, 0, 1000000
+            status = "❗ Performa Perlu Ditingkatkan (Risiko SP)"
 
-        st.markdown("---")
+        total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
+        total_bonus = b_absen_bln + b_video_bln
+        
+        st.divider()
+        st.markdown(f"### {status}")
+        
+        c_total, c_bonus = st.columns(2)
+        with c_total:
+            st.metric("ESTIMASI TERIMA", f"Rp {total_gaji:,}")
+        with c_bonus:
+            d_val = f"Cair Rp {total_bonus//hari_efektif:,} / hari" if t_hari >= 3 else None
+            st.metric("POTENSI BONUS", f"Rp {total_bonus:,}", delta=d_val)
 
-        # --- MODEL V-CARD (KARTU VISUAL) ---
-        st.markdown(f"""
-        <div style="background-color: #1E1E1E; padding: 25px; border-radius: 15px; border-left: 8px solid #00FFCC; box-shadow: 2px 2px 15px rgba(0,0,0,0.3);">
-            <h3 style="color: #00FFCC; margin-bottom: 5px;">💳 ESTIMASI GAJI BULANAN</h3>
-            <p style="color: #AAAAAA; font-size: 14px; margin-bottom: 20px;">Berdasarkan performa input harian</p>
-        
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: white;">Gaji Pokok (Tetap)</span>
-                <span style="color: white; font-weight: bold;">Rp {gp:,.0f}</span>
-            </div>
-        
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: white;">Total Produksi Video</span>
-                <span style="color: #FFCC00; font-weight: bold;">{total_video} Video</span>
-            </div>
-        
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
-                <span style="color: white;">Bonus Produksi (Rp {bonus_per_video:,.0f}/vid)</span>
-                <span style="color: #00FFCC; font-weight: bold;">+ Rp {total_bonus:,.0f}</span>
-            </div>
-        
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #00FFCC; font-size: 18px; font-weight: bold;">TAKE HOME PAY</span>
-                <span style="color: #00FFCC; font-size: 24px; font-weight: bold;">Rp {estimasi_total:,.0f}</span>
-            </div>
-        
-            <div style="margin-top: 20px; padding: 10px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; text-align: center;">
-                <p style="color: #00FFCC; font-size: 12px; margin: 0;">"Semakin banyak video berkualitas, semakin besar bonus menanti!" 🚀</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        # Spasi sebelum catatan kaki
+        st.write("")
+        st.caption(f"Catatan: Estimasi berdasarkan setoran stabil {t_hari} video/hari selama {hari_efektif} hari kerja.")
         
     with t3:
         st.subheader("⚠️ Sistem Peringatan & Performa")
