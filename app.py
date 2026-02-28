@@ -2549,18 +2549,20 @@ def tampilkan_kendali_tim():
     except Exception as e:
         st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
 
-# ==============================================================================
-# HALAMAN: AREA STAF (PUSAT INFORMASI)
-# ==============================================================================
 def tampilkan_area_staf():
     st.title("📘 Pusat Informasi")
+    
+    # --- 1. PAPAN PENGUMUMAN ---
     st.info("""
     📢 **PENGUMUMAN TERBARU:**
     - Libur menyambut awal Ramadhan akan diinfokan segera.
     - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
     - Semangat buat tim produksi video hari ini! 🚀
     """)
-    # --- 5 SUB-MENU PROFESIONAL ---
+    
+    st.write("") # Spasi inisiasi
+
+    # --- 2. SISTEM TABS ---
     t1, t2, t3, t4, t5 = st.tabs([
         "📋 Panduan (SOP)", 
         "💰 Simulasi Gaji", 
@@ -2570,64 +2572,86 @@ def tampilkan_area_staf():
     ])
 
     with t1:
+        st.write("")
         st.subheader("🚀 Standar Operasional Prosedur")
-        # Nanti kita isi cara editing dll
-        
+        st.caption("Panduan teknis untuk menjaga kualitas produksi Pintar Media.")
+
     with t2:
-        st.write("") 
-        st.subheader("💵 Kalkulator Simulasi Pendapatan")
+        st.write("")
+        st.markdown("##### 💵 Kalkulator Simulasi Pendapatan")
+        st.caption("Geser slider untuk melihat potensi penghasilan jika kamu bekerja konsisten.")
         
         t_hari = st.select_slider(
             "Target setoran video kamu per hari:",
             options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             value=3,
-            key="slider_simulasi_final"
+            key="slider_simulasi_card_v2"
         )
         
         # --- LOGIKA HITUNG (SINKRON ATURAN 2026) ---
         gapok_sim = 1500000
-        hari_efektif = 25
         
         if t_hari >= 3:
-            b_absen_bln = 30000 * hari_efektif 
-            b_video_bln = max(0, (t_hari - 4)) * 30000 * hari_efektif
+            b_absen_bln = 30000 * 25 
+            b_video_bln = max(0, (t_hari - 4)) * 30000 * 25
             p_sp = 0
-            status = "🌟 Performa Sangat Baik" if t_hari >= 5 else "✅ Performa Standar"
+            status_txt = "✨ AMAN" if t_hari >= 5 else "✅ STANDAR"
         elif t_hari == 2:
             b_absen_bln, b_video_bln, p_sp = 0, 0, 0
-            status = "⚠️ Performa Cukup (Aman SP, Tanpa Bonus)"
+            status_txt = "⚠️ CUKUP"
         else:
             b_absen_bln, b_video_bln, p_sp = 0, 0, 1000000
-            status = "❗ Performa Perlu Ditingkatkan (Risiko SP)"
+            status_txt = "🚨 RISIKO SP"
 
         total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
         total_bonus = b_absen_bln + b_video_bln
         
-        st.divider()
-        st.markdown(f"### {status}")
-        
-        c_total, c_bonus = st.columns(2)
-        with c_total:
-            st.metric("ESTIMASI TERIMA", f"Rp {total_gaji:,}")
-        with c_bonus:
-            d_val = f"Cair Rp {total_bonus//hari_efektif:,} / hari" if t_hari >= 3 else None
-            st.metric("POTENSI BONUS", f"Rp {total_bonus:,}", delta=d_val)
-
-        # Spasi sebelum catatan kaki
         st.write("")
-        st.caption(f"Catatan: Estimasi berdasarkan setoran stabil {t_hari} video/hari selama {hari_efektif} hari kerja.")
         
+        # --- BUNGKUS CARD (Model image_149d44.png) ---
+        with st.container(border=True):
+            # Kita bagi jadi 4 kolom biar berjejer horizontal
+            c1, c2, c3, c4 = st.columns([1.2, 1.5, 1.5, 2])
+            
+            with c1:
+                st.caption("📊 STATUS")
+                st.subheader(status_txt)
+                
+            with c2:
+                st.caption("💰 ESTIMASI GAJI")
+                st.subheader(f"Rp {total_gaji:,}")
+                
+            with c3:
+                st.caption("🎁 TOTAL BONUS")
+                st.subheader(f"Rp {total_bonus:,}")
+                if t_hari >= 3:
+                    st.write(f"↑ Rp {total_bonus//25:,}/hr") # Badge kecil bawah
+
+            with c4:
+                st.caption("📢 INFO SISTEM:")
+                if t_hari >= 5:
+                    st.write(f"Mantap! Bonus Absen + Lembur {t_hari-4} Vid cair.")
+                elif t_hari == 4:
+                    st.write("Full Bonus Absen Aktif! 🚀")
+                elif t_hari == 2:
+                    st.write("Aman SP, tapi tanpa bonus.")
+                else:
+                    st.write("Segera naikkan produksi!")
+
+        st.write("")
+        st.caption(f"Catatan: Estimasi berdasarkan setoran stabil {t_hari} video/hari selama 25 hari kerja.")
+
     with t3:
+        st.write("")
         st.subheader("⚠️ Sistem Peringatan & Performa")
-        # Isi aturan Hari Lemah & SP
-        
+
     with t4:
+        st.write("")
         st.subheader("⚖️ Peraturan Umum Perusahaan")
-        # Isi jam kerja, etika, dll
-        
+
     with t5:
+        st.write("")
         st.subheader("📝 Dokumen Kontrak Kerja")
-        # Isi poin-poin NDA & Kontrak
         
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3039,6 +3063,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
