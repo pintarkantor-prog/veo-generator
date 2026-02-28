@@ -2414,20 +2414,38 @@ def tampilkan_kendali_tim():
                 st.divider()
                         
                 if not df_ai.empty:
-                    # 3. TAMPILAN COMPACT 1 BARIS (7 KOLOM + ICON)
+                    # 1. STANDARISASI DATA
                     h_ini = sekarang.date()
+                    df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED']).dt.date
+                    
+                    # 2. LOGIKA PRIORITAS TAMPILAN
+                    def tentukan_prioritas(row):
+                        sisa = (row['EXPIRED_DT'] - h_ini).days
+                        pemakai = str(row['PEMAKAI']).strip().upper()
+                        
+                        # Prioritas 1: Belum Dipakai (Status 'X')
+                        if pemakai == "X": return 1
+                        # Prioritas 2: Otw Expired (Dipakai tapi sisa <= 3 hari)
+                        elif sisa <= 3: return 2
+                        # Prioritas 3: Sudah Dipakai (Ada nama user & sisa > 3 hari)
+                        else: return 3
 
-                    for idx, r in df_ai.iterrows():
-                        tgl_exp = pd.to_datetime(r['EXPIRED']).date()
-                        sisa = (tgl_exp - h_ini).days
+                    df_ai['PRIORITAS'] = df_ai.apply(tentukan_prioritas, axis=1)
+                    
+                    # 3. SORTING: Prioritas dulu, baru Sisa Hari terkecil
+                    df_tampil = df_ai.sort_values(['PRIORITAS', 'EXPIRED_DT']).copy()
+
+                    # 4. LOOPING TAMPILAN CLEAN 8 KOLOM
+                    for idx, r in df_tampil.iterrows():
+                        sisa = (r['EXPIRED_DT'] - h_ini).days
                         
                         if sisa < 0: 
-                            continue 
+                            continue
                         
                         # Penentu Warna Berdasarkan Sisa Hari
-                        if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
-                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
-                        else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
+                        if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
+                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#8B5E3C", "🟠 LIMIT"
+                        else: warna_h, stat_ai = "#633535", "🔴 MATI"
 
                         with st.container(border=True):
                             # HEADER TOOL
@@ -2870,6 +2888,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
