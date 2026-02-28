@@ -2264,22 +2264,35 @@ def tampilkan_kendali_tim():
         rekap_v_total, rekap_b_cair, rekap_b_absen, rekap_h_malas = 0, 0, 0, 0
         performa_staf = {}
 
-        df_staff_filtered = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
+        # --- PROTEKSI UTAMA: CEK APAKAH ADA DATA DI BULAN INI ---
+        if df_t_bln.empty:
+            st.info(f"📭 Belum ada data produksi untuk periode {pilihan_nama} {tahun_dipilih}")
+        else:
+            df_staff_filtered = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
 
-        for idx, s in df_staff_filtered.reset_index().iterrows():
-            n_up = str(s.get('NAMA', '')).strip().upper()
-            if n_up == "" or n_up == "NAN": continue
-            
-            df_a_staf_r = df_a_f[df_a_f['NAMA'] == n_up].copy()
-            df_t_staf_r = df_f_f[df_f_f['STAF'] == n_up].copy()
+            for idx, s in df_staff_filtered.reset_index().iterrows():
+                n_up = str(s.get('NAMA', '')).strip().upper()
+                if n_up == "" or n_up == "NAN": continue
+                
+                # --- AMBIL DATA ABSEN & TUGAS PER STAF ---
+                df_a_staf_r = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
+                
+                # Filter tugas per staf (Pastikan kolomnya STAF hasil standarisasi)
+                if not df_f_f.empty and 'STAF' in df_f_f.columns:
+                    df_t_staf_r = df_f_f[df_f_f['STAF'] == n_up].copy()
+                else:
+                    df_t_staf_r = pd.DataFrame()
 
-            lv_staf_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
-            
-            # Mesin hitung tetep jalan buat dapet status SP & Hari Lemah
-            b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = hitung_logika_performa_dan_bonus(
-                df_t_staf_r, df_a_staf_r, bulan_dipilih, tahun_dipilih,
-                level_target=lv_staf_ini
-            )
+                lv_staf_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
+
+                # --- MESIN HITUNG (Try-Except harus di dalam loop) ---
+                try:
+                    b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = hitung_logika_performa_dan_bonus(
+                        df_t_staf_r, df_a_staf_r, bulan_dipilih, tahun_dipilih,
+                        level_target=lv_staf_ini
+                    )
+                except:
+                    b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = 0, 0, 0, "NORMAL", 0
             
             # --- LOGIKA SINKRONISASI BONUS DARI SUPABASE (CARI DATA REAL) ---
             bonus_real_staf = 0
@@ -3031,5 +3044,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
