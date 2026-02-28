@@ -2424,7 +2424,7 @@ def tampilkan_kendali_tim():
                         tgl_exp = (row['EXPIRED_DT'] - h_ini).days
                         pemakai_str = str(row['PEMAKAI']).strip().upper()
                         if pemakai_str == "X": return 1
-                        elif sisa_hr <= 3: return 2
+                        elif tgl_exp <= 3: return 2
                         else: return 3
 
                     df_ai['PRIORITAS'] = df_ai.apply(tentukan_prioritas, axis=1)
@@ -2884,6 +2884,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
