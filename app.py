@@ -2416,31 +2416,27 @@ def tampilkan_kendali_tim():
                 if not df_ai.empty:
                     # 1. STANDARISASI DATA
                     h_ini = sekarang.date()
-                    df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED']).dt.date
+                    df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                     
-                    # 2. LOGIKA PRIORITAS TAMPILAN
+                    # 2. LOGIKA PRIORITAS TAMPILAN (X > Otw Expired > Sisanya)
                     def tentukan_prioritas(row):
-                        sisa = (row['EXPIRED_DT'] - h_ini).days
-                        pemakai = str(row['PEMAKAI']).strip().upper()
-                        
-                        # Prioritas 1: Belum Dipakai (Status 'X')
-                        if pemakai == "X": return 1
-                        # Prioritas 2: Otw Expired (Dipakai tapi sisa <= 3 hari)
-                        elif sisa <= 3: return 2
-                        # Prioritas 3: Sudah Dipakai (Ada nama user & sisa > 3 hari)
+                        if pd.isna(row['EXPIRED_DT']): return 4 # Data rusak taruh bawah
+                        sisa_hr = (row['EXPIRED_DT'] - h_ini).days
+                        pemakai_str = str(row['PEMAKAI']).strip().upper()
+                        if pemakai_str == "X": return 1
+                        elif sisa_hr <= 3: return 2
                         else: return 3
 
                     df_ai['PRIORITAS'] = df_ai.apply(tentukan_prioritas, axis=1)
-                    
-                    # 3. SORTING: Prioritas dulu, baru Sisa Hari terkecil
                     df_tampil = df_ai.sort_values(['PRIORITAS', 'EXPIRED_DT']).copy()
 
-                    # 4. LOOPING TAMPILAN CLEAN 8 KOLOM
+                    # 3. LOOPING TAMPILAN CLEAN 8 KOLOM
                     for idx, r in df_tampil.iterrows():
+                        # --- DEFINISIKAN SISA DULU SEBELUM DIPAKAI ---
+                        if pd.isna(r['EXPIRED_DT']): continue
                         sisa = (r['EXPIRED_DT'] - h_ini).days
                         
-                        if sisa < 0: 
-                            continue
+                        if sisa < 0: continue # Sembunyikan kalau expired
                         
                         # Penentu Warna Berdasarkan Sisa Hari
                         if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
@@ -2888,6 +2884,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
