@@ -2414,59 +2414,61 @@ def tampilkan_kendali_tim():
                 st.divider()
                         
                 if not df_ai.empty:
-                    # 1. SETUP DATA & SORTING (FOKUS URUTAN DIAN)
+                    # 1. SETUP TANGGAL & PRIORITAS
                     h_ini = sekarang.date()
                     df_ai['TGL_OBJ'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                     
                     def tentukan_urutan(r):
                         if pd.isna(r['TGL_OBJ']): return 4
-                        sisa_hr = (r['TGL_OBJ'] - h_ini).days
-                        pemakai = str(r['PEMAKAI']).strip().upper()
                         
-                        # URUTAN 1: BELUM ADA PEMAKAI
-                        if pemakai == "X": 
+                        sisa_hr = (r['TGL_OBJ'] - h_ini).days
+                        # CEK APAKAH KOLOM PEMAKAI KOSONG (BLANK)
+                        pemakai = str(r['PEMAKAI']).strip()
+                        
+                        # PRIORITAS 1: AKUN KOSONG (BELUM ADA NAMA PEMAKAI)
+                        if pemakai == "" or pemakai.upper() == "X" or pd.isna(r['PEMAKAI']): 
                             return 1
-                        # URUTAN 2: MAU EXPIRED (Ada pemakai & sisa <= 7 hari)
+                        # PRIORITAS 2: AKUN LIMIT (Sisa <= 7 hari)
                         elif sisa_hr <= 7: 
                             return 2
-                        # URUTAN 3: MASIH LAMA (Ada pemakai & sisa > 7 hari)
+                        # PRIORITAS 3: AKUN AMAN (Sisa > 7 hari)
                         else: 
                             return 3
 
                     df_ai['PRIO'] = df_ai.apply(tentukan_urutan, axis=1)
-                    # Sortir berdasarkan Prioritas (1-2-3) kemudian tanggal terdekat
-                    df_sorted = df_ai.sort_values(['PRIO', 'TGL_OBJ']).copy()
+                    
+                    # SORTING BERDASARKAN PRIORITAS (1-2-3)
+                    df_sorted = df_ai.sort_values(by=['PRIO', 'TGL_OBJ'], ascending=[True, True]).copy()
 
-                    # 2. TAMPILAN COMPACT 1 BARIS (Gunakan df_sorted)
+                    # 2. LOOPING TAMPILAN
                     for idx, r in df_sorted.iterrows():
                         tgl_exp = r['TGL_OBJ']
                         if pd.isna(tgl_exp): continue
                         
                         sisa = (tgl_exp - h_ini).days
+                        if sisa < 0: continue 
                         
-                        # Otomatis hilang jika sudah lewat hari (Expired)
-                        if sisa < 0: 
-                            continue 
-                        
-                        # Penentu Warna (Tetap sesuai kode asli lo)
-                        if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
-                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
-                        else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
+                        # Penentu Warna Muted
+                        if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
+                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#8B5E3C", "🟠 LIMIT"
+                        else: warna_h, stat_ai = "#633535", "🔴 MATI"
 
                         with st.container(border=True):
-                            # HEADER TOOL
                             st.markdown(f"""
                                 <div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;">
                                     <b style="color:white; font-size:11px;">🚀 {str(r['AI']).upper()}</b>
                                 </div>
                             """, unsafe_allow_html=True)
 
-                            # 7 KOLOM DENGAN ICON (Kode Asli Lo)
                             c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
                             
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{r['PEMAKAI']}</b>", unsafe_allow_html=True)
+                            
+                            # Tampilkan 'KOSONG' jika memang tidak ada nama
+                            val_user = r['PEMAKAI'] if str(r['PEMAKAI']).strip() != "" else "KOSONG"
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{val_user}</b>", unsafe_allow_html=True)
+                            
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
@@ -2893,6 +2895,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
