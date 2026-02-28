@@ -2580,66 +2580,87 @@ def tampilkan_area_staf():
         st.write("")
         st.markdown("##### 💵 Kalkulator Simulasi Pendapatan")
         st.caption("Geser slider untuk melihat potensi penghasilan jika kamu bekerja konsisten.")
-        
-        t_hari = st.select_slider(
-            "Target setoran video kamu per hari:",
-            options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            value=3,
-            key="slider_simulasi_card_v2"
-        )
-        
+
+        with st.container(border=True):
+            st.markdown("🎯 **SET TARGET HARIAN**")
+            t_hari = st.select_slider(
+                "Geser untuk simulasi potensi penghasilan kamu:",
+                options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                value=3,
+                key="slider_v5_sultan"
+            )
+            st.caption(f"Target terpilih: {t_hari} video per hari selama 25 hari kerja.")
+
+        st.write("")
+
         # --- LOGIKA HITUNG (SINKRON ATURAN 2026) ---
         gapok_sim = 1500000
+        hari_kerja = 25
         
         if t_hari >= 3:
-            b_absen_bln = 30000 * 25 
-            b_video_bln = max(0, (t_hari - 4)) * 30000 * 25
+            b_absen_bln = 30000 * hari_kerja 
+            b_video_bln = max(0, (t_hari - 4)) * 30000 * hari_kerja
             p_sp = 0
-            status_txt = "✨ AMAN" if t_hari >= 5 else "✅ STANDAR"
+            status_txt = "SANGAT BAIK" if t_hari >= 5 else "STANDAR"
+            delta_status = "✨ Optimal" if t_hari >= 5 else "✅ Aman"
         elif t_hari == 2:
             b_absen_bln, b_video_bln, p_sp = 0, 0, 0
-            status_txt = "⚠️ CUKUP"
+            status_txt = "CUKUP"
+            delta_status = "⚠️ No Bonus"
         else:
             b_absen_bln, b_video_bln, p_sp = 0, 0, 1000000
-            status_txt = "🚨 RISIKO SP"
+            status_txt = "RISIKO SP"
+            delta_status = "🚨 Potongan"
 
         total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
         total_bonus = b_absen_bln + b_video_bln
-        
-        st.write("")
-        
-        # --- BUNGKUS CARD (Model image_149d44.png) ---
+        bonus_per_hari = total_bonus // hari_kerja if t_hari >= 3 else 0
+
+        # --- CARD 2: DASHBOARD HASIL (HORIZONTAL & DELTA) ---
         with st.container(border=True):
-            # Kita bagi jadi 4 kolom biar berjejer horizontal
-            c1, c2, c3, c4 = st.columns([1.2, 1.5, 1.5, 2])
+            st.markdown("💰 **ESTIMASI PENDAPATAN BULANAN**")
+            st.write("")
+            
+            # Membagi 3 kolom untuk metric utama
+            c1, c2, c3 = st.columns(3)
             
             with c1:
-                st.caption("📊 STATUS")
-                st.subheader(status_txt)
+                st.metric(
+                    label="STATUS", 
+                    value=status_txt, 
+                    delta=delta_status
+                )
                 
             with c2:
-                st.caption("💰 ESTIMASI GAJI")
-                st.subheader(f"Rp {total_gaji:,}")
+                # Delta gaji dihitung dari selisih dengan gaji pokok saja
+                diff_gaji = total_gaji - gapok_sim
+                st.metric(
+                    label="TOTAL TERIMA", 
+                    value=f"Rp {total_gaji:,}", 
+                    delta=f"+ Rp {diff_gaji:,}" if diff_gaji >= 0 else f"- Rp {abs(diff_gaji):,}"
+                )
                 
             with c3:
-                st.caption("🎁 TOTAL BONUS")
-                st.subheader(f"Rp {total_bonus:,}")
-                if t_hari >= 3:
-                    st.write(f"↑ Rp {total_bonus//25:,}/hr") # Badge kecil bawah
-
-            with c4:
-                st.caption("📢 INFO SISTEM:")
-                if t_hari >= 5:
-                    st.write(f"Mantap! Bonus Absen + Lembur {t_hari-4} Vid cair.")
-                elif t_hari == 4:
-                    st.write("Full Bonus Absen Aktif! 🚀")
-                elif t_hari == 2:
-                    st.write("Aman SP, tapi tanpa bonus.")
-                else:
-                    st.write("Segera naikkan produksi!")
+                st.metric(
+                    label="POTENSI BONUS", 
+                    value=f"Rp {total_bonus:,}", 
+                    delta=f"Rp {bonus_per_hari:,} / hari" if t_hari >= 3 else "Rp 0"
+                )
 
         st.write("")
-        st.caption(f"Catatan: Estimasi berdasarkan setoran stabil {t_hari} video/hari selama 25 hari kerja.")
+
+        # --- CARD 3: PESAN SISTEM DINAMIS ---
+        with st.container(border=True):
+            if t_hari >= 5:
+                st.success(f"🔥 **Mental Juara!** Kamu dapet Bonus Absen + Bonus Lembur {t_hari-4} video setiap hari.")
+            elif t_hari == 4:
+                st.info("💡 **Tips:** Kamu sudah dapet Full Bonus Absen. Tambah 1 video lagi buat aktifin Bonus Lembur!")
+            elif t_hari == 2:
+                st.warning("🧐 **Catatan:** Gaji utuh tanpa potongan, tapi kamu belum berhak atas bonus kehadiran.")
+            else:
+                st.error("🚨 **Bahaya:** Produksi di bawah standar memicu SP dan pemotongan gaji pokok Rp 1.000.000.")
+
+        st.caption("PENTING: Angka di atas adalah simulasi. Hasil akhir tergantung pada laporan absensi dan kualitas video.")
 
     with t3:
         st.write("")
@@ -3063,6 +3084,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
