@@ -45,59 +45,41 @@ def ambil_data_beneran_segar(nama_sheet):
         print(f"GSheet Backup Error: {e}")
         return pd.DataFrame()
 
-# --- 4. FUNGSI UTAMA AMBIL DATA (VERSI FINAL - ANTI PUSING) ---
+import calendar
+
 @st.cache_data(ttl=60) 
 def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
-    """
-    LOGIKA KRAN SELEKTIF: 
-    Menyisir data berdasarkan status & periode agar RAM Web enteng.
-    """
     try:
-        # Penentuan Waktu (Default: Bulan & Tahun Berjalan)
         tz_wib = pytz.timezone('Asia/Jakarta')
         skrg = datetime.now(tz_wib)
         bln = int(bulan_pilihan) if bulan_pilihan else skrg.month
         thn = int(tahun_pilihan) if tahun_pilihan else skrg.year
         
-        # Format filter tanggal (Awal s/d Akhir bulan)
+        # Logika Tanggal Akhir yang Akurat (Anti-Error Februari)
+        last_day = calendar.monthrange(thn, bln)[1]
         tgl_awal = f"{thn}-{bln:02d}-01"
-        tgl_akhir = f"{thn}-{bln:02d}-31" 
+        tgl_akhir = f"{thn}-{bln:02d}-{last_day}" 
 
         query = supabase.table(target).select("*")
         
-        # 1. GUDANG IDE: Sisir status 'Tersedia'
         if target == "Gudang_Ide":
             res = query.eq("STATUS", "Tersedia").order("ID_IDE", desc=True).execute()
-            
-        # 2. TUGAS: Khusus tabel ini pakai kolom 'Deadline' (Sesuai Gambar Kamu)
         elif target == "Tugas":
+            # Pakai Deadline sesuai dashboard kamu
             res = query.gte("Deadline", tgl_awal).lte("Deadline", tgl_akhir).order("id", desc=True).execute()
-            
-        # 3. ARUS KAS & ABSENSI: Pakai kolom 'Tanggal'
         elif target in ["Arus_Kas", "Absensi"]:
             res = query.gte("Tanggal", tgl_awal).lte("Tanggal", tgl_akhir).order("id", desc=True).execute()
-            
-        # 4. LOG AKTIVITAS: Limit 300 saja
         elif target == "Log_Aktivitas":
             res = query.order("Waktu", desc=True).limit(300).execute()
-            
         else:
-            # Tabel Staff tetap ditarik semua
             res = query.execute()
             
         df = pd.DataFrame(res.data)
-        
         if not df.empty:
-            # Hapus kolom id bawaan supabase agar tidak bentrok dengan ID manual
-            if 'id' in df.columns: 
-                df = df.drop(columns=['id'])
+            if 'id' in df.columns: df = df.drop(columns=['id'])
             return bersihkan_data(df)
-        else:
-            # Jika Supabase kosong (mungkin karena filter bulan), coba lari ke GSheet Backup
-            return ambil_data_beneran_segar(target)
-            
+        return ambil_data_beneran_segar(target) # Fallback ke GSheet
     except Exception as e:
-        st.error(f"Gagal Sinkron {target}: {e}")
         return ambil_data_beneran_segar(target)
 
 # --- 5. FUNGSI PEMBERSIH DATA ---
@@ -277,13 +259,19 @@ MASTER_CHAR = {
 # FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP + SUPABASE
 # ==============================================================================
 def log_absen_otomatis(nama_user):
-    # 1. CEK SESSION (Biar nggak bolak-balik nembak database)
+    """Mesin Absen Otomatis: Hanya jalan JIKA sudah login & Belum Absen."""
+    
+    # 1. SATPAM UTAMA: Jangan jalan kalau belum login!
+    if not st.session_state.get('sudah_login', False):
+        return
+
+    # 2. CEK SESSION (Biar nggak bolak-balik nembak database)
     if st.session_state.get('absen_done_today', False):
         return
 
-    # 2. FILTER OWNER / TAMU (KEBAL ABSENSI)
+    # 3. FILTER OWNER / TAMU (KEBAL ABSENSI)
     user_level = st.session_state.get("user_level", "STAFF")
-    if user_level == "OWNER" or nama_user.lower() == "tamu":
+    if user_level == "OWNER" or str(nama_user).lower() == "tamu":
         st.session_state.absen_done_today = True
         return
     
@@ -293,38 +281,29 @@ def log_absen_otomatis(nama_user):
     tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
-    # 3. RANGE JAM OPERASIONAL ABSENSI
+    # 4. RANGE JAM OPERASIONAL ABSENSI
     if 8 <= jam < 22: 
         try:
             nama_up = str(nama_user).upper().strip()
             
-            # --- OPTIMASI: CEK SUPABASE HANYA UNTUK USER INI & HARI INI ---
-            res = supabase.table("Absensi")\
-                .select("id")\
-                .eq("Nama", nama_up)\
-                .eq("Tanggal", tgl_skrg)\
-                .execute()
+            # Cek Supabase untuk user ini & hari ini (Anti-Ganda)
+            res = supabase.table("Absensi").select("id").eq("Nama", nama_up).eq("Tanggal", tgl_skrg).execute()
             
-            sudah_absen = len(res.data) > 0
-            
-            if not sudah_absen:
+            if len(res.data) == 0:
                 # Logika Telat: Lewat jam 10 pagi dianggap telat
                 status_final = "HADIR" if jam < 10 else f"TELAT ({jam_skrg})"
                 
                 # A. SUPABASE (UTAMA)
                 supabase.table("Absensi").insert({
-                    "Nama": nama_up, 
-                    "Tanggal": tgl_skrg, 
-                    "Jam Masuk": jam_skrg, 
-                    "Status": status_final
+                    "Nama": nama_up, "Tanggal": tgl_skrg, "Jam Masuk": jam_skrg, "Status": status_final
                 }).execute()
 
-                # B. GSHEET (BACKUP - JALAN DI BACKGROUND)
+                # B. GSHEET (BACKUP)
                 try:
                     sh = get_gspread_sh() 
                     sheet_absen = sh.worksheet("Absensi")
                     sheet_absen.append_row([nama_up, tgl_skrg, jam_skrg, status_final])
-                except: pass # GSheet error jangan nge-block sistem utama
+                except: pass
                 
                 st.session_state.absen_done_today = True
                 st.toast(f"⏰ Absen Berhasil (Jam {jam_skrg})", icon="✅")
@@ -336,8 +315,7 @@ def log_absen_otomatis(nama_user):
         except Exception as e:
             st.error(f"Sistem Absen Error: {e}")
     else:
-        # Jika login di luar jam kerja, jangan kunci session, biar bisa login tapi diingatkan
-        st.toast(f"Sistem Absen Tutup (Jam {jam_skrg}). Status: Lembur/Akses Malam.", icon="🌙")
+        st.toast(f"Akses Malam/Lembur (Absen Tutup).", icon="🌙")
             
 # ==============================================================================
 # BAGIAN 2: SISTEM KEAMANAN & INISIALISASI DATA (SESSION STATE)
@@ -3030,6 +3008,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
