@@ -1728,28 +1728,26 @@ def tampilkan_tugas_kerja():
             except Exception as e_station:
                 st.error(f"Gagal memuat AI Station: {e_station}")
                 
-    # --- 4. LACI ARSIP (DENGAN FILTER BULAN) ---
+    # --- 4. LACI ARSIP (VERSI SUPABASE TURBO) ---
     with st.expander("📜 RIWAYAT & ARSIP TUGAS", expanded=False):
-        if not df_all_tugas.empty:
-            c_arsip1, c_arsip2 = st.columns([2, 1])
-            daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
-            
-            bln_arsip_nama = c_arsip1.selectbox("📅 Pilih Bulan Riwayat:", list(daftar_bulan.values()), index=sekarang.month - 1, key="sel_bln_arsip")
-            bln_arsip_angka = [k for k, v in daftar_bulan.items() if v == bln_arsip_nama][0]
-            thn_arsip = c_arsip2.number_input("📅 Tahun:", value=sekarang.year, min_value=2024, max_value=2030, key="sel_thn_arsip")
+        c_arsip1, c_arsip2 = st.columns([2, 1])
+        daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
+        
+        bln_arsip_nama = c_arsip1.selectbox("📅 Pilih Bulan Riwayat:", list(daftar_bulan.values()), index=sekarang.month - 1, key="sel_bln_arsip")
+        bln_arsip_angka = [k for k, v in daftar_bulan.items() if v == bln_arsip_nama][0]
+        thn_arsip = c_arsip2.number_input("📅 Tahun:", value=sekarang.year, min_value=2024, max_value=2030, key="sel_thn_arsip")
 
-            # Pastikan konversi tanggal DEADLINE aman
-            df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
+        # --- PERBAIKAN: Panggil data segar berdasarkan pilihan dropdown ---
+        df_laci = ambil_data_segar("Tugas", bulan_pilihan=bln_arsip_angka, tahun_pilihan=thn_arsip)
+        
+        if not df_laci.empty:
+            # Saring berdasarkan Status (Hanya FINISH & CANCELED)
+            df_laci = df_laci[df_laci['STATUS'].isin(['FINISH', 'CANCELED'])]
             
-            # Masking Riwayat
-            mask_arsip = (df_all_tugas['DEADLINE_DT'].dt.month == bln_arsip_angka) & \
-                         (df_all_tugas['DEADLINE_DT'].dt.year == thn_arsip) & \
-                         (df_all_tugas['STATUS'].isin(['FINISH', 'CANCELED']))
-            
-            if user_level == "STAFF":
-                mask_arsip &= (df_all_tugas['STAF'].str.upper() == user_sekarang.upper())
-
-            df_laci = df_all_tugas[mask_arsip].copy()
+            # Saring jika user adalah STAFF
+            if st.session_state.get("user_level") == "STAFF":
+                user_skrg = st.session_state.get("user_aktif", "").upper()
+                df_laci = df_laci[df_laci['STAF'].str.upper() == user_skrg]
 
             if not df_laci.empty:
                 # Statistik
@@ -1757,19 +1755,19 @@ def tampilkan_tugas_kerja():
                 total_c = len(df_laci[df_laci['STATUS'] == "CANCELED"])
                 st.markdown(f"📊 **Laporan {bln_arsip_nama}:** <span style='color:#1d976c;'>✅ {total_f} Selesai</span> | <span style='color:#e74c3c;'>🚫 {total_c} Dibatalkan</span>", unsafe_allow_html=True)
                 
-                df_laci = df_laci.sort_values(by='ID', ascending=False)
+                # Gunakan kolom yang sesuai dengan bersihkan_data (HURUF BESAR)
                 kolom_fix = ['ID', 'STAF', 'INSTRUKSI', 'DEADLINE', 'STATUS', 'CATATAN_REVISI']
                 
-                # Render Dataframe dengan Column Config lo yang udah oke
+                # Render Dataframe
                 st.dataframe(
-                    df_laci[kolom_fix], # Styling ditiadakan sementara jika bikin lemot, atau pake apply di bawah
+                    df_laci.sort_values(by='ID', ascending=False)[kolom_fix],
                     column_config={
-                        "ID": st.column_config.TextColumn("🆔 ID", width="small"),
-                        "STAF": st.column_config.TextColumn("👤 STAF", width="small"),
-                        "INSTRUKSI": st.column_config.TextColumn("📝 JUDUL KONTEN", width="medium"),
-                        "DEADLINE": st.column_config.TextColumn("📅 TGL", width="small"),
-                        "STATUS": st.column_config.TextColumn("🚩 STATUS", width="small"),
-                        "CATATAN_REVISI": st.column_config.TextColumn("📋 KETERANGAN", width="medium")
+                        "ID": st.column_config.TextColumn("🆔 ID"),
+                        "STAF": st.column_config.TextColumn("👤 STAF"),
+                        "INSTRUKSI": st.column_config.TextColumn("📝 JUDUL KONTEN"),
+                        "DEADLINE": st.column_config.TextColumn("📅 TGL"),
+                        "STATUS": st.column_config.TextColumn("🚩 STATUS"),
+                        "CATATAN_REVISI": st.column_config.TextColumn("📋 KETERANGAN")
                     },
                     hide_index=True,
                     use_container_width=True
@@ -3008,6 +3006,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
