@@ -2733,7 +2733,57 @@ def tampilkan_area_staf():
 
     with t4:
         st.write("")
-        st.subheader("⚖️ Peraturan Umum Perusahaan")
+        st.markdown("#### 🤝 Budaya Kerja & Aturan Main Pintar Media")
+        # --- CARD 1: JAM OPERASIONAL & REHAT ---
+        with st.container(border=True):
+            st.markdown("⏰ **WAKTU KERJA & ISTIRAHAT**")
+            c1, c2 = st.columns(2)
+            with c1:
+                st.write("**Jam Operasional:**")
+                st.write("- **Masuk Kantor**: 08.30 WIB (Masuk santai, kerja gaspol!).")
+                st.write("- **Jam Pulang**: 17.00 WIB (Selesaikan target, langsung healing).")
+                st.write("- **Hari Libur**: Minggu & Tanggal Merah Hari Besar (Waktunya istirahat total).")
+            with c2:
+                st.write("**Waktu Rehat:**")
+                st.write("- **Senin - Kamis**: 11.30 - 12.30 WIB.")
+                st.write("- **Jumat**: 11.30 - 13.00 WIB (Biar cowok-cowok tenang ke Masjid).")
+
+        st.write("")
+
+        # --- CARD 2: GAJIAN & PROGRES ---
+        with st.container(border=True):
+            st.markdown("💰 **INFO GAJIAN & PERFORMANCE**")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("TANGGAL GAJIAN", "5", delta="Setiap Bulan", delta_color="normal")
+                st.caption("Gaji pokok & bonus meluncur ke rekening kamu tepat waktu.")
+            with col_b:
+                st.markdown("**Catatan Performa:**")
+                st.write("- **Update Progres**: Wajib lapor ke Admin setiap sore.")
+                st.write("- **Bonus Absen**: Syaratnya cuma satu: Masuk rajin & kerja stabil.")
+
+        st.write("")
+
+        # --- CARD 3: HAL YANG JANGAN DILAKUKAN (THE DON'TS) ---
+        with st.container(border=True):
+            st.markdown("🚫 **YANG JANGAN DILAKUKAN (BIAR SAMA-SAMA ENAK)**")
+            st.write("- **Toxic Vibes**: No drama, no gibah. Kita fokus jadi tim konten terkuat.")
+            st.write("- **Ghosting**: Izin itu penting. Jangan tiba-tiba ngilang pas lagi dibutuhin.")
+            st.write("- **Mager Parah**: Inget, setor cuma 1 video itu statusnya **HARI LEMAH**.")
+            st.write("- **Password Hunter**: Akun premium dipake bareng, dilarang ganti password sendiri!")
+
+        st.write("")
+
+        # --- CARD 4: KONSEKUENSI SANTAI TAPI TEGAS ---
+        with st.container(border=True):
+            st.error("🚨 **POTONGAN HARI LEMAH**")
+            st.write("""
+            Kalau performa kamu drop (cuma setor 1 video ACC/hari), otomatis sistem hitung sebagai **HARI LEMAH** (Potongan Rp 1.000.000). 
+            Aturan ini dibuat biar adil buat temen-temen kamu yang berjuang bikin konten keren setiap hari. Yuk, saling support!
+            """)
+
+        st.write("")
+        st.markdown(f"> *'Di Pintar Media, kita keluarga. Tapi keluarga yang profesional ya!'* — **Dian**")
 
     with t5:
         st.write("")
@@ -3149,6 +3199,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
