@@ -2128,12 +2128,12 @@ def tampilkan_kendali_tim():
             if n_up == "" or n_up == "NAN": continue
             
             # --- FIX: Proteksi filter agar Maret tidak error ---
-            df_a_staf_r = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
-            df_t_staf_r = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
+            df_a_staf_r = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame(columns=['NAMA', 'TANGGAL'])
+            df_t_staf_r = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame(columns=['STAF', 'STATUS'])
 
             lv_staf_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
             
-            # Mesin hitung tetep jalan
+            # Mesin hitung tetep jalan dengan pengaman
             try:
                 b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = hitung_logika_performa_dan_bonus(
                     df_t_staf_r, df_a_staf_r, bulan_dipilih, tahun_dipilih,
@@ -2142,14 +2142,18 @@ def tampilkan_kendali_tim():
             except:
                 b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = 0, 0, 0, "NORMAL", 0
             
-            # --- LOGIKA SINKRONISASI BONUS DARI SUPABASE ---
+            # --- LOGIKA SINKRONISASI BONUS DARI KAS (LIVE) ---
             bonus_real_staf = 0
             if not df_kas.empty:
-                df_kas['NOMINAL_INT'] = pd.to_numeric(df_kas['NOMINAL'], errors='coerce').fillna(0)
-                mask_staf_kas = (df_kas['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                (df_kas['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
-                                (pd.to_datetime(df_kas['TANGGAL'], dayfirst=True, errors='coerce').dt.month == bulan_dipilih)
-                bonus_real_staf = df_kas[mask_staf_kas]['NOMINAL_INT'].sum()
+                df_kas_temp = df_kas.copy()
+                df_kas_temp['NOMINAL_INT'] = pd.to_numeric(df_kas_temp['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
+                
+                # Filter Periode & Nama Staf
+                mask_staf_kas = (df_kas_temp['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                                (df_kas_temp['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
+                                (pd.to_datetime(df_kas_temp['TANGGAL'], errors='coerce').dt.month == bulan_dipilih)
+                
+                bonus_real_staf = df_kas_temp[mask_staf_kas]['NOMINAL_INT'].sum()
             
             jml_v = len(df_t_staf_r)
             rekap_v_total += jml_v
@@ -2173,7 +2177,7 @@ def tampilkan_kendali_tim():
                 
             warna_bg = "#1d976c" if level_sp_r == "NORMAL" or "PROTEKSI" in level_sp_r else "#f39c12" if level_sp_r == "SP 1" else "#e74c3c"
 
-            # --- TAMPILAN CARD (Gaya Lu Tetep Sama) ---
+            # --- TAMPILAN CARD ---
             with kolom_card[idx % 4]:
                 with st.container(border=True):
                     st.markdown(f'<div style="text-align:center; padding:5px; background:{warna_bg}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;"><b style="color:white; font-size:14px;">{n_up}</b></div>', unsafe_allow_html=True)
@@ -2192,7 +2196,9 @@ def tampilkan_kendali_tim():
                     det1.markdown(f"<p style='margin:5px 0 0 0; font-size:10px; color:#888;'>✨ HARI CAIR</p><b style='font-size:12px;'>{h_cair} Hari</b>", unsafe_allow_html=True)
                     det2.markdown(f"<p style='margin:5px 0 0 0; font-size:10px; color:#888;'>💰 TOTAL BONUS</p><b style='font-size:12px; color:#1d976c;'>Rp {int(bonus_real_staf):,}</b>", unsafe_allow_html=True)
                     
-                    st.progress(min(h_lemah_staf / 7, 1.0))
+                    # Progress bar pengaman (Max 1.0)
+                    prog_val = min(h_lemah_staf / 7, 1.0) if h_lemah_staf > 0 else 0.0
+                    st.progress(prog_val)
                     
         # ======================================================================
         # --- 5. RANGKUMAN KOLEKTIF TIM (VERSI FIX BONUS VIDEO & LEMBUR) ---
@@ -2883,6 +2889,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
