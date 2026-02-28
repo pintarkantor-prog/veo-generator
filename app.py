@@ -104,21 +104,29 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Fungsi sakti untuk mencatat semua gerakan staff ke GSheet"""
+    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
     try:
-        sh = get_gspread_sh()
-        ws_log = sh.worksheet("Log_Aktivitas")
-        
-        # Atur waktu WIB
         tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+        waktu_skrg_iso = datetime.now(tz_wib).isoformat() # Format standar database
+        waktu_skrg_tampil = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
         
-        # Kirim ke GSheet (Kolom: Waktu, Nama, Aksi)
-        ws_log.append_row([waktu_skrg, str(user).upper(), aksi])
-    except Exception as e:
-        # Cukup tampilkan di terminal/console biar user gak panik
-        print(f"Gagal mencatat log: {e}")
+        # 1. KIRIM KE SUPABASE (Cepat untuk dibaca di web)
+        supabase.table("Log_Aktivitas").insert({
+            "Waktu": waktu_skrg_iso,
+            "Nama": str(user).upper(),
+            "Aksi": aksi
+        }).execute()
 
+        # 2. KIRIM KE GSHEET (Backup pasif)
+        try:
+            sh = get_gspread_sh()
+            ws_log = sh.worksheet("Log_Aktivitas")
+            ws_log.append_row([waktu_skrg_tampil, str(user).upper(), aksi])
+        except: pass 
+
+    except Exception as e:
+        print(f"Gagal mencatat log: {e}")
+        
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
 # ==============================================================================
@@ -825,7 +833,7 @@ def tampilkan_ai_lab():
 
     # MODE MANUAL
     with tab_manual:
-        with st.expander("📝 KONFIGURASI MANUAL", expanded=True):
+        with st.expander("📝 KONFIGURASI MANUAL", expanded=True)
             col_m1, col_m2 = st.columns([2, 1])
             with col_m1:
                 st.markdown("**📝 Topik Utama**")
@@ -3020,6 +3028,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
