@@ -78,7 +78,14 @@ def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
         if not df.empty:
             if 'id' in df.columns: df = df.drop(columns=['id'])
             return bersihkan_data(df)
-        return ambil_data_beneran_segar(target) # Fallback ke GSheet
+        
+        # JIKA SUPABASE KOSONG: 
+        # Cek apakah ini pencarian bulan spesifik? 
+        # Kalau iya, jangan asal lari ke GSheet (kecuali GSheet-nya juga disaring)
+        if bulan_pilihan:
+            return pd.DataFrame() # Kembalikan kosong agar muncul 'st.info'
+            
+        return ambil_data_beneran_segar(target) 
     except Exception as e:
         return ambil_data_beneran_segar(target)
 
@@ -3006,6 +3013,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
