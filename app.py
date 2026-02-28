@@ -2422,76 +2422,58 @@ def tampilkan_kendali_tim():
                         if pd.isna(r['TGL_OBJ']): return 4
                         
                         sisa_hr = (r['TGL_OBJ'] - h_ini).days
+                        # CEK APAKAH KOLOM PEMAKAI KOSONG (BLANK)
+                        pemakai = str(r['PEMAKAI']).strip()
                         
-                        # --- LOGIKA PENENTU KOSONG (LEBIH GALAK) ---
-                        val_pemakai = str(r.get('PEMAKAI', '')).strip()
-                        
-                        # Cek: Apakah NaN, apakah string kosong, atau cuma spasi
-                        is_kosong = pd.isna(r['PEMAKAI']) or val_pemakai == "" or val_pemakai.upper() == "X"
-                        
-                        # PRIORITAS 1: BENAR-BENAR KOSONG (Contoh: lisaluk80)
-                        if is_kosong: 
+                        # PRIORITAS 1: AKUN KOSONG (BELUM ADA NAMA PEMAKAI)
+                        if pemakai == "" or pemakai.upper() == "X" or pd.isna(r['PEMAKAI']): 
                             return 1
-                        # PRIORITAS 2: MAU EXPIRED (Ada pemakai & sisa <= 7 hari)
+                        # PRIORITAS 2: AKUN LIMIT (Sisa <= 7 hari)
                         elif sisa_hr <= 7: 
                             return 2
-                        # PRIORITAS 3: MASIH LAMA (Ada pemakai & sisa > 7 hari)
+                        # PRIORITAS 3: AKUN AMAN (Sisa > 7 hari)
                         else: 
                             return 3
 
-                    # Terapkan skoring
                     df_ai['PRIO'] = df_ai.apply(tentukan_urutan, axis=1)
                     
-                    # SORTING: Prioritas (1-2-3), lalu Tanggal Expired (Paling Dekat di atas)
+                    # SORTING BERDASARKAN PRIORITAS (1-2-3)
                     df_sorted = df_ai.sort_values(by=['PRIO', 'TGL_OBJ'], ascending=[True, True]).copy()
 
-                    # 2. LOOPING TAMPILAN (Gunakan df_sorted)
+                    # 2. LOOPING TAMPILAN
                     for idx, r in df_sorted.iterrows():
                         tgl_exp = r['TGL_OBJ']
                         if pd.isna(tgl_exp): continue
                         
                         sisa = (tgl_exp - h_ini).days
-                        if sisa < 0: continue # Sembunyikan yang sudah lewat
+                        if sisa < 0: continue 
                         
-                        # Penentu Warna Muted (Deep Forest & Burnt Orange)
+                        # Penentu Warna Muted
                         if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
                         elif 0 <= sisa <= 7: warna_h, stat_ai = "#8B5E3C", "🟠 LIMIT"
                         else: warna_h, stat_ai = "#633535", "🔴 MATI"
 
                         with st.container(border=True):
-                            # HEADER TOOL (Gaya Original Dian)
                             st.markdown(f"""
                                 <div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;">
                                     <b style="color:white; font-size:11px;">🚀 {str(r['AI']).upper()}</b>
                                 </div>
                             """, unsafe_allow_html=True)
 
-                            # 7 KOLOM SEJAJAR
                             c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
                             
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             
-                            # TAMPILAN USER (Kasih tanda 🆕 biar mencolok kalau kosong)
-                            val_user = str(r['PEMAKAI']).strip()
-                            is_null = pd.isna(r['PEMAKAI']) or val_user == "" or val_user.upper() == "X"
-                            user_display = "" if is_null else r['PEMAKAI']
+                            # Tampilkan 'KOSONG' jika memang tidak ada nama
+                            val_user = r['PEMAKAI'] if str(r['PEMAKAI']).strip() != "" else "KOSONG"
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{val_user}</b>", unsafe_allow_html=True)
                             
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{user_display}</b>", unsafe_allow_html=True)
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
-                            # Tombol Reset
                             if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
-                                try:
-                                    cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
-                                    if cell_target:
-                                        ws_akun.update_cell(cell_target.row, 5, "X")
-                                        ws_akun.update_cell(cell_target.row, 6, "")
-                                        st.success(f"✅ Reset!"); time.sleep(1); st.rerun()
-                                except Exception as e:
-                                    st.error(f"Gagal: {e}")
                 else:
                     st.info("Belum ada data akun AI.")
 
@@ -2905,6 +2887,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
