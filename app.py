@@ -422,23 +422,28 @@ def proses_login(user, pwd):
         st.error(f"Sistem Login Error: {e}")
 
 def tampilkan_halaman_login():
-    st.markdown("<br>", unsafe_allow_html=True)
-    # --- TETAP PAKE KOLOM BIAR DI TENGAH ---
-    col_l, col_m, col_r = st.columns([2, 1, 2]) 
-    with col_m:
-        try:
-            st.image("PINTAR.png", use_container_width=True)
-        except:
-            st.markdown("<h2 style='text-align: center; color: #1d976c;'>PINTAR MEDIA</h2>", unsafe_allow_html=True)
+    # Gunakan Container agar tidak berantakan di HP
+    with st.container():
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        col_l, col_m, col_r = st.columns([1.5, 1, 1.5]) 
         
-        with st.form("login_station"):
-            # Username otomatis dikecilin pas ngetik buat kenyamanan, tapi di proses jadi GEDE
-            u = st.text_input("Username", placeholder="Username...", key="login_user").lower()
-            p = st.text_input("Password", type="password", placeholder="Password...", key="login_pass")
-            submit = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True)
-            if submit: 
-                proses_login(u, p)
-        st.markdown("<p style='text-align: center; color: #484f58; font-size: 11px; margin-top: 15px;'>Secure Access - PINTAR MEDIA</p>", unsafe_allow_html=True)
+        with col_m:
+            try:
+                st.image("PINTAR.png", use_container_width=True)
+            except:
+                st.markdown("<h2 style='text-align:center;'>PINTAR MEDIA</h2>", unsafe_allow_html=True)
+            
+            # Key unik agar tidak bentrok
+            with st.form("login_station", clear_on_submit=False):
+                u = st.text_input("Username", placeholder="Username...", key="input_u").lower()
+                p = st.text_input("Password", type="password", placeholder="Password...", key="input_p")
+                submit = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True)
+                
+                if submit: 
+                    if u.strip() and p.strip():
+                        proses_login(u, p)
+                    else:
+                        st.warning("Isi dulu Bos!")
 
 def cek_autentikasi():
     if st.session_state.get('sudah_login', False):
@@ -3019,6 +3024,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
