@@ -2114,40 +2114,16 @@ def tampilkan_kendali_tim():
         # 5. UI ANALISIS KEUANGAN
         total_out_riil = float(total_gp_tim + bonus_kas_raw + ops_raw)
         saldo_riil = float(inc_raw - total_out_riil)
-        
-        # ======================================================================
-        # --- UI: FINANCIAL COMMAND CENTER (CUSTOM LAYOUT) ---
-        # ======================================================================
+
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
-            
-            # --- FIX TIPE DATA FINANSIAL SEBELUM TAMPIL ---
-            inc_val = float(inc)
-            # Pastikan bonus terbayar dan ops sudah angka murni
-            bonus_val = float(bonus_terbayar_kas) if bonus_terbayar_kas else 0
-            ops_val = float(ops) if ops else 0
-            
-            # Outcome total gabungan (Riil)
-            total_out_riil = total_gaji_pokok_tim + bonus_val + ops_val
-            saldo_riil = inc_val - total_out_riil
-            
-            # --- METRIK UTAMA ---
             m1, m2, m3, m4 = st.columns(4)
+            # Proteksi f-string terakhir
+            m1.metric("💰 INCOME", f"Rp {inc_raw:,.0f}")
+            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}")
+            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta="SURPLUS" if saldo_riil >= 0 else "DEFISIT")
             
-            m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
-            
-            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", 
-                      delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, 
-                      delta_color="normal")
-            
-            status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
-            warna_delta = "normal" if saldo_riil >= 0 else "inverse"
-            
-            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", 
-                      delta=status_saldo,
-                      delta_color=warna_delta)
-            
-            margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
-            m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
+            margin = (saldo_riil / inc_raw * 100) if inc_raw > 0 else 0.0
+            m4.metric("📊 MARGIN", f"{margin:.1f}%")
 
             st.divider()
             
@@ -3004,6 +2980,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
