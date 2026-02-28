@@ -1342,9 +1342,10 @@ def tampilkan_tugas_kerja():
                 else:
                     status_ikon, msg = "✨ AMAN", "Performa mantap! Pertahankan."
 
-            # --- RENDER RADAR UI ---
+            # --- RENDER RADAR UI (5 KOLOM) ---
             with wadah_radar.container(border=True):
-                c1, c2, c3, c4 = st.columns([1, 1, 1, 1.5])
+                # Kita bagi menjadi 5 kolom agar muat semua metrik
+                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.5])
                 
                 with c1:
                     st.metric("📊 STATUS", status_ikon)
@@ -1356,23 +1357,34 @@ def tampilkan_tugas_kerja():
                         delta=f"{tampil_h_kurang} hari" if tampil_h_kurang > 0 else None,
                         delta_color="inverse"
                     )
-                
-                with c3:
-                    # Pastikan variabel ini jadi angka murni (int)
-                    # Kita kasih fallback 0 kalau datanya None atau kosong
-                    try:
-                        angka_bonus = int(total_semua_bonus) if total_semua_bonus else 0
-                    except:
-                        angka_bonus = 0
 
+                with c3:
+                    # MENGHITUNG TOTAL VIDEO STATUS FINISH BULAN INI
+                    total_vid_finish = len(df_arsip_user) # Data ini sudah difilter mask_bulan & FINISH
                     st.metric(
-                        "💰 TOTAL BONUS", 
-                        f"Rp {angka_bonus:,}", # Sekarang pasti aman karena udah jadi Integer
-                        delta="LIVE SYNC",
+                        "🎬 VIDEO JADI",
+                        f"{total_vid_finish} Vid",
+                        delta="Bulan Ini",
                         delta_color="normal"
                     )
                 
                 with c4:
+                    # PECAH DATA DARI ARUS KAS (Sesuai ralat 30rb)
+                    mask_vid = mask_bonus_real & df_kas_all['KETERANGAN'].str.upper().str.contains('VIDEO', na=False)
+                    mask_abs = mask_bonus_real & df_kas_all['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)
+                    
+                    cair_vid = pd.to_numeric(df_kas_all[mask_vid]['NOMINAL'], errors='coerce').sum()
+                    cair_abs = pd.to_numeric(df_kas_all[mask_abs]['NOMINAL'], errors='coerce').sum()
+                    total_semua = cair_vid + cair_abs
+
+                    st.metric(
+                        "💰 TOTAL BONUS", 
+                        f"Rp {int(total_semua):,}",
+                        delta=f"V: {int(cair_vid/1000)}k | A: {int(cair_abs/1000)}k",
+                        delta_color="normal"
+                    )
+                
+                with c5:
                     st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
                     st.write(f"📢 **INFO {target_user}:** \n\n {msg}")
 
@@ -2821,6 +2833,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
