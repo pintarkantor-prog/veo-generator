@@ -1797,87 +1797,6 @@ def tampilkan_tugas_kerja():
             # Jika benar-benar kosong atau tidak ada yang FINISH/CANCELED
             st.info(f"📭 Tidak ada riwayat tugas pada {bln_arsip_nama} {thn_arsip}.")
                 
-        # --- TAMPILAN ATURAN GAJI (VERSI REVISI FINAL - KONSISTENSI) ---
-        with st.expander("ℹ️ INFO PENTING: ATURAN & SIMULASI GAJI", expanded=False):
-            st.write("### 📢 Panduan Kerja & Simulasi Penghasilan")
-            
-            tab_info, tab_simulasi = st.tabs(["📜 Aturan Dasar & SP", "💸 Simulasi Harian"])
-            
-            with tab_info:
-                st.markdown("""
-                Selamat bekerja! Agar penghasilan kamu maksimal, mohon perhatikan aturan berikut:
-                
-                * ⏰ **Bonus Kehadiran:** Tambahan **Rp 30.000** diberikan setiap hari jika kamu menyelesaikan minimal **3 video** (FINISH).
-                * 🎬 **Apresiasi Produksi (Video):** Bonus tambahan **Rp 30.000** per video baru mulai diberikan pada **video ke-5** dan seterusnya dalam satu hari.
-                * ⚠️ **Batas Minimal Bonus:** Jika hanya menyelesaikan **2 video** sehari, status **Aman**, namun Bonus Kehadiran & Video **TIDAK CAIR**.
-                * 📌 **Penting:** Perhitungan bonus dilakukan secara harian. Mari jaga konsistensi setiap hari agar bonus tidak terlewat.
-                
-                ---
-                #### 🛡️ Mengenal Sistem Performa (SP)
-                Sistem ini bertujuan untuk menjaga produktivitas tim agar tetap stabil:
-                
-                1. **Masa Proteksi:** Tanggal 1 sampai 6 tiap bulan adalah masa adaptasi, kamu aman dari penilaian SP.
-                2. **Hari Kurang Produkif:** Jika dalam satu hari hanya menyelesaikan **0 atau 1 video**, hari tersebut dicatat sebagai 'Hari Kurang Produktif'.
-                3. **Akumulasi SP:**
-                    * **SP 1 (7 Hari):** Jika dalam sebulan terdapat 7 hari kurang produktif (Potongan Rp 300.000).
-                    * **SP 2 (14 Hari):** Jika mencapai 14 hari kurang produktif (Potongan Rp 700.000).
-                    * **SP 3 (21 Hari):** Jika mencapai 21 hari kurang produktif (Potongan Rp 1.000.000 + Pemutusan Kerja).
-                """)
-                st.info("💡 *Tips: Setor minimal 3 video setiap hari untuk mengaktifkan semua bonus Absensi!*")
-
-            with tab_simulasi:
-                st.write("**Geser slider untuk melihat potensi penghasilan jika kamu bekerja konsisten:**")
-                
-                t_hari = st.select_slider(
-                    "Target setoran video kamu per hari:",
-                    options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                    value=3,
-                    key="slider_final_v4"
-                )
-                
-                # --- LOGIKA HITUNG SIMULASI (SINKRON ATURAN 2026) ---
-                gapok_sim = 1500000
-                jml_hari_kerja = 25 # Asumsi standar sebulan
-                
-                if t_hari >= 3:
-                    # 1. Uang Absen: 30rb per hari
-                    b_absen_bln = 30000 * jml_hari_kerja 
-                    
-                    # 2. Bonus Video: Mulai video ke-5 (t_hari - 4) x 30rb
-                    b_video_per_hari = max(0, (t_hari - 4)) * 30000
-                    b_video_bln = b_video_per_hari * jml_hari_kerja
-                    
-                    p_sp = 0
-                    status = "🌟 Performa Sangat Baik" if t_hari >= 5 else "✅ Performa Standar"
-                elif t_hari == 2:
-                    b_absen_bln, b_video_bln, p_sp = 0, 0, 0
-                    status = "⚠️ Performa Cukup (Aman SP, Tanpa Bonus)"
-                else:
-                    b_absen_bln, b_video_bln = 0, 0
-                    # Simulasi SP 3 jika setiap hari cuma 1 video
-                    p_sp = 1000000 
-                    status = "❗ Performa Perlu Ditingkatkan (Risiko SP 3)"
-
-                total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
-                
-                st.divider()
-                st.markdown(f"<h4 style='text-align:center;'>Status: {status}</h4>", unsafe_allow_html=True)
-                
-                c1, c2, c3 = st.columns(3)
-                c1.metric("GAJI POKOK", f"Rp {gapok_sim:,}")
-                c2.metric("TOTAL BONUS", f"Rp {b_absen_bln + b_video_bln:,}", 
-                          delta=f"Rp {(b_absen_bln + b_video_bln)//jml_hari_kerja:,} /hr" if t_hari >= 3 else None)
-                c3.metric("POTONGAN SP", f"Rp {p_sp:,}", delta="Waspada!" if p_sp > 0 else None, delta_color="inverse")
-
-                st.subheader(f"Estimasi Terima: Rp {total_gaji:,}")
-                # Tambahan di bawah subheader Estimasi Terima
-                kenaikan = total_gaji - gapok_sim
-                if kenaikan > 0:
-                    persen_bonus = (kenaikan / gapok_sim) * 100
-                    st.write(f"🔥 Kamu berpotensi dapet tambahan **{persen_bonus:.1f}%** dari gaji pokokmu!")
-
-                st.caption(f"Catatan: Estimasi berdasarkan setoran stabil {t_hari} video/hari selama 25 hari kerja.")
-                
 def tampilkan_kendali_tim():    
     user_level = st.session_state.get("user_level", "STAFF")
 
@@ -2881,6 +2800,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
