@@ -1723,25 +1723,48 @@ def tampilkan_tugas_kerja():
                     bisa_klaim = False
                     st.warning("🚫 Limit 3 akun aktif tercapai. Tunggu akun lama expired.")
 
+                # --- GANTI BAGIAN INI (Step 3) ---
                 if c_btn.button("🔓 KLAIM AKUN", use_container_width=True, disabled=not bisa_klaim):
-                    target = df_stok[df_stok['AI'] == pilihan_ai].sample(1)
-                    email_target = str(target.iloc[0]['EMAIL']).strip()
-                    
-                    try:
-                        cell = ws_akun.find(email_target, in_column=2)
-                        if cell:
-                            # Update ke GSheet (Kolom 5=Pemakai, 6=Tgl Klaim)
-                            ws_akun.update_cell(cell.row, 5, user_up) 
-                            ws_akun.update_cell(cell.row, 6, h_ini.strftime("%Y-%m-%d"))
+                    # 1. CEK LOCK (Supaya tidak double click saat internet lag)
+                    if f"lock_ai_{user_up}" in st.session_state:
+                        st.warning("Sabar Bos, lagi diproses...")
+                    else:
+                        st.session_state[f"lock_ai_{user_up}"] = True
+                        
+                        try:
+                            # 2. AMBIL STOK PERTAMA (Ganti .sample(1) jadi .iloc[0])
+                            # Ini penting supaya kalau Icha & Nissa barengan, gak dapet email yang sama
+                            target_df = df_stok[df_stok['AI'] == pilihan_ai]
                             
-                            kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
-                            tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
-                            
-                            st.success(f"Akun {pilihan_ai} Berhasil Diklaim!")
-                            time.sleep(1)
-                            st.rerun()
-                    except Exception as e:
-                        st.error(f"Gagal Update GSheet: {e}")
+                            if not target_df.empty:
+                                target = target_df.iloc[0] 
+                                email_target = str(target['EMAIL']).strip()
+                                
+                                # 3. PROSES KE GSHEET
+                                cell = ws_akun.find(email_target, in_column=2)
+                                if cell:
+                                    ws_akun.update_cell(cell.row, 5, user_up) 
+                                    ws_akun.update_cell(cell.row, 6, h_ini.strftime("%Y-%m-%d"))
+                                    
+                                    # Kirim Notif & Log
+                                    kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
+                                    tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
+                                    
+                                    st.success(f"Berhasil! Akun {pilihan_ai} sekarang milikmu.")
+                                    
+                                    # 4. BERSIHKAN LOCK & REFRESH
+                                    del st.session_state[f"lock_ai_{user_up}"]
+                                    time.sleep(1)
+                                    st.rerun()
+                            else:
+                                st.error("Yah, barusan diambil orang lain. Coba tool lain ya!")
+                                del st.session_state[f"lock_ai_{user_up}"]
+                                
+                        except Exception as e:
+                            # Lepas lock kalau error biar bisa coba lagi
+                            if f"lock_ai_{user_up}" in st.session_state:
+                                del st.session_state[f"lock_ai_{user_up}"]
+                            st.error(f"Gagal klaim: {e}")
 
                 # 4. DAFTAR KOLEKSI (Tampilan 3 Kolom Premium Lo)
                 if akun_aktif_user:
@@ -2833,6 +2856,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
