@@ -833,7 +833,7 @@ def tampilkan_ai_lab():
 
     # MODE MANUAL
     with tab_manual:
-        with st.expander("📝 KONFIGURASI MANUAL", expanded=True)
+        with st.expander("📝 KONFIGURASI MANUAL", expanded=True):
             col_m1, col_m2 = st.columns([2, 1])
             with col_m1:
                 st.markdown("**📝 Topik Utama**")
