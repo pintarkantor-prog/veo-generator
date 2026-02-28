@@ -2591,12 +2591,12 @@ def tampilkan_area_staf():
             with st.container(border=True):
                 st.markdown("🎯 **SET TARGET PRODUKSI HARIAN**")
                 t_hari = st.select_slider(
-                    "Geser untuk simulasi pendapatan harian kamu: (status video finish / acc )",
+                    "Geser untuk simulasi pendapatan harian kamu:",
                     options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     value=3,
                     key="slider_editor_final"
                 )
-            
+                st.warning("⚠️ **STANDAR KUALITAS:** Hanya video dengan status **ACC/FINISH** yang masuk dalam perhitungan performa harian.")
             # --- LOGIKA HITUNG EDITOR ---
             gapok_sim = 1500000
             hari_kerja = 25
@@ -3076,6 +3076,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
