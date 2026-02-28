@@ -2491,14 +2491,13 @@ def tampilkan_kendali_tim():
                                         st.success(f"✅ Berhasil Reset!"); time.sleep(0.5); st.rerun()
                                 except Exception as e:
                                     st.error(f"Gagal: {e}")
-                                
-                     else:
-                         st.info("Belum ada data akun AI.")
+                else:
+                    # ELSE UNTUK DF_AI EMPTY
+                    st.info("📭 Belum ada data akun AI di database.")
 
             except Exception as e_ai:
                 st.error(f"Gagal memuat Database Akun AI: {e_ai}")
 
-    # --- PENUTUP TRY UTAMA (Sangat Penting! Sejajar dengan 'try' di awal fungsi) ---
     except Exception as e:
         st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
         
@@ -2905,5 +2904,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
