@@ -2574,54 +2574,54 @@ def tampilkan_area_staf():
         # Nanti kita isi cara editing dll
         
     with t2:
-    st.subheader("💵 Kalkulator Simulasi Pendapatan")    
-    # --- INPUT USER ---
-    c1, c2 = st.columns(2)
-    with c1:
-        jumlah_video = st.slider("Target Video Per Hari", 1, 10, 3)
-        hari_kerja = st.number_input("Jumlah Hari Kerja Sebulan", 1, 31, 26)
+        st.subheader("💵 Kalkulator Simulasi Pendapatan")    
+        # --- INPUT USER ---
+        c1, c2 = st.columns(2)
+        with c1:
+            jumlah_video = st.slider("Target Video Per Hari", 1, 10, 3)
+            hari_kerja = st.number_input("Jumlah Hari Kerja Sebulan", 1, 31, 26)
     
-    # --- LOGIKA HITUNG (Sesuaikan dengan Rumus Lo) ---
-    # Misal: Gaji Pokok (GP) + (Bonus per Video * Total Video)
-    gp = 1500000  # Contoh Gaji Pokok
-    bonus_per_video = 5000 # Contoh Bonus per Video
-    total_video = jumlah_video * hari_kerja
-    total_bonus = total_video * bonus_per_video
-    estimasi_total = gp + total_bonus
+        # --- LOGIKA HITUNG (Sesuaikan dengan Rumus Lo) ---
+        # Misal: Gaji Pokok (GP) + (Bonus per Video * Total Video)
+        gp = 1500000  # Contoh Gaji Pokok
+        bonus_per_video = 5000 # Contoh Bonus per Video
+        total_video = jumlah_video * hari_kerja
+        total_bonus = total_video * bonus_per_video
+        estimasi_total = gp + total_bonus
 
-    st.markdown("---")
+        st.markdown("---")
 
-    # --- MODEL V-CARD (KARTU VISUAL) ---
-    st.markdown(f"""
-    <div style="background-color: #1E1E1E; padding: 25px; border-radius: 15px; border-left: 8px solid #00FFCC; box-shadow: 2px 2px 15px rgba(0,0,0,0.3);">
-        <h3 style="color: #00FFCC; margin-bottom: 5px;">💳 ESTIMASI GAJI BULANAN</h3>
-        <p style="color: #AAAAAA; font-size: 14px; margin-bottom: 20px;">Berdasarkan performa input harian</p>
+        # --- MODEL V-CARD (KARTU VISUAL) ---
+        st.markdown(f"""
+        <div style="background-color: #1E1E1E; padding: 25px; border-radius: 15px; border-left: 8px solid #00FFCC; box-shadow: 2px 2px 15px rgba(0,0,0,0.3);">
+            <h3 style="color: #00FFCC; margin-bottom: 5px;">💳 ESTIMASI GAJI BULANAN</h3>
+            <p style="color: #AAAAAA; font-size: 14px; margin-bottom: 20px;">Berdasarkan performa input harian</p>
         
-        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-            <span style="color: white;">Gaji Pokok (Tetap)</span>
-            <span style="color: white; font-weight: bold;">Rp {gp:,.0f}</span>
-        </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: white;">Gaji Pokok (Tetap)</span>
+                <span style="color: white; font-weight: bold;">Rp {gp:,.0f}</span>
+            </div>
         
-        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-            <span style="color: white;">Total Produksi Video</span>
-            <span style="color: #FFCC00; font-weight: bold;">{total_video} Video</span>
-        </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: white;">Total Produksi Video</span>
+                <span style="color: #FFCC00; font-weight: bold;">{total_video} Video</span>
+            </div>
         
-        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
-            <span style="color: white;">Bonus Produksi (Rp {bonus_per_video:,.0f}/vid)</span>
-            <span style="color: #00FFCC; font-weight: bold;">+ Rp {total_bonus:,.0f}</span>
-        </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">
+                <span style="color: white;">Bonus Produksi (Rp {bonus_per_video:,.0f}/vid)</span>
+                <span style="color: #00FFCC; font-weight: bold;">+ Rp {total_bonus:,.0f}</span>
+            </div>
         
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: #00FFCC; font-size: 18px; font-weight: bold;">TAKE HOME PAY</span>
-            <span style="color: #00FFCC; font-size: 24px; font-weight: bold;">Rp {estimasi_total:,.0f}</span>
-        </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #00FFCC; font-size: 18px; font-weight: bold;">TAKE HOME PAY</span>
+                <span style="color: #00FFCC; font-size: 24px; font-weight: bold;">Rp {estimasi_total:,.0f}</span>
+            </div>
         
-        <div style="margin-top: 20px; padding: 10px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; text-align: center;">
-            <p style="color: #00FFCC; font-size: 12px; margin: 0;">"Semakin banyak video berkualitas, semakin besar bonus menanti!" 🚀</p>
+            <div style="margin-top: 20px; padding: 10px; background: rgba(0, 255, 204, 0.1); border-radius: 8px; text-align: center;">
+                <p style="color: #00FFCC; font-size: 12px; margin: 0;">"Semakin banyak video berkualitas, semakin besar bonus menanti!" 🚀</p>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
         
     with t3:
         st.subheader("⚠️ Sistem Peringatan & Performa")
@@ -3045,6 +3045,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
