@@ -2119,7 +2119,7 @@ def tampilkan_kendali_tim():
                 
                 # --- 2. SINKRON: Ambil Data Harian ---
                 df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
+                df_t_staf = df_f_f[df_f_f['STAFF'] == n_up].copy()
 
                 # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
@@ -3033,4 +3033,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
