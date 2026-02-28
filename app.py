@@ -1914,7 +1914,7 @@ def tampilkan_kendali_tim():
         
         rekap_harian_tim = {}
         rekap_total_video = {}
-        if not df_f_f.empty:
+        if not df_f_f.empty and 'STAF' in df_f_f.columns:
             df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
             df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
             rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
@@ -2853,4 +2853,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
