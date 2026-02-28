@@ -2053,8 +2053,11 @@ def tampilkan_kendali_tim():
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_tugas.columns = [str(c).strip().upper() for c in df_tugas.columns]
         df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
+
+        for df_item in [df_staff, df_absen, df_kas, df_tugas, df_log]:
+            if not df_item.empty:
+                df_item.columns = [str(c).strip().upper() for c in df_item.columns]
 
         # Hitung target display (logika lo tetep jalan)
         t_target_display = len(df_staff) * 40
@@ -3028,4 +3031,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
