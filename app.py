@@ -2048,18 +2048,12 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 1. AMBIL DATA DARI SUPABASE/GSHEET ---
+        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas")
-
-        # --- 2. PEMBERSIH KOLOM (KUNCI BIAR NGGA ERROR 'STAF') ---
-        # Kita paksa semua kolom di semua tabel jadi HURUF BESAR
-        for df_item in [df_staff, df_absen, df_kas, df_tugas, df_log]:
-            if not df_item.empty:
-                df_item.columns = [str(c).strip().upper() for c in df_item.columns]
+        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
 
         # Hitung target display (logika lo tetep jalan)
         t_target_display = len(df_staff) * 40
@@ -2119,7 +2113,7 @@ def tampilkan_kendali_tim():
                 
                 # --- 2. SINKRON: Ambil Data Harian ---
                 df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
-                df_t_staf = df_f_f[df_f_f['STAFF'] == n_up].copy()
+                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
 
                 # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
@@ -3033,6 +3027,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
