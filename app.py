@@ -2492,8 +2492,8 @@ def tampilkan_kendali_tim():
                                 except Exception as e:
                                     st.error(f"Gagal: {e}")
                                 
-                    else:
-                        st.info("Belum ada data akun AI.")
+                        else:
+                            st.info("Belum ada data akun AI.")
 
             except Exception as e_ai:
                 st.error(f"Gagal memuat Database Akun AI: {e_ai}")
@@ -2905,3 +2905,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
