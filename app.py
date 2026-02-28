@@ -1194,7 +1194,7 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
         
         is_telat = "TELAT" in status_absen
         is_hadir = status_absen == "HADIR"
-        is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"]).
+        is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"])
 
         # --- LOGIKA BONUS (Syarat: HADIR & TIDAK TELAT) ---
         if tgl <= batas_bonus:
@@ -2821,6 +2821,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
