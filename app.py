@@ -2474,9 +2474,17 @@ def tampilkan_kendali_tim():
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
                             if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
+                                try:
+                                    cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
+                                    if cell_target:
+                                        ws_akun.update_cell(cell_target.row, 5, "X")
+                                        ws_akun.update_cell(cell_target.row, 6, "")
+                                        st.success(f"✅ Reset!"); time.sleep(1); st.rerun()
+                                except Exception as e:
+                                    st.error(f"Gagal: {e}")
                                 
-                else:
-                    st.info("Belum ada data akun AI.")
+                    else:
+                        st.info("Belum ada data akun AI.")
 
             except Exception as e_ai:
                 st.error(f"Gagal memuat Database Akun AI: {e_ai}")
@@ -2888,6 +2896,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
