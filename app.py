@@ -2573,8 +2573,77 @@ def tampilkan_area_staf():
 
     with t1:
         st.write("")
-        st.subheader("🚀 Standar Operasional Prosedur")
-        st.caption("Panduan teknis untuk menjaga kualitas produksi Pintar Media.")
+        st.markdown("#### 🚀 Standar Operasional Prosedur (SOP) Pintar Media")
+        st.caption("Pedoman kualitas dan alur kerja untuk seluruh tim operasional.")
+
+        # --- PILIHAN DIVISI (SOP) ---
+        divisi_sop = st.radio(
+            "Pilih Panduan Posisi:",
+            ["Staff Editor AI", "Staff Uploader", "Staff Admin"],
+            horizontal=True,
+            key="pilih_sop_divisi_v2"
+        )
+        st.divider()
+
+        if divisi_sop == "Staff Editor AI":
+            # --- CARD EDITOR: TEKNIS & KREATIVITAS ---
+            with st.container(border=True):
+                st.markdown("🎨 **MASTER OF STORYTELLING (EDITOR AI)**")
+                st.write("")
+                st.info("💡 **Visi Utama:** Menciptakan konten AI yang memiliki 'jiwa' dan alur cerita yang mampu mengikat penonton dari detik pertama.")
+                
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**🎬 Spesifikasi Teknis (Wajib):**")
+                    st.write("- **Resolusi**: Minimal **Full HD 1080p** (Tajam & Jernih).")
+                    st.write("- **Format Shorts**: Portrait (9:16).")
+                    st.write("- **Durasi**: Minimal **1 Menit** (Fleksibel sesuai kebutuhan cerita).")
+                    st.write("- **Audio**: Wajib **Free Copyright** (Rekomendasi: YouTube Audio Library).")
+                with c2:
+                    st.markdown("**🔍 Sumber Ide & Kreativitas:**")
+                    st.write("- **Pintar AI Lab & Gudang Ide**: Gunakan sebagai basis teknologi.")
+                    st.write("- **Benchmarking**: Amati channel referensi luar untuk inspirasi.")
+                    st.write("- **Originality**: Sangat dihargai jika ide murni dari kreativitas sendiri.")
+
+            with st.container(border=True):
+                st.error("🚨 **STATUS ACC:** Video hanya akan di-ACC jika memenuhi seluruh spek teknis & alur cerita menarik.")
+
+        elif divisi_sop == "Staff Uploader":
+            # --- CARD UPLOADER: CHANNEL HANDLER ---
+            with st.container(border=True):
+                st.markdown("📡 **CONTENT PUBLISHING & CHANNEL HANDLER**")
+                st.write("")
+                st.success("🎯 **Visi Utama:** Menjadi garda terdepan dalam memastikan konten sampai ke penonton melalui manajemen channel yang sehat.")
+                
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**📦 Manajemen Stok & Distribusi:**")
+                    st.write("- **Koordinasi Stok**: Pantau ketersediaan video dari Editor setiap hari.")
+                    st.write("- **Final QC**: Cek ulang kesesuaian judul & deskripsi sebelum tayang.")
+                with c2:
+                    st.markdown("**📈 Optimasi & Audit Channel:**")
+                    st.write("- **Selection**: Memilah mana channel yang layak upload.")
+                    st.write("- **Replacement**: Berani mengganti dengan channel baru jika performa mati.")
+
+        else:
+            # --- CARD ADMIN: OPERATIONAL BACKBONE ---
+            with st.container(border=True):
+                st.markdown("⚖️ **OPERATIONAL BACKBONE (ADMIN)**")
+                st.write("")
+                st.warning("⚙️ **Visi Utama:** Memastikan seluruh roda operasional kantor berjalan mulus tanpa ada data yang terlewat.")
+                
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**📝 Administrasi & Keuangan:**")
+                    st.write("- **Input Progres**: Mencatat setiap video yang masuk (ACC/Revisi).")
+                    st.write("- **Cashflow**: Pencatatan rutin arus kas operasional kantor.")
+                with c2:
+                    st.markdown("**🛡️ Pengawasan & Resource:**")
+                    st.write("- **Monitoring Staff**: Memantau kedisiplinan dan kendala harian tim.")
+                    st.write("- **Stock Management**: Menyiapkan kebutuhan aset & operasional harian.")
+
+        st.write("")
+        st.caption("PENTING: Kelalaian terhadap SOP akan mempengaruhi penilaian kinerja harian.")
 
     with t2:
         st.write("")
@@ -3077,6 +3146,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
