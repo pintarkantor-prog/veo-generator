@@ -2054,15 +2054,23 @@ def tampilkan_kendali_tim():
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
         df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
+        
+        for df_item in [df_staff, df_absen, df_kas, df_tugas, df_log]:
+            if not df_item.empty:
+                df_item.columns = [str(c).strip().upper() for c in df_item.columns]
+        # --------------------------------------------
 
         # Hitung target display (logika lo tetep jalan)
         t_target_display = len(df_staff) * 40
 
-        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
+        # --- 2. FUNGSI SARING TANGGAL (FIX: DAYFIRST INDO) ---
         def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            # Pastikan kolom tanggal jadi format waktu Python yang benar
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
+            if df.empty or kolom.upper() not in df.columns: 
+                return pd.DataFrame()
+            
+            # dayfirst=True wajib biar 21/02 dibaca FEBRUARI (Bukan Error)
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], dayfirst=True, errors='coerce')
+            
             mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return df[mask].copy()
 
@@ -2072,8 +2080,10 @@ def tampilkan_kendali_tim():
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
-        # Logika Finish & Rekap
-        df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
+        # --- 4. LOGIKA FINISH & REKAP (VERSI AMAN MARET) ---
+        df_f_f = pd.DataFrame()
+        if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
+            df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
         
         rekap_harian_tim = {}
         rekap_total_video = {}
@@ -3027,5 +3037,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
