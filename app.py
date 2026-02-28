@@ -9,10 +9,12 @@ import re
 import plotly.express as px
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
-from supabase import create_client, Client # <--- Library Supabase
+from supabase import create_client, Client
+
+st.set_page_config(page_title="PINTAR MEDIA | Studio", layout="wide")
 
 # ==============================================================================
-# KONFIGURASI DASAR & KONEKSI (STABIL & HEMAT KUOTA)
+# KONEKSI & KONFIGURASI
 # ==============================================================================
 URL_MASTER = "https://docs.google.com/spreadsheets/d/16xcIqG2z78yH_OxY5RC2oQmLwcJpTs637kPY-hewTTY/edit?usp=sharing"
 
@@ -21,7 +23,7 @@ url: str = st.secrets["supabase"]["url"]
 key: str = st.secrets["supabase"]["key"]
 supabase: Client = create_client(url, key)
 
-# --- 2. KONEKSI GSHEET (DI-CACHE BIAR RAMAH RAM) ---
+# --- 2. KONEKSI GSHEET (DI-CACHE) ---
 @st.cache_resource
 def get_gspread_sh():
     """Koneksi Google Sheets yang disimpan di RAM."""
@@ -30,57 +32,9 @@ def get_gspread_sh():
     client = gspread.authorize(creds)
     return client.open_by_url(URL_MASTER)
 
-# --- 3. FUNGSI BACKUP GSHEET (YANG TADI ILANG) ---
-def ambil_data_beneran_segar(nama_sheet):
-    """Fungsi asli narik data langsung ke GSheet (Backup kalau Supabase mati)."""
-    try:
-        sh = get_gspread_sh()
-        ws = sh.worksheet(nama_sheet)
-        data = ws.get_all_records()
-        # Kita kembalikan DataFrame yang sudah dibersihkan
-        return bersihkan_data(pd.DataFrame(data))
-    except Exception as e:
-        print(f"GSheet Backup Error: {e}")
-        return pd.DataFrame()
-
-# --- 4. FUNGSI UTAMA AMBIL DATA (Satu Pintu + Cache 60 Detik) ---
-@st.cache_data(ttl=60) 
-def ambil_data_segar(target):
-    """LOGIKA SATU PINTU: Limit cerdas agar data ketarik semua."""
-    try:
-        query = supabase.table(target).select("*")
-        
-        if target == "Gudang_Ide":
-            # KHUSUS GUDANG IDE: Tarik limit gede (3000) biar 1.400 data lo aman
-            # Urutkan berdasarkan ID_IDE terbaru
-            res = query.order("ID_IDE", desc=True).limit(3000).execute()
-            
-        elif target in ["Log_Aktivitas", "Absensi", "Arus_Kas"]:
-            # Tabel log/absen biarin 200-500 aja biar gak berat
-            res = query.order("Waktu", desc=True).limit(500).execute()
-        else:
-            # Tabel lain (Staff, dsb) tarik semua
-            res = query.execute()
-            
-        df = pd.DataFrame(res.data)
-        
-        if not df.empty:
-            if 'id' in df.columns: 
-                df = df.drop(columns=['id'])
-            return bersihkan_data(df)
-        else:
-            return ambil_data_beneran_segar(target)
-            
-    except Exception as e:
-        # Fallback kalau order "Waktu" atau "ID_IDE" gagal
-        try:
-            res = supabase.table(target).select("*").limit(3000).execute()
-            df_f = pd.DataFrame(res.data)
-            return bersihkan_data(df_f) if not df_f.empty else ambil_data_beneran_segar(target)
-        except:
-            return ambil_data_beneran_segar(target)
-
-# --- 5. FUNGSI PEMBERSIH DATA ---
+# ==============================================================================
+# MESIN DATA (AMBIL & BERSIHKAN)
+# ==============================================================================
 def bersihkan_data(df):
     """Standardisasi data biar Python gak pusing (Versi Anti-NAN)."""
     if df.empty: return df
@@ -94,24 +48,172 @@ def bersihkan_data(df):
             df[col] = df[col].replace(['NAN', 'NONE', '<NA>'], '')
     return df
 
-def tambah_log(user, aksi):
-    """Fungsi sakti untuk mencatat semua gerakan staff ke GSheet"""
+def ambil_data_beneran_segar(nama_sheet):
+    """Backup kalau Supabase bermasalah."""
     try:
         sh = get_gspread_sh()
-        ws_log = sh.worksheet("Log_Aktivitas")
-        
-        # Atur waktu WIB
-        tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
-        
-        # Kirim ke GSheet (Kolom: Waktu, Nama, Aksi)
-        ws_log.append_row([waktu_skrg, str(user).upper(), aksi])
+        ws = sh.worksheet(nama_sheet)
+        data = ws.get_all_records()
+        return bersihkan_data(pd.DataFrame(data))
     except Exception as e:
-        # Cukup tampilkan di terminal/console biar user gak panik
+        print(f"GSheet Backup Error: {e}")
+        return pd.DataFrame()
+
+@st.cache_data(ttl=60) 
+def ambil_data_segar(target):
+    """LOGIKA SATU PINTU: Supabase-First dengan limit cerdas."""
+    try:
+        query = supabase.table(target).select("*")
+        if target == "Gudang_Ide":
+            res = query.order("ID_IDE", desc=True).limit(3000).execute()
+        elif target in ["Log_Aktivitas", "Absensi", "Arus_Kas"]:
+            res = query.order("Waktu" if target != "Arus_Kas" else "Tanggal", desc=True).limit(500).execute()
+        else:
+            res = query.execute()
+            
+        df = pd.DataFrame(res.data)
+        if not df.empty:
+            if 'id' in df.columns: df = df.drop(columns=['id'])
+            return bersihkan_data(df)
+        return ambil_data_beneran_segar(target)
+    except Exception as e:
+        return ambil_data_beneran_segar(target)
+
+def tambah_log(user, aksi):
+    """CCTV: Catat aktivitas ke Supabase & GSheet."""
+    tz_wib = pytz.timezone('Asia/Jakarta')
+    waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+    nama_up = str(user).upper()
+    try:
+        # Supabase record
+        supabase.table("Log_Aktivitas").insert({"Waktu": waktu_skrg, "Nama": nama_up, "Aksi": aksi}).execute()
+        # GSheet backup
+        sh = get_gspread_sh()
+        ws_log = sh.worksheet("Log_Aktivitas")
+        ws_log.append_row([waktu_skrg, nama_up, aksi])
+    except Exception as e:
         print(f"Gagal mencatat log: {e}")
+        
+# ==============================================================================
+# SISTEM KEAMANAN & ABSENSI
+# ==============================================================================
+def log_absen_otomatis(nama_user):
+    if st.session_state.get('absen_done_today', False): return
+    user_level = st.session_state.get("user_level", "STAFF")
+    if user_level == "OWNER" or nama_user.lower() == "tamu":
+        st.session_state.absen_done_today = True
+        return
+    
+    tz_wib = pytz.timezone('Asia/Jakarta')
+    waktu_skrg = datetime.now(tz_wib)
+    tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
+    jam_skrg = waktu_skrg.strftime("%H:%M")
+
+    if 8 <= waktu_skrg.hour < 22:
+        try:
+            nama_up = str(nama_user).upper().strip()
+            res = supabase.table("Absensi").select("id").eq("Nama", nama_up).eq("Tanggal", tgl_skrg).execute()
+            
+            if len(res.data) == 0:
+                status_final = "HADIR" if waktu_skrg.hour < 10 else f"TELAT ({jam_skrg})"
+                supabase.table("Absensi").insert({"Nama": nama_up, "Tanggal": tgl_skrg, "Jam Masuk": jam_skrg, "Status": status_final}).execute()
+                try:
+                    sh = get_gspread_sh(); ws = sh.worksheet("Absensi")
+                    ws.append_row([nama_up, tgl_skrg, jam_skrg, status_final])
+                except: pass
+                st.session_state.absen_done_today = True
+                st.toast(f"⏰ Absen Berhasil ({jam_skrg})", icon="✅")
+                time.sleep(1); st.rerun()
+            else:
+                st.session_state.absen_done_today = True
+        except Exception as e:
+            st.error(f"Sistem Absen Error: {e}")
+    else:
+        st.toast(f"Akses Malam/Lembur Aktif.", icon="🌙")
+
+def inisialisasi_keamanan():
+    if 'sudah_login' not in st.session_state:
+        st.session_state.sudah_login = False
+    if 'data_produksi' not in st.session_state:
+        # Inisialisasi default tetap aman di sini
+        pass 
 
 # ==============================================================================
-# BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
+# AUTENTIKASI (LOGIN/LOGOUT)
+# ==============================================================================
+def proses_login(user, pwd):
+    try:
+        df_staff = ambil_data_segar("Staff")
+        if df_staff.empty: return
+        u_input = str(user).strip().upper()
+        p_input = str(pwd).strip()
+        user_row = df_staff[df_staff['NAMA'] == u_input]
+
+        if not user_row.empty:
+            pwd_sheet = str(user_row.iloc[0]['PASSWORD']).strip()
+            if pwd_sheet == p_input:
+                st.session_state.sudah_login = True
+                st.session_state.user_aktif = u_input
+                st.session_state.waktu_login = datetime.now()
+                st.session_state.user_level = "OWNER" if u_input == "DIAN" else str(user_row.iloc[0]['LEVEL']).upper()
+                
+                tambah_log(u_input, "LOGIN KE SISTEM")
+                if st.session_state.user_level != "OWNER":
+                    log_absen_otomatis(u_input)
+                
+                st.query_params.clear()
+                time.sleep(1); st.rerun()
+            else: st.error("Password salah.")
+        else: st.error("Username tidak terdaftar.")
+    except Exception as e: st.error(f"Login Error: {e}")
+
+def proses_logout():
+    u = st.session_state.get("user_aktif", "unknown")
+    tambah_log(u, "LOGOUT SISTEM")
+    for key in list(st.session_state.keys()): del st.session_state[key]
+    st.query_params.clear()
+    st.rerun()
+
+# ==============================================================================
+# SYNC CLOUD (BACKUP/RESTORE)
+# ==============================================================================
+def simpan_ke_gsheet():
+    try:
+        sh = get_gspread_sh(); sheet = sh.sheet1 
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        waktu = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+        user = st.session_state.get("user_aktif", "STAFF").upper() 
+        data_json = json.dumps(st.session_state.data_produksi)
+        
+        semua_user = sheet.col_values(1) 
+        if user in semua_user:
+            row_index = semua_user.index(user) + 1
+            sheet.update(f"B{row_index}:C{row_index}", [[waktu, data_json]])
+        else:
+            sheet.append_row([user, waktu, data_json])
+        st.toast("🔄 Cloud Backup Berhasil!", icon="☁️")
+    except Exception as e: st.error(f"Gagal Simpan Cloud: {e}")
+
+def muat_dari_gsheet():
+    try:
+        sh = get_gspread_sh(); sheet = sh.sheet1
+        user_up = st.session_state.get("user_aktif", "").upper()
+        try:
+            cell = sheet.find(user_up)
+            row_data = sheet.row_values(cell.row)
+            naskah_mentah = row_data[2] if len(row_data) >= 3 else None
+        except:
+            st.warning("⚠️ Data Cloud tidak ditemukan."); return
+
+        if naskah_mentah:
+            data_termuat = json.loads(naskah_mentah)
+            st.session_state.data_produksi = data_termuat
+            st.session_state.form_version = st.session_state.get('form_version', 0) + 1
+            st.success("🔄 Data Dipulihkan!"); st.rerun()
+    except Exception as e: st.error(f"Gagal Memuat: {e}")
+
+# ==============================================================================
+# TAMBAHAN MASTER CHAR PROMPT & KARAKTER
 # ==============================================================================
 OPTS_STYLE = ["Sangat Nyata", "Animasi 3D Pixar", "Gaya Cyberpunk", "Anime Jepang"]
 OPTS_LIGHT = ["Senja Cerah (Golden)", "Studio Bersih", "Neon Cyberpunk", "Malam Indigo", "Siang Alami"]
@@ -252,287 +354,9 @@ MASTER_CHAR = {
         }
     }
 }
-
-st.set_page_config(page_title="PINTAR MEDIA | Studio", layout="wide")
-
-# ==============================================================================
-# FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP + SUPABASE
-# ==============================================================================
-def log_absen_otomatis(nama_user):
-    # 1. CEK SESSION (Biar nggak bolak-balik nembak database)
-    if st.session_state.get('absen_done_today', False):
-        return
-
-    # 2. FILTER OWNER / TAMU (KEBAL ABSENSI)
-    user_level = st.session_state.get("user_level", "STAFF")
-    if user_level == "OWNER" or nama_user.lower() == "tamu":
-        st.session_state.absen_done_today = True
-        return
-    
-    tz_wib = pytz.timezone('Asia/Jakarta')
-    waktu_skrg = datetime.now(tz_wib)
-    jam = waktu_skrg.hour
-    tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
-    jam_skrg = waktu_skrg.strftime("%H:%M")
-
-    # 3. RANGE JAM OPERASIONAL ABSENSI
-    if 8 <= jam < 22: 
-        try:
-            nama_up = str(nama_user).upper().strip()
-            
-            # --- OPTIMASI: CEK SUPABASE HANYA UNTUK USER INI & HARI INI ---
-            res = supabase.table("Absensi")\
-                .select("id")\
-                .eq("Nama", nama_up)\
-                .eq("Tanggal", tgl_skrg)\
-                .execute()
-            
-            sudah_absen = len(res.data) > 0
-            
-            if not sudah_absen:
-                # Logika Telat: Lewat jam 10 pagi dianggap telat
-                status_final = "HADIR" if jam < 10 else f"TELAT ({jam_skrg})"
-                
-                # A. SUPABASE (UTAMA)
-                supabase.table("Absensi").insert({
-                    "Nama": nama_up, 
-                    "Tanggal": tgl_skrg, 
-                    "Jam Masuk": jam_skrg, 
-                    "Status": status_final
-                }).execute()
-
-                # B. GSHEET (BACKUP - JALAN DI BACKGROUND)
-                try:
-                    sh = get_gspread_sh() 
-                    sheet_absen = sh.worksheet("Absensi")
-                    sheet_absen.append_row([nama_up, tgl_skrg, jam_skrg, status_final])
-                except: pass # GSheet error jangan nge-block sistem utama
-                
-                st.session_state.absen_done_today = True
-                st.toast(f"⏰ Absen Berhasil (Jam {jam_skrg})", icon="✅")
-                time.sleep(1)
-                st.rerun() 
-            else:
-                st.session_state.absen_done_today = True
-
-        except Exception as e:
-            st.error(f"Sistem Absen Error: {e}")
-    else:
-        # Jika login di luar jam kerja, jangan kunci session, biar bisa login tapi diingatkan
-        st.toast(f"Sistem Absen Tutup (Jam {jam_skrg}). Status: Lembur/Akses Malam.", icon="🌙")
-            
-# ==============================================================================
-# BAGIAN 2: SISTEM KEAMANAN & INISIALISASI DATA (SESSION STATE)
-# ==============================================================================
-def inisialisasi_keamanan():
-    if 'sudah_login' not in st.session_state:
-        st.session_state.sudah_login = False
-    
-    # INISIALISASI MASTER DATA (VERSI CLEAN)
-    if 'data_produksi' not in st.session_state:
-        st.session_state.data_produksi = {
-            "jumlah_karakter": 2,
-            "karakter": [ {"nama": "", "wear": "", "fisik": ""} for _ in range(4) ],
-            "jumlah_adegan": 5,
-            "adegan": {i: {
-                "aksi": "", 
-                "style": OPTS_STYLE[0], 
-                "light": OPTS_LIGHT[0], 
-                "arah": OPTS_ARAH[0], 
-                "shot": OPTS_SHOT[0], 
-                "cam": OPTS_CAM[0], 
-                "loc": "", 
-                "dialogs": [""]*4
-            } for i in range(1, 51)}, 
-            "form_version": 0
-        }
-
-# ==============================================================================
-# SISTEM AUTENTIKASI (LOGIN/LOGOUT) - VERSI SINKRON CLOUD
-# ==============================================================================
-def proses_login(user, pwd):
-    try:
-        # Pake ambil_data_segar biar sinkron sama Supabase/Sheet Staff
-        df_staff = ambil_data_segar("Staff")
-        
-        if df_staff.empty:
-            st.error("Database Staff tidak terbaca.")
-            return
-
-        # Standarisasi kolom & input (Paksa UPPER biar sinkron sama GSheet)
-        df_staff.columns = [str(c).strip().upper() for c in df_staff.columns]
-        u_input = str(user).strip().upper()
-        p_input = str(pwd).strip()
-
-        # Cari user di database
-        user_row = df_staff[df_staff['NAMA'] == u_input]
-
-        if not user_row.empty:
-            pwd_sheet = str(user_row.iloc[0]['PASSWORD']).strip()
-            user_level = str(user_row.iloc[0]['LEVEL']).strip().upper()
-            
-            if pwd_sheet == p_input:
-                # --- 1. SET STATUS LOGIN ---
-                st.session_state.sudah_login = True
-                
-                # PENTING: Pake UPPER biar sinkron sama fungsi Backup/Restore GSheet
-                user_key = u_input
-                st.session_state.user_aktif = user_key
-                st.session_state.waktu_login = datetime.now()
-
-                tambah_log(user_key, "LOGIN KE SISTEM") # CCTV AKTIF
-
-                # --- 2. KUNCI KASTA OWNER (BYPASS) ---
-                if user_key == "DIAN":
-                    st.session_state.user_level = "OWNER"
-                else:
-                    st.session_state.user_level = user_level
-
-                current_lv = st.session_state.user_level
-
-                # --- 3. LOGIKA ABSEN & NOTIF ---
-                if current_lv in ["STAFF", "ADMIN"]:
-                    log_absen_otomatis(user_key)
-                    st.toast(f"Selamat bekerja, {user_key}!", icon="✅")
-                else:
-                    st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
-
-                # --- 4. BERSIHKAN URL & REFRESH ---
-                st.query_params.clear() 
-                time.sleep(1) 
-                st.rerun()
-            else:
-                st.error("Password salah.")
-        else:
-            st.error("Username tidak terdaftar.")
-
-    except Exception as e:
-        st.error(f"Sistem Login Error: {e}")
-
-def tampilkan_halaman_login():
-    # Gunakan Container agar tidak berantakan di HP
-    with st.container():
-        st.markdown("<br><br>", unsafe_allow_html=True)
-        col_l, col_m, col_r = st.columns([1.5, 1, 1.5]) 
-        
-        with col_m:
-            try:
-                st.image("PINTAR.png", use_container_width=True)
-            except:
-                st.markdown("<h2 style='text-align:center;'>PINTAR MEDIA</h2>", unsafe_allow_html=True)
-            
-            # Key unik agar tidak bentrok
-            with st.form("login_station", clear_on_submit=False):
-                u = st.text_input("Username", placeholder="Username...", key="input_u").lower()
-                p = st.text_input("Password", type="password", placeholder="Password...", key="input_p")
-                submit = st.form_submit_button("MASUK KE SISTEM 🚀", use_container_width=True)
-                
-                if submit: 
-                    if u.strip() and p.strip():
-                        proses_login(u, p)
-                    else:
-                        st.warning("Isi dulu Bos!")
-
-def cek_autentikasi():
-    if st.session_state.get('sudah_login', False):
-        if 'waktu_login' in st.session_state:
-            durasi = datetime.now() - st.session_state.waktu_login
-            if durasi > timedelta(hours=10):
-                proses_logout()
-                return False
-        return True
-    return False
-
-def proses_logout():
-    u = st.session_state.get("user_aktif", "unknown")
-    tambah_log(u, "LOGOUT / KELUAR SISTEM")
-    
-    # Hapus session satu-satu biar lebih aman
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
-        
-    st.query_params.clear()
-    st.rerun()
-
-# FUNGSI BACKUP (Fokus GSheet lewat Secrets)
-def simpan_ke_gsheet():
-    try:
-        sh = get_gspread_sh() 
-        sheet = sh.sheet1 
-        
-        tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
-        user = st.session_state.get("user_aktif", "STAFF").upper() 
-        data_json = json.dumps(st.session_state.data_produksi)
-        
-        # --- 1. CEK APAKAH USER SUDAH PERNAH BACKUP? ---
-        # Kita ambil semua nama di kolom A
-        semua_user = sheet.col_values(1) 
-        
-        if user in semua_user:
-            # 2. KALAU SUDAH ADA, KITA UPDATE (NIMPA)
-            # index + 1 karena list python mulai dari 0, tapi baris GSheet mulai dari 1
-            row_index = semua_user.index(user) + 1
-            
-            # Kita cuma update kolom B (Waktu) dan C (Data Naskah)
-            # Formatnya: [[Data Kolom B, Data Kolom C]]
-            sheet.update(f"B{row_index}:C{row_index}", [[waktu, data_json]])
-            
-            msg = "🔄 Cloud Backup Berhasil Diperbarui!"
-        else:
-            # 3. KALAU BELUM ADA, BARU TAMBAH BARIS BARU
-            sheet.append_row([user, waktu, data_json])
-            msg = "🚀 Baris Baru Dibuat & Tersimpan di Cloud!"
-            
-        st.toast(msg, icon="☁️")
-        
-    except Exception as e:
-        st.error(f"Gagal Simpan Cloud: {e}")
-
-def muat_dari_gsheet():
-    try:
-        sh = get_gspread_sh()
-        sheet = sh.sheet1
-        user_up = st.session_state.get("user_aktif", "").upper()
-        
-        try:
-            cell = sheet.find(user_up)
-            row_data = sheet.row_values(cell.row)
-            naskah_mentah = row_data[2] if len(row_data) >= 3 else None
-        except:
-            st.warning(f"⚠️ Data untuk {user_up} tidak ditemukan di Cloud.")
-            return
-
-        if naskah_mentah:
-            try:
-                # Perbaikan: Validasi apakah ini beneran JSON?
-                data_termuat = json.loads(naskah_mentah)
-            except json.JSONDecodeError:
-                st.error("❌ Data di Cloud rusak (Format JSON Ilegal). Hubungi Admin.")
-                return
-            
-            # Logika restrukturisasi adegan tetap sama...
-            if "adegan" in data_termuat:
-                adegan_baru = {}
-                for k, v in data_termuat["adegan"].items():
-                    # Bersihkan junk
-                    for junk in ["ekspresi", "cuaca", "vibe", "ratio"]:
-                        v.pop(junk, None)
-                    adegan_baru[int(k)] = v 
-                data_termuat["adegan"] = adegan_baru
-            
-            st.session_state.data_produksi = data_termuat
-            st.session_state.form_version = st.session_state.get('form_version', 0) + 1
-            st.success(f"🔄 Data {user_up} Berhasil Dipulihkan!")
-            st.rerun()
-        else:
-            st.error("⚠️ Data ditemukan, tapi kolom naskah kosong.")
-
-    except Exception as e: # <--- PENUTUP Pintu 1 (Ini yang tadi hilang!)
-        st.error(f"Gagal memuat dari Cloud: {e}")
         
 # ==============================================================================
-# BAGIAN 3: PENGATURAN TAMPILAN (CSS) - TOTAL BORDERLESS & STATIC
+# BAGIAN 3: PENGATURAN TAMPILAN (CSS)
 # ==============================================================================
 def pasang_css_kustom():
     st.markdown("""
@@ -681,11 +505,11 @@ def pasang_css_kustom():
         }
 
         </style>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True) 
+# ==============================================================================
+# NAVIGASI SIDEBAR (VERSI CLOUD ONLY)
+# ==============================================================================
 
-# ==============================================================================
-# BAGIAN 4: NAVIGASI SIDEBAR (VERSI CLOUD ONLY)
-# ==============================================================================
 def tampilkan_navigasi_sidebar():
     # Ambil level user dari session state (Default ke STAFF jika tidak ada)
     user_level = st.session_state.get("user_level", "STAFF")
@@ -759,7 +583,7 @@ def tampilkan_navigasi_sidebar():
         ''', unsafe_allow_html=True)
         
     return pilihan
-
+    
 # ==============================================================================
 # BAGIAN 5: PINTAR AI LAB - PRO EDITION (SYNCHRONIZED MANTRA)
 # ==============================================================================
@@ -3012,19 +2836,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
