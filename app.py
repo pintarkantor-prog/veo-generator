@@ -1854,26 +1854,19 @@ def tampilkan_tugas_kerja():
             st.info(f"📭 Tidak ada riwayat tugas pada {bln_arsip_nama} {thn_arsip}.")
                 
 def tampilkan_kendali_tim():    
+    # --- 1. PROTEKSI ---
     user_level = st.session_state.get("user_level", "STAFF")
-
     if user_level not in ["OWNER", "ADMIN"]:
-        st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
+        st.error("🚫 Area Khusus Manajemen.")
         st.stop()
 
-    # --- 1. SETUP WAKTU ---
+    # --- 2. SETUP WAKTU ---
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # --- 2. HEADER ---
-    col_h1, col_h2 = st.columns([3, 1])
-    with col_h1:
-        st.title("⚡ PUSAT KENDALI TIM")
-    with col_h2:
-        if st.button("🔄 REFRESH DATA", use_container_width=True):
-            st.cache_data.clear()
-            st.rerun()
-
-    # --- 3. FILTER PERIODE ---
+    # --- 3. HEADER & FILTER ---
+    st.title("⚡ PUSAT KENDALI TIM")
+    
     c_bln, c_thn = st.columns([2, 2])
     daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
     pilihan_nama = c_bln.selectbox("📅 Pilih Bulan Laporan:", list(daftar_bulan.values()), index=sekarang.month - 1)
@@ -1883,14 +1876,14 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 4. AMBIL DATA (SUPABASE) ---
+        # --- 4. AMBIL DATA ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
         df_log   = ambil_data_segar("Log_Aktivitas")
 
-        # --- 5. FUNGSI SARING TANGGAL (INTERNAL) ---
+        # --- 5. FUNGSI SARING TANGGAL ---
         def saring_tgl(df, kolom_target, bln, thn):
             if df.empty: return pd.DataFrame()
             cols = [c for c in df.columns if c.upper() == kolom_target.upper()]
@@ -1898,69 +1891,62 @@ def tampilkan_kendali_tim():
             df['TGL_TEMP'] = pd.to_datetime(df[cols[0]], errors='coerce')
             return df[(df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)].copy()
 
-        # Eksekusi Filter
         df_t_bln = saring_tgl(df_tugas, 'Deadline', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'Tanggal', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'Tanggal', bulan_dipilih, tahun_dipilih)
-        df_log_f = saring_tgl(df_log, 'Waktu', bulan_dipilih, tahun_dipilih)
         
-        # Logika Finish untuk Radar
         df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
 
-        # --- 6. HITUNG SEMUA VARIABEL (MESIN UTAMA) ---
-        # Definisi Awal agar tidak "Not Defined"
+        # --- 6. HITUNG KEUANGAN (VARIABEL SINKRON) ---
+        # Gue pake nama 'income_val' buat semua proses
         income_val = 0.0
         bonus_val = 0.0
         ops_val = 0.0
         total_gaji_pokok_tim = 0.0
 
-        # A. Hitung Kas Riil
         if not df_k_f.empty:
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'], errors='coerce').fillna(0)
             income_val = float(df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum())
             bonus_val = float(df_k_f[df_k_f['KATEGORI'] == 'Gaji Tim']['NOMINAL'].sum())
             ops_val = float(df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL'].sum())
 
-        # B. Hitung Gaji Tim Bersih (Pake Mesin SP)
+        # Hitung Gaji Tim
         df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN', 'UPLOADER'])]
         for _, s in df_staff_real.iterrows():
             n_up = str(s.get('NAMA', '')).strip().upper()
             lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
-            
             df_a_staf = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy() if not df_a_f.empty else pd.DataFrame()
             df_t_staf = df_f_f[df_f_f['STAF'].str.upper() == n_up].copy() if not df_f_f.empty else pd.DataFrame()
 
-            _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli 
-            )
+            _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli)
             
             g_pokok = int(pd.to_numeric(s.get('GAJI_POKOK', 0)))
             t_tunj = int(pd.to_numeric(s.get('TUNJANGAN', 0)))
             total_gaji_pokok_tim += max(0, (g_pokok + t_tunj) - pot_sp_real)
 
-        # C. Hitung Saldo Akhir
+        # Hasil Akhir Riil
         total_out_riil = total_gaji_pokok_tim + bonus_val + ops_val
         saldo_riil = income_val - total_out_riil
 
-        # --- 7. TAMPILAN UI (EXPANDER KEUANGAN) ---
-        with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
+        # --- 7. UI: ANALISIS KEUANGAN ---
+        with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=True):
             m1, m2, m3, m4 = st.columns(4)
+            # Pake 'income_val' secara konsisten!
             m1.metric("💰 INCOME", f"Rp {income_val:,.0f}")
             m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", delta=f"Gaji: Rp {total_gaji_pokok_tim:,.0f}", delta_color="inverse")
+            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta="SURPLUS" if saldo_riil >= 0 else "DEFISIT", delta_color="normal" if saldo_riil >= 0 else "inverse")
             
-            status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
-            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta=status_saldo, delta_color="normal" if saldo_riil >= 0 else "inverse")
-            
-            margin_val = (saldo_riil / income_val * 100) if income_val > 0 else 0
-            m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
+            margin_perc = (saldo_riil / income_val * 100) if income_val > 0 else 0
+            m4.metric("📊 MARGIN", f"{margin_perc:.1f}%")
 
-            # --- Visualisasi Donut ---
-            col_input, col_logs, col_viz = st.columns([1, 1.2, 1], gap="small")
-            with col_viz:
+            st.divider()
+            c_in, c_log_k, c_donut = st.columns([1, 1.2, 1])
+            with c_donut:
+                # Donut pake income_val juga
                 df_donut = pd.DataFrame({"Kat": ["INCOME", "OUTCOME"], "Val": [income_val, total_out_riil]})
                 if (income_val + total_out_riil) > 0:
-                    fig = px.pie(df_donut, values='Val', names='Kat', hole=0.75, color_discrete_sequence=["#00ba69", "#ff4b4b"])
-                    fig.update_layout(showlegend=False, height=180, margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
+                    fig = px.pie(df_donut, values='Val', names='Kat', hole=0.7, color_discrete_sequence=["#00ba69", "#ff4b4b"])
+                    fig.update_layout(showlegend=False, height=200, margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
                     st.plotly_chart(fig, use_container_width=True)
                     
             st.divider()
@@ -2790,6 +2776,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
