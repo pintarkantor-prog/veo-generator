@@ -1352,7 +1352,7 @@ def tampilkan_tugas_kerja():
                 
                 with c2:
                     st.metric(
-                        "💀 HARI KURANG", 
+                        "💀 HARI LEMAH", 
                         f"{tampil_h_kurang} / 21", 
                         delta=f"{tampil_h_kurang} hari" if tampil_h_kurang > 0 else None,
                         delta_color="inverse"
@@ -1362,7 +1362,7 @@ def tampilkan_tugas_kerja():
                     # MENGHITUNG TOTAL VIDEO STATUS FINISH BULAN INI
                     total_vid_finish = len(df_arsip_user) # Data ini sudah difilter mask_bulan & FINISH
                     st.metric(
-                        "🎬 VIDEO JADI",
+                        "🎬 TOTAL VIDEO",
                         f"{total_vid_finish} Vid",
                         delta="Bulan Ini",
                         delta_color="normal"
@@ -1380,7 +1380,7 @@ def tampilkan_tugas_kerja():
                     st.metric(
                         "💰 TOTAL BONUS", 
                         f"Rp {int(total_semua):,}",
-                        delta=f"V: {int(cair_vid/1000)}k | A: {int(cair_abs/1000)}k",
+                        delta=f"Video: {int(cair_vid/1000)}k | Absen: {int(cair_abs/1000)}k",
                         delta_color="normal"
                     )
                 
@@ -2833,6 +2833,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
