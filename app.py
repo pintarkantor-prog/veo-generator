@@ -1913,26 +1913,34 @@ def tampilkan_kendali_tim():
         rekap_harian_tim = {}
         rekap_total_video = {}
 
-        # 1. Pastikan df_f_f tidak kosong DAN memiliki kolom 'STAF'
+        # --- 1. PROSES FILTER DATA (WAJIB ADA DI ATAS) ---
+        # Pastikan df_t_bln didefinisikan dulu dari hasil saring_tgl
+        if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
+            df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
+        else:
+            # Jika data kosong, buat DataFrame kosong dengan kolom default agar tidak 'not defined'
+            df_f_f = pd.DataFrame(columns=['STAF', 'STATUS', 'TGL_TEMP'])
+
+        # --- 2. LOGIKA REKAP (VERSI SUPER SAKTI) ---
+        rekap_harian_tim = {}
+        rekap_total_video = {}
+
+        # Sekarang df_f_f PASTI ada wujudnya (biarpun kosong)
         if not df_f_f.empty and 'STAF' in df_f_f.columns:
-            # Bersihkan data nama staf
             df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
             
-            # 2. Cek kolom TGL_TEMP sebelum formatting tanggal
-            if 'TGL_TEMP' in df_f_f.columns and not df_f_f['TGL_TEMP'].isnull().all():
+            if 'TGL_TEMP' in df_f_f.columns:
                 df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
                 
-                # Proses Groupby dengan pengaman tambahan
+                # Groupby aman karena df_f_f sudah divalidasi
                 try:
                     rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-                except Exception:
+                except:
                     rekap_harian_tim = {}
             
-            # Hitung total video per staf
             rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
-            
         else:
-            # Jika Maret masih kosong atau kolom hilang, inisialisasi default agar UI tidak meledak
+            # Fallback aman kalau Maret masih nol
             rekap_harian_tim = {}
             rekap_total_video = {}
 
@@ -2871,6 +2879,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
