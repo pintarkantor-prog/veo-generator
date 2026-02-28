@@ -1235,7 +1235,7 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
     return bonus_video_total, uang_absen_total, pot_sp, level_sp, hari_lemah
     
 def tampilkan_tugas_kerja():
-    st.title("📋 TUGAS KERJA & MONITORING")
+    st.title("📋 TUGAS KERJA")
     sh = get_gspread_sh() 
     sheet_tugas = sh.worksheet("Tugas")
     wadah_radar = st.empty()
@@ -2553,7 +2553,8 @@ def tampilkan_kendali_tim():
 # HALAMAN: AREA STAF (PUSAT INFORMASI)
 # ==============================================================================
 def tampilkan_area_staf():
-    st.title("📘 Pusat Informasi & Area Staf")
+    st.title("📘 Pusat Informasi")
+    st.caption("Pusat kendali SOP, aturan kerja, dan pengumuman resmi PT Pintar Digital Kreasi.")
     st.markdown("---")
     
     # Menggunakan Tabs agar informasi tidak menumpuk
@@ -3004,6 +3005,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
