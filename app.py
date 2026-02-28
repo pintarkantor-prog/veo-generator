@@ -2413,7 +2413,7 @@ def tampilkan_kendali_tim():
 
                 st.divider()
                         
-                    if not df_ai.empty:
+                if not df_ai.empty:
                     # 3. TAMPILAN COMPACT 1 BARIS (7 KOLOM + ICON)
                     h_ini = sekarang.date()
 
@@ -2870,6 +2870,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
