@@ -2560,45 +2560,34 @@ def tampilkan_area_staf():
     - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
     - Semangat buat tim produksi video hari ini! 🚀
     """)
-    st.markdown("---")
-    
-    # Menggunakan Tabs agar informasi tidak menumpuk
-    tab_sop, tab_kontrak, tab_sp = st.tabs(["📘 Panduan (SOP)", "📜 Kontrak Kerja", "🚨 Aturan SP"])
+    # --- 5 SUB-MENU PROFESIONAL ---
+    t1, t2, t3, t4, t5 = st.tabs([
+        "📋 Panduan (SOP)", 
+        "💰 Simulasi Gaji", 
+        "🚨 Aturan SP", 
+        "⚖️ Peraturan", 
+        "📜 Kontrak Kerja"
+    ])
 
-    with tab_sop:
-        st.subheader("🚀 Standar Operasional Prosedur (SOP)")
-        with st.expander("🎥 Standar Editing Video (YouTube/TikTok)"):
-            st.write("1. **Rasio**: Wajib 9:16 (Portrait).")
-            st.write("2. **Durasi**: Ideal antara 15-59 detik.")
-            st.write("3. **Kualitas**: Pastikan audio jernih dan bebas copyright musik.")
+    with t1:
+        st.subheader("🚀 Standar Operasional Prosedur")
+        # Nanti kita isi cara editing dll
         
-        with st.expander("🧠 Panduan Penggunaan AI Lab"):
-            st.write("1. Masukkan prompt yang mendetail untuk hasil naskah terbaik.")
-            st.write("2. Selalu lakukan cek ulang (cross-check) pada data yang dihasilkan AI.")
-
-    with tab_kontrak:
-        st.subheader("📜 Etika & Kontrak Kerja")
-        st.info("Kerahasiaan ide dan data akun di Pintar Media adalah prioritas utama.")
-        with st.expander("📝 Poin Utama Kontrak"):
-            st.write("- Dilarang menyebarkan isi GUDANG IDE ke pihak luar.")
-            st.write("- Menjaga kerahasiaan password yang ada di DATABASE CHANNEL.")
-            st.write("- Mematuhi tenggat waktu (deadline) upload yang sudah ditentukan.")
-
-    with tab_sp:
-        st.subheader("🚨 Aturan Performa & SP Otomatis")
-        st.warning("Sistem Radar Performa bekerja secara otomatis berdasarkan input harian.")
+    with t2:
+        st.subheader("💵 Kalkulator Simulasi Pendapatan")
+        # Nanti kita buatkan input angka biar mereka bisa simulasi gaji
         
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("**📉 Definisi Hari Lemah**")
-            st.write("- Produksi < 2 Video per hari dianggap 'Hari Lemah'.")
-            st.write("- 7 Hari Lemah dalam sebulan akan memicu **SP 1**.")
+    with t3:
+        st.subheader("⚠️ Sistem Peringatan & Performa")
+        # Isi aturan Hari Lemah & SP
         
-        with col2:
-            st.markdown("**🛡️ Kebijakan Khusus (Kebal SP)**")
-            st.write("- Hari Minggu & Libur Nasional: Off.")
-            st.write("- Kendala Teknis (Listrik/Internet) yang dikonfirmasi Owner.")
-            st.write("- Status IZIN/SAKIT yang sudah di-ACC.")
+    with t4:
+        st.subheader("⚖️ Peraturan Umum Perusahaan")
+        # Isi jam kerja, etika, dll
+        
+    with t5:
+        st.subheader("📝 Dokumen Kontrak Kerja")
+        # Isi poin-poin NDA & Kontrak
         
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3010,6 +2999,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
