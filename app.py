@@ -105,6 +105,8 @@ def bersihkan_data(df):
 
 def tambah_log(user, aksi):
     """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
+    if str(user).upper() == "DIAN": 
+        return # Langsung keluar, tidak mencatat apa-apa kalau itu Dian
     try:
         tz_wib = pytz.timezone('Asia/Jakarta')
         waktu_skrg_iso = datetime.now(tz_wib).isoformat() # Format standar database
@@ -297,7 +299,7 @@ def log_absen_otomatis(nama_user):
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
     # 4. RANGE JAM OPERASIONAL ABSENSI
-    if 8 <= jam < 22: 
+    if 8 <= jam < 17: 
         try:
             nama_up = str(nama_user).upper().strip()
             
@@ -305,8 +307,14 @@ def log_absen_otomatis(nama_user):
             res = supabase.table("Absensi").select("id").eq("Nama", nama_up).eq("Tanggal", tgl_skrg).execute()
             
             if len(res.data) == 0:
-                # Logika Telat: Lewat jam 10 pagi dianggap telat
-                status_final = "HADIR" if jam < 10 else f"TELAT ({jam_skrg})"
+                # --- PERBAIKAN LOGIKA TELAT ---
+                # Menggunakan menit total agar jam 10:01 sudah terhitung TELAT
+                menit_total = waktu_skrg.hour * 60 + waktu_skrg.minute
+                
+                if menit_total <= 600: # 600 menit = Jam 10:00 tepat
+                    status_final = "HADIR"
+                else:
+                    status_final = f"TELAT ({jam_skrg})"
                 
                 # A. SUPABASE (UTAMA)
                 supabase.table("Absensi").insert({
@@ -2800,6 +2808,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
