@@ -1169,12 +1169,12 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
 
     # 2. Rekap Berdasarkan 'Deadline' (Patokan Supabase)
     # Hanya video status 'FINISH' yang masuk hitungan.
-    df_finish = df_arsip_user[df_arsip_user['Status'] == 'FINISH'].copy()
+    df_finish = df_arsip_user[df_arsip_user['STATUS'] == 'FINISH'].copy()
     rekap_harian = {}
-    
+
     if not df_finish.empty:
-        # Menggunakan 'Deadline' sebagai tanggal efektif setor staf.
-        df_finish['TGL_EFEKTIF'] = pd.to_datetime(df_finish['Deadline'], errors='coerce').dt.day
+        # Menggunakan 'DEADLINE' (Hasil UPPER dari 'Deadline')
+        df_finish['TGL_EFEKTIF'] = pd.to_datetime(df_finish['DEADLINE'], errors='coerce').dt.day
         df_finish = df_finish.dropna(subset=['TGL_EFEKTIF'])
         rekap_harian = df_finish.groupby('TGL_EFEKTIF').size().to_dict()
 
@@ -1191,7 +1191,7 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
         # --- DATA ABSENSI ---
         data_absen = df_absen_user[df_absen_user['TANGGAL'] == tgl_str]
         status_absen = str(data_absen['STATUS'].values[0]).upper() if not data_absen.empty else "ALPHA"
-        
+    
         is_telat = "TELAT" in status_absen
         is_hadir = status_absen == "HADIR"
         is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"])
@@ -2821,6 +2821,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
