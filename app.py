@@ -45,42 +45,54 @@ def ambil_data_beneran_segar(nama_sheet):
         print(f"GSheet Backup Error: {e}")
         return pd.DataFrame()
 
-# --- 4. FUNGSI UTAMA AMBIL DATA (Satu Pintu + Cache 60 Detik) ---
+# --- 4. FUNGSI UTAMA AMBIL DATA (VERSI SMART FILTER - ANTI LAG) ---
 @st.cache_data(ttl=60) 
-def ambil_data_segar(target):
-    """LOGIKA SATU PINTU: Limit cerdas agar data ketarik semua."""
+def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
+    """
+    LOGIKA KRAN SELEKTIF: 
+    Menyisir data berdasarkan status & periode agar RAM Web enteng.
+    """
     try:
+        # Penentuan Waktu (Default: Bulan & Tahun Berjalan)
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        skrg = datetime.now(tz_wib)
+        bln = int(bulan_pilihan) if bulan_pilihan else skrg.month
+        thn = int(tahun_pilihan) if tahun_pilihan else skrg.year
+        
+        # Format filter tanggal (Awal s/d Akhir bulan)
+        tgl_awal = f"{thn}-{bln:02d}-01"
+        tgl_akhir = f"{thn}-{bln:02d}-31" # Postgres pinter, 31 otomatis jadi akhir bulan
+
         query = supabase.table(target).select("*")
         
+        # 1. GUDANG IDE: Sisir hanya yang siap dikerjakan
         if target == "Gudang_Ide":
-            # KHUSUS GUDANG IDE: Tarik limit gede (3000) biar 1.400 data lo aman
-            # Urutkan berdasarkan ID_IDE terbaru
-            res = query.order("ID_IDE", desc=True).limit(3000).execute()
+            res = query.eq("STATUS", "Tersedia").order("ID_IDE", desc=True).execute()
             
-        elif target in ["Log_Aktivitas", "Absensi", "Arus_Kas"]:
-            # Tabel log/absen biarin 200-500 aja biar gak berat
-            res = query.order("Waktu", desc=True).limit(500).execute()
+        # 2. TUGAS, ARUS KAS, & ABSENSI: Wajib Bulan Berjalan (Untuk Bonus/SP)
+        elif target in ["Tugas", "Arus_Kas", "Absensi"]:
+            res = query.gte("Tanggal", tgl_awal).lte("Tanggal", tgl_akhir).order("id", desc=True).execute()
+            
+        # 3. LOG AKTIVITAS: Limit 300 saja (Hanya untuk pantauan)
+        elif target == "Log_Aktivitas":
+            res = query.order("Waktu", desc=True).limit(300).execute()
+            
         else:
-            # Tabel lain (Staff, dsb) tarik semua
+            # Tabel Staff tetap ditarik semua
             res = query.execute()
             
         df = pd.DataFrame(res.data)
         
         if not df.empty:
-            if 'id' in df.columns: 
-                df = df.drop(columns=['id'])
+            if 'id' in df.columns: df = df.drop(columns=['id'])
             return bersihkan_data(df)
         else:
+            # Jika Supabase kosong (karena filter), coba lari ke GSheet Backup
             return ambil_data_beneran_segar(target)
             
     except Exception as e:
-        # Fallback kalau order "Waktu" atau "ID_IDE" gagal
-        try:
-            res = supabase.table(target).select("*").limit(3000).execute()
-            df_f = pd.DataFrame(res.data)
-            return bersihkan_data(df_f) if not df_f.empty else ambil_data_beneran_segar(target)
-        except:
-            return ambil_data_beneran_segar(target)
+        st.error(f"Gagal Sinkron {target}: {e}")
+        return ambil_data_beneran_segar(target)
 
 # --- 5. FUNGSI PEMBERSIH DATA ---
 def bersihkan_data(df):
@@ -3012,4 +3024,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
