@@ -2421,7 +2421,7 @@ def tampilkan_kendali_tim():
                     # 2. LOGIKA PRIORITAS TAMPILAN (X > Otw Expired > Sisanya)
                     def tentukan_prioritas(row):
                         if pd.isna(row['EXPIRED_DT']): return 4 # Data rusak taruh bawah
-                        sisa_hr = (row['EXPIRED_DT'] - h_ini).days
+                        tgl_exp = (row['EXPIRED_DT'] - h_ini).days
                         pemakai_str = str(row['PEMAKAI']).strip().upper()
                         if pemakai_str == "X": return 1
                         elif sisa_hr <= 3: return 2
@@ -2884,6 +2884,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
