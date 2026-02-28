@@ -2554,7 +2554,12 @@ def tampilkan_kendali_tim():
 # ==============================================================================
 def tampilkan_area_staf():
     st.title("📘 Pusat Informasi")
-    st.caption("Pusat kendali SOP, aturan kerja, dan pengumuman resmi PT Pintar Digital Kreasi.")
+    st.info("""
+    📢 **PENGUMUMAN TERBARU:**
+    - Libur menyambut awal Ramadhan akan diinfokan segera.
+    - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
+    - Semangat buat tim produksi video hari ini! 🚀
+    """)
     st.markdown("---")
     
     # Menggunakan Tabs agar informasi tidak menumpuk
@@ -3005,6 +3010,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
