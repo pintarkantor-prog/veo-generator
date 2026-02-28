@@ -1196,23 +1196,23 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
         is_hadir = status_absen == "HADIR"
         is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"])
 
-        # --- LOGIKA BONUS (Syarat: HADIR & TIDAK TELAT) ---
-        if tgl <= batas_bonus:
+        # --- LOGIKA BONUS (HANYA UNTUK STAFF) ---
+        # Admin kebal SP tapi gak dapet jatah bonus absen video
+        if level_target == "STAFF" and tgl <= batas_bonus:
             if is_hadir and not is_telat:
                 if jml_v >= 3: 
                     uang_absen_total += 30000 
                 if jml_v >= 5: 
                     bonus_video_total += (jml_v - 4) * 30000
             
-        # --- LOGIKA SP (Syarat: Bukan Minggu & Bukan Izin/Sakit) ---
-        if tgl <= batas_sp and not is_minggu and not is_kebal_sp:
-            # SP bertambah jika video finish < 2 (0 atau 1).
-            if jml_v < 2: 
-                hari_lemah += 1
+        # --- LOGIKA SP (HANYA UNTUK STAFF & H+1) ---
+        if level_target == "STAFF" and tgl <= batas_sp:
+            if not is_minggu and not is_kebal_sp:
+                if jml_v < 2: 
+                    hari_lemah += 1
 
-    # 4. Penentuan Level & Potongan SP (Reset tiap bulan)
+    # 4. Penentuan Level & Potongan
     pot_sp = 0
-    # Level UPLOADER, ADMIN, OWNER dikecualikan dari SP.
     if level_target in ["OWNER", "ADMIN", "UPLOADER"]:
         level_sp = "🌟 NORMAL (VIP)"
         hari_lemah = 0
@@ -1327,7 +1327,7 @@ def tampilkan_tugas_kerja():
             # --- 3. SET VARIABLE UNTUK UI ---
             total_semua_bonus = bonus_sudah_cair # <--- INI KUNCI SINKRONISASINYA
             # --- SISIRAN FINAL: PENENTU PESAN & RADAR UI (KASTA VERSION) ---
-            if level_asli_target in ["OWNER", "ADMIN"]:
+            if level_asli_target in ["OWNER", "ADMIN", "UPLOADER"]:
                 status_ikon = "✨ VIP"
                 msg = "Akses Khusus: Tidak dipengaruhi sistem potongan SP harian."
                 tampil_h_kurang = 0 # VIP selalu terlihat bersih di radar
@@ -2414,69 +2414,49 @@ def tampilkan_kendali_tim():
                 st.divider()
 
                 if not df_ai.empty:
-                    # 3. Logika Tampilan 2 Kolom (Gede & Jelas)
-                    kolom_ai = st.columns(2)
+                    # 3. TAMPILAN COMPACT 1 BARIS (7 KOLOM + ICON)
                     h_ini = sekarang.date()
-
-                    # Counter buat ngatur kolom (biar gak bolong kalau ada yang di-skip)
-                    col_idx = 0
 
                     for idx, r in df_ai.iterrows():
                         tgl_exp = pd.to_datetime(r['EXPIRED']).date()
                         sisa = (tgl_exp - h_ini).days
                         
-                        # --- MODIFIKASI DISINI: SEMBUNYIKAN KALAU MATI ---
                         if sisa < 0: 
-                            continue # Lewati adegan ini, jangan tampilin di layar
+                            continue 
                         
-                        # Penentu Warna Header
+                        # Penentu Warna Berdasarkan Sisa Hari
                         if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
                         elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
                         else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
 
-                        with kolom_ai[idx % 2]:
-                            with st.container(border=True):
-                                # HEADER
-                                st.markdown(f"""
-                                    <div style="text-align:center; padding:3px; background:{warna_h}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;">
-                                        <b style="color:white; font-size:12px;">{str(r['AI']).upper()}</b>
-                                    </div>
-                                """, unsafe_allow_html=True)
-                                
-                                # EMAIL & PASSWORD (2 KOLOM - FONT 15PX)
-                                c1, c2, c3 = st.columns(3)
-                                c1.markdown(f"<p style='margin:10px 0 0 0; font-size:11px; color:#888;'>📧 EMAIL</p><code style='font-size:13px !important; display:block; padding:5px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                                c2.markdown(f"<p style='margin:10px 0 0 0; font-size:11px; color:#888;'>🔑 PASSWORD</p><code style='font-size:13px !important; display:block; padding:5px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                                c3.markdown(f"<p style='margin:10px 0 0 0; font-size:11px; color:#888;'>👤 PEMAKAI</p><code style='font-size:13px !important; display:block; padding:5px;'>{r['PEMAKAI']}</code>", unsafe_allow_html=True)
+                        with st.container(border=True):
+                            # HEADER TOOL
+                            st.markdown(f"""
+                                <div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;">
+                                    <b style="color:white; font-size:11px;">🚀 {str(r['AI']).upper()}</b>
+                                </div>
+                            """, unsafe_allow_html=True)
 
-
-                                st.divider()
-                                
-                                # STATUS, EXPIRED, SISA (3 KOLOM SEJAJAR)
-                                b1, b2, b3 = st.columns(3)
-                                b1.markdown(f"<p style='margin:0; font-size:11px; color:#888;'>STATUS</p><b style='font-size:13px;'>{stat_ai}</b>", unsafe_allow_html=True)
-                                b2.markdown(f"<p style='margin:0; font-size:11px; color:#888;'>EXPIRED</p><b style='font-size:13px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
-                                b3.markdown(f"<p style='margin:0; font-size:11px; color:#888;'>SISA</p><b style='font-size:15px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
-
-                                st.write("") # Kasih jarak dikit
-                                if st.button(f"🔄 RESET AKUN", key=f"reset_{r['EMAIL']}_{idx}", use_container_width=True):
-                                    try:
-                                        # 1. Cari baris berdasarkan Email (Kolom 2)
-                                        # Kita pake .strip() biar kalau ada spasi gak sengaja di GSheet tetep ketemu
-                                        cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
-                                        
-                                        if cell_target:
-                                            # 2. Update status jadi 'X' (Kolom 5) dan hapus tgl klaim (Kolom 6)
-                                            ws_akun.update_cell(cell_target.row, 5, "X")
-                                            ws_akun.update_cell(cell_target.row, 6, "")
-                                            
-                                            st.success(f"✅ Akun {r['AI']} berhasil direset!")
-                                            time.sleep(1)
-                                            st.rerun()
-                                        else:
-                                            st.error("❌ Email tidak ditemukan di database.")
-                                    except Exception as e:
-                                        st.error(f"⚠️ Gagal reset: {e}")
+                            # 7 KOLOM DENGAN ICON
+                            c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
+                            
+                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 USER</p><b style='font-size:12px;'>{r['PEMAKAI']}</b>", unsafe_allow_html=True)
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
+                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
+                            
+                            # Tombol Reset
+                            if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
+                                try:
+                                    cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
+                                    if cell_target:
+                                        ws_akun.update_cell(cell_target.row, 5, "X")
+                                        ws_akun.update_cell(cell_target.row, 6, "")
+                                        st.success(f"✅ Reset!"); time.sleep(1); st.rerun()
+                                except Exception as e:
+                                    st.error(f"Gagal: {e}")
                 else:
                     st.info("Belum ada data akun AI.")
 
@@ -2890,6 +2870,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
