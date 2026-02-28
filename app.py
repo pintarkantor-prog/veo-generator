@@ -2589,7 +2589,7 @@ def tampilkan_area_staf():
                 value=3,
                 key="slider_simulasi_2026_final"
             )
-            st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja). **⚠️Status video wajib finish/acc.** ")
+            st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja).")
 
         st.write("")
 
@@ -2644,7 +2644,7 @@ def tampilkan_area_staf():
             
             with col3:
                 st.metric("TOTAL BONUS", f"Rp {total_bonus:,}", delta=f"Rp {b_harian:,} / hr")
-
+        st.caption(f"Simulasi ini *HANYA* berlaku untuk staff editor AI (status video finish)")
         st.write("")
 
         # --- CARD 3: INFO SISTEM ---
@@ -3080,6 +3080,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
