@@ -95,32 +95,20 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    tz_wib = pytz.timezone('Asia/Jakarta')
-    waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
-    
-    # 1. Catat ke Supabase (WAJIB & CEPAT)
-    # Ini cuma butuh milidetik, gak kerasa sama user
-    try:
-        supabase.table("Log_Aktivitas").insert({
-            "Waktu": waktu_skrg,
-            "User": user.upper(),
-            "Aksi": aksi
-        }).execute()
-    except Exception as e:
-        print(f"Supabase Log Error: {e}")
-
-    # 2. Catat ke GSheet (BACKUP - SI BIANG KEROK LEMOT)
-    # SARAN GUE: Matikan GSheet log kalau mau web beneran enteng.
-    # Supabase udah cukup aman buat Log.
-    # Kalau mau tetep ada, bungkus begini:
-    """
+    """Fungsi sakti untuk mencatat semua gerakan staff ke GSheet"""
     try:
         sh = get_gspread_sh()
         ws_log = sh.worksheet("Log_Aktivitas")
-        ws_log.append_row([waktu_skrg, user.upper(), aksi])
-    except:
-        pass
-    """
+        
+        # Atur waktu WIB
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        waktu_skrg = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Kirim ke GSheet (Kolom: Waktu, Nama, Aksi)
+        ws_log.append_row([waktu_skrg, str(user).upper(), aksi])
+    except Exception as e:
+        # Cukup tampilkan di terminal/console biar user gak panik
+        print(f"Gagal mencatat log: {e}")
 
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3024,6 +3012,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
