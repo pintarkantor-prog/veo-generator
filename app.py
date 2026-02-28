@@ -2414,34 +2414,36 @@ def tampilkan_kendali_tim():
                 st.divider()
                         
                 if not df_ai.empty:
-                    # 1. STANDARISASI DATA
+                    # 1. SETUP DATA & SORTING (Fokus Urutan: X > Otw Expired > Sisanya)
                     h_ini = sekarang.date()
-                    df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
+                    df_ai['TGL_OBJ'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                     
-                    # 2. LOGIKA PRIORITAS TAMPILAN (X > Otw Expired > Sisanya)
-                    def tentukan_prioritas(row):
-                        if pd.isna(row['EXPIRED_DT']): return 4 # Data rusak taruh bawah
-                        tgl_exp = (row['EXPIRED_DT'] - h_ini).days
-                        pemakai_str = str(row['PEMAKAI']).strip().upper()
-                        if pemakai_str == "X": return 1
-                        elif tgl_exp <= 3: return 2
+                    # Buat kolom bantuan 'PRIORITAS' buat urutan (1: X, 2: Expired Dekat, 3: Sisanya)
+                    def urutkan(r):
+                        sisa_hr = (r['TGL_OBJ'] - h_ini).days
+                        pemakai = str(r['PEMAKAI']).strip().upper()
+                        if pemakai == "X": return 1
+                        elif sisa_hr <= 3: return 2
                         else: return 3
 
-                    df_ai['PRIORITAS'] = df_ai.apply(tentukan_prioritas, axis=1)
-                    df_tampil = df_ai.sort_values(['PRIORITAS', 'EXPIRED_DT']).copy()
+                    df_ai['PRIO'] = df_ai.apply(urutkan, axis=1)
+                    # Sortir berdasarkan Prioritas lalu tanggal terdekat
+                    df_sorted = df_ai.sort_values(['PRIO', 'TGL_OBJ']).copy()
 
-                    # 3. LOOPING TAMPILAN CLEAN 8 KOLOM
-                    for idx, r in df_tampil.iterrows():
-                        # --- DEFINISIKAN SISA DULU SEBELUM DIPAKAI ---
-                        if pd.isna(r['EXPIRED_DT']): continue
-                        sisa = (r['EXPIRED_DT'] - h_ini).days
+                    # 2. TAMPILAN COMPACT 1 BARIS (Gunakan df_sorted)
+                    for idx, r in df_sorted.iterrows():
+                        tgl_exp = r['TGL_OBJ']
+                        if pd.isna(tgl_exp): continue
                         
-                        if sisa < 0: continue # Sembunyikan kalau expired
+                        sisa = (tgl_exp - h_ini).days
                         
-                        # Penentu Warna Berdasarkan Sisa Hari
-                        if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
-                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#8B5E3C", "🟠 LIMIT"
-                        else: warna_h, stat_ai = "#633535", "🔴 MATI"
+                        if sisa < 0: 
+                            continue 
+                        
+                        # Penentu Warna (Warna tetap sesuai kode asli lo)
+                        if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
+                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
+                        else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
 
                         with st.container(border=True):
                             # HEADER TOOL
@@ -2884,6 +2886,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
