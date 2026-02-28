@@ -2586,8 +2586,6 @@ def tampilkan_area_staf():
             key="pilih_posisi_simulasi_v2"
         )
         
-        st.divider()
-
         if posisi == "Staff Editor":
             # --- CARD 1: SLIDER EDITOR ---
             with st.container(border=True):
@@ -3078,6 +3076,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
