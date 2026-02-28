@@ -2016,37 +2016,27 @@ def tampilkan_tugas_kerja():
         else:
             st.info("🔒 **Menu Klaim Gaji** akan terbuka otomatis pada tanggal 26 setiap bulannya.")
                 
-def tampilkan_kendali_tim():   
-    tz_wib = pytz.timezone('Asia/Jakarta')
-    sekarang = datetime.now(tz_wib)
+def tampilkan_kendali_tim():    
     user_level = st.session_state.get("user_level", "STAFF")
-    user_sekarang = st.session_state.get("username", "USER")
 
     if user_level not in ["OWNER", "ADMIN"]:
-        st.error("🚫 Akses Terbatas.")
+        st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
         st.stop()
 
-    # --- FUNGSI HELPER (ANTI-ERROR 'f') ---
-    def clean_money(val):
-        try:
-            if val is None or str(val).strip() == "" or str(val).lower() == "nan":
-                return 0.0
-            # Hapus semua karakter kecuali angka dan titik desimal
-            res = "".join(c for c in str(val) if c.isdigit() or c == '.')
-            return float(res) if res else 0.0
-        except:
-            return 0.0
-
-    st.title("⚡ PUSAT KENDALI TIM")
+    # 2. SETUP WAKTU (Wajib di atas agar variabel 'sekarang' terbaca semua modul)
+    tz_wib = pytz.timezone('Asia/Jakarta')
+    sekarang = datetime.now(tz_wib)
     
+    # 3. HEADER HALAMAN
     col_h1, col_h2 = st.columns([3, 1])
     with col_h1:
-        st.markdown("### Dashboard Eksekutif")
+        st.title("⚡ PUSAT KENDALI TIM")
     with col_h2:
         if st.button("🔄 REFRESH DATA", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
 
+    # 4. KONEKSI MASTER (Satu koneksi untuk semua expander di bawah)
     sh = get_gspread_sh()
     
     c_bln, c_thn = st.columns([2, 2])
@@ -2058,72 +2048,129 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # 1. AMBIL DATA
+        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas")
+        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
 
-        # 2. SARING DATA (Anti-Melar)
+        # Hitung target display (logika lo tetep jalan)
+        t_target_display = len(df_staff) * 40
+
+        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
         def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: 
-                return pd.DataFrame(columns=df.columns)
+            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
+            # Pastikan kolom tanggal jadi format waktu Python yang benar
             df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
             mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return df[mask].copy()
 
+        # Jalankan filter untuk semua tabel (Data otomatis tersaring sesuai bulan/tahun pilihan lo)
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
-        
+        df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
+
+        # Logika Finish & Rekap
         df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
+        
+        rekap_harian_tim = {}
+        rekap_total_video = {}
+        if not df_f_f.empty:
+            df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
+            df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
+            rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
+            rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
-        # 3. KALKULASI KEUANGAN (DIPAKSA FLOAT)
-        inc_raw, ops_raw, bonus_kas_raw = 0.0, 0.0, 0.0
+        # --- KALKULASI KEUANGAN RIIL ---
+        inc = 0
+        ops = 0
+        bonus_terbayar_kas = 0
+        
         if not df_k_f.empty:
-            df_k_f['NOM_NUM'] = df_k_f['NOMINAL'].apply(clean_money)
-            inc_raw = float(df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOM_NUM'].sum())
-            ops_raw = float(df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOM_NUM'].sum())
-            bonus_kas_raw = float(df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOM_NUM'].sum())
+            df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
+            inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
+            # Ops adalah pengeluaran SELAIN Gaji Tim
+            ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL'].sum()
+            # Bonus Terbayar adalah yang sudah masuk ke Arus Kas via tombol ACC
+            bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOMINAL'].sum()
 
-        # 4. HITUNG GAJI POKOK REAL
-        total_gp_tim = 0.0
+        # --- HITUNG ESTIMASI GAJI POKOK REAL (STAFF & ADMIN) ---
+        total_gaji_pokok_tim = 0
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
-        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])] if not df_staff.empty else pd.DataFrame()
+        
+        # FILTER: Ambil STAFF dan ADMIN. OWNER (Dian) jangan dimasukkan agar saldo tetap rahasia.
+        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
 
-        if not is_masa_depan and not df_staff_real.empty:
+        if not is_masa_depan:
             for _, s in df_staff_real.iterrows():
                 n_up = str(s.get('NAMA', '')).strip().upper()
-                if n_up in ["", "NAN"]: continue
+                if n_up == "" or n_up == "NAN": continue
                 
-                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
+                # --- 1. IDENTIFIKASI LEVEL TARGET (KUNCI UTAMA) ---
+                lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
+                
+                # --- 2. SINKRON: Ambil Data Harian ---
+                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
+                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
 
-                _, _, pot_sp, _, _ = hitung_logika_performa_dan_bonus(df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=str(s.get('LEVEL')))
+                # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
+                _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
+                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
+                    level_target=lv_asli # <--- LISA SEKARANG AMAN (KEBAL)
+                )
                 
-                gp = clean_money(s.get('GAJI_POKOK', 0))
-                tj = clean_money(s.get('TUNJANGAN', 0))
-                nett = max(0.0, (gp + tj) - float(pot_sp))
+                # --- 4. HITUNG GAJI NETT ---
+                g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
+                t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
+                
+                # Admin pasti pot_sp_real = 0 karena level_target="ADMIN" sudah dikirim ke mesin
+                gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
                 
                 if bulan_dipilih == sekarang.month:
-                    total_gp_tim += (nett / 25) * min(sekarang.day, 25)
+                    total_gaji_pokok_tim += (gaji_nett / 25) * min(sekarang.day, 25)
                 else:
-                    total_gp_tim += nett
+                    total_gaji_pokok_tim += gaji_nett
 
-        # 5. UI ANALISIS KEUANGAN
-        total_out_riil = float(total_gp_tim + bonus_kas_raw + ops_raw)
-        saldo_riil = float(inc_raw - total_out_riil)
-
+        # TOTAL OUTCOME SINKRON (Uang Keluar Real: Staff + Admin)
+        total_pengeluaran_gaji = total_gaji_pokok_tim + bonus_terbayar_kas
+        total_out = total_pengeluaran_gaji + ops
+        saldo_bersih = inc - total_out
+        
+        # ======================================================================
+        # --- UI: FINANCIAL COMMAND CENTER (CUSTOM LAYOUT) ---
+        # ======================================================================
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
-            m1, m2, m3, m4 = st.columns(4)
-            # Proteksi f-string terakhir
-            m1.metric("💰 INCOME", f"Rp {inc_raw:,.0f}")
-            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}")
-            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta="SURPLUS" if saldo_riil >= 0 else "DEFISIT")
             
-            margin = (saldo_riil / inc_raw * 100) if inc_raw > 0 else 0.0
-            m4.metric("📊 MARGIN", f"{margin:.1f}%")
+            # --- FIX TIPE DATA FINANSIAL SEBELUM TAMPIL ---
+            inc_val = float(inc)
+            # Pastikan bonus terbayar dan ops sudah angka murni
+            bonus_val = float(bonus_terbayar_kas) if bonus_terbayar_kas else 0
+            ops_val = float(ops) if ops else 0
+            
+            # Outcome total gabungan (Riil)
+            total_out_riil = total_gaji_pokok_tim + bonus_val + ops_val
+            saldo_riil = inc_val - total_out_riil
+            
+            # --- METRIK UTAMA ---
+            m1, m2, m3, m4 = st.columns(4)
+            
+            m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
+            
+            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", 
+                      delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, 
+                      delta_color="normal")
+            
+            status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
+            warna_delta = "normal" if saldo_riil >= 0 else "inverse"
+            
+            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", 
+                      delta=status_saldo,
+                      delta_color=warna_delta)
+            
+            margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
+            m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
 
             st.divider()
             
@@ -2980,8 +3027,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
