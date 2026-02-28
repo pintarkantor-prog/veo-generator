@@ -2502,14 +2502,14 @@ def tampilkan_kendali_tim():
         # --- 8. PINTAR COMMAND CENTER (SUNTIK ABSEN & IZIN) ---
         # ======================================================================
         with st.expander("🛠️ PINTAR COMMAND CENTER", expanded=False):
-            st.info("Gunakan ini untuk suntik HADIR (Darurat) atau input IZIN/SAKIT.")
+            st.info("Gunakan ini untuk intervensi data (HADIR/IZIN/SAKIT).")
             
-            # Ambil data staf dari st_raw yang sudah ditarik di awal fungsi Kendali Tim
-            list_staf = st_raw[st_raw['LEVEL'] != 'OWNER']['NAMA'].unique().tolist()
+            # PAKAI df_staff (Sesuai kode lo di atas)
+            list_staf = df_staff[df_staff['LEVEL'] != 'OWNER']['NAMA'].unique().tolist()
             
             c_staf, c_aksi, c_tgl = st.columns([1.5, 1.5, 1])
             with c_staf: target = st.selectbox("Pilih Staf:", list_staf, key="cmd_staf")
-            with c_aksi: status_baru = st.selectbox("Status:", ["HADIR", "IZIN", "SAKIT", "OFF"], key="cmd_stat")
+            with c_aksi: status_baru = st.selectbox("Set Status:", ["HADIR", "IZIN", "SAKIT", "OFF", "TELAT"], key="cmd_stat")
             with c_tgl: tgl_cmd = st.date_input("Tanggal:", value=sekarang.date(), key="cmd_tgl")
             
             if st.button("🔥 EKSEKUSI PERUBAHAN", use_container_width=True):
@@ -2517,16 +2517,26 @@ def tampilkan_kendali_tim():
                 jam_s = "08:00" if status_baru == "HADIR" else "-"
                 
                 try:
-                    # 1. Update Supabase
+                    # 1. Update Supabase (Tabel Absensi)
                     res = supabase.table("Absensi").select("id").eq("Nama", target).eq("Tanggal", tgl_s).execute()
                     if len(res.data) > 0:
                         supabase.table("Absensi").update({"Status": status_baru, "Jam Masuk": jam_s}).eq("Nama", target).eq("Tanggal", tgl_s).execute()
                     else:
                         supabase.table("Absensi").insert({"Nama": target, "Tanggal": tgl_s, "Status": status_baru, "Jam Masuk": jam_s}).execute()
                     
-                    st.success(f"✅ {target} berhasil diubah jadi {status_baru}!"); time.sleep(1); st.rerun()
+                    # 2. Update GSheet (Backup)
+                    try:
+                        ws_abs = sh.worksheet("Absensi")
+                        # Cari baris yang cocok (ini asumsi sederhana, cari nama)
+                        c_find = ws_abs.find(target)
+                        if c_find:
+                            # Update kolom status (biasanya kolom 4 atau 5 sesuai format lo)
+                            ws_abs.update_cell(c_find.row, 4, status_baru)
+                    except: pass
+
+                    st.success(f"✅ Berhasil! {target} sekarang {status_baru}"); time.sleep(1); st.rerun()
                 except Exception as e:
-                    st.error(f"Gagal eksekusi: {e}")
+                    st.error(f"Gagal: {e}")
 
     except Exception as e:
         st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
@@ -2934,6 +2944,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
