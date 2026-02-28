@@ -2345,7 +2345,7 @@ def tampilkan_kendali_tim():
                     
                     st.progress(min(h_lemah_staf / 7, 1.0))
         # ======================================================================
-        # --- 5. RANGKUMAN KOLEKTIF TIM (VERSI CLEAN TOTAL - FIXED) ---
+        # --- 5. RANGKUMAN KOLEKTIF TIM (VERSI CLEAN TOTAL - VIP SYNCED) ---
         # ======================================================================
         with st.container(border=True):
             st.markdown("<p style='font-size:12px; font-weight:bold; color:#888; margin-bottom:15px;'>📊 RANGKUMAN KOLEKTIF TIM</p>", unsafe_allow_html=True)
@@ -2354,11 +2354,10 @@ def tampilkan_kendali_tim():
             nama_staff_asli = df_staff[df_staff['LEVEL'] == 'STAFF']['NAMA'].str.upper().tolist()
             performa_hanya_staff = {k: v for k, v in performa_staf.items() if k in nama_staff_asli}
             
-            # Pengaman jika data staff kosong
             staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             
-            # --- LOGIKA SINKRONISASI KAS SUPABASE (FIXED BULAN) ---
+            # --- TAMBAHAN LOGIKA SINKRONISASI KAS SUPABASE ---
             df_kas_kolektif = ambil_data_segar("Arus_Kas")
             real_b_lembur = 0
             real_b_absen = 0
@@ -2367,48 +2366,48 @@ def tampilkan_kendali_tim():
                 # Standardisasi Header
                 df_kas_kolektif.columns = [str(c).strip().upper() for c in df_kas_kolektif.columns]
                 
-                # Filter Periode: GUNAKAN bulan_dipilih & tahun_dipilih (Bukan 'sekarang')
-                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], dayfirst=True, errors='coerce')
-                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == bulan_dipilih) & \
-                               (df_kas_kolektif['TANGGAL_DT'].dt.year == tahun_dipilih)
+                # Filter Periode Bulan Ini
+                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], errors='coerce')
+                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == sekarang.month) & \
+                               (df_kas_kolektif['TANGGAL_DT'].dt.year == sekarang.year)
                 
                 df_cair = df_kas_kolektif[mask_periode].copy()
                 
                 if not df_cair.empty:
-                    # KUNCI: Paksa nominal jadi angka
+                    # --- KUNCI: PAKSA NOMINAL JADI ANGKA ---
                     df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'], errors='coerce').fillna(0)
                     
-                    # Hitung Bonus Video Real
+                    # Hitung dengan filter yang lebih LUAS (Upper case agar sinkron)
                     real_b_lembur = df_cair[
                         (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & 
                         (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO', na=False))
                     ]['NOMINAL_FIX'].sum()
                     
-                    # Hitung Bonus Absen Real
                     real_b_absen = df_cair[
                         (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & 
                         (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
                     ]['NOMINAL_FIX'].sum()
+            # --------------------------------------------------
 
-            # --- DISPLAY METRIC (7 KOLOM) ---
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
             
-            # Target Ideal
-            target_fix = len(nama_staff_asli) * 40
+            # 2. Target Ideal dinamis (Jumlah Staff x 40)
+            jml_staff_asli = len(nama_staff_asli)
+            target_fix = jml_staff_asli * 40
             c_r1.metric("🎯 TARGET IDEAL", f"{target_fix} Vid") 
             
-            # Capaian
+            # 3. Total Video & Persentase Capaian
             persen_capaian = (rekap_v_total / target_fix * 100) if target_fix > 0 else 0
-            c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}%")
+            c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}% Capaian")
             
-            # Bonus Real (Synced Supabase)
-            c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_lembur):,}", delta="LIVE")
-            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen):,}", delta="LIVE")
+            # 4. Bonus (Sumber data ganti ke REAL_B SUPABASE)
+            c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_lembur):,}", delta="LIVE SYNC")
+            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen):,}", delta="LIVE SYNC")
             
-            # Hari Lemah
-            c_r5.metric("💀 TOTAL LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
+            # 5. Total Hari Lemah (Otomatis 0 buat Admin karena Mantra Kebal)
+            c_r5.metric("💀 TOTAL HARI LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
             
-            # MVP & LOW
+            # 6. Gelar Juara & Perlu Bimbingan
             c_r6.metric("👑 MVP STAF", staf_top)
             c_r7.metric("📉 LOW STAF", staf_low)
         
@@ -3040,6 +3039,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
