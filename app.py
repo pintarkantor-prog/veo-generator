@@ -2571,7 +2571,7 @@ def tampilkan_area_staf():
         "📜 Kontrak Kerja"
     ])
 
-with t1:
+    with t1:
         st.write("")
         st.markdown("#### 🚀 Panduan Kerja & Standar Kualitas (SOP)")
         st.caption("Pahami setiap detail teknis di bawah ini. Kegagalan mengikuti SOP = Video REVISI/GAGAL.")
@@ -3151,6 +3151,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
