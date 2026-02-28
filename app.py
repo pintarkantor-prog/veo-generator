@@ -1390,8 +1390,8 @@ def tampilkan_tugas_kerja():
 
         st.divider()
 
-        except Exception as e:
-            st.error(f"❌ Error Tampilan: {e}")
+    except Exception as e:
+        st.error(f"❌ Error Tampilan: {e}")
 
     # --- 3. PANEL ADMIN (Taruh di Sini!) ---
     if user_level == "OWNER": # <--- Cuma Dian yang punya akses kirim tugas
@@ -1884,7 +1884,7 @@ def tampilkan_kendali_tim():
 
     st.divider()
 
-try:
+    try:
         # --- 1. AMBIL DATA (SUPABASE) ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
@@ -2283,6 +2283,7 @@ try:
 
             except Exception as e_slip:
                 st.error(f"Gagal memuat Rincian Gaji Sinkron: {e_slip}")
+                
         # ======================================================================
         # --- 7. DATABASE AKUN AI (VERSI ASLI DIAN - INDENTASI TERKUNCI) ---
         # ======================================================================
@@ -2789,6 +2790,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
