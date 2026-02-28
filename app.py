@@ -2050,7 +2050,7 @@ def tampilkan_kendali_tim():
                                 "Tanggal": sekarang.strftime('%Y-%m-%d'),
                                 "Tipe": f_tipe,
                                 "Kategori": f_kat,
-                                "Nominal": str(int(f_nom)), # <--- UBAH JADI STRING
+                                "Nominal": str(int(f_nom)),
                                 "Keterangan": f_ket,
                                 "User": user_sekarang.upper()
                             }
@@ -2061,7 +2061,7 @@ def tampilkan_kendali_tim():
                                 sekarang.strftime('%Y-%m-%d'), 
                                 f_tipe, 
                                 f_kat, 
-                                str(int(f_nom)), # <--- UBAH JADI STRING
+                                str(int(f_nom)),
                                 f_ket, 
                                 user_sekarang.upper()
                             ])
@@ -2077,13 +2077,14 @@ def tampilkan_kendali_tim():
                 # Log Terakhir: Batasi 5 Transaksi Saja
                 with st.container(height=230):
                     if not df_k_f.empty:
-                        # Ambil hanya 5 baris terbaru
-                        for _, r in df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(6).iterrows():
+                        # Ambil hanya 6 baris terbaru
+                        df_logs_display = df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(8)
+                        for _, r in df_logs_display.iterrows():
                             color = "#00ba69" if r['TIPE'] == "PENDAPATAN" else "#ff4b4b"
                             st.markdown(f"""
                             <div style='font-size:11px; border-bottom:1px solid #333; padding:4px 0;'>
                                 <b style='color:#ccc;'>{r['KATEGORI']}</b> 
-                                <span style='float:right; color:{color}; font-weight:bold;'>Rp {r['NOMINAL']:,.0f}</span><br>
+                                <span style='float:right; color:{color}; font-weight:bold;'>Rp {float(r['NOMINAL']):,.0f}</span><br>
                                 <span style='color:#666; font-style:italic;'>{r['KETERANGAN']}</span>
                             </div>
                             """, unsafe_allow_html=True)
@@ -2889,6 +2890,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
