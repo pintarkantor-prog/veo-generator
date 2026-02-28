@@ -2571,87 +2571,92 @@ def tampilkan_area_staf():
         "📜 Kontrak Kerja"
     ])
 
-    with t1:
+with t1:
         st.write("")
-        st.markdown("#### 🚀 Standar Operasional Prosedur (SOP) Pintar Media")
-        st.caption("Pedoman kualitas dan alur kerja untuk seluruh tim operasional.")
+        st.markdown("#### 🚀 Panduan Kerja & Standar Kualitas (SOP)")
+        st.caption("Pahami setiap detail teknis di bawah ini. Kegagalan mengikuti SOP = Video REVISI/GAGAL.")
 
-        # --- PILIHAN DIVISI (SOP) ---
+        # --- SUB-TAB POSISI ---
         divisi_sop = st.radio(
-            "Pilih Panduan Posisi:",
-            ["Staff Editor AI", "Staff Uploader", "Staff Admin"],
+            "Pilih Posisi Kamu:",
+            ["Staff Editor", "Staff Uploader", "Admin"],
             horizontal=True,
-            key="pilih_sop_divisi_v2"
+            key="pilih_sop_v_final_sultan"
         )
         st.divider()
 
-        if divisi_sop == "Staff Editor AI":
-            # --- CARD EDITOR: TEKNIS & KREATIVITAS ---
+        if divisi_sop == "Staff Editor":
             with st.container(border=True):
-                st.markdown("🎨 **MASTER OF STORYTELLING (EDITOR AI)**")
-                st.write("")
-                st.info("💡 **Visi Utama:** Menciptakan konten AI yang memiliki 'jiwa' dan alur cerita yang mampu mengikat penonton dari detik pertama.")
-                
+                st.markdown("🎨 **STANDAR PRODUKSI EDITOR (STORYTELLING AI)**")
+                st.info("💡 **Gaya Cerita:** Referensi Karakter Udin & Tung (Warung Tungtung).")
                 c1, c2 = st.columns(2)
                 with c1:
-                    st.markdown("**🎬 Spesifikasi Teknis (Wajib):**")
-                    st.write("- **Resolusi**: Minimal **Full HD 1080p** (Tajam & Jernih).")
-                    st.write("- **Format Shorts**: Portrait (9:16).")
-                    st.write("- **Durasi**: Minimal **1 Menit** (Fleksibel sesuai kebutuhan cerita).")
-                    st.write("- **Audio**: Wajib **Free Copyright** (Rekomendasi: YouTube Audio Library).")
+                    st.markdown("**🛠️ Spesifikasi Teknis Wajib:**")
+                    st.write("- **Kualitas**: Minimal **1080p Full HD** (Wajib Tajam!).")
+                    st.write("- **Rasio & Safe Zone**: 9:16 (Shorts), teks jangan ketutup UI YouTube.")
+                    st.write("- **Durasi**: Minimal 60 detik (Padat, no filler).")
+                    st.write("- **Audio**: Wajib **Copyright-Free** (Cek YouTube Audio Library).")
+                    st.write("- **SFX**: Gunakan Sound Effect untuk setiap aksi/kejadian penting.")
                 with c2:
-                    st.markdown("**🔍 Sumber Ide & Kreativitas:**")
-                    st.write("- **Pintar AI Lab & Gudang Ide**: Gunakan sebagai basis teknologi.")
-                    st.write("- **Benchmarking**: Amati channel referensi luar untuk inspirasi.")
-                    st.write("- **Originality**: Sangat dihargai jika ide murni dari kreativitas sendiri.")
-
+                    st.markdown("**🧠 Kreativitas & Alur Cerita:**")
+                    st.write("- **Hook 3 Detik**: Wajib ada kejutan/masalah di awal video.")
+                    st.write("- **Ekspresi AI**: Karakter harus punya emosi (marah/lucu/sedih).")
+                    st.write("- **Subtitle**: Wajib ada animasi teks yang mudah dibaca.")
+                    st.write("- **Ending**: Berikan penutup yang bikin orang mau nonton lagi.")
+            
             with st.container(border=True):
-                st.error("🚨 **STATUS ACC:** Video hanya akan di-ACC jika memenuhi seluruh spek teknis & alur cerita menarik.")
+                st.markdown("**📂 Manajemen File:**")
+                st.write("- **Nama File**: `TGL_NAMA_JUDUL.mp4` (Wajib Seragam!).")
+                st.write("- **Backup**: Simpan aset mentah (Project) minimal selama 3 hari.")
 
         elif divisi_sop == "Staff Uploader":
-            # --- CARD UPLOADER: CHANNEL HANDLER ---
             with st.container(border=True):
-                st.markdown("📡 **CONTENT PUBLISHING & CHANNEL HANDLER**")
-                st.write("")
-                st.success("🎯 **Visi Utama:** Menjadi garda terdepan dalam memastikan konten sampai ke penonton melalui manajemen channel yang sehat.")
-                
+                st.markdown("📡 **TATA CARA UPLOAD & HANDLE CHANNEL**")
                 c1, c2 = st.columns(2)
                 with c1:
-                    st.markdown("**📦 Manajemen Stok & Distribusi:**")
-                    st.write("- **Koordinasi Stok**: Pantau ketersediaan video dari Editor setiap hari.")
-                    st.write("- **Final QC**: Cek ulang kesesuaian judul & deskripsi sebelum tayang.")
+                    st.markdown("**📦 Distribusi & Posting:**")
+                    st.write("- **Prime Time**: Upload di jam ramai (Sesuai analitik channel).")
+                    st.write("- **Optimasi SEO**: Judul & Deskripsi harus memancing rasa penasaran.")
+                    st.write("- **Thumbnail**: Pilih frame paling menarik untuk cover Shorts.")
+                    st.write("- **Playlist**: Kelompokkan video sesuai tema di channel masing-masing.")
                 with c2:
-                    st.markdown("**📈 Optimasi & Audit Channel:**")
-                    st.write("- **Selection**: Memilah mana channel yang layak upload.")
-                    st.write("- **Replacement**: Berani mengganti dengan channel baru jika performa mati.")
+                    st.markdown("**📈 Monitoring & Audit:**")
+                    st.write("- **Evaluasi Performa**: Cek video yang 'meledak' vs yang 'mati'.")
+                    st.write("- **Selection**: Pilih mana channel yang layak lanjut vs ganti baru.")
+                    st.write("- **Daily Report**: Laporkan jumlah views & subscribers harian.")
+            
+            with st.container(border=True):
+                st.markdown("**🤝 Koordinasi:**")
+                st.write("- Wajib lapor sisa stok video ke Editor setiap sore pukul 16.00 WIB.")
 
         else:
-            # --- CARD ADMIN: OPERATIONAL BACKBONE ---
             with st.container(border=True):
-                st.markdown("⚖️ **OPERATIONAL BACKBONE (ADMIN)**")
-                st.write("")
-                st.warning("⚙️ **Visi Utama:** Memastikan seluruh roda operasional kantor berjalan mulus tanpa ada data yang terlewat.")
-                
+                st.markdown("⚖️ **TULANG PUNGGUNG OPERASIONAL (ADMIN)**")
                 c1, c2 = st.columns(2)
                 with c1:
-                    st.markdown("**📝 Administrasi & Keuangan:**")
-                    st.write("- **Input Progres**: Mencatat setiap video yang masuk (ACC/Revisi).")
-                    st.write("- **Cashflow**: Pencatatan rutin arus kas operasional kantor.")
+                    st.markdown("**📝 Manajemen Data & Progres:**")
+                    st.write("- **Input Database**: Catat video ACC/Revisi setiap jam ke sistem.")
+                    st.write("- **Absensi & Kedisiplinan**: Rekap jam kerja staf setiap hari.")
+                    st.write("- **Inventory**: Pastikan stok akun (YouTube/AI) selalu tersedia.")
+                    st.write("- **Filiring**: Rapikan folder Drive agar tidak berantakan.")
                 with c2:
-                    st.markdown("**🛡️ Pengawasan & Resource:**")
-                    st.write("- **Monitoring Staff**: Memantau kedisiplinan dan kendala harian tim.")
-                    st.write("- **Stock Management**: Menyiapkan kebutuhan aset & operasional harian.")
+                    st.markdown("**💰 Administrasi & Keuangan:**")
+                    st.write("- **Daily Cashflow**: Catat pengeluaran operasional sekecil apapun.")
+                    st.write("- **Audit Gaji**: Cek kesesuaian bonus dengan data video ACC.")
+                    st.write("- **Asset Management**: Pantau kondisi alat kantor (PC/Wifi/Listrik).")
+                    st.write("- **Support**: Siapkan referensi ide dari 'Gudang Ide' untuk tim.")
 
-        st.write("")
-        st.caption("PENTING: Kelalaian terhadap SOP akan mempengaruhi penilaian kinerja harian.")
-
+        st.error("🚨 **PERINGATAN:** Kelalaian berulang terhadap SOP ini akan memicu Surat Peringatan (SP) dan denda Rp 1.000.000.")
+    
     with t2:
         st.write("")
         st.markdown("##### 💵 Kalkulator Simulasi Pendapatan")
-        posisi = st.selectbox(
+        # Ganti selectbox jadi radio horizontal
+        posisi = st.radio(
             "Pilih Posisi Kamu:",
             ["Staff Editor", "Uploader & Admin"],
             index=0,
+            horizontal=True, # Ini kuncinya biar sejajar ke samping
             key="pilih_posisi_simulasi_v2"
         )
         
@@ -3146,6 +3151,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
