@@ -1955,7 +1955,7 @@ def tampilkan_kendali_tim():
                 # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
                     df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
-                    level_target=lv_asli # <--- LISA SEKARANG AMAN (KEBAL)
+                    level_target=lv_asli 
                 )
                 
                 # --- 4. HITUNG GAJI NETT ---
@@ -1965,10 +1965,7 @@ def tampilkan_kendali_tim():
                 # Admin pasti pot_sp_real = 0 karena level_target="ADMIN" sudah dikirim ke mesin
                 gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
                 
-                if bulan_dipilih == sekarang.month:
-                    total_gaji_pokok_tim += (gaji_nett / 25) * min(sekarang.day, 25)
-                else:
-                    total_gaji_pokok_tim += gaji_nett
+                total_gaji_pokok_tim += gaji_nett
 
         # TOTAL OUTCOME SINKRON (Uang Keluar Real: Staff + Admin)
         total_pengeluaran_gaji = total_gaji_pokok_tim + bonus_terbayar_kas
@@ -2856,3 +2853,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
