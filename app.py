@@ -2579,84 +2579,91 @@ def tampilkan_area_staf():
     with t2:
         st.write("")
         st.markdown("##### 💵 Kalkulator Simulasi Pendapatan")
-        st.caption("Geser slider untuk melihat potensi penghasilan jika kamu bekerja konsisten.")
+        st.caption("Simulasi ini hanya berlaku untuk Staff Editor AI (status video wajib finish/acc)")
 
-        with st.container(border=True):
-            st.markdown("🎯 **SET TARGET PRODUKSI HARIAN**")
-            t_hari = st.select_slider(
-                "Geser untuk simulasi pendapatan harian kamu:",
-                options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                value=3,
-                key="slider_simulasi_2026_final"
-            )
-            st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja).")
-
-        st.write("")
-
-        # --- LOGIKA HITUNG REVISI ---
-        gapok_sim = 1500000
-        hari_kerja = 25
+        posisi = st.selectbox(
+            "Pilih Posisi Kamu:",
+            ["Editor AI (Storytelling)", "Uploader & Admin"],
+            index=0,
+            key="pilih_posisi_simulasi"
+        )
         
-        if t_hari >= 5:
-            # 5 Video+: Bonus Absen + Bonus Video
-            b_absen_bln = 30000 * hari_kerja
-            b_video_bln = (t_hari - 4) * 30000 * hari_kerja
-            p_sp = 0
-            status_txt, d_status, d_color = "SANGAT BAIK", "🌟 Full Bonus", "normal"
-        elif t_hari >= 3:
-            # 3-4 Video: Bonus Absen Saja
-            b_absen_bln = 30000 * hari_kerja
-            b_video_bln = 0
-            p_sp = 0
-            status_txt, d_status, d_color = "STANDAR", "✅ Bonus Absen", "normal"
-        elif t_hari == 2:
-            # 2 Video: Gaji Pokok Saja (Aman SP)
-            b_absen_bln, b_video_bln, p_sp = 0, 0, 0
-            status_txt, d_status, d_color = "CUKUP", "🛡️ Aman SP", "normal"
-        else:
-            # 1 Video: Hari Lemah / Potongan SP 1jt
-            b_absen_bln, b_video_bln = 0, 0
-            p_sp = 1000000
-            status_txt, d_status, d_color = "LEMAH", "🚨 Risiko SP", "inverse"
+        st.divider()
 
-        total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
-        total_bonus = b_absen_bln + b_video_bln
-        b_harian = total_bonus // hari_kerja if t_hari >= 3 else 0
-        diff_gaji = total_gaji - gapok_sim
-
-        # --- CARD 2: DASHBOARD METRIC (FIXED DELTA) ---
-        with st.container(border=True):
-            st.markdown("💰 **ESTIMASI PENDAPATAN BULANAN**")
-            st.write("")
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.metric("STATUS", status_txt, delta=d_status, delta_color=d_color)
-            
-            with col2:
-                # delta_color="inverse" bikin angka minus jadi MERAH
-                st.metric(
-                    label="ESTIMASI TERIMA", 
-                    value=f"Rp {total_gaji:,}", 
-                    delta=f"Rp {diff_gaji:,}",
-                    delta_color="inverse" if diff_gaji < 0 else "normal"
+        if posisi == "Editor AI (Storytelling)":
+            # --- CARD 1: INPUT SLIDER EDITOR ---
+            with st.container(border=True):
+                st.markdown("🎯 **SET TARGET PRODUKSI HARIAN**")
+                t_hari = st.select_slider(
+                    "Geser untuk simulasi pendapatan harian kamu:",
+                    options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    value=3,
+                    key="slider_editor_2026"
                 )
-            
-            with col3:
-                st.metric("TOTAL BONUS", f"Rp {total_bonus:,}", delta=f"Rp {b_harian:,} / hr")
-        st.caption(f"Simulasi ini *HANYA* berlaku untuk staff editor AI (status video finish)")
-        st.write("")
+                st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja).")
 
-        # --- CARD 3: INFO SISTEM ---
-        with st.container(border=True):
+            st.write("")
+
+            # --- LOGIKA HITUNG EDITOR ---
+            gapok_sim = 1500000
+            hari_kerja = 25
+            
             if t_hari >= 5:
-                st.success(f"🔥 **PERFORMA MANTAP:** Gaji Pokok + Bonus Absen + Bonus Video Ke-{t_hari}!")
+                b_absen_bln = 30000 * hari_kerja
+                b_video_bln = (t_hari - 4) * 30000 * hari_kerja
+                p_sp = 0
+                status_txt, d_status, d_color = "SANGAT BAIK", "🌟 Full Bonus", "normal"
             elif t_hari >= 3:
-                st.info("💡 **INFO:** Bonus Absen cair! Tambah ke 5 video untuk mulai klaim Bonus Video.")
+                b_absen_bln = 30000 * hari_kerja
+                b_video_bln = 0
+                p_sp = 0
+                status_txt, d_status, d_color = "STANDAR", "✅ Bonus Absen", "normal"
             elif t_hari == 2:
-                st.warning("🧐 **ZONA AMAN:** Gaji Pokok utuh. Bonus baru aktif mulai dari 3 video/hari.")
+                b_absen_bln, b_video_bln, p_sp = 0, 0, 0
+                status_txt, d_status, d_color = "CUKUP", "🛡️ Aman SP", "normal"
             else:
-                st.error("🚨 **BAHAYA:** Potongan Gaji Rp 1.000.000 karena status HARI LEMAH!")
+                b_absen_bln, b_video_bln = 0, 0
+                p_sp = 1000000
+                status_txt, d_status, d_color = "LEMAH", "🚨 Risiko SP", "inverse"
+
+            total_gaji = (gapok_sim + b_absen_bln + b_video_bln) - p_sp
+            total_bonus = b_absen_bln + b_video_bln
+            b_harian = total_bonus // hari_kerja if t_hari >= 3 else 0
+            diff_gaji = total_gaji - gapok_sim
+
+            # --- CARD 2: DASHBOARD METRIC EDITOR ---
+            with st.container(border=True):
+                st.markdown("💰 **ESTIMASI PENDAPATAN BULANAN**")
+                st.write("")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("STATUS", status_txt, delta=d_status, delta_color=d_color)
+                with col2:
+                    st.metric("ESTIMASI TERIMA", f"Rp {total_gaji:,}", delta=f"Rp {diff_gaji:,}", delta_color="inverse" if diff_gaji < 0 else "normal")
+                with col3:
+                    st.metric("TOTAL BONUS", f"Rp {total_bonus:,}", delta=f"Rp {b_harian:,} / hr")
+
+        else:
+            # --- TAMPILAN UNTUK UPLOADER & ADMIN ---
+            with st.container(border=True):
+                st.markdown("🏢 **INFORMASI PENDAPATAN ADMIN / UPLOADER**")
+                st.write("")
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.metric("STATUS", "AKTIF", delta="🛡️ Fixed Salary")
+                with c2:
+                    st.metric("ESTIMASI TERIMA", "Rp 1,500,000", delta="Gaji Pokok")
+                
+                st.write("")
+                st.info("""
+                📌 **Info Ketentuan:**
+                - Posisi Admin & Uploader memiliki sistem **Gaji Pokok Tetap**.
+                - Tidak berlaku sistem potongan SP berdasarkan jumlah video.
+                - Fokus utama pada ketepatan waktu upload dan kerapihan database.
+                """)
+
+        st.write("")
+        st.caption("PENTING: Seluruh informasi gaji bersifat transparan untuk menjaga profesionalitas tim.")
         
     with t3:
         st.write("")
@@ -3080,6 +3087,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
