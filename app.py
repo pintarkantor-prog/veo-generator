@@ -2298,9 +2298,6 @@ def tampilkan_kendali_tim():
             c_r5.metric("💀 TOTAL HARI LEMAH", f"{rekap_h_malas} HR", delta_color="inverse")
             c_r6.metric("👑 MVP STAF", staf_top)
             c_r7.metric("📉 LOW STAF", staf_low)
-
-    except Exception as e:
-        st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
         
         # ======================================================================
         # --- 6. RINCIAN GAJI & SLIP (FULL VERSION - SINKRON HARIAN) ---
@@ -2934,5 +2931,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
