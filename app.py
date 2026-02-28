@@ -2589,7 +2589,7 @@ def tampilkan_area_staf():
                 value=3,
                 key="slider_simulasi_2026_final"
             )
-            st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja).")
+            st.caption(f"Simulasi berdasarkan performa stabil {t_hari} video/hari (25 Hari Kerja). **⚠️Status video wajib finish/acc.** ")
 
         st.write("")
 
@@ -3080,6 +3080,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
