@@ -1205,7 +1205,7 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
                     bonus_video_total += (jml_v - 4) * 30000
             
         # --- LOGIKA SP (Syarat: Bukan Minggu & Bukan Izin/Sakit) ---
-        if tgl <= batas_sp and not is_minggu and not is_kebal_sp:.
+        if tgl <= batas_sp and not is_minggu and not is_kebal_sp:
             # SP bertambah jika video finish < 2 (0 atau 1).
             if jml_v < 2: 
                 hari_lemah += 1
@@ -2821,6 +2821,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
