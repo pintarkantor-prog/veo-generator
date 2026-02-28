@@ -2060,9 +2060,9 @@ def tampilkan_kendali_tim():
 
         # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
         def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: 
-                return pd.DataFrame()
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], dayfirst=True, errors='coerce')
+            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
+            # Pastikan kolom tanggal jadi format waktu Python yang benar
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
             mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
             return df[mask].copy()
 
@@ -3027,4 +3027,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
