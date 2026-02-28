@@ -9,7 +9,9 @@ import re
 import plotly.express as px
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
-from supabase import create_client, Client # <--- Library Supabase
+from supabase import create_client, Client
+
+st.set_page_config(page_title="PINTAR MEDIA | Studio", layout="wide")
 
 # ==============================================================================
 # KONFIGURASI DASAR & KONEKSI (STABIL & HEMAT KUOTA)
@@ -252,8 +254,6 @@ MASTER_CHAR = {
         }
     }
 }
-
-st.set_page_config(page_title="PINTAR MEDIA | Studio", layout="wide")
 
 # ==============================================================================
 # FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP + SUPABASE
@@ -3012,3 +3012,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
