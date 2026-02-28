@@ -1735,7 +1735,7 @@ def tampilkan_tugas_kerja():
             except Exception as e_station:
                 st.error(f"Gagal memuat AI Station: {e_station}")
                 
-    # --- 4. LACI ARSIP (VERSI SUPABASE TURBO) ---
+    # --- 4. LACI ARSIP (VERSI FIX NOTIF) ---
     with st.expander("📜 RIWAYAT & ARSIP TUGAS", expanded=False):
         c_arsip1, c_arsip2 = st.columns([2, 1])
         daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
@@ -1744,43 +1744,50 @@ def tampilkan_tugas_kerja():
         bln_arsip_angka = [k for k, v in daftar_bulan.items() if v == bln_arsip_nama][0]
         thn_arsip = c_arsip2.number_input("📅 Tahun:", value=sekarang.year, min_value=2024, max_value=2030, key="sel_thn_arsip")
 
-        # --- PERBAIKAN: Panggil data segar berdasarkan pilihan dropdown ---
+        # Panggil data segar
         df_laci = ambil_data_segar("Tugas", bulan_pilihan=bln_arsip_angka, tahun_pilihan=thn_arsip)
         
+        # Inisialisasi variabel pengecekan
+        tampilkan_data = False
+
         if not df_laci.empty:
-            # Saring berdasarkan Status (Hanya FINISH & CANCELED)
+            # 1. Saring berdasarkan Status
             df_laci = df_laci[df_laci['STATUS'].isin(['FINISH', 'CANCELED'])]
             
-            # Saring jika user adalah STAFF
+            # 2. Saring jika user adalah STAFF
             if st.session_state.get("user_level") == "STAFF":
                 user_skrg = st.session_state.get("user_aktif", "").upper()
                 df_laci = df_laci[df_laci['STAF'].str.upper() == user_skrg]
-
+            
+            # 3. Cek apakah setelah disaring masih ada data?
             if not df_laci.empty:
-                # Statistik
-                total_f = len(df_laci[df_laci['STATUS'] == "FINISH"])
-                total_c = len(df_laci[df_laci['STATUS'] == "CANCELED"])
-                st.markdown(f"📊 **Laporan {bln_arsip_nama}:** <span style='color:#1d976c;'>✅ {total_f} Selesai</span> | <span style='color:#e74c3c;'>🚫 {total_c} Dibatalkan</span>", unsafe_allow_html=True)
-                
-                # Gunakan kolom yang sesuai dengan bersihkan_data (HURUF BESAR)
-                kolom_fix = ['ID', 'STAF', 'INSTRUKSI', 'DEADLINE', 'STATUS', 'CATATAN_REVISI']
-                
-                # Render Dataframe
-                st.dataframe(
-                    df_laci.sort_values(by='ID', ascending=False)[kolom_fix],
-                    column_config={
-                        "ID": st.column_config.TextColumn("🆔 ID"),
-                        "STAF": st.column_config.TextColumn("👤 STAF"),
-                        "INSTRUKSI": st.column_config.TextColumn("📝 JUDUL KONTEN"),
-                        "DEADLINE": st.column_config.TextColumn("📅 TGL"),
-                        "STATUS": st.column_config.TextColumn("🚩 STATUS"),
-                        "CATATAN_REVISI": st.column_config.TextColumn("📋 KETERANGAN")
-                    },
-                    hide_index=True,
-                    use_container_width=True
-                )
-            else:
-                st.info(f"📭 Tidak ada riwayat tugas pada {bln_arsip_nama} {thn_arsip}.")
+                tampilkan_data = True
+
+        # --- LOGIKA TAMPILAN ---
+        if tampilkan_data:
+            # Statistik
+            total_f = len(df_laci[df_laci['STATUS'] == "FINISH"])
+            total_c = len(df_laci[df_laci['STATUS'] == "CANCELED"])
+            st.markdown(f"📊 **Laporan {bln_arsip_nama}:** <span style='color:#1d976c;'>✅ {total_f} Selesai</span> | <span style='color:#e74c3c;'>🚫 {total_c} Dibatalkan</span>", unsafe_allow_html=True)
+            
+            kolom_fix = ['ID', 'STAF', 'INSTRUKSI', 'DEADLINE', 'STATUS', 'CATATAN_REVISI']
+            
+            st.dataframe(
+                df_laci.sort_values(by='ID', ascending=False)[kolom_fix],
+                column_config={
+                    "ID": st.column_config.TextColumn("🆔 ID"),
+                    "STAF": st.column_config.TextColumn("👤 STAF"),
+                    "INSTRUKSI": st.column_config.TextColumn("📝 JUDUL KONTEN"),
+                    "DEADLINE": st.column_config.TextColumn("📅 TGL"),
+                    "STATUS": st.column_config.TextColumn("🚩 STATUS"),
+                    "CATATAN_REVISI": st.column_config.TextColumn("📋 KETERANGAN")
+                },
+                hide_index=True,
+                use_container_width=True
+            )
+        else:
+            # Jika benar-benar kosong atau tidak ada yang FINISH/CANCELED
+            st.info(f"📭 Tidak ada riwayat tugas pada {bln_arsip_nama} {thn_arsip}.")
                 
     # --- 5. GAJIAN (SINKRON SUPABASE & ANTI SELISIH) ---
     if user_level in ["STAFF", "ADMIN"]:
@@ -3013,6 +3020,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
