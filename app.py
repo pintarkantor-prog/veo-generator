@@ -2048,12 +2048,18 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
+        # --- 1. AMBIL DATA DARI SUPABASE/GSHEET ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
+        df_log   = ambil_data_segar("Log_Aktivitas")
+
+        # --- 2. PEMBERSIH KOLOM (KUNCI BIAR NGGA ERROR 'STAF') ---
+        # Kita paksa semua kolom di semua tabel jadi HURUF BESAR
+        for df_item in [df_staff, df_absen, df_kas, df_tugas, df_log]:
+            if not df_item.empty:
+                df_item.columns = [str(c).strip().upper() for c in df_item.columns]
 
         # Hitung target display (logika lo tetep jalan)
         t_target_display = len(df_staff) * 40
@@ -3027,3 +3033,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
