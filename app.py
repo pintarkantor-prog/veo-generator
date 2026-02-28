@@ -2075,7 +2075,7 @@ def tampilkan_kendali_tim():
 
             with col_logs:
                 # Log Terakhir: Batasi 5 Transaksi Saja
-                with st.container(height=230):
+                with st.container(height=270):
                     if not df_k_f.empty:
                         # Ambil hanya 6 baris terbaru
                         df_logs_display = df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(8)
@@ -2890,6 +2890,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
