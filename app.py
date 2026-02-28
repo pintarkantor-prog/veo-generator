@@ -2347,6 +2347,38 @@ def tampilkan_kendali_tim():
             
             staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
+
+                      # --- TAMBAHAN LOGIKA SINKRONISASI KAS SUPABASE ---
+            df_kas_kolektif = ambil_data_segar("Arus_Kas")
+            real_b_lembur = 0
+            real_b_absen = 0
+            
+            if not df_kas_kolektif.empty:
+                # Standardisasi Header
+                df_kas_kolektif.columns = [str(c).strip().upper() for c in df_kas_kolektif.columns]
+                
+                # Filter Periode Bulan Ini
+                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], errors='coerce')
+                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == sekarang.month) & \
+                               (df_kas_kolektif['TANGGAL_DT'].dt.year == sekarang.year)
+                
+                df_cair = df_kas_kolektif[mask_periode].copy()
+                
+                if not df_cair.empty:
+                    # --- KUNCI: PAKSA NOMINAL JADI ANGKA ---
+                    df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'], errors='coerce').fillna(0)
+                    
+                    # Hitung dengan filter yang lebih LUAS (Upper case agar sinkron)
+                    real_b_lembur = df_cair[
+                        (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & 
+                        (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO', na=False))
+                    ]['NOMINAL_FIX'].sum()
+                    
+                    real_b_absen = df_cair[
+                        (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & 
+                        (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
+                    ]['NOMINAL_FIX'].sum()
+             # --------------------------------------------------
             
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
             
@@ -2999,6 +3031,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
