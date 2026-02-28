@@ -1142,74 +1142,87 @@ def kirim_notif_wa(pesan):
 # LOGIKA PERHITUNGAN (SP & BONUS 2026) - VERSI KASTA VIP
 # ==============================================================================
 def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, tahun_pilih, level_target="STAFF"):
+    """
+    Logika Inti Pintar Media 2026:
+    - RESET OTOMATIS: SP tidak diakumulasi ke bulan berikutnya.
+    - AMBANG SP: < 2 video (0 atau 1) = Hari Lemah.
+    - HARI MINGGU: Bebas SP (Libur).
+    - BONUS: Absen (3 video), Video (min 5 video + kelipatan).
+    - SYARAT BONUS: Status 'HADIR' & Tidak 'TELAT'.
+    - KEBAL SP: OWNER, ADMIN, UPLOADER, & Status IZIN/SAKIT.
+    """
     bonus_video_total = 0
     uang_absen_total = 0
-    hari_lemah = 0  
+    hari_lemah = 0  # <--- KUNCI RESET: Selalu mulai dari 0 setiap fungsi dipanggil
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # 1. Tentukan Batas Hari
     import calendar
+    # 1. Tentukan Batas Hari (SP H+1, Bonus Real-time)
     if bulan_pilih == sekarang.month and tahun_pilih == sekarang.year:
         batas_sp = sekarang.day - 1 
         batas_bonus = sekarang.day  
     else:
+        # Jika melihat arsip bulan lalu, hitung penuh satu bulan
         batas_sp = calendar.monthrange(tahun_pilih, bulan_pilih)[1]
         batas_bonus = batas_sp
 
-    # 2. Rekap Harian
-    df_finish = df_arsip_user[df_arsip_user['STATUS'] == 'FINISH'].copy()
+    # 2. Rekap Berdasarkan 'Deadline' (Patokan Supabase)
+    # Hanya video status 'FINISH' yang masuk hitungan.
+    df_finish = df_arsip_user[df_arsip_user['Status'] == 'FINISH'].copy()
     rekap_harian = {}
     
     if not df_finish.empty:
-        df_finish['TGL_SETOR'] = pd.to_datetime(df_finish['DEADLINE'], errors='coerce').dt.day
-        df_finish = df_finish.dropna(subset=['TGL_SETOR'])
-        rekap_harian = df_finish.groupby('TGL_SETOR').size().to_dict()
+        # Menggunakan 'Deadline' sebagai tanggal efektif setor staf.
+        df_finish['TGL_EFEKTIF'] = pd.to_datetime(df_finish['Deadline'], errors='coerce').dt.day
+        df_finish = df_finish.dropna(subset=['TGL_EFEKTIF'])
+        rekap_harian = df_finish.groupby('TGL_EFEKTIF').size().to_dict()
 
-    # 3. Looping Perhitungan
+    # 3. Looping Perhitungan Harian
     for tgl in range(1, 32):
+        tgl_str = f"{tahun_pilih}-{bulan_pilih:02d}-{tgl:02d}"
         try:
             tgl_objek = datetime(tahun_pilih, bulan_pilih, tgl)
             is_minggu = tgl_objek.weekday() == 6
-        except:
-            continue
+        except: continue
 
         jml_v = rekap_harian.get(tgl, 0)
         
-        # --- LOGIKA BONUS ---
+        # --- DATA ABSENSI ---
+        data_absen = df_absen_user[df_absen_user['TANGGAL'] == tgl_str]
+        status_absen = str(data_absen['STATUS'].values[0]).upper() if not data_absen.empty else "ALPHA"
+        
+        is_telat = "TELAT" in status_absen
+        is_hadir = status_absen == "HADIR"
+        is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"]).
+
+        # --- LOGIKA BONUS (Syarat: HADIR & TIDAK TELAT) ---
         if tgl <= batas_bonus:
-            if jml_v >= 3: uang_absen_total += 30000 
-            if jml_v >= 5: bonus_video_total += (jml_v - 4) * 30000
+            if is_hadir and not is_telat:
+                if jml_v >= 3: 
+                    uang_absen_total += 30000 
+                if jml_v >= 5: 
+                    bonus_video_total += (jml_v - 4) * 30000
             
-        # --- LOGIKA SP ---
-        if tgl <= batas_sp and not is_minggu:
-            if jml_v <= 1: hari_lemah += 1
+        # --- LOGIKA SP (Syarat: Bukan Minggu & Bukan Izin/Sakit) ---
+        if tgl <= batas_sp and not is_minggu and not is_kebal_sp:.
+            # SP bertambah jika video finish < 2 (0 atau 1).
+            if jml_v < 2: 
+                hari_lemah += 1
 
-    # 4. Penentuan Level SP & Potongan
+    # 4. Penentuan Level & Potongan SP (Reset tiap bulan)
     pot_sp = 0
-    is_pemutihan = False  # <--- Ganti jadi True pas mau ada pemutihan, ganti False lagi kalau udah beres.
-
-    if is_pemutihan:
-        level_sp = "🌟 BEBAS SP AKTIF"
+    # Level UPLOADER, ADMIN, OWNER dikecualikan dari SP.
+    if level_target in ["OWNER", "ADMIN", "UPLOADER"]:
+        level_sp = "🌟 NORMAL (VIP)"
         hari_lemah = 0
-        pot_sp = 0
     elif bulan_pilih == sekarang.month and sekarang.day <= 6:
-        level_sp = "MASA PROTEKSI"
+        level_sp = "🛡️ MASA PROTEKSI"
     else:
-        if hari_lemah >= 21: pot_sp = 1000000; level_sp = "SP 3"
-        elif hari_lemah >= 14: pot_sp = 700000; level_sp = "SP 2"
-        elif hari_lemah >= 7: pot_sp = 300000; level_sp = "SP 1"
-        else: level_sp = "NORMAL"
-
-    # --- PROTEKSI VIP (SUNTIKAN KASTA) ---
-    # Mengambil level dari session state
-    user_level = st.session_state.get("user_level", "STAFF")
-    
-    # Jika yang login OWNER/ADMIN, biarpun h_kurang banyak, paksa jadi NORMAL
-    if level_target in ["OWNER", "ADMIN"]:
-        pot_sp = 0
-        level_sp = "NORMAL (VIP)"
-        hari_lemah = 0
+        if hari_lemah >= 21: pot_sp = 1000000; level_sp = "🚨 SP 3"
+        elif hari_lemah >= 14: pot_sp = 700000; level_sp = "⚠️ SP 2"
+        elif hari_lemah >= 7: pot_sp = 300000; level_sp = "📢 SP 1"
+        else: level_sp = "✅ NORMAL"
 
     return bonus_video_total, uang_absen_total, pot_sp, level_sp, hari_lemah
     
@@ -2808,6 +2821,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
