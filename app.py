@@ -2048,29 +2048,30 @@ def tampilkan_kendali_tim():
     st.divider()
 
     try:
-        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
+        # --- 1. AMBIL DATA ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
+        df_log   = ambil_data_segar("Log_Aktivitas")
 
+        # --- 2. PEMBERSIH KOLOM (ANTI ERROR 'STAF') ---
         for df_item in [df_staff, df_absen, df_kas, df_tugas, df_log]:
             if not df_item.empty:
                 df_item.columns = [str(c).strip().upper() for c in df_item.columns]
 
-        # Hitung target display (logika lo tetep jalan)
+        # Target display
         t_target_display = len(df_staff) * 40
 
-        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
+        # --- 3. FUNGSI SARING TANGGAL (VERSI SAKTI) ---
         def saring_tgl(df, kolom, bln, thn):
             if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            # Pastikan kolom tanggal jadi format waktu Python yang benar
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
-            mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
+            # Paksa format tanggal Indonesia (Day-Month-Year)
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], dayfirst=True, errors='coerce')
+            mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
-        # Jalankan filter untuk semua tabel (Data otomatis tersaring sesuai bulan/tahun pilihan lo)
+        # Jalankan filter
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
@@ -2079,14 +2080,9 @@ def tampilkan_kendali_tim():
         # Logika Finish & Rekap
         df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
         
-        rekap_harian_tim = {}
-        rekap_total_video = {}
+        # Bersihkan kolom STAF agar sinkron dengan NAMA di sheet Staff
         if not df_f_f.empty:
             df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
-            df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-            rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-            rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
-
         # --- KALKULASI KEUANGAN RIIL ---
         inc = 0
         ops = 0
@@ -3044,6 +3040,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
