@@ -2729,7 +2729,50 @@ def tampilkan_area_staf():
         
     with t3:
         st.write("")
-        st.subheader("⚠️ Sistem Peringatan & Performa")
+        st.markdown("### ⚠️ Sistem Peringatan & Performa (SP)")
+        st.caption("Sistem ini bertujuan untuk menjaga produktivitas tim agar tetap stabil dan adil untuk semua.")
+
+        # --- CARD 1: MASA PROTEKSI & HARI KURANG PRODUKTIF ---
+        with st.container(border=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.info("🛡️ **MASA PROTEKSI**")
+                st.write("Tanggal **1 sampai 6** tiap bulan adalah masa adaptasi. Rekan-rekan aman dari penilaian SP di periode ini.")
+            with col2:
+                st.warning("📉 **HARI KURANG PRODUKTIF**")
+                st.write("Jika dalam satu hari hanya menyelesaikan **0 atau 1 video**, hari tersebut dicatat sebagai 'Hari Kurang Produktif'.")
+
+        st.write("")
+
+        # --- CARD 2: AKUMULASI SP & POTONGAN ---
+        with st.container(border=True):
+            st.markdown("⚖️ **AKUMULASI SANKSI BULANAN**")
+            st.write("Sanksi diberikan berdasarkan jumlah total 'Hari Kurang Produktif' dalam satu bulan:")
+            
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                st.error("**SP 1 (7 Hari)**")
+                st.write("- Akumulasi 7 hari kurang produktif.")
+                st.write("- **Potongan: Rp 300.000**")
+            with c2:
+                st.error("**SP 2 (14 Hari)**")
+                st.write("- Akumulasi 14 hari kurang produktif.")
+                st.write("- **Potongan: Rp 700.000**")
+            with c3:
+                st.error("**SP 3 (21 Hari)**")
+                st.write("- Akumulasi 21 hari kurang produktif.")
+                st.write("- **Potongan: Rp 1.000.000 + Pemutusan Kerja**")
+
+        st.write("")
+
+        # --- CARD 3: TIPS & NOTIFIKASI ---
+        with st.container(border=True):
+            st.success("💡 **TIPS AGAR PENGHASILAN MAKSIMAL**")
+            st.write("- Setor minimal **3 video** setiap hari untuk mengaktifkan semua **Bonus Absensi**.")
+            st.write("- Jika hanya menyelesaikan **2 video**, status Anda **Aman**, namun Bonus Kehadiran & Lembur tidak cair.")
+
+        st.write("")
+        st.markdown(f"> *'Mari jaga konsistensi setiap hari agar bonus tidak terlewat dan hasil maksimal untuk kita semua.'* — **Dian, CEO PT Pintar Digital Kreasi**")
 
     with t4:
         st.write("")
@@ -3199,6 +3242,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
