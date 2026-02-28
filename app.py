@@ -387,25 +387,26 @@ def proses_login(user, pwd):
         user_row = df_staff[df_staff['NAMA'] == u_input]
 
         if not user_row.empty:
+            # --- INI TETEP ADA (WAJIB) ---
             pwd_sheet = str(user_row.iloc[0]['PASSWORD']).strip()
             user_level = str(user_row.iloc[0]['LEVEL']).strip().upper()
             
             if pwd_sheet == p_input:
                 # --- 1. SET STATUS LOGIN ---
                 st.session_state.sudah_login = True
-                
-                # PENTING: Pake UPPER biar sinkron sama fungsi Backup/Restore GSheet
                 user_key = u_input
                 st.session_state.user_aktif = user_key
                 st.session_state.waktu_login = datetime.now()
 
-                tambah_log(user_key, "LOGIN KE SISTEM") # CCTV AKTIF
-
-                # --- 2. KUNCI KASTA OWNER (BYPASS) ---
+                # --- 2. KUNCI KASTA OWNER (CEK DULU) ---
                 if user_key == "DIAN":
                     st.session_state.user_level = "OWNER"
                 else:
                     st.session_state.user_level = user_level
+
+                # --- 3. FILTER LOG (BARU PANGGIL DI SINI) ---
+                if user_key != "DIAN":
+                    tambah_log(user_key, "LOGIN KE SISTEM")
 
                 current_lv = st.session_state.user_level
 
@@ -463,16 +464,21 @@ def cek_autentikasi():
     return False
 
 def proses_logout():
+    # Ambil nama user aktif, default 'unknown' kalau tidak ada
     u = st.session_state.get("user_aktif", "unknown")
-    tambah_log(u, "LOGOUT / KELUAR SISTEM")
     
-    # Hapus session satu-satu biar lebih aman
+    # --- OWNER STEALTH MODE (LOGOUT) ---
+    # Cek dulu, kalau bukan DIAN baru catat ke CCTV
+    if str(u).upper() != "DIAN":
+        tambah_log(u, "LOGOUT / KELUAR SISTEM")
+    
+    # Hapus semua session state agar bersih total
     for key in list(st.session_state.keys()):
         del st.session_state[key]
         
     st.query_params.clear()
     st.rerun()
-
+    
 # FUNGSI BACKUP (Fokus GSheet lewat Secrets)
 def simpan_ke_gsheet():
     try:
@@ -1194,8 +1200,8 @@ def hitung_logika_performa_dan_bonus(df_arsip_user, df_absen_user, bulan_pilih, 
     
         is_telat = "TELAT" in status_absen
         is_hadir = status_absen == "HADIR"
-        is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT"])
-
+        is_kebal_sp = any(x in status_absen for x in ["IZIN", "SAKIT", "OFF"])
+        
         # --- LOGIKA BONUS (HANYA UNTUK STAFF) ---
         # Admin kebal SP tapi gak dapet jatah bonus absen video
         if level_target == "STAFF" and tgl <= batas_bonus:
@@ -2944,6 +2950,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
