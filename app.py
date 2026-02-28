@@ -2475,8 +2475,8 @@ def tampilkan_kendali_tim():
                             
                             if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
                                 
-                    else:
-                        st.info("Belum ada data akun AI.")
+                else:
+                    st.info("Belum ada data akun AI.")
 
             except Exception as e_ai:
                 st.error(f"Gagal memuat Database Akun AI: {e_ai}")
@@ -2888,6 +2888,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
