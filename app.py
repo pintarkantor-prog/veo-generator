@@ -1912,13 +1912,24 @@ def tampilkan_kendali_tim():
         # Logika Finish & Rekap
         df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy() if not df_t_bln.empty else pd.DataFrame()
         
+        # --- LOGIKA REKAP (VERSI ANTI-CRASH MARET) ---
         rekap_harian_tim = {}
         rekap_total_video = {}
-        if not df_f_f.empty and 'STAF' in df_f_f.columns:
-            df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
-            df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-            rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-            rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
+        
+        # SATPAM 1: Cek apakah ada video yang FINISH di bulan Maret
+        if not df_f_f.empty:
+            # SATPAM 2: Pastikan kolom STAF benar-benar ada
+            if 'STAF' in df_f_f.columns:
+                df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
+                df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
+                
+                # Operasi ini hanya jalan kalau ada datanya
+                rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
+                rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
+        else:
+            # Jika Maret masih kosong, kita kasih data kosong biar UI gak error
+            rekap_harian_tim = {}
+            rekap_total_video = {}
 
         # --- KALKULASI KEUANGAN RIIL ---
         inc = 0
@@ -2853,5 +2864,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
