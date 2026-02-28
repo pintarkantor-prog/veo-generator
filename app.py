@@ -2475,7 +2475,7 @@ def tampilkan_kendali_tim():
                             # TAMPILAN USER (Kasih tanda 🆕 biar mencolok kalau kosong)
                             val_user = str(r['PEMAKAI']).strip()
                             is_null = pd.isna(r['PEMAKAI']) or val_user == "" or val_user.upper() == "X"
-                            user_display = "🆕 KOSONG" if is_null else r['PEMAKAI']
+                            user_display = "" if is_null else r['PEMAKAI']
                             
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PEMAKAI</p><b style='font-size:12px;'>{user_display}</b>", unsafe_allow_html=True)
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
@@ -2905,6 +2905,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
