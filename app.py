@@ -2574,7 +2574,6 @@ def tampilkan_area_staf():
     with t1:
         st.write("")
         st.markdown("#### 🚀 Panduan Kerja & Standar Kualitas (SOP)")
-        st.caption("Pahami setiap detail teknis di bawah ini. Kegagalan mengikuti SOP = Video REVISI/GAGAL.")
 
         # --- SUB-TAB POSISI ---
         divisi_sop = st.radio(
@@ -2583,7 +2582,6 @@ def tampilkan_area_staf():
             horizontal=True,
             key="pilih_sop_v_final_sultan"
         )
-        st.divider()
 
         if divisi_sop == "Staff Editor":
             with st.container(border=True):
@@ -3151,6 +3149,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
