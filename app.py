@@ -2204,33 +2204,38 @@ def tampilkan_kendali_tim():
             nama_staff_asli = df_staff[df_staff['LEVEL'] == 'STAFF']['NAMA'].str.upper().tolist()
             performa_hanya_staff = {k: v for k, v in performa_staf.items() if k in nama_staff_asli}
             
-            staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
-            staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
+            # Pengaman MVP & LOW: Jika semua masih 0, jangan tampilkan error
+            if performa_hanya_staff and any(v > 0 for v in performa_hanya_staff.values()):
+                staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get)
+                staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get)
+            else:
+                staf_top = "-"
+                staf_low = "-"
             
             # --- LOGIKA SINKRONISASI KAS (FIXED) ---
             df_kas_kolektif = ambil_data_segar("Arus_Kas")
-            real_b_video_kolektif = 0  # <--- Ganti nama biar jelas
+            real_b_video_kolektif = 0
             real_b_absen_kolektif = 0
             
             if not df_kas_kolektif.empty:
                 df_kas_kolektif.columns = [str(c).strip().upper() for c in df_kas_kolektif.columns]
                 
-                # Filter Periode: Pake dayfirst agar tgl Indo aman
-                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], dayfirst=True, errors='coerce')
+                # Filter Periode: Konsisten dengan filter bulan/tahun pilihan
+                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], errors='coerce')
                 mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == bulan_dipilih) & \
                                (df_kas_kolektif['TANGGAL_DT'].dt.year == tahun_dipilih)
                 
                 df_cair = df_kas_kolektif[mask_periode].copy()
                 
                 if not df_cair.empty:
-                    df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'], errors='coerce').fillna(0)
+                    # Pastikan Nominal bersih dari karakter aneh
+                    df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
                     
-                    # LOGIKA PENCARIAN KATA KUNCI (VIDEO atau LEMBUR)
+                    # Logika pencarian kata kunci di keterangan Kas
                     mask_video = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
                                  (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False))
                     real_b_video_kolektif = df_cair[mask_video]['NOMINAL_FIX'].sum()
                     
-                    # Bonus Absen
                     mask_absen = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
                                  (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
                     real_b_absen_kolektif = df_cair[mask_absen]['NOMINAL_FIX'].sum()
@@ -2244,9 +2249,8 @@ def tampilkan_kendali_tim():
             persen_capaian = (rekap_v_total / target_fix * 100) if target_fix > 0 else 0
             c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}%")
             
-            # SEKARANG PASTI MUNCUL NILAINYA
             c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_video_kolektif):,}", delta="LIVE SYNC")
-            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen_kolektif):,}", delta="LIVE SYNC")
+            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen_real):,}" if 'real_b_absen_real' in locals() else f"Rp {int(real_b_absen_kolektif):,}", delta="LIVE SYNC")
             
             c_r5.metric("💀 TOTAL LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
             c_r6.metric("👑 MVP STAF", staf_top)
@@ -2879,6 +2883,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
