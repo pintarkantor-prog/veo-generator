@@ -45,7 +45,7 @@ def ambil_data_beneran_segar(nama_sheet):
         print(f"GSheet Backup Error: {e}")
         return pd.DataFrame()
 
-# --- 4. FUNGSI UTAMA AMBIL DATA (VERSI SMART FILTER - ANTI LAG) ---
+# --- 4. FUNGSI UTAMA AMBIL DATA (VERSI FINAL - ANTI PUSING) ---
 @st.cache_data(ttl=60) 
 def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
     """
@@ -61,19 +61,23 @@ def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
         
         # Format filter tanggal (Awal s/d Akhir bulan)
         tgl_awal = f"{thn}-{bln:02d}-01"
-        tgl_akhir = f"{thn}-{bln:02d}-31" # Postgres pinter, 31 otomatis jadi akhir bulan
+        tgl_akhir = f"{thn}-{bln:02d}-31" 
 
         query = supabase.table(target).select("*")
         
-        # 1. GUDANG IDE: Sisir hanya yang siap dikerjakan
+        # 1. GUDANG IDE: Sisir status 'Tersedia'
         if target == "Gudang_Ide":
             res = query.eq("STATUS", "Tersedia").order("ID_IDE", desc=True).execute()
             
-        # 2. TUGAS, ARUS KAS, & ABSENSI: Wajib Bulan Berjalan (Untuk Bonus/SP)
-        elif target in ["Tugas", "Arus_Kas", "Absensi"]:
+        # 2. TUGAS: Khusus tabel ini pakai kolom 'Deadline' (Sesuai Gambar Kamu)
+        elif target == "Tugas":
+            res = query.gte("Deadline", tgl_awal).lte("Deadline", tgl_akhir).order("id", desc=True).execute()
+            
+        # 3. ARUS KAS & ABSENSI: Pakai kolom 'Tanggal'
+        elif target in ["Arus_Kas", "Absensi"]:
             res = query.gte("Tanggal", tgl_awal).lte("Tanggal", tgl_akhir).order("id", desc=True).execute()
             
-        # 3. LOG AKTIVITAS: Limit 300 saja (Hanya untuk pantauan)
+        # 4. LOG AKTIVITAS: Limit 300 saja
         elif target == "Log_Aktivitas":
             res = query.order("Waktu", desc=True).limit(300).execute()
             
@@ -84,10 +88,12 @@ def ambil_data_segar(target, bulan_pilihan=None, tahun_pilihan=None):
         df = pd.DataFrame(res.data)
         
         if not df.empty:
-            if 'id' in df.columns: df = df.drop(columns=['id'])
+            # Hapus kolom id bawaan supabase agar tidak bentrok dengan ID manual
+            if 'id' in df.columns: 
+                df = df.drop(columns=['id'])
             return bersihkan_data(df)
         else:
-            # Jika Supabase kosong (karena filter), coba lari ke GSheet Backup
+            # Jika Supabase kosong (mungkin karena filter bulan), coba lari ke GSheet Backup
             return ambil_data_beneran_segar(target)
             
     except Exception as e:
@@ -3024,5 +3030,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
