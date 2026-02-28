@@ -2028,7 +2028,7 @@ def tampilkan_kendali_tim():
 
             with col_logs:
                 # Log Terakhir: Batasi 5 Transaksi Saja
-                with st.container(height=230):
+                with st.container(height=270):
                     if not df_k_f.empty:
                         # Ambil hanya 5 baris terbaru
                         for _, r in df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(6).iterrows():
@@ -2098,11 +2098,13 @@ def tampilkan_kendali_tim():
             # --- LOGIKA SINKRONISASI BONUS DARI SUPABASE ---
             bonus_real_staf = 0
             if not df_kas.empty:
-                df_kas['NOMINAL_INT'] = pd.to_numeric(df_kas['NOMINAL'], errors='coerce').fillna(0)
-                mask_staf_kas = (df_kas['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                (df_kas['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
-                                (pd.to_datetime(df_kas['TANGGAL'], dayfirst=True, errors='coerce').dt.month == bulan_dipilih)
-                bonus_real_staf = df_kas[mask_staf_kas]['NOMINAL_INT'].sum()
+                # Kita pakai df_k_f yang sudah disaring di bagian atas (Keuangan)
+                # agar lebih ringan dan pasti sinkron bulannya
+                mask_staf_kas = (df_k_f['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                                (df_k_f['KETERANGAN'].str.upper().str.contains(n_up, na=False))
+                
+                # Pastikan Nominal sudah angka
+                bonus_real_staf = pd.to_numeric(df_k_f[mask_staf_kas]['NOMINAL'], errors='coerce').sum()
             
             jml_v = len(df_t_staf_r)
             rekap_v_total += jml_v
@@ -2160,33 +2162,26 @@ def tampilkan_kendali_tim():
             staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get) if performa_hanya_staff else "-"
             
-            # --- LOGIKA SINKRONISASI KAS (FIXED) ---
-            df_kas_kolektif = ambil_data_segar("Arus_Kas")
-            real_b_video_kolektif = 0  # <--- Ganti nama biar jelas
+            # --- LOGIKA SINKRONISASI KAS (VERSI OPTIMASI) ---
+            real_b_video_kolektif = 0  
             real_b_absen_kolektif = 0
             
-            if not df_kas_kolektif.empty:
-                df_kas_kolektif.columns = [str(c).strip().upper() for c in df_kas_kolektif.columns]
+            if not df_k_f.empty:
+                # Gunakan df_k_f yang sudah disaring di bagian 'Keuangan' tadi
+                df_cair = df_k_f.copy()
                 
-                # Filter Periode: Pake dayfirst agar tgl Indo aman
-                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], dayfirst=True, errors='coerce')
-                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == bulan_dipilih) & \
-                               (df_kas_kolektif['TANGGAL_DT'].dt.year == tahun_dipilih)
+                # Pastikan Nominal sudah angka murni
+                df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'], errors='coerce').fillna(0)
                 
-                df_cair = df_kas_kolektif[mask_periode].copy()
+                # Bonus Video/Lembur
+                mask_video = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                             (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False))
+                real_b_video_kolektif = df_cair[mask_video]['NOMINAL_FIX'].sum()
                 
-                if not df_cair.empty:
-                    df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'], errors='coerce').fillna(0)
-                    
-                    # LOGIKA PENCARIAN KATA KUNCI (VIDEO atau LEMBUR)
-                    mask_video = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                 (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False))
-                    real_b_video_kolektif = df_cair[mask_video]['NOMINAL_FIX'].sum()
-                    
-                    # Bonus Absen
-                    mask_absen = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                 (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
-                    real_b_absen_kolektif = df_cair[mask_absen]['NOMINAL_FIX'].sum()
+                # Bonus Absen
+                mask_absen = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                             (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
+                real_b_absen_kolektif = df_cair[mask_absen]['NOMINAL_FIX'].sum()
 
             # --- DISPLAY METRIC (7 KOLOM) ---
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
@@ -2204,6 +2199,7 @@ def tampilkan_kendali_tim():
             c_r5.metric("💀 TOTAL LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
             c_r6.metric("👑 MVP STAF", staf_top)
             c_r7.metric("📉 LOW STAF", staf_low)
+            
         # ======================================================================
         # --- 6. RINCIAN GAJI & SLIP (FULL VERSION - SINKRON HARIAN) ---
         # ======================================================================
@@ -2832,6 +2828,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
