@@ -2579,23 +2579,21 @@ def tampilkan_area_staf():
     with t2:
         st.write("")
         st.markdown("##### 💵 Kalkulator Simulasi Pendapatan")
-        st.caption("Simulasi ini hanya berlaku untuk Staff Editor AI (status video wajib finish/acc)")
-
         posisi = st.selectbox(
             "Pilih Posisi Kamu:",
-            ["Editor AI (Storytelling)", "Uploader & Admin"],
+            ["Staff Editor", "Uploader & Admin"],
             index=0,
             key="pilih_posisi_simulasi_v2"
         )
         
         st.divider()
 
-        if posisi == "Editor AI (Storytelling)":
+        if posisi == "Staff Editor":
             # --- CARD 1: SLIDER EDITOR ---
             with st.container(border=True):
                 st.markdown("🎯 **SET TARGET PRODUKSI HARIAN**")
                 t_hari = st.select_slider(
-                    "Geser untuk simulasi pendapatan harian kamu:",
+                    "Geser untuk simulasi pendapatan harian kamu: (status video finish / acc )",
                     options=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     value=3,
                     key="slider_editor_final"
@@ -2654,9 +2652,8 @@ def tampilkan_area_staf():
                     st.metric("TUNJANGAN", "TERSEDIA", delta="✨ Tunjangan Kerja") # Tanpa nominal
                 
                 st.write("")
-                st.success("✅ **STATUS TUNJANGAN:** Kamu berhak mendapatkan tunjangan kerja berdasarkan ketepatan waktu upload dan kedisiplinan admin.")
+                st.success("✅ **STATUS TUNJANGAN:** Tunjangan kerja diberikan secara selektif berdasarkan **Efektivitas** dalam mendukung operasional Tim.")
 
-        st.write("")
         st.caption("PENTING: Seluruh informasi gaji bersifat transparan untuk menjaga profesionalitas tim Pintar Media.")
         
     with t3:
@@ -3081,6 +3078,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
