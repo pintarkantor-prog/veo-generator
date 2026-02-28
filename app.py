@@ -732,7 +732,9 @@ def tampilkan_navigasi_sidebar():
             "🚀 RUANG PRODUKSI", 
             "🧠 PINTAR AI LAB", 
             "💡 GUDANG IDE", 
-            "📋 TUGAS KERJA"
+            "📋 TUGAS KERJA",
+            "📱 DATABASE CHANNEL", # Menu baru (Besok kita isi dagingnya)
+            "📘 AREA STAF"         # Menu baru (Fokus kita sekarang)
         ]
         
         # OWNER dan ADMIN bisa lihat menu Kendali Tim
@@ -2938,18 +2940,26 @@ def utama():
 
         elif menu == "📋 TUGAS KERJA": 
             tampilkan_tugas_kerja()
-        
+
+        # --- TAMBAHKAN INI UNTUK DATABASE CHANNEL ---
+        elif menu == "📱 DATABASE CHANNEL":
+            st.title("📱 Database & Jadwal Upload")
+            st.info("🚧 **MAAF:** Fitur ini sedang disinkronisasi!")
+            
+        elif menu == "📘 AREA STAF":
+            tampilkan_area_staf() 
+
         elif menu == "⚡ KENDALI TIM": 
-            # Proteksi Berlapis: Level Check
             if user_level in ["OWNER", "ADMIN"]:
                 tampilkan_kendali_tim()
             else:
                 st.warning(f"⚠️ {user_aktif}, area ini terbatas untuk Manajemen.")
-                tampilkan_ruang_produksi() # Tendang balik ke produksi
+                tampilkan_ruang_produksi()
 
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
