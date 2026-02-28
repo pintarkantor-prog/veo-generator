@@ -2596,7 +2596,8 @@ def tampilkan_area_staf():
                     value=3,
                     key="slider_editor_final"
                 )
-                st.warning("⚠️ **STANDAR KUALITAS:** Hanya video dengan status **ACC/FINISH** yang masuk dalam perhitungan performa harian.")
+                st.caption("STANDAR KUALITAS: Hanya video dengan status **ACC/FINISH** yang masuk dalam perhitungan performa harian.")
+                
             # --- LOGIKA HITUNG EDITOR ---
             gapok_sim = 1500000
             hari_kerja = 25
@@ -2628,13 +2629,13 @@ def tampilkan_area_staf():
             st.write("")
             with st.container(border=True):
                 if t_hari >= 5:
-                    st.success(f"🔥 **PERFORMA MANTAP:** Gaji Pokok + Bonus Absen + Bonus Video Ke-{t_hari}!")
+                    st.success(f"🔥 **ELITE EDITOR:** Kamu konsisten menyetor {t_hari} video kualitas **ACC** setiap hari!")
                 elif t_hari >= 3:
-                    st.info("💡 **INFO:** Bonus Absen cair! Tambah ke 5 video untuk mulai klaim Bonus Video.")
+                    st.info("💡 **CATATAN:** Bonus Absen cair karena video mencapai standar minimal kualitas **ACC**.")
                 elif t_hari == 2:
-                    st.warning("🧐 **ZONA AMAN:** Gaji Pokok utuh. Bonus baru aktif mulai dari 3 video/hari.")
+                    st.warning("🧐 **REVIEW:** Performa cukup, pastikan video berikutnya tetap berstatus **FINISH** agar aman.")
                 else:
-                    st.error("🚨 **BAHAYA:** Potongan Gaji Rp 1.000.000 karena status HARI LEMAH!")
+                    st.error(f"🚨 **SP ALERT:** Setoran di bawah standar (Hanya {t_hari} video ACC) memicu denda Rp 1.000.000!")
 
         else:
             # --- TAMPILAN UNTUK UPLOADER & ADMIN ---
@@ -3076,6 +3077,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
