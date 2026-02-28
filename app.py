@@ -2414,7 +2414,7 @@ def tampilkan_kendali_tim():
                 st.divider()
 
                 if not df_ai.empty:
-                    # 3. TAMPILAN COMPACT 1 BARIS (7 KOLOM + ICON)
+                    # 3. TAMPILAN CLEAN 8 KOLOM (TANPA WARNA)
                     h_ini = sekarang.date()
 
                     for idx, r in df_ai.iterrows():
@@ -2424,39 +2424,50 @@ def tampilkan_kendali_tim():
                         if sisa < 0: 
                             continue 
                         
-                        # Penentu Warna Berdasarkan Sisa Hari
-                        if sisa > 7: warna_h, stat_ai = "#1d976c", "🟢 AMAN"
-                        elif 0 <= sisa <= 7: warna_h, stat_ai = "#f39c12", "🟠 LIMIT"
-                        else: warna_h, stat_ai = "#e74c3c", "🔴 MATI"
-
                         with st.container(border=True):
-                            # HEADER TOOL
-                            st.markdown(f"""
-                                <div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;">
-                                    <b style="color:white; font-size:11px;">🚀 {str(r['AI']).upper()}</b>
-                                </div>
-                            """, unsafe_allow_html=True)
-
-                            # 7 KOLOM DENGAN ICON
-                            c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
+                            # 8 KOLOM SEJAJAR (Rasio disesuaikan agar pas)
+                            c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1, 1.8, 1.3, 0.8, 0.8, 0.8, 0.6, 1])
                             
-                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 USER</p><b style='font-size:12px;'>{r['PEMAKAI']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
-                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
+                            with c1:
+                                st.caption("🚀 TOOL")
+                                st.write(f"**{str(r['AI']).upper()}**")
                             
-                            # Tombol Reset
-                            if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
-                                try:
-                                    cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
-                                    if cell_target:
-                                        ws_akun.update_cell(cell_target.row, 5, "X")
-                                        ws_akun.update_cell(cell_target.row, 6, "")
-                                        st.success(f"✅ Reset!"); time.sleep(1); st.rerun()
-                                except Exception as e:
-                                    st.error(f"Gagal: {e}")
+                            with c2:
+                                st.caption("📧 EMAIL")
+                                st.code(r['EMAIL'], language=None)
+                                
+                            with c3:
+                                st.caption("🔑 PASS")
+                                st.code(r['PASSWORD'], language=None)
+                                
+                            with c4:
+                                st.caption("👤 USER")
+                                st.write(f"{r['PEMAKAI']}")
+                                
+                            with c5:
+                                st.caption("📡 STATUS")
+                                status_txt = "AMAN" if sisa > 7 else "LIMIT"
+                                st.write(status_txt)
+                                
+                            with c6:
+                                st.caption("📅 EXP")
+                                st.write(tgl_exp.strftime('%d %b'))
+                                
+                            with c7:
+                                st.caption("⏳ SISA")
+                                st.write(f"{sisa}d")
+                            
+                            with c8:
+                                st.write("") # Spacer
+                                if st.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
+                                    try:
+                                        cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
+                                        if cell_target:
+                                            ws_akun.update_cell(cell_target.row, 5, "X")
+                                            ws_akun.update_cell(cell_target.row, 6, "")
+                                            st.success("Reset!"); time.sleep(0.5); st.rerun()
+                                    except Exception as e:
+                                        st.error(f"Err: {e}")
                 else:
                     st.info("Belum ada data akun AI.")
 
@@ -2870,6 +2881,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
