@@ -3215,27 +3215,31 @@ def tampilkan_area_staf():
                     Setiap perubahan akan diinformasikan melalui sistem Dashboard Pintar Media dengan keterangan "Update Terakhir".<br>
                     Pihak Kedua dinyatakan setuju dengan perubahan tersebut selama masih melanjutkan hubungan kerja di periode bulan berikutnya.
                 </div>
-                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 15: Validitas Digital Signature</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 9: Validitas Digital Signature</p>
                 <div style="margin-left: 20px;">
                     Tindakan menekan tombol "SETUJU & TANDATANGANI" adalah sah sebagai pengganti tanda tangan basah demi hukum.<br>
                     Sistem merekam secara otomatis: Nama Staff Resmi dan Timestamp (Waktu Presisi) sebagai bukti otentik pengesahan.<br>
                 </div>
             </div>
 
-            <table style="width: 100%; text-align: center; font-size: 13px; margin-top: 50px;">
-                <tr>
-                    <td style="width: 50%;">PIHAK KEDUA,<br><br><br>
-                        <span style="color:green; font-weight:bold;">
-                            {"[ E-SIGNED VERIFIED: " + waktu_presisi + " ]" if is_signed else "(BELUM TANDA TANGAN)"}
-                        </span><br>
-                        <b>{staf_nama}</b>
-                    </td>
-                    <td style="width: 50%;">Banyumas, {tgl_hari_ini}<br>PIHAK PERTAMA,<br><br><br>
-                        <span style="color:blue; font-weight:bold;">[ OWNER SIGNED & VERIFIED ]</span><br>
-                        <b>{nama_direktur}</b>
-                    </td>
-                </tr>
-            </table>
+            <div style="page-break-inside: avoid; break-inside: avoid; margin-top: 50px;">
+                <table style="width: 100%; text-align: center; font-size: 13px;">
+                    <tr>
+                        <td style="width: 50%; vertical-align: top;">
+                            PIHAK KEDUA,<br><br><br><br>
+                            <span style="color:green; font-weight:bold;">
+                                {"[ E-SIGNED VERIFIED: " + waktu_presisi + " ]" if is_signed else "(BELUM TANDA TANGAN)"}
+                            </span><br>
+                            <b>{staf_nama}</b>
+                        </td>
+                        <td style="width: 50%; vertical-align: top;">
+                            Banyumas, {tgl_hari_ini}<br>PIHAK PERTAMA,<br><br><br><br>
+                            <span style="color:blue; font-weight:bold;">[ OWNER SIGNED & VERIFIED ]</span><br>
+                            <b>{nama_direktur}</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
             <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 40px; font-size: 9px; color: #888; text-align: justify;">
                 <i><b>Pintar Media System:</b> Update: {last_update}. Dokumen ini sah dan berlaku secara otomatis.</i>
@@ -3705,4 +3709,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
