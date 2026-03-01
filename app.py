@@ -2966,87 +2966,109 @@ def tampilkan_area_staf():
     with t4:
         st.write("")
         
-        # --- DIGITAL E-CONTRACT SYSTEM ---
-        # Pastikan baris di bawah ini menjorok ke dalam (1 level tab/4 spasi) dari 'with t4'
-        with st.expander("##### 📄 E-CONTRACT: SURAT PERJANJIAN KERJA PARUH WAKTU (AUTO-RENEWAL)", expanded=True):
-            
-            # Ambil data staff otomatis
-            nama_staff = st.session_state.get('username', '___________________________').upper()
-            nama_direktur = "Dian Setya Wardana"
-            nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-            
-            # Logika Tanggal Otomatis
-            from datetime import datetime
-            tgl_sekarang = datetime.now().strftime("%d %B %Y")
+        # --- LOGIKA MAPPING NAMA STAFF (IMPROVED) ---
+        # Mengambil username login dan mengubahnya ke Nama Lengkap Resmi
+        user_login = st.session_state.get('username', 'STAFF').lower()
+        
+        staff_mapping = {
+            "nissa": "NISSA PANGESTUNINGRUM",
+            "lisa": "LISA ANGGRAENI", # Contoh, silakan sesuaikan
+            "icha": "ANNISA NUR CAHYANI", # Contoh
+            "inggi": "INGGI PRAMESTI", # Contoh
+        }
+        
+        nama_staff_resmi = staff_mapping.get(user_login, user_login.upper())
+        nama_direktur = "DIAN SETYA WARDANA"
+        nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
+        
+        # --- LOGIKA TANGGAL OTOMATIS (RENEWAL SYSTEM) ---
+        from datetime import datetime
+        now = datetime.now()
+        # Kontrak dimulai tanggal 1 bulan berjalan sampai akhir bulan berjalan
+        tgl_mulai = now.replace(day=1).strftime("%d %B %Y")
+        # Logika masa berlaku (Auto-Renewable)
+        masa_berlaku = f"01 {now.strftime('%B %Y')} s/d Akhir Bulan {now.strftime('%B %Y')}"
 
-            html_e_contract = f"""
-            <div style="background: white; padding: 70px 90px; font-family: 'Arial', sans-serif; color: #1a1a1a; line-height: 1.8; border: 1px solid #ddd; margin-bottom: 20px; position: relative;">
+        with st.expander(f"⚖️ E-CONTRACT RESMI: {nama_staff_resmi} (STATUS: ACTIVE)", expanded=True):
+            
+            # --- DESAIN KOP & DOKUMEN PREMIUM ---
+            html_kontrak_premium = f"""
+            <div style="background: white; padding: 60px 90px; font-family: 'Helvetica', Arial, sans-serif; color: #1a1a1a; line-height: 1.8; border: 1px solid #000; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.05);">
                 
-                <div style="text-align: right; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 40px;">
-                    <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 150px;">
-                    <p style="margin: 10px 0 0 0; font-size: 14px; font-weight: bold; letter-spacing: 1px;">PT PINTAR DIGITAL KREASI</p>
-                    <p style="margin: 0; font-size: 10px; color: #777;">Digital Media Production | {nomor_ahu}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #000; padding-bottom: 20px; margin-bottom: 40px;">
+                    <div style="text-align: left;">
+                        <h1 style="margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -1px; line-height: 1;">PINTAR<br>MEDIA</h1>
+                        <p style="margin: 5px 0 0 0; font-size: 10px; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: 2px;">Creative Content & AI House</p>
+                    </div>
+                    <div style="text-align: right; font-size: 11px; color: #333;">
+                        <b>PT PINTAR DIGITAL KREASI</b><br>
+                        Pengesahan: {nomor_ahu}<br>
+                        Banyumas, Jawa Tengah, Indonesia
+                    </div>
                 </div>
-                
+
                 <center>
-                    <h2 style="margin: 0; font-size: 18px; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">Surat Perjanjian Kerja Digital</h2>
-                    <p style="margin: 5px 0 0 0; font-size: 11px; color: #888;">INTERNAL DOCUMENT ID: PDK-CONTRACT/PART-TIME/2026</p>
+                    <h2 style="margin: 0; font-size: 18px; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;">Surat Perjanjian Kerja Paruh Waktu</h2>
+                    <p style="margin: 5px 0 0 0; font-size: 11px; color: #777;">REF ID: PM/CONTRACT-{user_login.upper()}/{now.strftime('%m%y')}</p>
                 </center>
-                
+
                 <br><br>
 
-                <div style="font-size: 13px; text-align: justify; color: #333;">
-                    <p>Perjanjian ini dibuat secara elektronik pada tanggal <b>{tgl_sekarang}</b>, oleh dan antara:</p>
+                <div style="font-size: 13px; text-align: justify;">
+                    <p>Pada hari ini, <b>{tgl_mulai}</b>, dokumen elektronik ini diterbitkan sebagai pernyataan kesepakatan kerja antara:</p>
                     
-                    <div style="margin-left: 20px; margin-bottom: 20px; border-left: 3px solid #000; padding-left: 15px;">
-                        <b>PIHAK PERTAMA (PERUSAHAAN)</b><br>
-                        Nama: <b>{nama_direktur}</b><br>
-                        Jabatan: Direktur Utama PT Pintar Digital Kreasi
+                    <div style="margin-left: 20px; margin-bottom: 15px;">
+                        1. <b>{nama_direktur}</b>, selaku Direktur Utama <b>PT Pintar Digital Kreasi</b>, selanjutnya disebut sebagai <b>PIHAK PERTAMA</b>.<br>
+                        2. <b>{nama_staff_resmi}</b>, selaku Tenaga Kerja Kreatif, selanjutnya disebut sebagai <b>PIHAK KEDUA</b>.
                     </div>
 
-                    <div style="margin-left: 20px; margin-bottom: 20px; border-left: 3px solid #ddd; padding-left: 15px;">
-                        <b>PIHAK KEDUA (TENAGA KERJA)</b><br>
-                        Nama: <b>{nama_staff}</b><br>
-                        Jabatan: Staff Kreatif Paruh Waktu (Part-Time)
+                    <div style="background: #f9f9f9; padding: 20px; border: 1px dashed #ccc; margin: 25px 0;">
+                        <b style="font-size: 14px;">PASAL KHUSUS: PEMBAHARUAN OTOMATIS (AUTO-RENEWAL)</b><br>
+                        Perjanjian ini berlaku secara efektif terhitung sejak tanggal <b>1 (Satu)</b> pada setiap bulan berjalan. Kontrak ini secara sistem akan <b>DIPERBAHARUI OTOMATIS</b> untuk periode bulan berikutnya, selama PIHAK KEDUA konsisten memenuhi standar produksi (SOP 7 Bagian) dan tidak melakukan pelanggaran integritas.
                     </div>
 
-                    <p style="margin-top: 30px; font-weight: bold; border-bottom: 1px solid #eee;">PASAL 1: SIFAT PEKERJAAN & PEMBAHARUAN OTOMATIS</p>
-                    <p>1.1. Perjanjian ini bersifat paruh waktu (Part-Time) dengan evaluasi harian berbasis target.<br>
-                    1.2. <b>Sistem Auto-Renewal:</b> Kontrak ini secara otomatis diperbaharui setiap bulan selama PIHAK KEDUA memenuhi standar minimum produksi dan tidak ditemukan pelanggaran SOP yang bersifat fatal.</p>
+                    <p><b>POIN KESEPAKATAN UTAMA:</b></p>
+                    <ul style="margin-top: 5px;">
+                        <li><b>Integritas SOP:</b> PIHAK KEDUA wajib mematuhi alur produksi 7 Bagian secara disiplin.</li>
+                        <li><b>Manajemen Target:</b> PIHAK KEDUA memahami konsekuensi administratif (Status Hari Lemah) sesuai kebijakan internal perusahaan.</li>
+                        <li><b>Kerahasiaan Digital:</b> Larangan keras membagi akses akun AI premium dan data internal kepada pihak luar.</li>
+                    </ul>
 
-                    <p style="margin-top: 20px; font-weight: bold; border-bottom: 1px solid #eee;">PASAL 2: TANGGUNG JAWAB & INTEGRITAS</p>
-                    <p>2.1. PIHAK KEDUA wajib tunduk pada metodologi produksi yang ditetapkan (SOP 7 Bagian).<br>
-                    2.2. PIHAK KEDUA memahami sepenuhnya konsekuensi administratif atas ketidaktercapaian target produksi harian sesuai regulasi perusahaan.</p>
-
-                    <p style="margin-top: 20px; font-weight: bold; border-bottom: 1px solid #eee;">PASAL 3: KERAHASIAAN DIGITAL</p>
-                    <p>3.1. PIHAK KEDUA dilarang menyebarkan akses akun premium, naskah, atau database milik PIHAK PERTAMA kepada pihak mana pun.</p>
+                    <p style="margin-top: 30px;">Demikian perjanjian digital ini dibuat untuk dipatuhi bersama dengan penuh tanggung jawab.</p>
                 </div>
 
                 <br><br><br>
 
-                <table style="width: 100%; font-size: 13px;">
+                <table style="width: 100%; text-align: center; font-size: 13px; margin-top: 40px;">
                     <tr>
                         <td style="width: 50%;">
-                            <p style="color: #999; font-size: 10px; margin-bottom: 40px;">[ ELECTRONIC SIGNATURE ]</p>
-                            <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 180px; font-weight: bold;">{nama_staff}</p>
-                            <p style="font-size: 10px; color: #aaa;">Pihak Kedua</p>
+                            <p style="color: #999; font-size: 10px; margin-bottom: 50px;">DISYAHKAN SECARA DIGITAL OLEH:</p>
+                            <p style="border-bottom: 2px solid #000; display: inline-block; min-width: 200px; font-weight: bold; padding-bottom: 5px;">{nama_staff_resmi}</p>
+                            <p style="font-size: 11px; margin-top: 5px;">PIHAK KEDUA</p>
                         </td>
-                        <td style="width: 50%; text-align: right;">
-                            <p style="color: #999; font-size: 10px; margin-bottom: 40px;">Banyumas, {tgl_sekarang}</p>
-                            <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 180px; font-weight: bold;">{nama_direktur}</p>
-                            <p style="font-size: 10px; color: #aaa;">Pihak Pertama</p>
+                        <td style="width: 50%;">
+                            <p style="color: #999; font-size: 10px; margin-bottom: 50px;">BANYUMAS, {tgl_mulai}</p>
+                            <p style="border-bottom: 2px solid #000; display: inline-block; min-width: 200px; font-weight: bold; padding-bottom: 5px;">{nama_direktur}</p>
+                            <p style="font-size: 11px; margin-top: 5px;">PIHAK PERTAMA (CEO)</p>
                         </td>
                     </tr>
                 </table>
+
+                <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #bbb; letter-spacing: 1px;">
+                    VALIDATED BY PINTAR MEDIA HR-SYSTEM © 2026
+                </div>
             </div>
             """
             
-            st.components.v1.html(html_e_contract, height=1000, scrolling=True)
+            st.components.v1.html(html_kontrak_premium, height=1100, scrolling=True)
 
-            if st.button(f"📄 DOWNLOAD E-CONTRACT - {nama_staff}", use_container_width=True):
-                html_with_print = html_e_contract + "<script>window.print();</script>"
+            if st.button(f"📄 DOWNLOAD OFFICIAL CONTRACT - {nama_staff_resmi}", use_container_width=True):
+                html_with_print = html_kontrak_premium + "<script>window.print();</script>"
                 st.components.v1.html(html_with_print, height=0)
-        
+
+        st.write("")
+        st.markdown(f"> *Sistem mendeteksi login sebagai: **{user_login.upper()}**. Nama resmi telah disesuaikan secara otomatis.*")
+    
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
 # ==============================================================================
@@ -3457,6 +3479,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
