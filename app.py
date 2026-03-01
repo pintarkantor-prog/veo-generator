@@ -3011,24 +3011,24 @@ def tampilkan_area_staf():
         staf_nama = staff_mapping.get(user_login, user_login.upper())
         nama_direktur = "DIAN SETYA WARDANA"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
+        last_update = "1 Maret 2026 | 23:59 WIB" # Update manual jika ada revisi pasal
         
         import pytz
-        import datetime as dt # Kita kasih inisial 'dt' biar nggak pusing
+        import datetime as dt 
         
         tz_wib = pytz.timezone('Asia/Jakarta')
-        # Ganti baris ini:
         now = dt.datetime.now(tz_wib) 
         
         bulan_sekarang = now.strftime("%m-%Y")
-        # --- KHUSUS TAMPILAN OWNER (DIAN) ---
+
+        # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
             st.markdown("### 📊 Rekap Tanda Tangan Staff")
             
-            # 1. Ambil data dari database Supabase
+            # 1. Ambil data tanda tangan bulan ini
             all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
             signed_users = [row['username'] for row in all_signs.data]
             
-            # Daftar staff yang dipantau (kecuali lo sendiri)
             daftar_staff = ["nissa", "lisa", "icha", "inggi"]
             
             # 2. Tombol BOM WA (Pengumuman Grup)
@@ -3044,7 +3044,7 @@ def tampilkan_area_staf():
                         f"Segera lakukan pengesahan kontrak periode *{bulan_sekarang}* di Dashboard Pintar Media.\n\n"
                         f"Terima kasih! 🙏"
                     )
-                    kirim_notif_wa(pesan_grup) # Panggil fungsi API WA grup lo
+                    kirim_notif_wa(pesan_grup)
                     st.toast("Pengumuman Grup Berhasil Dikirim!")
                 st.write("") 
 
@@ -3062,16 +3062,15 @@ def tampilkan_area_staf():
             st.write("---")
 
         # --- LOGIKA KUNCI TANGGAL (FIX AGAR TIDAK BERUBAH) ---
-        # 1. Cek ke database Supabase apakah user ini sudah tanda tangan bulan ini
         check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
         
         if check_db.data:
-            # JIKA SUDAH TANDA TANGAN: Ambil data permanen dari Database
+            # JIKA SUDAH TANDA TANGAN: Pakai data permanen
             is_signed = True
             tgl_hari_ini = check_db.data[0]['tgl_tanda_tangan']
             waktu_presisi = check_db.data[0]['waktu_presisi']
         else:
-            # JIKA BELUM TANDA TANGAN: Pakai waktu berjalan (Real-time)
+            # JIKA BELUM TANDA TANGAN: Pakai waktu berjalan
             is_signed = False
             tgl_hari_ini = now.strftime("%d %B %Y")
             waktu_presisi = now.strftime("%H:%M:%S")
@@ -3669,6 +3668,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
