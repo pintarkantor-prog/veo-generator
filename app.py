@@ -2981,8 +2981,10 @@ def tampilkan_area_staf():
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         last_update = "1 Maret 2026 | 23:59 WIB"
         
-        from datetime import datetime
-        now = datetime.now()
+        import pytz
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        now = datetime.now(tz_wib) # Paksa ke Jakarta (WIB)
+        
         bulan_sekarang = now.strftime("%m-%Y")
         tgl_hari_ini = now.strftime("%d %B %Y")
         waktu_presisi = now.strftime("%H:%M:%S")
@@ -3024,15 +3026,15 @@ def tampilkan_area_staf():
             </table>
             
             <center>
-                <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">MASTER DRAFT: PERJANJIAN KERJA DIGITAL & PAKTA INTEGRITAS</h2>
+                <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERJANJIAN KERJA & PAKTA INTEGRITAS</h2>
                 <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: PDK/HRD-SPK/{now.strftime('%y%m')}/{user_login.upper()}</p>
             </center>
             
             <div style="font-size: 13px; text-align: justify; margin-top: 25px;">
                 <p>Perjanjian ini dibuat secara sah oleh dan antara <b>{nama_direktur}</b> (Pihak Pertama) dan <b>{staf_nama}</b> (Pihak Kedua) tertanggal <b>{tgl_hari_ini}</b> dengan rincian sebagai berikut:</p>
 
-                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB II: KEDISIPLINAN & OPERASIONAL</p>
-                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 3: Waktu Kerja, Hari Kerja, & Hak Libur</p>
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB I: KEDISIPLINAN & OPERASIONAL</p>
+                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 1: Waktu Kerja, Hari Kerja, & Hak Libur</p>
                 <div style="margin-left: 20px;">
                     <b>Waktu Kerja Efektif:</b> Pihak Kedua wajib berada di lokasi kerja/menjalankan tugas pada pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Hari Kerja:</b> Senin s/d Sabtu.<br>
@@ -3045,8 +3047,8 @@ def tampilkan_area_staf():
                     <b>Presensi:</b> Pihak Kedua wajib melakukan pelaporan kehadiran (Check-in & Check-out) kepada Admin/Koordinator. Keterlambatan tanpa alasan logis akan diakumulasi sebagai pengurangan poin performa.
                 </div>
 
-                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB III: KEAMANAN ASET & KERAHASIAAN DATA (NDA)</p>
-                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Perlindungan & Efisiensi Akun AI Premium</p>
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB II: KEAMANAN ASET & KERAHASIAAN DATA (NDA)</p>
+                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 2: Perlindungan & Efisiensi Akun AI Premium</p>
                 <div style="margin-left: 20px;">
                     <b>Hak Akses:</b> Pihak Kedua diberikan akses akun AI premium (Generator, Email, Supabase) semata-mata untuk Kepentingan Pekerjaan PT Pintar Digital Kreasi.<br>
                     <b>Larangan Penyalahgunaan:</b> Dilarang keras menggunakan akun milik perusahaan untuk keperluan pribadi, proyek sampingan di luar perusahaan, atau membagikan akses kepada pihak ketiga.<br>
@@ -3054,35 +3056,35 @@ def tampilkan_area_staf():
                     <b>Keamanan Akun:</b> Pihak Kedua dilarang mengubah informasi profil, email pemulihan, atau password tanpa instruksi langsung dari Pihak Pertama.
                 </div>
 
-                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: EVALUASI & SANKSI FINANSIAL</p>
-                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 7: Penyesuaian Administratif (Denda)</p>
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB III: EVALUASI & SANKSI FINANSIAL</p>
+                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 3: Penyesuaian Administratif (Denda)</p>
                 <div style="margin-left: 20px;">
                     <b>Pelanggaran SOP & Target:</b> Pihak Kedua sepakat bahwa kegagalan memenuhi standar produksi (SOP 7 Bagian) atau mencapai target harian minimum (Status Hari Lemah) adalah pelanggaran kontrak.<br>
                     <b>Nilai Penalti:</b> Atas pelanggaran tersebut, Pihak Kedua bersedia menerima penyesuaian administratif (potongan gaji) sebesar <b>Rp 1.000.000 (Satu Juta Rupiah)</b> per periode bulan berjalan.<br>
                     <b>Ghosting:</b> Tindakan tidak memberikan kabar (Ghosting) selama >2 hari kerja dianggap sebagai pengunduran diri sepihak dan Pihak Pertama berhak menahan hak upah yang belum terbayar sebagai kompensasi kerugian operasional.
                 </div>
 
-                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB V: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
-                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 8: Hak Upah & Bonus</p>
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
+                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Hak Upah & Bonus</p>
                 <div style="margin-left: 20px;">
                     Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.<br>
                     Bonus performa dihitung berdasarkan data validasi sistem (ACC Video).
                 </div>
-                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 9: Pajak Penghasilan (PPh)</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 5: Pajak Penghasilan (PPh)</p>
                 <div style="margin-left: 20px;">
                     Segala bentuk Pajak Penghasilan (PPh) yang timbul atas upah dan bonus yang diterima oleh Pihak Kedua adalah Tanggung Jawab Pribadi Pihak Kedua.<br>
                     Pihak Pertama membayarkan upah secara gross (kotor) tanpa potongan pajak dari perusahaan.
                 </div>
-                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 10: Perlindungan Asuransi & Kesehatan</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 6: Perlindungan Asuransi & Kesehatan</p>
                 <div style="margin-left: 20px;">
                     Mengingat status kemitraan ini adalah paruh waktu (part-time), Pihak Pertama tidak memberikan fasilitas asuransi kesehatan atau jaminan hari tua (BPJS/Asuransi Swasta).<br>
                     Segala biaya medis atau perlindungan kesehatan merupakan Tanggung Jawab Pribadi Pihak Kedua. Pihak Kedua disarankan memiliki proteksi kesehatan mandiri.
                 </div>
 
-                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB VIII: LEGALITAS & DINAMIKA PERATURAN</p>
-                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 14: Perubahan Peraturan (Amandemen)</p>
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB V: LEGALITAS & DINAMIKA PERATURAN</p>
+                <p style="font-weight: bold; margin-bottom: 5px;">Pasal 7: Perubahan Peraturan (Amandemen)</p>
                 <div style="margin-left: 20px;">
-                    Pihak Pertama berhak melakukan perubahan, penambahan, atau pengurangan poin-poin dalam Pasal Perjanjian ini sewaktu-waktu sesuai dengan Kondisi Dinamis Pekerjaan dan kebijakan Pimpinan.<br>
+                    Pihak Pertama berhak melakukan perubahan, penambahan, atau pengurangan poin-poin dalam Pasal Perjanjian ini.<br>
                     Setiap perubahan akan diinformasikan melalui sistem Dashboard Pintar Media dengan keterangan "Update Terakhir".<br>
                     Pihak Kedua dinyatakan setuju dengan perubahan tersebut selama masih melanjutkan hubungan kerja di periode bulan berikutnya.
                 </div>
@@ -3090,7 +3092,6 @@ def tampilkan_area_staf():
                 <div style="margin-left: 20px;">
                     Tindakan menekan tombol "SETUJU & TANDATANGANI" adalah sah sebagai pengganti tanda tangan basah demi hukum.<br>
                     Sistem merekam secara otomatis: Nama Staff Resmi dan Timestamp (Waktu Presisi) sebagai bukti otentik pengesahan.<br>
-                    Khusus akun Pimpinan (Dian Setya Wardana), sistem memberikan otorisasi otomatis berstatus "OWNER SIGNED & VERIFIED".
                 </div>
             </div>
 
@@ -3557,6 +3558,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
