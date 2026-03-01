@@ -104,28 +104,30 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Mencatat aktivitas ke Supabase & GSheet dengan kolom yang benar."""
+    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
     if str(user).upper() == "DIAN": 
-        return 
-        
+        return # Langsung keluar, tidak mencatat apa-apa kalau itu Dian
+
     try:
         tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu_skrg_iso = datetime.now(tz_wib).isoformat()
-        waktu_skrg_tampil = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+        # Pake format ini biar rapi kayak data lama lo di screenshot
+        waktu_sekarang = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
         
-        # --- PERBAIKAN DI SINI (Ganti 'Nama' jadi 'User') ---
+        # 1. KIRIM KE SUPABASE
+        # 'Nama' diganti 'User' karena di database lo kolomnya itu
         supabase.table("Log_Aktivitas").insert({
-            "Waktu": waktu_skrg_iso,
-            "User": str(user).upper(), # Kolom di DB lo namanya 'User'
+            "Waktu": waktu_sekarang,
+            "User": str(user).upper(),
             "Aksi": aksi
         }).execute()
 
-        # 2. KIRIM KE GSHEET
+        # 2. KIRIM KE GSHEET (Backup pasif)
         try:
             sh = get_gspread_sh()
             ws_log = sh.worksheet("Log_Aktivitas")
-            ws_log.append_row([waktu_skrg_tampil, str(user).upper(), aksi])
-        except: pass 
+            ws_log.append_row([waktu_sekarang, str(user).upper(), aksi])
+        except: 
+            pass 
 
     except Exception as e:
         print(f"Gagal mencatat log: {e}")
@@ -3751,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
