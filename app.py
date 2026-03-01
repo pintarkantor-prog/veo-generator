@@ -3044,54 +3044,58 @@ def tampilkan_area_staf():
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
-            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=False):
-                # 1. Ambil data dari Supabase
-                all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
-                signed_users = [row['username'].lower() for row in all_signs.data]
+            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
+                # 1. Ambil data dari Supabase (Cek username & waktu_presisi juga)
+                all_signs_raw = supabase.table("kontrak_staff").select("username, waktu_presisi").eq("periode", bulan_sekarang).execute()
+                
+                # Bikin mapping biar gampang panggil waktu sign-nya
+                # Format: {'nissa': '08:30:15', 'lisa': '09:00:21'}
+                sign_map = {row['username'].lower(): row['waktu_presisi'] for row in all_signs_raw.data}
+                signed_users = list(sign_map.keys())
                 
                 daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
                 
-                # 2. Grid Card (Gaya Radar Performa)
                 st.write("")
                 kolom_card = st.columns(4)
                 
                 for idx, s in enumerate(daftar_staff_monitor):
                     is_ok = s in signed_users
-                    warna_bg = "#1d976c" if is_ok else "#e74c3c" # Hijau vs Merah
+                    warna_bg = "#1d976c" if is_ok else "#e74c3c"
                     n_up = s.upper()
                     txt_status = "SUDAH" if is_ok else "BELUM"
+                    # Ambil jam sign kalau ada, kalau nggak kasih tanda strip
+                    jam_sign = sign_map.get(s, "--:--:--")
                     
                     with kolom_card[idx % 4]:
                         with st.container(border=True):
-                            # Header Warna Solid (Pake trik negative margin lo)
+                            # Header Header ala Radar Performa
                             st.markdown(f'<div style="text-align:center; padding:5px; background:{warna_bg}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;"><b style="color:black; font-size:14px;">{n_up}</b></div>', unsafe_allow_html=True)
                             
-                            # Baris Detail Status
                             m1, m2 = st.columns(2)
-                            m1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:12px; color:{warna_bg};'>{txt_status} SIGN</b>", unsafe_allow_html=True)
-                            m2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>PERIODE</p><b style='font-size:12px;'>{bulan_sekarang}</b>", unsafe_allow_html=True)
+                            m1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:11px; color:{warna_bg};'>{txt_status} SIGN</b>", unsafe_allow_html=True)
+                            m2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>PERIODE</p><b style='font-size:11px;'>{bulan_sekarang}</b>", unsafe_allow_html=True)
                             
                             st.divider()
                             
-                            # Info Tambahan
                             det1, det2 = st.columns(2)
-                            det1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🚩 OTORITAS</p><b style='font-size:11px;'>STAFF</b>", unsafe_allow_html=True)
+                            # Bagian ini nampilin jam tanda tangan
+                            det1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏰ JAM SIGN</p><b style='font-size:11px;'>{jam_sign}</b>", unsafe_allow_html=True)
                             det2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📝 DOKUMEN</p><b style='font-size:11px;'>KONTRAK</b>", unsafe_allow_html=True)
                             
-                            # Progress Bar (Full kalau sudah sign, Kosong kalau belum)
                             prog_val = 1.0 if is_ok else 0.0
                             st.progress(prog_val)
 
-                # 3. Tombol BOM WA di Bawah Card
+                # 3. Tombol BOM WA Otomatis Filter Nama
                 belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
                 if belum_sign:
                     st.write("")
-                    if st.button(f"📢 KIRIM WA ({len(belum_sign)} STAFF)", use_container_width=True, type="primary"):
+                    if st.button(f"📢 BOM WA ({len(belum_sign)} STAFF BELUM)", use_container_width=True, type="primary"):
                         tag_nama = ", ".join(belum_sign)
                         pesan_grup = f"📢 *PENGUMUMAN*\n\nMohon perhatian: *{tag_nama}*\nSegera sign kontrak periode *{bulan_sekarang}*."
                         kirim_notif_wa(pesan_grup)
-                        st.toast("Sentilan Grup Meluncur!")
-            
+                        st.toast("Pesan dikirim ke yang Belum Sign aja!")
+                else:
+                    st.success("Semua Beres! Seluruh Staff Sudah TTD Kontrak! 😎")
             st.write("---")
         # --- LOGIKA KUNCI TANGGAL ---
         check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
@@ -3697,6 +3701,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
