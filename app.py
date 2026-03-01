@@ -2605,46 +2605,59 @@ def tampilkan_area_staf():
                 st.write("• **PROJECT RINGAN**: 1 Link GDrive berisi minimal 15 Video = **1 Poin**.")
                 st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
-                
-            # --- III. MODUL PANDUAN (MODEL BUKA TUTUP LANGSUNG) ---
+
+            # --- III. MODUL PANDUAN (FULL DRAFT & LENGKAP) ---
             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
                 # Hamparan Kertas Putih (HTML)
                 html_konten_pdf = f"""
-                <div style="background: white; padding: 30px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
+                <div style="background: white; padding: 40px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
                     <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px; margin-bottom: 10px;">
-                        <h2 style="margin: 0; font-size: 20px;">PT PINTAR DIGITAL KREASI</h2>
-                        <hr style="border: 1px solid black; margin: 10px 0;">
-                        <b style="font-size: 16px; text-decoration: underline;">BLUEPRINT ALUR KONTEN AI (HQ)</b><br>
-                        <small>Update: 1 Maret 2026</small>
+                        <h2 style="margin: 0; font-size: 22px;">BLUEPRINT & TUTORIAL ALUR KONTEN AI (HQ)</h2>
+                        <hr style="border: 1px solid black; margin: 15px 0;">
                     </center>
                     <br>
-                    <b style="font-size: 14px;">🔥 ALUR A: THE EMOTIONAL UNDERDOG (REVENGE)</b><br>
-                    <b>Fase 1 - The Hook (Penindasan):</b> Adegan karakter dihina/diremehkan. <i>Wajib Visual: Ekspresi AI sedih (Close-up).</i><br>
-                    <b>Fase 2 - Turning Point:</b> Momen karakter menghapus air mata & bangkit. <i>Wajib Musik: Nada penuh harapan.</i><br>
-                    <b>Fase 3 - The Struggle (Engagement):</b> Montage perjuangan. <b>Wajib CTA: "Bantu Like yuk agar Udin sukses!".</b><br>
-                    <b>Fase 4 - Evolution:</b> Perubahan drastis (Visual mewah/berwibawa).<br>
-                    <b>Fase 5 - Satisfaction:</b> Pembuktian di depan penindas. Penonton merasa puas.<br><br>
 
-                    <b style="font-size: 14px;">⚔️ ALUR B: THE BATTLE / VS (PLOT TWIST)</b><br>
-                    <b>Fase 1 - Confrontation:</b> Udin vs Tung berhadapan tajam.<br>
-                    <b>Fase 2 - The Challenge:</b> Pertandingan dimulai (Fast-cut editing).<br>
-                    <b>Fase 3 - Momen Kritis:</b> Masukkan interaksi "Tim Udin (Like) vs Tim Tung (Komen)".<br>
-                    <b>Fase 4 - The Plot Twist:</b> Hasil akhir yang tidak terduga.<br><br>
+                    <div style="margin-bottom: 30px;">
+                        <b style="font-size: 16px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL UNDERDOG (REVENGE)</b><br><br>
+                        <b>A. Bagian Awal (The Hook - Penindasan):</b> Tampilkan adegan karakter utama (Udin/Tung) sedang dihina atau diremehkan karena kondisi fisik atau kemiskinannya. <i>Instruksi Visual: Ekspresi AI wajib sedih/tertekan, lawan main wajib angkuh.</i><br>
+                        <b>B. Bagian Transisi (Turning Point):</b> Momen karakter memutuskan berhenti menangis dan mulai bangkit. <i>Instruksi Visual: Ekspresi berubah fokus/serius, mulai melakukan aksi nyata.</i><br>
+                        <b>C. Bagian Tengah (The Struggle):</b> Tampilkan proses perjuangan progresif (2-3 adegan). <i>Interaksi: Masukkan ajakan "Like untuk bantu Udin sukses!".</i><br>
+                        <b>D. Bagian Klimaks (The Evolution):</b> Kembalinya karakter dengan perubahan drastis 180 derajat. <i>Instruksi Visual: Penampilan mewah/kuat, ekspresi puas dan tenang.</i><br>
+                        <b>E. Bagian Akhir (The Satisfaction):</b> Konfrontasi terakhir dengan penindas. <i>Instruksi Visual: Karakter utama cukup senyum kemenangan elegan.</i>
+                    </div>
 
-                    <table style="width: 100%; text-align: center; font-size: 12px; margin-top: 20px;">
-                        <tr><td>Owner PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
-                        <tr style="height: 50px;"><td><b>DIAN</b></td><td><b>{nama_user}</b></td></tr>
-                    </table>
+                    <div style="margin-bottom: 30px;">
+                        <b style="font-size: 16px; color: #1976d2;">⚔️ 2. ALUR: THE BATTLE / VS (PLOT TWIST ENDING)</b><br><br>
+                        <b>A. Bagian Awal (The Hook - Konfrontasi):</b> Tampilkan dua karakter (Udin vs Tung) yang sedang berhadapan dengan tensi tinggi. Bisa berupa adu tatap mata atau persiapan lomba. <i>Tujuan: Membuat penonton memilih kubu di detik pertama.</i><br>
+                        <b>B. Bagian Tengah (Dinamika Battle):</b> Tampilkan cuplikan pertandingan atau adu kekuatan yang intens. Gunakan editing cepat (fast-cut) dan SFX yang memacu adrenalin. <i>Interaksi: Masukkan polling "Pilih Tim Udin (Like) atau Tim Tung (Komen)".</i><br>
+                        <b>C. Bagian Klimaks (The Critical Moment):</b> Momen di mana salah satu karakter terlihat akan kalah atau terjepit situasi sulit. Buat tensi berada di puncaknya.<br>
+                        <b>D. Bagian Akhir (The Plot Twist):</b> Ending yang tidak terduga. Karakter yang diprediksi kalah malah menang dengan cara unik, atau muncul pihak ketiga yang mengacaukan pertandingan.<br>
+                        <b>E. Penutup (Retention):</b> Tanyakan pendapat penonton di kolom komentar: "Siapa yang harus melawan pemenang ini selanjutnya?".
+                    </div>
+
+                    <div style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px dashed #666;">
+                        <b style="font-size: 16px;">📢 PANDUAN INTERAKSI (CTA - CALL TO ACTION)</b><br><br>
+                        • <b>Timing:</b> Jangan letakkan CTA di awal yang mengganggu hook. Taruh di momen penonton sedang merasa "kasihan" atau "penasaran".<br>
+                        • <b>Emotional CTA:</b> Gunakan kalimat ajakan yang melibatkan kontribusi penonton (Contoh: "Bantu Udin bangkit dengan klik Like").<br>
+                        • <b>Debate CTA:</b> Gunakan pada konten Battle untuk memancing kolom komentar (Contoh: "Ketik 1 untuk Udin, 2 untuk Tung").<br>
+                        • <b>Retention CTA:</b> Ajakan untuk menonton part selanjutnya atau memberikan ide konten (Contoh: "Ketik LANJUT buat liat pembalasan berikutnya!").
+                    </div>
+
+                    <div style="margin-top: 50px; font-size: 11px; text-align: center; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
+                        📌 Dokumen ini dibuat pada 1 Maret 2026. Isi panduan bersifat dinamis dan dapat direvisi sesuai dengan kebutuhan operasional kantor tanpa pemberitahuan sebelumnya.
+                    </div>
                 </div>
                 """
-                # Tampilan di layar
-                st.components.v1.html(html_konten_pdf, height=750, scrolling=True)
+                # Tampilan di dashboard
+                st.components.v1.html(html_konten_pdf, height=1200, scrolling=True)
 
                 # Tombol Print
                 if st.button(f"📄 PREVIEW & PRINT MODUL {nama_user.upper()}", use_container_width=True):
                     html_with_print = html_konten_pdf + "<script>window.print();</script>"
                     st.components.v1.html(html_with_print, height=0)
+
+            # --- IV. SANKSI ---
+            st.error("⚠️ **DENDA ADMINISTRATIF Rp 1.000.000** bagi kelalaian SOP & Blueprint Alur.")
     
         elif divisi_sop == "Staff Uploader":
             import datetime
@@ -3451,6 +3464,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
