@@ -3006,9 +3006,20 @@ def tampilkan_area_staf():
         
         # --- KONEKSI DATA USER ---
         user_login = st.session_state.get('user_aktif', 'tamu').lower()
-        # Pastikan level_aktif sudah didefinisikan sebelumnya, jika belum pakai ini:
-        level_aktif = st.session_state.get('status', st.session_state.get('level', 'STAFF')).upper()
         
+        # LOGIKA PENANGKAP LEVEL (Disesuaikan dengan kolom 'Level' di tabel Staff lo)
+        # Kita ambil dari session state, kalau gagal kita tembak langsung ke Supabase
+        level_aktif = st.session_state.get('Level', st.session_state.get('level', st.session_state.get('status', 'STAFF'))).upper()
+        
+        if level_aktif == "STAFF":
+            try:
+                # Sesuaikan dengan nama tabel lo 'Staff' (S besar) dan kolom 'Level' (L besar)
+                res_level = supabase.table("Staff").select("Level").eq("Nama", user_login.upper()).execute()
+                if res_level.data:
+                    level_aktif = res_level.data[0]['Level'].upper()
+            except:
+                pass
+
         staff_mapping = {
             "nissa": "NISSA PANGESTUNINGRUM",
             "lisa": "LISA ANGGRAENI",
@@ -3022,25 +3033,24 @@ def tampilkan_area_staf():
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         last_update = "1 Maret 2026 | 23:59 WIB"
         
-        # --- FIX DATETIME (Agar tidak UnboundLocalError) ---
+        # --- FIX DATETIME (Solusi UnboundLocalError) ---
         import pytz
         import datetime as dt 
         import time
         
         tz_jakarta = pytz.timezone('Asia/Jakarta')
-        # Panggil class datetime di dalam modul dt
         now_fix = dt.datetime.now(tz_jakarta) 
-        
         bulan_sekarang = now_fix.strftime("%m-%Y")
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
-        if level_aktif.upper() in ["OWNER", "ADMIN"]:
+        if level_aktif in ["OWNER", "ADMIN"]:
             st.markdown("### 📊 Rekap Tanda Tangan Staff")
             
-            # 1. Ambil data tanda tangan dari Supabase
+            # 1. Ambil data tanda tangan dari tabel kontrak_staff
             all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
-            signed_users = [row['username'] for row in all_signs.data]
+            signed_users = [row['username'].lower() for row in all_signs.data]
             
+            # Daftar staff yang dipantau (Disesuaikan dengan staff_mapping)
             daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
             
             # 2. Tombol BOM WA (Pengumuman Grup)
@@ -3677,6 +3687,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
