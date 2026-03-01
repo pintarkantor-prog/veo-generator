@@ -2606,15 +2606,13 @@ def tampilkan_area_staf():
                 """)
 
             # --- II. KETENTUAN UNIT & POIN ---
-            st.markdown("### 📊 II. KETENTUAN UNIT KERJA")
+            st.markdown("### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Aturan ini dibuat agar beban kerja adil bagi semua staf (HQ vs Ringan).**")
                 
                 st.markdown("#### ⚖️ 1. Penyetaraan Tugas Kerja (Weighting System)")
                 st.write("• **PROJECT HQ**: Karena tingkat kesulitan tinggi, 1 Link GDrive berisi 1 Video dihitung **1 Poin**.")
                 st.write("• **PROJECT RINGAN**: Karena pengerjaan lebih cepat, 1 Link GDrive wajib berisi minimal 15 Video untuk dihitung **1 Poin**.")
-
-                st.markdown("#### 💰 2. Skema Bonus Otomatis (Insentif)")
                 st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis sebagai apresiasi kehadiran.")
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
 
@@ -3498,4 +3496,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
