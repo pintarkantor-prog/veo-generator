@@ -2866,17 +2866,42 @@ def tampilkan_area_staf():
 
     with t4:
         st.write("")
+        # --- DATA DINAMIS ---
+        import pytz
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        now = datetime.now(tz_wib)
+        tgl_hari_ini = now.strftime("%d %B %Y")
+        nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
+        nama_direktur = "DIAN SETYA WARDANA"
+        last_update = "2 Maret 2026 | 00:40 WIB"
+
         # --- EXPANDER UTAMA ---
         with st.expander("##### 🤝 Budaya Kerja & Aturan Main Pintar Media", expanded=True):
 
-            # --- DOKUMEN MASTER PDF FORMAT MINIMALIS RESMI ---
-            nama_lengkap = "Dian Setya Wardana"
-            nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-
+            # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEKS) ---
             html_master_pdf = f"""
-            <div style="background: white; padding: 60px 80px; font-family: 'Arial', sans-serif; color: black; line-height: 1.8; border: 1px solid #eee; margin-bottom: 20px;">
+            <style>
+                @media print {{
+                    @page {{ size: A4; margin: 15mm; }}
+                    body {{ margin: 0; padding: 0; }}
+                    .a4-container {{ border: none !important; box-shadow: none !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }}
+                }}
+                .a4-container {{
+                    background: white; 
+                    width: 210mm; 
+                    min-height: 297mm;
+                    padding: 20mm; 
+                    margin: auto; 
+                    font-family: 'Arial', sans-serif; 
+                    color: black; 
+                    line-height: 1.6; 
+                    border: 1px solid #eee;
+                    box-sizing: border-box;
+                }}
+            </style>
+            <div class="a4-container">
                 
-                <table style="width: 100%; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
+                <table style="width: 100%; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
                     <tr>
                         <td style="width: 20%; vertical-align: middle;">
                             <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px;">
@@ -2891,7 +2916,7 @@ def tampilkan_area_staf():
                 
                 <center>
                     <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h2>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">PT PINTAR DIGITAL KREASI (PINTAR MEDIA)</p>
+                    <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: PDK/REG-SOP/{now.strftime('%y%m')}/OWNER</p>
                 </center>
                 
                 <br><br>
@@ -2947,18 +2972,28 @@ def tampilkan_area_staf():
 
                 <br><br><br>
 
-                <div style="float: right; text-align: center; width: 250px;">
-                    <p style="font-size: 13px; margin-bottom: 60px;">Banyumas, 1 Maret 2026<br><b>Pimpinan Perusahaan,</b></p>
-                    <p style="font-size: 14px; font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">{nama_lengkap}</p>
+                <table style="width: 100%; text-align: center; font-size: 13px;">
+                    <tr>
+                        <td style="width: 50%;"></td>
+                        <td style="width: 50%;">
+                            <p>Banyumas, {tgl_hari_ini}<br><b>PIHAK PERTAMA (OWNER)</b></p>
+                            <br><br>
+                            <p style="color:blue; font-weight:bold; font-size: 10px;">[ OWNER SIGNED & VERIFIED ]</p>
+                            <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 200px; font-weight: bold;">{nama_direktur}</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 60px; font-size: 9px; color: #888; text-align: justify;">
+                    <i><b>Pintar Media Online Regulation System:</b> Update: {last_update}. Dokumen ini sah dan berlaku secara otomatis bagi seluruh staff PT Pintar Digital Kreasi.</i>
                 </div>
-                <div style="clear: both;"></div>
             </div>
             """
             
             # Pratinjau Dokumen
             st.components.v1.html(html_master_pdf, height=1000, scrolling=True)
 
-            # Tombol Print (Sekarang di dalam expander Budaya Kerja)
+            # Tombol Print
             if st.button(f"📄 DOWNLOAD / PRINT PDF PERATURAN", use_container_width=True):
                 html_with_print = html_master_pdf + "<script>window.print();</script>"
                 st.components.v1.html(html_with_print, height=0)
@@ -3558,6 +3593,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
