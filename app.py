@@ -3044,57 +3044,56 @@ def tampilkan_area_staf():
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
-            st.markdown("### 📊 Rekap Tanda Tangan Staff")
-            
-            # 1. Ambil data tanda tangan dari tabel kontrak_staff
-            all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
-            signed_users = [row['username'].lower() for row in all_signs.data]
-            
-            # Daftar staff yang dipantau (Disesuaikan dengan staff_mapping)
-            daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
-            
-            # 2. Tombol BOM WA (Pengumuman Grup)
-            belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
-            
-            if belum_sign:
-                if st.button("📢 UMUMKAN DI GRUP (BOM)", use_container_width=True):
-                    tag_nama = ", ".join(belum_sign)
-                    pesan_grup = (
-                        f"📢 *PENGUMUMAN KONTRAK DIGITAL*\n\n"
-                        f"Mohon perhatiannya untuk rekan-rekan:\n"
-                        f"👉 *{tag_nama}*\n\n"
-                        f"Segera lakukan pengesahan kontrak periode *{bulan_sekarang}* di Dashboard Pintar Media.\n\n"
-                        f"Terima kasih! 🙏"
-                    )
-                    kirim_notif_wa(pesan_grup)
-                    st.toast("Pengumuman Grup Berhasil Dikirim!")
-                st.write("") 
+            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
+                # 1. Ambil data tanda tangan dari Supabase
+                all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
+                signed_users = [row['username'].lower() for row in all_signs.data]
+                
+                daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
 
-            # 3. Tabel Pantauan Ringkas
-            st.write("") 
-            cols = st.columns(4) # Bikin 4 kolom biar sejajar
-            
-            for i, s in enumerate(daftar_staff_monitor):
-                with cols[i]:
-                    # Container Styling ala Akun AI
-                    if s in signed_users:
-                        st.markdown(f"""
-                        <div style="background-color: #1e3d24; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #2ecc71;">
-                            <p style="margin: 0; color: #888; font-size: 10px; font-weight: bold;">STAFF</p>
-                            <h4 style="margin: 5px 0; color: white; font-size: 14px;">{s.upper()}</h4>
-                            <p style="margin: 0; color: #2ecc71; font-size: 12px;">● SUDAH</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown(f"""
-                        <div style="background-color: #3d1e1e; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #e74c3c;">
-                            <p style="margin: 0; color: #888; font-size: 10px; font-weight: bold;">STAFF</p>
-                            <h4 style="margin: 5px 0; color: white; font-size: 14px;">{s.upper()}</h4>
-                            <p style="margin: 0; color: #e74c3c; font-size: 12px;">○ BELUM</p>
-                        </div>
-                        """, unsafe_allow_html=True)
+                # 2. Card Staff (Nama | Status | Periode) - 1 Baris per Staff
+                for s in daftar_staff_monitor:
+                    is_ok = s in signed_users
+                    
+                    # Bikin 3 kolom utama sesuai request
+                    c1, c2, c3 = st.columns([2, 3, 1])
+                    
+                    with c1:
+                        # Nama Staff dengan Icon
+                        st.write(f"👤 **{s.upper()}**")
+                    
+                    with c2:
+                        # Status dengan warna default Streamlit (Success/Error)
+                        if is_ok:
+                            st.success("✅ SUDAH SIGN")
+                        else:
+                            st.error("⚠️ BELUM SIGN")
+                    
+                    with c3:
+                        # Periode
+                        st.code(bulan_sekarang)
+                
+                st.write("---") # Garis pembatas sebelum tombol
+
+                # 3. Tombol BOM WA (Diletakkan di bawah card)
+                belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
+                
+                if belum_sign:
+                    if st.button("📢 UMUMKAN DI GRUP (BOM WA)", use_container_width=True, type="primary"):
+                        tag_nama = ", ".join(belum_sign)
+                        pesan_grup = (
+                            f"📢 *PENGUMUMAN KONTRAK DIGITAL*\n\n"
+                            f"Mohon perhatiannya untuk rekan-rekan:\n"
+                            f"👉 *{tag_nama}*\n\n"
+                            f"Segera lakukan pengesahan kontrak periode *{bulan_sekarang}* di Dashboard Pintar Media.\n\n"
+                            f"Terima kasih! 🙏"
+                        )
+                        kirim_notif_wa(pesan_grup)
+                        st.toast("Pengumuman Grup Berhasil Dikirim!")
+                else:
+                    st.success("✨ Semua staff sudah tanda tangan kontrak!")
+
             st.write("---")
-
         # --- LOGIKA KUNCI TANGGAL ---
         check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
         
@@ -3699,6 +3698,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
