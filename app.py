@@ -2868,103 +2868,90 @@ def tampilkan_area_staf():
         st.write("")
         st.markdown("#### 🤝 Budaya Kerja & Aturan Main Pintar Media")
         
-        # --- DOKUMEN MASTER PDF STANDAR SK RESMI ---
+        # --- DOKUMEN MASTER PDF FORMAT MINIMALIS RESMI ---
         nama_lengkap = "Dian Setya Wardana"
+        nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
 
         html_master_pdf = f"""
-        <div style="background: white; padding: 40px 60px; font-family: 'Arial', sans-serif; color: black; line-height: 1.5; border: 1px solid #ddd; margin-bottom: 20px;">
+        <div style="background: white; padding: 60px 80px; font-family: 'Arial', sans-serif; color: black; line-height: 1.8; border: 1px solid #eee; margin-bottom: 20px;">
             
-            <table style="width: 100%; border-bottom: 3px solid #000; margin-bottom: 2px;">
-                <tr>
-                    <td style="width: 15%; text-align: center; padding-bottom: 10px;">
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 120px;">
-                    </td>
-                    <td style="width: 85%; text-align: center; padding-bottom: 10px;">
-                        <h1 style="margin: 0; font-size: 24px; letter-spacing: 2px;">PT PINTAR DIGITAL KREASI</h1>
-                        <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">CREATIVE CONTENT AI SPECIALIST & DIGITAL MEDIA PRODUCTION</p>
-                        <p style="margin: 2px 0 0 0; font-size: 11px;">Alamat: Banyumas, Jawa Tengah | Email: official@pintarmedia.com</p>
-                    </td>
-                </tr>
-            </table>
-            <div style="border-top: 1px solid #000; margin-bottom: 25px;"></div>
+            <div style="text-align: right; margin-bottom: 40px;">
+                <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 140px;">
+            </div>
             
             <center>
-                <h3 style="margin: 0; font-size: 16px; text-decoration: underline;">SURAT KEPUTUSAN DIREKSI</h3>
-                <p style="margin: 5px 0 0 0; font-size: 12px;">NOMOR: 001/SK-DIR/PDK/III/2026</p>
-                <br>
-                <h4 style="margin: 0; font-size: 14px;">TENTANG</h4>
-                <h4 style="margin: 5px 0 0 0; font-size: 14px; text-transform: uppercase;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL PROSEDUR (SOP)</h4>
+                <h2 style="margin: 0; font-size: 18px; font-weight: bold; letter-spacing: 1px;">PERATURAN PERUSAHAAN</h2>
+                <h3 style="margin: 5px 0 0 0; font-size: 16px; font-weight: bold;">PT Pintar Digital Kreasi</h3>
+                <p style="margin: 5px 0 0 0; font-size: 11px; color: #555;">Nomor Pengesahan: {nomor_ahu}</p>
             </center>
             
-            <div style="font-size: 12px; text-align: justify; margin-top: 30px; font-family: 'Arial', sans-serif;">
-                <p><b>I. KETENTUAN WAKTU KERJA & DISIPLIN</b><br>
+            <br><br>
+
+            <div style="font-size: 13px; text-align: justify;">
+                <p style="text-align: center; font-weight: bold; margin-bottom: 20px;">I. KETENTUAN WAKTU KERJA & DISIPLIN</p>
+                <p>
                 <b>Jam Operasional:</b> Staff wajib menjalankan tugas di kantor pada pukul 08:30 s/d 16:30 WIB.<br>
                 <b>Waktu Istirahat:</b><br>
                 - Senin – Kamis: 11:30 – 12:30 WIB.<br>
                 - Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
                 <b>Hari Libur:</b> Operasional kantor diliburkan pada hari Minggu dan Hari Libur Nasional. Adapun untuk Hari Cuti Bersama, operasional tetap berjalan normal kecuali ditentukan lain oleh kebijakan pimpinan.<br>
-                <b>Presensi:</b> Staff wajib melakukan pelaporan kehadiran (Absensi) kepada Koordinator Kantor (Admin) pada saat memulai dan mengakhiri jam kerja.</p>
+                <b>Presensi:</b> Staff wajib melakukan pelaporan kehadiran (Absensi) kepada Koordinator Kantor (Admin) pada saat memulai dan mengakhiri jam kerja.
+                </p>
 
-                <p><b>II. SISTEM PENGGAJIAN & APRESIASI KINERJA</b><br>
+                <p style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 20px;">II. SISTEM PENGGAJIAN & APRESIASI KINERJA</p>
+                <p>
                 <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus kinerja akan disalurkan pada tanggal 1 s/d 3 setiap bulannya.<br>
                 <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kehadiran, serta Bonus Performa yang dihitung berdasarkan poin Video HQ (High Quality) yang berhasil diproduksi.<br>
-                <b>Bonus Absensi:</b> Apresiasi tambahan yang diberikan kepada staff dengan tingkat kehadiran 100% dan konsistensi kerja yang stabil dalam satu periode bulan berjalan.</p>
+                <b>Bonus Absensi:</b> Apresiasi tambahan yang diberikan kepada staff dengan tingkat kehadiran 100% dan konsistensi kerja yang stabil dalam satu periode bulan berjalan.
+                </p>
 
-                <p><b>III. STANDAR OPERASIONAL PRODUKSI (SOP) KONTEN</b><br>
+                <p style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 20px;">III. STANDAR OPERASIONAL PRODUKSI (SOP) KONTEN</p>
+                <p>
                 <b>Metodologi 7 Bagian:</b> Staff Editor wajib menggunakan pedoman SOP Alur Drama AI (7 Bagian) sebagai standar minimum kualitas konten, yang meliputi:<br>
                 <i>Ordinary Life, Incident, Unfair Moment, Despair, Critical Support (CTA), Transformation, dan Ultimate Satisfaction.</i><br>
-                <b>Kualitas Visual:</b> Setiap konten harus memenuhi standar resolusi dan estetika yang telah ditetapkan oleh pimpinan melalui Koordinator Kantor.</p>
+                <b>Kualitas Visual:</b> Setiap konten harus memenuhi standar resolusi dan estetika yang telah ditetapkan oleh pimpinan melalui Koordinator Kantor.
+                </p>
 
-                <p><b>IV. PENGGUNAAN ALAT KERJA & SMARTPHONE</b><br>
+                <p style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 20px;">IV. PENGGUNAAN ALAT KERJA & SMARTPHONE</p>
+                <p>
                 <b>Smartphone Flexible-Policy:</b> Perusahaan memahami kebutuhan riset digital. Penggunaan smartphone diperbolehkan terbatas untuk:<br>
                 - Mencari referensi audio/musik yang sedang tren.<br>
                 - Riset tren visual dan ide cerita pada platform media sosial.<br>
                 - Koordinasi internal grup kantor.<br>
-                <b>Batasan Etika:</b> Staff berkewajiban membatasi penggunaan smartphone untuk aktivitas hiburan pribadi (seperti bermain game atau streaming non-pekerjaan) yang dapat mengganggu produktivitas dan ritme kerja tim.</p>
+                <b>Batasan Etika:</b> Staff berkewajiban membatasi penggunaan smartphone untuk aktivitas hiburan pribadi (seperti bermain game atau streaming non-pekerjaan) yang dapat mengganggu produktivitas dan ritme kerja tim.
+                </p>
 
-                <p><b>V. TANGGUNG JAWAB ASSET & KERAHASIAAN DATA</b><br>
+                <p style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 20px;">V. TANGGUNG JAWAB ASSET & KERAHASIAAN DATA</p>
+                <p>
                 <b>Integritas Akun AI:</b> Staff diberikan amanah penuh dalam penggunaan akun premium perusahaan. Dilarang keras mengubah informasi akun (password/email) atau membagikan akses kepada pihak ketiga tanpa izin pimpinan.<br>
                 <b>Efisiensi Resource:</b> Staff wajib menggunakan kuota produksi (render credit) secara bijak dan terukur guna menghindari pemborosan aset digital perusahaan.<br>
-                <b>Kerahasiaan Intelektual:</b> Seluruh draf cerita, naskah, alur 7 bagian, dan database (Supabase) adalah rahasia perusahaan. Staff dilarang menyebarkan atau menduplikasi aset tersebut untuk kepentingan di luar PT Pintar Digital Kreasi.</p>
+                <b>Kerahasiaan Intelektual:</b> Seluruh draf cerita, naskah, alur 7 bagian, dan database (Supabase) adalah rahasia perusahaan. Staff dilarang menyebarkan atau menduplikasi aset tersebut untuk kepentingan di luar PT Pintar Digital Kreasi.
+                </p>
 
-                <p><b>VI. KOMITMEN PROFESIONALISME & EVALUASI</b><br>
+                <p style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 20px;">VI. KOMITMEN PROFESIONALISME & EVALUASI</p>
+                <p>
                 Guna menjaga keadilan dan stabilitas operasional, perusahaan menetapkan evaluasi sebagai berikut:<br><br>
                 <b>Status Hari Lemah:</b> Pencapaian output harian yang hanya berjumlah 1 video ACC tanpa adanya kendala teknis/darurat yang sah, dikategorikan sebagai "Hari Lemah".<br>
-                <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif sebesar <b>Rp 1.000.000</b> yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.</p>
+                <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif sebesar <b>Rp 1.000.000</b> yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.
+                </p>
             </div>
 
-            <br><br>
+            <br><br><br>
 
-            <table style="width: 100%; margin-top: 20px;">
-                <tr>
-                    <td style="width: 60%;"></td>
-                    <td style="text-align: center;">
-                        <p style="margin: 0;">Banyumas, 1 Maret 2026</p>
-                        <p style="margin: 5px 0 60px 0; font-weight: bold;">Direktur Utama PT Pintar Digital Kreasi,</p>
-                        
-                        <div style="position: relative; display: inline-block;">
-                            <div style="width: 70px; height: 70px; border: 1px solid #1a5f7a; color: #1a5f7a; font-size: 8px; font-weight: bold; position: absolute; left: -80px; top: -20px; transform: rotate(-10deg); display: flex; align-items: center; justify-content: center; text-align: center; border-style: dashed;">
-                                E-MATERAI<br>SEPULUH RIBU<br>RUPIAH
-                            </div>
-                            <p style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold; border-bottom: 2px solid #000; padding: 0 10px;">{nama_lengkap}</p>
-                        </div>
-                        <p style="margin: 5px 0 0 0; font-size: 12px;">NIK. 20260301001</p>
-                    </td>
-                </tr>
-            </table>
+            <div style="float: right; text-align: center; width: 250px;">
+                <p style="font-size: 13px; margin-bottom: 60px;">Banyumas, 1 Maret 2026<br><b>Pimpinan Perusahaan,</b></p>
+                <p style="font-size: 14px; font-weight: bold; border-bottom: 1px solid #000; display: inline-block; padding: 0 10px;">{nama_lengkap}</p>
+            </div>
+            <div style="clear: both;"></div>
         </div>
         """
 
-        st.write("")
-        with st.expander("👁️ Lihat Pratinjau SK Direksi (Resmi)"):
-            st.components.v1.html(html_master_pdf, height=1000, scrolling=True)
+        with st.expander("👁️ Pratinjau Peraturan Perusahaan (Format Resmi)"):
+            st.components.v1.html(html_master_pdf, height=1200, scrolling=True)
 
-        if st.button(f"📄 DOWNLOAD / PRINT PDF RESMI", use_container_width=True):
+        if st.button(f"📄 DOWNLOAD / PRINT PDF", use_container_width=True):
             html_with_print = html_master_pdf + "<script>window.print();</script>"
             st.components.v1.html(html_with_print, height=0)
-
-        st.write("")
-        st.markdown(f"> *'Keputusan ini berlaku sejak tanggal ditetapkan.'* — **{nama_lengkap}**")
 
     with t5:
         st.write("")
@@ -3380,6 +3367,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
