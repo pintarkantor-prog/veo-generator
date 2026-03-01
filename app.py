@@ -2612,11 +2612,11 @@ def tampilkan_area_staf():
                 <div style="background: white; padding: 50px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
                     
                     <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px; margin-bottom: 5px;">
-                        <div style="border-top: 3px solid black; border-bottom: 1px solid black; padding: 2px 0; margin-top: 10px;"></div>
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 250px; margin-bottom: 5px;">
+                        <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; padding: 2px 0; margin-top: 10px;"></div>
                         <br>
-                        <h2 style="margin: 0; font-size: 24px; letter-spacing: 2px;">MODUL PANDUAN PRODUKSI</h2>
-                        <b style="font-size: 14px;">NOMOR: 001/MODUL-HQ/PINTARMEDIA/III/2026</b>
+                        <h3 style="margin: 0; font-size: 18px; color: #333; letter-spacing: 1px;">MODUL PANDUAN PRODUKSI</h3>
+                        <span style="font-size: 12px; color: #666;">NOMOR: 001/MODUL-HQ/PINTARMEDIA/III/2026</span>
                     </center>
                     <br><br>
 
@@ -3500,6 +3500,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
