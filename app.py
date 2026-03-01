@@ -2586,7 +2586,7 @@ def tampilkan_area_staf():
         if divisi_sop == "Staff Editor":
             st.markdown(f"**Update Terakhir:** 1 Maret 2026")
             # --- I. STANDAR PRODUKSI UMUM ---
-            st.markdown("### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
+            st.markdown("##### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
                 st.success("**Poin ini adalah pondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Owner berhak menolak setoran video.**")
                 st.write("• **Kualitas Visual**: Minimal 1080p Full HD.")
@@ -3486,6 +3486,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
