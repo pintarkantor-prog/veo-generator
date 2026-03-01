@@ -2915,8 +2915,8 @@ def tampilkan_area_staf():
                 </table>
                 
                 <center>
-                    <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h2>
-                    <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: PDK/REG-SOP/{now.strftime('%y%m')}/OWNER</p>
+                    <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERATURAN KERJA</h2>
+                    <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">NOMOR: PDK/REG-SOP/{now.strftime('%y%m')}/OWNER</p>
                 </center>
                 
                 <br><br>
@@ -2924,49 +2924,46 @@ def tampilkan_area_staf():
                 <div style="font-size: 13px; text-align: justify;">
                     <p style="font-weight: bold; margin-bottom: 10px;">I. KETENTUAN WAKTU KERJA & DISIPLIN</p>
                     <p style="margin-left: 20px;">
-                    <b>Jam Operasional:</b> Staff wajib menjalankan tugas di kantor pada pukul 08:30 s/d 16:30 WIB.<br>
+                    <b>Jam Operasional:</b> Senin – Sabtu: pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Waktu Istirahat:</b><br>
                     Senin – Kamis: 11:30 – 12:30 WIB.<br>
                     Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
-                    <b>Hari Libur:</b> Operasional kantor diliburkan pada hari Minggu dan Hari Libur Nasional. Adapun untuk Hari Cuti Bersama, operasional tetap berjalan normal kecuali ditentukan lain oleh kebijakan pimpinan.<br>
-                    <b>Presensi:</b> Staff wajib melakukan pelaporan kehadiran (Absensi) kepada Koordinator Kantor (Admin) pada saat memulai dan mengakhiri jam kerja.
+                    <b>Hari Libur:</b> Operasional kantor diliburkan pada hari Minggu dan Hari Libur Nasional. Adapun untuk Hari Cuti Bersama, operasional tetap berjalan normal kecuali ditentukan lain oleh kebijakan owner.<br>
+                    <b>Presensi:</b> Sistem absen tercatat otomatis melalui sistem login dashboard web PINTAR MEDIA.
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">II. SISTEM PENGGAJIAN & APRESIASI KINERJA</p>
                     <p style="margin-left: 20px;">
-                    <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus kinerja akan disalurkan pada tanggal 1 s/d 3 setiap bulannya.<br>
-                    <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kehadiran, serta Bonus Performa yang dihitung berdasarkan poin Video HQ (High Quality) yang berhasil diproduksi.<br>
-                    <b>Bonus Absensi:</b> Apresiasi tambahan yang diberikan kepada staff dengan tingkat kehadiran 100% dan konsistensi kerja yang stabil dalam satu periode bulan berjalan.
+                    <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus akan disalurkan pada tanggal 1 s/d 3 setiap bulannya.<br>
+                    <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kinerja khusus Staff Uploader dan Admin, Serta khusus Staff Editor Bonus Absensi dan Bonus Performa yang dihitung berdasarkan Video HQ (High Quality) yang berhasil diproduksi.<br>
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">III. STANDAR OPERASIONAL PRODUKSI (SOP) KONTEN</p>
                     <p style="margin-left: 20px;">
-                    <b>Metodologi 7 Bagian:</b> Staff Editor wajib menggunakan pedoman SOP Alur Drama AI (7 Bagian) sebagai standar minimum kualitas konten, yang meliputi:<br>
-                    Ordinary Life, Incident, Unfair Moment, Despair, Critical Support (CTA), Transformation, dan Ultimate Satisfaction.<br>
-                    <b>Kualitas Visual:</b> Setiap konten harus memenuhi standar resolusi dan estetika yang telah ditetapkan oleh pimpinan melalui Koordinator Kantor.
+                    <b>SOP kerja berdasarkan posisi masing masing bisa dilihat dihalaman Area Staff<br>
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">IV. PENGGUNAAN ALAT KERJA & SMARTPHONE</p>
                     <p style="margin-left: 20px;">
                     <b>Smartphone Flexible-Policy:</b> Perusahaan memahami kebutuhan riset digital. Penggunaan smartphone diperbolehkan terbatas untuk:<br>
-                    - Mencari referensi audio/musik yang sedang tren.<br>
+                    - Mencari referensi video/audio/musik yang sedang tren.<br>
                     - Riset tren visual dan ide cerita pada platform media sosial.<br>
                     - Koordinasi internal grup kantor.<br>
-                    <b>Batasan Etika:</b> Staff berkewajiban membatasi penggunaan smartphone untuk aktivitas hiburan pribadi (seperti bermain game atau streaming non-pekerjaan) yang dapat mengganggu produktivitas dan ritme kerja tim.
+                    <b>Batasan Etika:</b> Staff berkewajiban membatasi penggunaan smartphone untuk aktivitas hiburan pribadi (seperti bermain game atau streaming non-pekerjaan atau wa personal) yang dapat mengganggu produktivitas dan ritme kerja tim.
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">V. TANGGUNG JAWAB ASSET & KERAHASIAAN DATA</p>
                     <p style="margin-left: 20px;">
-                    <b>Integritas Akun AI:</b> Staff diberikan amanah penuh dalam penggunaan akun premium perusahaan. Dilarang keras mengubah informasi akun (password/email) atau membagikan akses kepada pihak ketiga tanpa izin pimpinan.<br>
-                    <b>Efisiensi Resource:</b> Staff wajib menggunakan kuota produksi (render credit) secara bijak dan terukur guna menghindari pemborosan aset digital perusahaan.<br>
-                    <b>Kerahasiaan Intelektual:</b> Seluruh draf cerita, naskah, alur 7 bagian, dan database (Supabase) adalah rahasia perusahaan. Staff dilarang menyebarkan atau menduplikasi aset tersebut untuk kepentingan di luar PT Pintar Digital Kreasi.
+                    <b>Integritas Akun AI:</b> Staff diberikan amanah penuh dalam penggunaan akun premium. Dilarang keras mengubah informasi akun (password/email) atau membagikan akses kepada pihak ketiga tanpa izin.<br>
+                    <b>Efisiensi Resource:</b> Staff wajib menggunakan kuota produksi (render credit) secara bijak dan terukur guna menghindari pemborosan aset digital.<br>
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">VI. KOMITMEN PROFESIONALISME & EVALUASI</p>
                     <p style="margin-left: 20px;">
                     Guna menjaga keadilan dan stabilitas operasional, perusahaan menetapkan evaluasi sebagai berikut:<br><br>
-                    <b>Status Hari Lemah:</b> Pencapaian output harian yang hanya berjumlah 1 video ACC tanpa adanya kendala teknis/darurat yang sah, dikategorikan sebagai "Hari Lemah".<br>
-                    <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif sebesar <b>Rp 1.000.000</b> yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.
+                    <b>Status Hari Lemah Staff Editor:</b> Pencapaian output harian yang hanya berjumlah 1 video ACC tanpa adanya kendala teknis/darurat yang sah, dikategorikan sebagai "Hari Lemah".<br>
+                    <b>Status Hari Lemah Staff Uploader/Admin:</b> Membuat produktifitas terganggu karena kelalaian, tidak sesuai SOP yang ditetapkan, dikategorikan sebagai "Hari Lemah".<br>
+                    <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.
                     </p>
                 </div>
 
@@ -2985,7 +2982,7 @@ def tampilkan_area_staf():
                 </table>
 
                 <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 60px; font-size: 9px; color: #888; text-align: justify;">
-                    <i><b>Pintar Media Online Regulation System:</b> Update: {last_update}. Dokumen ini sah dan berlaku secara otomatis bagi seluruh staff PT Pintar Digital Kreasi.</i>
+                    <i><b>Pintar Media System:</b> Update: {last_update}. Dokumen ini sah dan berlaku secara otomatis.</i>
                 </div>
             </div>
             """
@@ -3062,7 +3059,7 @@ def tampilkan_area_staf():
             
             <center>
                 <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERJANJIAN KERJA & PAKTA INTEGRITAS</h2>
-                <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: PDK/HRD-SPK/{now.strftime('%y%m')}/{user_login.upper()}</p>
+                <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">NOMOR: PDK/HRD-SPK/{now.strftime('%y%m')}/{user_login.upper()}</p>
             </center>
             
             <div style="font-size: 13px; text-align: justify; margin-top: 25px;">
@@ -3071,7 +3068,7 @@ def tampilkan_area_staf():
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB I: KEDISIPLINAN & OPERASIONAL</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 1: Waktu Kerja, Hari Kerja, & Hak Libur</p>
                 <div style="margin-left: 20px;">
-                    <b>Waktu Kerja Efektif:</b> Pihak Kedua wajib berada di lokasi kerja/menjalankan tugas pada pukul 08:30 s/d 16:30 WIB.<br>
+                    <b>Waktu Kerja Efektif:</b> Pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Hari Kerja:</b> Senin s/d Sabtu.<br>
                     <b>Waktu Istirahat:</b><br>
                     - Senin – Kamis: 11:30 – 12:30 WIB.<br>
@@ -3079,13 +3076,13 @@ def tampilkan_area_staf():
                     <b>Hari Libur:</b> Hari Minggu dan Hari Libur Nasional.<br>
                     <b>Cuti Bersama:</b> Operasional kantor tetap berjalan normal pada hari Cuti Bersama Pemerintah, kecuali ditentukan lain oleh Kebijakan Pimpinan (Pihak Pertama).<br>
                     <b>Hak Cuti Pribadi:</b> Pihak Kedua berhak mengajukan izin/cuti dengan pemberitahuan minimal 2 hari sebelumnya. Izin mendadak hanya diterima untuk kondisi darurat (Sakit/Duka) dengan bukti yang sah.<br>
-                    <b>Presensi:</b> Pihak Kedua wajib melakukan pelaporan kehadiran (Check-in & Check-out) kepada Admin/Koordinator. Keterlambatan tanpa alasan logis akan diakumulasi sebagai pengurangan poin performa.
+                    <b>Presensi:</b> Pihak Kedua wajib login disistem untuk Absensi. Keterlambatan tanpa alasan logis akan diakumulasi sebagai "Hari Lemah".
                 </div>
 
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB II: KEAMANAN ASET & KERAHASIAAN DATA (NDA)</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 2: Perlindungan & Efisiensi Akun AI Premium</p>
                 <div style="margin-left: 20px;">
-                    <b>Hak Akses:</b> Pihak Kedua diberikan akses akun AI premium (Generator, Email, Supabase) semata-mata untuk Kepentingan Pekerjaan PT Pintar Digital Kreasi.<br>
+                    <b>Hak Akses:</b> Pihak Kedua diberikan akses akun AI premium (Generator, Email, Grok, Gemini, etc) semata-mata untuk Kepentingan Pekerjaan PT Pintar Digital Kreasi.<br>
                     <b>Larangan Penyalahgunaan:</b> Dilarang keras menggunakan akun milik perusahaan untuk keperluan pribadi, proyek sampingan di luar perusahaan, atau membagikan akses kepada pihak ketiga.<br>
                     <b>Efisiensi Resource:</b> Pihak Kedua wajib menggunakan kuota produksi (render credit/token) secara bijak dan efisien. Pemborosan resource tanpa hasil output yang jelas dianggap sebagai kelalaian kerja.<br>
                     <b>Keamanan Akun:</b> Pihak Kedua dilarang mengubah informasi profil, email pemulihan, atau password tanpa instruksi langsung dari Pihak Pertama.
@@ -3094,16 +3091,16 @@ def tampilkan_area_staf():
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB III: EVALUASI & SANKSI FINANSIAL</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 3: Penyesuaian Administratif (Denda)</p>
                 <div style="margin-left: 20px;">
-                    <b>Pelanggaran SOP & Target:</b> Pihak Kedua sepakat bahwa kegagalan memenuhi standar produksi (SOP 7 Bagian) atau mencapai target harian minimum (Status Hari Lemah) adalah pelanggaran kontrak.<br>
-                    <b>Nilai Penalti:</b> Atas pelanggaran tersebut, Pihak Kedua bersedia menerima penyesuaian administratif (potongan gaji) sebesar <b>Rp 1.000.000 (Satu Juta Rupiah)</b> per periode bulan berjalan.<br>
-                    <b>Ghosting:</b> Tindakan tidak memberikan kabar (Ghosting) selama >2 hari kerja dianggap sebagai pengunduran diri sepihak dan Pihak Pertama berhak menahan hak upah yang belum terbayar sebagai kompensasi kerugian operasional.
+                    <b>Pelanggaran SOP & Target:</b> Pihak Kedua sepakat bahwa kegagalan memenuhi standar produksi atau mencapai target harian minimum (Status Hari Lemah) adalah pelanggaran kontrak.<br>
+                    <b>Nilai Penalti:</b> Atas pelanggaran tersebut, Pihak Kedua bersedia menerima penyesuaian administratif (potongan gaji) sebesar maksimal <b>Rp 1.000.000 (Satu Juta Rupiah)</b> per periode bulan berjalan.<br>
+                    <b>Ghosting:</b> Tindakan tidak memberikan kabar (Ghosting) selama >3 hari kerja dianggap sebagai pengunduran diri sepihak dan Pihak Pertama berhak menahan hak upah yang belum terbayar sebagai kompensasi kerugian operasional.
                 </div>
 
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Hak Upah & Bonus</p>
                 <div style="margin-left: 20px;">
                     Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.<br>
-                    Bonus performa dihitung berdasarkan data validasi sistem (ACC Video).
+                    Bonus performa dihitung berdasarkan data validasi sistem (ACC Video dan atau Kinerja).
                 </div>
                 <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 5: Pajak Penghasilan (PPh)</p>
                 <div style="margin-left: 20px;">
@@ -3146,7 +3143,7 @@ def tampilkan_area_staf():
             </table>
 
             <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 40px; font-size: 9px; color: #888; text-align: justify;">
-                <i><b>Pintar Media Online Contract System:</b> Update: {last_update}. Peraturan dapat berubah sewaktu-waktu menyesuaikan kondisi operasional perusahaan.</i>
+                <i><b>Pintar Media System:</b> Update: {last_update}. Dokumen ini sah dan berlaku secara otomatis.</i>
             </div>
         </div>
         """
@@ -3593,6 +3590,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
