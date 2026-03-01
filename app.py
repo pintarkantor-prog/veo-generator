@@ -3135,7 +3135,7 @@ def tampilkan_area_staf():
         <div class="a4-container">
             <table style="width: 100%; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
                 <tr>
-                    <td style="width: 20%; vertical-align: middle;">
+                    <td style="width: 40%; vertical-align: middle;">
                         <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px;">
                     </td>
                     <td style="width: 80%; text-align: right; vertical-align: middle;">
@@ -3724,6 +3724,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
