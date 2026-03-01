@@ -2763,7 +2763,7 @@ def tampilkan_area_staf():
                 st.caption("KETENTUAN: Project HQ: 1 video = 1 | Project Ringan: 15 video = 1")
                 
             # --- LOGIKA HITUNG EDITOR ---
-            gapok_sim = 1500000
+            gapok_sim = 2000000
             hari_kerja = 25
             if t_hari >= 5:
                 b_absen, b_video, p_sp = 750000, (t_hari - 4) * 30000 * hari_kerja, 0
@@ -2810,7 +2810,7 @@ def tampilkan_area_staf():
                 with c1: 
                     st.metric("STATUS", "AKTIF", delta="🛡️ Fixed Salary")
                 with c2: 
-                    st.metric("ESTIMASI TERIMA", "Rp 1,500,000", delta="Gaji Pokok")
+                    st.metric("ESTIMASI TERIMA", "Rp 2,000,000", delta="Gaji Pokok")
                 with c3: 
                     st.metric("TUNJANGAN", "TERSEDIA", delta="✨ Tunjangan Kerja") # Tanpa nominal
                 
@@ -3723,6 +3723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
