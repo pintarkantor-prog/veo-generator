@@ -2606,58 +2606,92 @@ def tampilkan_area_staf():
                 st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
 
-            # --- III. MODUL PANDUAN (FULL DRAFT & LENGKAP) ---
+            # --- III. MODUL PANDUAN (FULL DETAIL A-E) ---
             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
                 # Hamparan Kertas Putih (HTML)
                 html_konten_pdf = f"""
                 <div style="background: white; padding: 40px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
                     <center>
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px; margin-bottom: 10px;">
                         <h2 style="margin: 0; font-size: 22px;">BLUEPRINT & TUTORIAL ALUR KONTEN AI (HQ)</h2>
                         <hr style="border: 1px solid black; margin: 15px 0;">
                     </center>
                     <br>
 
-                    <div style="margin-bottom: 30px;">
-                        <b style="font-size: 16px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL UNDERDOG (REVENGE)</b><br><br>
-                        <b>A. Bagian Awal (The Hook - Penindasan):</b> Tampilkan adegan karakter utama (Udin/Tung) sedang dihina atau diremehkan karena kondisi fisik atau kemiskinannya. <i>Instruksi Visual: Ekspresi AI wajib sedih/tertekan, lawan main wajib angkuh.</i><br>
-                        <b>B. Bagian Transisi (Turning Point):</b> Momen karakter memutuskan berhenti menangis dan mulai bangkit. <i>Instruksi Visual: Ekspresi berubah fokus/serius, mulai melakukan aksi nyata.</i><br>
-                        <b>C. Bagian Tengah (The Struggle):</b> Tampilkan proses perjuangan progresif (2-3 adegan). <i>Interaksi: Masukkan ajakan "Like untuk bantu Udin sukses!".</i><br>
-                        <b>D. Bagian Klimaks (The Evolution):</b> Kembalinya karakter dengan perubahan drastis 180 derajat. <i>Instruksi Visual: Penampilan mewah/kuat, ekspresi puas dan tenang.</i><br>
-                        <b>E. Bagian Akhir (The Satisfaction):</b> Konfrontasi terakhir dengan penindas. <i>Instruksi Visual: Karakter utama cukup senyum kemenangan elegan.</i>
+                    <div style="margin-bottom: 40px; border-left: 5px solid #d32f2f; padding-left: 20px;">
+                        <b style="font-size: 18px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL UNDERDOG (REVENGE)</b><br><br>
+                        
+                        <b>A. Bagian Awal (The Hook - Penindasan)</b><br>
+                        Tampilkan adegan di mana karakter utama (Udin atau Tung) sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya.<br>
+                        <i><b>Instruksi Visual:</b> Ekspresi AI wajib terlihat sangat sedih, tertekan, atau marah besar. Lawan main harus terlihat angkuh/sombong.</i><br>
+                        <i><b>Tujuan:</b> Memancing amarah dan rasa kasihan penonton dalam 5 detik pertama agar mereka tidak scroll video.</i><br><br>
+
+                        <b>B. Bagian Transisi (The Turning Point - Titik Balik)</b><br>
+                        Momen di mana karakter memutuskan untuk berhenti menangis dan mulai bangkit. Tampilkan adegan karakter menghapus air mata atau menatap masa depan dengan tekad kuat.<br>
+                        <i><b>Instruksi Visual:</b> Perubahan ekspresi dari sedih menjadi fokus/serius. Mulai melakukan aksi nyata (belajar, berlatih, atau memungut modal pertama).</i><br><br>
+
+                        <b>C. Bagian Tengah (The Struggle - Proses & Dukungan)</b><br>
+                        Tampilkan proses perjuangan karakter yang tidak instan. Di sini kita masukkan elemen Emotional Investment dari penonton.<br>
+                        <i><b>Instruksi Visual:</b> Tampilkan 2-3 adegan progresif. Misal: Awalnya memungut sampah ➔ Mulai berjualan kecil ➔ Mulai sukses.</i><br>
+                        <i><b>Interaksi Penonton:</b> Masukkan ajakan di tengah proses ini: "Udin sedang berusaha keras bangkit, bantu kasih Like yuk agar dia lebih semangat!". Penonton merasa kesuksesan karakter adalah berkat bantuan mereka.</i><br><br>
+
+                        <b>D. Bagian Klimaks (The Evolution - Perubahan Signifikan)</b><br>
+                        Tampilkan kembalinya si karakter utama dengan perubahan yang sangat drastis dan mengejutkan.<br>
+                        <i><b>Instruksi Visual:</b> Penampilan harus berubah 180 derajat (Pakaian mewah, kendaraan bagus, atau aura yang sangat berwibawa/kuat). Ekspresi AI wajib terlihat puas, bangga, dan tenang.</i><br><br>
+
+                        <b>E. Bagian Akhir (The Satisfaction - Pembuktian)</b><br>
+                        Tampilkan konfrontasi terakhir dengan orang yang dulu menghinanya. Orang tersebut terlihat malu, menyesal, atau ketakutan.<br>
+                        <i><b>Instruksi Visual:</b> Karakter utama tidak perlu membalas dengan kemarahan, cukup dengan tindakan elegan atau senyum kemenangan yang "mahal".</i><br>
+                        <i><b>Tujuan:</b> Memberikan kepuasan maksimal (Satisfying Ending) kepada penonton.</i>
                     </div>
 
-                    <div style="margin-bottom: 30px;">
-                        <b style="font-size: 16px; color: #1976d2;">⚔️ 2. ALUR: THE BATTLE / VS (PLOT TWIST ENDING)</b><br><br>
-                        <b>A. Bagian Awal (The Hook - Konfrontasi):</b> Tampilkan dua karakter (Udin vs Tung) yang sedang berhadapan dengan tensi tinggi. Bisa berupa adu tatap mata atau persiapan lomba. <i>Tujuan: Membuat penonton memilih kubu di detik pertama.</i><br>
-                        <b>B. Bagian Tengah (Dinamika Battle):</b> Tampilkan cuplikan pertandingan atau adu kekuatan yang intens. Gunakan editing cepat (fast-cut) dan SFX yang memacu adrenalin. <i>Interaksi: Masukkan polling "Pilih Tim Udin (Like) atau Tim Tung (Komen)".</i><br>
-                        <b>C. Bagian Klimaks (The Critical Moment):</b> Momen di mana salah satu karakter terlihat akan kalah atau terjepit situasi sulit. Buat tensi berada di puncaknya.<br>
-                        <b>D. Bagian Akhir (The Plot Twist):</b> Ending yang tidak terduga. Karakter yang diprediksi kalah malah menang dengan cara unik, atau muncul pihak ketiga yang mengacaukan pertandingan.<br>
-                        <b>E. Penutup (Retention):</b> Tanyakan pendapat penonton di kolom komentar: "Siapa yang harus melawan pemenang ini selanjutnya?".
+                    <div style="margin-bottom: 40px; border-left: 5px solid #1976d2; padding-left: 20px;">
+                        <b style="font-size: 18px; color: #1976d2;">⚔️ 2. ALUR: THE BATTLE / VS (PLOT TWIST ENDING)</b><br><br>
+                        
+                        <b>A. Bagian Awal (The Hook - Konfrontasi Panas)</b><br>
+                        Tampilkan dua karakter atau lebih (Udin vs Tung atau karakter baru) dalam posisi berhadapan dengan tensi tinggi. Bisa berupa persiapan lomba balap, kompetisi kekuatan, atau perdebatan sengit.<br>
+                        <i><b>Instruksi Visual:</b> Zoom-in ke arah mata karakter (eye-to-eye). Gunakan filter warna yang kontras untuk membedakan dua kubu. Ekspresi harus terlihat ambisius dan tak mau kalah.</i><br>
+                        <i><b>Tujuan:</b> Memaksa penonton untuk langsung memihak salah satu jagoan (Engagement instan).</i><br><br>
+
+                        <b>B. Bagian Dinamika (The Duel - Adu Kekuatan)</b><br>
+                        Tampilkan cuplikan-cuplikan pertandingan yang intens. Gunakan transisi cepat dan efek suara (SFX) yang menggelegar untuk setiap benturan atau aksi.<br>
+                        <i><b>Instruksi Visual:</b> Fast-cut editing. Tampilkan pergantian dominasi, sebentar Udin yang memimpin, sebentar kemudian Tung yang membalas. Jangan buat satu karakter terlihat menang terlalu mudah di sini.</i><br><br>
+
+                        <b>C. Bagian Tengah (The Critical Moment - Dukungan Massa)</b><br>
+                        Momen di mana pertandingan mencapai puncaknya atau ada karakter yang hampir tumbang. Ini adalah waktu terbaik untuk memanggil dukungan penonton.<br>
+                        <i><b>Instruksi Visual:</b> Slow motion pada momen krusial. Karakter terlihat mulai kelelahan tapi tetap berusaha.</i><br>
+                        <i><b>Interaksi Penonton:</b> Munculkan teks polling visual: "Ketik 1 untuk dukung Udin, Ketik 2 untuk dukung Tung!". Buat penonton merasa suara mereka menentukan hasil duel.</i><br><br>
+
+                        <b>D. Bagian Klimaks (The Plot Twist - Kejutan Tak Terduga)</b><br>
+                        Ini adalah inti dari alur Battle. Saat penonton mengira salah satu akan menang, hadirkan kejadian yang di luar nalar atau tidak terduga.<br>
+                        <i><b>Instruksi Visual:</b> Misal: Munculnya kekuatan tersembunyi, bantuan karakter misterius, atau justru kedua karakter malah bekerja sama melawan musuh baru yang lebih besar.</i><br>
+                        <i><b>Tujuan:</b> Menciptakan efek "Mind-Blowing" agar penonton menonton sampai detik terakhir.</i><br><br>
+
+                        <b>E. Bagian Akhir (The Retention - Pertanyaan Terbuka)</b><br>
+                        Tampilkan hasil akhir yang memicu diskusi panjang di kolom komentar.<br>
+                        <i><b>Instruksi Visual:</b> Pemenang memberikan pesan singkat atau tatapan menantang ke arah kamera.</i><br>
+                        <i><b>Tujuan:</b> Memancing komentar perdebatan seperti "Harusnya Tung yang menang!" atau "Lanjut part 2, balas dendam!".</i>
                     </div>
 
-                    <div style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px dashed #666;">
+                    <div style="margin-bottom: 30px; background: #f9f9f9; padding: 25px; border: 1px dashed #666;">
                         <b style="font-size: 16px;">📢 PANDUAN INTERAKSI (CTA - CALL TO ACTION)</b><br><br>
-                        • <b>Timing:</b> Jangan letakkan CTA di awal yang mengganggu hook. Taruh di momen penonton sedang merasa "kasihan" atau "penasaran".<br>
-                        • <b>Emotional CTA:</b> Gunakan kalimat ajakan yang melibatkan kontribusi penonton (Contoh: "Bantu Udin bangkit dengan klik Like").<br>
-                        • <b>Debate CTA:</b> Gunakan pada konten Battle untuk memancing kolom komentar (Contoh: "Ketik 1 untuk Udin, 2 untuk Tung").<br>
-                        • <b>Retention CTA:</b> Ajakan untuk menonton part selanjutnya atau memberikan ide konten (Contoh: "Ketik LANJUT buat liat pembalasan berikutnya!").
+                        • <b>Strategi Timing:</b> Letakkan CTA di momen "Emosional Puncak" (Revenge) atau "Tensi Puncak" (Battle).<br>
+                        • <b>Kekuatan Kata:</b> Gunakan kata "Bantu" atau "Kontribusi". Contoh: "Kasih 1 Like buat modal Udin jualan!".<br>
+                        • <b>Retention Loop:</b> Selalu tanya pendapat penonton untuk video berikutnya. Contoh: "Karakter siapa lagi yang harus muncul?".
                     </div>
 
                     <div style="margin-top: 50px; font-size: 11px; text-align: center; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
-                        📌 Dokumen ini dibuat pada 1 Maret 2026. Isi panduan bersifat dinamis dan dapat direvisi sesuai dengan kebutuhan operasional kantor tanpa pemberitahuan sebelumnya.
+                        📌 Dokumen Produksi - Update Terakhir: 1 Maret 2026. Panduan bersifat dinamis dan dapat direvisi sesuai kebutuhan kantor.
                     </div>
                 </div>
                 """
                 # Tampilan di dashboard
-                st.components.v1.html(html_konten_pdf, height=1200, scrolling=True)
+                st.components.v1.html(html_konten_pdf, height=1300, scrolling=True)
 
                 # Tombol Print
                 if st.button(f"📄 PREVIEW & PRINT MODUL {nama_user.upper()}", use_container_width=True):
                     html_with_print = html_konten_pdf + "<script>window.print();</script>"
                     st.components.v1.html(html_with_print, height=0)
-
-            # --- IV. SANKSI ---
-            st.error("⚠️ **DENDA ADMINISTRATIF Rp 1.000.000** bagi kelalaian SOP & Blueprint Alur.")
     
         elif divisi_sop == "Staff Uploader":
             import datetime
@@ -3464,6 +3498,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
