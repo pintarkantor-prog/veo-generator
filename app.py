@@ -2711,7 +2711,7 @@ def tampilkan_area_staf():
             # --- II. KETENTUAN UNIT & POIN (Tetap di Dashboard) ---
             st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
-                st.info("**Sistem ini memastikan distribusi konten berjalan konsisten setiap harinya.**")
+                st.info("**Sistem ini memastikan operasional kantor berjalan konsisten setiap harinya.**")
                 st.write("• **QC CHANNEL**: Selalu memastikan channel ready di setiap HP (Koordinasi dengan admin).")
                 st.write("• **JADWAL UPLOAD**: Memastikan jadwal upload, jenis konten, dan HP sinkron.")
                 st.write("• Uploader selalu koordinasi dengan admin terkait stok video dan channel yang akan diupload.")
@@ -3334,6 +3334,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
