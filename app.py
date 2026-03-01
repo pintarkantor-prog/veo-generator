@@ -2584,6 +2584,10 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
+            import datetime
+            sekarang = datetime.datetime.now()
+            
+            # 1. Tampilan Preview di Dashboard (Biar tetep bisa dibaca cepet)
             with st.container(border=True):
                 st.markdown("🎨 **STANDAR PRODUKSI EDITOR (STORYTELLING AI)**")
                 st.info("💡 **Gaya Cerita:** Referensi Karakter Udin & Tung (Warung Tungtung).")
@@ -2591,24 +2595,14 @@ def tampilkan_area_staf():
                 with c1:
                     st.markdown("**🛠️ Spesifikasi Teknis Wajib:**")
                     st.write("- **Kualitas**: Minimal **1080p Full HD** (Wajib Tajam!).")
-                    st.write("- **Rasio & Safe Zone**: 9:16 (Shorts), teks jangan ketutup UI YouTube.")
                     st.write("- **Durasi**: Minimal 60 detik (Padat, no filler).")
-                    st.write("- **Audio**: Wajib **Copyright-Free** (Cek YouTube Audio Library).")
-                    st.write("- **SFX**: Gunakan Sound Effect untuk setiap aksi/kejadian penting.")
                 with c2:
                     st.markdown("**🧠 Kreativitas & Alur Cerita:**")
-                    st.write("- **Hook 3 Detik**: Wajib ada kejutan/masalah di awal video.")
-                    st.write("- **Ekspresi AI**: Karakter harus punya emosi (marah/lucu/sedih).")
-                    st.write("- **Subtitle**: Wajib ada animasi teks yang mudah dibaca.")
-                    st.write("- **Ending**: Berikan penutup yang bikin orang mau nonton lagi.")
+                    st.write("- **Hook 3 Detik**: Wajib ada kejutan di awal video.")
+                    st.write("- **Ekspresi AI**: Karakter harus punya emosi.")
             
-            with st.container(border=True):
-                st.markdown("**📂 Manajemen File:**")
-                st.write("- **Nama File**: `TGL_NAMA_JUDUL.mp4` (Wajib Seragam!).")
-                st.write("- **Backup**: Simpan aset mentah (Project) minimal selama 3 hari.")
-
-            # --- TOMBOL CETAK SLIP SOP EDITOR ---
-            if st.button(f"📄 PREVIEW & PRINT SOP EDITOR: {n_up}", key=f"print_sop_editor_{n_up}", use_container_width=True):
+            # 2. Tombol Cetak (Gue buat UMUM tanpa variabel n_up biar gak eror)
+            if st.button("📄 PREVIEW & PRINT SURAT PEMBERITAHUAN SOP", key="print_sop_editor_umum", use_container_width=True):
                 sop_editor_html = f"""
                 <div id="sop-print" style="background: white; padding: 35px; border-radius: 20px; border: 1px solid #eee; font-family: sans-serif; width: 450px; margin: auto; color: #333; line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
                     <center>
@@ -2619,7 +2613,7 @@ def tampilkan_area_staf():
 
                     <div style="background: #fcfcfc; padding: 12px; border-radius: 10px; border: 1px solid #f0f0f0; margin: 15px 0; font-size: 11px;">
                         <table style="width: 100%;">
-                            <tr><td style="color: #999;">PENERIMA</td><td align="right"><b>{n_up}</b></td></tr>
+                            <tr><td style="color: #999;">PENERIMA</td><td align="right"><b>SELURUH STAFF EDITOR</b></td></tr>
                             <tr><td style="color: #999;">DIVISI</td><td align="right"><b>EDITOR PRODUCTION</b></td></tr>
                         </table>
                     </div>
@@ -2631,16 +2625,11 @@ def tampilkan_area_staf():
                         • Subtitle Animasi | No Copyright Audio | Wajib SFX
                     </div>
 
-                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">2. ATURAN SETORAN (BARU 2026)</h4>
+                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">2. ATURAN SETORAN (REVISI 2026)</h4>
                     <div style="font-size: 10px; color: #444;">
                         • <b>PROJECT HQ:</b> 1 Video = 1 Link (1 Poin)<br>
                         • <b>PROJECT RINGAN:</b> 10 Video = 1 Link (1 Poin)<br>
                         • <b>RADAR AMAN:</b> Wajib 2 Poin/Hari (Contoh: 20 Video Ringan)
-                    </div>
-
-                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">3. MANAJEMEN FILE</h4>
-                    <div style="font-size: 10px; color: #444;">
-                        • Penamaan: TGL_NAMA_JUDUL.mp4 | Simpan Project Min 3 Hari
                     </div>
 
                     <div style="background: #1a1a1a; color: white; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px;">
@@ -3295,6 +3284,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
