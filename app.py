@@ -2703,118 +2703,40 @@ def tampilkan_area_staf():
             st.markdown("##### 🎨 I. STANDAR OPERASIONAL UPLOADER (WAJIB)")
             with st.container(border=True):
                 st.success("**Uploader adalah gerbang terakhir kualitas konten. Kesalahan upload berarti hilangnya potensi traffic.**")
-                st.write("• **Ketepatan Waktu**: Wajib upload sesuai jadwal yang ditentukan (Prime Time).")
-                st.write("• **Optimasi Metadata**: Judul wajib menggunakan kalimat pancingan (Clickbait Positif). Deskripsi wajib berisi kata kunci relevan dan hashtag sesuai kategori konten.")
-                st.write("• **Pengecekan Visual**: Sebelum publikasi, Uploader wajib mengecek ulang apakah ada glitch visual atau audio yang mati. Jika ditemukan, wajib lapor ke Admin/Editor untuk revisi.")
-                st.write("• **Pengecekan Thumbnail**: Pilih thumbnail yang menarik (ambil dari gambaran inti ceritanya).")
+                st.write("• **Scheduling**: Wajib upload sesuai jadwal yang ditentukan (Prime Time).")
+                st.write("• **Optimasi Metadata**: Menentukan judul (memancing Click-bait positif), menulis deskripsi, dan memilih Tag yang relevan.")
+                st.write("• **Thumbnail**: Memilih frame paling dramatis/menarik sesuai inti dari video.")
+                st.write("• **Stok Channel**: Wajib memastikan stok channel selalu ready (koordinasi dengan admin).")
                 st.write("• **Stok Video**: Wajib memastikan stok video selalu ready (koordinasi dengan admin).")
             # --- II. KETENTUAN UNIT & POIN (Tetap di Dashboard) ---
             st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Sistem ini memastikan distribusi konten berjalan konsisten setiap harinya.**")
                 st.write("• **QC CHANNEL**: Selalu memastikan channel ready di setiap HP (Koordinasi dengan admin).")
-                st.write("• **JADWAL UPLOAD**: Memaskikan jadwal upload, jenis konten, dan HP sinkron.")
+                st.write("• **JADWAL UPLOAD**: Memastikan jadwal upload, jenis konten, dan HP sinkron.")
                 st.write("• Uploader selalu koordinasi dengan admin terkait stok video dan channel yang akan diupload.")
                 st.write("• Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis")
 
         elif divisi_sop == "Admin":
-            import datetime
-            sekarang = datetime.datetime.now()
-            tgl_terbit = "1 Maret 2026"
+            st.markdown(f"**Update Terakhir:** 1 Maret 2026")
 
-            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
-            # --- I. STANDAR OPERASIONAL ADMIN ---
-            st.markdown("### 📋 I. STANDAR OPERASIONAL ADMIN (WAJIB)")
+            # --- I. STANDAR PRODUKSI UMUM (Tetap di Dashboard) ---
+            st.markdown("##### 🎨 I. STANDAR OPERASIONAL UPLOADER (WAJIB)")
             with st.container(border=True):
-                st.success("**Admin adalah jantung operasional. Ketelitian data adalah prioritas utama untuk menghindari kerugian perusahaan.**")
-                st.markdown("""
-                • **Quality Control (QC)**: Admin wajib memeriksa setiap video yang disetor Editor. Jika tidak sesuai SOP Editor (buram, durasi kurang, dll), Admin berhak mengubah status menjadi **Waiting QC**.
-                
-                • **Update Database**: Wajib melakukan update status poin dan radar di sistem (Supabase/Dashboard) secara real-time segera setelah pemeriksaan selesai.
-                
-                • **Monitoring Radar**: Admin wajib memantau staf yang status radarnya Merah dan segera melakukan follow-up atau teguran agar target harian tercapai.
-                
-                • **Manajemen Arsip**: Memastikan semua link GDrive terorganisir dengan rapi dan aset mentah aman sesuai masa backup (3 hari).
-                
-                • **Laporan Harian**: Wajib mengirimkan rekapitulasi total poin tim dan kendala produksi kepada Owner setiap hari sebelum jam kerja berakhir.
-                """)
-
-            # --- II. KETENTUAN UNIT & TARGET ADMIN ---
-            st.markdown("### 📊 II. KETENTUAN UNIT KERJA & TARGET HARIAN")
+                st.success("**Admin adalah jantung operasional. Ketelitian data adalah prioritas utama untuk menghindari kerugian.**")
+                st.write("• **Audit Kuota**: Memastikan stok akun ai dan kuota HP selalu ready setiap hari.")
+                st.write("• **Scheduling**: Memastikan channel untuk upload hari esok ready dan membuat jadwal upload (koordinasi dengan uploader).")
+                st.write("• **Stok Channel Ready-to-Use**: Menyiapkan stok channel cadangan yang sudah di-set up (Nama, Logo, Banner) agar saat dibutuhkan, staff uploader tinggal pakai.")
+                st.write("• **Audit Kelayakan Channel**: Memilah channel mana yang performanya bagus dan mana yang busuk (yang busuk wajib diganti).")
+                st.write("• **Monitoring Output**: Memastikan semua staff editor dan uploader bekerja dengan baik.")
+            # --- II. KETENTUAN UNIT & POIN (Tetap di Dashboard) ---
+            st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
-                st.info("**Target Admin dihitung berdasarkan volume data yang diproses dan diverifikasi.**")
-                
-                st.markdown("#### ⚖️ 1. Penyetaraan Unit Setoran (Weighting System)")
-                st.write("• **VERIFIKASI HQ**: Setiap 20 Video HQ yang berhasil di-QC dan diupdate ke database dihitung **1 Poin**.")
-                st.write("• **VERIFIKASI MASSAL**: Setiap 100 Video Massal (10 Link) yang berhasil diverifikasi dihitung **1 Poin**.")
-                
-                st.markdown("#### 🎯 2. Target Harian & Status Radar (SP)")
-                st.write("• Setiap Staff Admin wajib mencapai minimal **2 Poin per hari** (Total verifikasi sesuai volume masuk).")
-                st.write("• Kegagalan dalam update data yang menyebabkan kesalahan perhitungan bonus akan dianggap sebagai poin minus.")
-                st.write("• Akumulasi kesalahan input data atau kelalaian QC akan memicu Surat Peringatan (SP).")
-
-                st.markdown("#### 💰 3. Skema Bonus Otomatis (Insentif)")
-                st.write("• **Poin ke-3 (Bonus Ketelitian)**: Bonus Rp 30.000 cair otomatis sebagai apresiasi atas keakuratan laporan harian.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin diberikan atas penanganan volume data ekstra.")
-
-            # --- III. PANDUAN KOMUNIKASI & EVALUASI ---
-            st.markdown("### 💬 III. PANDUAN KOMUNIKASI & EVALUASI")
-            with st.expander("Gunakan panduan ini untuk menjaga ritme kerja tim", expanded=True):
-                st.markdown("#### 📢 1. TEGURAN RADAR MERAH")
-                st.write("• Admin wajib memberikan pengingat sopan namun tegas kepada Editor/Uploader yang belum mencapai poin aman di jam-jam kritis.")
-                
-                st.markdown("#### 🛠️ 2. FEEDBACK REVISI")
-                st.write("• Saat menolak video, Admin wajib memberikan alasan yang jelas (Misal: 'Revisi bagian Hook, visual pecah') agar Editor bisa langsung memperbaiki.")
-
-            # --- IV. SANKSI ADMIN ---
-            st.markdown("### 📢 IV. SANKSI & PELANGGARAN")
-            with st.container(border=True):
-                st.write("• **Pelanggaran Berat**: Salah input data bonus, memanipulasi poin staf, atau membocorkan data internal perusahaan.")
-                st.error("⚠️ **PERINGATAN**: Kelalaian dalam menjaga integritas data atau kerahasiaan password sistem akan memicu **DENDA ADMINISTRATIF Rp 1.000.000**.")
-
-            # --- TOMBOL PRINT ---
-            if st.button("🖨️ PREVIEW PANDUAN DAN SOP KERJA ADMIN (PDF)", use_container_width=True):
-                html_print_admin = f"""
-                <div style="background: white; padding: 40px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; text-align: justify; border: 1px solid #eee;">
-                    <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 150px;">
-                        <h2 style="margin: 5px 0;">PT PINTAR DIGITAL KREASI</h2>
-                        <hr style="border: 1px solid black; margin: 15px 0;">
-                        <b style="font-size: 16px;">PANDUAN DAN SOP KERJA ADMIN</b><br>
-                        Versi PDF/Print - Update: {tgl_terbit}
-                    </center>
-                    <br>
-                    <b>I. STANDAR OPERASIONAL ADMIN (WAJIB)</b><br>
-                    • Quality Control: Wajib cek kualitas visual/audio setiap setoran sebelum ACC.<br>
-                    • Update Database: Wajib input status poin secara real-time ke sistem.<br>
-                    • Monitoring Radar: Wajib follow-up staf yang belum mencapai target harian.<br>
-                    • Laporan Harian: Rekap harian dikirim ke Owner sebelum jam kerja berakhir.<br><br>
-
-                    <b>II. KETENTUAN UNIT KERJA & TARGET HARIAN</b><br>
-                    <b>1. Penyetaraan Unit Setoran (Weighting System):</b><br>
-                    • VERIFIKASI HQ: 20 Video (QC & Update) = 1 Poin.<br>
-                    • VERIFIKASI MASSAL: 100 Video / 10 Folder = 1 Poin.<br><br>
-                    <b>2. Target Harian & Status Radar:</b><br>
-                    • Wajib mencapai minimal 2 Poin per hari untuk status AMAN.<br>
-                    • Kesalahan input data yang berulang memicu Surat Peringatan (SP).<br><br>
-                    <b>3. Skema Bonus Otomatis:</b><br>
-                    • Poin ke-3: Bonus Rp 30.000 (Bonus Ketelitian Data).<br>
-                    • Poin ke-5 & Seterusnya: Bonus Rp 30.000 per poin tambahan.<br><br>
-
-                    <b>III. SANKSI & PELANGGARAN</b><br>
-                    Kelalaian dalam input data bonus atau kebocoran informasi kredensial sistem memicu <b>DENDA ADMINISTRATIF Rp 1.000.000</b>.<br><br>
-
-                    <table style="width: 100%; text-align: center; font-size: 12px;">
-                        <tr><td>Pimpinan PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
-                        <tr style="height: 60px;"><td><b>DIAN (OWNER)</b></td><td>..........................</td></tr>
-                    </table>
-                    <div style="margin-top: 20px; border: 1px dashed black; padding: 10px; font-size: 10px; text-align: center;">
-                        📌 Dokumen ini dibuat pada <b>{tgl_terbit}</b> dan dapat direvisi sewaktu-waktu.
-                    </div>
-                    <script>window.print();</script>
-                </div>
-                """
-                st.components.v1.html(html_print_admin, height=1200, scrolling=True)
+                st.info("**Sistem ini memastikan distribusi konten berjalan konsisten setiap harinya.**")
+                st.write("• **Cashflow Kantor**: Mengelola laporan keuangan dan uang kas kecil agar operasional harian tidak tersendat.")
+                st.write("• **Budgeting Tools**: Mengurus listrik, kuota, akun, hingga stok konsumsi/kebutuhan harian kantor.")
+                st.write("• Admin selalu koordinasi dengan owner terkait stok channel dan cashflow kantor.")
+                st.write("• Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis")
     
     with t2:
         st.write("")
@@ -3412,6 +3334,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
