@@ -2697,114 +2697,25 @@ def tampilkan_area_staf():
                     st.components.v1.html(html_with_print, height=0)
     
         elif divisi_sop == "Staff Uploader":
-            import datetime
-            sekarang = datetime.datetime.now()
-            tgl_terbit = "1 Maret 2026"
+            st.markdown(f"**Update Terakhir:** 1 Maret 2026")
 
-            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
-            # --- I. STANDAR OPERASIONAL UPLOAD ---
-            st.markdown("### 🚀 I. STANDAR OPERASIONAL UPLOAD (WAJIB)")
+            # --- I. STANDAR PRODUKSI UMUM (Tetap di Dashboard) ---
+            st.markdown("##### 🎨 I. STANDAR OPERASIONAL UPLOADER (WAJIB)")
             with st.container(border=True):
                 st.success("**Uploader adalah gerbang terakhir kualitas konten. Kesalahan upload berarti hilangnya potensi traffic.**")
-                st.markdown("""
-                • **Ketepatan Waktu**: Wajib upload sesuai jadwal yang ditentukan (Prime Time). Keterlambatan lebih dari 15 menit tanpa alasan akan dicatat sebagai poin minus.
-                
-                • **Optimasi Metadata**: Judul wajib menggunakan kalimat pancingan (Clickbait Positif). Deskripsi wajib berisi kata kunci relevan dan hashtag sesuai kategori konten.
-                
-                • **Pengecekan Visual**: Sebelum publikasi, Uploader wajib mengecek ulang apakah ada glitch visual atau audio yang mati. Jika ditemukan, wajib lapor ke Admin/Editor untuk revisi.
-                
-                • **Thumbnail & End Screen**: Wajib memastikan Thumbnail sudah terpasang dengan benar dan elemen End Screen (ajakan nonton video lain) sudah aktif.
-                
-                • **Interaksi Awal**: Wajib memberikan Like dan Pin pada komentar terbaik atau komentar dari akun official kita sendiri untuk memancing interaksi publik.
-                """)
-
-            # --- II. KETENTUAN UNIT & TARGET UPLOAD ---
-            st.markdown("### 📊 II. KETENTUAN UNIT KERJA & TARGET HARIAN")
+                st.write("• **Ketepatan Waktu**: Wajib upload sesuai jadwal yang ditentukan (Prime Time).")
+                st.write("• **Optimasi Metadata**: Judul wajib menggunakan kalimat pancingan (Clickbait Positif). Deskripsi wajib berisi kata kunci relevan dan hashtag sesuai kategori konten.")
+                st.write("• **Pengecekan Visual**: Sebelum publikasi, Uploader wajib mengecek ulang apakah ada glitch visual atau audio yang mati. Jika ditemukan, wajib lapor ke Admin/Editor untuk revisi.")
+                st.write("• **Pengecekan Thumbnail**: Pilih thumbnail yang menarik (ambil dari gambaran inti ceritanya).")
+                st.write("• **Stok Video**: Wajib memastikan stok video selalu ready (koordinasi dengan admin).")
+            # --- II. KETENTUAN UNIT & POIN (Tetap di Dashboard) ---
+            st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Sistem ini memastikan distribusi konten berjalan konsisten setiap harinya.**")
-                
-                st.markdown("#### ⚖️ 1. Penyetaraan Unit Setoran (Weighting System)")
-                st.write("• **UPLOAD KONTEN HQ**: Setiap 5 Video yang berhasil dioptimasi (Metadata + Upload + Publikasi) dihitung **1 Poin**.")
-                st.write("• **UPLOAD KONTEN MASSAL**: Setiap 30 Video yang berhasil diupload (Bulk Upload) dihitung **1 Poin**.")
-                
-                st.markdown("#### 🎯 2. Target Harian & Status Radar (SP)")
-                st.write("• Setiap Staff Uploader wajib mencapai minimal **2 Poin per hari** (Total 10 Video HQ atau 60 Video Massal).")
-                st.write("• Status Radar akan berwarna Hijau (AMAN) jika target tercapai. Gagal target memicu status 'Hari Kurang Produktif'.")
-                st.write("• Akumulasi status kurang produktif akan memicu Surat Peringatan (SP) dan evaluasi jabatan.")
-
-                st.markdown("#### 💰 3. Skema Bonus Otomatis (Insentif)")
-                st.write("• **Poin ke-3 (Bonus Loyalitas)**: Bonus Rp 30.000 cair otomatis sebagai apresiasi atas konsistensi jam tayang.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin diberikan atas produktivitas upload tambahan.")
-
-            # --- III. PANDUAN OPTIMASI (SEO & RETENSI) ---
-            st.markdown("### 🔍 III. PANDUAN OPTIMASI (SEO & RETENSI)")
-            with st.expander("Gunakan panduan ini agar video masuk ke algoritma YouTube", expanded=True):
-                st.markdown("#### 📝 1. STRATEGI JUDUL & THUMBNAIL")
-                st.write("• Gunakan kalimat tanya atau pernyataan yang bikin penasaran (Misal: 'Udin Akhirnya Melawan!' atau 'Siapa Sangka Tung Bisa Begini?').")
-                st.write("• Pastikan teks di thumbnail (jika ada) tidak tertutup oleh durasi video di pojok kanan bawah.")
-
-                st.markdown("#### 💬 2. MANAJEMEN KOMENTAR")
-                st.write("• Balas minimal 5-10 komentar pertama dalam 30 menit awal setelah upload. Hal ini memicu algoritma YouTube menganggap video sedang 'ramai'.")
-                st.write("• Gunakan fitur 'Love' pada komentar penonton yang memberikan masukan positif.")
-
-                st.markdown("#### 📈 3. SHARE & PROMOSI")
-                st.write("• Setelah upload, bagikan link video ke komunitas atau grup sosial media internal untuk mendapatkan 'pancingan' view pertama.")
-
-            # --- IV. SANKSI ---
-            st.markdown("### 📢 IV. SANKSI & PELANGGARAN")
-            with st.container(border=True):
-                st.write("• **Pelanggaran Berat**: Salah upload file, judul typo parah, atau lupa setting kategori (Misal: Konten anak tapi di-set umum).")
-                st.error("⚠️ **PERINGATAN**: Kelalaian dalam SOP Upload yang mengakibatkan video kena 'Strike' atau 'Banned' akan memicu **DENDA ADMINISTRATIF Rp 1.000.000**.")
-
-            # --- TOMBOL PRINT ---
-            if st.button("🖨️ PREVIEW PANDUAN DAN SOP KERJA UPLOADER (PDF)", use_container_width=True):
-                html_print_uploader = f"""
-                <div style="background: white; padding: 40px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; text-align: justify; border: 1px solid #eee;">
-                    <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 150px;">
-                        <h2 style="margin: 5px 0;">PT PINTAR DIGITAL KREASI</h2>
-                        <hr style="border: 1px solid black; margin: 15px 0;">
-                        <b style="font-size: 16px;">PANDUAN DAN SOP KERJA UPLOADER</b><br>
-                        Versi PDF/Print - Update: {tgl_terbit}
-                    </center>
-                    <br>
-                    <b>I. STANDAR OPERASIONAL UPLOAD (WAJIB)</b><br>
-                    • Ketepatan Waktu: Wajib upload sesuai jadwal Prime Time. Keterlambatan dicatat sebagai poin minus.<br>
-                    • Optimasi Metadata: Judul wajib pancingan/clickbait positif. Deskripsi wajib mengandung kata kunci.<br>
-                    • Pengecekan Visual: Wajib cek glitch visual/audio sebelum klik publikasi.<br>
-                    • Thumbnail & End Screen: Wajib terpasang dengan benar sesuai standar visual.<br>
-                    • Interaksi Awal: Wajib Like/Pin komentar untuk memicu algoritma interaksi.<br><br>
-
-                    <b>II. KETENTUAN UNIT KERJA & TARGET HARIAN</b><br>
-                    <b>1. Penyetaraan Unit Setoran (Weighting System):</b><br>
-                    • UPLOAD HQ: 5 Video (Lengkap Metadata) = 1 Poin.<br>
-                    • UPLOAD MASSAL: 30 Video (Bulk Upload) = 1 Poin.<br><br>
-                    <b>2. Target Harian & Status Radar:</b><br>
-                    • Wajib mencapai minimal 2 Poin per hari untuk status AMAN (Radar Hijau).<br>
-                    • Kegagalan target berulang memicu Surat Peringatan (SP).<br><br>
-                    <b>3. Skema Bonus Otomatis:</b><br>
-                    • Poin ke-3: Bonus Rp 30.000 (Bonus Loyalitas Jam Tayang).<br>
-                    • Poin ke-5 & Seterusnya: Bonus Rp 30.000 per poin tambahan.<br><br>
-
-                    <b>III. PANDUAN OPTIMASI (SEO & RETENSI)</b><br>
-                    • Judul & Thumbnail: Fokus pada rasa penasaran penonton (Curiosity Gap).<br>
-                    • Komentar: Balas minimal 5-10 komentar pertama untuk menaikkan performa video.<br>
-                    • Promosi: Bagikan ke channel promosi internal segera setelah publikasi.<br><br>
-
-                    <b>IV. SANKSI & PELANGGARAN</b><br>
-                    Kelalaian fatal yang mengakibatkan strike/banned atau kesalahan upload berulang memicu <b>DENDA ADMINISTRATIF Rp 1.000.000</b>.<br><br>
-
-                    <table style="width: 100%; text-align: center; font-size: 12px;">
-                        <tr><td>Pimpinan PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
-                        <tr style="height: 60px;"><td><b>DIAN (OWNER)</b></td><td>..........................</td></tr>
-                    </table>
-                    <div style="margin-top: 20px; border: 1px dashed black; padding: 10px; font-size: 10px; text-align: center;">
-                        📌 Dokumen ini dibuat pada <b>{tgl_terbit}</b> dan dapat direvisi sewaktu-waktu.
-                    </div>
-                    <script>window.print();</script>
-                </div>
-                """
-                st.components.v1.html(html_print_uploader, height=1200, scrolling=True)
+                st.write("• **QC CHANNEL**: Selalu memastikan channel ready di setiap HP (Koordinasi dengan admin).")
+                st.write("• **JADWAL UPLOAD**: Memaskikan jadwal upload, jenis konten, dan HP sinkron**.")
+                st.write("• **Uploader selalu koordinasi dengan admin terkait stok video dan channel yang akan diupload.")
+                st.write("• **Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis")
 
         elif divisi_sop == "Admin":
             import datetime
@@ -3501,6 +3412,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
