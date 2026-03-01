@@ -2587,67 +2587,134 @@ def tampilkan_area_staf():
             import datetime
             sekarang = datetime.datetime.now()
             
-            # 1. Tampilan Preview di Dashboard (Biar tetep bisa dibaca cepet)
-            with st.container(border=True):
-                st.markdown("🎨 **STANDAR PRODUKSI EDITOR (STORYTELLING AI)**")
-                st.info("💡 **Gaya Cerita:** Referensi Karakter Udin & Tung (Warung Tungtung).")
-                c1, c2 = st.columns(2)
-                with c1:
-                    st.markdown("**🛠️ Spesifikasi Teknis Wajib:**")
-                    st.write("- **Kualitas**: Minimal **1080p Full HD** (Wajib Tajam!).")
-                    st.write("- **Durasi**: Minimal 60 detik (Padat, no filler).")
-                with c2:
-                    st.markdown("**🧠 Kreativitas & Alur Cerita:**")
-                    st.write("- **Hook 3 Detik**: Wajib ada kejutan di awal video.")
-                    st.write("- **Ekspresi AI**: Karakter harus punya emosi.")
+            st.title("🎨 PANDUAN KERJA & SOP EDITOR")
             
-            # 2. Tombol Cetak (Gue buat UMUM tanpa variabel n_up biar gak eror)
-            if st.button("📄 PREVIEW & PRINT SURAT PEMBERITAHUAN SOP", key="print_sop_editor_umum", use_container_width=True):
-                sop_editor_html = f"""
-                <div id="sop-print" style="background: white; padding: 35px; border-radius: 20px; border: 1px solid #eee; font-family: sans-serif; width: 450px; margin: auto; color: #333; line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-                    <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 200px; margin-bottom: 10px;">
-                        <div style="height: 4px; background: #1d976c; width: 60px; border-radius: 10px; margin-bottom: 5px;"></div>
-                        <p style="font-size: 11px; letter-spacing: 3px; color: #1d976c; font-weight: 800; text-transform: uppercase;">SOP EDITOR STORYTELLING</p>
-                    </center>
+            # --- TAB UNTUK MEMILIH MODE BACA ---
+            tab_baca, tab_cetak = st.tabs(["📖 BACA PANDUAN LENGKAP", "🖨️ CETAK PDF / SURAT RESMI"])
 
-                    <div style="background: #fcfcfc; padding: 12px; border-radius: 10px; border: 1px solid #f0f0f0; margin: 15px 0; font-size: 11px;">
-                        <table style="width: 100%;">
-                            <tr><td style="color: #999;">PENERIMA</td><td align="right"><b>SELURUH STAFF EDITOR</b></td></tr>
-                            <tr><td style="color: #999;">DIVISI</td><td align="right"><b>EDITOR PRODUCTION</b></td></tr>
+            with tab_baca:
+                st.warning("⚠️ **PENTING:** Seluruh Editor wajib memahami poin-poin di bawah ini tanpa kecuali.")
+                
+                with st.expander("I. STANDAR PRODUKSI UMUM (WAJIB)", expanded=True):
+                    st.markdown("""
+                    Poin ini adalah fondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Admin berhak menolak setoran video.
+                    - **Kualitas Visual:** Minimal 1080p Full HD. Video wajib tajam, jernih, dan tidak pecah (pixelated).
+                    - **Rasio & Safe Zone:** Format 9:16 (Shorts). Pastikan elemen penting (wajah karakter atau teks judul) tidak tertutup oleh ikon YouTube (seperti tombol Like, Subscribe, atau Judul Video di bagian bawah).
+                    - **Durasi:** Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler) hanya untuk mengejar durasi.
+                    - **Audio & SFX:** Wajib Copyright-Free. Sangat direkomendasikan mengambil musik dari YouTube Audio Library agar aman dari klaim hak cipta.
+                    - **Backup & Penamaan:** Aset mentah (project file/bahan mentah) wajib disimpan minimal 3 hari untuk keperluan revisi. Penamaan file wajib seragam: **TGL_NAMA_JUDUL.mp4**.
+                    """)
+
+                with st.expander("II. KETENTUAN UNIT KERJA & SISTEM POIN RADAR", expanded=True):
+                    st.markdown("""
+                    Aturan ini dibuat agar beban kerja adil bagi semua staf, baik yang mengerjakan project sulit maupun project massal.
+                    
+                    **1. Penyetaraan Unit Setoran (Weighting System)**
+                    - **PROJECT HIGH QUALITY (HQ):** Karena tingkat kesulitan prompt AI, emosi, dan detail editing yang tinggi, maka 1 Link GDrive berisi 1 Video sudah dihitung senilai **1 Poin**.
+                    - **PROJECT RINGAN (MASSAL):** Karena proses pengerjaan yang lebih cepat dan simpel, maka 1 Link GDrive wajib berisi minimal 10 Video untuk bisa dihitung senilai **1 Poin**.
+                    *(Artinya: Jika lo cuma setor 5 video ringan, poin tidak akan terhitung / 0 Poin).*
+
+                    **2. Target Harian & Status Radar (SP)**
+                    - Setiap Editor wajib mencapai minimal **2 Poin per hari** agar status Radar di dashboard berwarna Hijau (AMAN).
+                    - **Contoh:** Editor Project Ringan harus setor total 20 Video (dalam 2 link atau 2 folder) per hari untuk dianggap memenuhi kuota.
+                    - Kegagalan mencapai 2 Poin sehari akan tercatat sebagai "Hari Kurang Produktif". Jika hal ini berulang, sistem akan memicu keluarnya Surat Peringatan (SP) sebagai bahan evaluasi kerja.
+
+                    **3. Skema Bonus Otomatis (Insentif)**
+                    - **Poin ke-3 (Bonus Absensi):** Begitu lo mencapai Poin ke-3 yang sudah di-ACC, sistem otomatis mencairkan bonus sebesar **Rp 30.000** sebagai apresiasi kehadiran dan kerajinan lo.
+                    - **Poin ke-5 & Seterusnya (Bonus Video):** Setiap pencapaian Poin ke-5 dan poin-poin selanjutnya (ke-6, ke-7, dst), lo akan mendapatkan bonus tambahan sebesar **Rp 30.000** per poin sebagai reward atas produktivitas lo.
+                    """)
+
+                with st.expander("📜 PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)", expanded=True):
+                    st.markdown("""
+                    Gunakan alur ini sebagai kerangka cerita agar video lo punya "nyawa" dan retention tinggi.
+
+                    **1. ALUR: REVENGE (Direndahkan -> Balas Dendam)**
+                    Alur ini sangat kuat untuk memancing emosi dan empati penonton di awal, lalu memberikan kepuasan di akhir.
+                    - **Bagian Awal (Hook):** Tampilkan adegan di mana karakter utama (Udin atau Tung) sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya. Ekspresi AI wajib terlihat sangat sedih, tertekan, atau marah besar.
+                    - **Bagian Tengah (Proses):** Tampilkan momen perubahan karakter. Misalnya karakter mulai belajar, berlatih keras, bekerja, atau menemukan kekuatan/keajaiban. Gunakan editing yang cepat (fast-paced) dan zoom-in dinamis untuk membangun suasana semangat.
+                    - **Bagian Akhir (Ending):** Karakter utama kembali dengan penampilan yang jauh lebih baik, mewah, atau kuat, lalu membalas perlakuan orang yang dulu merendahkannya. Ekspresi AI wajib terlihat puas, bangga, atau sedikit sombong untuk memberikan rasa puas pada penonton.
+
+                    **2. ALUR: ABSURD RACE (Lomba Konyol -> Interaktif CTA)**
+                    Alur ini bertujuan untuk menghibur dengan hal-hal di luar logika dan sangat efektif memicu share.
+                    - **Bagian Awal (Hook):** Tampilkan dua karakter atau lebih (Udin vs Tung) yang sedang bersiap melakukan lomba atau tantangan. Buat visualnya seaneh mungkin (Contoh: Balapan lari tapi pakai kursi kantor, atau lomba makan pedas di atas gunung).
+                    - **Bagian Tengah (Dinamika):** Tunjukkan berbagai rintangan konyol dan kejadian tak terduga selama lomba berlangsung. Masukkan banyak Sound Effect (SFX) lucu seperti suara jatuh, tabrakan, atau suara kartun untuk memperkuat suasana komedi.
+                    - **Bagian Akhir (Ending):** Berikan Plot Twist atau kejutan siapa yang akhirnya menang dengan cara yang tidak disangka-sangka oleh penonton.
+
+                    **3. ALUR: THE BATTLE / VS (Adu Kekuatan -> Plot Twist Ending)**
+                    Alur ini fokus pada persaingan antara dua karakter untuk membuktikan siapa yang terbaik. Tujuannya memancing penonton untuk memilih kubu.
+                    - **Bagian Awal (Hook):** Tampilkan konfrontasi langsung antara dua karakter (Udin vs Tung). Gunakan visual adu tatap mata yang tajam atau persiapan alat yang mereka gunakan untuk bertanding. Narasi harus langsung menantang: "Siapa yang bakal menang hari ini? Udin dengan kekuatannya, atau Tung dengan kecerdikannya?".
+                    - **Bagian Tengah (Dinamika):** Tunjukkan momen-momen kritis selama pertandingan atau tantangan berlangsung. Misalnya: Udin hampir menang tapi Tung melakukan langkah tak terduga. Gunakan Sound Effect (SFX) yang tegang (suara jantung berdegup, angin kencang, atau suara mesin). Editing harus cepat (fast-cut) agar adrenalin penonton ikut naik.
+                    - **Bagian Akhir (Ending):** Berikan kejutan di akhir cerita (Plot Twist). Pemenangnya bukan orang yang diprediksi di awal, atau ada kejadian luar biasa yang menghentikan pertandingan. Tutup dengan pertanyaan interaktif: "Coba jujur, kalian tadi pegang Tim Udin atau Tim Tung? Tulis di kolom komentar!".
+                    """)
+
+                with st.expander("📢 PANDUAN INTERAKSI (CTA - CALL TO ACTION)", expanded=True):
+                    st.markdown("""
+                    Interaksi penonton (Like, Komen, Subs) adalah bensin untuk algoritma YouTube. **WAJIB ada di setiap video!**
+
+                    - **Penempatan:** Selipkan ajakan ini di Tengah Video saat tensi cerita lagi seru-serunya, atau di Akhir Video setelah cerita selesai.
+                    - **Contoh Kalimat Ajakan:**
+                        - "Ketik 'LANJUT' kalau kalian mau lihat Udin balas dendam di part 2!"
+                        - "Kalau kalian di posisi Tung, apa yang bakal kalian lakuin? Tulis pendapat kalian di kolom komentar!"
+                        - "Bantu Subscribe ya biar Udin bisa beli rumah baru dan berhenti dihina!"
+                        - "Siapa yang bakal menang menurut kalian? Tekan Like buat Tim Udin, Komen buat Tim Tung!"
+                    """)
+
+            with tab_cetak:
+                st.write("Klik tombol di bawah untuk menampilkan surat resmi yang siap dicetak.")
+                if st.button("📄 GENERATE SURAT RESMI PINTAR MEDIA", use_container_width=True):
+                    full_sop_html = f"""
+                    <div id="print-area" style="background: white; padding: 40px; border: 1px solid #ddd; font-family: 'Times New Roman', serif; width: 700px; margin: auto; color: #1a1a1a; line-height: 1.5; text-align: justify;">
+                        <center>
+                            <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px; margin-bottom: 5px;">
+                            <p style="font-size: 11px; margin: 0; font-weight: bold; text-transform: uppercase;">PT PINTAR DIGITAL KREASI (PINTAR MEDIA)</p>
+                            <hr style="border: 2px solid #1d976c; margin: 15px 0;">
+                            <b style="font-size: 14px; text-decoration: underline;">SURAT PANDUAN KERJA & STANDAR OPERASIONAL (SOP)</b><br>
+                            <span style="font-size: 10px;">Nomor: {sekarang.strftime('%d%m')}/SOP-EDT/PM/2026</span>
+                        </center>
+
+                        <div style="font-size: 11px; margin-top: 20px;">
+                            <b>I. STANDAR PRODUKSI UMUM (WAJIB BAGI SEMUA EDITOR)</b><br>
+                            Poin ini adalah fondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Admin berhak menolak setoran video.<br>
+                            - <b>Kualitas Visual:</b> Minimal 1080p Full HD. Video wajib tajam, jernih, dan tidak pecah.<br>
+                            - <b>Rasio & Safe Zone:</b> Format 9:16 (Shorts). Pastikan elemen penting tidak tertutup ikon YouTube.<br>
+                            - <b>Durasi:</b> Minimal 60 detik. Dilarang memberikan adegan kosong (filler).<br>
+                            - <b>Audio & SFX:</b> Wajib Copyright-Free (YouTube Audio Library).<br>
+                            - <b>Backup & Penamaan:</b> Simpan aset mentah min. 3 hari. Format: TGL_NAMA_JUDUL.mp4.<br><br>
+
+                            <b>II. KETENTUAN UNIT KERJA & SISTEM POIN RADAR</b><br>
+                            <b>1. Penyetaraan Unit Setoran (Weighting System):</b><br>
+                            - <b>PROJECT HQ:</b> 1 Link GDrive berisi 1 Video = 1 Poin.<br>
+                            - <b>PROJECT RINGAN:</b> 1 Link GDrive berisi minimal 10 Video = 1 Poin.<br>
+                            <b>2. Target Harian & Status Radar (SP):</b><br>
+                            - Wajib mencapai minimal 2 Poin per hari untuk status AMAN (Radar Hijau).<br>
+                            - Kegagalan memicu status "Hari Kurang Produktif" dan akumulasi Surat Peringatan (SP).<br>
+                            <b>3. Skema Bonus Otomatis (Insentif):</b><br>
+                            - <b>Poin ke-3:</b> Bonus Absensi Rp 30.000 (Cair otomatis setelah ACC).<br>
+                            - <b>Poin ke-5 & Seterusnya:</b> Bonus Video Rp 30.000 per poin.<br><br>
+
+                            <b>📜 PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)</b><br>
+                            <b>1. ALUR: REVENGE:</b> Awal (Direndahkan/Sedih) -> Tengah (Proses Perubahan) -> Akhir (Balas Dendam/Puas).<br>
+                            <b>2. ALUR: ABSURD RACE:</b> Awal (Lomba Aneh) -> Tengah (Rintangan Konyol + SFX Lucu) -> Akhir (Plot Twist Pemenang).<br>
+                            <b>3. ALUR: THE BATTLE / VS:</b> Awal (Konfrontasi Tajam) -> Tengah (Tensi Tinggi/SFX Tegang) -> Akhir (Plot Twist Hasil Akhir).<br><br>
+
+                            <b>📢 PANDUAN INTERAKSI (CTA):</b> Wajib ada di Tengah atau Akhir Video. Contoh: "Ketik LANJUT", "Komen pilihan kalian", atau "Bantu Subscribe".<br><br>
+                        </div>
+
+                        <table style="width: 100%; text-align: center; font-size: 11px;">
+                            <tr><td>Pimpinan PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
+                            <tr style="height: 60px;"><td><b style="color: #1d976c;">DIAN (OWNER)</b></td><td>..........................</td></tr>
+                            <tr><td>PT. PINTAR DIGITAL KREASI</td><td>( Seluruh Staff Editor )</td></tr>
                         </table>
-                    </div>
 
-                    <h4 style="font-size: 12px; color: #1d976c; margin-bottom: 5px; border-bottom: 1px solid #f0f0f0;">1. STANDAR TEKNIS & KREATIF</h4>
-                    <div style="font-size: 10px; color: #444;">
-                        • 1080p Full HD | Rasio 9:16 | Durasi Min 60 Detik<br>
-                        • Hook 3 Detik (Kejutan di awal) | Ekspresi AI (Emosi)<br>
-                        • Subtitle Animasi | No Copyright Audio | Wajib SFX
+                        <div style="margin-top: 20px; border: 2px dashed #1d976c; padding: 10px; font-size: 10px; text-align: center; background: #f9fffb;">
+                            ⚠️ <b>MAKLUMAT PENTING:</b> Panduan ini berlaku per <b>1 Maret 2026</b>. Seluruh poin dapat direvisi kemudian hari oleh Manajemen sesuai kebutuhan produksi.
+                        </div>
                     </div>
-
-                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">2. ATURAN SETORAN (REVISI 2026)</h4>
-                    <div style="font-size: 10px; color: #444;">
-                        • <b>PROJECT HQ:</b> 1 Video = 1 Link (1 Poin)<br>
-                        • <b>PROJECT RINGAN:</b> 10 Video = 1 Link (1 Poin)<br>
-                        • <b>RADAR AMAN:</b> Wajib 2 Poin/Hari (Contoh: 20 Video Ringan)
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="window.print()" style="padding: 12px 30px; background: #1a1a1a; color: #55efc4; border: 2px solid #55efc4; border-radius: 10px; cursor: pointer;">🖨️ CETAK PDF SEKARANG</button>
                     </div>
-
-                    <div style="background: #1a1a1a; color: white; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px;">
-                        <p style="margin: 0; font-size: 8px; color: #ff7675; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Konsekuensi</p>
-                        <h2 style="margin: 5px 0 0; font-size: 18px; color: #ff7675; font-weight: 800;">DENDA Rp 1.000.000</h2>
-                        <p style="margin: 5px 0 0; font-size: 9px; color: #ddd;">Kelalaian berulang memicu SP & Pemotongan Gaji</p>
-                    </div>
-
-                    <div style="margin-top: 20px; text-align: center; font-size: 9px; color: #bbb; border-top: 1px solid #f5f5f5; padding-top: 10px;">
-                        Diterbitkan Digital oleh PINTAR MEDIA | {sekarang.strftime('%d/%m/%Y')}
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="window.print()" style="padding: 12px 25px; background: #1a1a1a; color: #55efc4; border: 2px solid #55efc4; border-radius: 10px; font-weight: bold; cursor: pointer;">🖨️ SIMPAN SEBAGAI PDF</button>
-                </div>
-                """
-                st.components.v1.html(sop_editor_html, height=850, scrolling=True)
+                    """
+                    st.components.v1.html(full_sop_html, height=1200, scrolling=True)
     
         elif divisi_sop == "Staff Uploader":
             with st.container(border=True):
@@ -3284,6 +3351,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
