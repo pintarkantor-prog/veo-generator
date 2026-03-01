@@ -3044,7 +3044,7 @@ def tampilkan_area_staf():
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
-            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
+            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=False):
                 # 1. Ambil data dari Supabase
                 all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
                 signed_users = [row['username'].lower() for row in all_signs.data]
@@ -3086,7 +3086,7 @@ def tampilkan_area_staf():
                 belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
                 if belum_sign:
                     st.write("")
-                    if st.button(f"📢 BOM WA ({len(belum_sign)} STAFF)", use_container_width=True, type="primary"):
+                    if st.button(f"📢 KIRIM WA ({len(belum_sign)} STAFF)", use_container_width=True, type="primary"):
                         tag_nama = ", ".join(belum_sign)
                         pesan_grup = f"📢 *PENGUMUMAN*\n\nMohon perhatian: *{tag_nama}*\nSegera sign kontrak periode *{bulan_sekarang}*."
                         kirim_notif_wa(pesan_grup)
@@ -3697,6 +3697,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
