@@ -2989,10 +2989,28 @@ def tampilkan_area_staf():
 
         is_signed = st.session_state.get(f"signed_{user_login}_{bulan_sekarang}", False)
 
-        # --- KONSTRUKSI HTML (FULL TEKS 100% NO CUT) ---
+        # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEXT NO CUT) ---
         html_kontrak_full = f"""
-        <div style="background: white; padding: 60px 80px; font-family: Arial, sans-serif; color: black; line-height: 1.8; border: 1px solid #000;">
-            <table style="width: 100%; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
+        <style>
+            @media print {{
+                @page {{ size: A4; margin: 15mm; }}
+                body {{ margin: 0; padding: 0; }}
+                .a4-container {{ border: none !important; box-shadow: none !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }}
+            }}
+            .a4-container {{
+                background: white; 
+                width: 210mm; 
+                padding: 20mm; 
+                margin: auto; 
+                font-family: Arial, sans-serif; 
+                color: black; 
+                line-height: 1.6; 
+                border: 1px solid #eee;
+                box-sizing: border-box;
+            }}
+        </style>
+        <div class="a4-container">
+            <table style="width: 100%; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
                 <tr>
                     <td style="width: 20%; vertical-align: middle;">
                         <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px;">
@@ -3004,24 +3022,30 @@ def tampilkan_area_staf():
                     </td>
                 </tr>
             </table>
+            
             <center>
                 <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">MASTER DRAFT: PERJANJIAN KERJA DIGITAL & PAKTA INTEGRITAS</h2>
-                <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">PT PINTAR DIGITAL KREASI (PINTAR MEDIA)</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: PDK/HRD-SPK/{now.strftime('%y%m')}/{user_login.upper()}</p>
             </center>
-            <br>
-            <div style="font-size: 13px; text-align: justify;">
-                <p style="font-weight: bold; margin-bottom: 10px;">BAB II: KEDISIPLINAN & OPERASIONAL</p>
+            
+            <div style="font-size: 13px; text-align: justify; margin-top: 25px;">
+                <p>Perjanjian ini dibuat secara sah oleh dan antara <b>{nama_direktur}</b> (Pihak Pertama) dan <b>{staf_nama}</b> (Pihak Kedua) tertanggal <b>{tgl_hari_ini}</b> dengan rincian sebagai berikut:</p>
+
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB II: KEDISIPLINAN & OPERASIONAL</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 3: Waktu Kerja, Hari Kerja, & Hak Libur</p>
                 <div style="margin-left: 20px;">
                     <b>Waktu Kerja Efektif:</b> Pihak Kedua wajib berada di lokasi kerja/menjalankan tugas pada pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Hari Kerja:</b> Senin s/d Sabtu.<br>
-                    <b>Waktu Istirahat:</b> - Senin – Kamis: 11:30 – 12:30 WIB. - Jumat: 11:30 – 13:00 WIB (Penyesuaian ibadah).<br>
-                    <b>Hari Libur:</b> Hari Minggu and Hari Libur Nasional.<br>
+                    <b>Waktu Istirahat:</b><br>
+                    - Senin – Kamis: 11:30 – 12:30 WIB.<br>
+                    - Jumat: 11:30 – 13:00 WIB (Penyesuaian ibadah).<br>
+                    <b>Hari Libur:</b> Hari Minggu dan Hari Libur Nasional.<br>
                     <b>Cuti Bersama:</b> Operasional kantor tetap berjalan normal pada hari Cuti Bersama Pemerintah, kecuali ditentukan lain oleh Kebijakan Pimpinan (Pihak Pertama).<br>
                     <b>Hak Cuti Pribadi:</b> Pihak Kedua berhak mengajukan izin/cuti dengan pemberitahuan minimal 2 hari sebelumnya. Izin mendadak hanya diterima untuk kondisi darurat (Sakit/Duka) dengan bukti yang sah.<br>
                     <b>Presensi:</b> Pihak Kedua wajib melakukan pelaporan kehadiran (Check-in & Check-out) kepada Admin/Koordinator. Keterlambatan tanpa alasan logis akan diakumulasi sebagai pengurangan poin performa.
                 </div>
-                <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">BAB III: KEAMANAN ASET & KERAHASIAAN DATA (NDA)</p>
+
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB III: KEAMANAN ASET & KERAHASIAAN DATA (NDA)</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Perlindungan & Efisiensi Akun AI Premium</p>
                 <div style="margin-left: 20px;">
                     <b>Hak Akses:</b> Pihak Kedua diberikan akses akun AI premium (Generator, Email, Supabase) semata-mata untuk Kepentingan Pekerjaan PT Pintar Digital Kreasi.<br>
@@ -3029,45 +3053,48 @@ def tampilkan_area_staf():
                     <b>Efisiensi Resource:</b> Pihak Kedua wajib menggunakan kuota produksi (render credit/token) secara bijak dan efisien. Pemborosan resource tanpa hasil output yang jelas dianggap sebagai kelalaian kerja.<br>
                     <b>Keamanan Akun:</b> Pihak Kedua dilarang mengubah informasi profil, email pemulihan, atau password tanpa instruksi langsung dari Pihak Pertama.
                 </div>
-                <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">BAB IV: EVALUASI & SANKSI FINANSIAL</p>
+
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: EVALUASI & SANKSI FINANSIAL</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 7: Penyesuaian Administratif (Denda)</p>
                 <div style="margin-left: 20px;">
                     <b>Pelanggaran SOP & Target:</b> Pihak Kedua sepakat bahwa kegagalan memenuhi standar produksi (SOP 7 Bagian) atau mencapai target harian minimum (Status Hari Lemah) adalah pelanggaran kontrak.<br>
                     <b>Nilai Penalti:</b> Atas pelanggaran tersebut, Pihak Kedua bersedia menerima penyesuaian administratif (potongan gaji) sebesar <b>Rp 1.000.000 (Satu Juta Rupiah)</b> per periode bulan berjalan.<br>
                     <b>Ghosting:</b> Tindakan tidak memberikan kabar (Ghosting) selama >2 hari kerja dianggap sebagai pengunduran diri sepihak dan Pihak Pertama berhak menahan hak upah yang belum terbayar sebagai kompensasi kerugian operasional.
                 </div>
-                <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">BAB V: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
+
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB V: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 8: Hak Upah & Bonus</p>
                 <div style="margin-left: 20px;">
                     Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.<br>
                     Bonus performa dihitung berdasarkan data validasi sistem (ACC Video).
                 </div>
-                <p style="font-weight: bold; margin-top: 15px; margin-bottom: 5px;">Pasal 9: Pajak Penghasilan (PPh)</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 9: Pajak Penghasilan (PPh)</p>
                 <div style="margin-left: 20px;">
                     Segala bentuk Pajak Penghasilan (PPh) yang timbul atas upah dan bonus yang diterima oleh Pihak Kedua adalah Tanggung Jawab Pribadi Pihak Kedua.<br>
                     Pihak Pertama membayarkan upah secara gross (kotor) tanpa potongan pajak dari perusahaan.
                 </div>
-                <p style="font-weight: bold; margin-top: 15px; margin-bottom: 5px;">Pasal 10: Perlindungan Asuransi & Kesehatan</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 10: Perlindungan Asuransi & Kesehatan</p>
                 <div style="margin-left: 20px;">
                     Mengingat status kemitraan ini adalah paruh waktu (part-time), Pihak Pertama tidak memberikan fasilitas asuransi kesehatan atau jaminan hari tua (BPJS/Asuransi Swasta).<br>
                     Segala biaya medis atau perlindungan kesehatan merupakan Tanggung Jawab Pribadi Pihak Kedua. Pihak Kedua disarankan memiliki proteksi kesehatan mandiri.
                 </div>
-                <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">BAB VIII: LEGALITAS & DINAMIKA PERATURAN</p>
+
+                <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB VIII: LEGALITAS & DINAMIKA PERATURAN</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 14: Perubahan Peraturan (Amandemen)</p>
                 <div style="margin-left: 20px;">
                     Pihak Pertama berhak melakukan perubahan, penambahan, atau pengurangan poin-poin dalam Pasal Perjanjian ini sewaktu-waktu sesuai dengan Kondisi Dinamis Pekerjaan dan kebijakan Pimpinan.<br>
                     Setiap perubahan akan diinformasikan melalui sistem Dashboard Pintar Media dengan keterangan "Update Terakhir".<br>
                     Pihak Kedua dinyatakan setuju dengan perubahan tersebut selama masih melanjutkan hubungan kerja di periode bulan berikutnya.
                 </div>
-                <p style="font-weight: bold; margin-top: 15px; margin-bottom: 5px;">Pasal 15: Validitas Digital Signature</p>
+                <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 15: Validitas Digital Signature</p>
                 <div style="margin-left: 20px;">
                     Tindakan menekan tombol "SETUJU & TANDATANGANI" adalah sah sebagai pengganti tanda tangan basah demi hukum.<br>
                     Sistem merekam secara otomatis: Nama Staff Resmi dan Timestamp (Waktu Presisi) sebagai bukti otentik pengesahan.<br>
                     Khusus akun Pimpinan (Dian Setya Wardana), sistem memberikan otorisasi otomatis berstatus "OWNER SIGNED & VERIFIED".
                 </div>
             </div>
-            <br><br><br>
-            <table style="width: 100%; text-align: center; font-size: 13px;">
+
+            <table style="width: 100%; text-align: center; font-size: 13px; margin-top: 50px;">
                 <tr>
                     <td style="width: 50%;">PIHAK KEDUA,<br><br><br>
                         <span style="color:green; font-weight:bold;">
@@ -3081,10 +3108,14 @@ def tampilkan_area_staf():
                     </td>
                 </tr>
             </table>
+
+            <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 40px; font-size: 9px; color: #888; text-align: justify;">
+                <i><b>Pintar Media Online Contract System:</b> Update: {last_update}. Peraturan dapat berubah sewaktu-waktu menyesuaikan kondisi operasional perusahaan.</i>
+            </div>
         </div>
         """
 
-        # --- LOGIKA TOMBOL PREVIEW (MENGGANTIKAN TAMPILAN LANGSUNG) ---
+        # --- LOGIKA TAMPILAN DASHBOARD ---
         st.subheader("📝 Pengesahan Kontrak Digital")
         
         if user_login == "dian":
@@ -3095,12 +3126,10 @@ def tampilkan_area_staf():
         elif not is_signed:
             st.info(f"Halo {staf_nama}, silakan klik tombol di bawah untuk meninjau Kontrak Kerja periode {bulan_sekarang}.")
             
-            # Tombol Preview
             if st.button("🔍 PREVIEW KONTRAK (LIAT PDF)", use_container_width=True):
                 st.session_state[f"preview_done_{user_login}"] = True
                 st.components.v1.html(html_kontrak_full + "<script>window.print();</script>", height=0)
             
-            # Cek apakah sudah klik preview
             if st.session_state.get(f"preview_done_{user_login}", False):
                 st.write("---")
                 setuju_kontrak = st.checkbox(f"Saya, {staf_nama}, menyatakan SETUJU & TUNDUK pada seluruh pasal perjanjian di atas.")
@@ -3108,11 +3137,8 @@ def tampilkan_area_staf():
                 if setuju_kontrak:
                     if st.button("✅ SAHKAN & TANDATANGANI", use_container_width=True):
                         st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
-                        
-                        # API NOTIF WA & LOG PUNYA LO
                         kirim_notif_wa(f"✅ *KONTRAK DISAHKAN*\n👤 *Staff:* {staf_nama}\n📅 *Periode:* {bulan_sekarang}\n⏰ *Waktu:* {waktu_presisi} WIB")
-                        tambah_log(st.session_state.user_aktif, f"SIGN KONTRAK BULAN: {bulan_sekarang}")
-                        
+                        tambah_log(st.session_state.user_aktif, f"SIGN KONTRAK: {bulan_sekarang}")
                         st.success("Kontrak Berhasil Disahkan!"); time.sleep(1); st.rerun()
                 else:
                     st.button("✅ SAHKAN & TANDATANGANI", disabled=True, use_container_width=True)
@@ -3531,6 +3557,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
