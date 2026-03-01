@@ -3011,17 +3011,27 @@ def tampilkan_area_staf():
         staf_nama = staff_mapping.get(user_login, user_login.upper())
         nama_direktur = "DIAN SETYA WARDANA"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-        last_update = "1 Maret 2026 | 23:59 WIB"
         
         import pytz
         tz_wib = pytz.timezone('Asia/Jakarta')
-        now = datetime.now(tz_wib) # Paksa ke Jakarta (WIB)
+        now = datetime.now(tz_wib)
         
         bulan_sekarang = now.strftime("%m-%Y")
-        tgl_hari_ini = now.strftime("%d %B %Y")
-        waktu_presisi = now.strftime("%H:%M:%S")
 
-        is_signed = st.session_state.get(f"signed_{user_login}_{bulan_sekarang}", False)
+        # --- LOGIKA KUNCI TANGGAL (FIX AGAR TIDAK BERUBAH) ---
+        # 1. Cek ke database Supabase apakah user ini sudah tanda tangan bulan ini
+        check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
+        
+        if check_db.data:
+            # JIKA SUDAH TANDA TANGAN: Ambil data permanen dari Database
+            is_signed = True
+            tgl_hari_ini = check_db.data[0]['tgl_tanda_tangan']
+            waktu_presisi = check_db.data[0]['waktu_presisi']
+        else:
+            # JIKA BELUM TANDA TANGAN: Pakai waktu berjalan (Real-time)
+            is_signed = False
+            tgl_hari_ini = now.strftime("%d %B %Y")
+            waktu_presisi = now.strftime("%H:%M:%S")
 
         # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEXT NO CUT) ---
         html_kontrak_full = f"""
@@ -3175,14 +3185,34 @@ def tampilkan_area_staf():
                 
                 if setuju_kontrak:
                     if st.button("✅ SAHKAN & TANDATANGANI", use_container_width=True):
+                        # 1. SIMPAN KE DATABASE (Agar tanggal tgl_hari_ini & waktu_presisi jadi PERMANEN)
+                        data_kontrak = {
+                            "username": user_login,
+                            "nama_staff": staf_nama,
+                            "periode": bulan_sekarang,
+                            "tgl_tanda_tangan": tgl_hari_ini,
+                            "waktu_presisi": waktu_presisi
+                        }
+                        # Pastikan lo sudah membuat tabel 'kontrak_staff' di Supabase
+                        supabase.table("kontrak_staff").insert(data_kontrak).execute()
+
+                        # 2. UPDATE SESSION STATE
                         st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
-                        kirim_notif_wa(f"✅ *KONTRAK DISAHKAN*\n👤 *Staff:* {staf_nama}\n📅 *Periode:* {bulan_sekarang}\n⏰ *Waktu:* {waktu_presisi} WIB")
+                        
+                        # 3. NOTIFIKASI WA & LOG AKTIVITAS
+                        kirim_notif_wa(f"✅ *KONTRAK DISAHKAN*\n👤 *Staff:* {staf_nama}\n📅 *Tgl:* {tgl_hari_ini}\n⏰ *Waktu:* {waktu_presisi} WIB")
                         tambah_log(st.session_state.user_aktif, f"SIGN KONTRAK: {bulan_sekarang}")
+                        
                         st.success("Kontrak Berhasil Disahkan!"); time.sleep(1); st.rerun()
                 else:
                     st.button("✅ SAHKAN & TANDATANGANI", disabled=True, use_container_width=True)
         else:
-            st.success(f"🔒 Kontrak periode {now.strftime('%B %Y')} sudah ditandatangani sah.")
+            # Mengubah format 03-2026 (periode) menjadi nama bulan yang rapi
+            import datetime
+            obj_bulan = datetime.datetime.strptime(bulan_sekarang, "%m-%Y")
+            nama_bulan_fix = obj_bulan.strftime("%B %Y")
+            
+            st.success(f"🔒 Kontrak periode {nama_bulan_fix} sudah ditandatangani sah.")
             if st.button("📄 DOWNLOAD SALINAN KONTRAK (PDF)", use_container_width=True):
                 st.components.v1.html(html_kontrak_full + "<script>window.print();</script>", height=0)
     
@@ -3596,6 +3626,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
