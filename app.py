@@ -3045,41 +3045,37 @@ def tampilkan_area_staf():
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
             with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
-                # 1. Ambil data tanda tangan dari Supabase
+                # 1. Ambil data dari Supabase
                 all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
                 signed_users = [row['username'].lower() for row in all_signs.data]
                 
                 daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
 
-                # 2. Card Staff (Nama | Status | Periode) - 1 Baris per Staff
+                # 2. Card Staff (1 Baris per Staff - Clean Design)
                 for s in daftar_staff_monitor:
                     is_ok = s in signed_users
+                    txt_status = "SUDAH TANDA TANGAN" if is_ok else "BELUM TANDA TANGAN"
+                    clr_status = "#2ecc71" if is_ok else "#e74c3c" # Hijau vs Merah
+                    bg_card = "#1a1c23" # Warna gelap elegan biar masuk ke dashboard
                     
-                    # Bikin 3 kolom utama sesuai request
-                    c1, c2, c3 = st.columns([2, 3, 1])
-                    
-                    with c1:
-                        # Nama Staff dengan Icon
-                        st.write(f"👤 **{s.upper()}**")
-                    
-                    with c2:
-                        # Status dengan warna default Streamlit (Success/Error)
-                        if is_ok:
-                            st.success("✅ SUDAH SIGN")
-                        else:
-                            st.error("⚠️ BELUM SIGN")
-                    
-                    with c3:
-                        # Periode
-                        st.code(bulan_sekarang)
+                    st.markdown(f"""
+                    <div style="background-color: {bg_card}; border-radius: 5px; padding: 10px 15px; margin-bottom: 5px; border-left: 4px solid {clr_status};">
+                        <table style="width: 100%; border: none; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 30%; color: white; font-weight: bold; font-size: 14px;">👤 {s.upper()}</td>
+                                <td style="width: 45%; color: {clr_status}; font-weight: bold; font-size: 12px; text-align: center;">{"●" if is_ok else "○"} {txt_status}</td>
+                                <td style="width: 25%; color: #888; font-size: 11px; text-align: right;">📅 {bulan_sekarang}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                st.write("---") # Garis pembatas sebelum tombol
-
-                # 3. Tombol BOM WA (Diletakkan di bawah card)
+                st.write("") 
+                # 3. Tombol BOM WA (Desain Simple di Bawah Card)
                 belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
                 
                 if belum_sign:
-                    if st.button("📢 UMUMKAN DI GRUP (BOM WA)", use_container_width=True, type="primary"):
+                    if st.button(f"📢 UMUMKAN DI GRUP ({len(belum_sign)} STAFF BELUM)", use_container_width=True):
                         tag_nama = ", ".join(belum_sign)
                         pesan_grup = (
                             f"📢 *PENGUMUMAN KONTRAK DIGITAL*\n\n"
@@ -3089,9 +3085,9 @@ def tampilkan_area_staf():
                             f"Terima kasih! 🙏"
                         )
                         kirim_notif_wa(pesan_grup)
-                        st.toast("Pengumuman Grup Berhasil Dikirim!")
+                        st.toast("Notif Grup Berhasil Dikirim!")
                 else:
-                    st.success("✨ Semua staff sudah tanda tangan kontrak!")
+                    st.success("Semua staff sudah beres! ✨")
 
             st.write("---")
         # --- LOGIKA KUNCI TANGGAL ---
@@ -3698,6 +3694,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
