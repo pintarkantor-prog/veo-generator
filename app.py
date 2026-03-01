@@ -2608,10 +2608,7 @@ def tampilkan_area_staf():
                 
             # --- III. MODUL PANDUAN (MODEL BUKA TUTUP / EXPANDER) ---
             # Judul III masuk ke dalam kontainer, baru di dalamnya ada expander buat "Buka Tutup"
-            with st.container(border=True):
-                st.markdown("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)")
-                
-                with st.expander("📖 KLIK UNTUK MEMBUKA MODUL & BLUEPRINT ALUR", expanded=False):
+             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
                     # Hamparan Kertas Putih (HTML)
                     html_konten_pdf = f"""
                     <div style="background: white; padding: 30px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
@@ -3455,6 +3452,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
