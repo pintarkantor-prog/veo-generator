@@ -2607,7 +2607,7 @@ def tampilkan_area_staf():
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
                 
             # --- III. KETENTUAN PANDUAN KONTEN (Tetap di Dashboard) ---
-            with st.container(border=True):
+            with st.container(border=False):
                 st.markdown("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)")
                 
                 # Lembaran Kertas Putih (HTML)
@@ -3453,6 +3453,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
