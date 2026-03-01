@@ -2584,11 +2584,7 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
-            import datetime
-            sekarang = datetime.datetime.now()
-            tgl_terbit = "1 Maret 2026"
-
-            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
+            st.markdown(f"**Update Terakhir:** 1 Maret 2026")
             # --- I. STANDAR PRODUKSI UMUM ---
             st.markdown("### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
@@ -2598,7 +2594,6 @@ def tampilkan_area_staf():
                 st.write("• **Durasi**: Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler).")
                 st.write("• **Audio & SFX**: Wajib Copyright-Free. Sangat direkomendasikan menggunakan musik dari YouTube Audio Library.")
                 st.write("• **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
 
             # --- II. KETENTUAN UNIT & POIN ---
             st.markdown("### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
@@ -3491,6 +3486,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
