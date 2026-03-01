@@ -2735,7 +2735,7 @@ def tampilkan_area_staf():
                 st.info("**Sistem ini memastikan operasional kantor berjalan konsisten setiap harinya.**")
                 st.write("• **Cashflow Kantor**: Mengelola laporan keuangan dan uang kas kecil agar operasional harian tidak tersendat.")
                 st.write("• **Budgeting Tools**: Mengurus listrik, kuota, akun, hingga stok konsumsi/kebutuhan harian kantor.")
-                st.write("• Admin selalu koordinasi dengan owner terkait stok channel dan cashflow kantor.")
+                st.write("• Membantu upload video sesuai kebutuhan kantor.")
                 st.write("• Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis")
     
     with t2:
@@ -3723,6 +3723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
