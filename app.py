@@ -2583,7 +2583,7 @@ def tampilkan_area_staf():
             key="pilih_sop_v_final_sultan"
         )
 
-if divisi_sop == "Staff Editor":
+        if divisi_sop == "Staff Editor":
             import datetime
             sekarang = datetime.datetime.now()
             tgl_terbit = "1 Maret 2026"
@@ -3337,6 +3337,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
