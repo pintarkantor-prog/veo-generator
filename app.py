@@ -2862,7 +2862,7 @@ def tampilkan_area_staf():
             st.success("💡 **TIPS AGAR PENGHASILAN MAKSIMAL**")
             st.write("- Setor minimal **3 video** setiap hari untuk mengaktifkan semua **Bonus Absensi**.")
             st.write("- Jika hanya menyelesaikan **2 video**, status Anda **Aman**, namun Bonus Kehadiran & Lembur tidak cair.")
-            st.write("- CATATAN KHUSUS: Upload dan Admin, sistem SP berdasarkan peforma kinerja harian.")
+            st.write("- CATATAN KHUSUS: Staff Uploader dan Admin, sistem SP berdasarkan peforma kinerja harian.")
 
     with t4:
         st.write("")
@@ -3332,6 +3332,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
