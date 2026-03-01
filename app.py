@@ -2596,25 +2596,23 @@ def tampilkan_area_staf():
                 st.write("• **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4.")
 
             # --- II. KETENTUAN UNIT & POIN ---
-            st.markdown("### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
+            st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Aturan ini dibuat agar beban kerja adil bagi semua staf (HQ vs Ringan).**")
-                
-                st.markdown("#### ⚖️ 1. Penyetaraan Tugas Kerja (Weighting System)")
                 st.write("• **PROJECT HQ**: Karena tingkat kesulitan tinggi, 1 Link GDrive berisi 1 Video dihitung **1 Poin**.")
                 st.write("• **PROJECT RINGAN**: Karena pengerjaan lebih cepat, 1 Link GDrive wajib berisi minimal 15 Video untuk dihitung **1 Poin**.")
                 st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis sebagai apresiasi kehadiran.")
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
 
             # --- III. PANDUAN ALUR HQ ---
-            st.markdown("### 📜 III. PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)")
-            with st.expander("Gunakan alur ini sebagai kerangka cerita agar video punya 'nyawa' dan retention tinggi", expanded=True):
-                st.markdown("#### 🔥 1. ALUR: REVENGE (Direndahkan -> Balas Dendam)")
-                st.write("• **Bagian Awal (Hook)**: Tampilkan adegan karakter (Udin/Tung) dihina, diusir, atau diremehkan. Ekspresi AI wajib sedih/marah.")
-                st.write("• **Bagian Tengah (Proses)**: Momen perubahan karakter (belajar/bekerja). Gunakan editing cepat dan zoom dinamis.")
-                st.write("• **Bagian Akhir (Ending)**: Karakter kembali mewah/kuat dan membalas perlakuan orang lain. Ekspresi AI wajib puas/sombong.")
+            st.markdown("##### 📜 III. PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)")
+            with st.expander("Gunakan alur ini sebagai kerangka cerita agar video punya 'nyawa' dan retention tinggi", expanded=False):
+                st.markdown("###### 🔥 1. ALUR: REVENGE (Direndahkan -> Balas Dendam)")
+                st.write("• **Bagian Awal (Hook)**: Tampilkan adegan di mana karakter utama sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya. Ekspresi AI wajib terlihat sangat sedih, tertekan, atau marah besar.")
+                st.write("• **Bagian Tengah (Proses)**: Tampilkan momen perubahan karakter. Misalnya karakter mulai belajar, berlatih keras, bekerja, atau menemukan kekuatan/keajaiban.")
+                st.write("• **Bagian Akhir (Ending)**: Karakter utama kembali dengan penampilan yang jauh lebih baik, mewah, atau kuat, lalu membalas perlakuan orang yang dulu merendahkannya.")
 
-                st.markdown("#### 🏁 2. ALUR: ABSURD RACE (Lomba Konyol -> Interaktif CTA)")
+                st.markdown("###### 🏁 2. ALUR: ABSURD RACE (Lomba Konyol -> Interaktif CTA)")
                 st.write("• **Bagian Awal (Hook)**: Tampilkan persiapan lomba konyol (Udin vs Tung). Buat visual seaneh mungkin (Contoh: Balap kursi kantor).")
                 st.write("• **Bagian Tengah (Dinamika)**: Rintangan konyol selama lomba dengan Sound Effect lucu seperti suara jatuh atau tabrakan.")
                 st.write("• **Bagian Akhir (Ending)**: Berikan Plot Twist atau kejutan siapa yang akhirnya menang secara tak terduga.")
@@ -3486,6 +3484,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
