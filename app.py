@@ -2584,6 +2584,8 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
+            import datetime
+            sekarang = datetime.datetime.now()
             st.warning("⚠️ **PENTING:** Klik tombol di bawah untuk melihat dan mencetak Dokumen Standar Kualitas resmi.")
             
             # --- SURAT RESMI SOP EDITOR ---
@@ -3287,4 +3289,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
