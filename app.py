@@ -2867,56 +2867,89 @@ def tampilkan_area_staf():
     with t4:
         st.write("")
         st.markdown("#### 🤝 Budaya Kerja & Aturan Main Pintar Media")
-        # --- CARD 1: JAM OPERASIONAL & REHAT ---
+        
+        # --- CARD RINGKASAN VISUAL ---
         with st.container(border=True):
-            st.markdown("⏰ **WAKTU KERJA & ISTIRAHAT**")
-            c1, c2 = st.columns(2)
+            c1, c2, c3 = st.columns(3)
             with c1:
-                st.write("**Jam Operasional:**")
-                st.write("- **Masuk Kantor**: 08.30 WIB (Masuk santai, kerja gaspol!).")
-                st.write("- **Jam Pulang**: 17.00 WIB (Selesaikan target, langsung healing).")
-                st.write("- **Hari Libur**: Minggu & Tanggal Merah Hari Besar (Waktunya istirahat total).")
+                st.write("⏰ **JAM KERJA**")
+                st.write("08:30 - 16:30")
             with c2:
-                st.write("**Waktu Rehat:**")
-                st.write("- **Senin - Kamis**: 11.30 - 12.30 WIB.")
-                st.write("- **Jumat**: 11.30 - 13.00 WIB (Biar cowok-cowok tenang ke Masjid).")
+                st.write("💰 **GAJIAN**")
+                st.write("Tgl 1 - 3")
+            with c3:
+                st.write("🛡️ **SOP ALUR**")
+                st.write("Formula 7 Bagian")
+
+        # --- DOKUMEN MASTER PDF (Sesuai Teks Dian) ---
+        nama_user = st.session_state.get('username', 'STAFF')
+
+        html_master_pdf = f"""
+        <div style="background: white; padding: 50px; font-family: 'Times New Roman', Times, serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px;">
+            <center>
+                <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 250px;">
+                <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; padding: 2px 0; margin-top: 10px; font-weight: bold; font-size: 10px;">
+                    PT PINTAR DIGITAL KREASI - CREATIVE CONTENT AI SPECIALIST
+                </div>
+                <br>
+                <h3 style="text-decoration: underline; margin-bottom: 5px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h3>
+                <span style="font-size: 12px;">NOMOR: 001/SK-PM/III/2026</span>
+            </center>
+            
+            <div style="font-size: 13px; text-align: justify; margin-top: 20px;">
+                <p><b>I. KETENTUAN WAKTU KERJA & DISIPLIN</b><br>
+                <b>Jam Operasional:</b> Staff wajib menjalankan tugas di kantor pada pukul 08:30 s/d 16:30 WIB.<br>
+                <b>Waktu Istirahat:</b><br>
+                - Senin – Kamis: 11:30 – 12:30 WIB.<br>
+                - Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
+                <b>Hari Libur:</b> Operasional kantor diliburkan pada hari Minggu dan Hari Libur Nasional. Adapun untuk Hari Cuti Bersama, operasional tetap berjalan normal kecuali ditentukan lain oleh kebijakan pimpinan.<br>
+                <b>Presensi:</b> Staff wajib melakukan pelaporan kehadiran (Absensi) kepada Koordinator Kantor (Admin) pada saat memulai dan mengakhiri jam kerja.</p>
+
+                <p><b>II. SISTEM PENGGAJIAN & APRESIASI KINERJA</b><br>
+                <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus kinerja akan disalurkan pada tanggal 1 s/d 3 setiap bulannya.<br>
+                <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kehadiran, serta Bonus Performa yang dihitung berdasarkan poin Video HQ (High Quality) yang berhasil diproduksi.<br>
+                <b>Bonus Absensi:</b> Apresiasi tambahan yang diberikan kepada staff dengan tingkat kehadiran 100% dan konsistensi kerja yang stabil dalam satu periode bulan berjalan.</p>
+
+                <p><b>III. STANDAR OPERASIONAL PRODUKSI (SOP) KONTEN</b><br>
+                <b>Metodologi 7 Bagian:</b> Staff Editor wajib menggunakan pedoman SOP Alur Drama AI (7 Bagian) sebagai standar minimum kualitas konten, yang meliputi:<br>
+                <i>Ordinary Life, Incident, Unfair Moment, Despair, Critical Support (CTA), Transformation, dan Ultimate Satisfaction.</i><br>
+                <b>Kualitas Visual:</b> Setiap konten harus memenuhi standar resolusi dan estetika yang telah ditetapkan oleh pimpinan melalui Koordinator Kantor.</p>
+
+                <p><b>IV. PENGGUNAAN ALAT KERJA & SMARTPHONE</b><br>
+                <b>Smartphone Flexible-Policy:</b> Perusahaan memahami kebutuhan riset digital. Penggunaan smartphone diperbolehkan terbatas untuk:<br>
+                - Mencari referensi audio/musik yang sedang tren.<br>
+                - Riset tren visual dan ide cerita pada platform media sosial.<br>
+                - Koordinasi internal grup kantor.<br>
+                <b>Batasan Etika:</b> Staff berkewajiban membatasi penggunaan smartphone untuk aktivitas hiburan pribadi (seperti bermain game atau streaming non-pekerjaan) yang dapat mengganggu produktivitas dan ritme kerja tim.</p>
+
+                <p><b>V. TANGGUNG JAWAB ASSET & KERAHASIAAN DATA</b><br>
+                <b>Integritas Akun AI:</b> Staff diberikan amanah penuh dalam penggunaan akun premium perusahaan. Dilarang keras mengubah informasi akun (password/email) atau membagikan akses kepada pihak ketiga tanpa izin pimpinan.<br>
+                <b>Efisiensi Resource:</b> Staff wajib menggunakan kuota produksi (render credit) secara bijak dan terukur guna menghindari pemborosan aset digital perusahaan.<br>
+                <b>Kerahasiaan Intelektual:</b> Seluruh draf cerita, naskah, alur 7 bagian, dan database (Supabase) adalah rahasia perusahaan. Staff dilarang menyebarkan atau menduplikasi aset tersebut untuk kepentingan di luar PT Pintar Digital Kreasi.</p>
+
+                <p><b>VI. KOMITMEN PROFESIONALISME & EVALUASI</b><br>
+                Guna menjaga keadilan dan stabilitas operasional, perusahaan menetapkan evaluasi sebagai berikut:<br>
+                <b>Status Hari Lemah:</b> Pencapaian output harian yang hanya berjumlah 1 video ACC tanpa adanya kendala teknis/darurat yang sah, dikategorikan sebagai "Hari Lemah".<br>
+                <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif sebesar <b>Rp 1.000.000</b> yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.</p>
+            </div>
+            <br>
+            <div style="float: right; text-align: center; font-size: 13px;">
+                Banyumas, 1 Maret 2026<br>
+                <b>Pimpinan PT Pintar Digital Kreasi</b>
+                <br><br><br><br>
+                ( <b>Dian</b> )
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        """
 
         st.write("")
+        with st.expander("👁️ Lihat Detail Peraturan Resmi"):
+            st.components.v1.html(html_master_pdf, height=800, scrolling=True)
 
-        # --- CARD 2: GAJIAN & PROGRES ---
-        with st.container(border=True):
-            st.markdown("💰 **INFO GAJIAN & PERFORMANCE**")
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("TANGGAL GAJIAN", "5", delta="Setiap Bulan", delta_color="normal")
-                st.caption("Gaji pokok & bonus meluncur ke rekening kamu tepat waktu.")
-            with col_b:
-                st.markdown("**Catatan Performa:**")
-                st.write("- **Update Progres**: Wajib lapor ke Admin setiap sore.")
-                st.write("- **Bonus Absen**: Syaratnya cuma satu: Masuk rajin & kerja stabil.")
-
-        st.write("")
-
-        # --- CARD 3: HAL YANG JANGAN DILAKUKAN (THE DON'TS) ---
-        with st.container(border=True):
-            st.markdown("🚫 **YANG JANGAN DILAKUKAN (BIAR SAMA-SAMA ENAK)**")
-            st.write("- **Toxic Vibes**: No drama, no gibah. Kita fokus jadi tim konten terkuat.")
-            st.write("- **Ghosting**: Izin itu penting. Jangan tiba-tiba ngilang pas lagi dibutuhin.")
-            st.write("- **Mager Parah**: Inget, setor cuma 1 video itu statusnya **HARI LEMAH**.")
-            st.write("- **Password Hunter**: Akun premium dipake bareng, dilarang ganti password sendiri!")
-
-        st.write("")
-
-        # --- CARD 4: KONSEKUENSI SANTAI TAPI TEGAS ---
-        with st.container(border=True):
-            st.error("🚨 **POTONGAN HARI LEMAH**")
-            st.write("""
-            Kalau performa kamu drop (cuma setor 1 video ACC/hari), otomatis sistem hitung sebagai **HARI LEMAH** (Potongan Rp 1.000.000). 
-            Aturan ini dibuat biar adil buat temen-temen kamu yang berjuang bikin konten keren setiap hari. Yuk, saling support!
-            """)
-
-        st.write("")
-        st.markdown(f"> *'Di Pintar Media, kita keluarga. Tapi keluarga yang profesional ya!'* — **Dian**")
+        if st.button(f"📄 DOWNLOAD / PRINT PDF PERATURAN", use_container_width=True):
+            html_with_print = html_master_pdf + "<script>window.print();</script>"
+            st.components.v1.html(html_with_print, height=0)
 
     with t5:
         st.write("")
@@ -3332,6 +3365,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
