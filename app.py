@@ -2615,33 +2615,33 @@ def tampilkan_area_staf():
                         <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 250px; margin-bottom: 5px;">
                         <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; padding: 2px 0; margin-top: 10px;"></div>
                         <br>
-                        <h3 style="margin: 0; font-size: 18px; color: #333; letter-spacing: 1px;">MODUL PANDUAN PRODUKSI</h3>
-                        <span style="font-size: 12px; color: #666;">NOMOR: 001/MODUL-HQ/PINTARMEDIA/III/2026</span>
+                        <h3 style="margin: 0; font-size: 18px; color: #333; letter-spacing: 1px;">PANDUAN STRUKTUR KONTEN AI</h3>
+                        <span style="font-size: 12px; color: #666;">NOMOR: 001/PANDUAN-HQ/PINTARMEDIA/III/2026</span>
                     </center>
                     <br><br>
 
                     <div style="margin-bottom: 40px; border-left: 5px solid #d32f2f; padding-left: 20px;">
-                        <b style="font-size: 18px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL UNDERDOG (REVENGE)</b><br><br>
+                        <b style="font-size: 18px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL ( Direndahkan -> Balas Dendam )</b><br><br>
                         
-                        <b>A. Bagian Awal (The Hook - Penindasan)</b><br>
-                        Tampilkan adegan di mana karakter utama (Udin atau Tung) sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya.<br>
+                        <b>A. Bagian Awal (Hook - Penindasan)</b><br>
+                        Tampilkan adegan di mana karakter utama sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya.<br>
                         <i><b>Instruksi Visual:</b> Ekspresi AI wajib terlihat sangat sedih, tertekan, atau marah besar. Lawan main harus terlihat angkuh/sombong.</i><br>
-                        <i><b>Tujuan:</b> Memancing amarah dan rasa kasihan penonton dalam 5 detik pertama agar mereka tidak scroll video.</i><br><br>
+                        <i><b>Tujuan:</b> Memancing amarah dan rasa kasihan penonton dalam 15 detik pertama agar mereka tidak scroll video.</i><br><br>
 
-                        <b>B. Bagian Transisi (The Turning Point - Titik Balik)</b><br>
-                        Momen di mana karakter memutuskan untuk berhenti menangis dan mulai bangkit. Tampilkan adegan karakter menghapus air mata atau menatap masa depan dengan tekad kuat.<br>
-                        <i><b>Instruksi Visual:</b> Perubahan ekspresi dari sedih menjadi fokus/serius. Mulai melakukan aksi nyata (belajar, berlatih, atau memungut modal pertama).</i><br><br>
+                        <b>B. Bagian Transisi ( Titik Balik)</b><br>
+                        Momen di mana misalnya, karakter utama memutuskan untuk mulai bangkit. Tampilkan adegan karakter menatap masa depan dengan tekad kuat.<br>
+                        <i><b>Instruksi Visual:</b> Perubahan ekspresi dari sedih menjadi fokus/serius. Mulai melakukan aksi nyata (belajar, berlatih, bekerja, atau menemukan kekuatan/keajaiban).</i><br><br>
 
-                        <b>C. Bagian Tengah (The Struggle - Proses & Dukungan)</b><br>
+                        <b>C. Bagian Tengah (Proses & Dukungan)</b><br>
                         Tampilkan proses perjuangan karakter yang tidak instan. Di sini kita masukkan elemen Emotional Investment dari penonton.<br>
                         <i><b>Instruksi Visual:</b> Tampilkan 2-3 adegan progresif. Misal: Awalnya memungut sampah ➔ Mulai berjualan kecil ➔ Mulai sukses.</i><br>
-                        <i><b>Interaksi Penonton:</b> Masukkan ajakan di tengah proses ini: "Udin sedang berusaha keras bangkit, bantu kasih Like yuk agar dia lebih semangat!". Penonton merasa kesuksesan karakter adalah berkat bantuan mereka.</i><br><br>
+                        <i><b>Interaksi Penonton:</b> Masukkan ajakan di tengah proses ini: "Misalnya: bantu Like dan Subscribe guys.. biar lebih semangat lagi!". Penonton merasa kesuksesan karakter adalah berkat bantuan mereka.</i><br><br>
 
-                        <b>D. Bagian Klimaks (The Evolution - Perubahan Signifikan)</b><br>
+                        <b>D. Bagian Klimaks (Perubahan Signifikan)</b><br>
                         Tampilkan kembalinya si karakter utama dengan perubahan yang sangat drastis dan mengejutkan.<br>
-                        <i><b>Instruksi Visual:</b> Penampilan harus berubah 180 derajat (Pakaian mewah, kendaraan bagus, atau aura yang sangat berwibawa/kuat). Ekspresi AI wajib terlihat puas, bangga, dan tenang.</i><br><br>
+                        <i><b>Instruksi Visual:</b> Penampilan harus berubah 180 derajat (Pakaian mewah, kendaraan bagus, atau aura yang sangat berwibawa/kuat). Ekspresi wajib terlihat puas, bangga, dan tenang.</i><br><br>
 
-                        <b>E. Bagian Akhir (The Satisfaction - Pembuktian)</b><br>
+                        <b>E. Bagian Akhir (Ending - Pembuktian)</b><br>
                         Tampilkan konfrontasi terakhir dengan orang yang dulu menghinanya. Orang tersebut terlihat malu, menyesal, atau ketakutan.<br>
                         <i><b>Instruksi Visual:</b> Karakter utama tidak perlu membalas dengan kemarahan, cukup dengan tindakan elegan atau senyum kemenangan yang "mahal".</i><br>
                         <i><b>Tujuan:</b> Memberikan kepuasan maksimal (Satisfying Ending) kepada penonton.</i>
@@ -2651,18 +2651,18 @@ def tampilkan_area_staf():
                         <b style="font-size: 18px; color: #1976d2;">⚔️ 2. ALUR: THE BATTLE / VS (PLOT TWIST ENDING)</b><br><br>
                         
                         <b>A. Bagian Awal (The Hook - Konfrontasi Panas)</b><br>
-                        Tampilkan dua karakter atau lebih (Udin vs Tung atau karakter baru) dalam posisi berhadapan dengan tensi tinggi. Bisa berupa persiapan lomba balap, kompetisi kekuatan, atau perdebatan sengit.<br>
+                        Tampilkan dua karakter atau lebih dalam posisi berhadapan dengan tensi tinggi. Bisa berupa persiapan lomba balap, kompetisi kekuatan, atau perdebatan sengit.<br>
                         <i><b>Instruksi Visual:</b> Zoom-in ke arah mata karakter (eye-to-eye). Gunakan filter warna yang kontras untuk membedakan dua kubu. Ekspresi harus terlihat ambisius dan tak mau kalah.</i><br>
                         <i><b>Tujuan:</b> Memaksa penonton untuk langsung memihak salah satu jagoan (Engagement instan).</i><br><br>
 
-                        <b>B. Bagian Dinamika (The Duel - Adu Kekuatan)</b><br>
-                        Tampilkan cuplikan-cuplikan pertandingan yang intens. Gunakan transisi cepat dan efek suara (SFX) yang menggelegar untuk setiap benturan atau aksi.<br>
-                        <i><b>Instruksi Visual:</b> Fast-cut editing. Tampilkan pergantian dominasi, sebentar Udin yang memimpin, sebentar kemudian Tung yang membalas. Jangan buat satu karakter terlihat menang terlalu mudah di sini.</i><br><br>
+                        <b>B. Bagian Dinamika (Adu Kekuatan)</b><br>
+                        Tampilkan cuplikan-cuplikan pertandingan yang intens. Gunakan transisi cepat dan efek suara (SFX) untuk setiap benturan atau aksi.<br>
+                        <i><b>Instruksi Visual:</b> Fast-cut editing. Tampilkan pergantian dominasi, sebentar si A yang memimpin, sebentar kemudian si B yang membalas. Jangan buat satu karakter terlihat menang terlalu mudah di sini.</i><br><br>
 
-                        <b>C. Bagian Tengah (The Critical Moment - Dukungan Massa)</b><br>
+                        <b>C. Bagian Tengah (The Critical Moment)</b><br>
                         Momen di mana pertandingan mencapai puncaknya atau ada karakter yang hampir tumbang. Ini adalah waktu terbaik untuk memanggil dukungan penonton.<br>
                         <i><b>Instruksi Visual:</b> Slow motion pada momen krusial. Karakter terlihat mulai kelelahan tapi tetap berusaha.</i><br>
-                        <i><b>Interaksi Penonton:</b> Munculkan teks polling visual: "Ketik 1 untuk dukung Udin, Ketik 2 untuk dukung Tung!". Buat penonton merasa suara mereka menentukan hasil duel.</i><br><br>
+                        <i><b>Interaksi Penonton:</b> Munculkan bantuan like dan subscribe atau teks polling visual: "Ketik 1 untuk dukung Udin, Ketik 2 untuk dukung Tung!". Buat penonton merasa suara mereka menentukan hasil duel.</i><br><br>
 
                         <b>D. Bagian Klimaks (The Plot Twist - Kejutan Tak Terduga)</b><br>
                         Ini adalah inti dari alur Battle. Saat penonton mengira salah satu akan menang, hadirkan kejadian yang di luar nalar atau tidak terduga.<br>
@@ -2672,7 +2672,7 @@ def tampilkan_area_staf():
                         <b>E. Bagian Akhir (The Retention - Pertanyaan Terbuka)</b><br>
                         Tampilkan hasil akhir yang memicu diskusi panjang di kolom komentar.<br>
                         <i><b>Instruksi Visual:</b> Pemenang memberikan pesan singkat atau tatapan menantang ke arah kamera.</i><br>
-                        <i><b>Tujuan:</b> Memancing komentar perdebatan seperti "Harusnya Tung yang menang!" atau "Lanjut part 2, balas dendam!".</i>
+                        <i><b>Tujuan:</b> Memancing komentar perdebatan seperti "Harusnya si A yang menang!" atau "Lanjut part 2, balas dendam!".</i>
                     </div>
 
                     <div style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px dashed #666;">
@@ -2684,7 +2684,7 @@ def tampilkan_area_staf():
                     </div>
 
                     <div style="margin-top: 50px; font-size: 11px; text-align: center; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
-                        📌 Dokumen Produksi - Update Terakhir: 1 Maret 2026. Panduan bersifat dinamis dan dapat direvisi sesuai kebutuhan kantor.
+                        📌 Update Terakhir: 1 Maret 2026. Panduan bersifat dinamis dan dapat direvisi sesuai kebutuhan.
                     </div>
                 </div>
                 """
@@ -3501,6 +3501,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
