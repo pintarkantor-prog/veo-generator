@@ -1401,48 +1401,48 @@ def tampilkan_tugas_kerja():
     except Exception as e:
         st.error(f"❌ Error Tampilan: {e}")
 
-    # --- 3. PANEL ADMIN (MODIFIKASI AMAN) ---
-    if user_level == "OWNER":
+    # --- 3. PANEL ADMIN (Taruh di Sini!) ---
+    if user_level == "OWNER": # <--- Cuma Dian yang punya akses kirim tugas
+        
+        # Ambil data staff untuk dropdown
         st_raw.columns = [str(c).strip().upper() for c in st_raw.columns]
         staf_options = st_raw['NAMA'].unique().tolist()
         
-        with st.expander("✨ **KIRIM TUGAS / VALIDASI QC**", expanded=False):
+        with st.expander("✨ **KIRIM TUGAS BARU**", expanded=False):
             c2, c1 = st.columns([2, 1]) 
             with c2: 
-                isi_tugas = st.text_area("Instruksi / Catatan QC", height=150, placeholder="Tulis detail di sini...", key="input_tugas_admin")
-                # SAKLAR PROJECT BARU: Biar lo bisa ganti-ganti target sesuka hati
-                mode_project = st.radio("Tipe Project:", ["High Quality (AI)", "Konten Ringan"], horizontal=True)
+                isi_tugas = st.text_area("Instruksi Tugas", height=150, placeholder="Tulis instruksi video di sini...", key="input_tugas_admin")
             with c1: 
                 staf_tujuan = st.selectbox("Pilih Editor", staf_options)
-                # Input jumlah video khusus buat project ringan
-                jml_acc = st.number_input("Jumlah Video (Jika Project Ringan):", min_value=1, value=1)
                 pake_wa = st.checkbox("Kirim Notif WA?", value=True)
             
-            if st.button("🚀 EKSEKUSI DATA PRODUKSI", use_container_width=True):
+            if st.button("🚀 KIRIM KE EDITOR", use_container_width=True):
                 if isi_tugas:
-                    # LOGIKA PENERJEMAH SP (Sesuai image_124ba3.png)
-                    if mode_project == "High Quality (AI)":
-                        # Standar 1 video
-                        status_sp = "Hari Kurang Produktif" if jml_acc <= 1 else "Aman"
-                    else:
-                        # Standar Massal (Ganti 20 sesuai kemauan lo)
-                        status_sp = "Hari Kurang Produktif" if jml_acc < 20 else "Aman"
-                    
-                    # DATA YANG DIKIRIM TETAP SINKRON KE SUPABASE
                     t_id = f"ID{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
                     tgl_skrg = sekarang.strftime("%Y-%m-%d")
                     
+                    # --- 1. KIRIM KE SUPABASE (Biar Radar Langsung Update) ---
+                    # Sesuaikan key dengan nama kolom asli di DB lo (Staf, Deadline, dll)
                     data_tugas_supabase = {
                         "ID": t_id,
                         "Staf": staf_tujuan,
                         "Deadline": tgl_skrg,
-                        "Instruksi": f"[{mode_project}] {isi_tugas}",
-                        "Status": "FINISH", # Langsung finish biar radar update
-                        "Keterangan": status_sp # Kolom ini yang dibaca Radar buat SP
+                        "Instruksi": isi_tugas,
+                        "Status": "PROSES"
                     }
-                    
                     supabase.table("Tugas").insert(data_tugas_supabase).execute()
-                    st.success(f"✅ Status {staf_tujuan} Tercatat: {status_sp}")
+                    
+                    # --- 2. KIRIM KE GSHEET (Backup Kesayangan Lo) ---
+                    sheet_tugas.append_row([t_id, staf_tujuan, tgl_skrg, isi_tugas, "PROSES", "-", "", ""])
+                    
+                    # --- 3. LOG & NOTIF ---
+                    tambah_log(st.session_state.user_aktif, f"Kirim Tugas Baru {t_id}")
+                    
+                    if pake_wa:
+                        kirim_notif_wa(f"✨ *INFO TUGAS*\n\n👤 *Untuk:* {staf_tujuan.upper()}\n🆔 *ID:* {t_id}\n📝 *Detail:* {isi_tugas[:30]}...")
+                    
+                    st.success("✅ Terkirim ke Supabase & GSheet!")
+                    time.sleep(1)
                     st.rerun()
                 else:
                     st.error("Isi dulu instruksinya, Bos!")
@@ -3242,35 +3242,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
