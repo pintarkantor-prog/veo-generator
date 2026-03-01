@@ -2829,9 +2829,9 @@ def tampilkan_area_staf():
             col1, col2 = st.columns(2)
             with col1:
                 st.info("🛡️ **MASA PROTEKSI**")
-                st.write("Sistem SP otomatis OFF jika Staff izin (sakit/agenda lain), kendala teknis kantor, hari libur")
+                st.write("Sistem SP otomatis OFF jika Staff izin (sakit/agenda lain), kendala teknis kantor dan hari libur")
             with col2:
-                st.warning("📉 **HARI LEMAH**")
+                st.warning("📉 **HARI LEMAH (KURANG PRODUKTIF)**")
                 st.write("Jika dalam satu hari hanya menyelesaikan **1 video**, hari tersebut dicatat sebagai 'Hari Lemah'.")
 
         st.write("")
@@ -3332,6 +3332,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
