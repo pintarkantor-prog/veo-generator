@@ -2963,12 +2963,90 @@ def tampilkan_area_staf():
                 html_with_print = html_master_pdf + "<script>window.print();</script>"
                 st.components.v1.html(html_with_print, height=0)
 
-        st.write("")
-        st.markdown(f"> *'Profesionalisme adalah kunci pertumbuhan kita bersama.'* — **{nama_lengkap}**")
+    # --- SURAT PERJANJIAN KERJA (SPK) RESMI ---
+        with st.expander("##### 📄 Draft Kontrak Kerja (Surat Perjanjian Kerja)", expanded=False):
+            
+            # Ambil nama staff dari session login
+            nama_staff = st.session_state.get('username', '___________________________').upper()
+            nama_direktur = "Dian Setya Wardana"
+            nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
 
-    with t5:
-        st.write("")
-        st.subheader("📝 Dokumen Kontrak Kerja")
+            html_kontrak_pdf = f"""
+            <div style="background: white; padding: 60px 80px; font-family: 'Arial', sans-serif; color: black; line-height: 1.8; border: 1px solid #eee; margin-bottom: 20px;">
+                
+                <table style="width: 100%; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
+                    <tr>
+                        <td style="width: 20%; vertical-align: middle;">
+                            <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px;">
+                        </td>
+                        <td style="width: 80%; text-align: right; vertical-align: middle;">
+                            <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">PT Pintar Digital Kreasi</h1>
+                            <p style="margin: 0; font-size: 11px; color: #333;">Creative Content AI Specialist & Digital Media Production</p>
+                            <p style="margin: 0; font-size: 10px; color: #666;">SK KEMENKUMHAM: {nomor_ahu}</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <center>
+                    <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">SURAT PERJANJIAN KERJA</h2>
+                    <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">NOMOR: 002/SPK-PDK/III/2026</p>
+                </center>
+                
+                <br><br>
+
+                <div style="font-size: 13px; text-align: justify;">
+                    <p>Yang bertanda tangan di bawah ini:</p>
+                    
+                    <table style="width: 100%; margin-left: 20px; margin-bottom: 15px;">
+                        <tr><td style="width: 100px;">Nama</td><td>: <b>{nama_direktur}</b></td></tr>
+                        <tr><td>Jabatan</td><td>: Direktur Utama PT Pintar Digital Kreasi</td></tr>
+                    </table>
+                    
+                    <p>Dalam hal ini bertindak untuk dan atas nama PT Pintar Digital Kreasi, selanjutnya disebut sebagai <b>PIHAK PERTAMA (PENGUSAHA)</b>.</p>
+
+                    <table style="width: 100%; margin-left: 20px; margin-bottom: 15px;">
+                        <tr><td style="width: 100px;">Nama</td><td>: <b>{nama_staff}</b></td></tr>
+                        <tr><td>Posisi</td><td>: Staff Produksi Kreatif</td></tr>
+                    </table>
+                    
+                    <p>Dalam hal ini bertindak untuk dan atas nama diri sendiri, selanjutnya disebut sebagai <b>PIHAK KEDUA (KARYAWAN)</b>.</p>
+
+                    <p>Pada hari ini, Minggu, 1 Maret 2026, kedua belah pihak sepakat untuk mengadakan perjanjian kerja yang mengacu pada <b>Peraturan Perusahaan PT Pintar Digital Kreasi</b> dengan ketentuan sebagai berikut:</p>
+
+                    <p style="margin-top: 20px;"><b>PASAL 1: RUANG LINGKUP PEKERJAAN</b><br>
+                    PIHAK KEDUA berkewajiban melaksanakan tugas produksi sesuai dengan <b>SOP Metodologi 7 Bagian</b> yang telah ditetapkan oleh PIHAK PERTAMA.</p>
+
+                    <p style="margin-top: 20px;"><b>PASAL 2: UPAH & EVALUASI</b><br>
+                    PIHAK PERTAMA akan memberikan upah pada tanggal <b>1 s/d 3</b> setiap bulannya. PIHAK KEDUA menyatakan setuju atas ketentuan evaluasi <b>"Hari Lemah"</b> dan penyesuaian administratif sebesar <b>Rp 1.000.000</b> jika melanggar standar minimum produksi.</p>
+
+                    <p style="margin-top: 20px;"><b>PASAL 3: KERAHASIAAN ASET</b><br>
+                    PIHAK KEDUA wajib menjaga kerahasiaan naskah, alur cerita, dan seluruh akses akun premium milik PIHAK PERTAMA.</p>
+                </div>
+
+                <br><br><br><br>
+
+                <table style="width: 100%; text-align: center; font-size: 13px;">
+                    <tr>
+                        <td style="width: 50%;">
+                            <p><b>PIHAK KEDUA</b></p>
+                            <br><br><br><br><br>
+                            <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 180px;"><b>{nama_staff}</b></p>
+                        </td>
+                        <td style="width: 50%;">
+                            <p>Banyumas, 1 Maret 2026<br><b>PIHAK PERTAMA</b></p>
+                            <br><br><br><br><br>
+                            <p style="border-bottom: 1px solid #000; display: inline-block; min-width: 180px;"><b>{nama_direktur}</b></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            """
+            
+            st.components.v1.html(html_kontrak_pdf, height=1100, scrolling=True)
+            
+            if st.button(f"📄 DOWNLOAD KONTRAK KERJA - {nama_staff}", use_container_width=True):
+                html_with_print = html_kontrak_pdf + "<script>window.print();</script>"
+                st.components.v1.html(html_with_print, height=0)
         
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3380,6 +3458,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
