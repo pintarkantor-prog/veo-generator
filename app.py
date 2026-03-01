@@ -3019,6 +3019,7 @@ def tampilkan_area_staf():
             except:
                 pass
 
+        # --- 1. DEFINISI IDENTITAS DASAR ---
         staff_mapping = {
             "nissa": "NISSA PANGESTUNINGRUM",
             "lisa": "LISA ANGGRAENI",
@@ -3027,10 +3028,22 @@ def tampilkan_area_staf():
             "dian": "DIAN SETYA WARDANA"
         }
         
+        # Ambil Nama Staf
         staf_nama = staff_mapping.get(user_login, user_login.upper())
         nama_direktur = "DIAN SETYA WARDANA"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         last_update = "1 Maret 2026 | 23:59 WIB"
+
+        # --- 2. AMBIL GAJI DARI SUPABASE (SETELAH IDENTITAS SIAP) ---
+        gaji_pokok_staf = "0"
+        try:
+            res_staff = supabase.table("Staff").select("Gaji_Pokok").ilike("Nama", f"%{user_login}%").execute()
+            if res_staff.data:
+                val_gapok = res_staff.data[0].get('Gaji_Pokok', 0)
+                # Format ke ribuan
+                gaji_pokok_staf = "{:,}".format(int(val_gapok)).replace(",", ".")
+        except:
+            pass # Biar gak ngerusak dashboard kalau Supabase lagi ngadat
         
         # --- FIX DATETIME (Solusi UnboundLocalError) ---
         import pytz
@@ -3187,9 +3200,13 @@ def tampilkan_area_staf():
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Hak Upah & Bonus</p>
                 <div style="margin-left: 20px;">
-                    Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.<br>
-                    Bonus performa dihitung berdasarkan data validasi sistem (ACC Video dan atau Kinerja).
+                    1. <b>Upah Pokok (Base Salary):</b> Pihak Kedua berhak menerima upah pokok sebesar <b>Rp {gaji_pokok_staf}</b> per periode bulan berjalan.* <br>
+                    2. <b>Bonus Performa:</b> Dihitung berdasarkan data validasi sistem (ACC Video dan atau Kinerja).<br>
+                    3. <b>Waktu Pembayaran:</b> Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.
                 </div>
+                <p style="font-size: 10px; color: #666; font-style: italic; margin-left: 20px; margin-top: 5px;">
+                    *Upah pokok dapat disesuaikan secara proporsional berdasarkan jumlah kehadiran (Presensi) Pihak Kedua.
+                </p>
                 <p style="font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Pasal 5: Pajak Penghasilan (PPh)</p>
                 <div style="margin-left: 20px;">
                     Segala bentuk Pajak Penghasilan (PPh) yang timbul atas upah dan bonus yang diterima oleh Pihak Kedua adalah Tanggung Jawab Pribadi Pihak Kedua.<br>
@@ -3723,6 +3740,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
