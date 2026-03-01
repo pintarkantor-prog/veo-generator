@@ -3000,6 +3000,9 @@ def tampilkan_area_staf():
         
         # --- KONEKSI DATA USER ---
         user_login = st.session_state.get('user_aktif', 'tamu').lower()
+        # Pastikan level_aktif sudah didefinisikan sebelumnya, jika belum pakai ini:
+        level_aktif = st.session_state.get('level', 'STAFF').upper() 
+        
         staff_mapping = {
             "nissa": "NISSA PANGESTUNINGRUM",
             "lisa": "LISA ANGGRAENI",
@@ -3011,28 +3014,31 @@ def tampilkan_area_staf():
         staf_nama = staff_mapping.get(user_login, user_login.upper())
         nama_direktur = "DIAN SETYA WARDANA"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-        last_update = "1 Maret 2026 | 23:59 WIB" # Update manual jika ada revisi pasal
+        last_update = "1 Maret 2026 | 23:59 WIB"
         
+        # --- FIX DATETIME (Agar tidak UnboundLocalError) ---
         import pytz
         import datetime as dt 
+        import time
         
-        tz_wib = pytz.timezone('Asia/Jakarta')
-        now = dt.datetime.now(tz_wib) 
+        tz_jakarta = pytz.timezone('Asia/Jakarta')
+        # Panggil class datetime di dalam modul dt
+        now_fix = dt.datetime.now(tz_jakarta) 
         
-        bulan_sekarang = now.strftime("%m-%Y")
+        bulan_sekarang = now_fix.strftime("%m-%Y")
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
             st.markdown("### 📊 Rekap Tanda Tangan Staff")
             
-            # 1. Ambil data tanda tangan bulan ini
+            # 1. Ambil data tanda tangan dari Supabase
             all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
             signed_users = [row['username'] for row in all_signs.data]
             
-            daftar_staff = ["nissa", "lisa", "icha", "inggi"]
+            daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
             
             # 2. Tombol BOM WA (Pengumuman Grup)
-            belum_sign = [s.upper() for s in daftar_staff if s not in signed_users]
+            belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
             
             if belum_sign:
                 if st.button("📢 UMUMKAN DI GRUP (BOM)", use_container_width=True):
@@ -3049,11 +3055,11 @@ def tampilkan_area_staf():
                 st.write("") 
 
             # 3. Tabel Pantauan Ringkas
-            for s in daftar_staff:
-                col1, col2 = st.columns([3, 3])
-                with col1:
+            for s in daftar_staff_monitor:
+                c1, c2 = st.columns([3, 3])
+                with c1:
                     st.write(f"**{s.upper()}**")
-                with col2:
+                with c2:
                     if s in signed_users:
                         st.success("✅ SUDAH")
                     else:
@@ -3061,20 +3067,17 @@ def tampilkan_area_staf():
             
             st.write("---")
 
-        # --- LOGIKA KUNCI TANGGAL (FIX AGAR TIDAK BERUBAH) ---
+        # --- LOGIKA KUNCI TANGGAL ---
         check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
         
         if check_db.data:
-            # JIKA SUDAH TANDA TANGAN: Pakai data permanen
             is_signed = True
             tgl_hari_ini = check_db.data[0]['tgl_tanda_tangan']
             waktu_presisi = check_db.data[0]['waktu_presisi']
         else:
-            # JIKA BELUM TANDA TANGAN: Pakai waktu berjalan
             is_signed = False
-            tgl_hari_ini = now.strftime("%d %B %Y")
-            waktu_presisi = now.strftime("%H:%M:%S")
-
+            tgl_hari_ini = now_fix.strftime("%d %B %Y")
+            waktu_presisi = now_fix.strftime("%H:%M:%S")
         # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEXT NO CUT) ---
         html_kontrak_full = f"""
         <style>
@@ -3668,6 +3671,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
