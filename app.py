@@ -2966,8 +2966,8 @@ def tampilkan_area_staf():
     with t5:
         st.write("") 
         
-        # --- KONFIGURASI DATA OTOMATIS ---
-        user_login = st.session_state.get('username', 'STAFF').lower()
+        # --- KONEKSI DATA USER ---
+        user_login = st.session_state.get('username', 'tamu').lower()
         staff_mapping = {
             "nissa": "NISSA PANGESTUNINGRUM",
             "lisa": "LISA ANGGRAENI",
@@ -2983,16 +2983,19 @@ def tampilkan_area_staf():
         now = datetime.now()
         bulan_sekarang = now.strftime("%m-%Y")
         tgl_hari_ini = now.strftime("%d %B %Y")
-        last_update = "1 Maret 2026 | 23:59 WIB"
 
-        # Logika Signature Staff (Reset Bulanan)
+        # Logika Signature Bulanan
         is_signed = st.session_state.get(f"signed_{user_login}_{bulan_sekarang}", False)
+
+        # --- HEADER PREVIEW ---
+        st.subheader("📄 Preview & Pengesahan Kontrak Kerja")
+        st.info("Silakan tinjau seluruh pasal di bawah ini sebelum memberikan persetujuan digital.")
 
         # --- EXPANDER UTAMA ---
         with st.expander(f"📜 DIGITAL CONTRACT & PAKTA INTEGRITAS: {nama_staff_resmi}", expanded=True):
             
             # --- KONSTRUKSI HTML (FULL TEXT - NO CUT - TWIN T4) ---
-            html_kontrak_resmi = f"""
+            html_kontrak_preview = f"""
             <div style="background: white; padding: 60px 80px; font-family: 'Arial', sans-serif; color: black; line-height: 1.8; border: 1px solid #eee; margin-bottom: 20px;">
                 
                 <table style="width: 100%; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
@@ -3541,6 +3544,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
