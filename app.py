@@ -2760,7 +2760,7 @@ def tampilkan_area_staf():
                     value=3,
                     key="slider_editor_final"
                 )
-                st.caption("STANDAR KUALITAS: Hanya video dengan status **ACC/FINISH** yang masuk dalam perhitungan performa harian.")
+                st.caption("KETENTUAN: Project HQ: 1 video = 1 | Project Ringan: 15 video = 1")
                 
             # --- LOGIKA HITUNG EDITOR ---
             gapok_sim = 1500000
@@ -3334,6 +3334,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
