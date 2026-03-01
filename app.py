@@ -3200,7 +3200,7 @@ def tampilkan_area_staf():
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB IV: KOMPENSASI, PAJAK, & PERLINDUNGAN KESEHATAN</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 4: Hak Upah & Bonus</p>
                 <div style="margin-left: 20px;">
-                    1. <b>Upah Pokok (Base Salary):</b> Pihak Kedua berhak menerima upah pokok sebesar <b>Rp {gaji_pokok_staf}</b> per periode bulan berjalan.* <br>
+                    1. <b>Base Salary:</b> Pihak Kedua berhak menerima upah pokok sebesar <b>Rp {gaji_pokok_staf}</b> per periode bulan berjalan.* <br>
                     2. <b>Bonus Performa:</b> Dihitung berdasarkan data validasi sistem (ACC Video dan atau Kinerja).<br>
                     3. <b>Waktu Pembayaran:</b> Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.
                 </div>
@@ -3740,6 +3740,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
