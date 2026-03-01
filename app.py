@@ -2584,6 +2584,7 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
+            nama_user = st.session_state.get('username', 'Staff Editor')
             st.markdown(f"**Update Terakhir:** 1 Maret 2026")
             
             # --- I. STANDAR PRODUKSI UMUM (Tetap di Dashboard) ---
@@ -2605,59 +2606,48 @@ def tampilkan_area_staf():
                 st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
                 st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
 
-            # --- III. MODUL PANDUAN ALUR HQ (VERSI PRINT/PDF) ---
+            # --- III. MODUL PANDUAN (LANGSUNG TAMPILAN KERTAS PDF) ---
             st.markdown("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)")
-            st.info("Gunakan tombol di bawah untuk membuka **Tutorial & Blueprint Alur Cerita**. Editor wajib mengikuti urutan fase yang ada di dalam modul ini.")
             
-            # TOMBOL KHUSUS PRINT MODUL ALUR
-            if st.button("📑 BUKA MODUL & PRINT BLUEPRINT ALUR HQ (PDF)", use_container_width=True):
-                html_modul_alur = f"""
-                <div style="background: white; padding: 40px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; border: 1px solid #eee;">
-                    <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 150px;">
-                        <h2 style="margin: 5px 0;">PINTAR MEDIA - CREATIVE GUIDE</h2>
-                        <hr style="border: 1px solid black; margin: 15px 0;">
-                        <b style="font-size: 18px; text-decoration: underline;">BLUEPRINT & TUTORIAL ALUR KONTEN AI (HQ)</b><br>
-                        Lampiran SOP Produksi - Update: 1 Maret 2026
-                    </center>
-                    <br>
+            # Konten HTML yang akan tampil sebagai "Kertas" di dashboard & hasil print
+            html_konten_pdf = f"""
+            <div id="printArea" style="background: white; padding: 30px; font-family: 'Times New Roman', serif; color: black; border: 1px solid #ccc; line-height: 1.5;">
+                <center>
+                    <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px; margin-bottom: 10px;">
+                    <h2 style="margin: 0; font-size: 20px;">PT PINTAR DIGITAL KREASI</h2>
+                    <hr style="border: 1px solid black; margin: 10px 0;">
+                    <b style="font-size: 16px; text-decoration: underline;">BLUEPRINT ALUR KONTEN AI (HQ)</b><br>
+                    <small>Update: 1 Maret 2026</small>
+                </center>
+                <br>
+                <b style="font-size: 14px;">🔥 ALUR A: THE EMOTIONAL UNDERDOG (REVENGE)</b><br>
+                <b>Fase 1 - The Hook (Penindasan):</b> Adegan karakter (Udin/Tung) dihina atau diremehkan. <i>Wajib Visual: Ekspresi AI menangis/sedih (Close-up).</i><br>
+                <b>Fase 2 - Turning Point:</b> Momen karakter menghapus air mata dan mulai bangkit. <i>Wajib Musik: Berubah dari sedih ke nada penuh harapan.</i><br>
+                <b>Fase 3 - The Struggle (Engagement):</b> Montage proses perjuangan. <i>Wajib CTA: Selipkan ajakan "Bantu Like yuk agar Udin sukses!".</i><br>
+                <b>Fase 4 - The Evolution (Klimaks):</b> Perubahan drastis. Penampilan mewah, kendaraan bagus, atau aura berwibawa.<br>
+                <b>Fase 5 - Satisfaction (Ending):</b> Pembuktian di depan penindas. Penonton merasa puas karena ikut berjasa membantu karakter.<br><br>
 
-                    <div style="background: #f9f9f9; padding: 20px; border-left: 5px solid #ff4b4b; margin-bottom: 20px;">
-                        <b style="font-size: 16px;">🔥 ALUR A: THE EMOTIONAL UNDERDOG (REVENGE)</b><br>
-                        <i>Alur ini fokus pada investasi emosi penonton dari benci menjadi puas.</i>
-                        <ol>
-                            <li><b>FASE 1 - THE HOOK (0-5 detik):</b> Adegan penindasan. Karakter (Udin/Tung) dihina, diusir, atau diremehkan. <b>Wajib Visual:</b> Ekspresi AI menangis/sedih (Close-up).</li>
-                            <li><b>FASE 2 - TURNING POINT:</b> Momen karakter menghapus air mata dan mulai melakukan aksi kecil (bekerja/berlatih). <b>Wajib Musik:</b> Berubah dari sedih ke nada penuh harapan.</li>
-                            <li><b>FASE 3 - THE STRUGGLE (Tengah):</b> Montage proses perjuangan. <b>Wajib CTA:</b> Selipkan ajakan "Bantu Like yuk agar Udin sukses!".</li>
-                            <li><b>FASE 4 - THE EVOLUTION:</b> Perubahan drastis. Penampilan mewah, kendaraan bagus, atau aura berwibawa. <b>Wajib Visual:</b> Ekspresi AI tenang & tegas.</li>
-                            <li><b>FASE 5 - SATISFACTION (Ending):</b> Pembuktian di depan penindas. Penonton merasa puas karena ikut berjasa membantu karakter di Fase 3.</li>
-                        </ol>
-                    </div>
+                <b style="font-size: 14px;">⚔️ ALUR B: THE BATTLE / VS (PLOT TWIST)</b><br>
+                <b>Fase 1 - Confrontation:</b> Udin vs Tung berhadapan tajam.<br>
+                <b>F5ase 2 - The Challenge:</b> Pertandingan dimulai (Fast-cut editing).<br>
+                <b>Fase 3 - Momen Kritis:</b> Masukkan interaksi "Tim Udin (Like) vs Tim Tung (Komen)".<br>
+                <b>Fase 4 - The Plot Twist:</b> Hasil akhir yang tidak terduga.<br><br>
 
-                    <div style="background: #f9f9f9; padding: 20px; border-left: 5px solid #1f77b4; margin-bottom: 20px;">
-                        <b style="font-size: 16px;">⚔️ ALUR B: THE BATTLE / VS (PLOT TWIST)</b><br>
-                        <i>Alur persaingan yang memancing kubu pendukung di kolom komentar.</i>
-                        <ol>
-                            <li><b>FASE 1 - CONFRONTATION:</b> Udin dan Tung berhadapan langsung. Visual tatap mata tajam. Narasi menantang penonton: "Siapa jagoan kalian?".</li>
-                            <li><b>FASE 2 - THE CHALLENGE:</b> Pertandingan dimulai. Gunakan editing cepat (fast-cut) dan SFX yang tegang (suara jantung/angin).</li>
-                            <li><b>FASE 3 - MOMEN KRITIS:</b> Salah satu karakter hampir kalah. Masukkan interaksi: "Tekan Like buat Tim Udin, Komen buat Tim Tung!".</li>
-                            <li><b>FASE 4 - THE PLOT TWIST:</b> Akhir tak terduga. Pemenang bukan yang diprediksi di awal.</li>
-                            <li><b>FASE 5 - CLOSING:</b> Minta pendapat penonton tentang hasil pertandingan di kolom komentar.</li>
-                        </ol>
-                    </div>
+                <table style="width: 100%; text-align: center; font-size: 12px; margin-top: 20px;">
+                    <tr><td>Owner PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
+                    <tr style="height: 50px;"><td><b>DIAN</b></td><td><b>{nama_user}</b></td></tr>
+                </table>
+            </div>
+            """
 
-                    <table style="width: 100%; text-align: center; font-size: 12px; margin-top: 30px;">
-                        <tr><td>Owner PINTAR MEDIA,</td><td>Editor Production,</td></tr>
-                        <tr style="height: 70px;"><td><b>DIAN</b></td><td>..........................</td></tr>
-                    </table>
-                    <script>window.print();</script>
-                </div>
-                """
-                st.components.v1.html(html_modul_alur, height=1200, scrolling=True)
+            # Tampilkan "Kertas" di Dashboard
+            st.components.v1.html(html_konten_pdf, height=650, scrolling=True)
 
-            # --- IV. SANKSI (Tetap di Dashboard) ---
-            st.divider()
-            st.error("⚠️ **PERINGATAN**: Kelalaian terhadap SOP Produksi & Blueprint Alur akan memicu SP dan **DENDA ADMINISTRATIF Rp 1.000.000**.")
+            # Tombol Print yang manggil konten di atas
+            if st.button(f"🖨️ PREVIEW & PRINT MODUL ({nama_user})", use_container_width=True):
+                # Tambahin script print otomatis pas tombol diklik
+                html_with_print = html_konten_pdf + "<script>window.print();</script>"
+                st.components.v1.html(html_with_print, height=0)
     
         elif divisi_sop == "Staff Uploader":
             import datetime
@@ -3464,6 +3454,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
