@@ -2585,99 +2585,79 @@ def tampilkan_area_staf():
 
         if divisi_sop == "Staff Editor":
             st.markdown(f"**Update Terakhir:** 1 Maret 2026")
-            # --- I. STANDAR PRODUKSI UMUM ---
+            
+            # --- I. STANDAR PRODUKSI UMUM (Tetap di Dashboard) ---
             st.markdown("##### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
-                st.success("**Poin ini adalah pondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Owner berhak menolak setoran video.**")
+                st.success("**Poin ini adalah fondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Owner berhak menolak setoran video.**")
                 st.write("• **Kualitas Visual**: Minimal 1080p Full HD.")
                 st.write("• **Aspect Ratio**: Format 9:16 (1080x1920).")
                 st.write("• **Durasi**: Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler).")
                 st.write("• **Audio & SFX**: Wajib Copyright-Free. Sangat direkomendasikan menggunakan musik dari YouTube Audio Library.")
-                st.write("• **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4.")
+                st.write("• **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4**")
 
-            # --- II. KETENTUAN UNIT & POIN ---
+            # --- II. KETENTUAN UNIT & POIN (Tetap di Dashboard) ---
             st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Aturan ini dibuat agar beban kerja adil bagi semua staf (HQ vs Ringan).**")
-                st.write("• **PROJECT HQ**: Karena tingkat kesulitan tinggi, 1 Link GDrive berisi 1 Video dihitung **1 Poin**.")
-                st.write("• **PROJECT RINGAN**: Karena pengerjaan lebih cepat, 1 Link GDrive wajib berisi minimal 15 Video untuk dihitung **1 Poin**.")
-                st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis sebagai apresiasi kehadiran.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
+                st.write("• **PROJECT HQ**: 1 Link GDrive berisi 1 Video = **1 Poin**.")
+                st.write("• **PROJECT RINGAN**: 1 Link GDrive berisi minimal 15 Video = **1 Poin**.")
+                st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
+                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
 
-            # --- III. PANDUAN ALUR HQ ---
-            st.markdown("##### 📜 III. PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)")
-            with st.expander("Gunakan alur ini sebagai kerangka cerita agar video punya 'nyawa' dan retention tinggi", expanded=False):
-                st.markdown("###### 🔥 1. ALUR: REVENGE (Direndahkan -> Balas Dendam)")
-                st.write("• **Bagian Awal (Hook)**: Tampilkan adegan di mana karakter utama sedang dihina, diusir, atau diremehkan oleh karakter lain karena kondisi fisiknya, kemiskinannya, atau kelemahannya. Ekspresi AI wajib terlihat sangat sedih, tertekan, atau marah besar.")
-                st.write("• **Bagian Tengah (Proses)**: Tampilkan momen perubahan karakter. Misalnya karakter mulai belajar, berlatih keras, bekerja, atau menemukan kekuatan/keajaiban.")
-                st.write("• **Bagian Akhir (Ending)**: Karakter utama kembali dengan penampilan yang jauh lebih baik, mewah, atau kuat, lalu membalas perlakuan orang yang dulu merendahkannya.")
-
-                st.markdown("###### 🏁 2. ALUR: ABSURD RACE (Lomba Konyol -> Interaktif CTA)")
-                st.write("• **Bagian Awal (Hook)**: Tampilkan persiapan lomba konyol (Udin vs Tung). Buat visual seaneh mungkin (Contoh: Balap kursi kantor).")
-                st.write("• **Bagian Tengah (Dinamika)**: Rintangan konyol selama lomba dengan Sound Effect lucu seperti suara jatuh atau tabrakan.")
-                st.write("• **Bagian Akhir (Ending)**: Berikan Plot Twist atau kejutan siapa yang akhirnya menang secara tak terduga.")
-
-                st.markdown("#### ⚔️ 3. ALUR: THE BATTLE / VS (Adu Kekuatan -> Plot Twist Ending)")
-                st.write("• **Bagian Awal (Hook)**: Konfrontasi langsung Udin vs Tung. Visual adu tatap mata tajam. Narasi menantang penonton.")
-                st.write("• **Bagian Tengah (Dinamika)**: Momen kritis pertandingan. Gunakan SFX tegang (jantung berdegup) dan editing fast-cut.")
-                st.write("• **Bagian Akhir (Ending)**: Kejutan akhir cerita (Plot Twist). Tutup dengan pertanyaan interaktif (Pilih Tim Udin atau Tung).")
-
-            # --- IV. CTA & SANKSI ---
-            st.markdown("### 📢 IV. PANDUAN INTERAKSI (CTA) & SANKSI")
-            with st.container(border=True):
-                st.write("• **Penempatan CTA**: Selipkan ajakan Like/Komen/Subs di tengah video atau di akhir setelah cerita selesai.")
-                st.write("• **Contoh**: 'Ketik LANJUT buat part 2!', 'Apa yang bakal lo lakuin?', 'Bantu Subscribe dsb'.")
-                st.error("⚠️ **PERINGATAN**: Kelalaian berulang akan memicu SP dan **DENDA ADMINISTRATIF Rp 1.000.000**.")
-
-            # --- TOMBOL PRINT (UTUH & MIRRORING) ---
-            if st.button("🖨️ PREVIEW PANDUAN DAN SOP KERJA (PDF)", use_container_width=True):
-                html_print_fix = f"""
-                <div style="background: white; padding: 40px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; text-align: justify; border: 1px solid #eee;">
+            # --- III. MODUL PANDUAN ALUR HQ (VERSI PRINT/PDF) ---
+            st.markdown("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)")
+            st.info("Gunakan tombol di bawah untuk membuka **Tutorial & Blueprint Alur Cerita**. Editor wajib mengikuti urutan fase yang ada di dalam modul ini.")
+            
+            # TOMBOL KHUSUS PRINT MODUL ALUR
+            if st.button("📑 BUKA MODUL & PRINT BLUEPRINT ALUR HQ (PDF)", use_container_width=True):
+                html_modul_alur = f"""
+                <div style="background: white; padding: 40px; font-family: 'Times New Roman', serif; color: black; line-height: 1.6; border: 1px solid #eee;">
                     <center>
                         <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 150px;">
-                        <h2 style="margin: 5px 0;">PT PINTAR DIGITAL KREASI</h2>
+                        <h2 style="margin: 5px 0;">PINTAR MEDIA - CREATIVE GUIDE</h2>
                         <hr style="border: 1px solid black; margin: 15px 0;">
-                        <b style="font-size: 16px;">PANDUAN DAN SOP KERJA</b><br>
-                        Versi PDF/Print - Update: {tgl_terbit}
+                        <b style="font-size: 18px; text-decoration: underline;">BLUEPRINT & TUTORIAL ALUR KONTEN AI (HQ)</b><br>
+                        Lampiran SOP Produksi - Update: 1 Maret 2026
                     </center>
                     <br>
-                    <b>I. STANDAR PRODUKSI UMUM (WAJIB BAGI SEMUA EDITOR)</b><br>
-                    • Kualitas Visual: Minimal 1080p Full HD. Video wajib tajam dan tidak pecah.<br>
-                    • Rasio & Safe Zone: Format 9:16 (Shorts). Pastikan elemen penting tidak tertutup ikon YouTube.<br>
-                    • Durasi: Minimal 60 detik (Padat, no filler).<br>
-                    • Audio & SFX: Wajib Copyright-Free & Penggunaan SFX aktif.<br>
-                    • Backup & Penamaan: Simpan aset mentah min. 3 hari. Format: TGL_NAMA_JUDUL.mp4.<br><br>
 
-                    <b>II. KETENTUAN UNIT KERJA & SISTEM POIN RADAR</b><br>
-                    <b>1. Penyetaraan Unit Setoran (Weighting System):</b><br>
-                    • PROJECT HQ: 1 Link GDrive berisi 1 Video berkualitas tinggi = 1 Poin.<br>
-                    • PROJECT RINGAN: 1 Link GDrive berisi minimal 10 Video = 1 Poin.<br><br>
-                    <b>2. Target Harian & Status Radar (SP):</b><br>
-                    • Setiap Editor wajib mencapai minimal 2 Poin per hari (Status Radar Aman).<br>
-                    • Kegagalan mencapai target memicu status 'Hari Kurang Produktif' dan akumulasi SP.<br><br>
-                    <b>3. Skema Bonus Otomatis (Insentif):</b><br>
-                    • Poin ke-3 (Bonus Absensi): Bonus Rp 30.000 cair otomatis.<br>
-                    • Poin ke-5 & Seterusnya: Bonus tambahan Rp 30.000 per poin produktivitas.<br><br>
-
-                    <b>III. PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)</b><br>
-                    <b>1. ALUR REVENGE:</b> Diawali karakter direndahkan, diikuti proses perubahan dinamis, diakhiri balas dendam yang puas.<br>
-                    <b>2. ALUR ABSURD RACE:</b> Lomba aneh dengan rintangan tak terduga dan SFX komedi, diakhiri Plot Twist pemenang.<br>
-                    <b>3. ALUR THE BATTLE:</b> Konfrontasi serius dua karakter dengan tensi tinggi (SFX tegang) dan hasil mengejutkan.<br><br>
-
-                    <b>IV. SANKSI & PELANGGARAN</b><br>
-                    Kelalaian memicu Surat Peringatan (SP) dan <b>DENDA ADMINISTRATIF Rp 1.000.000</b>.<br><br>
-
-                    <table style="width: 100%; text-align: center; font-size: 12px;">
-                        <tr><td>Pimpinan PINTAR MEDIA,</td><td>Diterima Oleh,</td></tr>
-                        <tr style="height: 60px;"><td><b>DIAN (OWNER)</b></td><td>..........................</td></tr>
-                    </table>
-                    <div style="margin-top: 20px; border: 1px dashed black; padding: 10px; font-size: 10px; text-align: center; background: #f9f9f9;">
-                        📌 Dokumen ini dibuat pada <b>{tgl_terbit}</b> dan dapat direvisi sewaktu-waktu.
+                    <div style="background: #f9f9f9; padding: 20px; border-left: 5px solid #ff4b4b; margin-bottom: 20px;">
+                        <b style="font-size: 16px;">🔥 ALUR A: THE EMOTIONAL UNDERDOG (REVENGE)</b><br>
+                        <i>Alur ini fokus pada investasi emosi penonton dari benci menjadi puas.</i>
+                        <ol>
+                            <li><b>FASE 1 - THE HOOK (0-5 detik):</b> Adegan penindasan. Karakter (Udin/Tung) dihina, diusir, atau diremehkan. <b>Wajib Visual:</b> Ekspresi AI menangis/sedih (Close-up).</li>
+                            <li><b>FASE 2 - TURNING POINT:</b> Momen karakter menghapus air mata dan mulai melakukan aksi kecil (bekerja/berlatih). <b>Wajib Musik:</b> Berubah dari sedih ke nada penuh harapan.</li>
+                            <li><b>FASE 3 - THE STRUGGLE (Tengah):</b> Montage proses perjuangan. <b>Wajib CTA:</b> Selipkan ajakan "Bantu Like yuk agar Udin sukses!".</li>
+                            <li><b>FASE 4 - THE EVOLUTION:</b> Perubahan drastis. Penampilan mewah, kendaraan bagus, atau aura berwibawa. <b>Wajib Visual:</b> Ekspresi AI tenang & tegas.</li>
+                            <li><b>FASE 5 - SATISFACTION (Ending):</b> Pembuktian di depan penindas. Penonton merasa puas karena ikut berjasa membantu karakter di Fase 3.</li>
+                        </ol>
                     </div>
+
+                    <div style="background: #f9f9f9; padding: 20px; border-left: 5px solid #1f77b4; margin-bottom: 20px;">
+                        <b style="font-size: 16px;">⚔️ ALUR B: THE BATTLE / VS (PLOT TWIST)</b><br>
+                        <i>Alur persaingan yang memancing kubu pendukung di kolom komentar.</i>
+                        <ol>
+                            <li><b>FASE 1 - CONFRONTATION:</b> Udin dan Tung berhadapan langsung. Visual tatap mata tajam. Narasi menantang penonton: "Siapa jagoan kalian?".</li>
+                            <li><b>FASE 2 - THE CHALLENGE:</b> Pertandingan dimulai. Gunakan editing cepat (fast-cut) dan SFX yang tegang (suara jantung/angin).</li>
+                            <li><b>FASE 3 - MOMEN KRITIS:</b> Salah satu karakter hampir kalah. Masukkan interaksi: "Tekan Like buat Tim Udin, Komen buat Tim Tung!".</li>
+                            <li><b>FASE 4 - THE PLOT TWIST:</b> Akhir tak terduga. Pemenang bukan yang diprediksi di awal.</li>
+                            <li><b>FASE 5 - CLOSING:</b> Minta pendapat penonton tentang hasil pertandingan di kolom komentar.</li>
+                        </ol>
+                    </div>
+
+                    <table style="width: 100%; text-align: center; font-size: 12px; margin-top: 30px;">
+                        <tr><td>Owner PINTAR MEDIA,</td><td>Editor Production,</td></tr>
+                        <tr style="height: 70px;"><td><b>DIAN</b></td><td>..........................</td></tr>
+                    </table>
                     <script>window.print();</script>
                 </div>
                 """
-                st.components.v1.html(html_print_fix, height=1200, scrolling=True)
+                st.components.v1.html(html_modul_alur, height=1200, scrolling=True)
+
+            # --- IV. SANKSI (Tetap di Dashboard) ---
+            st.divider()
+            st.error("⚠️ **PERINGATAN**: Kelalaian terhadap SOP Produksi & Blueprint Alur akan memicu SP dan **DENDA ADMINISTRATIF Rp 1.000.000**.")
     
         elif divisi_sop == "Staff Uploader":
             import datetime
@@ -3484,6 +3464,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
