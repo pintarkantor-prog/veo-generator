@@ -2868,44 +2868,35 @@ def tampilkan_area_staf():
         st.write("")
         st.markdown("#### 🤝 Budaya Kerja & Aturan Main Pintar Media")
         
-        # --- CARD RINGKASAN VISUAL ---
-        with st.container(border=True):
-            c1, c2, c3 = st.columns(3)
-            with c1:
-                st.write("⏰ **JAM OPERASIONAL**")
-                st.write("08:30 - 16:30")
-            with c2:
-                st.write("💰 **GAJIAN**")
-                st.write("Tgl 1 - 3")
-            with c3:
-                st.write("🛡️ **SOP ALUR**")
-                st.write("Formula 7 Bagian")
-
-        # --- DOKUMEN MASTER PDF PREMIUM ---
+        # --- DOKUMEN MASTER PDF STANDAR SK RESMI ---
         nama_lengkap = "Dian Setya Wardana"
 
         html_master_pdf = f"""
-        <div style="background: white; padding: 60px 80px; font-family: 'Garamond', serif; color: black; line-height: 1.6; border: 1px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative;">
+        <div style="background: white; padding: 40px 60px; font-family: 'Arial', sans-serif; color: black; line-height: 1.5; border: 1px solid #ddd; margin-bottom: 20px;">
             
-            <table style="width: 100%; border-bottom: 4px double #000; padding-bottom: 20px; margin-bottom: 30px;">
+            <table style="width: 100%; border-bottom: 3px solid #000; margin-bottom: 2px;">
                 <tr>
-                    <td style="width: 25%;">
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px;">
+                    <td style="width: 15%; text-align: center; padding-bottom: 10px;">
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 120px;">
                     </td>
-                    <td style="text-align: right; vertical-align: bottom;">
-                        <h2 style="margin: 0; font-family: 'Arial Black', sans-serif; letter-spacing: 2px; color: #1a1a1a;">PINTAR MEDIA</h2>
-                        <span style="font-size: 12px; font-style: italic; color: #444;">Creative AI Solutions & Digital Media House</span><br>
-                        <span style="font-size: 10px; color: #666;">PT PINTAR DIGITAL KREASI | Banyumas, Jawa Tengah</span>
+                    <td style="width: 85%; text-align: center; padding-bottom: 10px;">
+                        <h1 style="margin: 0; font-size: 24px; letter-spacing: 2px;">PT PINTAR DIGITAL KREASI</h1>
+                        <p style="margin: 5px 0 0 0; font-size: 12px; font-weight: bold;">CREATIVE CONTENT AI SPECIALIST & DIGITAL MEDIA PRODUCTION</p>
+                        <p style="margin: 2px 0 0 0; font-size: 11px;">Alamat: Banyumas, Jawa Tengah | Email: official@pintarmedia.com</p>
                     </td>
                 </tr>
             </table>
+            <div style="border-top: 1px solid #000; margin-bottom: 25px;"></div>
             
             <center>
-                <h3 style="text-decoration: underline; margin-bottom: 5px; font-family: 'Arial', sans-serif; letter-spacing: 1px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h3>
-                <span style="font-size: 11px;">Nomor Dokumentasi Resmi: 001/LEGAL-PM/III/2026</span>
+                <h3 style="margin: 0; font-size: 16px; text-decoration: underline;">SURAT KEPUTUSAN DIREKSI</h3>
+                <p style="margin: 5px 0 0 0; font-size: 12px;">NOMOR: 001/SK-DIR/PDK/III/2026</p>
+                <br>
+                <h4 style="margin: 0; font-size: 14px;">TENTANG</h4>
+                <h4 style="margin: 5px 0 0 0; font-size: 14px; text-transform: uppercase;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL PROSEDUR (SOP)</h4>
             </center>
             
-            <div style="font-size: 14px; text-align: justify; margin-top: 30px; font-family: 'Times New Roman', serif;">
+            <div style="font-size: 12px; text-align: justify; margin-top: 30px; font-family: 'Arial', sans-serif;">
                 <p><b>I. KETENTUAN WAKTU KERJA & DISIPLIN</b><br>
                 <b>Jam Operasional:</b> Staff wajib menjalankan tugas di kantor pada pukul 08:30 s/d 16:30 WIB.<br>
                 <b>Waktu Istirahat:</b><br>
@@ -2944,38 +2935,36 @@ def tampilkan_area_staf():
 
             <br><br>
 
-            <div style="float: right; position: relative; width: 300px; text-align: center;">
-                <div style="font-size: 14px;">Banyumas, 1 Maret 2026</div>
-                <div style="font-weight: bold; margin-top: 5px;">Pimpinan PT Pintar Digital Kreasi</div>
-                
-                <div style="height: 100px; margin: 10px 0; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <div style="width: 80px; height: 80px; border: 2px solid #2e7d32; color: #2e7d32; border-radius: 5px; font-size: 10px; padding: 5px; font-weight: bold; text-transform: uppercase; transform: rotate(-15deg); position: absolute; left: 20px; opacity: 0.8;">
-                        E-MATERAI<br>RESMI<br>PINTAR MEDIA<br>D2026-X
-                    </div>
-                    <div style="font-family: 'Brush Script MT', cursive; font-size: 30px; color: #1a1a1a; z-index: 2;">{nama_lengkap}</div>
-                </div>
-                
-                <div style="border-bottom: 2px solid #000; display: inline-block; padding: 0 20px;"><b>{nama_lengkap}</b></div>
-                <div style="font-size: 12px; margin-top: 5px;">Founder & CEO</div>
-            </div>
-            <div style="clear: both;"></div>
-
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.03; font-size: 100px; font-weight: bold; pointer-events: none; width: 100%; text-align: center;">
-                PINTAR MEDIA OFFICIAL
-            </div>
+            <table style="width: 100%; margin-top: 20px;">
+                <tr>
+                    <td style="width: 60%;"></td>
+                    <td style="text-align: center;">
+                        <p style="margin: 0;">Banyumas, 1 Maret 2026</p>
+                        <p style="margin: 5px 0 60px 0; font-weight: bold;">Direktur Utama PT Pintar Digital Kreasi,</p>
+                        
+                        <div style="position: relative; display: inline-block;">
+                            <div style="width: 70px; height: 70px; border: 1px solid #1a5f7a; color: #1a5f7a; font-size: 8px; font-weight: bold; position: absolute; left: -80px; top: -20px; transform: rotate(-10deg); display: flex; align-items: center; justify-content: center; text-align: center; border-style: dashed;">
+                                E-MATERAI<br>SEPULUH RIBU<br>RUPIAH
+                            </div>
+                            <p style="margin: 0; font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold; border-bottom: 2px solid #000; padding: 0 10px;">{nama_lengkap}</p>
+                        </div>
+                        <p style="margin: 5px 0 0 0; font-size: 12px;">NIK. 20260301001</p>
+                    </td>
+                </tr>
+            </table>
         </div>
         """
 
         st.write("")
-        with st.expander("👁️ PRATINJAU DOKUMEN HUKUM (MASTER COPY)"):
+        with st.expander("👁️ Lihat Pratinjau SK Direksi (Resmi)"):
             st.components.v1.html(html_master_pdf, height=1000, scrolling=True)
 
-        if st.button(f"📄 GENERATE & PRINT OFFICIAL PDF", use_container_width=True):
+        if st.button(f"📄 DOWNLOAD / PRINT PDF RESMI", use_container_width=True):
             html_with_print = html_master_pdf + "<script>window.print();</script>"
             st.components.v1.html(html_with_print, height=0)
 
         st.write("")
-        st.markdown(f"> *'Profesionalisme adalah kunci pertumbuhan kita bersama.'* — **{nama_lengkap}**")
+        st.markdown(f"> *'Keputusan ini berlaku sejak tanggal ditetapkan.'* — **{nama_lengkap}**")
 
     with t5:
         st.write("")
@@ -3391,6 +3380,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
