@@ -2872,7 +2872,7 @@ def tampilkan_area_staf():
         with st.container(border=True):
             c1, c2, c3 = st.columns(3)
             with c1:
-                st.write("⏰ **JAM KERJA**")
+                st.write("⏰ **JAM OPERASIONAL**")
                 st.write("08:30 - 16:30")
             with c2:
                 st.write("💰 **GAJIAN**")
@@ -2881,22 +2881,31 @@ def tampilkan_area_staf():
                 st.write("🛡️ **SOP ALUR**")
                 st.write("Formula 7 Bagian")
 
-        # --- DOKUMEN MASTER PDF (Sesuai Teks Dian) ---
-        nama_user = st.session_state.get('username', 'STAFF')
+        # --- DOKUMEN MASTER PDF PREMIUM ---
+        nama_lengkap = "Dian Setya Wardana"
 
         html_master_pdf = f"""
-        <div style="background: white; padding: 50px; font-family: 'Times New Roman', Times, serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px;">
+        <div style="background: white; padding: 60px 80px; font-family: 'Garamond', serif; color: black; line-height: 1.6; border: 1px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative;">
+            
+            <table style="width: 100%; border-bottom: 4px double #000; padding-bottom: 20px; margin-bottom: 30px;">
+                <tr>
+                    <td style="width: 25%;">
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px;">
+                    </td>
+                    <td style="text-align: right; vertical-align: bottom;">
+                        <h2 style="margin: 0; font-family: 'Arial Black', sans-serif; letter-spacing: 2px; color: #1a1a1a;">PINTAR MEDIA</h2>
+                        <span style="font-size: 12px; font-style: italic; color: #444;">Creative AI Solutions & Digital Media House</span><br>
+                        <span style="font-size: 10px; color: #666;">PT PINTAR DIGITAL KREASI | Banyumas, Jawa Tengah</span>
+                    </td>
+                </tr>
+            </table>
+            
             <center>
-                <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 250px;">
-                <div style="border-top: 3px solid #000; border-bottom: 1px solid #000; padding: 2px 0; margin-top: 10px; font-weight: bold; font-size: 10px;">
-                    PT PINTAR DIGITAL KREASI - CREATIVE CONTENT AI SPECIALIST
-                </div>
-                <br>
-                <h3 style="text-decoration: underline; margin-bottom: 5px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h3>
-                <span style="font-size: 12px;">NOMOR: 001/SK-PM/III/2026</span>
+                <h3 style="text-decoration: underline; margin-bottom: 5px; font-family: 'Arial', sans-serif; letter-spacing: 1px;">PERATURAN PERUSAHAAN & STANDAR OPERASIONAL (SOP)</h3>
+                <span style="font-size: 11px;">Nomor Dokumentasi Resmi: 001/LEGAL-PM/III/2026</span>
             </center>
             
-            <div style="font-size: 13px; text-align: justify; margin-top: 20px;">
+            <div style="font-size: 14px; text-align: justify; margin-top: 30px; font-family: 'Times New Roman', serif;">
                 <p><b>I. KETENTUAN WAKTU KERJA & DISIPLIN</b><br>
                 <b>Jam Operasional:</b> Staff wajib menjalankan tugas di kantor pada pukul 08:30 s/d 16:30 WIB.<br>
                 <b>Waktu Istirahat:</b><br>
@@ -2928,28 +2937,45 @@ def tampilkan_area_staf():
                 <b>Kerahasiaan Intelektual:</b> Seluruh draf cerita, naskah, alur 7 bagian, dan database (Supabase) adalah rahasia perusahaan. Staff dilarang menyebarkan atau menduplikasi aset tersebut untuk kepentingan di luar PT Pintar Digital Kreasi.</p>
 
                 <p><b>VI. KOMITMEN PROFESIONALISME & EVALUASI</b><br>
-                Guna menjaga keadilan dan stabilitas operasional, perusahaan menetapkan evaluasi sebagai berikut:<br>
+                Guna menjaga keadilan dan stabilitas operasional, perusahaan menetapkan evaluasi sebagai berikut:<br><br>
                 <b>Status Hari Lemah:</b> Pencapaian output harian yang hanya berjumlah 1 video ACC tanpa adanya kendala teknis/darurat yang sah, dikategorikan sebagai "Hari Lemah".<br>
                 <b>Penyesuaian Administratif:</b> Atas ketidaktercapaian standar minimum kerja (Hari Lemah), pelanggaran SOP Alur secara sengaja, atau ketidakhadiran tanpa keterangan (Ghosting), akan dilakukan penyesuaian administratif sebesar <b>Rp 1.000.000</b> yang akan diperhitungkan dalam evaluasi gaji/bonus bulanan.</p>
             </div>
-            <br>
-            <div style="float: right; text-align: center; font-size: 13px;">
-                Banyumas, 1 Maret 2026<br>
-                <b>Pimpinan PT Pintar Digital Kreasi</b>
-                <br><br><br><br>
-                ( <b>Dian</b> )
+
+            <br><br>
+
+            <div style="float: right; position: relative; width: 300px; text-align: center;">
+                <div style="font-size: 14px;">Banyumas, 1 Maret 2026</div>
+                <div style="font-weight: bold; margin-top: 5px;">Pimpinan PT Pintar Digital Kreasi</div>
+                
+                <div style="height: 100px; margin: 10px 0; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div style="width: 80px; height: 80px; border: 2px solid #2e7d32; color: #2e7d32; border-radius: 5px; font-size: 10px; padding: 5px; font-weight: bold; text-transform: uppercase; transform: rotate(-15deg); position: absolute; left: 20px; opacity: 0.8;">
+                        E-MATERAI<br>RESMI<br>PINTAR MEDIA<br>D2026-X
+                    </div>
+                    <div style="font-family: 'Brush Script MT', cursive; font-size: 30px; color: #1a1a1a; z-index: 2;">{nama_lengkap}</div>
+                </div>
+                
+                <div style="border-bottom: 2px solid #000; display: inline-block; padding: 0 20px;"><b>{nama_lengkap}</b></div>
+                <div style="font-size: 12px; margin-top: 5px;">Founder & CEO</div>
             </div>
             <div style="clear: both;"></div>
+
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.03; font-size: 100px; font-weight: bold; pointer-events: none; width: 100%; text-align: center;">
+                PINTAR MEDIA OFFICIAL
+            </div>
         </div>
         """
 
         st.write("")
-        with st.expander("👁️ Lihat Detail Peraturan Resmi"):
-            st.components.v1.html(html_master_pdf, height=800, scrolling=True)
+        with st.expander("👁️ PRATINJAU DOKUMEN HUKUM (MASTER COPY)"):
+            st.components.v1.html(html_master_pdf, height=1000, scrolling=True)
 
-        if st.button(f"📄 DOWNLOAD / PRINT PDF PERATURAN", use_container_width=True):
+        if st.button(f"📄 GENERATE & PRINT OFFICIAL PDF", use_container_width=True):
             html_with_print = html_master_pdf + "<script>window.print();</script>"
             st.components.v1.html(html_with_print, height=0)
+
+        st.write("")
+        st.markdown(f"> *'Profesionalisme adalah kunci pertumbuhan kita bersama.'* — **{nama_lengkap}**")
 
     with t5:
         st.write("")
@@ -3365,6 +3391,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
