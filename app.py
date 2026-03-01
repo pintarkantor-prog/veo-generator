@@ -3007,7 +3007,7 @@ def tampilkan_area_staf():
         # --- KONEKSI DATA USER ---
         user_login = st.session_state.get('user_aktif', 'tamu').lower()
         # Pastikan level_aktif sudah didefinisikan sebelumnya, jika belum pakai ini:
-        level_aktif = st.session_state.get('level', 'STAFF').upper() 
+        level_aktif = st.session_state.get('status', st.session_state.get('level', 'STAFF')).upper()
         
         staff_mapping = {
             "nissa": "NISSA PANGESTUNINGRUM",
@@ -3677,6 +3677,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
