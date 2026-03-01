@@ -104,30 +104,52 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
+    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup) dengan proteksi ganda."""
+    
+    # 1. SATPAM OWNER: Jangan mencatat apa-apa kalau itu Dian
     if str(user).upper() == "DIAN": 
-        return # Langsung keluar, tidak mencatat apa-apa kalau itu Dian
+        return 
+
+    # 2. PENGAMAN SESSION: Buat kunci unik berdasarkan user dan aksinya
+    # Ini supaya kalau tombol diklik 2x atau sistem rerun, prosesnya terkunci
+    kunci_aksi = f"log_{user}_{aksi}".replace(" ", "_").lower()
+    if st.session_state.get(kunci_aksi, False):
+        return
+
     try:
-        tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu_skrg_iso = datetime.now(tz_wib).isoformat() # Format standar database
-        waktu_skrg_tampil = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
+        # Kunci sekarang juga!
+        st.session_state[kunci_aksi] = True
         
-        # 1. KIRIM KE SUPABASE (Cepat untuk dibaca di web)
+        tz_wib = pytz.timezone('Asia/Jakarta')
+        waktu_skrg = datetime.now(tz_wib)
+        waktu_skrg_iso = waktu_skrg.isoformat() 
+        waktu_skrg_tampil = waktu_skrg.strftime("%d/%m/%Y %H:%M:%S")
+        
+        # 1. KIRIM KE SUPABASE (Utama)
+        # Pastikan kolom di tabel Log_Aktivitas lo adalah Waktu, Nama, Aksi
         supabase.table("Log_Aktivitas").insert({
             "Waktu": waktu_skrg_iso,
             "Nama": str(user).upper(),
             "Aksi": aksi
         }).execute()
 
-        # 2. KIRIM KE GSHEET (Backup pasif)
+        # 2. KIRIM KE GSHEET (Backup)
         try:
             sh = get_gspread_sh()
             ws_log = sh.worksheet("Log_Aktivitas")
             ws_log.append_row([waktu_skrg_tampil, str(user).upper(), aksi])
-        except: pass 
+        except Exception as e_gsheet:
+            # GSheet gagal gak apa-apa, yang penting Supabase masuk
+            print(f"GSheet Log Error: {e_gsheet}")
+
+        # Opsional: Berikan sedikit jeda sebelum kunci dibuka lagi (atau biarkan terkunci selama sesi)
+        # time.sleep(1)
+        # st.session_state[kunci_aksi] = False
 
     except Exception as e:
-        print(f"Gagal mencatat log: {e}")
+        # Kalau gagal total, buka lagi kuncinya biar bisa dicoba ulang
+        st.session_state[kunci_aksi] = False
+        st.error(f"Gagal mencatat log ke Supabase: {e}")
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -276,13 +298,13 @@ MASTER_CHAR = {
 # FUNGSI ABSENSI OTOMATIS (MESIN ABSEN) - VERSI KASTA OWNER VIP + SUPABASE
 # ==============================================================================
 def log_absen_otomatis(nama_user):
-    """Mesin Absen Otomatis: Hanya jalan JIKA sudah login & Belum Absen."""
+    """Mesin Absen Otomatis: Anti-Double Input ke Supabase & GSheet."""
     
     # 1. SATPAM UTAMA: Jangan jalan kalau belum login!
     if not st.session_state.get('sudah_login', False):
         return
 
-    # 2. CEK SESSION (Biar nggak bolak-balik nembak database)
+    # 2. CEK SESSION: Kalau sudah absen di turn ini, langsung balik kanan
     if st.session_state.get('absen_done_today', False):
         return
 
@@ -298,44 +320,54 @@ def log_absen_otomatis(nama_user):
     tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
-    # 4. RANGE JAM OPERASIONAL ABSENSI
+    # 4. RANGE JAM OPERASIONAL ABSENSI (03:00 - 16:59)
     if 3 <= jam < 17: 
         try:
             nama_up = str(nama_user).upper().strip()
             
-            # Cek Supabase untuk user ini & hari ini (Anti-Ganda)
+            # Cek Supabase (Safety Check Terakhir)
             res = supabase.table("Absensi").select("id").eq("Nama", nama_up).eq("Tanggal", tgl_skrg).execute()
             
             if len(res.data) == 0:
-                # --- PERBAIKAN LOGIKA TELAT ---
-                # Menggunakan menit total agar jam 10:01 sudah terhitung TELAT
-                menit_total = waktu_skrg.hour * 60 + waktu_skrg.minute
+                # --- [PENTING] GEMBOK PROSES DI SINI ---
+                # Set True SEBELUM insert biar kalau ada rerun pas proses, gak tembus lagi
+                st.session_state.absen_done_today = True 
                 
-                if menit_total <= 600: # 600 menit = Jam 10:00 tepat
+                # Logika Telat (Jam 10:01 ke atas = Telat)
+                menit_total = waktu_skrg.hour * 60 + waktu_skrg.minute
+                if menit_total <= 600: # 10:00 pagi
                     status_final = "HADIR"
                 else:
                     status_final = f"TELAT ({jam_skrg})"
                 
-                # A. SUPABASE (UTAMA)
+                # A. KIRIM KE SUPABASE
                 supabase.table("Absensi").insert({
-                    "Nama": nama_up, "Tanggal": tgl_skrg, "Jam Masuk": jam_skrg, "Status": status_final
+                    "Nama": nama_up, 
+                    "Tanggal": tgl_skrg, 
+                    "Jam Masuk": jam_skrg, 
+                    "Status": status_final
                 }).execute()
 
-                # B. GSHEET (BACKUP)
+                # B. KIRIM KE GSHEET (Backup)
                 try:
                     sh = get_gspread_sh() 
                     sheet_absen = sh.worksheet("Absensi")
                     sheet_absen.append_row([nama_up, tgl_skrg, jam_skrg, status_final])
-                except: pass
+                except Exception as e_gsheet:
+                    # Kalau GSheet gagal, log aja tapi jangan bikin aplikasi mati
+                    print(f"GSheet Gagal: {e_gsheet}")
                 
-                st.session_state.absen_done_today = True
+                # Toast & Refresh
                 st.toast(f"⏰ Absen Berhasil (Jam {jam_skrg})", icon="✅")
-                time.sleep(1)
+                time.sleep(1.5) # Kasih jeda biar user liat toast
                 st.rerun() 
             else:
+                # Kalau ternyata sudah ada datanya di Supabase, kunci session
                 st.session_state.absen_done_today = True
 
         except Exception as e:
+            # Jika error, reset session biar bisa coba lagi
+            st.session_state.absen_done_today = False
             st.error(f"Sistem Absen Error: {e}")
     else:
         st.toast(f"Akses Malam/Lembur (Absen Tutup).", icon="🌙")
@@ -3740,6 +3772,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
