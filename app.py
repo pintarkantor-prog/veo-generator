@@ -3034,7 +3034,7 @@ def tampilkan_area_staf():
         bulan_sekarang = now_fix.strftime("%m-%Y")
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
-        if level_aktif in ["OWNER", "ADMIN"]:
+        if level_aktif.upper() in ["OWNER", "ADMIN"]:
             st.markdown("### 📊 Rekap Tanda Tangan Staff")
             
             # 1. Ambil data tanda tangan dari Supabase
@@ -3677,6 +3677,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
