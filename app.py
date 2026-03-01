@@ -2672,7 +2672,7 @@ def tampilkan_area_staf():
                         <b>E. Bagian Akhir (The Retention - Pertanyaan Terbuka)</b><br>
                         Tampilkan hasil akhir yang memicu diskusi panjang di kolom komentar.<br>
                         <i><b>Instruksi Visual:</b> Pemenang memberikan pesan singkat atau tatapan menantang ke arah kamera.</i><br>
-                        <i><b>Tujuan:</b> Memancing komentar perdebatan seperti "Harusnya si A yang menang!" atau "Lanjut part 2, balas dendam!".</i>
+                        <i><b>Tujuan:</b> Memancing komentar perdebatan.</i>
                     </div>
 
                     <div style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px dashed #666;">
@@ -3501,6 +3501,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
