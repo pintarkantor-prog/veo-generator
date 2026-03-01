@@ -3050,45 +3050,48 @@ def tampilkan_area_staf():
                 signed_users = [row['username'].lower() for row in all_signs.data]
                 
                 daftar_staff_monitor = ["nissa", "lisa", "icha", "inggi"]
-
-                # 2. Card Staff (1 Baris per Staff - Clean Design)
-                for s in daftar_staff_monitor:
+                
+                # 2. Grid Card (Gaya Radar Performa)
+                st.write("")
+                kolom_card = st.columns(4)
+                
+                for idx, s in enumerate(daftar_staff_monitor):
                     is_ok = s in signed_users
-                    txt_status = "SUDAH TANDA TANGAN" if is_ok else "BELUM TANDA TANGAN"
-                    clr_status = "#2ecc71" if is_ok else "#e74c3c" # Hijau vs Merah
-                    bg_card = "#1a1c23" # Warna gelap elegan biar masuk ke dashboard
+                    warna_bg = "#1d976c" if is_ok else "#e74c3c" # Hijau vs Merah
+                    n_up = s.upper()
+                    txt_status = "SUDAH" if is_ok else "BELUM"
                     
-                    st.markdown(f"""
-                    <div style="background-color: {bg_card}; border-radius: 5px; padding: 10px 15px; margin-bottom: 5px; border-left: 4px solid {clr_status};">
-                        <table style="width: 100%; border: none; border-collapse: collapse;">
-                            <tr>
-                                <td style="width: 30%; color: white; font-weight: bold; font-size: 14px;">👤 {s.upper()}</td>
-                                <td style="width: 45%; color: {clr_status}; font-weight: bold; font-size: 12px; text-align: center;">{"●" if is_ok else "○"} {txt_status}</td>
-                                <td style="width: 25%; color: #888; font-size: 11px; text-align: right;">📅 {bulan_sekarang}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                st.write("") 
-                # 3. Tombol BOM WA (Desain Simple di Bawah Card)
-                belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
-                
-                if belum_sign:
-                    if st.button(f"📢 UMUMKAN DI GRUP ({len(belum_sign)} STAFF BELUM)", use_container_width=True):
-                        tag_nama = ", ".join(belum_sign)
-                        pesan_grup = (
-                            f"📢 *PENGUMUMAN KONTRAK DIGITAL*\n\n"
-                            f"Mohon perhatiannya untuk rekan-rekan:\n"
-                            f"👉 *{tag_nama}*\n\n"
-                            f"Segera lakukan pengesahan kontrak periode *{bulan_sekarang}* di Dashboard Pintar Media.\n\n"
-                            f"Terima kasih! 🙏"
-                        )
-                        kirim_notif_wa(pesan_grup)
-                        st.toast("Notif Grup Berhasil Dikirim!")
-                else:
-                    st.success("Semua staff sudah beres! ✨")
+                    with kolom_card[idx % 4]:
+                        with st.container(border=True):
+                            # Header Warna Solid (Pake trik negative margin lo)
+                            st.markdown(f'<div style="text-align:center; padding:5px; background:{warna_bg}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;"><b style="color:black; font-size:14px;">{n_up}</b></div>', unsafe_allow_html=True)
+                            
+                            # Baris Detail Status
+                            m1, m2 = st.columns(2)
+                            m1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:12px; color:{warna_bg};'>{txt_status} SIGN</b>", unsafe_allow_html=True)
+                            m2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>PERIODE</p><b style='font-size:12px;'>{bulan_sekarang}</b>", unsafe_allow_html=True)
+                            
+                            st.divider()
+                            
+                            # Info Tambahan
+                            det1, det2 = st.columns(2)
+                            det1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🚩 OTORITAS</p><b style='font-size:11px;'>STAFF</b>", unsafe_allow_html=True)
+                            det2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📝 DOKUMEN</p><b style='font-size:11px;'>KONTRAK</b>", unsafe_allow_html=True)
+                            
+                            # Progress Bar (Full kalau sudah sign, Kosong kalau belum)
+                            prog_val = 1.0 if is_ok else 0.0
+                            st.progress(prog_val)
 
+                # 3. Tombol BOM WA di Bawah Card
+                belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
+                if belum_sign:
+                    st.write("")
+                    if st.button(f"📢 BOM WA ({len(belum_sign)} STAFF)", use_container_width=True, type="primary"):
+                        tag_nama = ", ".join(belum_sign)
+                        pesan_grup = f"📢 *PENGUMUMAN*\n\nMohon perhatian: *{tag_nama}*\nSegera sign kontrak periode *{bulan_sekarang}*."
+                        kirim_notif_wa(pesan_grup)
+                        st.toast("Sentilan Grup Meluncur!")
+            
             st.write("---")
         # --- LOGIKA KUNCI TANGGAL ---
         check_db = supabase.table("kontrak_staff").select("*").eq("username", user_login).eq("periode", bulan_sekarang).execute()
@@ -3694,6 +3697,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
