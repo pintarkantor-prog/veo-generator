@@ -301,8 +301,8 @@ def log_absen_otomatis(nama_user):
     tgl_skrg = waktu_skrg.strftime("%Y-%m-%d")
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
-    # 4. RANGE JAM OPERASIONAL ABSENSI (03:00 - 16:59)
-    if 3 <= jam < 17: 
+    # 4. RANGE JAM OPERASIONAL ABSENSI (08:00 - 17:59)
+    if 8 <= jam < 18: 
         try:
             nama_up = str(nama_user).upper().strip()
             
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
