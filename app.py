@@ -3102,24 +3102,34 @@ def tampilkan_area_staf():
             </div>
             """
             
-            st.components.v1.html(html_kontrak_resmi, height=1500, scrolling=True)
+        # Tampilkan Preview Kontrak
+        st.components.v1.html(html_kontrak_preview, height=1000, scrolling=True)
 
-            # --- LOGIKA TOMBOL AKSI ---
-            if user_login == "dian":
-                st.success("👑 **STATUS OWNER**: Otorisasi Kontrak Otomatis Disahkan.")
-                if st.button("📄 DOWNLOAD MASTER KONTRAK (PDF)", use_container_width=True):
-                    st.components.v1.html(html_kontrak_resmi + "<script>window.print();</script>", height=0)
+        # --- LOGIKA PERSETUJUAN (PREVIEW FIRST) ---
+        if user_login == "dian":
+            st.success("👑 **STATUS OWNER**: Otorisasi Kontrak Otomatis Disahkan.")
+            if st.button("📄 DOWNLOAD MASTER KONTRAK", use_container_width=True):
+                st.components.v1.html(html_kontrak_preview + "<script>window.print();</script>", height=0)
+        
+        elif not is_signed:
+            st.warning("⚠️ Anda wajib membaca seluruh pasal di atas sebelum menyetujui.")
             
+            # Checkbox sebagai "Preview Validation"
+            setuju_syarat = st.checkbox(f"Saya, {nama_staff_resmi}, telah membaca dan menyetujui seluruh isi kontrak periode {now.strftime('%B %Y')}")
+            
+            if setuju_syarat:
+                if st.button(f"✅ SAHKAN TANDA TANGAN DIGITAL", use_container_width=True):
+                    st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
+                    st.balloons()
+                    st.success(f"Kontrak Berhasil Disahkan!")
+                    st.rerun()
             else:
-                if not is_signed:
-                    if st.button(f"✅ SAYA SETUJU & TANDATANGANI KONTRAK PERIODE {now.strftime('%B %Y').upper()}", use_container_width=True):
-                        st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
-                        st.success(f"Kontrak Berhasil Disahkan!")
-                        st.rerun()
-                else:
-                    st.warning(f"🔒 Kontrak periode {now.strftime('%B %Y')} sudah ditandatangani.")
-                    if st.button("📄 DOWNLOAD SALINAN KONTRAK (PDF)", use_container_width=True):
-                        st.components.v1.html(html_kontrak_resmi + "<script>window.print();</script>", height=0)
+                st.button("✅ SAHKAN TANDA TANGAN DIGITAL", disabled=True, use_container_width=True, help="Centang persetujuan di atas untuk mengaktifkan tombol.")
+        
+        else:
+            st.success(f"🔒 Kontrak periode {now.strftime('%B %Y')} sudah Anda tandatangani secara sah.")
+            if st.button("📄 DOWNLOAD SALINAN KONTRAK (PDF)", use_container_width=True):
+                st.components.v1.html(html_kontrak_preview + "<script>window.print();</script>", height=0)
     
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3531,6 +3541,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
