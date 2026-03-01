@@ -104,52 +104,31 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup) dengan proteksi ganda."""
-    
-    # 1. SATPAM OWNER: Jangan mencatat apa-apa kalau itu Dian
+    """Mencatat aktivitas ke Supabase & GSheet dengan kolom yang benar."""
     if str(user).upper() == "DIAN": 
         return 
-
-    # 2. PENGAMAN SESSION: Buat kunci unik berdasarkan user dan aksinya
-    # Ini supaya kalau tombol diklik 2x atau sistem rerun, prosesnya terkunci
-    kunci_aksi = f"log_{user}_{aksi}".replace(" ", "_").lower()
-    if st.session_state.get(kunci_aksi, False):
-        return
-
+        
     try:
-        # Kunci sekarang juga!
-        st.session_state[kunci_aksi] = True
-        
         tz_wib = pytz.timezone('Asia/Jakarta')
-        waktu_skrg = datetime.now(tz_wib)
-        waktu_skrg_iso = waktu_skrg.isoformat() 
-        waktu_skrg_tampil = waktu_skrg.strftime("%d/%m/%Y %H:%M:%S")
+        waktu_skrg_iso = datetime.now(tz_wib).isoformat()
+        waktu_skrg_tampil = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
         
-        # 1. KIRIM KE SUPABASE (Utama)
-        # Pastikan kolom di tabel Log_Aktivitas lo adalah Waktu, Nama, Aksi
+        # --- PERBAIKAN DI SINI (Ganti 'Nama' jadi 'User') ---
         supabase.table("Log_Aktivitas").insert({
             "Waktu": waktu_skrg_iso,
-            "Nama": str(user).upper(),
+            "User": str(user).upper(), # Kolom di DB lo namanya 'User'
             "Aksi": aksi
         }).execute()
 
-        # 2. KIRIM KE GSHEET (Backup)
+        # 2. KIRIM KE GSHEET
         try:
             sh = get_gspread_sh()
             ws_log = sh.worksheet("Log_Aktivitas")
             ws_log.append_row([waktu_skrg_tampil, str(user).upper(), aksi])
-        except Exception as e_gsheet:
-            # GSheet gagal gak apa-apa, yang penting Supabase masuk
-            print(f"GSheet Log Error: {e_gsheet}")
-
-        # Opsional: Berikan sedikit jeda sebelum kunci dibuka lagi (atau biarkan terkunci selama sesi)
-        # time.sleep(1)
-        # st.session_state[kunci_aksi] = False
+        except: pass 
 
     except Exception as e:
-        # Kalau gagal total, buka lagi kuncinya biar bisa dicoba ulang
-        st.session_state[kunci_aksi] = False
-        st.error(f"Gagal mencatat log ke Supabase: {e}")
+        print(f"Gagal mencatat log: {e}")
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3772,6 +3751,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
