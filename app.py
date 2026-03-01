@@ -2584,6 +2584,11 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
+            import datetime
+            sekarang = datetime.datetime.now()
+            tgl_terbit = "1 Maret 2026"
+
+            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
             # --- I. STANDAR PRODUKSI UMUM ---
             st.markdown("### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
@@ -2695,6 +2700,11 @@ def tampilkan_area_staf():
                 st.components.v1.html(html_print_fix, height=1200, scrolling=True)
     
         elif divisi_sop == "Staff Uploader":
+            import datetime
+            sekarang = datetime.datetime.now()
+            tgl_terbit = "1 Maret 2026"
+
+            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
             # --- I. STANDAR OPERASIONAL UPLOAD ---
             st.markdown("### 🚀 I. STANDAR OPERASIONAL UPLOAD (WAJIB)")
             with st.container(border=True):
@@ -2800,6 +2810,12 @@ def tampilkan_area_staf():
                 st.components.v1.html(html_print_uploader, height=1200, scrolling=True)
 
         elif divisi_sop == "Admin":
+            import datetime
+            sekarang = datetime.datetime.now()
+            tgl_terbit = "1 Maret 2026"
+
+            st.markdown(f"**Update Terakhir:** {tgl_terbit} | **Pimpinan:** Dian (Owner)")
+            # --- I. STANDAR OPERASIONAL ADMIN ---
             st.markdown("### 📋 I. STANDAR OPERASIONAL ADMIN (WAJIB)")
             with st.container(border=True):
                 st.success("**Admin adalah jantung operasional. Ketelitian data adalah prioritas utama untuk menghindari kerugian perusahaan.**")
@@ -3488,22 +3504,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
