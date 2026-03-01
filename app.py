@@ -2810,7 +2810,7 @@ def tampilkan_area_staf():
                 with c1: 
                     st.metric("STATUS", "AKTIF", delta="🛡️ Fixed Salary")
                 with c2: 
-                    st.metric("ESTIMASI TERIMA", "Rp 2,000,000", delta="Gaji Pokok")
+                    st.metric("ESTIMASI TERIMA", "Rp 1,500,000", delta="Gaji Pokok")
                 with c3: 
                     st.metric("TUNJANGAN", "TERSEDIA", delta="✨ Tunjangan Kerja") # Tanpa nominal
                 
@@ -3723,6 +3723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
