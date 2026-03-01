@@ -2608,15 +2608,17 @@ def tampilkan_area_staf():
 
             # --- III. MODUL PANDUAN (FULL DETAIL A-E) ---
             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
-                # Hamparan Kertas Putih (HTML)
                 html_konten_pdf = f"""
-                <div style="background: white; padding: 40px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
+                <div style="background: white; padding: 50px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
+                    
                     <center>
-                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px; margin-bottom: 10px;">
-                        <h2 style="margin: 0; font-size: 22px;">BLUEPRINT & TUTORIAL ALUR KONTEN AI (HQ)</h2>
-                        <hr style="border: 1px solid black; margin: 15px 0;">
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px; margin-bottom: 5px;">
+                        <div style="border-top: 3px solid black; border-bottom: 1px solid black; padding: 2px 0; margin-top: 10px;"></div>
+                        <br>
+                        <h2 style="margin: 0; font-size: 24px; letter-spacing: 2px;">MODUL PANDUAN PRODUKSI</h2>
+                        <b style="font-size: 14px;">NOMOR: 001/MODUL-HQ/PINTARMEDIA/III/2026</b>
                     </center>
-                    <br>
+                    <br><br>
 
                     <div style="margin-bottom: 40px; border-left: 5px solid #d32f2f; padding-left: 20px;">
                         <b style="font-size: 18px; color: #d32f2f;">🔥 1. ALUR: EMOTIONAL UNDERDOG (REVENGE)</b><br><br>
@@ -3498,6 +3500,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
