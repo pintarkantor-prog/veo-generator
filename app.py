@@ -2908,7 +2908,7 @@ def tampilkan_area_staf():
                         </td>
                         <td style="width: 80%; text-align: right; vertical-align: middle;">
                             <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">PT Pintar Digital Kreasi</h1>
-                            <p style="margin: 0; font-size: 11px; color: #333;">Creative Content AI Specialist & Digital Media Production</p>
+                            <p style="margin: 0; font-size: 11px; color: #333;">Creative Content & Digital Media Production</p>
                             <p style="margin: 0; font-size: 10px; color: #666;">SK KEMENKUMHAM: {nomor_ahu}</p>
                         </td>
                     </tr>
@@ -3051,7 +3051,7 @@ def tampilkan_area_staf():
                     </td>
                     <td style="width: 80%; text-align: right; vertical-align: middle;">
                         <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">PT Pintar Digital Kreasi</h1>
-                        <p style="margin: 0; font-size: 11px; color: #333;">Creative Content AI Specialist & Digital Media Production</p>
+                        <p style="margin: 0; font-size: 11px; color: #333;">Creative Content & Digital Media Production</p>
                         <p style="margin: 0; font-size: 10px; color: #666;">SK KEMENKUMHAM: {nomor_ahu}</p>
                     </td>
                 </tr>
@@ -3590,6 +3590,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
