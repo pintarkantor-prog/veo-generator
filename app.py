@@ -2964,7 +2964,6 @@ def tampilkan_area_staf():
                 st.components.v1.html(html_with_print, height=0)
 
         with t4:
-        st.write("")
         # --- DIGITAL E-CONTRACT SYSTEM ---
         with st.expander("##### 📄 E-CONTRACT: SURAT PERJANJIAN KERJA PARUH WAKTU (AUTO-RENEWAL)", expanded=True):
             
@@ -3465,6 +3464,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
