@@ -2584,75 +2584,81 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
-            import datetime
-            sekarang = datetime.datetime.now()
-            # Gunakan st.session_state.user_aktif sebagai cadangan jika n_up tidak ada
-            nama_penerima = st.session_state.get('user_aktif', 'Staff Pintar Media')
+            with st.container(border=True):
+                st.markdown("🎨 **STANDAR PRODUKSI EDITOR (STORYTELLING AI)**")
+                st.info("💡 **Gaya Cerita:** Referensi Karakter Udin & Tung (Warung Tungtung).")
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**🛠️ Spesifikasi Teknis Wajib:**")
+                    st.write("- **Kualitas**: Minimal **1080p Full HD** (Wajib Tajam!).")
+                    st.write("- **Rasio & Safe Zone**: 9:16 (Shorts), teks jangan ketutup UI YouTube.")
+                    st.write("- **Durasi**: Minimal 60 detik (Padat, no filler).")
+                    st.write("- **Audio**: Wajib **Copyright-Free** (Cek YouTube Audio Library).")
+                    st.write("- **SFX**: Gunakan Sound Effect untuk setiap aksi/kejadian penting.")
+                with c2:
+                    st.markdown("**🧠 Kreativitas & Alur Cerita:**")
+                    st.write("- **Hook 3 Detik**: Wajib ada kejutan/masalah di awal video.")
+                    st.write("- **Ekspresi AI**: Karakter harus punya emosi (marah/lucu/sedih).")
+                    st.write("- **Subtitle**: Wajib ada animasi teks yang mudah dibaca.")
+                    st.write("- **Ending**: Berikan penutup yang bikin orang mau nonton lagi.")
+            
+            with st.container(border=True):
+                st.markdown("**📂 Manajemen File:**")
+                st.write("- **Nama File**: `TGL_NAMA_JUDUL.mp4` (Wajib Seragam!).")
+                st.write("- **Backup**: Simpan aset mentah (Project) minimal selama 3 hari.")
 
-            sop_editor_html = f"""
-            <div id="sop-resmi-editor" style="background: white; padding: 40px; border: 2px solid #1d976c; border-radius: 5px; font-family: 'Times New Roman', Times, serif; width: 500px; margin: auto; color: #1a1a1a; line-height: 1.6; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                <center>
-                    <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px; margin-bottom: 5px;">
-                    <p style="font-size: 11px; margin: 0; font-weight: bold; text-transform: uppercase;">PT PINTAR DIGITAL KREASI (PINTAR MEDIA)</p>
-                    <p style="font-size: 9px; margin: 0; color: #666;">Baturraden, Banyumas, Jawa Tengah | 2026</p>
-                    <hr style="border: 1px solid #1d976c; margin: 15px 0;">
-                    <b style="font-size: 14px; text-decoration: underline;">PEMBERITAHUAN STANDAR OPERASIONAL PROSEDUR (SOP)</b><br>
-                    <span style="font-size: 10px;">Nomor: {sekarang.strftime('%d%m')}/SOP-INFO/PM/{sekarang.strftime('%Y')}</span>
-                </center>
+            # --- TOMBOL CETAK SLIP SOP EDITOR ---
+            if st.button(f"📄 PREVIEW & PRINT SOP EDITOR: {n_up}", key=f"print_sop_editor_{n_up}", use_container_width=True):
+                sop_editor_html = f"""
+                <div id="sop-print" style="background: white; padding: 35px; border-radius: 20px; border: 1px solid #eee; font-family: sans-serif; width: 450px; margin: auto; color: #333; line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                    <center>
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 200px; margin-bottom: 10px;">
+                        <div style="height: 4px; background: #1d976c; width: 60px; border-radius: 10px; margin-bottom: 5px;"></div>
+                        <p style="font-size: 11px; letter-spacing: 3px; color: #1d976c; font-weight: 800; text-transform: uppercase;">SOP EDITOR STORYTELLING</p>
+                    </center>
 
-                <div style="font-size: 11px; margin-top: 25px;">
-                    Diberitahukan kepada seluruh tim produksi, khususnya:<br><br>
-                    <table style="width: 100%; font-size: 11px; margin-left: 20px;">
-                        <tr><td width="100">Nama Staf</td><td>: <b>{nama_penerima}</b></td></tr>
-                        <tr><td>Posisi</td><td>: Editor Storytelling AI (Udin & Tung)</td></tr>
-                    </table>
-                    <br>
-                    Untuk selalu memperhatikan dan menerapkan standar produksi di bawah ini:
+                    <div style="background: #fcfcfc; padding: 12px; border-radius: 10px; border: 1px solid #f0f0f0; margin: 15px 0; font-size: 11px;">
+                        <table style="width: 100%;">
+                            <tr><td style="color: #999;">PENERIMA</td><td align="right"><b>{n_up}</b></td></tr>
+                            <tr><td style="color: #999;">DIVISI</td><td align="right"><b>EDITOR PRODUCTION</b></td></tr>
+                        </table>
+                    </div>
+
+                    <h4 style="font-size: 12px; color: #1d976c; margin-bottom: 5px; border-bottom: 1px solid #f0f0f0;">1. STANDAR TEKNIS & KREATIF</h4>
+                    <div style="font-size: 10px; color: #444;">
+                        • 1080p Full HD | Rasio 9:16 | Durasi Min 60 Detik<br>
+                        • Hook 3 Detik (Kejutan di awal) | Ekspresi AI (Emosi)<br>
+                        • Subtitle Animasi | No Copyright Audio | Wajib SFX
+                    </div>
+
+                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">2. ATURAN SETORAN (BARU 2026)</h4>
+                    <div style="font-size: 10px; color: #444;">
+                        • <b>PROJECT HQ:</b> 1 Video = 1 Link (1 Poin)<br>
+                        • <b>PROJECT RINGAN:</b> 10 Video = 1 Link (1 Poin)<br>
+                        • <b>RADAR AMAN:</b> Wajib 2 Poin/Hari (Contoh: 20 Video Ringan)
+                    </div>
+
+                    <h4 style="font-size: 12px; color: #1d976c; margin: 15px 0 5px 0; border-bottom: 1px solid #f0f0f0;">3. MANAJEMEN FILE</h4>
+                    <div style="font-size: 10px; color: #444;">
+                        • Penamaan: TGL_NAMA_JUDUL.mp4 | Simpan Project Min 3 Hari
+                    </div>
+
+                    <div style="background: #1a1a1a; color: white; padding: 15px; border-radius: 15px; text-align: center; margin-top: 20px;">
+                        <p style="margin: 0; font-size: 8px; color: #ff7675; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Konsekuensi</p>
+                        <h2 style="margin: 5px 0 0; font-size: 18px; color: #ff7675; font-weight: 800;">DENDA Rp 1.000.000</h2>
+                        <p style="margin: 5px 0 0; font-size: 9px; color: #ddd;">Kelalaian berulang memicu SP & Pemotongan Gaji</p>
+                    </div>
+
+                    <div style="margin-top: 20px; text-align: center; font-size: 9px; color: #bbb; border-top: 1px solid #f5f5f5; padding-top: 10px;">
+                        Diterbitkan Digital oleh PINTAR MEDIA | {sekarang.strftime('%d/%m/%Y')}
+                    </div>
                 </div>
 
-                <div style="font-size: 10.5px; margin-top: 15px;">
-                    <b>I. SPESIFIKASI TEKNIS & KREATIF</b>
-                    <ul style="margin: 5px 0 10px 20px; padding: 0;">
-                        <li>Kualitas 1080p Full HD & Rasio 9:16 (Shorts)</li>
-                        <li>Hook 3 Detik di awal video & Ekspresi AI Berkarakter</li>
-                        <li>Durasi Min 60 Detik dengan Audio No-Copyright & SFX</li>
-                        <li>Manajemen File: TGL_NAMA_JUDUL.mp4 & Backup Aset 3 Hari</li>
-                    </ul>
-
-                    <b>II. ATURAN PENYETARAAN UNIT (NEW 2026)</b>
-                    <ul style="margin: 5px 0 10px 20px; padding: 0;">
-                        <li><b>Project HQ (AI):</b> 1 Video = 1 Link (1 Poin)</li>
-                        <li><b>Project Ringan:</b> Minimal 10 Video/Link = 1 Poin</li>
-                        <li><b>Radar Aman:</b> Minimal 2 Poin/Hari (Contoh: 20 Video Ringan)</li>
-                    </ul>
-
-                    <b>III. INFORMASI SANKSI</b>
-                    <p style="margin: 5px 20px; color: #e74c3c; font-weight: bold; border: 1px solid #e74c3c; padding: 5px;">
-                        Kelalaian terhadap standar ini dapat memicu Surat Peringatan (SP) dan denda administrasi sesuai kebijakan perusahaan.
-                    </p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="window.print()" style="padding: 12px 25px; background: #1a1a1a; color: #55efc4; border: 2px solid #55efc4; border-radius: 10px; font-weight: bold; cursor: pointer;">🖨️ SIMPAN SEBAGAI PDF</button>
                 </div>
-
-                <table style="width: 100%; margin-top: 30px; font-size: 10px; text-align: center;">
-                    <tr>
-                        <td width="50%">Penerima Informasi,</td>
-                        <td width="50%">Owner PINTAR MEDIA,</td>
-                    </tr>
-                    <tr style="height: 50px;">
-                        <td><br><i style="color: #ccc;">(Digital Read)</i></td>
-                        <td><br><b style="color: #1d976c;">DIAN</b></td>
-                    </tr>
-                    <tr>
-                        <td><b>( {nama_penerima} )</b></td>
-                        <td><b>( PT. PINTAR DIGITAL KREASI )</b></td>
-                    </tr>
-                </table>
-            </div>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="window.print()" style="padding: 15px 35px; background: #1a1a1a; color: #55efc4; border: 2px solid #55efc4; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px;">🖨️ SIMPAN SEBAGAI PDF</button>
-            </div>
-            """
-            st.components.v1.html(sop_editor_html, height=950, scrolling=True)
+                """
+                st.components.v1.html(sop_editor_html, height=850, scrolling=True)
     
         elif divisi_sop == "Staff Uploader":
             with st.container(border=True):
@@ -3289,6 +3295,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
