@@ -2592,18 +2592,13 @@ def tampilkan_area_staf():
             # --- I. STANDAR PRODUKSI UMUM ---
             st.markdown("### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
-                st.success("**Poin ini adalah pondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Admin berhak menolak setoran video.**")
-                st.markdown("""
-                • **Kualitas Visual**: Minimal 1080p Full HD.
-                
-                • **Aspect Ratio**: Format 9:16 (1080x1920).
-                
-                • **Durasi**: Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler).
-                
-                • **Audio & SFX**: Wajib Copyright-Free. Sangat direkomendasikan menggunakan musik dari YouTube Audio Library.
-                
-                • **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4**.
-                """)
+                st.success("**Poin ini adalah pondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Owner berhak menolak setoran video.**")
+                st.write("• **Kualitas Visual**: Minimal 1080p Full HD.")
+                st.write("• **Aspect Ratio**: Format 9:16 (1080x1920).")
+                st.write("• **Durasi**: Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler).")
+                st.write("• **Audio & SFX**: Wajib Copyright-Free. Sangat direkomendasikan menggunakan musik dari YouTube Audio Library.")
+                st.write("• **Backup & Penamaan**: Aset mentah wajib disimpan minimal 3 hari. Format: **TGL_NAMA_JUDUL.mp4.")
+                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
 
             # --- II. KETENTUAN UNIT & POIN ---
             st.markdown("### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
@@ -3496,5 +3491,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
