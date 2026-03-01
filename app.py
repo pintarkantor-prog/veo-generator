@@ -3097,19 +3097,30 @@ def tampilkan_area_staf():
             </div>
             """
             
+            # --- TAMPILKAN HTML KONTRAK (PIHAK PERTAMA OTOMATIS SIGNED) ---
             st.components.v1.html(html_kontrak_master, height=1500, scrolling=True)
 
+            # --- LOGIKA TOMBOL AKSI BAWAH ---
             if user_login == "dian":
-                st.success("👑 **STATUS OWNER**: Otoritas Kontrak Otomatis Disahkan.")
-            elif not is_signed:
-                if st.button(f"✅ SAYA SETUJU & TANDATANGANI KONTRAK PERIODE {now.strftime('%B %Y').upper()}", use_container_width=True):
-                    st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
-                    st.success(f"Kontrak Disahkan untuk {nama_staff_resmi}!")
-                    st.rerun()
-            else:
-                st.warning(f"🔒 Kontrak periode {now.strftime('%B %Y')} sudah ditandatangani.")
-                if st.button("📄 DOWNLOAD SALINAN KONTRAK (PDF)", use_container_width=True):
+                # Jika lo yang login, lo nggak perlu tanda tangan lagi, langsung muncul tombol download
+                st.success("👑 **STATUS OWNER**: Otoritas Kontrak Otomatis Terverifikasi.")
+                if st.button("📄 DOWNLOAD MASTER KONTRAK (PDF)", use_container_width=True):
                     st.components.v1.html(html_kontrak_master + "<script>window.print();</script>", height=0)
+            
+            else:
+                # Jika staff yang login
+                if not is_signed:
+                    # Tombol muncul hanya jika staff belum klik setuju di bulan ini
+                    if st.button(f"✅ SAYA SETUJU & TANDATANGANI KONTRAK PERIODE {now.strftime('%B %Y').upper()}", use_container_width=True):
+                        # Simpan ke session (Nanti sambung ke Supabase agar permanen)
+                        st.session_state[f"signed_{user_login}_{bulan_sekarang}"] = True
+                        st.success(f"Kontrak Berhasil Disahkan untuk {nama_staff_resmi}!")
+                        st.rerun()
+                else:
+                    # Jika staff sudah klik, tombol setuju hilang, ganti jadi download
+                    st.warning(f"🔒 Kontrak periode {now.strftime('%B %Y')} sudah Anda tandatangani.")
+                    if st.button("📄 DOWNLOAD SALINAN KONTRAK (PDF)", use_container_width=True):
+                        st.components.v1.html(html_kontrak_master + "<script>window.print();</script>", height=0)
     
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3521,6 +3532,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
