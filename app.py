@@ -2592,11 +2592,11 @@ def tampilkan_area_staf():
             # --- I. STANDAR PRODUKSI UMUM ---
             st.markdown("### 🎨 I. STANDAR PRODUKSI UMUM (WAJIB)")
             with st.container(border=True):
-                st.success("**Poin ini adalah fondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Admin berhak menolak setoran video.**")
+                st.success("**Poin ini adalah pondasi kualitas di PINTAR MEDIA. Jika salah satu poin tidak terpenuhi, Admin berhak menolak setoran video.**")
                 st.markdown("""
-                • **Kualitas Visual**: Minimal 1080p Full HD. Video wajib tajam, jernih, dan tidak pecah (pixelated).
+                • **Kualitas Visual**: Minimal 1080p Full HD.
                 
-                • **Rasio & Safe Zone**: Format 9:16 (Shorts). Pastikan elemen penting tidak tertutup oleh ikon YouTube (seperti tombol Like, Subscribe, atau Judul Video di bagian bawah).
+                • **Aspect Ratio**: Format 9:16 (1080x1920).
                 
                 • **Durasi**: Minimal 60 detik. Durasi harus padat berisi, dilarang memberikan adegan kosong (filler).
                 
@@ -2606,23 +2606,17 @@ def tampilkan_area_staf():
                 """)
 
             # --- II. KETENTUAN UNIT & POIN ---
-            st.markdown("### 📊 II. KETENTUAN UNIT KERJA & SISTEM POIN RADAR")
+            st.markdown("### 📊 II. KETENTUAN UNIT KERJA")
             with st.container(border=True):
                 st.info("**Aturan ini dibuat agar beban kerja adil bagi semua staf (HQ vs Ringan).**")
                 
-                st.markdown("#### ⚖️ 1. Penyetaraan Unit Setoran (Weighting System)")
+                st.markdown("#### ⚖️ 1. Penyetaraan Tugas Kerja (Weighting System)")
                 st.write("• **PROJECT HQ**: Karena tingkat kesulitan tinggi, 1 Link GDrive berisi 1 Video dihitung **1 Poin**.")
-                st.write("• **PROJECT RINGAN**: Karena pengerjaan lebih cepat, 1 Link GDrive wajib berisi minimal 10 Video untuk dihitung **1 Poin**.")
-                st.caption("*Artinya: Jika lo cuma setor 5 video ringan, poin tidak akan terhitung (0 Poin).*")
-                
-                st.markdown("#### 🎯 2. Target Harian & Status Radar (SP)")
-                st.write("• Setiap Editor wajib mencapai minimal **2 Poin per hari** agar status Radar berwarna Hijau (AMAN).")
-                st.write("• **Contoh**: Editor Project Ringan harus setor total 20 Video (2 link) per hari untuk dianggap memenuhi kuota.")
-                st.write("• Kegagalan mencapai target memicu status 'Hari Kurang Produktif' dan akumulasi Surat Peringatan (SP).")
+                st.write("• **PROJECT RINGAN**: Karena pengerjaan lebih cepat, 1 Link GDrive wajib berisi minimal 15 Video untuk dihitung **1 Poin**.")
 
-                st.markdown("#### 💰 3. Skema Bonus Otomatis (Insentif)")
-                st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis sebagai apresiasi kehadiran dan kerajinan.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward atas produktivitas lo.")
+                st.markdown("#### 💰 2. Skema Bonus Otomatis (Insentif)")
+                st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis sebagai apresiasi kehadiran.")
+                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin sebagai reward produktivitas.")
 
             # --- III. PANDUAN ALUR HQ ---
             st.markdown("### 📜 III. PANDUAN ALUR & STRUKTUR KONTEN AI (HQ)")
@@ -3504,3 +3498,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
