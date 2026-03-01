@@ -2555,7 +2555,7 @@ def tampilkan_area_staf():
     # --- 1. PAPAN PENGUMUMAN ---
     st.info("""
     📢 **PENGUMUMAN TERBARU:**
-    - Libur menyambut awal Ramadhan akan diinfokan segera.
+    - Libur Hari Raya Idul Fitri Mulai Tanggal 18 - 23 maret (Tanggal 24 masuk normal).
     - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
     - Semangat buat tim produksi video hari ini! 🚀
     """)
@@ -3723,6 +3723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
