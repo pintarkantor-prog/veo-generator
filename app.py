@@ -3071,16 +3071,28 @@ def tampilkan_area_staf():
                 st.write("") 
 
             # 3. Tabel Pantauan Ringkas
-            for s in daftar_staff_monitor:
-                c1, c2 = st.columns([3, 3])
-                with c1:
-                    st.write(f"**{s.upper()}**")
-                with c2:
-                    if s in signed_users:
-                        st.success("✅ SUDAH")
-                    else:
-                        st.error("❌ BELUM")
+            st.write("") 
+            cols = st.columns(4) # Bikin 4 kolom biar sejajar
             
+            for i, s in enumerate(daftar_staff_monitor):
+                with cols[i]:
+                    # Container Styling ala Akun AI
+                    if s in signed_users:
+                        st.markdown(f"""
+                        <div style="background-color: #1e3d24; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #2ecc71;">
+                            <p style="margin: 0; color: #888; font-size: 10px; font-weight: bold;">STAFF</p>
+                            <h4 style="margin: 5px 0; color: white; font-size: 14px;">{s.upper()}</h4>
+                            <p style="margin: 0; color: #2ecc71; font-size: 12px;">● SUDAH</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                        <div style="background-color: #3d1e1e; border-radius: 10px; padding: 15px; text-align: center; border: 1px solid #e74c3c;">
+                            <p style="margin: 0; color: #888; font-size: 10px; font-weight: bold;">STAFF</p>
+                            <h4 style="margin: 5px 0; color: white; font-size: 14px;">{s.upper()}</h4>
+                            <p style="margin: 0; color: #e74c3c; font-size: 12px;">○ BELUM</p>
+                        </div>
+                        """, unsafe_allow_html=True)
             st.write("---")
 
         # --- LOGIKA KUNCI TANGGAL ---
@@ -3687,6 +3699,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
