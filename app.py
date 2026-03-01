@@ -3013,10 +3013,53 @@ def tampilkan_area_staf():
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         
         import pytz
+        import datetime as dt # Kita kasih inisial 'dt' biar nggak pusing
+        
         tz_wib = pytz.timezone('Asia/Jakarta')
-        now = datetime.now(tz_wib)
+        # Ganti baris ini:
+        now = dt.datetime.now(tz_wib) 
         
         bulan_sekarang = now.strftime("%m-%Y")
+        # --- KHUSUS TAMPILAN OWNER (DIAN) ---
+        if level_aktif in ["OWNER", "ADMIN"]:
+            st.markdown("### 📊 Rekap Tanda Tangan Staff")
+            
+            # 1. Ambil data dari database Supabase
+            all_signs = supabase.table("kontrak_staff").select("username").eq("periode", bulan_sekarang).execute()
+            signed_users = [row['username'] for row in all_signs.data]
+            
+            # Daftar staff yang dipantau (kecuali lo sendiri)
+            daftar_staff = ["nissa", "lisa", "icha", "inggi"]
+            
+            # 2. Tombol BOM WA (Pengumuman Grup)
+            belum_sign = [s.upper() for s in daftar_staff if s not in signed_users]
+            
+            if belum_sign:
+                if st.button("📢 UMUMKAN DI GRUP (BOM)", use_container_width=True):
+                    tag_nama = ", ".join(belum_sign)
+                    pesan_grup = (
+                        f"📢 *PENGUMUMAN KONTRAK DIGITAL*\n\n"
+                        f"Mohon perhatiannya untuk rekan-rekan:\n"
+                        f"👉 *{tag_nama}*\n\n"
+                        f"Segera lakukan pengesahan kontrak periode *{bulan_sekarang}* di Dashboard Pintar Media.\n\n"
+                        f"Terima kasih! 🙏"
+                    )
+                    kirim_notif_wa(pesan_grup) # Panggil fungsi API WA grup lo
+                    st.toast("Pengumuman Grup Berhasil Dikirim!")
+                st.write("") 
+
+            # 3. Tabel Pantauan Ringkas
+            for s in daftar_staff:
+                col1, col2 = st.columns([3, 3])
+                with col1:
+                    st.write(f"**{s.upper()}**")
+                with col2:
+                    if s in signed_users:
+                        st.success("✅ SUDAH")
+                    else:
+                        st.error("❌ BELUM")
+            
+            st.write("---")
 
         # --- LOGIKA KUNCI TANGGAL (FIX AGAR TIDAK BERUBAH) ---
         # 1. Cek ke database Supabase apakah user ini sudah tanda tangan bulan ini
@@ -3626,6 +3669,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
