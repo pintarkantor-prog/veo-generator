@@ -3044,7 +3044,7 @@ def tampilkan_area_staf():
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
-            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
+            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=False):
                 # 1. Ambil data dari Supabase (Cek periode Maret)
                 # Pakai try-except biar kalau tabel kosong nggak langsung error njir
                 try:
@@ -3705,3 +3705,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
