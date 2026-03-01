@@ -2906,19 +2906,18 @@ def tampilkan_area_staf():
                 }}
             </style>
             <div class="a4-container">
-                
-                <table style="width: 100%; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 40px;">
-                    <tr>
-                        <td style="width: 20%; vertical-align: middle;">
-                            <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 130px;">
-                        </td>
-                        <td style="width: 80%; text-align: right; vertical-align: middle;">
-                            <h1 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">PT Pintar Digital Kreasi</h1>
-                            <p style="margin: 0; font-size: 11px; color: #333;">Creative Content & Digital Media Production</p>
-                            <p style="margin: 0; font-size: 10px; color: #666;">SK KEMENKUMHAM: {nomor_ahu}</p>
-                        </td>
-                    </tr>
-                </table>
+            <table style="width: 100%; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
+                <tr>
+                    <td style="width: 30%; vertical-align: middle;">
+                        <img src="https://raw.githubusercontent.com/pintarkantor-prog/pintarmedia/main/PINTAR.png" style="width: 180px; height: auto;">
+                    </td>
+                    <td style="width: 70%; text-align: right; vertical-align: middle;">
+                        <h1 style="margin: 0; font-size: 22px; font-weight: bold; text-transform: uppercase;">PT Pintar Digital Kreasi</h1>
+                        <p style="margin: 0; font-size: 12px; color: #333;">Creative Content & Digital Media Production</p>
+                        <p style="margin: 0; font-size: 10px; color: #666;">SK KEMENKUMHAM: {nomor_ahu}</p>
+                    </td>
+                </tr>
+            </table>
                 
                 <center>
                     <h2 style="margin: 0; font-size: 16px; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">PERATURAN KERJA</h2>
@@ -3724,6 +3723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
