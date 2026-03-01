@@ -2584,11 +2584,14 @@ def tampilkan_area_staf():
         )
 
         if divisi_sop == "Staff Editor":
+            # --- MASUK 1 TAB DARI IF ---
             import datetime
             sekarang = datetime.datetime.now()
-            st.warning("⚠️ **PENTING:** Klik tombol di bawah untuk melihat dan mencetak Dokumen Standar Kualitas resmi.")
-            
-            # --- SURAT RESMI SOP EDITOR ---
+            bln_thn = sekarang.strftime('%m/%Y')
+
+            st.warning("⚠️ **DOKUMEN RESMI:** Klik tombol di bawah untuk cetak Kontrak SOP Editor.")
+
+            # --- SURAT RESMI SOP EDITOR (VERSI UMUM) ---
             sop_editor_html = f"""
             <div id="sop-resmi-editor" style="background: white; padding: 40px; border: 2px solid #1d976c; border-radius: 5px; font-family: 'Times New Roman', Times, serif; width: 500px; margin: auto; color: #1a1a1a; line-height: 1.6; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
                 <center>
@@ -2597,53 +2600,53 @@ def tampilkan_area_staf():
                     <p style="font-size: 9px; margin: 0; color: #666;">Baturraden, Banyumas, Jawa Tengah | 2026</p>
                     <hr style="border: 1px solid #1d976c; margin: 15px 0;">
                     <b style="font-size: 14px; text-decoration: underline;">SURAT KONTRAK STANDAR OPERASIONAL PROSEDUR (SOP)</b><br>
-                    <span style="font-size: 10px;">Nomor: 01/SOP-EDT/PM/{sekarang.strftime('%m/%Y')}</span>
+                    <span style="font-size: 10px;">Nomor: 01/SOP-EDT/PM/{bln_thn}</span>
                 </center>
 
                 <div style="font-size: 11px; margin-top: 25px;">
-                    Yang bertanda tangan di bawah ini menerangkan bahwa:<br><br>
+                    Dengan ini Pihak Manajemen menerangkan standar kerja untuk posisi:<br><br>
                     <table style="width: 100%; font-size: 11px; margin-left: 20px;">
-                        <tr><td width="100">Nama Staf</td><td>: <b>{n_up}</b></td></tr>
-                        <tr><td>Posisi</td><td>: Editor Storytelling AI (Udin & Tung)</td></tr>
+                        <tr><td width="120">Posisi Tugas</td><td>: <b>EDITOR STORYTELLING AI</b></td></tr>
+                        <tr><td>Nama Staf</td><td>: ...........................................................</td></tr>
                     </table>
                     <br>
-                    Wajib mengikuti seluruh ketentuan standar produksi di bawah ini:
+                    Seluruh staf wajib mengikuti ketentuan produksi sebagai berikut:
                 </div>
 
                 <div style="font-size: 10.5px; margin-top: 15px;">
                     <b>I. SPESIFIKASI TEKNIS & KREATIF</b>
                     <ul style="margin: 5px 0 10px 20px; padding: 0;">
-                        <li>Kualitas 1080p Full HD & Rasio 9:16 (Shorts)</li>
-                        <li>Hook 3 Detik di awal video & Ekspresi AI Berkarakter</li>
-                        <li>Durasi Min 60 Detik dengan Audio No-Copyright & SFX</li>
-                        <li>Manajemen File: TGL_NAMA_JUDUL.mp4 & Backup Aset 3 Hari</li>
+                        <li>Kualitas Visual: Wajib 1080p Full HD & Rasio 9:16 (Shorts).</li>
+                        <li>Alur Cerita: Wajib Hook 3 Detik di awal & Ekspresi AI Berkarakter.</li>
+                        <li>Produksi: Durasi Min 60 Detik, Audio No-Copyright & Wajib SFX.</li>
+                        <li>Manajemen: File TGL_NAMA_JUDUL.mp4 & Backup Aset 3 Hari.</li>
                     </ul>
 
-                    <b>II. ATURAN PENYETARAAN UNIT (NEW 2026)</b>
+                    <b>II. ATURAN PENYETARAAN UNIT (STANDAR 2026)</b>
                     <ul style="margin: 5px 0 10px 20px; padding: 0;">
-                        <li><b>Project HQ (AI):</b> 1 Video = 1 Link (1 Poin)</li>
-                        <li><b>Project Ringan:</b> Minimal 10 Video/Link = 1 Poin</li>
-                        <li><b>Radar Aman:</b> Minimal 2 Poin/Hari (Contoh: 20 Video Ringan)</li>
+                        <li><b>Project High Quality:</b> 1 Video = 1 Link Setoran (1 Poin).</li>
+                        <li><b>Project Ringan:</b> Minimal 10 Video/Link = 1 Poin.</li>
+                        <li><b>Target Radar:</b> Minimal 2 Poin/Hari (Contoh: 20 Video Ringan).</li>
                     </ul>
 
                     <b>III. SANKSI DAN PELANGGARAN</b>
-                    <p style="margin: 5px 20px; color: #e74c3c; font-weight: bold; border: 1px solid #e74c3c; padding: 5px;">
-                        Kelalaian terhadap SOP memicu Surat Peringatan (SP) dan Denda Administratif Rp 1.000.000.
+                    <p style="margin: 5px 20px; color: #e74c3c; font-weight: bold; border: 1px solid #e74c3c; padding: 8px; text-align: center; border-radius: 5px;">
+                        KELALAIAN TERHADAP SOP MEMICU SURAT PERINGATAN (SP) DAN DENDA ADMINISTRATIF RP 1.000.000.
                     </p>
                 </div>
 
-                <table style="width: 100%; margin-top: 30px; font-size: 10px; text-align: center;">
+                <table style="width: 100%; margin-top: 40px; font-size: 10px; text-align: center;">
                     <tr>
                         <td width="50%">Penerima Tugas,</td>
-                        <td width="50%">Owner PINTAR MEDIA,</td>
+                        <td width="50%">Pihak PINTAR MEDIA,</td>
                     </tr>
-                    <tr style="height: 50px;">
-                        <td><br><i style="color: #ccc;">(Tanda Tangan Digital)</i></td>
-                        <td><br><b style="color: #1d976c;">DIAN</b></td>
+                    <tr style="height: 60px;">
+                        <td></td>
+                        <td><br><b style="color: #1d976c;">OWNER DIAN</b></td>
                     </tr>
                     <tr>
-                        <td><b>( {n_up} )</b></td>
-                        <td><b>( PT. PINTAR DIGITAL KREASI )</b></td>
+                        <td>( ................................... )</td>
+                        <td>( PT. PINTAR DIGITAL KREASI )</td>
                     </tr>
                 </table>
             </div>
@@ -2652,8 +2655,9 @@ def tampilkan_area_staf():
                 <button onclick="window.print()" style="padding: 15px 35px; background: #1a1a1a; color: #55efc4; border: 2px solid #55efc4; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px;">🖨️ CETAK & SIMPAN SURAT SOP</button>
             </div>
             """
+            # --- KOMPONEN HTML HARUS SEJAJAR DENGAN SOP_EDITOR_HTML ---
             st.components.v1.html(sop_editor_html, height=950, scrolling=True)
-
+    
         elif divisi_sop == "Staff Uploader":
             with st.container(border=True):
                 st.markdown("📡 **TATA CARA UPLOAD & HANDLE CHANNEL**")
@@ -3289,5 +3293,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
