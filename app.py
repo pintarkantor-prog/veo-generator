@@ -2601,10 +2601,10 @@ def tampilkan_area_staf():
             st.markdown("##### 📊 II. KETENTUAN KERJA & BONUS INSENTIF")
             with st.container(border=True):
                 st.info("**Aturan ini dibuat agar beban kerja adil bagi semua staf (HQ vs Ringan).**")
-                st.write("• **PROJECT HQ**: 1 Link GDrive berisi 1 Video = **1 Poin**.")
-                st.write("• **PROJECT RINGAN**: 1 Link GDrive berisi minimal 15 Video = **1 Poin**.")
-                st.write("• **Poin ke-3 (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
-                st.write("• **Poin ke-5 & Seterusnya**: Bonus tambahan Rp 30.000 per poin.")
+                st.write("• **PROJECT HQ**: 1 Link GDrive berisi 1 Video.")
+                st.write("• **PROJECT RINGAN**: 1 Link GDrive berisi 15 Video = **nilainya setara dengan 1 video HQ**.")
+                st.write("• **Video ke-3 status acc (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
+                st.write("• **Video ke-5 status acc & Seterusnya**: Bonus tambahan Rp 30.000 per video.")
 
             # --- III. MODUL PANDUAN (FULL DETAIL A-E) ---
             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
@@ -3501,6 +3501,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
