@@ -3223,18 +3223,33 @@ def tampilkan_area_staf():
             </div>
 
             <div style="page-break-inside: avoid; break-inside: avoid; margin-top: 50px;">
-                <table style="width: 100%; text-align: center; font-size: 13px;">
+                <table style="width: 100%; text-align: center; font-size: 13px; border-collapse: collapse;">
                     <tr>
-                        <td style="width: 50%; vertical-align: top;">
-                            PIHAK KEDUA,<br><br><br><br>
-                            <span style="color:green; font-weight:bold;">
+                        <td style="width: 50%; vertical-align: bottom; padding-bottom: 20px;">
+                            PIHAK KEDUA,
+                        </td>
+                        <td style="width: 50%; vertical-align: bottom; padding-bottom: 20px;">
+                            Banyumas, {tgl_hari_ini}<br>
+                            PIHAK PERTAMA,
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="height: 80px; vertical-align: middle;">
+                            <span style="color:green; font-weight:bold; font-size: 11px;">
                                 {"[ E-SIGNED VERIFIED: " + waktu_presisi + " ]" if is_signed else "(BELUM TANDA TANGAN)"}
-                            </span><br>
+                            </span>
+                        </td>
+                        <td style="height: 80px; vertical-align: middle;">
+                            <span style="color:blue; font-weight:bold; font-size: 11px;">[ OWNER SIGNED & VERIFIED ]</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align: top;">
                             <b>{staf_nama}</b>
                         </td>
-                        <td style="width: 50%; vertical-align: top;">
-                            Banyumas, {tgl_hari_ini}<br>PIHAK PERTAMA,<br><br><br><br>
-                            <span style="color:blue; font-weight:bold;">[ OWNER SIGNED & VERIFIED ]</span><br>
+                        <td style="vertical-align: top;">
                             <b>{nama_direktur}</b>
                         </td>
                     </tr>
@@ -3709,5 +3724,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
