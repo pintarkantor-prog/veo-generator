@@ -3044,7 +3044,7 @@ def tampilkan_area_staf():
 
         # --- KHUSUS TAMPILAN OWNER / ADMIN ---
         if level_aktif in ["OWNER", "ADMIN"]:
-            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=True):
+            with st.expander("📊 Rekap Tanda Tangan Staff", expanded=False):
                 # 1. Ambil data dari Supabase (Cek username & waktu_presisi juga)
                 all_signs_raw = supabase.table("kontrak_staff").select("username, waktu_presisi").eq("periode", bulan_sekarang).execute()
                 
@@ -3701,6 +3701,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
