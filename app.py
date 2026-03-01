@@ -2675,11 +2675,12 @@ def tampilkan_area_staf():
                         <i><b>Tujuan:</b> Memancing komentar perdebatan seperti "Harusnya Tung yang menang!" atau "Lanjut part 2, balas dendam!".</i>
                     </div>
 
-                    <div style="margin-bottom: 30px; background: #f9f9f9; padding: 25px; border: 1px dashed #666;">
+                    <div style="margin-bottom: 30px; background: #f9f9f9; padding: 20px; border: 1px dashed #666;">
                         <b style="font-size: 16px;">📢 PANDUAN INTERAKSI (CTA - CALL TO ACTION)</b><br><br>
-                        • <b>Strategi Timing:</b> Letakkan CTA di momen "Emosional Puncak" (Revenge) atau "Tensi Puncak" (Battle).<br>
-                        • <b>Kekuatan Kata:</b> Gunakan kata "Bantu" atau "Kontribusi". Contoh: "Kasih 1 Like buat modal Udin jualan!".<br>
-                        • <b>Retention Loop:</b> Selalu tanya pendapat penonton untuk video berikutnya. Contoh: "Karakter siapa lagi yang harus muncul?".
+                        • <b>Timing:</b> Jangan letakkan CTA di awal yang mengganggu hook. Taruh di momen penonton sedang merasa "kasihan" atau "penasaran".<br>
+                        • <b>Emotional CTA:</b> Gunakan kalimat ajakan yang melibatkan kontribusi penonton (Contoh: "Bantu Udin bangkit dengan klik Like").<br>
+                        • <b>Debate CTA:</b> Gunakan pada konten Battle untuk memancing kolom komentar (Contoh: "Ketik 1 untuk Udin, 2 untuk Tung").<br>
+                        • <b>Retention CTA:</b> Ajakan untuk menonton part selanjutnya atau memberikan ide konten (Contoh: "Ketik LANJUT buat liat pembalasan berikutnya!").
                     </div>
 
                     <div style="margin-top: 50px; font-size: 11px; text-align: center; color: #666; border-top: 1px solid #eee; padding-top: 10px;">
@@ -3500,6 +3501,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
