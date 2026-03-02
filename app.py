@@ -3439,17 +3439,21 @@ def tampilkan_database_channel():
                             # --- KOLOM 4: SUBSCRIBE (BISA EDIT MANUAL) ---
                             with c4:
                                 st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p>", unsafe_allow_html=True)
-                                # Gunakan text_input agar bisa diketik manual
-                                v_subs_awal = str(r['SUBSCRIBE'])
-                                new_subs = st.text_input("Subs", value=v_subs_awal, key=f"subs_{idx}", label_visibility="collapsed")
                                 
-                                # Logika Otomatis Update ke GSheet jika ada perubahan
-                                if new_subs != v_subs_awal:
-                                    r_idx = idx + 2
-                                    ws.update_cell(r_idx, 5, new_subs) # Kolom 5 adalah SUBSCRIBE
-                                    st.toast(f"✅ {r['NAMA_CHANNEL']} Update: {new_subs} Subs")
-                                    time.sleep(0.5)
-                                    st.rerun()
+                                # Baris data dan tombol edit kecil sejajar
+                                c_subs_val, c_subs_edit = st.columns([3, 1])
+                                c_subs_val.markdown(f"<b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                                
+                                # Tombol edit mungil pake popover biar nggak ngerusak baris
+                                with c_subs_edit:
+                                    with st.popover("✏️", use_container_width=True):
+                                        new_s = st.text_input("Update Subs", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
+                                        if st.button("💾 SIMPAN", key=f"save_s_{idx}", use_container_width=True):
+                                            r_idx = idx + 2
+                                            ws.update_cell(r_idx, 5, new_s) # Update Kolom E (5)
+                                            st.toast(f"✅ Subs {r['NAMA_CHANNEL']} Updated!")
+                                            time.sleep(0.5)
+                                            st.rerun()
                             
                             link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db;'>BUKA LINK CHANNEL</a>"
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p>{link_txt}", unsafe_allow_html=True)
@@ -3922,6 +3926,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
