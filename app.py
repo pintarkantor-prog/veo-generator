@@ -3524,55 +3524,66 @@ def tampilkan_database_channel():
                                         time.sleep(1.5)
                                         st.rerun()
 
-    with st.expander("📱 RADAR MASA AKTIF HP (5 COLUMNS)", expanded=True):
-    if df_hp.empty:
-        st.info("Data HP kosong di GSheet.")
-    else:
-        # BIKIN 5 KOLOM SEJAJAR
-        cols = st.columns(5)
-        
-        for i, (idx, r) in enumerate(df_hp.iterrows()):
-            # Bagi rata ke 5 kolom
-            with cols[i % 5]:
-                try:
-                    # Hitung Masa Aktif
-                    tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
-                    sisa = (tgl_exp - datetime.now()).days
-                    
-                    # Logika Warna Gaya Radar
-                    bg_color = "#2D5A47" # Hijau (Aman)
-                    if sisa < 0:
-                        bg_color = "#962D2D" # Merah (Mati)
-                    elif sisa <= 7:
-                        bg_color = "#A67C00" # Kuning (Warning)
+        # --- RADAR MASA AKTIF HP (5 KOLOM SEJAJAR) ---
+        with st.expander("📱 RADAR MASA AKTIF HP", expanded=True):
+            if df_hp.empty:
+                st.info("Data HP belum terisi di GSheet 'Data_HP'.")
+            else:
+                cols_hp = st.columns(5) #
+                
+                for i, (idx, r) in enumerate(df_hp.iterrows()):
+                    with cols_hp[i % 5]: # Biar berjejer 5
+                        try:
+                            # 1. Logika Hitung Hari
+                            tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
+                            sisa = (tgl_exp - datetime.now()).days
+                            
+                            # 2. Penentu Warna Gaya Radar
+                            bg_c = "#2D5A47" # Hijau (Aman)
+                            if sisa < 0: bg_c = "#962D2D" # Merah (Mati)
+                            elif sisa <= 7: bg_c = "#A67C00" # Kuning (Warning)
 
-                    with st.container(border=True):
-                        # Header Nama HP
-                        st.markdown(f"""
-                            <div style="background:{bg_color}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;">
-                                <b style="color:white; font-size:12px;">{str(r['NAMA_HP']).upper()}</b>
-                            </div>
-                        """, unsafe_allow_html=True)
-                        
-                        # Info Detail Minimalis
-                        st.markdown(f"""
-                            <p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR</p>
-                            <p style='margin:0; font-size:12px;'><b>{r['NOMOR_HP']}</b></p>
-                            <div style='margin-top:8px;'></div>
-                            <p style='margin:0; font-size:10px; color:#888;'>⏳ SISA HARI</p>
-                            <p style='margin:0; font-size:14px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>
-                        """, unsafe_allow_html=True)
-                        
-                        # Tombol Edit Kecil (PopOver) biar gak makan tempat
-                        with st.popover("⚙️", use_container_width=True):
-                            new_tgl = st.text_input("Update Expired", value=str(r['MASA_AKTIF']), key=f"hp_{idx}")
-                            if st.button("SAVE", key=f"btn_hp_{idx}", use_container_width=True):
-                                # Asumsi Update ke GSheet (Kolom C = urutan ke-3)
-                                ws_hp = sh_master.worksheet("Data_HP")
-                                ws_hp.update_cell(idx + 2, 3, new_tgl)
-                                st.toast("✅ Updated!"); time.sleep(1.5); st.rerun()
-                except:
-                    st.caption(f"Format {r['NAMA_HP']} Error")
+                            with st.container(border=True):
+                                # Header Card
+                                st.markdown(f"""
+                                    <div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;">
+                                        <b style="color:white; font-size:11px;">{str(r['NAMA_HP']).upper()}</b>
+                                    </div>
+                                """, unsafe_allow_html=True)
+                                
+                                # Tampilan Info (Nomor & Hari)
+                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR</p><p style='margin:0; font-size:12px;'><b>{r['NOMOR_HP']}</b></p>", unsafe_allow_html=True)
+                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:5px;'>⏳ SISA</p><p style='margin:0; font-size:14px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>", unsafe_allow_html=True)
+                                
+                                # 3. MASTER EDIT HP (Input & Simpan di Popover)
+                                with st.popover("✏️ EDIT", use_container_width=True):
+                                    # Cek apakah user punya hak akses
+                                    is_authorized = str(user_aktif).upper() in ["ADMIN", "OWNER", "DIAN"]
+                                    
+                                    if not is_authorized:
+                                        st.error("🚫 Hanya Admin/Owner yang bisa edit.")
+                                    
+                                    st.caption(f"Update Data {r['NAMA_HP']}")
+                                    
+                                    # Inputan otomatis 'disabled' kalau bukan authorized user
+                                    new_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), 
+                                                          key=f"hp_no_{idx}", disabled=not is_authorized)
+                                    new_prov = st.text_input("Provider", value=str(r['PROVIDER']), 
+                                                           key=f"hp_pv_{idx}", disabled=not is_authorized)
+                                    new_tgl = st.text_input("Tgl Expired", value=str(r['MASA_AKTIF']), 
+                                                           key=f"hp_tg_{idx}", help="Format: DD/MM/YYYY",
+                                                           disabled=not is_authorized)
+                                    
+                                    # Tombol hanya aktif untuk Admin/Owner
+                                    if st.button("💾 SAVE", key=f"hp_sv_{idx}", use_container_width=True, 
+                                                 type="primary", disabled=not is_authorized):
+                                        ws_hp = sh_master.worksheet("Data_HP") #
+                                        r_idx = idx + 2
+                                        ws_hp.update(f"B{r_idx}:D{r_idx}", [[new_no, new_prov, new_tgl]]) #
+                                        
+                                        st.toast(f"✅ {r['NAMA_HP']} Updated!")
+                                        time.sleep(1.5) #
+                                        st.rerun()
                                         
     # ==========================================
     # TAB 3: JADWAL UPLOAD
@@ -4020,6 +4031,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
