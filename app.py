@@ -3509,77 +3509,85 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (PREMIUM UI & FULL INPUT) ---
+    # --- TAB 4: MONITOR HP (PRO MINIMALIS UI) ---
     # ======================================================================
     with tab_hp:
-        st.subheader("📡 RADAR MONITORING UNIT - V.4.0")
+        st.subheader("📡 RADAR MONITORING UNIT")
         
-        with st.expander("📱 PANEL KENDALI UNIT & KARTU", expanded=True):
-            if is_boss:
-                with st.form("form_hp_lengkap_v4", clear_on_submit=True):
-                    st.markdown("### ➕ Tambah Unit Baru")
-                    c1, c2 = st.columns(2)
-                    in_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
-                    in_no = c2.text_input("Nomor HP (Contoh: 0812...)")
-                    
-                    c3, c4 = st.columns(2)
-                    in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                    in_tgl = st.date_input("Masa Aktif Kartu") # Pake date_input biar user gak salah ketik format
-                    
-                    if st.form_submit_button("🚀 SIMPAN UNIT KE GSHEET"):
-                        if in_nama and in_no:
-                            # Format tanggal ke string buat GSheet
-                            tgl_str = in_tgl.strftime("%d/%m/%Y")
-                            # Input Lengkap: NAMA_HP, NOMOR_HP, PROVIDER, MASA_AKTIF
-                            ws_unit_hp.insert_row([str(in_nama).upper(), f"'{in_no}", in_prov, tgl_str], 2, value_input_option='USER_ENTERED')
-                            st.cache_data.clear()
-                            st.success(f"✅ {in_nama} Berhasil Didaftarkan!"); time.sleep(1); st.rerun()
-                        else:
-                            st.error("Nama dan Nomor wajib diisi, Cok!")
-
-            st.divider()
-
-            # --- DISPLAY CARD PREMIUM ---
-            if df_hp.empty:
-                st.info("Radar masih kosong.")
-            else:
-                # Pastikan identitas gak ilang
-                df_hp['NAMA_HP'] = df_hp['NAMA_HP'].astype(str)
-                df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].copy()
+        with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
+            with st.form("form_hp_pro_v5", clear_on_submit=True):
+                # Baris 1: Nama Unit & Nomor HP
+                c1, c2 = st.columns(2)
+                v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
+                v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
                 
-                grid = st.columns(5)
-                for i, (idx, r) in enumerate(df_view.iterrows()):
-                    with grid[i % 5]:
-                        # LOGIKA WARNA BERDASARKAN TANGGAL
+                # Baris 2: Provider & Masa Aktif
+                c3, c4 = st.columns(2)
+                v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                v_tgl = c4.date_input("Masa Aktif Kartu", value=datetime.now())
+                
+                if st.form_submit_button("🚀 SIMPAN UNIT"):
+                    # VALIDASI KETAT: Tolak jika ada yang kosong
+                    if not v_nama or not v_no or not v_tgl:
+                        st.error("❌ GAGAL! Semua data (Nama, Nomor, Provider, & Tanggal) wajib diisi!")
+                    else:
                         try:
-                            exp_tgl = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
-                            sisa_hari = (exp_tgl - datetime.now()).days
-                            if sisa_hari > 7: color_header = "#2D5A47" # Ijo
-                            elif sisa_hari >= 0: color_header = "#A67C00" # Kuning
-                            else: color_header = "#962D2D" # Merah
-                        except:
-                            color_header = "#444"; sisa_hari = "?"
+                            tgl_fix = v_tgl.strftime("%d/%m/%Y")
+                            # Simpan ke GSheet
+                            ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
+                            st.cache_data.clear()
+                            st.success(f"✅ {v_nama} Berhasil Didaftarkan!"); time.sleep(1); st.rerun()
+                        except Exception as e:
+                            st.error(f"Error: {e}")
 
-                        with st.container(border=True):
-                            # Header Card dengan Warna Status
-                            st.markdown(f"""
-                                <div style="background:{color_header}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;">
-                                    <b style="color:white; font-size:12px;">{r['NAMA_HP']}</b>
-                                </div>
-                            """, unsafe_allow_html=True)
+        st.divider()
+
+        # --- DISPLAY RADAR CARD (2 KOLOM INFO) ---
+        if df_hp.empty:
+            st.info("Radar masih kosong.")
+        else:
+            df_hp['NAMA_HP'] = df_hp['NAMA_HP'].astype(str)
+            df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].copy()
+            
+            grid = st.columns(4) # 4 Card per baris biar gak sesek
+            for i, (idx, r) in enumerate(df_view.iterrows()):
+                with grid[i % 4]:
+                    # LOGIKA HITUNG SISA HARI & WARNA
+                    try:
+                        t_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
+                        sisa = (t_exp - datetime.now()).days
+                        if sisa > 7: color_code = "#2D5A47" # IJO
+                        elif 3 <= sisa <= 7: color_code = "#A67C00" # ORANGE
+                        else: color_code = "#962D2D" # MERAH
+                    except:
+                        color_code = "#444"; sisa = 0
+
+                    with st.container(border=True):
+                        # Judul Unit Minimalis
+                        st.markdown(f'<div style="background:{color_code}; padding:3px; border-radius:3px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
+                        
+                        # Info 2 Kolom Inside Card
+                        ic1, ic2 = st.columns(2)
+                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXP</p><b style='font-size:10px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
+                        
+                        ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROV</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
+                        ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
+
+                        # Popover Edit Lengkap
+                        with st.popover("✏️", use_container_width=True):
+                            e_nama = st.text_input("Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
+                            e_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
+                            e_prov = st.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], index=["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"].index(r['PROVIDER']) if r['PROVIDER'] in ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"] else 0, key=f"ep_{idx}")
+                            e_tgl = st.text_input("Masa Aktif (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
                             
-                            # Isi Data Lengkap
-                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📞 {r['PROVIDER']}</p>", unsafe_allow_html=True)
-                            st.markdown(f"<b style='font-size:13px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
-                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:8px;'>⏳ MASA AKTIF</p>", unsafe_allow_html=True)
-                            st.markdown(f"<b style='font-size:12px;'>{r['MASA_AKTIF']}</b> <small>({sisa_hari} hari)</small>", unsafe_allow_html=True)
-
-                            # Tombol Edit Cepat
-                            with st.popover("✏️"):
-                                new_no = st.text_input("Ganti Nomor", value=str(r['NOMOR_HP']), key=f"ed_no_{idx}")
-                                if st.button("UPDATE", key=f"btn_up_{idx}"):
-                                    ws_unit_hp.update_cell(idx + 2, 2, f"'{new_no}")
-                                    st.cache_data.clear(); st.rerun()
+                            if st.button("SIMPAN PERUBAHAN", key=f"btn_e_{idx}", use_container_width=True):
+                                # Update 4 kolom sekaligus
+                                ws_unit_hp.update_cell(idx + 2, 1, e_nama.upper())
+                                ws_unit_hp.update_cell(idx + 2, 2, f"'{e_no}")
+                                ws_unit_hp.update_cell(idx + 2, 3, e_prov)
+                                ws_unit_hp.update_cell(idx + 2, 4, e_tgl)
+                                st.cache_data.clear(); st.rerun()
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4005,4 +4013,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
