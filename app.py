@@ -3453,9 +3453,37 @@ def tampilkan_database_channel():
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
                                     st.cache_data.clear(); st.rerun()
                             with c8:
+                                # Popover Edit Minimalis
                                 with st.popover("✏️"):
-                                    # ... (Kode Edit Channel lo tetap sama di sini) ...
-                                    st.write("Edit Mode Active")
+                                    st.markdown(f"### ✏️ Edit Channel")
+                                    # Input Field (Mengambil data lama sebagai default value)
+                                    e_nama_ch = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"edit_nm_{idx}")
+                                    e_mail_ch = st.text_input("Email Login", value=str(r['EMAIL']), key=f"edit_ml_{idx}")
+                                    e_pass_ch = st.text_input("Password", value=str(r['PASSWORD']), key=f"edit_ps_{idx}")
+                                    e_link_ch = st.text_input("Link Channel", value=str(r['LINK_CHANNEL']), key=f"edit_lk_{idx}")
+                                    
+                                    st.divider()
+                                    
+                                    # Tombol Update
+                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"save_ch_{idx}", use_container_width=True):
+                                        if e_nama_ch and e_mail_ch:
+                                            try:
+                                                # Update kolom GSheet (Sesuaikan nomor kolom dengan urutan di sheet lo)
+                                                # Contoh: Nama (Kolom 4), Email (Kolom 2), Pass (Kolom 3), Link (Kolom 6)
+                                                r_idx = idx + 2 # Header + Index 0
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper())
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)
+                                                
+                                                st.cache_data.clear() # Bersihkan cache agar data terbaru nongol
+                                                st.success("✅ Berhasil diupdate!")
+                                                time.sleep(1)
+                                                st.rerun()
+                                            except Exception as e:
+                                                st.error(f"Gagal update: {e}")
+                                        else:
+                                            st.error("Nama & Email gak boleh kosong!")
 
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
@@ -4019,6 +4047,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
