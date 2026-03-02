@@ -302,7 +302,7 @@ def log_absen_otomatis(nama_user):
     jam_skrg = waktu_skrg.strftime("%H:%M")
 
     # 4. RANGE JAM OPERASIONAL ABSENSI (08:00 - 17:59)
-    if 8 <= jam < 24: 
+    if 8 <= jam < 18: 
         try:
             nama_up = str(nama_user).upper().strip()
             
@@ -432,7 +432,7 @@ def proses_login(user, pwd):
 
                 # --- 4. BERSIHKAN URL & REFRESH ---
                 st.query_params.clear() 
-                time.sleep(2) 
+                time.sleep(1) 
                 st.rerun()
             else:
                 st.error("Password salah.")
@@ -3864,6 +3864,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
