@@ -3375,18 +3375,17 @@ def tampilkan_database_channel():
     user_aktif = st.session_state.get("user_aktif", "User").upper()
     is_boss = level_aktif in ["OWNER", "ADMIN"]
 
-    # --- 2. KONEKSI SATU PINTU (HAPUS SEMUA CACHE DI SINI) ---
+    # --- 2. KONEKSI SATU PINTU (FORCE LIVE) ---
     try:
         sh = get_gspread_sh()
         
-        # A. Tarik Data Channel
+        # A. Data Channel (Pintar)
         ws_ch = sh.worksheet("Channel_Pintar")
         df = pd.DataFrame(ws_ch.get_all_records())
         df.columns = [str(c).strip().upper() for c in df.columns]
 
-        # B. Tarik Data HP (FORCE LIVE - JANGAN PAKE CACHE)
+        # B. Data HP (Force Pull Detik Ini Juga)
         ws_hp = sh.worksheet("Data_HP")
-        # Tarik data detik ini juga
         raw_hp = ws_hp.get_all_records()
         df_hp = pd.DataFrame(raw_hp) if raw_hp else pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
         df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
@@ -3394,7 +3393,7 @@ def tampilkan_database_channel():
     except Exception as e:
         st.error(f"Koneksi Gagal: {e}"); return
 
-    # --- 3. PEMBUATAN TAB ---
+    # --- 3. PEMBUATAN TAB (TAMBAHKAN KEY AGAR REFRESH) ---
     tab_standby, tab_proses, tab_jadwal, tab_hp, tab_sold, tab_arsip = st.tabs([
         "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", 
         "📱 MONITOR HP", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
@@ -3515,48 +3514,61 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     with tab_hp:
-        st.subheader("📡 RADAR MONITORING HP - VERSI FINAL")
+        st.subheader("📡 RADAR MONITORING HP - VERSI FRESH")
         
-        # BUNGKUS SATU EXPANDER
-        with st.expander("📡 PANEL KENDALI UNIT HP", expanded=True):
+        # BUNGKUS DALAM SATU EXPANDER SESUAI REQUEST
+        with st.expander("📱 RADAR MASA AKTIF HP", expanded=True):
             if is_boss:
-                # Pake kunci form yang unik biar gak nyangkut
-                with st.form("form_input_hp_v100", clear_on_submit=True):
-                    st.markdown("### ➕ Input Unit Baru")
+                st.markdown("### ➕ Tambah Unit Baru")
+                with st.form("form_hp_internal_fresh", clear_on_submit=True):
                     c1, c2 = st.columns(2)
-                    v_nama = c1.text_input("Nama Unit HP (Wajib)")
+                    v_nama = c1.text_input("Nama Unit HP (Wajib)", placeholder="Contoh: HP 1")
                     v_nomer = c2.text_input("Nomor HP (Wajib)")
                     
                     c3, c4 = st.columns(2)
                     v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                    v_tgl = c4.text_input("Expired (DD/MM/YYYY) - Wajib")
+                    v_tgl = c4.text_input("Masa Aktif (Wajib: DD/MM/YYYY)", placeholder="10/03/2026")
                     
-                    if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
-                        # VALIDASI GALAK: Cek manual di sini
+                    if st.form_submit_button("🚀 SIMPAN UNIT"):
+                        # VALIDASI GALAK: Cek manual di sini biar gak Zonk
                         if not v_nama or not v_nomer or not v_tgl:
                             st.error("❌ GAGAL! Semua kolom wajib diisi, jangan ada yang kosong!")
                         else:
                             try:
-                                ws_hp.append_row([v_nama.upper(), f"'{v_nomer}", v_prov, v_tgl], value_input_option='USER_ENTERED')
+                                # Pakai insert_row agar HP 4 atau HP 1 muncul paling atas
+                                ws_hp.insert_row([str(v_nama).upper(), f"'{v_nomer}", v_prov, v_tgl], 2, value_input_option='USER_ENTERED')
                                 st.cache_data.clear()
-                                st.success("✅ DATA MASUK!"); time.sleep(1); st.rerun()
+                                st.success(f"✅ {v_nama} BERHASIL DISIMPAN!"); time.sleep(1); st.rerun()
                             except Exception as e:
-                                st.error(f"Error: {e}")
+                                st.error(f"Gagal: {e}")
 
             st.divider()
             
-            # TAMPILIN CARD
+            # --- BAGIAN RADAR CARD (FORCE DISPLAY) ---
+            # Pastikan NAMA_HP dibaca sebagai string agar identitas 'HP 1' nggak ilang
             df_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
+            
             if df_view.empty:
-                st.info("Data HP masih kosong.")
+                st.info("📭 Radar masih kosong. Silakan input di atas.")
             else:
                 grid = st.columns(5)
                 for i, (idx, r) in enumerate(df_view.iterrows()):
                     with grid[i % 5]:
-                        with st.container(border=True):
-                            st.markdown(f"**{r['NAMA_HP']}**")
-                            st.caption(f"📞 {r['NOMOR_HP']}")
-                            st.write(f"⏳ {r['MASA_AKTIF']}")
+                        try:
+                            # Logika Warna Card
+                            t_exp = pd.to_datetime(str(r['MASA_AKTIF']), dayfirst=True, errors='coerce')
+                            if pd.isnat(t_exp):
+                                bg_c, sisa = "#444", "?"
+                            else:
+                                sisa = (t_exp - datetime.now()).days
+                                bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
+
+                            with st.container(border=True):
+                                st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{str(r["NAMA_HP"]).upper()}</b></div>', unsafe_allow_html=True)
+                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
+                        except:
+                            pass
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -3982,6 +3994,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
