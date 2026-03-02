@@ -3426,22 +3426,22 @@ def tampilkan_database_channel():
                             # HEADER CARD (Warna Hijau Gelap Standby)
                             st.markdown(f"""
                                 <div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;">
-                                    <b style="color:white; font-size:11px;">🚀 {str(r['NAMA_CHANNEL']).upper()}</b>
+                                    <b style="color:white; font-size:11px;">📺 {str(r['NAMA_CHANNEL']).upper()}</b>
                                 </div>
                             """, unsafe_allow_html=True)
 
                             # 7 KOLOM SEJAJAR (EMAIL, PW, NAMA, SUBS, LINK, OLEH, AKSI)
                             c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1.5, 0.8, 1, 1, 1.2])
                             
-                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PW</p><code style='font-size:11px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA</p><b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:11px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:14px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:14px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:14px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
                             
-                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px; color:#3498db;'>Buka</a>"
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p>{link_txt}", unsafe_allow_html=True)
+                            link_txt = f"<a href='{r['BUKA LINK CHANNEL']}' target='_blank' style='font-size:11px; color:#3498db;'>Buka</a>"
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p>{link_txt}", unsafe_allow_html=True)
                             
-                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:11px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
+                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:14px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
 
                             # AKSI DROPDOWN MINIMALIS
                             with c7:
@@ -3909,6 +3909,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
