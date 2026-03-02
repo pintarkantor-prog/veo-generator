@@ -3351,6 +3351,8 @@ def tampilkan_database_channel():
     # --- 1. SETUP AKSES & USER ---
     level_aktif = st.session_state.get("user_level", "STAFF")
     user_aktif = st.session_state.get("user_aktif", "User").upper()
+
+    # Variabel Izin Akses (PENTING: Jangan dihapus agar tab bawah gak error)
     is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
     is_boss = level_aktif in ["OWNER", "ADMIN"]
 
@@ -3359,27 +3361,36 @@ def tampilkan_database_channel():
         sh = get_gspread_sh() 
         ws = sh.worksheet("Channel_Pintar")
         data = ws.get_all_records()
-        df = pd.DataFrame(data) if data else pd.DataFrame()
-        if not df.empty:
+        
+        kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
+                       "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN", "PENCATAT"]
+        
+        if not data:
+            df = pd.DataFrame(columns=kolom_wajib)
+        else:
+            df = pd.DataFrame(data)
             df.columns = [str(c).strip().upper() for c in df.columns]
     except Exception as e:
-        st.error(f"Gagal koneksi: {e}")
+        st.error(f"Gagal koneksi GSheet: {e}")
         return
 
-    # --- 3. TAB MENU ---
+    # --- 3. PEMBUATAN TAB (NAMA VARIABEL TETAP KONSISTEN) ---
     tab_standby, tab_proses, tab_jadwal, tab_sold, tab_arsip = st.tabs([
-        "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
+        "📦 STOK STANDBY", 
+        "🚀 CHANNEL PROSES", 
+        "📅 JADWAL UPLOAD", 
+        "💰 SOLD CHANNEL", 
+        "📂 ARSIP CHANNEL"
     ])
 
     # ==========================================
-    # REVISI TOTAL: TAB STOK STANDBY
+    # TAB 1: STOK STANDBY (TAMPILAN BARU ALA AKUN AI)
     # ==========================================
-    with tab_st:
+    with tab_standby:
         if not is_pro:
-            st.warning("Akses Terbatas.")
+            st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # --- TOMBOL TAMBAH ALA AKUN AI ---
-            # Menggunakan expander dengan label + (icon plus)
+            # Tombol Tambah ala Akun AI
             with st.expander("➕ TAMBAH CHANNEL BARU", expanded=False):
                 with st.form("form_tambah_standby"):
                     c1, c2, c3 = st.columns(3)
@@ -3396,25 +3407,18 @@ def tampilkan_database_channel():
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                             ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
-                            st.success(f"Channel {f_nama} berhasil ditambahkan!")
-                            time.sleep(1)
+                            st.success("Berhasil!")
                             st.rerun()
 
-            st.write("") # Spacer
-
-            # --- LIST DATA STANDBY (MODEL 1 BARIS BEBERAPA KOLOM) ---
-            df_standby = df[df['STATUS'] == 'STANDBY']
-            
-            if df_standby.empty:
+            st.write("") 
+            df_st = df[df['STATUS'] == 'STANDBY']
+            if df_st.empty:
                 st.info("Gudang Standby Kosong.")
             else:
-                for idx, row in df_standby.iterrows():
-                    # Bungkus dalam container border biar rapi
+                for idx, row in df_st.iterrows():
                     with st.container(border=True):
-                        # Kita bagi kolom sejajar
-                        # Nama (2), Email (2), PW (1), Subs (1), Aksi (1)
+                        # Tampilan Sejajar
                         col_nama, col_mail, col_pass, col_subs, col_btn = st.columns([2, 2, 1.5, 1, 1.2])
-                        
                         col_nama.markdown(f"**{row['NAMA_CHANNEL']}**")
                         col_mail.caption(f"📧 {row['EMAIL']}")
                         col_pass.caption(f"🔑 `{row['PASSWORD']}`")
@@ -3422,7 +3426,6 @@ def tampilkan_database_channel():
                         
                         with col_btn:
                             with st.popover("⚙️ EKSEKUSI", use_container_width=True):
-                                # --- SMART HP & AUTO SLOT LOGIC ---
                                 df_p = df[df['STATUS'] == 'PROSES']
                                 suggested_hp = 1
                                 for h in range(1, 26):
@@ -3435,21 +3438,14 @@ def tampilkan_database_channel():
                                 if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
                                     data_hp_ini = df_p[df_p['HP'] == p_hp]
                                     slot_terpakai = data_hp_ini['SLOT'].tolist()
-                                    
-                                    slot_final = None
-                                    for s in ["PAGI", "SIANG", "SORE"]:
-                                        if s not in slot_terpakai:
-                                            slot_final = s
-                                            break
+                                    slot_final = next((s for s in ["PAGI", "SIANG", "SORE"] if s not in slot_terpakai), None)
                                     
                                     if not slot_final:
                                         st.error(f"HP {p_hp} FULL!")
                                     else:
                                         r = idx + 2
-                                        ws.update_cell(r, 7, "PROSES")
-                                        ws.update_cell(r, 8, p_hp)
-                                        ws.update_cell(r, 9, slot_final)
-                                        ws.update_cell(r, 11, user_aktif)
+                                        ws.update_cell(r, 7, "PROSES"); ws.update_cell(r, 8, p_hp)
+                                        ws.update_cell(r, 9, slot_final); ws.update_cell(r, 11, user_aktif)
                                         st.rerun()
                                 
                                 if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
@@ -3460,30 +3456,33 @@ def tampilkan_database_channel():
                                     ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
 
     # ==========================================
-    # TAB 2: CHANNEL PROSES (HANYA SOLD, BUSUK, SUSPEND)
+    # TAB 2: CHANNEL PROSES
     # ==========================================
     with tab_proses:
         if not is_pro:
-            st.warning("Akses Terbatas.")
+            st.warning("🚫 Akses Terbatas.")
         else:
             df_pro = df[df['STATUS'] == 'PROSES']
-            for idx, row in df_pro.iterrows():
-                with st.container(border=True):
-                    c1, c2, c3 = st.columns([2, 1, 1])
-                    c1.markdown(f"**{row['NAMA_CHANNEL']}**")
-                    c1.caption(f"📱 HP {row['HP']} | 📅 {row['SLOT']} | 👤 {row.get('PENCATAT','-')}")
-                    
-                    if c2.button("💰 SOLD", key=f"pr_sd_{idx}", use_container_width=True):
-                        ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                    with c3:
-                        with st.popover("⚠️ OPSI", use_container_width=True):
-                            if st.button("🥀 BUSUK", key=f"pr_bk_{idx}", use_container_width=True):
-                                ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                            if st.button("🚫 SUSPEND", key=f"pr_ss_{idx}", use_container_width=True):
-                                ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+            if df_pro.empty:
+                st.info("Tidak ada proses upload.")
+            else:
+                for idx, row in df_pro.iterrows():
+                    with st.container(border=True):
+                        c1, c2, c3 = st.columns([2, 1, 1])
+                        c1.markdown(f"**{row['NAMA_CHANNEL']}**")
+                        c1.caption(f"📱 HP {row['HP']} | 📅 {row['SLOT']}")
+                        
+                        if c2.button("💰 SOLD", key=f"pr_sd_{idx}", use_container_width=True):
+                            ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+                        with c3:
+                            with st.popover("⚠️ OPSI", use_container_width=True):
+                                if st.button("🥀 BUSUK", key=f"pr_bk_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+                                if st.button("🚫 SUSP", key=f"pr_ss_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
 
     # ==========================================
-    # TAB 3: JADWAL UPLOAD (SMART GRID)
+    # TAB 3: JADWAL UPLOAD
     # ==========================================
     with tab_jadwal:
         df_j = df[df['STATUS'] == 'PROSES']
@@ -3495,23 +3494,28 @@ def tampilkan_database_channel():
             for i, n_hp in enumerate(hp_aktif):
                 with cols[i % 3]:
                     with st.container(border=True):
-                        st.markdown(f"#### **📱 UNIT HP {n_hp}**")
+                        st.markdown(f"**📱 HP {n_hp}**")
                         d_hp = df_j[df_j['HP'] == n_hp]
                         for s in ["PAGI", "SIANG", "SORE"]:
                             cek = d_hp[d_hp['SLOT'] == s]
                             if not cek.empty:
-                                st.success(f"**{s}**: {cek.iloc[0]['NAMA_CHANNEL']}")
+                                st.success(f"✅ {s}: {cek.iloc[0]['NAMA_CHANNEL']}")
                             else:
-                                st.caption(f"*{s}: (Kosong)*")
+                                st.caption(f"⚪ {s}: (Kosong)")
 
-    # --- TAB SOLD & ARSIP (OWNER/ADMIN) ---
+    # ==========================================
+    # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
+    # ==========================================
     with tab_sold:
-        if is_boss:
-            df_s = df[df['STATUS'] == 'SOLD']
+        if not is_boss: st.error("🔒 Akses Owner & Admin.")
+        else:
+            df_s = df[df['STATUS'] == 'SOLD'].copy()
             st.dataframe(df_s[["TANGGAL", "NAMA_CHANNEL", "PENCATAT"]], use_container_width=True)
+
     with tab_arsip:
-        if is_boss:
-            df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])]
+        if not is_boss: st.error("🔒 Akses Owner & Admin.")
+        else:
+            df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
             st.dataframe(df_a[["TANGGAL", "NAMA_CHANNEL", "STATUS", "PENCATAT"]], use_container_width=True)
                             
 # ==============================================================================
@@ -3923,6 +3927,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
