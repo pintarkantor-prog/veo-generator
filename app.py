@@ -3569,11 +3569,11 @@ def tampilkan_database_channel():
                     in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
                     in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
                     
-                    if st.form_submit_button("🚀 SIMPAN UNIT SEKARANG"):
+                    if st.form_submit_button("🚀 SIMPAN UNIT"):
                         if in_nama and in_tgl:
                             try:
                                 # Input langsung pake ws_live yang tadi udah dibuat
-                                ws_live.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
+                                ws_hp.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
                                 
                                 # Hancurkan semua catatan lama (Cache)
                                 st.cache_data.clear()
@@ -4051,6 +4051,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
