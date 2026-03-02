@@ -131,6 +131,28 @@ def tambah_log(user, aksi):
 
     except Exception as e:
         print(f"Gagal mencatat log: {e}")
+# ==============================================================================
+# 6. SETUP DATABASE CHANNEL (TARUH DI SINI BIAR GAK LOADING)
+# ==============================================================================
+try:
+    # Kita kunci koneksi sheet-nya secara global di sini
+    sh_master = get_gspread_sh()
+    ws = sh_master.worksheet("Database_Channel")
+except Exception as e:
+    st.error(f"Gagal koneksi ke Sheet 'Database_Channel': {e}")
+
+@st.cache_data(ttl=5)
+def load_data_channel():
+    """Tarik data dari GSheet sekali aja buat dipake semua tab."""
+    try:
+        data_raw = ws.get_all_records()
+        return bersihkan_data(pd.DataFrame(data_raw))
+    except Exception as e:
+        # st.error(f"Error tarik data: {e}")
+        return pd.DataFrame()
+
+# Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
+df = load_data_channel()
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3920,6 +3942,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
