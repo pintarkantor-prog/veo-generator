@@ -2618,6 +2618,7 @@ def tampilkan_area_staf():
                 st.write("• **PROJECT RINGAN**: 1 Link GDrive berisi 15 Video = **nilainya setara dengan 1 video HQ**.")
                 st.write("• **Video ke-3 status acc (Bonus Absensi)**: Bonus Rp 30.000 dicairkan otomatis.")
                 st.write("• **Video ke-5 status acc & Seterusnya**: Bonus tambahan Rp 30.000 per video.")
+                st.write("• **TUNJANGAN KERJA**: Rp 500.000 (target 70 video perbulan).")
 
             # --- III. MODUL PANDUAN (FULL DETAIL A-E) ---
             with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
@@ -2953,7 +2954,7 @@ def tampilkan_area_staf():
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">II. SISTEM PENGGAJIAN & APRESIASI KINERJA</p>
                     <p style="margin-left: 20px;">
                     <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus akan disalurkan pada tanggal 2 s/d 5 setiap bulannya.<br>
-                    <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kinerja khusus Staff Uploader dan Admin, Serta khusus Staff Editor Bonus Absensi dan Bonus Performa yang dihitung berdasarkan Video HQ (High Quality) yang berhasil diproduksi.<br>
+                    <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kinerja, Bonus Absensi dan Bonus Performa yang dihitung berdasarkan Video HQ (High Quality) yang berhasil diproduksi.<br>
                     </p>
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">III. STANDAR OPERASIONAL PRODUKSI (SOP) KONTEN</p>
@@ -3753,6 +3754,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
