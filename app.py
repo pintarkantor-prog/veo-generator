@@ -3384,90 +3384,90 @@ def tampilkan_database_channel():
     ])
 
     # ======================================================================
-    # --- TAB 1: STOK STANDBY (VERSI NO SLOT - HANYA UNIT HP) ---
+    # --- TAB 1: STOK STANDBY (VERSI FINAL COMPACT - COMPLETE ACTIONS) ---
     # ======================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # 1. TOMBOL TAMBAH (Gaya Original Dian)
+            # 1. TOMBOL TAMBAH
             if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
             if st.session_state.get('form_baru', False):
-                with st.form("input_st_style", clear_on_submit=True):
+                with st.form("input_st_compact", clear_on_submit=True):
                     f1, f2, f3 = st.columns(3)
                     v_nama = f1.text_input("Nama Channel")
                     v_mail = f2.text_input("Email Login")
                     v_pass = f3.text_input("Password")
-                    
                     f4, f5 = st.columns([1, 2])
                     v_subs = f4.text_input("Jumlah Subs")
                     v_link = f5.text_input("Link Channel")
-                    
                     if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
                         if v_nama and v_mail:
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            # SLOT (Kolom 9) dikosongkan permanen
                             ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                            st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
+                            st.success("Berhasil!"); time.sleep(1); st.rerun()
 
             st.divider()
 
+            # 2. LIST DATA DALAM SATU BINGKAI BESAR (Style Tabel Card)
             df_st = df[df['STATUS'] == 'STANDBY']
             if df_st.empty:
                 st.info("📭 Belum ada stok channel standby.")
             else:
-                for idx, r in df_st.iterrows():
-                    with st.container(border=True):
-                        st.markdown(f"""
-                            <div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;">
-                                <b style="color:white; font-size:11px;">🚀 {str(r['NAMA_CHANNEL']).upper()}</b>
-                            </div>
-                        """, unsafe_allow_html=True)
+                with st.container(border=True):
+                    # HEADER KOLOM
+                    h1, h2, h3, h4, h5, h6, h7 = st.columns([1.8, 1.2, 1.5, 0.8, 1, 1, 1.2])
+                    h1.caption("📧 EMAIL")
+                    h2.caption("🔑 PW")
+                    h3.caption("📺 NAMA")
+                    h4.caption("📈 SUBS")
+                    h5.caption("🔗 LINK")
+                    h6.caption("👤 OLEH")
+                    h7.caption("⚙️ AKSI")
+                    st.markdown("<hr style='margin:0; border:1px solid #333;'>", unsafe_allow_html=True)
 
-                        # 7 KOLOM SEJAJAR (Tanpa Slot)
+                    for idx, r in df_st.iterrows():
                         c1, c2, c3, c4, c5, c6, c7 = st.columns([1.8, 1.2, 1.5, 0.8, 1, 1, 1.2])
                         
-                        c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px !important; color:#2ecc71;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                        c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:11px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                        c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                        c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📈 SUBS</p><b style='font-size:11px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
-                        c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p><a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px;'>🔗 Buka</a>", unsafe_allow_html=True)
-                        c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PENCATAT</p><b style='font-size:11px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
+                        c1.markdown(f"<code style='font-size:11px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                        c2.markdown(f"<code style='font-size:11px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                        c3.markdown(f"<b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                        c4.write(f"{r['SUBSCRIBE']}")
+                        c5.markdown(f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px;'>Buka</a>", unsafe_allow_html=True)
+                        c6.write(f"{r.get('PENCATAT', '-')}")
 
                         with c7:
-                            with st.popover("⚙️ EKSEKUSI", use_container_width=True):
-                                # LOGIKA AUTO-HP (Cek HP yang isinya < 3 channel)
+                            with st.popover("⚙️", use_container_width=True):
+                                # Logika Smart HP
                                 df_p = df[df['STATUS'] == 'PROSES']
-                                suggested_hp = 1
-                                for h in range(1, 26):
-                                    if len(df_p[df_p['HP'] == h]) < 3:
-                                        suggested_hp = h
-                                        break
+                                suggested_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
                                 
-                                p_hp = st.number_input("Unit HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
+                                p_hp = st.number_input("HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
                                 
                                 if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
-                                    # Cek apakah HP sudah penuh (Maks 3)
                                     if len(df_p[df_p['HP'] == p_hp]) >= 3:
-                                        st.error(f"HP {p_hp} SUDAH PENUH!")
+                                        st.error("FULL!")
                                     else:
                                         r_idx = idx + 2
-                                        ws.update_cell(r_idx, 7, "PROSES")
-                                        ws.update_cell(r_idx, 8, p_hp)
-                                        ws.update_cell(r_idx, 9, "") # KOLOM SLOT DIKOSONGKAN
-                                        ws.update_cell(r_idx, 11, user_aktif)
+                                        ws.update_cell(r_idx, 7, "PROSES"); ws.update_cell(r_idx, 8, p_hp)
+                                        ws.update_cell(r_idx, 9, ""); ws.update_cell(r_idx, 11, user_aktif)
                                         st.rerun()
                                 
-                                if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
+                                # TOMBOL AKSI LENGKAP
+                                if st.button("💰 SOLD", key=f"sd_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                                if st.button("🥀 BUSUK", key=f"btn_bk_{idx}", use_container_width=True):
+                                
+                                if st.button("🥀 BUSUK", key=f"bk_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                                if st.button("🚫 SUSPEND", key=f"btn_ss_{idx}", use_container_width=True):
+                                
+                                if st.button("🚫 SUSPEND", key=f"ss_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-
+                        
+                        # Garis Pembatas Tipis
+                        st.markdown("<hr style='margin:2px 0; border:0.1px solid #222;'>", unsafe_allow_html=True)
     # ==========================================
     # TAB 2: CHANNEL PROSES
     # ==========================================
@@ -3940,6 +3940,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
