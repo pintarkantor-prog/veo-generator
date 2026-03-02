@@ -3536,15 +3536,30 @@ def tampilkan_database_channel():
                             else:
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
-    # ======================================================================
-    # --- TAB 4: MONITOR HP (RADAR FINAL - NO ERROR) ---
-    # ======================================================================
+    # ==========================================
+    # --- TAB HP: RADAR MASA AKTIF KARTU (DIRECT PULL) ---
+    # ==========================================
     with tab_hp:
         st.subheader("📡 RADAR MASA AKTIF KARTU")
         
+        # 1. KONEKSI ULANG (BYPASS SEMUA CACHE)
+        try:
+            ws_radar = sh.worksheet("Data_HP")
+            # Tarik data paling fresh detik ini juga
+            data_fresh = ws_radar.get_all_records()
+            df_radar = pd.DataFrame(data_fresh)
+            if not df_radar.empty:
+                df_radar.columns = [str(c).strip().upper() for c in df_radar.columns]
+                # Buang baris kosong biar gak Err Unit
+                df_radar = df_radar[df_radar['NAMA_HP'].astype(str).strip() != ""]
+        except Exception as e:
+            st.error(f"Gagal koneksi tab HP: {e}")
+            df_radar = pd.DataFrame()
+
+        # 2. FORM INPUT (LANGSUNG TEMBAK)
         if is_boss:
             with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
-                with st.form("form_hp_new_final", clear_on_submit=True):
+                with st.form("form_hp_direct_input", clear_on_submit=True):
                     c1, c2 = st.columns(2)
                     in_nama = c1.text_input("Nama Unit HP")
                     in_no = c2.text_input("Nomor HP")
@@ -3554,29 +3569,28 @@ def tampilkan_database_channel():
                     
                     if st.form_submit_button("🚀 SIMPAN UNIT"):
                         if in_nama and in_tgl:
-                            try:
-                                # Pakai ws_hp yang sudah dikonek di atas
-                                ws_hp.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
-                                st.cache_data.clear()
-                                st.success("✅ Berhasil Tersimpan!"); time.sleep(1); st.rerun()
-                            except Exception as e: st.error(f"Gagal: {e}")
+                            # Masukkan data ke GSheet
+                            ws_radar.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
+                            # RESET SEMUA CACHE AGAR DATA BARU KEBACA
+                            st.cache_data.clear()
+                            st.success(f"✅ {in_nama} Masuk!")
+                            time.sleep(1)
+                            st.rerun()
 
         st.divider()
 
-        # Gunakan df_hp yang ditarik di Setup (Bagian 2)
-        if df_hp.empty:
-            st.info("Data HP masih kosong.")
+        # 3. DISPLAY CARD
+        if df_radar.empty:
+            st.info("Data HP masih kosong di GSheet.")
         else:
-            # Buang baris hantu
-            df_hp_clean = df_hp[df_hp['NAMA_HP'].astype(str).strip() != ""].copy()
-            
             cols_r = st.columns(5)
-            for i, (idx, r) in enumerate(df_hp_clean.iterrows()):
+            for i, (idx, r) in enumerate(df_radar.iterrows()):
                 u_name = str(r.get('NAMA_HP', '')).upper()
                 u_tgl = str(r.get('MASA_AKTIF', '')).strip()
                 
                 with cols_r[i % 5]:
                     try:
+                        # Hitung Tanggal
                         t_dt = pd.to_datetime(u_tgl, dayfirst=True, errors='coerce')
                         if pd.isnat(t_dt):
                             bg_c, sisa = "#444", "?"
@@ -3590,14 +3604,14 @@ def tampilkan_database_channel():
                             k1.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:10px;'>{r.get('NOMOR_HP','-')}</b>", unsafe_allow_html=True)
                             k2.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>⏳ SISA</p><b style='font-size:11px;color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
-                            with st.popover("✏️", use_container_width=True):
-                                if is_boss:
-                                    en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"n_hp_{idx}")
-                                    et = st.text_input("Exp", value=u_tgl, key=f"t_hp_{idx}")
-                                    if st.button("SAVE", key=f"b_hp_{idx}", type="primary", use_container_width=True):
-                                        ws_hp.update_cell(idx+2, 2, f"'{en}")
-                                        ws_hp.update_cell(idx+2, 4, et)
-                                        st.cache_data.clear(); st.rerun()
+                            with st.popover("✏️"):
+                                en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"edit_hp_{idx}")
+                                et = st.text_input("Exp", value=u_tgl, key=f"edit_tg_{idx}")
+                                if st.button("SAVE", key=f"btn_hp_{idx}", type="primary"):
+                                    ws_radar.update_cell(idx+2, 2, f"'{en}")
+                                    ws_radar.update_cell(idx+2, 4, et)
+                                    st.cache_data.clear()
+                                    st.rerun()
                     except: pass
                         
     # ==========================================
@@ -4024,6 +4038,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
