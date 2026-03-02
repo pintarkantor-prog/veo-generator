@@ -3417,7 +3417,7 @@ def tampilkan_database_channel():
 
     # --- 3. PEMBUATAN TAB (TAMBAH MONITOR HP) ---
     # Kita taruh di urutan kedua biar gampang dicek
-    tab_standby, tab_hp, tab_proses, tab_jadwal, tab_sold, tab_arsip = st.tabs([
+    tab_standby, tab_proses, tab_jadwal, tab_hp, tab_sold, tab_arsip = st.tabs([
         "📦 STOK STANDBY", 
         "🚀 CHANNEL PROSES", 
         "📅 JADWAL UPLOAD", 
@@ -3490,7 +3490,58 @@ def tampilkan_database_channel():
                                     # ... (Kode Edit Channel lo tetap sama di sini) ...
                                     st.write("Edit Mode Active")
 
-# ==========================================
+    # ======================================================================
+    # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
+    # ======================================================================
+    with tab_proses:
+        st.subheader("🚀 MONITORING CHANNEL PROSES")
+        
+        # Filter data yang statusnya PROSES
+        df_p = df[df['STATUS'] == 'PROSES']
+        
+        if df_p.empty:
+            st.info("📭 Belum ada channel yang sedang dalam proses upload.")
+        else:
+            # Tampilan dalam bentuk DataFrame atau Card (Gue kasih DataFrame biar rapi dulu)
+            kolom_lihat = ["NAMA_CHANNEL", "HP", "SLOT", "KONTEN", "PENCATAT"]
+            st.dataframe(df_p[kolom_lihat], use_container_width=True, hide_index=True)
+            
+            st.divider()
+            st.caption("Tips: Untuk mengubah status ke SOLD atau BUSUK, silakan lakukan di TAB STOK STANDBY.")
+
+    # ======================================================================
+    # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
+    # ======================================================================
+    with tab_jadwal:
+        st.subheader("📅 JADWAL UPLOAD HARIAN")
+        
+        # Ambil data proses lagi buat dipetain ke jadwal
+        df_j = df[df['STATUS'] == 'PROSES']
+        
+        if df_j.empty:
+            st.info("📅 Jadwal masih kosong.")
+        else:
+            # List HP yang ada isinya (diurutkan)
+            hp_aktif = sorted([int(x) for x in df_j['HP'].unique() if str(x).isdigit()])
+            
+            # Buat tampilan per HP (3 Kolom per baris)
+            cols_j = st.columns(3)
+            for i, n_hp in enumerate(hp_aktif):
+                with cols_j[i % 3]:
+                    with st.container(border=True):
+                        st.markdown(f"### 📱 HP {n_hp}")
+                        d_hp = df_j[df_j['HP'] == n_hp]
+                        
+                        # Cek Slot Pagi, Siang, Sore
+                        for s in ["PAGI", "SIANG", "SORE"]:
+                            cek = d_hp[d_hp['SLOT'] == s]
+                            if not cek.empty:
+                                nama_ch = cek.iloc[0]['NAMA_CHANNEL']
+                                st.success(f"✅ **{s}**: {nama_ch}")
+                            else:
+                                st.code(f"⚪ {s}: (Kosong)")
+                                
+    # ==========================================
     # --- TAB 2: MONITOR HP (RADAR STYLE) ---
     # ==========================================
     with tab_hp:
@@ -3562,7 +3613,7 @@ def tampilkan_database_channel():
                                         st.cache_data.clear(); st.rerun()
                     except:
                         st.caption(f"Err Unit {i}")
-
+                        
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
     # ==========================================
@@ -3987,47 +4038,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
