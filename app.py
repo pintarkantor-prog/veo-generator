@@ -3480,15 +3480,13 @@ def tampilkan_database_channel():
                             # MASTER EDIT (Kolom 8 - Minimalis)
                             with c8:
                                 with st.popover("✏️", use_container_width=True):
-                                    # Header Popover yang lebih tegas
                                     st.markdown("<h3 style='text-align:center; color:#3498db;'>📝 EDIT CHANNEL</h3>", unsafe_allow_html=True)
                                     st.divider()
 
-                                    # Gunakan kolom kecil untuk label agar input tidak terlalu lebar
-                                    ed_mail = st.text_input("📧 Email Login", value=str(r['EMAIL']), key=f"ed_m_{idx}")
+                                    # Kita pake help buat kasih petunjuk biar kontras visualnya nambah
+                                    ed_mail = st.text_input("📧 Email Login", value=str(r['EMAIL']), key=f"ed_m_{idx}", help="Isi email aktif")
                                     ed_pass = st.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"ed_p_{idx}")
                                     
-                                    # Nama & Subs kita bikin sejajar biar ringkas
                                     ea, eb = st.columns(2)
                                     ed_nama = ea.text_input("📺 Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"ed_n_{idx}")
                                     ed_subs = eb.text_input("📊 Subscribe", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
@@ -3497,14 +3495,22 @@ def tampilkan_database_channel():
                                     
                                     st.divider()
                                     
-                                    # Tombol Simpan yang lebih mencolok
                                     if st.button("🚀 SIMPAN PERUBAHAN", key=f"btnsave_{idx}", use_container_width=True, type="primary"):
                                         r_idx = idx + 2
-                                        # Pakai list update agar tidak loading terus (Batch Update)
-                                        data_update = [[ed_mail, ed_pass, ed_nama, ed_subs, ed_link]]
-                                        ws.update(f"B{r_idx}:F{r_idx}", data_update)
                                         
-                                        st.toast("✅ Data Berhasil Diperbarui!"); time.sleep(0.5); st.rerun()
+                                        # TANDA EDIT: Kita selipin keterangan di kolom PENCATAT (Kolom L / 11)
+                                        tanda_edit = f"{user_aktif} (EDITED)"
+                                        
+                                        # Batch Update: Email(B) sampe Link(F) + Pencatat(K)
+                                        # Sesuaikan index kolom GSheet lo (Liat image_07fa77)
+                                        # Jika kolom K atau L adalah PENCATAT, kita update di sana.
+                                        
+                                        ws.update(f"B{r_idx}:F{r_idx}", [[ed_mail, ed_pass, ed_nama, ed_subs, ed_link]])
+                                        ws.update_cell(r_idx, 11, tanda_edit) # Asumsi kolom 11 adalah PENCATAT
+                                        
+                                        st.toast(f"✅ Data {ed_nama} berhasil diperbarui!")
+                                        time.sleep(0.5)
+                                        st.rerun()
                                         
     # ==========================================
     # TAB 3: JADWAL UPLOAD
@@ -3952,6 +3958,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
