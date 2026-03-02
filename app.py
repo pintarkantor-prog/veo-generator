@@ -3597,7 +3597,7 @@ def tampilkan_database_channel():
                         color_code = "#444"; sisa = 0
 
                     with st.container(border=True):
-                        st.markdown(f'<div style="background:{color_code}; padding:3px; border-radius:3px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="background:{color_code}; padding:3px; border-radius:3px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:14px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
                         
                         # Info 2 Kolom
                         ic1, ic2 = st.columns(2)
@@ -4066,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
