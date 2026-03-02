@@ -3546,11 +3546,10 @@ def tampilkan_database_channel():
     # ==========================================
     with tab_hp:
         st.subheader("📡 RADAR MASA AKTIF KARTU")
-        
         # 1. INPUT UNIT (Gue rapihin biar lgsg masuk baris atas)
         if is_boss:
             with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
-                with st.form("form_hp_tab_new", clear_on_submit=True):
+                with st.form("form_hp_tab_new_V2", clear_on_submit=True): # Ganti nama form biar gak bentrok
                     c1, c2 = st.columns(2)
                     in_nama = c1.text_input("Nama HP (Contoh: HP 01)")
                     in_no = c2.text_input("Nomor HP")
@@ -3561,12 +3560,21 @@ def tampilkan_database_channel():
                     if st.form_submit_button("🚀 SIMPAN UNIT"):
                         if in_nama and in_tgl:
                             try:
+                                # 1. Koneksi ke Sheet HP
                                 ws_h = sh.worksheet("Data_HP")
-                                # PAKSA masuk ke baris kosong pertama yang bener-bener bersih
-                                ws_h.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
-                                st.cache_data.clear()
-                                st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
-                            except Exception as e: st.error(f"Gagal: {e}")
+                                
+                                # 2. DETEKSI BARIS KOSONG ASLI (Biar gak masuk ke baris 1000)
+                                all_rows = ws_h.get_all_values()
+                                next_row = len(all_rows) + 1
+                                
+                                # 3. TEMBAK DATA (Pake Pelindung Petik Tunggal)
+                                baris_baru = [in_nama, f"'{in_no}", in_prov, in_tgl]
+                                ws_h.insert_row(baris_baru, next_row, value_input_option='USER_ENTERED')
+                                
+                                st.cache_data.clear() # Bersihkan memori web
+                                st.success(f"✅ {in_nama} Masuk di Baris {next_row}!"); time.sleep(1); st.rerun()
+                            except Exception as e: 
+                                st.error(f"Gagal Simpan: {e}")
 
         st.divider()
 
@@ -4042,5 +4050,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
