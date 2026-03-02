@@ -131,28 +131,43 @@ def tambah_log(user, aksi):
 
     except Exception as e:
         print(f"Gagal mencatat log: {e}")
+        
 # ==============================================================================
-# 6. SETUP DATABASE CHANNEL (TARUH DI SINI BIAR GAK LOADING)
+# 6. SETUP DATABASE GSHEET (VERSI ANTI-CACHE & SINKRON)
 # ==============================================================================
 try:
-    # Kita kunci koneksi sheet-nya secara global di sini
+    # Koneksi Master (Satu Pintu)
     sh_master = get_gspread_sh()
+    
+    # 1. Worksheet Utama (Channel)
     ws = sh_master.worksheet("Channel_Pintar")
+    
+    # 2. Worksheet HP (Satu File GSheet, Beda Tab)
+    # Pastikan di GSheet lo ada tab namanya "Data_HP"
+    ws_hp = sh_master.worksheet("Data_HP") 
 except Exception as e:
-    st.error(f"Gagal koneksi ke Sheet 'Channel_Pintar': {e}")
+    st.error(f"❌ Koneksi GSheet Gagal: {e}")
 
-@st.cache_data(ttl=5)
+# KITA BUANG @st.cache_data DI SINI BIAR DATA SELALU SEGAR (LIVE)
 def load_data_channel():
-    """Tarik data dari GSheet sekali aja buat dipake semua tab."""
+    """Tarik data Channel secara LIVE."""
     try:
-        data_raw = ws.get_all_records()
-        return bersihkan_data(pd.DataFrame(data_raw))
-    except Exception as e:
-        # st.error(f"Error tarik data: {e}")
-        return pd.DataFrame()
+        return bersihkan_data(pd.DataFrame(ws.get_all_records()))
+    except:
+        return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
 
-# Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
+def load_data_hp():
+    """Tarik data HP secara LIVE."""
+    try:
+        return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
+    except:
+        # Default kolom kalau tab HP kosong/baru
+        return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
+
+# --- INI EKSEKUSI PENARIKAN DATA ---
+# Variabel ini bakal dipake di semua TAB
 df = load_data_channel()
+df_hp = load_data_hp()
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -4023,6 +4038,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
