@@ -137,9 +137,9 @@ def tambah_log(user, aksi):
 try:
     # Kita kunci koneksi sheet-nya secara global di sini
     sh_master = get_gspread_sh()
-    ws = sh_master.worksheet("Database_Channel")
+    ws = sh_master.worksheet("Channel_Pintar")
 except Exception as e:
-    st.error(f"Gagal koneksi ke Sheet 'Database_Channel': {e}")
+    st.error(f"Gagal koneksi ke Sheet 'Channel_Pintar': {e}")
 
 @st.cache_data(ttl=5)
 def load_data_channel():
@@ -4020,6 +4020,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
