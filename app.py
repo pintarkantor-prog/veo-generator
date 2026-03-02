@@ -3569,22 +3569,23 @@ def tampilkan_database_channel():
                 in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", key="debug_tgl")
                 
         # --- LOGIKA PAKSA MASUK (INSERT KE BARIS 2) ---
-        if st.button("🚀 PAKSA SIMPAN KE SHEET BARU", use_container_width=True, type="primary"):
-            if in_nama and in_tgl:
-                try:
-                    sh_new = get_gspread_sh()
-                    ws_new = sh_new.worksheet("Data_HP")
-                    
-                    # Kita pake insert_row(data, 2) biar PASTI masuk di bawah header
-                    data_baru = [in_nama, f"'{in_no}", in_prov, in_tgl]
-                    ws_new.insert_row(data_baru, 2, value_input_option='USER_ENTERED')
-                    
-                    st.cache_data.clear()
-                    st.success(f"🔥 MANTAP! {in_nama} Masuk di Baris 2!")
-                    time.sleep(1.5)
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"❌ Masih Gagal: {e}")
+# --- UJI COBA DETEKTIF ---
+        if st.button("🔍 CEK FILE & NAMA SHEET", use_container_width=True):
+            try:
+                sh_test = get_gspread_sh()
+                # 1. Cek Judul File
+                st.write(f"📁 Nama File yang Kebaca: **{sh_test.title}**")
+                
+                # 2. Cek Daftar Tab (Sheet)
+                list_sheet = [s.title for s in sh_test.worksheets()]
+                st.write(f"📜 Daftar Tab di File Ini: {list_sheet}")
+                
+                if "Data_HP" in list_sheet:
+                    st.success("✅ Tab 'Data_HP' DITEMUKAN!")
+                else:
+                    st.error("❌ Tab 'Data_HP' TIDAK ADA di file ini!")
+            except Exception as e:
+                st.error(f"❌ Koneksi Mati Total: {e}")
 
         st.divider()
 
@@ -4051,6 +4052,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
