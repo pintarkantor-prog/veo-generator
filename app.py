@@ -3498,18 +3498,19 @@ def tampilkan_database_channel():
                                     if st.button("🚀 SIMPAN PERUBAHAN", key=f"btnsave_{idx}", use_container_width=True, type="primary"):
                                         r_idx = idx + 2
                                         
-                                        # TANDA EDIT: Kita selipin keterangan di kolom PENCATAT (Kolom L / 11)
-                                        tanda_edit = f"{user_aktif} (EDITED)"
+                                        # 1. Batch Update Data Utama (Kolom B sampai F)
+                                        data_update = [[ed_mail, ed_pass, ed_nama, ed_subs, ed_link]]
+                                        ws.update(f"B{r_idx}:F{r_idx}", data_update)
                                         
-                                        # Batch Update: Email(B) sampe Link(F) + Pencatat(K)
-                                        # Sesuaikan index kolom GSheet lo (Liat image_07fa77)
-                                        # Jika kolom K atau L adalah PENCATAT, kita update di sana.
+                                        # 2. Update Status EDITED di Kolom L (Kolom ke-12)
+                                        tz_jkt = pytz.timezone('Asia/Jakarta')
+                                        waktu_edit = datetime.now(tz_jkt).strftime("%d/%m %H:%M")
+                                        status_edit = f"By {user_aktif} ({waktu_edit})"
                                         
-                                        ws.update(f"B{r_idx}:F{r_idx}", [[ed_mail, ed_pass, ed_nama, ed_subs, ed_link]])
-                                        ws.update_cell(r_idx, 11, tanda_edit) # Asumsi kolom 11 adalah PENCATAT
+                                        ws.update_cell(r_idx, 12, status_edit) # <--- Kolom 12 adalah L
                                         
-                                        st.toast(f"✅ Data {ed_nama} berhasil diperbarui!")
-                                        time.sleep(0.5)
+                                        st.toast(f"✅ Data {ed_nama} Berhasil Diupdate!")
+                                        time.sleep(1.5)
                                         st.rerun()
                                         
     # ==========================================
@@ -3958,6 +3959,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
