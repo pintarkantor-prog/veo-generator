@@ -3456,10 +3456,10 @@ def tampilkan_database_channel():
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:14px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:14px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:14px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
                             
-                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db; text-decoration:none;'>BUKA</a>"
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p>{link_txt}", unsafe_allow_html=True)
+                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db; text-decoration:none;'>BUKA LINK!</a>"
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p>{link_txt}", unsafe_allow_html=True)
                             
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:14px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
 
@@ -3942,6 +3942,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
