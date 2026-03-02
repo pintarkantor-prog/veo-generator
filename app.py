@@ -1300,7 +1300,7 @@ def tampilkan_tugas_kerja():
         status_tutup = ["FINISH", "ARSIP", "BATAL", "CANCELED"]
 
         # 3. LOGIKA TAMPILAN: (Semua tugas Maret) ATAU (Semua tugas yang BELUM FINISH/BATAL)
-        mask_tampilan = (mask_bulan) | (~df_all_tugas['STATUS'].str.strip().str.upper().isin(status_tutup))
+        mask_tampilan = (mask_bulan) | (~df_all_tugas['STATUS'].fillna('').str.strip().str.upper().isin(status_tutup))
 
         # --- UPDATE DATA TUGAS (INI KUNCINYA!) ---
         df_tugas_tampil = df_all_tugas[mask_tampilan].copy()
@@ -1321,8 +1321,8 @@ def tampilkan_tugas_kerja():
             level_asli_target = "STAFF" # Fallback kalau data gak ketemu
 
         if user_level in ["STAFF", "ADMIN", "OWNER"]:        
-            mask_user = df_all_tugas['STAF'].str.strip() == target_user
-            mask_finish = df_all_tugas['STATUS'].str.strip() == 'FINISH'
+            mask_user = df_all_tugas['STAF'].str.strip().str.upper() == target_user
+            mask_finish = df_all_tugas['STATUS'].str.strip().str.upper() == 'FINISH'
             df_arsip_user = df_all_tugas[mask_user & mask_finish & mask_bulan].copy()
             
             df_u_absen = pd.DataFrame()
@@ -3765,6 +3765,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
