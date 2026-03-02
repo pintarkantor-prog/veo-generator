@@ -1295,9 +1295,19 @@ def tampilkan_tugas_kerja():
         data_tugas = df_all_tugas.to_dict('records') 
         status_buang = ["ARSIP", "DONE", "BATAL"]
 
-        # --- 2. SETUP FILTER BULAN ---
+        # --- 2. SETUP FILTER (REVISI: BIAR FEBRUARI GAK HILANG) ---
+        # 1. Masker khusus untuk hitung BONUS (Tetap kunci di bulan berjalan/Maret)
         mask_bulan = (df_all_tugas['DEADLINE_DT'].dt.month == sekarang.month) & \
                      (df_all_tugas['DEADLINE_DT'].dt.year == sekarang.year)
+
+        # 2. Masker untuk TAMPILAN DAFTAR TUGAS (Maret + Semua yang Belum Kelar)
+        # Tampilkan jika: (Bulannya Maret) ATAU (Statusnya BUKAN Finish/Arsip/Batal/Done)
+        status_selesai = ['FINISH', 'ARSIP', 'DONE', 'BATAL']
+        mask_tampilan_tugas = (mask_bulan) | (~df_all_tugas['STATUS'].str.strip().str.upper().isin(status_selesai))
+
+        # Update data_tugas yang akan dirender ke kartu/tabel
+        df_tugas_tampil = df_all_tugas[mask_tampilan_tugas].copy()
+        data_tugas = df_tugas_tampil.to_dict('records')
 
         # --- 3. LOGIKA RADAR (Gunakan st_raw yang sudah ditarik di atas) ---
         if user_level == "OWNER":
@@ -3753,6 +3763,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
