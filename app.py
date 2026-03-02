@@ -133,41 +133,30 @@ def tambah_log(user, aksi):
         print(f"Gagal mencatat log: {e}")
         
 # ==============================================================================
-# 6. SETUP DATABASE GSHEET (VERSI ANTI-CACHE & SINKRON)
+# 6. SETUP DATABASE GSHEET (VERSI FIX & STABIL)
 # ==============================================================================
 try:
-    # Koneksi Master (Satu Pintu)
     sh_master = get_gspread_sh()
-    
-    # 1. Worksheet Utama (Channel)
     ws = sh_master.worksheet("Channel_Pintar")
-    
-    # 2. Worksheet HP (Satu File GSheet, Beda Tab)
-    # Pastikan di GSheet lo ada tab namanya "Data_HP"
     ws_hp = sh_master.worksheet("Data_HP") 
 except Exception as e:
-    st.error(f"❌ Koneksi GSheet Gagal: {e}")
+    # Jangan pake st.error di luar fungsi kalau gak mau aplikasinya berhenti total
+    print(f"❌ Koneksi GSheet Gagal: {e}")
 
-# KITA BUANG @st.cache_data DI SINI BIAR DATA SELALU SEGAR (LIVE)
 def load_data_channel():
-    """Tarik data Channel secara LIVE."""
     try:
         return bersihkan_data(pd.DataFrame(ws.get_all_records()))
     except:
         return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
 
 def load_data_hp():
-    """Tarik data HP secara LIVE."""
     try:
         return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
     except:
-        # Default kolom kalau tab HP kosong/baru
         return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
 
-# --- INI EKSEKUSI PENARIKAN DATA ---
-# Variabel ini bakal dipake di semua TAB
-df = load_data_channel()
-df_hp = load_data_hp()
+# JANGAN eksekusi df = load_data_channel() di sini! 
+# Kita panggil di dalam fungsi tampilkan_database_channel aja.
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3385,29 +3374,25 @@ def tampilkan_area_staf():
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
 
-    # --- 1. SETUP AKSES (TAMBAHKAN IS_PRO DI SINI) ---
+    # --- 1. SETUP AKSES (WAJIB ADA DI SINI) ---
     level_aktif = st.session_state.get("user_level", "STAFF")
     user_aktif = st.session_state.get("user_aktif", "User").upper()
     
-    # Inisialisasi variabel keamanan agar tidak NameError
+    # Perbaikan NameError
     is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
     is_boss = level_aktif in ["OWNER", "ADMIN"]
 
-    # --- 2. KONEKSI GSHEET (FORCE LIVE) ---
-    try:
-        sh = get_gspread_sh()
-        ws_hp = sh.worksheet("Data_HP")
-        # Tarik data LIVE tanpa embel-embel cache
-        df_hp = pd.DataFrame(ws_hp.get_all_records())
-        df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
-    except Exception as e:
-        st.error(f"Gagal koneksi: {e}"); return
+    # --- 2. PENARIKAN DATA (Ditarik saat menu dibuka) ---
+    with st.spinner("Sinkronisasi Radar..."):
+        df = load_data_channel()
+        df_hp = load_data_hp()
 
-    # --- 3. PEMBUATAN TAB (TAMBAHKAN KEY AGAR REFRESH) ---
+    # --- 3. PEMBUATAN TAB ---
     tab_standby, tab_proses, tab_jadwal, tab_hp, tab_sold, tab_arsip = st.tabs([
         "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", 
         "📱 MONITOR HP", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
     ])
+    
     # ======================================================================
     # --- TAB 1: STOK STANDBY ---
     # ======================================================================
@@ -3989,6 +3974,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
