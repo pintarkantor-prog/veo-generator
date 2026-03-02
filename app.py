@@ -153,17 +153,6 @@ def load_data_channel():
 
 # Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
 df = load_data_channel()
-
-# Fungsi khusus narik data HP
-@st.cache_data(ttl=10)
-def load_data_hp():
-    try:
-        ws_hp = sh_master.worksheet("Data_HP") # <--- Tembak sheet baru
-        return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
-    except:
-        return pd.DataFrame()
-
-df_hp = load_data_hp() # Simpan ke variabel
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3381,40 +3370,35 @@ def tampilkan_area_staf():
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
 
-    # --- 1. SETUP AKSES & USER ---
+    # --- 1. SETUP AKSES ---
     level_aktif = st.session_state.get("user_level", "STAFF")
     user_aktif = st.session_state.get("user_aktif", "User").upper()
-    is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
     is_boss = level_aktif in ["OWNER", "ADMIN"]
 
-    # --- 2. KONEKSI & AMBIL DATA (SATU PINTU) ---
+    # --- 2. KONEKSI SATU PINTU (HAPUS SEMUA CACHE DI SINI) ---
     try:
         sh = get_gspread_sh()
         
-        # A. Data Channel
+        # A. Tarik Data Channel
         ws_ch = sh.worksheet("Channel_Pintar")
-        data_ch = ws_ch.get_all_records()
-        df = pd.DataFrame(data_ch) if data_ch else pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
+        df = pd.DataFrame(ws_ch.get_all_records())
         df.columns = [str(c).strip().upper() for c in df.columns]
 
-        # B. Data HP (Langsung di sini, Gak usah pake fungsi load_data_hp lagi biar gak pusing)
-        try:
-            ws_hp = sh.worksheet("Data_HP")
-            data_hp = ws_hp.get_all_records()
-            df_hp = pd.DataFrame(data_hp) if data_hp else pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
-            df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
-        except:
-            df_hp = pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
-
+        # B. Tarik Data HP (FORCE LIVE - JANGAN PAKE CACHE)
+        ws_hp = sh.worksheet("Data_HP")
+        # Tarik data detik ini juga
+        raw_hp = ws_hp.get_all_records()
+        df_hp = pd.DataFrame(raw_hp) if raw_hp else pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
+        df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
+        
     except Exception as e:
-        st.error(f"Gagal koneksi: {e}"); return
+        st.error(f"Koneksi Gagal: {e}"); return
 
     # --- 3. PEMBUATAN TAB ---
-    # Tambahkan 'key' unik biar Streamlit ngereset state tab-nya
     tab_standby, tab_proses, tab_jadwal, tab_hp, tab_sold, tab_arsip = st.tabs([
         "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", 
         "📱 MONITOR HP", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
-    ]) # Tambahkan key kalau perlu di versi baru: , key="tab_global_v2")
+    ])
     # ======================================================================
     # --- TAB 1: STOK STANDBY ---
     # ======================================================================
@@ -3530,73 +3514,49 @@ def tampilkan_database_channel():
                             else:
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
-    # ======================================================================
-    # --- TAB 4: MONITOR HP (TEST REFRESH TOTAL) ---
-    # ======================================================================
     with tab_hp:
-        # Gue kasih judul beda biar ketauan kalau refresh berhasil
-        st.subheader("📡 RADAR MONITORING HP - VERSI FRESH")
+        st.subheader("📡 RADAR MONITORING HP - VERSI FINAL")
         
-        # DEBUG: Cetak waktu sekarang biar tau webnya update atau enggak
-        st.caption(f"Terakhir Update: {datetime.now().strftime('%H:%M:%S')}")
-
-        if not is_pro:
-            st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
-        else:
-            # GANTI NAMA EXPANDER BIAR KETAUAN BEDANYA
-            with st.expander("📡 PANEL KENDALI UNIT HP", expanded=True):
-                # Form Tambah (Hanya Boss)
-                if is_boss:
-                    with st.form("form_tambah_hp_baru_v99", clear_on_submit=True):
-                        st.markdown("### ➕ Input Unit Baru")
-                        c1, c2 = st.columns(2)
-                        n_unit = c1.text_input("Identitas Unit", placeholder="Contoh: HP 1")
-                        n_nomer = c2.text_input("Nomor Kartu")
-                        
-                        c3, c4 = st.columns(2)
-                        n_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                        n_tgl = c4.text_input("Expired (DD/MM/YYYY)")
-                        
-                        if st.form_submit_button("🚀 KIRIM DATA KE GSHEET"):
-                            if n_unit and n_tgl:
-                                try:
-                                    # Pake ws_hp global lo
-                                    ws_hp.append_row([n_unit.upper(), f"'{n_nomer}", n_prov, n_tgl], value_input_option='USER_ENTERED')
-                                    st.cache_data.clear()
-                                    st.success("MASUK COK!"); time.sleep(1); st.rerun()
-                                except Exception as e:
-                                    st.error(f"Error: {e}")
-                            else:
-                                st.error("Isi semua, jangan ngasal!")
-
-                st.divider()
-                
-                # BAGIAN DISPLAY CARD (PASTIKAN df_hp ADA ISINYA)
-                st.markdown("### 📡 Status Radar Aktif")
-                if df_hp.empty:
-                    st.info("Data HP masih kosong.")
-                else:
-                    # Filter data asli lo
-                    df_hp_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
+        # BUNGKUS SATU EXPANDER
+        with st.expander("📡 PANEL KENDALI UNIT HP", expanded=True):
+            if is_boss:
+                # Pake kunci form yang unik biar gak nyangkut
+                with st.form("form_input_hp_v100", clear_on_submit=True):
+                    st.markdown("### ➕ Input Unit Baru")
+                    c1, c2 = st.columns(2)
+                    v_nama = c1.text_input("Nama Unit HP (Wajib)")
+                    v_nomer = c2.text_input("Nomor HP (Wajib)")
                     
-                    grid = st.columns(5)
-                    for i, (idx, r) in enumerate(df_hp_view.iterrows()):
-                        with grid[i % 5]:
-                            # Logika Warna Sederhana
-                            with st.container(border=True):
-                                st.markdown(f"**{r['NAMA_HP']}**")
-                                st.caption(f"📞 {r['NOMOR_HP']}")
-                                st.write(f"⏳ {r['MASA_AKTIF']}")
-                                
-                                # Tombol Edit Popover
-                                with st.popover("✏️"):
-                                    en = st.text_input("No", value=str(r['NOMOR_HP']), key=f"e_n_{idx}")
-                                    et = st.text_input("Exp", value=str(r['MASA_AKTIF']), key=f"e_t_{idx}")
-                                    if st.button("SAVE", key=f"btn_s_{idx}"):
-                                        ws_hp.update_cell(idx+2, 2, f"'{en}")
-                                        ws_hp.update_cell(idx+2, 4, et)
-                                        st.cache_data.clear(); st.rerun()
+                    c3, c4 = st.columns(2)
+                    v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    v_tgl = c4.text_input("Expired (DD/MM/YYYY) - Wajib")
+                    
+                    if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
+                        # VALIDASI GALAK: Cek manual di sini
+                        if not v_nama or not v_nomer or not v_tgl:
+                            st.error("❌ GAGAL! Semua kolom wajib diisi, jangan ada yang kosong!")
+                        else:
+                            try:
+                                ws_hp.append_row([v_nama.upper(), f"'{v_nomer}", v_prov, v_tgl], value_input_option='USER_ENTERED')
+                                st.cache_data.clear()
+                                st.success("✅ DATA MASUK!"); time.sleep(1); st.rerun()
+                            except Exception as e:
+                                st.error(f"Error: {e}")
 
+            st.divider()
+            
+            # TAMPILIN CARD
+            df_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
+            if df_view.empty:
+                st.info("Data HP masih kosong.")
+            else:
+                grid = st.columns(5)
+                for i, (idx, r) in enumerate(df_view.iterrows()):
+                    with grid[i % 5]:
+                        with st.container(border=True):
+                            st.markdown(f"**{r['NAMA_HP']}**")
+                            st.caption(f"📞 {r['NOMOR_HP']}")
+                            st.write(f"⏳ {r['MASA_AKTIF']}")
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4022,6 +3982,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
