@@ -3348,89 +3348,114 @@ def tampilkan_area_staf():
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
 
-    # 1. PAKE KONEKSI LO (GSheet: Channel_Pintar | Tab: Channel_Pintar)
+    # 1. KONEKSI & AMBIL DATA (Satu Pintu GSheet A)
     try:
-        sh = get_gspread_sh() # Manggil fungsi cache lo
-        ws = sh.worksheet("Channel_Pintar") # Nama Tab lo
-        
+        sh = get_gspread_sh() # Memanggil fungsi cache lo
+        ws = sh.worksheet("Channel_Pintar") # Nama tab sesuai instruksi lo
         data = ws.get_all_records()
-        df = pd.DataFrame(data)
+        
+        # LOGIKA ANTI-ERROR: Jika GSheet bener-bener kosong (Cuma Header)
+        kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
+                       "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN"]
+        
+        if not data:
+            df = pd.DataFrame(columns=kolom_wajib)
+            st.info("💡 Belum ada data di GSheet. Silakan input channel baru di tab bawah.")
+        else:
+            df = pd.DataFrame(data)
+            # Bersihkan nama kolom: Hapus spasi & paksa Huruf Besar biar sinkron
+            df.columns = [str(c).strip().upper() for c in df.columns]
+            
     except Exception as e:
-        st.error(f"Gagal koneksi: Pastikan nama Tab di GSheet tulisannya 'Channel_Pintar'. Error: {e}")
+        st.error(f"Gagal koneksi ke GSheet: {e}")
         return
 
-    # 2. NAVIGASI TAB DI DALAM MENU
+    # 2. NAVIGASI TAB (BIAR RAPI)
     tab_input, tab_ready, tab_monitor = st.tabs(["➕ INPUT BARU", "📦 STOK STANDBY", "🖥️ MONITORING HP"])
 
-    # --- TAB 1: INPUT CHANNEL BARU ---
+    # --- TAB 1: INPUT CHANNEL BARU (OTOMATIS STANDBY) ---
     with tab_input:
-        with st.form("form_input_baru"):
-            st.subheader("Input Channel ke Gudang")
+        with st.form("form_input_channel"):
+            st.subheader("Registrasi Channel ke Database")
             c1, c2 = st.columns(2)
-            email = c1.text_input("Email Channel")
-            pw = c2.text_input("Password")
-            nama = c1.text_input("Nama Channel")
-            subs = c2.number_input("Subs Awal", min_value=0)
-            link = st.text_input("Link Channel")
+            f_email = c1.text_input("Email Channel")
+            f_pw = c2.text_input("Password")
+            f_nama = c1.text_input("Nama Channel")
+            f_subs = c2.number_input("Jumlah Subs", min_value=0)
+            f_link = st.text_input("Link Channel (URL)")
             
-            if st.form_submit_button("SIMPAN KE GSHEET"):
-                tz = pytz.timezone('Asia/Jakarta')
-                tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                # Urutan Kolom A-J: Tgl, Email, PW, Nama, Subs, Link, Status, HP, Slot, Konten
-                ws.append_row([tgl, email, pw, nama, subs, link, "STANDBY", "", "", ""])
-                st.success("Data Berhasil Disimpan!")
-                st.rerun()
+            if st.form_submit_button("SIMPAN DATA"):
+                if f_nama and f_email:
+                    tz = pytz.timezone('Asia/Jakarta')
+                    tgl_skrg = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                    # Urutan Kolom: TANGGAL(A), EMAIL(B), PW(C), NAMA(D), SUBS(E), LINK(F), STATUS(G), HP(H), SLOT(I), KONTEN(J)
+                    # Status otomatis 'STANDBY', sisanya kosong
+                    ws.append_row([tgl_skrg, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", ""])
+                    st.success(f"Channel {f_nama} berhasil didaftarkan!")
+                    st.rerun()
+                else:
+                    st.warning("Nama dan Email wajib diisi, Cok!")
 
     # --- TAB 2: STOK STANDBY & UPDATE SUBS ---
     with tab_ready:
+        # Filter hanya yang statusnya STANDBY
         df_standby = df[df['STATUS'] == 'STANDBY']
+        
         if df_standby.empty:
-            st.info("Belum ada stok standby di gudang.")
+            st.write("Gudang kosong. Input data dulu di tab sebelah.")
         else:
+            st.write(f"Total Stok: **{len(df_standby)} Channel**")
             for index, row in df_standby.iterrows():
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2, 1, 1])
-                    col1.write(f"**{row['NAMA_CHANNEL']}**")
-                    col1.caption(f"Subs: {row['SUBSCRIBE']} | {row['EMAIL']}")
                     
-                    # Update Subs (Kolom E / Index 5)
-                    new_subs = col2.number_input("Update Subs", value=int(row['SUBSCRIBE'] or 0), key=f"s_{index}")
-                    if col2.button("💾 Save", key=f"btn_s_{index}"):
-                        ws.update_cell(index + 2, 5, new_subs)
-                        st.rerun()
+                    with col1:
+                        st.markdown(f"**{row['NAMA_CHANNEL']}**")
+                        st.caption(f"📧 {row['EMAIL']} | 📊 Subs: {row['SUBSCRIBE']}")
                     
-                    # Proses ke Unit HP (Update Status, HP, Slot, Konten)
-                    with col3.expander("🚀 PROSES"):
-                        hp_no = st.number_input("Unit HP", 1, 30, key=f"hp_{index}")
-                        slot_jam = st.selectbox("Slot", ["PAGI", "SIANG", "SORE"], key=f"sl_{index}")
-                        konten_txt = st.text_input("Konten", key=f"kt_{index}")
-                        if st.button("Kirim ke HP", key=f"go_{index}"):
-                            r = index + 2
-                            ws.update_cell(r, 7, "PROSES") # Status (G)
-                            ws.update_cell(r, 8, hp_no)     # HP (H)
-                            ws.update_cell(r, 9, slot_jam)  # Slot (I)
-                            ws.update_cell(r, 10, konten_txt) # Konten (J)
+                    with col2:
+                        # FITUR UPDATE SUBS MANUAL
+                        new_s = st.number_input("Update Subs", value=int(row['SUBSCRIBE'] or 0), key=f"edit_s_{index}")
+                        if st.button("💾 Simpan Subs", key=f"btn_s_{index}"):
+                            ws.update_cell(index + 2, 5, new_s) # Kolom E (5)
                             st.rerun()
+                    
+                    with col3:
+                        # TOMBOL PROSES KE HP (Update G, H, I, J)
+                        with st.popover("🚀 PROSES"):
+                            p_hp = st.number_input("Nomor HP (1-30)", 1, 30, key=f"p_hp_{index}")
+                            p_slot = st.selectbox("Pilih Slot", ["PAGI", "SIANG", "SORE"], key=f"p_sl_{index}")
+                            p_konten = st.text_input("Keterangan Konten", key=f"p_kt_{index}")
+                            if st.button("KONFIRMASI JALAN", key=f"btn_go_{index}"):
+                                r_idx = index + 2
+                                ws.update_cell(r_idx, 7, "PROSES") # STATUS (G)
+                                ws.update_cell(r_idx, 8, p_hp)     # HP (H)
+                                ws.update_cell(r_idx, 9, p_slot)   # SLOT (I)
+                                ws.update_cell(r_idx, 10, p_konten) # KONTEN (J)
+                                st.rerun()
 
-    # --- TAB 3: MONITORING HP (GRID 3 KOLOM) ---
+    # --- TAB 3: MONITORING HP (MATRIKS 30 UNIT) ---
     with tab_monitor:
         df_active = df[df['STATUS'] == 'PROSES']
-        st.write(f"Total Channel Aktif: **{len(df_active)}**")
+        st.subheader("🖥️ Status Live Unit HP")
+        
+        # Menampilkan Grid HP 1 - 30
         cols = st.columns(3)
-        for i in range(1, 31): # Tampilkan HP 1-30
+        for i in range(1, 31):
             with cols[(i-1)%3]:
                 with st.container(border=True):
                     st.markdown(f"**📱 UNIT HP {i}**")
                     data_hp = df_active[df_active['HP'] == i]
+                    
                     for s in ["PAGI", "SIANG", "SORE"]:
                         cek = data_hp[data_hp['SLOT'] == s]
                         if not cek.empty:
                             nama_ch = cek.iloc[0]['NAMA_CHANNEL']
-                            st.caption(f"✅ {s}: {nama_ch}")
-                            if st.button(f"SOLD {s}", key=f"sold_{i}_{s}"):
-                                # Cari baris di GSheet berdasarkan nama channel
+                            st.success(f"✅ {s}: {nama_ch}")
+                            if st.button(f"MARK SOLD ({s})", key=f"sold_{i}_{s}"):
+                                # Cari baris di GSheet berdasarkan Nama Channel unik
                                 cell = ws.find(nama_ch)
-                                ws.update_cell(cell.row, 7, "SOLD") # Ubah Status ke SOLD
+                                ws.update_cell(cell.row, 7, "SOLD")
                                 st.rerun()
                         else:
                             st.caption(f"⚪ {s}: (Kosong)")
@@ -3844,6 +3869,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
