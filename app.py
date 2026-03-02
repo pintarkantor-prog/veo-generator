@@ -3544,39 +3544,51 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (HAK AKSES OWNER/ADMIN ONLY) ---
+    # --- TAB 4: MONITOR HP (MODEL STANDBY UI) ---
     # ======================================================================
     with tab_hp:
         st.subheader("📡 RADAR MONITORING UNIT")
         
-        # SATU WADAH EXPANDER
+        # SATU WADAH EXPANDER BESAR
         with st.expander("📱 PANEL KENDALI UNIT & MONITOR RADAR", expanded=True):
             
-            # --- 1. PROTEKSI INPUT (HANYA OWNER & ADMIN) ---
             if is_boss:
-                with st.form("form_hp_pro_final_v6", clear_on_submit=True):
-                    st.markdown("### ➕ Tambah Unit Baru")
-                    c1, c2 = st.columns(2)
-                    v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
-                    v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
-                    
-                    c3, c4 = st.columns(2)
-                    v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                    v_tgl = c4.date_input("Masa Aktif Kartu")
-                    
-                    if st.form_submit_button("🚀 SIMPAN UNIT"):
-                        # VALIDASI KETAT
-                        if not v_nama or not v_no:
-                            st.error("❌ GAGAL! Nama dan Nomor wajib diisi!")
-                        else:
-                            try:
-                                tgl_fix = v_tgl.strftime("%d/%m/%Y")
-                                ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
-                                st.cache_data.clear()
-                                st.success(f"✅ {v_nama} Berhasil Didaftarkan!"); time.sleep(1); st.rerun()
-                            except Exception as e:
-                                st.error(f"Error: {e}")
-                st.divider()
+                # --- TOMBOL MODEL STANDBY ---
+                if st.button("➕ TAMBAH UNIT HP BARU", use_container_width=True):
+                    # Toggle status form_hp di session state
+                    st.session_state.form_hp = not st.session_state.get('form_hp', False)
+
+                # Cek apakah form harus muncul
+                if st.session_state.get('form_hp', False):
+                    with st.form("form_hp_minimalis_style", clear_on_submit=True):
+                        st.markdown("### 📝 Form Registrasi Unit")
+                        # Layout 2 Kolom 2 Baris sesuai request sebelumnya
+                        c1, c2 = st.columns(2)
+                        v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
+                        v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
+                        
+                        c3, c4 = st.columns(2)
+                        v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                        v_tgl = c4.date_input("Masa Aktif Kartu")
+                        
+                        if st.form_submit_button("🚀 SIMPAN UNIT KE GSHEET"):
+                            if v_nama and v_no:
+                                try:
+                                    tgl_fix = v_tgl.strftime("%d/%m/%Y")
+                                    # Simpan ke baris 2 agar data terbaru di atas
+                                    ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
+                                    
+                                    # Tutup form setelah simpan
+                                    st.session_state.form_hp = False
+                                    st.cache_data.clear()
+                                    st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
+                                    time.sleep(1); st.rerun()
+                                except Exception as e:
+                                    st.error(f"Gagal Simpan: {e}")
+                            else:
+                                st.error("Nama dan Nomor wajib diisi!")
+
+            st.divider()
 
             # --- 2. DISPLAY RADAR (BISA DILIHAT SEMUA LEVEL) ---
             if df_hp.empty:
@@ -4073,6 +4085,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
