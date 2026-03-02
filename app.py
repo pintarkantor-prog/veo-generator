@@ -3530,21 +3530,21 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (SINKRON VARIABEL ASLI - FINAL) ---
+    # --- TAB 4: MONITOR HP (IDENTITAS UNIT & VALIDASI KETAT) ---
     # ======================================================================
     with tab_hp:
         st.subheader("📡 MONITORING UNIT & KARTU")
 
-        # --- BUNGKUS SATU EXPANDER BESAR (INPUT & RADAR) ---
+        # --- BUNGKUS SATU EXPANDER BESAR ---
         with st.expander("📱 RADAR MASA AKTIF HP", expanded=True):
             
-            # --- BAGIAN A: FORM INPUT (DENGAN VALIDASI BERISIK) ---
+            # --- BAGIAN A: FORM INPUT (VALIDASI BERISIK & GALAK) ---
             if is_boss:
                 st.markdown("### ➕ Tambah Unit Baru")
-                with st.form("form_hp_internal_final", clear_on_submit=True):
+                with st.form("form_hp_identitas_final", clear_on_submit=True):
                     c1, c2 = st.columns(2)
-                    in_nama = c1.text_input("Nama Unit HP (Wajib)", placeholder="Contoh: HP 01")
-                    in_no = c2.text_input("Nomor HP (Wajib)", placeholder="0812xxxx")
+                    in_nama = c1.text_input("Nama Unit HP (Wajib)", placeholder="Contoh: HP 1")
+                    in_no = c2.text_input("Nomor HP (Wajib)", placeholder="0855xxxxx")
                     
                     c3, c4 = st.columns(2)
                     in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
@@ -3552,19 +3552,21 @@ def tampilkan_database_channel():
                     
                     submit_hp = st.form_submit_button("🚀 SIMPAN UNIT")
                     
-                    # LOGIKA VALIDASI: WAJIB DI DALAM SINI
+                    # LOGIKA VALIDASI: WAJIB DI DALAM SINI BIAR MUNCUL NOTIF
                     if submit_hp:
                         if not in_nama.strip() or not in_no.strip() or not in_tgl.strip():
-                            st.error("❌ GAGAL! Nama, Nomor, dan Tanggal WAJIB diisi, Cok! Gak boleh ada yang kosong.")
+                            st.error("❌ GAGAL! Nama, Nomor, dan Tanggal WAJIB diisi semua, Cok!")
                         elif "/" not in in_tgl:
                             st.error("❌ FORMAT TANGGAL SALAH! Harus pake '/' (Contoh: 10/03/2026)")
                         else:
                             try:
                                 with st.spinner("Menembak data ke GSheet..."):
-                                    # Simpan ke ws_hp global lo
-                                    ws_hp.append_row([str(in_nama).upper(), f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
+                                    # Gunakan insert_row ke baris 2 agar data paling baru di atas
+                                    row_data = [str(in_nama).upper(), f"'{in_no}", in_prov, in_tgl]
+                                    ws_hp.insert_row(row_data, 2, value_input_option='USER_ENTERED')
+                                    
                                     st.cache_data.clear()
-                                    st.success(f"✅ BERHASIL! {in_nama} sudah masuk GSheet.")
+                                    st.success(f"✅ BERHASIL! {in_nama} sudah masuk GSheet di Baris 2.")
                                     time.sleep(1)
                                     st.rerun() 
                             except Exception as e:
@@ -3572,17 +3574,17 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- BAGIAN B: RADAR CARD (FORCE PULL BIAR LANGSUNG NONGOL) ---
+            # --- BAGIAN B: RADAR CARD (FORCE PULL & FIX IDENTITAS ANGKA) ---
             st.markdown("### 📡 Status Radar Aktif")
             
-            # Kita tarik data fresh di sini biar Card gak "Zonk"
             try:
+                # Tarik data live bypass cache sementara
                 data_live = ws_hp.get_all_records()
                 df_radar = pd.DataFrame(data_live)
                 if not df_radar.empty:
                     df_radar.columns = [str(c).strip().upper() for c in df_radar.columns]
-                    # Pastiin kolom NAMA_HP kebaca sebagai string biar gak ilang pas difilter
-                    df_radar['NAMA_HP'] = df_radar['NAMA_HP'].astype(str)
+                    # --- FIX IDENTITAS: Paksa semua kolom jadi STRING agar 'HP 1' gak ilang ---
+                    df_radar = df_radar.astype(str)
                     df_radar = df_radar[df_radar['NAMA_HP'].str.strip() != ""]
             except:
                 df_radar = pd.DataFrame()
@@ -3590,13 +3592,13 @@ def tampilkan_database_channel():
             if df_radar.empty:
                 st.info("📭 Belum ada data HP. Silakan input di atas.")
             else:
-                # Tampilan Grid 5 Kolom
+                # Tampilan Grid 5 Kolom Sejajar
                 cols_hp = st.columns(5)
                 for i, (idx, r) in enumerate(df_radar.iterrows()):
                     with cols_hp[i % 5]:
                         try:
-                            # Logika Tanggal
-                            u_tgl = str(r['MASA_AKTIF']).strip()
+                            # Logika Hitung Hari
+                            u_tgl = r['MASA_AKTIF'].strip()
                             t_exp = pd.to_datetime(u_tgl, dayfirst=True, errors='coerce')
                             
                             if pd.isnat(t_exp):
@@ -3606,19 +3608,20 @@ def tampilkan_database_channel():
                                 bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
 
                             with st.container(border=True):
-                                # Header Unit
-                                st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{str(r["NAMA_HP"]).upper()}</b></div>', unsafe_allow_html=True)
+                                # Header Unit (HP 1, HP 2, dst)
+                                st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
                                 
                                 # Info Detail
-                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r['PROVIDER']}</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
                                 st.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
                                 
                                 # Master Edit
                                 with st.popover("✏️", use_container_width=True):
-                                    en = st.text_input("No HP", value=str(r['NOMOR_HP']), key=f"e_no_final_{idx}")
+                                    en = st.text_input("No HP", value=r['NOMOR_HP'], key=f"e_no_final_{idx}")
                                     et = st.text_input("Exp", value=u_tgl, key=f"e_tg_final_{idx}")
                                     if st.button("SAVE", key=f"btn_sv_final_{idx}", use_container_width=True, type="primary"):
                                         if en and et:
+                                            # Update kolom B (2) dan D (4)
                                             ws_hp.update_cell(idx + 2, 2, f"'{en}")
                                             ws_hp.update_cell(idx + 2, 4, et)
                                             st.cache_data.clear()
@@ -4052,6 +4055,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
