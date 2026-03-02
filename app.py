@@ -3453,37 +3453,36 @@ def tampilkan_database_channel():
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
                                     st.cache_data.clear(); st.rerun()
                             with c8:
-                                # Popover Edit Minimalis
+                                # Popover Edit dengan Gaya Minimalis 2 Kolom
                                 with st.popover("✏️"):
-                                    st.markdown(f"### ✏️ Edit Channel")
-                                    # Input Field (Mengambil data lama sebagai default value)
-                                    e_nama_ch = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"edit_nm_{idx}")
-                                    e_mail_ch = st.text_input("Email Login", value=str(r['EMAIL']), key=f"edit_ml_{idx}")
-                                    e_pass_ch = st.text_input("Password", value=str(r['PASSWORD']), key=f"edit_ps_{idx}")
-                                    e_link_ch = st.text_input("Link Channel", value=str(r['LINK_CHANNEL']), key=f"edit_lk_{idx}")
+                                    st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
+                                    
+                                    # Baris 1: Nama & Email
+                                    ec1, ec2 = st.columns(2)
+                                    e_nama_ch = ec1.text_input("Nama Baru", value=str(r['NAMA_CHANNEL']), key=f"enm_{idx}")
+                                    e_mail_ch = ec2.text_input("Email Baru", value=str(r['EMAIL']), key=f"eml_{idx}")
+                                    
+                                    # Baris 2: Password & Link
+                                    ec3, ec4 = st.columns(2)
+                                    e_pass_ch = ec3.text_input("Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
+                                    e_link_ch = ec4.text_input("Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
                                     
                                     st.divider()
                                     
-                                    # Tombol Update
-                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"save_ch_{idx}", use_container_width=True):
+                                    # Tombol Simpan yang Lebar & Minimalis
+                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"sv_ch_{idx}", use_container_width=True, type="primary"):
                                         if e_nama_ch and e_mail_ch:
                                             try:
-                                                # Update kolom GSheet (Sesuaikan nomor kolom dengan urutan di sheet lo)
-                                                # Contoh: Nama (Kolom 4), Email (Kolom 2), Pass (Kolom 3), Link (Kolom 6)
-                                                r_idx = idx + 2 # Header + Index 0
-                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper())
-                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)
-                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)
-                                                ws_ch.update_cell(r_idx, 6, e_link_ch)
+                                                r_idx = idx + 2 
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Kolom Nama
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         # Kolom Email
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         # Kolom Pass
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         # Kolom Link
                                                 
-                                                st.cache_data.clear() # Bersihkan cache agar data terbaru nongol
-                                                st.success("✅ Berhasil diupdate!")
-                                                time.sleep(1)
-                                                st.rerun()
+                                                st.cache_data.clear()
+                                                st.success("✅ Terupdate!"); time.sleep(0.5); st.rerun()
                                             except Exception as e:
-                                                st.error(f"Gagal update: {e}")
-                                        else:
-                                            st.error("Nama & Email gak boleh kosong!")
+                                                st.error(f"Error: {e}")
 
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
@@ -4047,6 +4046,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
