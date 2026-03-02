@@ -2895,7 +2895,7 @@ def tampilkan_area_staf():
         last_update = "2 Maret 2026 | 00:40 WIB"
 
         # --- EXPANDER UTAMA ---
-        with st.expander("##### 🤝 Budaya Kerja & Peraturan", expanded=True):
+        with st.expander("##### 🤝 Budaya Kerja & Peraturan", expanded=False):
 
             # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEKS) ---
             html_master_pdf = f"""
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
