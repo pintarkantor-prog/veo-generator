@@ -3535,16 +3535,16 @@ def tampilkan_database_channel():
     with tab_hp:
         st.subheader("📡 MONITORING UNIT & KARTU")
 
-        # --- BUNGKUS SATU EXPANDER BESAR ---
+        # --- BUNGKUS SATU EXPANDER BESAR (Sesuai Request) ---
         with st.expander("📱 RADAR MASA AKTIF HP", expanded=True):
             
-            # --- BAGIAN A: FORM INPUT (VALIDASI BERISIK & GALAK) ---
+            # --- BAGIAN A: FORM INPUT (VALIDASI DI DALAM TOMBOL) ---
             if is_boss:
                 st.markdown("### ➕ Tambah Unit Baru")
                 with st.form("form_hp_identitas_final", clear_on_submit=True):
                     c1, c2 = st.columns(2)
                     in_nama = c1.text_input("Nama Unit HP (Wajib)", placeholder="Contoh: HP 1")
-                    in_no = c2.text_input("Nomor HP (Wajib)", placeholder="0855xxxxx")
+                    in_no = c2.text_input("Nomor HP (Wajib)", placeholder="085xxxx")
                     
                     c3, c4 = st.columns(2)
                     in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
@@ -3552,8 +3552,9 @@ def tampilkan_database_channel():
                     
                     submit_hp = st.form_submit_button("🚀 SIMPAN UNIT")
                     
-                    # LOGIKA VALIDASI: WAJIB DI DALAM SINI BIAR MUNCUL NOTIF
+                    # LOGIKA VALIDASI: HARUS DI DALAM SINI BIAR MUNCUL NOTIF
                     if submit_hp:
+                        # Biar Percobaan 1 & 2 lo langsung kena cegat notif error
                         if not in_nama.strip() or not in_no.strip() or not in_tgl.strip():
                             st.error("❌ GAGAL! Nama, Nomor, dan Tanggal WAJIB diisi semua, Cok!")
                         elif "/" not in in_tgl:
@@ -3568,22 +3569,23 @@ def tampilkan_database_channel():
                                     st.cache_data.clear()
                                     st.success(f"✅ BERHASIL! {in_nama} sudah masuk GSheet di Baris 2.")
                                     time.sleep(1)
-                                    st.rerun() 
+                                    st.rerun() # Refresh biar Card nongol
                             except Exception as e:
                                 st.error(f"Gagal Simpan: {e}")
 
             st.divider()
 
-            # --- BAGIAN B: RADAR CARD (FORCE PULL & FIX IDENTITAS ANGKA) ---
+            # --- BAGIAN B: RADAR CARD (FORCE PULL & FIX IDENTITAS HP) ---
             st.markdown("### 📡 Status Radar Aktif")
             
+            # Tarik data live bypass cache buat display radar
             try:
-                # Tarik data live bypass cache sementara
                 data_live = ws_hp.get_all_records()
                 df_radar = pd.DataFrame(data_live)
                 if not df_radar.empty:
                     df_radar.columns = [str(c).strip().upper() for c in df_radar.columns]
-                    # --- FIX IDENTITAS: Paksa semua kolom jadi STRING agar 'HP 1' gak ilang ---
+                    # --- FIX IDENTITAS: Paksa semua kolom jadi STRING ---
+                    # Ini kunci biar 'HP 1' atau '1' gak ilang pas difilter
                     df_radar = df_radar.astype(str)
                     df_radar = df_radar[df_radar['NAMA_HP'].str.strip() != ""]
             except:
@@ -3621,7 +3623,6 @@ def tampilkan_database_channel():
                                     et = st.text_input("Exp", value=u_tgl, key=f"e_tg_final_{idx}")
                                     if st.button("SAVE", key=f"btn_sv_final_{idx}", use_container_width=True, type="primary"):
                                         if en and et:
-                                            # Update kolom B (2) dan D (4)
                                             ws_hp.update_cell(idx + 2, 2, f"'{en}")
                                             ws_hp.update_cell(idx + 2, 4, et)
                                             st.cache_data.clear()
@@ -4055,6 +4056,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
