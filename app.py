@@ -2944,8 +2944,8 @@ def tampilkan_area_staf():
                     <p style="margin-left: 20px;">
                     <b>Jam Operasional:</b> Senin – Sabtu: pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Waktu Istirahat:</b><br>
-                    Senin – Kamis: 11:30 – 12:30 WIB.<br>
-                    Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
+                    Senin – Sabtu: 11:30 – 12:30 WIB.<br>
+                    Kecuali Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
                     <b>Hari Libur:</b> Operasional kantor diliburkan pada hari Minggu dan Hari Libur Nasional. Adapun untuk Hari Cuti Bersama, operasional tetap berjalan normal kecuali ditentukan lain oleh kebijakan owner.<br>
                     <b>Presensi:</b> Sistem absen tercatat otomatis melalui sistem login dashboard web PINTAR MEDIA.
                     </p>
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
