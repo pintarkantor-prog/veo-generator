@@ -3525,57 +3525,63 @@ def tampilkan_database_channel():
                                         time.sleep(1.5)
                                         st.rerun()
 
-    # 2. --- RADAR MONITORING KARTU HP (5 KOLOM SEJAJAR) ---
+    # --- 1. RADAR MONITORING KARTU HP ---
     with st.expander("📱 RADAR MONITORING KARTU HP", expanded=True):
         is_auth = str(user_aktif).upper() in ["ADMIN", "OWNER", "DIAN"]
         
+        # --- TOMBOL TAMBAH GAYA DATABASE (SESSION STATE) ---
         if is_auth:
-            with st.popover("➕ TAMBAH UNIT HP BARU", use_container_width=True):
-                st.markdown("### 📱 INPUT DATA HP BARU")
-                in_nama = st.text_input("Nama Unit HP", placeholder="Contoh: HP 01")
-                # Otomatis +62 ( agar staff tinggal lanjutin )
-                in_no = st.text_input("Nomor HP", value="+62 ( ")
-                in_prov = st.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                in_tgl = st.text_input("Masa Aktif", placeholder="DD/MM/YYYY")
-                
-                if st.button("🚀 SIMPAN UNIT", use_container_width=True, type="primary"):
-                    if in_nama and in_tgl:
-                        try:
-                            ws_hp = sh_master.worksheet("Data_HP")
-                            # Gunakan tanda ' agar GSheet menganggapnya teks
-                            no_fix = f"'{in_no}" 
-                            ws_hp.append_row([in_nama, no_fix, in_prov, in_tgl])
-                            st.toast(f"✅ {in_nama} Berhasil Ditambah!"); time.sleep(1.5); st.rerun()
-                        except:
-                            st.error("Gagal koneksi ke Sheet 'Data_HP'")
-                    else:
-                        st.warning("Nama dan Tanggal wajib diisi!")
-        
-        st.divider() # Garis pemisah antara Input dan Daftar Card
+            if st.button("➕ TAMBAH UNIT HP BARU", use_container_width=True):
+                st.session_state.form_hp_baru = not st.session_state.get('form_hp_baru', False)
 
-        # 2. DAFTAR CARD RADAR HP
+            if st.session_state.get('form_hp_baru', False):
+                with st.form("input_hp_baru_style", clear_on_submit=True):
+                    f1, f2 = st.columns(2)
+                    in_nama = f1.text_input("Nama Unit HP (Contoh: HP 01)")
+                    # Otomatis isi awal +62 (
+                    in_no = f2.text_input("Nomor HP", value="+62 ( ")
+                    
+                    f3, f4 = st.columns(2)
+                    in_prov = f3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    in_tgl = f4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="03/03/2026")
+                    
+                    if st.form_submit_button("🚀 SIMPAN UNIT KE GSHEET"):
+                        if in_nama and in_tgl:
+                            try:
+                                ws_hp = sh_master.worksheet("Data_HP")
+                                # Pakai tanda ' biar GSheet gak anggap itu rumus
+                                no_fix = f"'{in_no}" 
+                                ws_hp.append_row([in_nama, no_fix, in_prov, in_tgl])
+                                st.success(f"{in_nama} Berhasil Ditambahkan!"); time.sleep(1.5); st.rerun()
+                            except:
+                                st.error("Gagal koneksi ke Sheet 'Data_HP'")
+                        else:
+                            st.warning("Nama Unit dan Tanggal wajib diisi!")
+        
+        st.divider()
+
+        # --- 2. DAFTAR CARD RADAR (5 KOLOM) ---
         if df_hp.empty:
-            st.info("Belum ada data unit HP. Silakan tambah lewat tombol di atas.")
+            st.info("Data HP masih kosong di Sheet 'Data_HP'.")
         else:
-            cols_hp = st.columns(5)
+            cols_hp = st.columns(5) # Gaya Radar 5 Kolom
+            
             for i, (idx, r) in enumerate(df_hp.iterrows()):
                 with cols_hp[i % 5]:
-                    # PENGAMAN: Cek apakah kolom MASA_AKTIF ada isinya
-                    if pd.isna(r['MASA_AKTIF']) or str(r['MASA_AKTIF']).strip() == "":
-                        st.warning(f"⚠️ {r['NAMA_HP']} Tgl Kosong")
-                        continue
-                        
                     try:
-                        # Konversi Tanggal dengan penanganan error
+                        # Pengaman jika tanggal kosong atau format salah
+                        if not r['MASA_AKTIF']:
+                            st.caption(f"⚠️ {r['NAMA_HP']} No Date")
+                            continue
+                            
                         tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True, errors='coerce')
-                        
                         if pd.isnat(tgl_exp):
-                            st.error(f"Format Tgl {r['NAMA_HP']} Salah")
+                            st.caption(f"❌ {r['NAMA_HP']} Format Error")
                             continue
 
                         sisa = (tgl_exp - datetime.now()).days
                         
-                        # Penentu Warna Card
+                        # Penentu Warna Header
                         bg_c = "#2D5A47" # Hijau
                         if sisa < 0: bg_c = "#962D2D" # Merah
                         elif sisa <= 7: bg_c = "#A67C00" # Kuning
@@ -3587,21 +3593,24 @@ def tampilkan_database_channel():
                                 </div>
                             """, unsafe_allow_html=True)
                             
-                            k_data1, k_data2 = st.columns(2)
-                            k_data1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r['PROVIDER']}</p><p style='margin:0; font-size:11px;'><b>{r['NOMOR_HP']}</b></p>", unsafe_allow_html=True)
-                            k_data2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>⏳ SISA</p><p style='margin:0; font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>", unsafe_allow_html=True)
+                            # Info 2 Kolom Sejajar
+                            k1, k2 = st.columns(2)
+                            k1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r['PROVIDER']}</p><p style='margin:0; font-size:11px;'><b>{r['NOMOR_HP']}</b></p>", unsafe_allow_html=True)
+                            k2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>⏳ SISA</p><p style='margin:0; font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>", unsafe_allow_html=True)
                             
+                            # --- FITUR EDIT ---
                             with st.popover("✏️", use_container_width=True):
-                                new_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), key=f"hno_{idx}", disabled=not is_auth)
-                                new_pv = st.text_input("Provider", value=str(r['PROVIDER']), key=f"hpv_{idx}", disabled=not is_auth)
-                                new_tg = st.text_input("Tgl Expired", value=str(r['MASA_AKTIF']), key=f"htg_{idx}", help="Format: DD/MM/YYYY", disabled=not is_auth)
+                                ed_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), key=f"edno_{idx}", disabled=not is_auth)
+                                ed_pv = st.text_input("Provider", value=str(r['PROVIDER']), key=f"edpv_{idx}", disabled=not is_auth)
+                                ed_tg = st.text_input("Tgl Expired", value=str(r['MASA_AKTIF']), key=f"edtg_{idx}", disabled=not is_auth)
                                 
-                                if st.button("💾 SAVE", key=f"hsv_{idx}", use_container_width=True, type="primary", disabled=not is_auth):
+                                if st.button("💾 SAVE", key=f"edsv_{idx}", use_container_width=True, type="primary", disabled=not is_auth):
                                     ws_hp = sh_master.worksheet("Data_HP")
-                                    no_edit_fix = f"'{new_no}" if not new_no.startswith("'") else new_no
-                                    ws_hp.update(f"A{idx+2}:D{idx+2}", [[r['NAMA_HP'], no_edit_fix, new_pv, new_tg]])
+                                    # Tetap jaga tanda ' saat edit
+                                    no_edit_fix = f"'{ed_no}" if not ed_no.startswith("'") else ed_no
+                                    ws_hp.update(f"A{idx+2}:D{idx+2}", [[r['NAMA_HP'], no_edit_fix, ed_pv, ed_tg]])
                                     st.toast("✅ Updated!"); time.sleep(1.5); st.rerun()
-                    except Exception as e:
+                    except:
                         st.caption(f"Error {r['NAMA_HP']}")
                                         
     # ==========================================
@@ -4050,6 +4059,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
