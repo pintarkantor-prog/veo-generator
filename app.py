@@ -3383,49 +3383,63 @@ def tampilkan_database_channel():
         "📂 ARSIP CHANNEL"
     ])
 
-    # ==========================================
-    # TAB 1: STOK STANDBY (TAMPILAN BARU ALA AKUN AI)
-    # ==========================================
+    # ======================================================================
+    # --- TAB 1: STOK STANDBY (VERSI NO SLOT - HANYA UNIT HP) ---
+    # ======================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # Tombol Tambah ala Akun AI
-            with st.expander("➕ TAMBAH CHANNEL BARU", expanded=False):
-                with st.form("form_tambah_standby"):
-                    c1, c2, c3 = st.columns(3)
-                    f_nama = c1.text_input("Nama Channel")
-                    f_email = c2.text_input("Email")
-                    f_pw = c3.text_input("Password")
+            # 1. TOMBOL TAMBAH (Gaya Original Dian)
+            if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
+                st.session_state.form_baru = not st.session_state.get('form_baru', False)
+
+            if st.session_state.get('form_baru', False):
+                with st.form("input_st_style", clear_on_submit=True):
+                    f1, f2, f3 = st.columns(3)
+                    v_nama = f1.text_input("Nama Channel")
+                    v_mail = f2.text_input("Email Login")
+                    v_pass = f3.text_input("Password")
                     
-                    c4, c5 = st.columns([1, 2])
-                    f_subs = c4.text_input("Jumlah Subs")
-                    f_link = c5.text_input("Link Channel")
+                    f4, f5 = st.columns([1, 2])
+                    v_subs = f4.text_input("Jumlah Subs")
+                    v_link = f5.text_input("Link Channel")
                     
-                    if st.form_submit_button("💾 SIMPAN DATA KE STANDBY", use_container_width=True):
-                        if f_nama and f_email:
+                    if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
+                        if v_nama and v_mail:
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
-                            st.success("Berhasil!")
-                            st.rerun()
+                            # SLOT (Kolom 9) dikosongkan permanen
+                            ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
+                            st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
 
-            st.write("") 
+            st.divider()
+
             df_st = df[df['STATUS'] == 'STANDBY']
             if df_st.empty:
-                st.info("Gudang Standby Kosong.")
+                st.info("📭 Belum ada stok channel standby.")
             else:
-                for idx, row in df_st.iterrows():
+                for idx, r in df_st.iterrows():
                     with st.container(border=True):
-                        # Tampilan Sejajar
-                        col_nama, col_mail, col_pass, col_subs, col_btn = st.columns([2, 2, 1.5, 1, 1.2])
-                        col_nama.markdown(f"**{row['NAMA_CHANNEL']}**")
-                        col_mail.caption(f"📧 {row['EMAIL']}")
-                        col_pass.caption(f"🔑 `{row['PASSWORD']}`")
-                        col_subs.write(f"📊 {row['SUBSCRIBE']}")
+                        st.markdown(f"""
+                            <div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;">
+                                <b style="color:white; font-size:11px;">🚀 {str(r['NAMA_CHANNEL']).upper()}</b>
+                            </div>
+                        """, unsafe_allow_html=True)
+
+                        # 7 KOLOM SEJAJAR (Tanpa Slot)
+                        c1, c2, c3, c4, c5, c6, c7 = st.columns([1.8, 1.2, 1.5, 0.8, 1, 1, 1.2])
                         
-                        with col_btn:
+                        c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px !important; color:#2ecc71;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                        c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:11px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                        c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                        c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📈 SUBS</p><b style='font-size:11px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                        c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p><a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px;'>🔗 Buka</a>", unsafe_allow_html=True)
+                        c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 PENCATAT</p><b style='font-size:11px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
+
+                        with c7:
                             with st.popover("⚙️ EKSEKUSI", use_container_width=True):
+                                # LOGIKA AUTO-HP (Cek HP yang isinya < 3 channel)
                                 df_p = df[df['STATUS'] == 'PROSES']
                                 suggested_hp = 1
                                 for h in range(1, 26):
@@ -3436,23 +3450,22 @@ def tampilkan_database_channel():
                                 p_hp = st.number_input("Unit HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
                                 
                                 if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
-                                    data_hp_ini = df_p[df_p['HP'] == p_hp]
-                                    slot_terpakai = data_hp_ini['SLOT'].tolist()
-                                    slot_final = next((s for s in ["PAGI", "SIANG", "SORE"] if s not in slot_terpakai), None)
-                                    
-                                    if not slot_final:
-                                        st.error(f"HP {p_hp} FULL!")
+                                    # Cek apakah HP sudah penuh (Maks 3)
+                                    if len(df_p[df_p['HP'] == p_hp]) >= 3:
+                                        st.error(f"HP {p_hp} SUDAH PENUH!")
                                     else:
-                                        r = idx + 2
-                                        ws.update_cell(r, 7, "PROSES"); ws.update_cell(r, 8, p_hp)
-                                        ws.update_cell(r, 9, slot_final); ws.update_cell(r, 11, user_aktif)
+                                        r_idx = idx + 2
+                                        ws.update_cell(r_idx, 7, "PROSES")
+                                        ws.update_cell(r_idx, 8, p_hp)
+                                        ws.update_cell(r_idx, 9, "") # KOLOM SLOT DIKOSONGKAN
+                                        ws.update_cell(r_idx, 11, user_aktif)
                                         st.rerun()
                                 
                                 if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
                                 if st.button("🥀 BUSUK", key=f"btn_bk_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                                if st.button("🚫 SUSP", key=f"btn_ss_{idx}", use_container_width=True):
+                                if st.button("🚫 SUSPEND", key=f"btn_ss_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
 
     # ==========================================
@@ -3927,6 +3940,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
