@@ -1291,20 +1291,21 @@ def tampilkan_tugas_kerja():
         df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
         df_all_tugas['DEADLINE'] = df_all_tugas['DEADLINE_DT'].dt.strftime('%Y-%m-%d')
         
-        # --- 2. SETUP FILTER (VERSI ANTI HILANG & ANTI GAGAL) ---
-        # 1. Masker khusus BONUS (Tetap Maret biar bonus gak dobel dari bulan lalu)
+        # --- 2. SETUP FILTER (VERSI ANTI HILANG - KHUSUS WAITING QC) ---
+        # 1. Tetap kunci Maret buat Radar Bonus
         mask_bulan = (df_all_tugas['DEADLINE_DT'].dt.month == sekarang.month) & \
                      (df_all_tugas['DEADLINE_DT'].dt.year == sekarang.year)
 
-        # 2. Daftar status yang dianggap "SUDAH TUTUP" (Hanya hilang kalau sudah lewat bulan)
-        status_tutup = ["FINISH", "ARSIP", "BATAL", "CANCELED"]
+        # 2. STATUS WAJIB TAMPIL (Penyelamat Februari)
+        # Tugas dengan status ini GAK BOLEH ILANG kalau belum di-ACC/BATAL
+        status_penting = ["WAITING QC", "PROSES", "REVISI"]
 
-        # 3. LOGIKA TAMPILAN: (Semua tugas Maret) ATAU (Semua tugas yang BELUM FINISH/BATAL)
-        mask_tampilan = (mask_bulan) | (~df_all_tugas['STATUS'].fillna('').str.strip().str.upper().isin(status_tutup))
+        # 3. LOGIKA BARU: Tampilkan jika (Bulan Maret) ATAU (Status ada di list status_penting)
+        mask_tampilan = (mask_bulan) | (df_all_tugas['STATUS'].str.strip().str.upper().isin(status_penting))
 
-        # --- UPDATE DATA TUGAS (INI KUNCINYA!) ---
+        # --- UPDATE VARIABEL ---
         df_tugas_tampil = df_all_tugas[mask_tampilan].copy()
-        data_tugas = df_tugas_tampil.to_dict('records') # <-- PAKE YANG INI AJA, YANG ATAS BUANG
+        data_tugas = df_tugas_tampil.to_dict('records')
 
         # --- 3. LOGIKA RADAR (Gunakan st_raw yang sudah ditarik di atas) ---
         if user_level == "OWNER":
@@ -3765,6 +3766,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
