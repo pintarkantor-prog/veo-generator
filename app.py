@@ -1527,16 +1527,18 @@ def tampilkan_tugas_kerja():
                     else:
                         st.warning("⚠️ Mohon isi Judul dan Link terlebih dahulu!")
                         
-# --- 5. RENDER KARTU TUGAS (FILTER BERDASARKAN USER) ---
+    # --- 5. RENDER KARTU TUGAS (FILTER BERDASARKAN USER) ---
     tugas_terfilter = []
     
-    if not df_all_tugas.empty:
-        status_buang_final = ["FINISH", "CANCELED", "ARSIP", "BATAL"]
-        data_siap_tampil = df_tugas_tampil.to_dict('records')
+    if not df_tugas_tampil.empty:
+        # Langsung sikat dari DataFrame hasil filter Tahap 2
+        # Gak usah pake status_buang lagi, karena di atas udah kita saring pake status_tutup
         
         if user_level in ["OWNER", "ADMIN"]: 
-            # OWNER/ADMIN: Liat semua sisa tugas (Maret + Sisa Feb)
-            tugas_terfilter = [t for t in data_siap_tampil if str(t.get("STATUS")).upper() not in status_buang_final]
+            tugas_terfilter = df_tugas_tampil.to_dict('records')
+        else:
+            # Filter staf tetep jalan buat Icha, Nissa, Inggi dkk
+            tugas_terfilter = df_tugas_tampil[df_tugas_tampil['STAF'].str.lower() == user_sekarang].to_dict('records')
         else:
             # STAFF: Cuma liat punya dia sendiri (Maret + Sisa Feb)
             # Pake .strip() sama .lower() biar gak typo gara-gara spasi di GSheet
@@ -1548,8 +1550,7 @@ def tampilkan_tugas_kerja():
 
     # 2. CEK HASIL FILTER (Logika yang bener: kalau kosong kasih info, kalau ada gambar kartu)
     if not tugas_terfilter:
-        pass
-
+        st.info("📭 Semua tugas Februari & Maret sudah kelar (FINISH/BATAL).")
     else:
         # --- MODE 2 KOLOM (GRID) ---
         tugas_list = list(reversed(tugas_terfilter))
@@ -3767,6 +3768,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
