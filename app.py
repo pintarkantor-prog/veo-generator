@@ -3544,16 +3544,14 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (MODEL STABIL - ANTI REDIRECT) ---
+    # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
     # ======================================================================
     with tab_hp:
-
-        with st.expander("📱 MONITOR UNIT HP", expanded=True):
-            
-            # --- 1. FORM INPUT (TAMPIL TERUS BIAR GAK REDIRECT) ---
-            if is_boss:
+        # --- 1. EXPANDER INPUT (DISINI EXPANDED=FALSE BIAR RAPI) ---
+        if is_boss:
+            with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
                 with st.form("form_hp_fix_statis", clear_on_submit=True):
-                    st.markdown("### ➕ Tambah Unit Baru")
+                    st.markdown("### 📝 Input Data Unit")
                     c1, c2 = st.columns(2)
                     v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
                     v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
@@ -3570,84 +3568,79 @@ def tampilkan_database_channel():
                                 st.cache_data.clear()
                                 st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
                                 time.sleep(1)
-                                st.rerun() # Sekarang rerun-nya bakal lebih stabil
+                                st.rerun() 
                             except Exception as e:
                                 st.error(f"Error: {e}")
                         else:
                             st.error("Nama & Nomor wajib diisi!")
 
-            st.divider()
+        st.divider()
 
-            # --- 2. DISPLAY RADAR (BISA DILIHAT SEMUA LEVEL) ---
-            if df_hp.empty:
-                st.info("Radar masih kosong.")
-            else:
-                df_hp['NAMA_HP'] = df_hp['NAMA_HP'].astype(str)
-                df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].copy()
-                
-                grid = st.columns(4) 
-                for i, (idx, r) in enumerate(df_view.iterrows()):
-                    with grid[i % 4]:
-                        # LOGIKA WARNA SISA HARI
-                        try:
-                            t_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
-                            sisa = (t_exp - datetime.now()).days
-                            if sisa > 7: color_code = "#2D5A47" # IJO
-                            elif 3 <= sisa <= 7: color_code = "#A67C00" # ORANGE
-                            else: color_code = "#962D2D" # MERAH
-                        except:
-                            color_code = "#444"; sisa = 0
+        # --- 2. DISPLAY RADAR (TANPA EXPANDER - LANGSUNG TAMPIL) ---
+        if df_hp.empty:
+            st.info("Radar masih kosong.")
+        else:
+            df_hp['NAMA_HP'] = df_hp['NAMA_HP'].astype(str)
+            df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].copy()
+            
+            grid = st.columns(4) 
+            for i, (idx, r) in enumerate(df_view.iterrows()):
+                with grid[i % 4]:
+                    # LOGIKA WARNA SISA HARI
+                    try:
+                        t_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
+                        sisa = (t_exp - datetime.now()).days
+                        if sisa > 7: color_code = "#2D5A47" # IJO
+                        elif 3 <= sisa <= 7: color_code = "#A67C00" # ORANGE
+                        else: color_code = "#962D2D" # MERAH
+                    except:
+                        color_code = "#444"; sisa = 0
 
-                        with st.container(border=True):
-                            st.markdown(f'<div style="background:{color_code}; padding:3px; border-radius:3px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
-                            
-                            # Info 2 Kolom
-                            ic1, ic2 = st.columns(2)
-                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:14px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
-                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXPIRED</p><b style='font-size:11px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
-                            
-                            ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROVIDER</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
-                            ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
+                    with st.container(border=True):
+                        st.markdown(f'<div style="background:{color_code}; padding:3px; border-radius:3px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{r["NAMA_HP"]}</b></div>', unsafe_allow_html=True)
+                        
+                        # Info 2 Kolom
+                        ic1, ic2 = st.columns(2)
+                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:14px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXPIRED</p><b style='font-size:11px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
+                        
+                        ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROVIDER</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
+                        ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
 
-                            # --- PROTEKSI EDIT (HANYA OWNER & ADMIN) ---
-                            if is_boss:
-                                with st.popover("✏️ Edit Unit", use_container_width=True):
-                                    st.markdown(f"#### 🛠️ EDIT UNIT: {r['NAMA_HP']}")
-                                    
-                                    # Baris 1: Nama & Nomor (Gaya Minimalis 2 Kolom)
-                                    ec1, ec2 = st.columns(2)
-                                    e_nama = ec1.text_input("📱 Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
-                                    e_no = ec2.text_input("📞 Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
-                                    
-                                    # Baris 2: Provider & Masa Aktif
-                                    ec3, ec4 = st.columns(2)
-                                    e_prov = ec3.selectbox("📡 Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], 
-                                                          index=["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"].index(r['PROVIDER']) if r['PROVIDER'] in ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"] else 0, 
-                                                          key=f"ep_{idx}")
-                                    e_tgl = ec4.text_input("📅 Exp (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
-                                    
-                                    st.divider()
-                                    
-                                    # Tombol Simpan Tanpa Log Edit
-                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
-                                        if e_nama and e_no:
-                                            try:
-                                                r_idx = idx + 2 # Header + baris data
-                                                
-                                                # Update 4 Kolom Utama Saja
-                                                ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
-                                                ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
-                                                ws_unit_hp.update_cell(r_idx, 3, e_prov)
-                                                ws_unit_hp.update_cell(r_idx, 4, e_tgl)
-                                                
-                                                st.cache_data.clear() # Bersihkan cache
-                                                st.success("✅ Perubahan Berhasil Disimpan!")
-                                                time.sleep(0.5)
-                                                st.rerun() # Refresh halaman
-                                            except Exception as e:
-                                                st.error(f"Gagal: {e}")
-                                        else:
-                                            st.error("Nama & Nomor wajib diisi!")
+                        # --- PROTEKSI EDIT (HANYA OWNER & ADMIN) ---
+                        if is_boss:
+                            with st.popover("✏️ Edit Unit", use_container_width=True):
+                                st.markdown(f"#### 🛠️ EDIT UNIT: {r['NAMA_HP']}")
+                                
+                                # Baris 1: Nama & Nomor
+                                ec1, ec2 = st.columns(2)
+                                e_nama = ec1.text_input("📱 Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
+                                e_no = ec2.text_input("📞 Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
+                                
+                                # Baris 2: Provider & Masa Aktif
+                                ec3, ec4 = st.columns(2)
+                                e_prov = ec3.selectbox("📡 Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], 
+                                                      index=["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"].index(r['PROVIDER']) if r['PROVIDER'] in ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"] else 0, 
+                                                      key=f"ep_{idx}")
+                                e_tgl = ec4.text_input("📅 Exp (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
+                                
+                                st.divider()
+                                
+                                if st.button("💾 SIMPAN PERUBAHAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
+                                    if e_nama and e_no:
+                                        try:
+                                            r_idx = idx + 2
+                                            ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
+                                            ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
+                                            ws_unit_hp.update_cell(r_idx, 3, e_prov)
+                                            ws_unit_hp.update_cell(r_idx, 4, e_tgl)
+                                            
+                                            st.cache_data.clear()
+                                            st.success("✅ Berhasil!")
+                                            time.sleep(0.5)
+                                            st.rerun()
+                                        except Exception as e:
+                                            st.error(f"Gagal: {e}")
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4073,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
