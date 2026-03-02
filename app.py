@@ -3409,9 +3409,9 @@ def tampilkan_database_channel():
                 if st.session_state.get('form_baru', False):
                     with st.form("input_st_final_style", clear_on_submit=True):
                         f1, f2, f3 = st.columns(3)
-                        v_nama = f1.text_input("Nama Channel")
-                        v_mail = f2.text_input("Email Login")
-                        v_pass = f3.text_input("Password")
+                        v_mail = f1.text_input("Email Login")
+                        v_pass = f2.text_input("Password")
+                        v_nama = f3.text_input("Nama Channel")
                         f4, f5 = st.columns([1, 2])
                         v_subs = f4.text_input("Jumlah Subs")
                         v_link = f5.text_input("Link Channel")
@@ -4066,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
