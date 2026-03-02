@@ -2774,7 +2774,7 @@ def tampilkan_area_staf():
                     value=3,
                     key="slider_editor_final"
                 )
-                st.caption("KETENTUAN: Project HQ: 1 video = 1 | Project Ringan: 15 video = 1")
+                st.caption("KETENTUAN: Project HQ: 1 video = 1 | Project Ringan: 15 video = 1 | Tunjangan Kinerja Target Bulanan 70 Video Finish => Rp. 500.000")
                 
             # --- LOGIKA HITUNG EDITOR ---
             gapok_sim = 2000000
@@ -3755,6 +3755,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
