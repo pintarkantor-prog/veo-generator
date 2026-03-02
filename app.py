@@ -3445,7 +3445,7 @@ def tampilkan_database_channel():
 
                             # AKSI DROPDOWN MINIMALIS
                             with c7:
-                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⚡ AKSI</p>", unsafe_allow_html=True)
+                                
                                 opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
                                 
                                 if opsi != "-":
@@ -3909,6 +3909,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
