@@ -3601,7 +3601,7 @@ def tampilkan_database_channel():
                         
                         # Info 2 Kolom
                         ic1, ic2 = st.columns(2)
-                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:14px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                        ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:16px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
                         ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXPIRED</p><b style='font-size:11px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
                         
                         ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROVIDER</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
@@ -4066,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
