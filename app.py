@@ -3034,11 +3034,11 @@ def tampilkan_area_staf():
 
         # --- 1. DEFINISI IDENTITAS DASAR ---
         staff_mapping = {
-            "nissa": "NISSA PANGESTUNINGRUM",
-            "lisa": "LISA ANGGRAENI",
-            "icha": "ANNISA NUR CAHYANI",
-            "inggi": "INGGI PRAMESTI",
-            "dian": "DIAN SETYA WARDANA"
+            "nissa": "Nisaul Mukaromah Alfiyaeni",
+            "lisa": "Salisatu Rohmatus Saodah",
+            "icha": "Nissa Pangestuningrum",
+            "inggi": "Rizki Retno Inggiani",
+            "dian": "Dian Setya Wardana"
         }
         
         # Ambil Nama Staf
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
