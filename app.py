@@ -3185,8 +3185,8 @@ def tampilkan_area_staf():
                     <b>Waktu Kerja Efektif:</b> Pukul 08:30 s/d 16:30 WIB.<br>
                     <b>Hari Kerja:</b> Senin s/d Sabtu.<br>
                     <b>Waktu Istirahat:</b><br>
-                    - Senin – Kamis: 11:30 – 12:30 WIB.<br>
-                    - Jumat: 11:30 – 13:00 WIB (Penyesuaian ibadah).<br>
+                    - Senin – Sabtu: 11:30 – 12:30 WIB.<br>
+                    - Kecuali Jumat: 11:30 – 13:00 WIB (Penyesuaian ibadah).<br>
                     <b>Hari Libur:</b> Hari Minggu dan Hari Libur Nasional.<br>
                     <b>Cuti Bersama:</b> Operasional kantor tetap berjalan normal pada hari Cuti Bersama Pemerintah, kecuali ditentukan lain oleh Kebijakan Pimpinan (Pihak Pertama).<br>
                     <b>Hak Cuti Pribadi:</b> Pihak Kedua berhak mengajukan izin/cuti dengan pemberitahuan minimal 2 hari sebelumnya. Izin mendadak hanya diterima untuk kondisi darurat (Sakit/Duka) dengan bukti yang sah.<br>
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
