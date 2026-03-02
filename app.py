@@ -2570,7 +2570,7 @@ def tampilkan_area_staf():
     📢 **PENGUMUMAN TERBARU:**
     - Libur Hari Raya Idul Fitri Mulai Tanggal 18 - 23 maret (Tanggal 24 masuk normal).
     - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
-    - Semangat buat tim produksi video hari ini! 🚀
+    - Sistem masih tahap pengembangan jika ada selisih atau eror, segera lapor Admin! 🚀
     """)
     
     st.write("") # Spasi inisiasi
@@ -3753,3 +3753,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
