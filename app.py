@@ -154,21 +154,31 @@ def load_data_channel():
 # Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
 df = load_data_channel()
 
-# Fungsi khusus narik data HP
+# Fungsi khusus narik data HP (PASTIKAN SH TERDEFINISI)
 @st.cache_data(ttl=10)
 def load_data_hp():
     try:
-        # Panggil ulang koneksi biar seger
-        ws_hp = sh_master.worksheet("Data_HP")
+        # 1. Panggil koneksi utama dulu di sini
+        sh_internal = get_gspread_sh() 
+        
+        # 2. Buka worksheet dengan benar
+        ws_hp = sh_internal.worksheet("Data_HP")
         data = ws_hp.get_all_records()
+        
         if not data:
             return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-        return pd.DataFrame(data)
+            
+        df_hasil = pd.DataFrame(data)
+        # 3. Bersihkan nama kolom (biar gak ada spasi ganggu)
+        df_hasil.columns = [str(c).strip().upper() for c in df_hasil.columns]
+        return df_hasil
+        
     except Exception as e:
-        # Biar kita tau error aslinya apa, jangan cuma diem
-        st.sidebar.error(f"Koneksi Gagal: {e}")
-        return pd.DataFrame()
+        # Kalau muncul error di sidebar, baca baik-baik tulisannya apa!
+        st.sidebar.error(f"⚠️ Radar HP Gagal: {e}")
+        return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
 
+# Panggil fungsinya
 df_hp = load_data_hp()
         
 # ==============================================================================
@@ -4050,6 +4060,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
