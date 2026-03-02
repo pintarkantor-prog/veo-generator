@@ -3480,21 +3480,31 @@ def tampilkan_database_channel():
                             # MASTER EDIT (Kolom 8 - Minimalis)
                             with c8:
                                 with st.popover("✏️", use_container_width=True):
-                                    st.markdown("### 📝 **EDIT DATA**")
-                                    ed_mail = st.text_input("Email", value=str(r['EMAIL']), key=f"ed_m_{idx}")
-                                    ed_pass = st.text_input("Password", value=str(r['PASSWORD']), key=f"ed_p_{idx}")
-                                    ed_nama = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"ed_n_{idx}")
-                                    ed_subs = st.text_input("Subscribe", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
-                                    ed_link = st.text_input("Link Channel", value=str(r['LINK_CHANNEL']), key=f"ed_l_{idx}")
+                                    # Header Popover yang lebih tegas
+                                    st.markdown("<h3 style='text-align:center; color:#3498db;'>📝 EDIT CHANNEL</h3>", unsafe_allow_html=True)
+                                    st.divider()
+
+                                    # Gunakan kolom kecil untuk label agar input tidak terlalu lebar
+                                    ed_mail = st.text_input("📧 Email Login", value=str(r['EMAIL']), key=f"ed_m_{idx}")
+                                    ed_pass = st.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"ed_p_{idx}")
                                     
-                                    if st.button("💾 SIMPAN", key=f"btnsave_{idx}", use_container_width=True):
+                                    # Nama & Subs kita bikin sejajar biar ringkas
+                                    ea, eb = st.columns(2)
+                                    ed_nama = ea.text_input("📺 Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"ed_n_{idx}")
+                                    ed_subs = eb.text_input("📊 Subscribe", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
+                                    
+                                    ed_link = st.text_input("🔗 Link Channel", value=str(r['LINK_CHANNEL']), key=f"ed_l_{idx}")
+                                    
+                                    st.divider()
+                                    
+                                    # Tombol Simpan yang lebih mencolok
+                                    if st.button("🚀 SIMPAN PERUBAHAN", key=f"btnsave_{idx}", use_container_width=True, type="primary"):
                                         r_idx = idx + 2
-                                        ws.update_cell(r_idx, 2, ed_mail)
-                                        ws.update_cell(r_idx, 3, ed_pass)
-                                        ws.update_cell(r_idx, 4, ed_nama)
-                                        ws.update_cell(r_idx, 5, ed_subs)
-                                        ws.update_cell(r_idx, 6, ed_link)
-                                        st.toast("✅ Update Berhasil!"); time.sleep(0.5); st.rerun()
+                                        # Pakai list update agar tidak loading terus (Batch Update)
+                                        data_update = [[ed_mail, ed_pass, ed_nama, ed_subs, ed_link]]
+                                        ws.update(f"B{r_idx}:F{r_idx}", data_update)
+                                        
+                                        st.toast("✅ Data Berhasil Diperbarui!"); time.sleep(0.5); st.rerun()
                                         
     # ==========================================
     # TAB 3: JADWAL UPLOAD
@@ -3942,6 +3952,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
