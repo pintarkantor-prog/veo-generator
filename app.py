@@ -3453,36 +3453,40 @@ def tampilkan_database_channel():
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
                                     st.cache_data.clear(); st.rerun()
                             with c8:
-                                # Popover Edit dengan Gaya Minimalis 2 Kolom
                                 with st.popover("✏️"):
                                     st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
+                                    st.caption("Ubah data channel di bawah ini:")
                                     
-                                    # Baris 1: Nama & Email
+                                    # Baris 1: Nama & Email dengan Ikon
                                     ec1, ec2 = st.columns(2)
-                                    e_nama_ch = ec1.text_input("Nama Baru", value=str(r['NAMA_CHANNEL']), key=f"enm_{idx}")
-                                    e_mail_ch = ec2.text_input("Email Baru", value=str(r['EMAIL']), key=f"eml_{idx}")
+                                    e_nama_ch = ec1.text_input("📺 Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"enm_{idx}")
+                                    e_mail_ch = ec2.text_input("📧 Email Login", value=str(r['EMAIL']), key=f"eml_{idx}")
                                     
-                                    # Baris 2: Password & Link
+                                    # Baris 2: Password & Link dengan Ikon
                                     ec3, ec4 = st.columns(2)
-                                    e_pass_ch = ec3.text_input("Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
-                                    e_link_ch = ec4.text_input("Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
+                                    e_pass_ch = ec3.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
+                                    e_link_ch = ec4.text_input("🔗 Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
                                     
                                     st.divider()
                                     
-                                    # Tombol Simpan yang Lebar & Minimalis
+                                    # Tombol Simpan Premium
                                     if st.button("💾 SIMPAN PERUBAHAN", key=f"sv_ch_{idx}", use_container_width=True, type="primary"):
                                         if e_nama_ch and e_mail_ch:
                                             try:
                                                 r_idx = idx + 2 
-                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Kolom Nama
-                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         # Kolom Email
-                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         # Kolom Pass
-                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         # Kolom Link
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Update Nama
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         # Update Email
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         # Update Password
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         # Update Link
                                                 
-                                                st.cache_data.clear()
-                                                st.success("✅ Terupdate!"); time.sleep(0.5); st.rerun()
+                                                st.cache_data.clear() # Buang cache
+                                                st.success("✅ Data Berhasil Diperbarui!")
+                                                time.sleep(0.5)
+                                                st.rerun() # Refresh tampilan
                                             except Exception as e:
-                                                st.error(f"Error: {e}")
+                                                st.error(f"Gagal: {e}")
+                                        else:
+                                            st.error("Nama & Email gak boleh kosong!")
 
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
@@ -4046,6 +4050,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
