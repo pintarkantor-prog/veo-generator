@@ -158,10 +158,15 @@ df = load_data_channel()
 @st.cache_data(ttl=10)
 def load_data_hp():
     try:
-        ws_hp = sh_master.worksheet("Data_HP") # Nama tab sesuai screenshot lo
+        # Panggil ulang koneksi biar seger
+        ws_hp = sh_master.worksheet("Data_HP")
         data = ws_hp.get_all_records()
-        return bersihkan_data(pd.DataFrame(data))
+        if not data:
+            return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
+        return pd.DataFrame(data)
     except Exception as e:
+        # Biar kita tau error aslinya apa, jangan cuma diem
+        st.sidebar.error(f"Koneksi Gagal: {e}")
         return pd.DataFrame()
 
 df_hp = load_data_hp()
@@ -4061,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
