@@ -3372,66 +3372,92 @@ def tampilkan_database_channel():
     ])
 
     # ==========================================
-    # TAB 1: STOK STANDBY
+    # REVISI TOTAL: TAB STOK STANDBY
     # ==========================================
-    with tab_standby:
+    with tab_st:
         if not is_pro:
             st.warning("Akses Terbatas.")
         else:
-            df_st = df[df['STATUS'] == 'STANDBY']
-            for idx, row in df_st.iterrows():
-                with st.container(border=True):
-                    col_data, col_act = st.columns([4, 1])
-                    with col_data:
-                        st.markdown(f"### **{row['NAMA_CHANNEL']}**")
-                        st.write(f"📧 **Email:** `{row['EMAIL']}` | 🔑 **PW:** `{row['PASSWORD']}`")
-                        st.write(f"📊 **Subs:** {row['SUBSCRIBE']} | 🔗 [Link Channel]({row['LINK_CHANNEL']})")
+            # --- TOMBOL TAMBAH ALA AKUN AI ---
+            # Menggunakan expander dengan label + (icon plus)
+            with st.expander("➕ TAMBAH CHANNEL BARU", expanded=False):
+                with st.form("form_tambah_standby"):
+                    c1, c2, c3 = st.columns(3)
+                    f_nama = c1.text_input("Nama Channel")
+                    f_email = c2.text_input("Email")
+                    f_pw = c3.text_input("Password")
+                    
+                    c4, c5 = st.columns([1, 2])
+                    f_subs = c4.text_input("Jumlah Subs")
+                    f_link = c5.text_input("Link Channel")
+                    
+                    if st.form_submit_button("💾 SIMPAN DATA KE STANDBY", use_container_width=True):
+                        if f_nama and f_email:
+                            tz = pytz.timezone('Asia/Jakarta')
+                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                            ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
+                            st.success(f"Channel {f_nama} berhasil ditambahkan!")
+                            time.sleep(1)
+                            st.rerun()
 
-                    with col_act:
-                        with st.popover("⚙️ EKSEKUSI"):
-                            # --- SMART HP & AUTO SLOT LOGIC ---
-                            df_p = df[df['STATUS'] == 'PROSES']
-                            
-                            # Cari HP yang slotnya < 3 secara otomatis
-                            suggested_hp = 1
-                            for h in range(1, 26):
-                                if len(df_p[df_p['HP'] == h]) < 3:
-                                    suggested_hp = h
-                                    break
-                            
-                            # Cukup pilih Unit HP saja, Slot sudah otomatis
-                            p_hp = st.number_input("Unit HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
-                            
-                            if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
-                                # CEK SLOT YANG TERSEDIA DI HP TERPILIH SECARA OTOMATIS
-                                data_hp_ini = df_p[df_p['HP'] == p_hp]
-                                slot_terpakai = data_hp_ini['SLOT'].tolist()
-                                
-                                # Cari slot pertama yang kosong (PAGI -> SIANG -> SORE)
-                                slot_final = None
-                                for s in ["PAGI", "SIANG", "SORE"]:
-                                    if s not in slot_terpakai:
-                                        slot_final = s
+            st.write("") # Spacer
+
+            # --- LIST DATA STANDBY (MODEL 1 BARIS BEBERAPA KOLOM) ---
+            df_standby = df[df['STATUS'] == 'STANDBY']
+            
+            if df_standby.empty:
+                st.info("Gudang Standby Kosong.")
+            else:
+                for idx, row in df_standby.iterrows():
+                    # Bungkus dalam container border biar rapi
+                    with st.container(border=True):
+                        # Kita bagi kolom sejajar
+                        # Nama (2), Email (2), PW (1), Subs (1), Aksi (1)
+                        col_nama, col_mail, col_pass, col_subs, col_btn = st.columns([2, 2, 1.5, 1, 1.2])
+                        
+                        col_nama.markdown(f"**{row['NAMA_CHANNEL']}**")
+                        col_mail.caption(f"📧 {row['EMAIL']}")
+                        col_pass.caption(f"🔑 `{row['PASSWORD']}`")
+                        col_subs.write(f"📊 {row['SUBSCRIBE']}")
+                        
+                        with col_btn:
+                            with st.popover("⚙️ EKSEKUSI", use_container_width=True):
+                                # --- SMART HP & AUTO SLOT LOGIC ---
+                                df_p = df[df['STATUS'] == 'PROSES']
+                                suggested_hp = 1
+                                for h in range(1, 26):
+                                    if len(df_p[df_p['HP'] == h]) < 3:
+                                        suggested_hp = h
                                         break
                                 
-                                if not slot_final:
-                                    st.error(f"HP {p_hp} SUDAH PENUH (3 SLOT TERISI)!")
-                                else:
-                                    r = idx + 2
-                                    ws.update_cell(r, 7, "PROSES")
-                                    ws.update_cell(r, 8, p_hp)
-                                    ws.update_cell(r, 9, slot_final) # SLOT OTOMATIS TANPA PILIH LAGI
-                                    ws.update_cell(r, 11, user_aktif)
-                                    st.toast(f"Berhasil! HP {p_hp} Slot {slot_final}")
-                                    time.sleep(1)
-                                    st.rerun()
-                            
-                            if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
-                                ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                            if st.button("🥀 BUSUK", key=f"btn_bk_{idx}", use_container_width=True):
-                                ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
-                            if st.button("🚫 SUSPEND", key=f"btn_ss_{idx}", use_container_width=True):
-                                ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+                                p_hp = st.number_input("Unit HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
+                                
+                                if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
+                                    data_hp_ini = df_p[df_p['HP'] == p_hp]
+                                    slot_terpakai = data_hp_ini['SLOT'].tolist()
+                                    
+                                    slot_final = None
+                                    for s in ["PAGI", "SIANG", "SORE"]:
+                                        if s not in slot_terpakai:
+                                            slot_final = s
+                                            break
+                                    
+                                    if not slot_final:
+                                        st.error(f"HP {p_hp} FULL!")
+                                    else:
+                                        r = idx + 2
+                                        ws.update_cell(r, 7, "PROSES")
+                                        ws.update_cell(r, 8, p_hp)
+                                        ws.update_cell(r, 9, slot_final)
+                                        ws.update_cell(r, 11, user_aktif)
+                                        st.rerun()
+                                
+                                if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+                                if st.button("🥀 BUSUK", key=f"btn_bk_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
+                                if st.button("🚫 SUSP", key=f"btn_ss_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif); st.rerun()
 
     # ==========================================
     # TAB 2: CHANNEL PROSES (HANYA SOLD, BUSUK, SUSPEND)
@@ -3897,6 +3923,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
