@@ -3432,13 +3432,13 @@ def tampilkan_database_channel():
                 else:
                     for idx, r in df_st.iterrows():
                         with st.container(border=True):
-                            st.markdown(f'<div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;"><b style="color:white; font-size:11px;">📺 {str(r["NAMA_CHANNEL"]).upper()}</b></div>', unsafe_allow_html=True)
+                            st.markdown(f'<div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;"><b style="color:white; font-size:13px;">📺 {str(r["NAMA_CHANNEL"]).upper()}</b></div>', unsafe_allow_html=True)
                             c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([2.2, 1.2, 1.5, 0.8, 1, 0.8, 1.2, 0.5])
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p><b>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p><a href='{r['LINK_CHANNEL']}' target='_blank'>BUKA!</a>", unsafe_allow_html=True)
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><a href='{r['LINK_CHANNEL']}' target='_blank'>LINK CHANNEL!</a>", unsafe_allow_html=True)
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
                             with c7:
                                 opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
@@ -4088,6 +4088,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
