@@ -3436,7 +3436,20 @@ def tampilkan_database_channel():
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:14px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:14px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:14px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                            # --- KOLOM 4: SUBSCRIBE (BISA EDIT MANUAL) ---
+                            with c4:
+                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p>", unsafe_allow_html=True)
+                                # Gunakan text_input agar bisa diketik manual
+                                v_subs_awal = str(r['SUBSCRIBE'])
+                                new_subs = st.text_input("Subs", value=v_subs_awal, key=f"subs_{idx}", label_visibility="collapsed")
+                                
+                                # Logika Otomatis Update ke GSheet jika ada perubahan
+                                if new_subs != v_subs_awal:
+                                    r_idx = idx + 2
+                                    ws.update_cell(r_idx, 5, new_subs) # Kolom 5 adalah SUBSCRIBE
+                                    st.toast(f"✅ {r['NAMA_CHANNEL']} Update: {new_subs} Subs")
+                                    time.sleep(0.5)
+                                    st.rerun()
                             
                             link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db;'>BUKA LINK CHANNEL</a>"
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p>{link_txt}", unsafe_allow_html=True)
@@ -3909,6 +3922,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
