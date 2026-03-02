@@ -3392,21 +3392,22 @@ def tampilkan_database_channel():
                             # --- SMART HP & AUTO SLOT LOGIC ---
                             df_p = df[df['STATUS'] == 'PROSES']
                             
-                            # Cari HP yang slotnya < 3
+                            # Cari HP yang slotnya < 3 secara otomatis
                             suggested_hp = 1
                             for h in range(1, 26):
                                 if len(df_p[df_p['HP'] == h]) < 3:
                                     suggested_hp = h
                                     break
                             
+                            # Cukup pilih Unit HP saja, Slot sudah otomatis
                             p_hp = st.number_input("Unit HP", 1, 25, value=suggested_hp, key=f"hp_st_{idx}")
                             
                             if st.button("🚀 PROSES", key=f"btn_go_{idx}", use_container_width=True):
-                                # CEK SLOT YANG TERSEDIA DI HP TERPILIH
+                                # CEK SLOT YANG TERSEDIA DI HP TERPILIH SECARA OTOMATIS
                                 data_hp_ini = df_p[df_p['HP'] == p_hp]
                                 slot_terpakai = data_hp_ini['SLOT'].tolist()
                                 
-                                # Cari slot pertama yang kosong
+                                # Cari slot pertama yang kosong (PAGI -> SIANG -> SORE)
                                 slot_final = None
                                 for s in ["PAGI", "SIANG", "SORE"]:
                                     if s not in slot_terpakai:
@@ -3419,7 +3420,7 @@ def tampilkan_database_channel():
                                     r = idx + 2
                                     ws.update_cell(r, 7, "PROSES")
                                     ws.update_cell(r, 8, p_hp)
-                                    ws.update_cell(r, 9, slot_final) # SLOT OTOMATIS
+                                    ws.update_cell(r, 9, slot_final) # SLOT OTOMATIS TANPA PILIH LAGI
                                     ws.update_cell(r, 11, user_aktif)
                                     st.toast(f"Berhasil! HP {p_hp} Slot {slot_final}")
                                     time.sleep(1)
@@ -3896,6 +3897,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
