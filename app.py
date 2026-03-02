@@ -1291,25 +1291,17 @@ def tampilkan_tugas_kerja():
         df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
         df_all_tugas['DEADLINE'] = df_all_tugas['DEADLINE_DT'].dt.strftime('%Y-%m-%d')
         
-        # --- 2. SETUP FILTER (VERSI ANTI HILANG - KHUSUS WAITING QC) ---
-        # 1. Tetap kunci Maret buat Radar Bonus
+        # Variabel bantu agar kartu tugas nggak NameError
+        data_tugas = df_all_tugas.to_dict('records') 
+        status_buang = ["ARSIP", "DONE", "BATAL"]
+
+        # --- 2. SETUP FILTER BULAN ---
         mask_bulan = (df_all_tugas['DEADLINE_DT'].dt.month == sekarang.month) & \
                      (df_all_tugas['DEADLINE_DT'].dt.year == sekarang.year)
 
-        # 2. STATUS DARURAT (Penyelamat data Februari lo yang di image_4319fe.png)
-        # Tambahkan status yang lo liat masih gantung di Supabase
-        status_aktif = ["PROSES", "WAITING QC", "REVISI"]
-
-        # 3. LOGIKA GABUNGAN: 
-        # (Deadline Bulan Maret) ATAU (Statusnya masih PROSES/WAITING QC/REVISI)
-        mask_tampilan = (mask_bulan) | (df_all_tugas['STATUS'].str.strip().str.upper().isin(status_aktif))
-
-        # --- UPDATE VARIABEL TAMPILAN ---
-        df_tugas_tampil = df_all_tugas[mask_tampilan].copy()
-        data_tugas = df_tugas_tampil.to_dict('records')
-
         # --- 3. LOGIKA RADAR (Gunakan st_raw yang sudah ditarik di atas) ---
         if user_level == "OWNER":
+            # REVISI: Pakai data st_raw yang sudah ada (Gak usah panggil ambil_data_segar lagi)
             list_staf = st_raw[st_raw['LEVEL'] != 'OWNER']['NAMA'].unique().tolist()
             target_user = st.selectbox("🎯 Intip Radar Staf:", list_staf).upper()
         else:
@@ -1323,8 +1315,8 @@ def tampilkan_tugas_kerja():
             level_asli_target = "STAFF" # Fallback kalau data gak ketemu
 
         if user_level in ["STAFF", "ADMIN", "OWNER"]:        
-            mask_user = df_all_tugas['STAF'].str.strip().str.upper() == target_user
-            mask_finish = df_all_tugas['STATUS'].str.strip().str.upper() == 'FINISH'
+            mask_user = df_all_tugas['STAF'].str.strip() == target_user
+            mask_finish = df_all_tugas['STATUS'].str.strip() == 'FINISH'
             df_arsip_user = df_all_tugas[mask_user & mask_finish & mask_bulan].copy()
             
             df_u_absen = pd.DataFrame()
@@ -1527,32 +1519,26 @@ def tampilkan_tugas_kerja():
                     else:
                         st.warning("⚠️ Mohon isi Judul dan Link terlebih dahulu!")
                         
-    # --- 5. RENDER KARTU TUGAS (FILTER BERDASARKAN USER) ---
+    # --- 5. RENDER KARTU TUGAS (FIXED LOGIC) ---
     tugas_terfilter = []
     
-    if not df_tugas_tampil.empty:
-        # Langsung sikat dari DataFrame hasil filter Tahap 2
-        # Gak usah pake status_buang lagi, karena di atas udah kita saring pake status_tutup
+    # 1. Kumpulkan data dulu
+    if not df_all_tugas.empty:
+        status_buang = ["FINISH", "CANCELED"]
         
+        # OWNER dan ADMIN bisa pantau semua tugas yang lagi jalan
         if user_level in ["OWNER", "ADMIN"]: 
-            tugas_terfilter = df_tugas_tampil.to_dict('records')
+            tugas_terfilter = [t for t in data_tugas if str(t.get("STATUS")).upper() not in status_buang]
         else:
-            # Filter staf tetep jalan buat Icha, Nissa, Inggi dkk
-            tugas_terfilter = df_tugas_tampil[df_tugas_tampil['STAF'].str.lower() == user_sekarang].to_dict('records')
-        else:
-            # STAFF: Cuma liat punya dia sendiri (Maret + Sisa Feb)
-            # Pake .strip() sama .lower() biar gak typo gara-gara spasi di GSheet
-            tugas_terfilter = [
-                t for t in data_siap_tampil 
-                if str(t.get("STAF")).lower().strip() == user_sekarang 
-                and str(t.get("STATUS")).upper() not in status_buang_final
-            ]
+            tugas_terfilter = [t for t in data_tugas if str(t.get("STAF")).lower() == user_sekarang and str(t.get("STATUS")).upper() not in status_buang]
+
     # 2. CEK HASIL FILTER (Logika yang bener: kalau kosong kasih info, kalau ada gambar kartu)
     if not tugas_terfilter:
-        st.info("📭 Semua tugas Februari & Maret sudah kelar (FINISH/BATAL).") # <-- Masuk 4 spasi
-    else: # <--- Baris 1542: Harus LURUS vertikal sama "if" di atas!
+        pass
+
+    else:
         # --- MODE 2 KOLOM (GRID) ---
-        tugas_list = list(reversed(tugas_terfilter)) # <-- Masuk 8 spasi (2x tab)
+        tugas_list = list(reversed(tugas_terfilter))
         for i in range(0, len(tugas_list), 2):
             cols = st.columns(2)
             for j in range(2):
@@ -3767,30 +3753,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
