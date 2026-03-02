@@ -1547,13 +1547,12 @@ def tampilkan_tugas_kerja():
                 if str(t.get("STAF")).lower().strip() == user_sekarang 
                 and str(t.get("STATUS")).upper() not in status_buang_final
             ]
-
     # 2. CEK HASIL FILTER (Logika yang bener: kalau kosong kasih info, kalau ada gambar kartu)
     if not tugas_terfilter:
-        st.info("📭 Semua tugas Februari & Maret sudah kelar (FINISH/BATAL).")
-    else:
+        st.info("📭 Semua tugas Februari & Maret sudah kelar (FINISH/BATAL).") # <-- Masuk 4 spasi
+    else: # <--- Baris 1542: Harus LURUS vertikal sama "if" di atas!
         # --- MODE 2 KOLOM (GRID) ---
-        tugas_list = list(reversed(tugas_terfilter))
+        tugas_list = list(reversed(tugas_terfilter)) # <-- Masuk 8 spasi (2x tab)
         for i in range(0, len(tugas_list), 2):
             cols = st.columns(2)
             for j in range(2):
@@ -3768,6 +3767,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
