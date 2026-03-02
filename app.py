@@ -2891,7 +2891,7 @@ def tampilkan_area_staf():
         
         tgl_hari_ini = now.strftime("%d %B %Y")
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-        nama_direktur = "DIAN SETYA WARDANA"
+        nama_direktur = "Dian Setya Wardana"
         last_update = "2 Maret 2026 | 00:40 WIB"
 
         # --- EXPANDER UTAMA ---
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
