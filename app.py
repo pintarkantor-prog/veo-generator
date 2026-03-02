@@ -3397,14 +3397,24 @@ def tampilkan_database_channel():
     # --- 2. KONEKSI & AMBIL DATA ---
     try:
         sh = get_gspread_sh() # Variabel utama koneksi
+        
+        # A. TARIK DATA CHANNEL
         ws = sh.worksheet("Channel_Pintar")
         data = ws.get_all_records()
-        
         kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
                        "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN", "PENCATAT"]
-        
         df = pd.DataFrame(data) if data else pd.DataFrame(columns=kolom_wajib)
         df.columns = [str(c).strip().upper() for c in df.columns]
+
+        # B. TARIK DATA HP (TAMBAHKAN INI BIAR RADAR GAK ERROR)
+        try:
+            ws_hp = sh.worksheet("Data_HP") #
+            data_hp = ws_hp.get_all_records()
+            df_hp = pd.DataFrame(data_hp) if data_hp else pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
+            df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
+        except:
+            df_hp = pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
+
     except Exception as e:
         st.error(f"Gagal koneksi GSheet: {e}")
         return
@@ -3979,6 +3989,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
