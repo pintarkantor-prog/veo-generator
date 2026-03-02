@@ -3383,22 +3383,22 @@ def tampilkan_database_channel():
         "📂 ARSIP CHANNEL"
     ])
 
-# ======================================================================
-    # --- TAB 1: STOK STANDBY (VERSI EXPANDER PATEN - 1 BINGKAI) ---
+    # ======================================================================
+    # --- TAB 1: STOK STANDBY (VERSI EXPANDER + CARD PER BARIS) ---
     # ======================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # 1. BUNGKUS SEMUA DALAM 1 EXPANDER BESAR
+            # 1. BUNGKUS BESAR DALAM 1 EXPANDER
             with st.expander("🔐 DATABASE STOK STANDBY", expanded=True):
                 
-                # --- AREA INPUT (Gaya Original Dian) ---
+                # --- TOMBOL TAMBAH (Style Dian) ---
                 if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
                     st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
                 if st.session_state.get('form_baru', False):
-                    with st.form("input_st_paten", clear_on_submit=True):
+                    with st.form("input_st_final", clear_on_submit=True):
                         f1, f2, f3 = st.columns(3)
                         v_nama = f1.text_input("Nama Channel")
                         v_mail = f2.text_input("Email Login")
@@ -3411,56 +3411,50 @@ def tampilkan_database_channel():
                                 tz = pytz.timezone('Asia/Jakarta')
                                 tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                                st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
+                                st.success("Berhasil!"); time.sleep(1); st.rerun()
 
                 st.divider()
 
-                # --- AREA TABEL DATA (7 KOLOM PATEN) ---
+                # --- LIST DATA (CARD DI DALAM EXPANDER) ---
                 df_st = df[df['STATUS'] == 'STANDBY']
                 if df_st.empty:
                     st.info("📭 Belum ada stok standby.")
                 else:
-                    # Header Tabel Kolom Lengkap
-                    h = st.columns([2, 1.2, 1.5, 0.8, 1, 0.8, 1.5])
-                    labels = ["📧 EMAIL", "🔑 PW", "📺 NAMA", "📊 SUBS", "🔗 LINK", "👤 OLEH", "⚡ AKSI"]
-                    for col, text in zip(h, labels):
-                        col.markdown(f"<p style='font-size:10px; color:#888; margin:0;'>{text}</p>", unsafe_allow_html=True)
-                    st.markdown("<hr style='margin:5px 0; border:0.5px solid #333;'>", unsafe_allow_html=True)
-
                     for idx, r in df_st.iterrows():
-                        c = st.columns([2, 1.2, 1.5, 0.8, 1, 0.8, 1.5])
-                        
-                        # Data Baris (Font 11px biar muat banyak)
-                        c[0].markdown(f"<code style='font-size:11px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                        c[1].markdown(f"<code style='font-size:11px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                        c[2].markdown(f"<b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                        c[3].write(f"{r['SUBSCRIBE']}")
-                        c[4].markdown(f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px; color:#3498db;'>Buka</a>", unsafe_allow_html=True)
-                        c[5].write(f"{r.get('PENCATAT', '-')}")
-
-                        # --- AKSI MINIMALIS (DROPDOWN SIMPEL) ---
-                        with c[6]:
-                            # Dropdown Aksi agar tidak penuh tombol
-                            opsi_aksi = st.selectbox("Pilih Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"act_{idx}", label_visibility="collapsed")
+                        # TIAP BARIS ADALAH SATU CARD
+                        with st.container(border=True):
+                            # 7 KOLOM PATEN
+                            c1, c2, c3, c4, c5, c6, c7 = st.columns([1.8, 1.2, 1.5, 0.8, 0.8, 1, 1.2])
                             
-                            if opsi_aksi != "-":
-                                r_idx = idx + 2
-                                if opsi_aksi == "PROSES":
-                                    # Logika Auto-HP
-                                    df_p = df[df['STATUS'] == 'PROSES']
-                                    target_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
-                                    ws.update_cell(r_idx, 7, "PROSES")
-                                    ws.update_cell(r_idx, 8, target_hp)
-                                    ws.update_cell(r_idx, 9, "") # Slot kosong
-                                    ws.update_cell(r_idx, 11, user_aktif)
-                                    st.success(f"Masuk HP {target_hp}!"); time.sleep(0.5); st.rerun()
+                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PW</p><code style='font-size:11px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA</p><b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><p style='font-size:11px; margin:0;'>{r['SUBSCRIBE']}</p>", unsafe_allow_html=True)
+                            
+                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:11px;'>🔗 Buka</a>"
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p>{link_txt}", unsafe_allow_html=True)
+                            
+                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><p style='font-size:11px; margin:0;'>{r.get('PENCATAT', '-')}</p>", unsafe_allow_html=True)
+
+                            # AKSI DROPDOWN MINIMALIS
+                            with c7:
+                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⚡ AKSI</p>", unsafe_allow_html=True)
+                                opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
                                 
-                                elif opsi_aksi == "SOLD":
-                                    ws.update_cell(r_idx, 7, "SOLD"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
-                                elif opsi_aksi == "BUSUK":
-                                    ws.update_cell(r_idx, 7, "BUSUK"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
-                                elif opsi_aksi == "SUSPEND":
-                                    ws.update_cell(r_idx, 7, "SUSPEND"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
+                                if opsi != "-":
+                                    r_idx = idx + 2
+                                    if opsi == "PROSES":
+                                        df_p = df[df['STATUS'] == 'PROSES']
+                                        target_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
+                                        ws.update_cell(r_idx, 7, "PROSES"); ws.update_cell(r_idx, 8, target_hp)
+                                        ws.update_cell(r_idx, 9, ""); ws.update_cell(r_idx, 11, user_aktif)
+                                        st.rerun()
+                                    elif opsi == "SOLD":
+                                        ws.update_cell(r_idx, 7, "SOLD"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
+                                    elif opsi == "BUSUK":
+                                        ws.update_cell(r_idx, 7, "BUSUK"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
+                                    elif opsi == "SUSPEND":
+                                        ws.update_cell(r_idx, 7, "SUSPEND"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
 
                         # Pembatas Baris Tipis
                         st.markdown("<hr style='margin:2px 0; border:0.1px solid #222;'>", unsafe_allow_html=True)
@@ -3911,6 +3905,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
