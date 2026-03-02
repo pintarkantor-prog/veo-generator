@@ -3562,15 +3562,23 @@ def tampilkan_database_channel():
                     
                     if st.form_submit_button("🚀 SIMPAN UNIT"):
                         if v_nama and v_no:
-                            try:
-                                tgl_fix = v_tgl.strftime("%d/%m/%Y")
-                                ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
-                                st.cache_data.clear()
-                                st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
-                                time.sleep(1)
-                                st.rerun() 
-                            except Exception as e:
-                                st.error(f"Error: {e}")
+                            # Tampilkan loading spinner biar user gak bingung pas "ngedip"
+                            with st.spinner("Mengirim data ke Radar..."):
+                                try:
+                                    tgl_fix = v_tgl.strftime("%d/%m/%Y")
+                                    
+                                    # PAKAI APPEND_ROW BIAR KE BARIS PALING BAWAH
+                                    ws_unit_hp.append_row(
+                                        [str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 
+                                        value_input_option='USER_ENTERED'
+                                    )
+                                    
+                                    st.cache_data.clear() 
+                                    st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
+                                    time.sleep(0.5) # Jeda dikit biar user sempet liat centang ijonya
+                                    st.rerun() 
+                                except Exception as e:
+                                    st.error(f"Error: {e}")
                         else:
                             st.error("Nama & Nomor wajib diisi!")
 
@@ -4066,6 +4074,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
