@@ -104,29 +104,22 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Mencatat aktivitas ke Supabase & GSheet."""
-    u_log = str(user).upper()
-    if u_log == "DIAN": 
-        return 
+    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
+    if str(user).upper() == "DIAN": 
+        return # Langsung keluar, tidak mencatat apa-apa kalau itu Dian
 
     try:
         tz_wib = pytz.timezone('Asia/Jakarta')
+        # Pake format ini biar rapi kayak data lama lo di screenshot
         waktu_sekarang = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
         
         # 1. KIRIM KE SUPABASE
-        # Tambahin .execute() dan tangkap hasilnya
-        data_insert = {
+        # 'Nama' diganti 'User' karena di database lo kolomnya itu
+        supabase.table("Log_Aktivitas").insert({
             "Waktu": waktu_sekarang,
-            "User": u_log,
+            "User": str(user).upper(),
             "Aksi": aksi
-        }
-        
-        # Coba pake try di sini biar tau error spesifik Supabase
-        try:
-            supabase.table("Log_Aktivitas").insert(data_insert).execute()
-        except Exception as e_supa:
-            # INI PENTING: Biar kelihatan di web kalau Supabase nolak
-            st.toast(f"Supabase Gagal: {e_supa}", icon="⚠️")
+        }).execute()
 
         # 2. KIRIM KE GSHEET (Backup pasif)
         try:
@@ -424,26 +417,22 @@ def proses_login(user, pwd):
                 else:
                     st.session_state.user_level = user_level
 
-                # --- 3. FILTER LOG (PANGGIL DULUAN) ---
+                # --- 3. FILTER LOG (BARU PANGGIL DI SINI) ---
                 if user_key != "DIAN":
                     tambah_log(user_key, "LOGIN KE SISTEM")
 
                 current_lv = st.session_state.user_level
 
-                # --- 4. LOGIKA ABSEN & NOTIF ---
+                # --- 3. LOGIKA ABSEN & NOTIF ---
                 if current_lv in ["STAFF", "ADMIN"]:
                     log_absen_otomatis(user_key)
-                    # KASIH JEDA DI SINI! Biar Supabase & Absensi kelar kirim
-                    time.sleep(2) 
                     st.toast(f"Selamat bekerja, {user_key}!", icon="✅")
                 else:
-                    # Kalau owner cuma perlu sebentar
-                    time.sleep(0.5)
                     st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
 
-                # --- 5. BERSIHKAN URL & REFRESH ---
+                # --- 4. BERSIHKAN URL & REFRESH ---
                 st.query_params.clear() 
-                # Jangan sleep lagi di sini kalau di atas udah
+                time.sleep(1) 
                 st.rerun()
             else:
                 st.error("Password salah.")
@@ -3875,6 +3864,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
