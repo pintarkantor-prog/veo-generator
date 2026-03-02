@@ -3401,9 +3401,9 @@ def tampilkan_database_channel():
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
             # --- A. DATABASE STOK STANDBY ---
-            with st.expander("🔐 DATABASE STOK STANDBY", expanded=True):
+            with st.expander("🔐 STOK STANDBY", expanded=True):
                 # Tombol Tambah Channel
-                if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
+                if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=False):
                     st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
                 if st.session_state.get('form_baru', False):
@@ -4066,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
