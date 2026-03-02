@@ -3650,20 +3650,34 @@ def tampilkan_database_channel():
                                         except Exception as e:
                                             st.error(f"Gagal: {e}")
                         
-    # ==========================================
-    # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
-    # ==========================================
+    # ==============================================================================
+    # TAB 4 & 5: SOLD & ARSIP (VERSI ANTI-KEYERROR)
+    # ==============================================================================
     with tab_sold:
-        if not is_boss: st.error("🔒 Akses Owner & Admin.")
+        if not is_boss: 
+            st.error("🔒 Akses Owner & Admin.")
         else:
             df_s = df[df['STATUS'] == 'SOLD'].copy()
-            st.dataframe(df_s[["TANGGAL", "NAMA_CHANNEL", "PENCATAT"]], use_container_width=True)
+            if df_s.empty:
+                st.info("Belum ada channel yang SOLD.")
+            else:
+                # Cek kolom yang beneran ada di GSheet lo
+                cols_target = ["TANGGAL", "NAMA_CHANNEL", "PENCATAT"]
+                available = [c for c in cols_target if c in df_s.columns]
+                st.dataframe(df_s[available], use_container_width=True)
 
     with tab_arsip:
-        if not is_boss: st.error("🔒 Akses Owner & Admin.")
+        if not is_boss: 
+            st.error("🔒 Akses Owner & Admin.")
         else:
             df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
-            st.dataframe(df_a[["TANGGAL", "NAMA_CHANNEL", "STATUS", "PENCATAT"]], use_container_width=True)
+            if df_a.empty:
+                st.info("Arsip masih bersih.")
+            else:
+                # Cek kolom yang beneran ada di GSheet lo
+                cols_target_a = ["TANGGAL", "NAMA_CHANNEL", "STATUS", "PENCATAT"]
+                available_a = [c for c in cols_target_a if c in df_a.columns]
+                st.dataframe(df_a[available_a], use_container_width=True)
                             
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -4074,6 +4088,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
