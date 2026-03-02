@@ -153,6 +153,17 @@ def load_data_channel():
 
 # Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
 df = load_data_channel()
+
+# Fungsi khusus narik data HP
+@st.cache_data(ttl=10)
+def load_data_hp():
+    try:
+        ws_hp = sh_master.worksheet("Data_HP") # <--- Tembak sheet baru
+        return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
+    except:
+        return pd.DataFrame()
+
+df_hp = load_data_hp() # Simpan ke variabel
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3512,6 +3523,56 @@ def tampilkan_database_channel():
                                         st.toast(f"✅ Data {ed_nama} Berhasil Diupdate!")
                                         time.sleep(1.5)
                                         st.rerun()
+
+    with st.expander("📱 RADAR MASA AKTIF HP (5 COLUMNS)", expanded=True):
+    if df_hp.empty:
+        st.info("Data HP kosong di GSheet.")
+    else:
+        # BIKIN 5 KOLOM SEJAJAR
+        cols = st.columns(5)
+        
+        for i, (idx, r) in enumerate(df_hp.iterrows()):
+            # Bagi rata ke 5 kolom
+            with cols[i % 5]:
+                try:
+                    # Hitung Masa Aktif
+                    tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
+                    sisa = (tgl_exp - datetime.now()).days
+                    
+                    # Logika Warna Gaya Radar
+                    bg_color = "#2D5A47" # Hijau (Aman)
+                    if sisa < 0:
+                        bg_color = "#962D2D" # Merah (Mati)
+                    elif sisa <= 7:
+                        bg_color = "#A67C00" # Kuning (Warning)
+
+                    with st.container(border=True):
+                        # Header Nama HP
+                        st.markdown(f"""
+                            <div style="background:{bg_color}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;">
+                                <b style="color:white; font-size:12px;">{str(r['NAMA_HP']).upper()}</b>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        
+                        # Info Detail Minimalis
+                        st.markdown(f"""
+                            <p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR</p>
+                            <p style='margin:0; font-size:12px;'><b>{r['NOMOR_HP']}</b></p>
+                            <div style='margin-top:8px;'></div>
+                            <p style='margin:0; font-size:10px; color:#888;'>⏳ SISA HARI</p>
+                            <p style='margin:0; font-size:14px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>
+                        """, unsafe_allow_html=True)
+                        
+                        # Tombol Edit Kecil (PopOver) biar gak makan tempat
+                        with st.popover("⚙️", use_container_width=True):
+                            new_tgl = st.text_input("Update Expired", value=str(r['MASA_AKTIF']), key=f"hp_{idx}")
+                            if st.button("SAVE", key=f"btn_hp_{idx}", use_container_width=True):
+                                # Asumsi Update ke GSheet (Kolom C = urutan ke-3)
+                                ws_hp = sh_master.worksheet("Data_HP")
+                                ws_hp.update_cell(idx + 2, 3, new_tgl)
+                                st.toast("✅ Updated!"); time.sleep(1.5); st.rerun()
+                except:
+                    st.caption(f"Format {r['NAMA_HP']} Error")
                                         
     # ==========================================
     # TAB 3: JADWAL UPLOAD
@@ -3959,6 +4020,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
