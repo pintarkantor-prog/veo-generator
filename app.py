@@ -2728,7 +2728,7 @@ def tampilkan_area_staf():
                 st.write("• **QC CHANNEL**: Selalu memastikan channel ready di setiap HP (Koordinasi dengan admin).")
                 st.write("• **JADWAL UPLOAD**: Memastikan jadwal upload, jenis konten, dan HP sinkron.")
                 st.write("• Uploader selalu koordinasi dengan admin terkait stok video dan channel yang akan diupload.")
-                st.write("• Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis)")
+                st.write("• Sistem SP dan Bonus ditentukan berdasarkan peforma kinerja (tidak mengikuti sistem otomatis).")
 
         elif divisi_sop == "Admin":
             st.markdown(f"**Update Terakhir:** 1 Maret 2026")
@@ -3753,5 +3753,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
