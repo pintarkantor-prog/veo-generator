@@ -3347,6 +3347,13 @@ def tampilkan_area_staf():
 
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
+    
+    # --- 0. CEK SESSION ROLE (UPDATE ROL) ---
+    user_level = st.session_state.get("user_level", "STAFF")
+    user_aktif = st.session_state.get("user_aktif", "UNKNOWN")
+    
+    # Kasta yang bisa INPUT & PENCET tombol: OWNER, ADMIN, UPLOADER
+    is_authorized = user_level in ["OWNER", "ADMIN", "UPLOADER"]
 
     # 1. KONEKSI & DATA SOURCING
     try:
@@ -3354,12 +3361,9 @@ def tampilkan_database_channel():
         ws = sh.worksheet("Channel_Pintar")
         data = ws.get_all_records()
         
-        kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
-                       "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN"]
-        
         if not data:
-            df = pd.DataFrame(columns=kolom_wajib)
             st.info("💡 GSheet Kosong. Silakan Input Baru.")
+            return
         else:
             df = pd.DataFrame(data)
             df.columns = [str(c).strip().upper() for c in df.columns]
@@ -3369,25 +3373,29 @@ def tampilkan_database_channel():
 
     tab_input, tab_ready, tab_monitor = st.tabs(["➕ INPUT BARU", "📦 STOK STANDBY", "🖥️ MONITORING HP"])
 
-    # --- TAB 1: INPUT ---
+    # --- TAB 1: INPUT BARU (Hanya Authorized) ---
     with tab_input:
-        with st.form("form_input"):
-            st.subheader("Registrasi Channel")
-            c1, c2 = st.columns(2)
-            f_email = c1.text_input("Email")
-            f_pw = c2.text_input("Password")
-            f_nama = c1.text_input("Nama Channel")
-            f_subs = st.text_input("Jumlah Subs (Ketik Angka)")
-            f_link = st.text_input("Link Channel")
-            
-            if st.form_submit_button("SIMPAN"):
-                if f_nama and f_email:
-                    tz = pytz.timezone('Asia/Jakarta')
-                    tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                    # Default Status: STANDBY
-                    ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", ""])
-                    st.success("Berhasil!")
-                    st.rerun()
+        if not is_authorized:
+            st.warning(f"⚠️ Maaf {user_aktif}, Tidak memiliki akses input data!")
+        else:
+            with st.form("form_input"):
+                st.subheader("Registrasi Channel")
+                c1, c2 = st.columns(2)
+                f_email = c1.text_input("Email")
+                f_pw = c2.text_input("Password")
+                f_nama = c1.text_input("Nama Channel")
+                f_subs = st.text_input("Jumlah Subs (Ketik Angka)")
+                f_link = st.text_input("Link Channel")
+                
+                if st.form_submit_button("SIMPAN"):
+                    if f_nama and f_email:
+                        tz = pytz.timezone('Asia/Jakarta')
+                        tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                        # Kolom K (ke-11) otomatis diisi user_aktif
+                        ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
+                        tambah_log(user_aktif, f"INPUT CHANNEL: {f_nama}")
+                        st.success("Berhasil diinput!")
+                        st.rerun()
 
     # --- TAB 2: GUDANG (STANDBY) ---
     with tab_ready:
@@ -3398,31 +3406,40 @@ def tampilkan_database_channel():
             for index, row in df_standby.iterrows():
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2, 1, 1])
+                    pencatat = row.get('PENCATAT', '-')
                     col1.write(f"**{row['NAMA_CHANNEL']}**")
-                    col1.caption(f"Subs: {row['SUBSCRIBE']}")
+                    col1.caption(f"Subs: {row['SUBSCRIBE']} | In: {pencatat}")
                     
-                    # Edit Subs Manual (Ketik)
-                    new_s = col2.text_input("Subs", value=str(row['SUBSCRIBE']), key=f"s_{index}")
-                    if col2.button("💾", key=f"b_s_{index}"):
+                    # Update Subs Manual
+                    new_s = col2.text_input("Subs", value=str(row['SUBSCRIBE']), key=f"s_{index}", disabled=not is_authorized)
+                    if is_authorized and col2.button("💾", key=f"b_s_{index}"):
                         ws.update_cell(index + 2, 5, new_s)
+                        ws.update_cell(index + 2, 11, user_aktif) # Catat siapa yang update subs
                         st.rerun()
                     
                     with col3:
-                        with st.popover("🚀 PROSES"):
-                            p_hp = st.number_input("HP", 1, 30, key=f"hp_{index}")
-                            p_sl = st.selectbox("Slot", ["PAGI", "SIANG", "SORE"], key=f"sl_{index}")
-                            p_kt = st.text_input("Konten", key=f"kt_{index}")
-                            if st.button("JALANKAN", key=f"go_{index}"):
-                                r = index + 2
-                                ws.update_cell(r, 7, "PROSES")
-                                ws.update_cell(r, 8, p_hp)
-                                ws.update_cell(r, 9, p_sl)
-                                ws.update_cell(r, 10, p_kt)
+                        if is_authorized:
+                            with st.popover("🚀 PROSES"):
+                                p_hp = st.number_input("HP", 1, 30, key=f"hp_{index}")
+                                p_sl = st.selectbox("Slot", ["PAGI", "SIANG", "SORE"], key=f"sl_{index}")
+                                p_kt = st.text_input("Konten", key=f"kt_{index}")
+                                if st.button("JALANKAN", key=f"go_{index}"):
+                                    r = index + 2
+                                    ws.update_cell(r, 7, "PROSES")
+                                    ws.update_cell(r, 8, p_hp)
+                                    ws.update_cell(r, 9, p_sl)
+                                    ws.update_cell(r, 10, p_kt)
+                                    ws.update_cell(r, 11, user_aktif) # Catat siapa yang proses ke HP
+                                    tambah_log(user_aktif, f"PROSES HP {p_hp}: {row['NAMA_CHANNEL']}")
+                                    st.rerun()
+                            
+                            if st.button("💀 BUSUK", key=f"bsk_{index}"):
+                                ws.update_cell(index + 2, 7, "BUSUK")
+                                ws.update_cell(index + 2, 11, user_aktif)
+                                tambah_log(user_aktif, f"MARK BUSUK: {row['NAMA_CHANNEL']}")
                                 st.rerun()
-                        # Tombol jika baru input ternyata langsung mati
-                        if st.button("💀 BUSUK", key=f"bsk_{index}"):
-                            ws.update_cell(index + 2, 7, "BUSUK")
-                            st.rerun()
+                        else:
+                            st.caption("🔒 View Only")
 
     # --- TAB 3: MONITORING LIVE ---
     with tab_monitor:
@@ -3433,25 +3450,35 @@ def tampilkan_database_channel():
                 with st.container(border=True):
                     st.markdown(f"**📱 UNIT HP {i}**")
                     data_hp = df_active[df_active['HP'] == i]
+                    
                     for s in ["PAGI", "SIANG", "SORE"]:
                         cek = data_hp[data_hp['SLOT'] == s]
                         if not cek.empty:
                             nama_ch = cek.iloc[0]['NAMA_CHANNEL']
                             st.success(f"✅ {s}: {nama_ch}")
                             
-                            c_a, c_b, c_c = st.columns(3)
-                            if c_a.button("💰 SOLD", key=f"sd_{i}_{s}"):
-                                cell = ws.find(nama_ch)
-                                ws.update_cell(cell.row, 7, "SOLD")
-                                st.rerun()
-                            if c_b.button("🥀 BUSUK", key=f"bk_{i}_{s}", help="Mark as BUSUK"):
-                                cell = ws.find(nama_ch)
-                                ws.update_cell(cell.row, 7, "BUSUK")
-                                st.rerun()
-                            if c_c.button("🚫 SUSPEND", key=f"ss_{i}_{s}", help="Mark as SUSPEND"):
-                                cell = ws.find(nama_ch)
-                                ws.update_cell(cell.row, 7, "SUSPEND")
-                                st.rerun()
+                            if is_authorized:
+                                c_a, c_b, c_c = st.columns(3)
+                                if c_a.button("💰 SOLD", key=f"sd_{i}_{s}"):
+                                    cell = ws.find(nama_ch)
+                                    ws.update_cell(cell.row, 7, "SOLD")
+                                    ws.update_cell(cell.row, 11, user_aktif) # Catat siapa yang nge-sold
+                                    tambah_log(user_aktif, f"SOLD: {nama_ch}")
+                                    st.rerun()
+                                if c_b.button("🥀 BUSUK", key=f"bk_{i}_{s}"):
+                                    cell = ws.find(nama_ch)
+                                    ws.update_cell(cell.row, 7, "BUSUK")
+                                    ws.update_cell(cell.row, 11, user_aktif)
+                                    tambah_log(user_aktif, f"MARK BUSUK: {nama_ch}")
+                                    st.rerun()
+                                if c_c.button("🚫 SUSPEND", key=f"ss_{i}_{s}"):
+                                    cell = ws.find(nama_ch)
+                                    ws.update_cell(cell.row, 7, "SUSPEND")
+                                    ws.update_cell(cell.row, 11, user_aktif)
+                                    tambah_log(user_aktif, f"MARK SUSPEND: {nama_ch}")
+                                    st.rerun()
+                            else:
+                                st.caption(f"Status: PROSES ({cek.iloc[0].get('PENCATAT', '-')})")
                         else:
                             st.caption(f"⚪ {s}: (Kosong)")
                             
@@ -3864,27 +3891,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
