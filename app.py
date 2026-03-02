@@ -3370,9 +3370,12 @@ def tampilkan_area_staf():
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
 
-    # --- 1. SETUP AKSES ---
+    # --- 1. SETUP AKSES & USER (PASTIIN IS_PRO ADA DI SINI!) ---
     level_aktif = st.session_state.get("user_level", "STAFF")
     user_aktif = st.session_state.get("user_aktif", "User").upper()
+    
+    # DEFINISIKAN ULANG DI SINI BIAR GAK NAMEERROR
+    is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
     is_boss = level_aktif in ["OWNER", "ADMIN"]
 
     # --- 2. KONEKSI SATU PINTU (FORCE LIVE) ---
@@ -4020,6 +4023,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
