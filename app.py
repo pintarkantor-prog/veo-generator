@@ -3348,28 +3348,25 @@ def tampilkan_area_staf():
 def tampilkan_database_channel():
     st.title("📱 DATABASE CHANNEL")
 
-    # --- 1. DEKLARASI VARIABEL SAKTI (DIBUAT DI SINI) ---
-    # Ambil level dari session yang udah lo buat pas login
-    level_aktif = st.session_state.get("user_level", "STAFF") 
+    # --- 1. SETUP AKSES & USER ---
+    level_aktif = st.session_state.get("user_level", "STAFF")
     user_aktif = st.session_state.get("user_aktif", "User").upper()
 
-    # Variabel ini kita buat manual buat jadi "SIMBOL IZIN"
-    # Dia bakal bernilai True cuma kalau levelnya salah satu dari 3 ini
-    bisa_eksekusi = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
+    # Kasta Izin Akses
+    is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"] # Bisa akses Standby & Proses
+    is_boss = level_aktif in ["OWNER", "ADMIN"]           # Bisa akses Sold & Arsip
 
     # --- 2. KONEKSI & AMBIL DATA ---
     try:
-        sh = get_gspread_sh()
+        sh = get_gspread_sh() # Pastikan fungsi ini sudah lo definisikan di main code
         ws = sh.worksheet("Channel_Pintar")
         data = ws.get_all_records()
         
         kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
                        "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN", "PENCATAT"]
         
-        # Biar TAB tetap muncul meskipun data kosong, kita kondisikan df-nya aja
         if not data:
             df = pd.DataFrame(columns=kolom_wajib)
-            st.info("💡 GSheet Kosong. Silakan Input Baru.")
         else:
             df = pd.DataFrame(data)
             df.columns = [str(c).strip().upper() for c in df.columns]
@@ -3377,114 +3374,188 @@ def tampilkan_database_channel():
         st.error(f"Gagal koneksi GSheet: {e}")
         return
 
-    # --- 3. PEMBUATAN TAB ---
-    tab_input, tab_ready, tab_monitor = st.tabs(["➕ INPUT BARU", "📦 STOK STANDBY", "🖥️ MONITORING HP"])
+    # --- 3. PEMBUATAN TAB (URUTAN SESUAI REQUEST) ---
+    tabs = st.tabs([
+        "📦 STOK STANDBY", 
+        "🚀 CHANNEL PROSES", 
+        "📅 JADWAL UPLOAD", 
+        "💰 SOLD CHANNEL", 
+        "📂 ARSIP CHANNEL"
+    ])
+    tab_standby, tab_proses, tab_jadwal, tab_sold, tab_arsip = tabs
 
-    # --- TAB 1: INPUT ---
-    with tab_input:
-        # Pake variabel sakti tadi buat nge-gembok
-        if not bisa_eksekusi:
-            st.warning(f"🚫 Maaf {user_aktif}, Tab Input ini hanya untuk Owner, Admin, atau Uploader.")
+    # ==========================================
+    # TAB 1: STOK STANDBY (OWNER, ADMIN, UPLOADER)
+    # ==========================================
+    with tab_standby:
+        if not is_pro:
+            st.warning(f"⚠️ Maaf {user_aktif}, akses ini hanya untuk Owner/Admin/Uploader. Silakan buka Tab JADWAL UPLOAD.")
         else:
-            with st.form("form_input"):
-                st.subheader("Registrasi Channel Baru")
-                c1, c2 = st.columns(2)
-                f_email = c1.text_input("Email")
-                f_pw = c2.text_input("Password")
-                f_nama = c1.text_input("Nama Channel")
-                f_subs = st.text_input("Jumlah Subs (Ketik Angka)")
-                f_link = st.text_input("Link Channel")
-                
-                if st.form_submit_button("SIMPAN DATA"):
-                    if f_nama and f_email:
-                        tz = pytz.timezone('Asia/Jakarta')
-                        tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                        # Masukkin user_aktif ke kolom K (PENCATAT)
-                        ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
-                        tambah_log(user_aktif, f"INPUT CH: {f_nama}")
-                        st.success("Data Berhasil Disimpan!")
-                        st.rerun()
+            # --- FORM INPUT ---
+            with st.expander("➕ INPUT CHANNEL BARU", expanded=False):
+                with st.form("form_input_baru"):
+                    c1, c2 = st.columns(2)
+                    f_email = c1.text_input("Email")
+                    f_pw = c2.text_input("Password")
+                    f_nama = c1.text_input("Nama Channel")
+                    f_subs = st.text_input("Jumlah Subs")
+                    f_link = st.text_input("Link Channel")
+                    
+                    if st.form_submit_button("SIMPAN KE STANDBY"):
+                        if f_nama and f_email:
+                            tz = pytz.timezone('Asia/Jakarta')
+                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                            # Masuk ke GSheet (Status Otomatis STANDBY)
+                            ws.append_row([tgl, f_email, f_pw, f_nama, f_subs, f_link, "STANDBY", "", "", "", user_aktif])
+                            # Log ke Supabase
+                            tambah_log(user_aktif, f"INPUT STANDBY: {f_nama}")
+                            st.success("Berhasil masuk Stok Standby!")
+                            time.sleep(1)
+                            st.rerun()
 
-    # --- TAB 2: GUDANG (STANDBY) ---
-    with tab_ready:
-        df_standby = df[df['STATUS'] == 'STANDBY']
-        if df_standby.empty:
-            st.write("Gudang Kosong.")
-        else:
-            for index, row in df_standby.iterrows():
-                with st.container(border=True):
-                    col1, col2, col3 = st.columns([2, 1, 1])
-                    col1.write(f"**{row['NAMA_CHANNEL']}**")
-                    col1.caption(f"Subs: {row['SUBSCRIBE']} | In by: {row.get('PENCATAT', '-')}")
-                    
-                    # Edit Subs (Hanya bisa diketik kalau bisa_eksekusi=True)
-                    new_s = col2.text_input("Subs", value=str(row['SUBSCRIBE']), key=f"s_{index}", disabled=not bisa_eksekusi)
-                    
-                    if bisa_eksekusi and col2.button("💾", key=f"b_s_{index}"):
-                        ws.update_cell(index + 2, 5, new_s)
-                        ws.update_cell(index + 2, 11, user_aktif)
-                        st.rerun()
-                    
-                    with col3:
-                        if bisa_eksekusi:
-                            with st.popover("🚀 PROSES"):
-                                p_hp = st.number_input("HP", 1, 30, key=f"hp_{index}")
-                                p_sl = st.selectbox("Slot", ["PAGI", "SIANG", "SORE"], key=f"sl_{index}")
-                                p_kt = st.text_input("Konten", key=f"kt_{index}")
-                                if st.button("JALANKAN", key=f"go_{index}"):
-                                    r = index + 2
+            st.divider()
+            df_standby = df[df['STATUS'] == 'STANDBY']
+            if df_standby.empty:
+                st.info("Belum ada stok channel standby.")
+            else:
+                for idx, row in df_standby.iterrows():
+                    with st.container(border=True):
+                        col_info, col_aksi = st.columns([3, 1])
+                        with col_info:
+                            st.markdown(f"**{row['NAMA_CHANNEL']}**")
+                            st.caption(f"Email: {row['EMAIL']} | Subs: {row['SUBSCRIBE']} | In: {row.get('PENCATAT','-')}")
+                        
+                        with col_aksi:
+                            with st.popover("⚙️ EKSEKUSI"):
+                                p_hp = st.number_input("Pilih HP (1-25)", 1, 25, key=f"hp_st_{idx}")
+                                p_slot = st.selectbox("Pilih Slot", ["PAGI", "SIANG", "SORE"], key=f"sl_st_{idx}")
+                                p_kon = st.text_input("Jenis Konten", key=f"kt_st_{idx}")
+                                
+                                if st.button("🚀 JALANKAN PROSES", key=f"btn_go_{idx}", use_container_width=True):
+                                    r = idx + 2
                                     ws.update_cell(r, 7, "PROSES")
                                     ws.update_cell(r, 8, p_hp)
-                                    ws.update_cell(r, 9, p_sl)
-                                    ws.update_cell(r, 10, p_kt)
+                                    ws.update_cell(r, 9, p_slot)
+                                    ws.update_cell(r, 10, p_kon)
                                     ws.update_cell(r, 11, user_aktif)
                                     tambah_log(user_aktif, f"PROSES HP {p_hp}: {row['NAMA_CHANNEL']}")
                                     st.rerun()
-                        else:
-                            st.caption("🔒 View Only")
+                                
+                                if st.button("💰 SOLD", key=f"btn_sd_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif)
+                                    tambah_log(user_aktif, f"SOLD FROM STANDBY: {row['NAMA_CHANNEL']}")
+                                    st.rerun()
+                                
+                                if st.button("🥀 BUSUK", key=f"btn_bk_{idx}", use_container_width=True):
+                                    ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif)
+                                    tambah_log(user_aktif, f"BUSUK FROM STANDBY: {row['NAMA_CHANNEL']}")
+                                    st.rerun()
 
-    # --- TAB 3: MONITORING LIVE ---
-    with tab_monitor:
-        # Filter data yang lagi PROSES aja
-        df_active = df[df['STATUS'] == 'PROSES']
-        cols = st.columns(3)
-        for i in range(1, 31):
-            with cols[(i-1)%3]:
-                with st.container(border=True):
-                    st.markdown(f"**📱 UNIT HP {i}**")
-                    data_hp = df_active[df_active['HP'] == i]
-                    
-                    for s in ["PAGI", "SIANG", "SORE"]:
-                        cek = data_hp[data_hp['SLOT'] == s]
-                        if not cek.empty:
-                            nama_ch = cek.iloc[0]['NAMA_CHANNEL']
-                            st.success(f"✅ {s}: {nama_ch}")
-                            
-                            # TOMBOL EKSEKUSI HANYA UNTUK KASTA TINGGI
-                            if bisa_eksekusi:
-                                c_a, c_b, c_c = st.columns(3)
-                                if c_a.button("💰 SOLD", key=f"sd_{i}_{s}"):
-                                    cell = ws.find(nama_ch)
-                                    ws.update_cell(cell.row, 7, "SOLD")
-                                    ws.update_cell(cell.row, 11, user_aktif)
-                                    tambah_log(user_aktif, f"SOLD: {nama_ch}")
+    # ==========================================
+    # TAB 2: CHANNEL PROSES (OWNER, ADMIN, UPLOADER)
+    # ==========================================
+    with tab_proses:
+        if not is_pro:
+            st.warning("🚫 Akses Terbatas.")
+        else:
+            df_proses = df[df['STATUS'] == 'PROSES']
+            if df_proses.empty:
+                st.info("Tidak ada channel yang sedang dalam proses upload.")
+            else:
+                for idx, row in df_proses.iterrows():
+                    with st.container(border=True):
+                        c1, c2, c3 = st.columns([2, 1, 1])
+                        c1.markdown(f"**{row['NAMA_CHANNEL']}**")
+                        c1.caption(f"📱 HP {row['HP']} | 📅 {row['SLOT']} | 📝 {row['KONTEN']}")
+                        
+                        if c2.button("💰 SOLD", key=f"pr_sold_{idx}", use_container_width=True):
+                            ws.update_cell(idx+2, 7, "SOLD"); ws.update_cell(idx+2, 11, user_aktif)
+                            tambah_log(user_aktif, f"SOLD: {row['NAMA_CHANNEL']}")
+                            st.rerun()
+                        
+                        with c3:
+                            with st.popover("⚠️ OPSI", use_container_width=True):
+                                if st.button("🥀 BUSUK", key=f"pr_bsk_{idx}"):
+                                    ws.update_cell(idx+2, 7, "BUSUK"); ws.update_cell(idx+2, 11, user_aktif)
+                                    tambah_log(user_aktif, f"BUSUK: {row['NAMA_CHANNEL']}")
                                     st.rerun()
-                                if c_b.button("🥀 BUSUK", key=f"bk_{i}_{s}"):
-                                    cell = ws.find(nama_ch)
-                                    ws.update_cell(cell.row, 7, "BUSUK")
-                                    ws.update_cell(cell.row, 11, user_aktif)
-                                    tambah_log(user_aktif, f"MARK BUSUK: {nama_ch}")
+                                if st.button("🚫 SUSPEND", key=f"pr_sus_{idx}"):
+                                    ws.update_cell(idx+2, 7, "SUSPEND"); ws.update_cell(idx+2, 11, user_aktif)
+                                    tambah_log(user_aktif, f"SUSPEND: {row['NAMA_CHANNEL']}")
                                     st.rerun()
-                                if c_c.button("🚫 SUSPEND", key=f"ss_{i}_{s}"):
-                                    cell = ws.find(nama_ch)
-                                    ws.update_cell(cell.row, 7, "SUSPEND")
-                                    ws.update_cell(cell.row, 11, user_aktif)
-                                    tambah_log(user_aktif, f"MARK SUSPEND: {nama_ch}")
+                                if st.button("📦 RESET KE STANDBY", key=f"pr_res_{idx}"):
+                                    r = idx + 2
+                                    ws.update_cell(r, 7, "STANDBY")
+                                    ws.update_cell(r, 8, ""); ws.update_cell(r, 9, ""); ws.update_cell(r, 10, "")
                                     st.rerun()
+
+    # ==========================================
+    # TAB 3: JADWAL UPLOAD (SEMUA BISA LIHAT - SMART GRID)
+    # ==========================================
+    with tab_jadwal:
+        st.subheader("📋 Jadwal Aktif Unit HP")
+        df_jadwal = df[df['STATUS'] == 'PROSES']
+        
+        if df_jadwal.empty:
+            st.info("Belum ada jadwal upload hari ini.")
+        else:
+            # Ambil nomor HP unik yang sedang jalan (misal HP 1, 3, 10)
+            hp_aktif = sorted([int(x) for x in df_jadwal['HP'].unique() if str(x).isdigit()])
+            
+            cols = st.columns(3)
+            for idx, nomor_hp in enumerate(hp_aktif):
+                with cols[idx % 3]:
+                    with st.container(border=True):
+                        st.markdown(f"**📱 UNIT HP {nomor_hp}**")
+                        data_hp = df_jadwal[df_jadwal['HP'] == nomor_hp]
+                        
+                        for slot in ["PAGI", "SIANG", "SORE"]:
+                            cek = data_hp[data_hp['SLOT'] == slot]
+                            if not cek.empty:
+                                st.success(f"✅ {slot}: {cek.iloc[0]['NAMA_CHANNEL']}")
                             else:
-                                st.caption(f"Status: PROSES ({cek.iloc[0].get('PENCATAT', '-')})")
-                        else:
-                            st.caption(f"⚪ {s}: (Kosong)")
+                                st.caption(f"⚪ {slot}: (Kosong)")
+
+    # ==========================================
+    # TAB 4: SOLD CHANNEL (OWNER & ADMIN ONLY)
+    # ==========================================
+    with tab_sold:
+        if not is_boss:
+            st.error("🔒 Menu ini hanya bisa diakses oleh Owner & Admin.")
+        else:
+            df_sold = df[df['STATUS'] == 'SOLD'].copy()
+            if df_sold.empty:
+                st.info("Data Sold belum tersedia.")
+            else:
+                df_sold['TANGGAL_DT'] = pd.to_datetime(df_sold['TANGGAL'], dayfirst=True)
+                df_sold['BULAN'] = df_sold['TANGGAL_DT'].dt.strftime('%B %Y')
+                
+                list_bulan = sorted(df_sold['BULAN'].unique(), reverse=True)
+                sel_bulan = st.selectbox("Pilih Bulan Rekap Sold", list_bulan)
+                
+                display_sold = df_sold[df_sold['BULAN'] == sel_bulan]
+                st.metric("Total Terjual", f"{len(display_sold)} Channel")
+                st.dataframe(display_sold[["TANGGAL", "NAMA_CHANNEL", "SUBSCRIBE", "PENCATAT"]], use_container_width=True)
+
+    # ==========================================
+    # TAB 5: ARSIP CHANNEL (OWNER & ADMIN ONLY)
+    # ==========================================
+    with tab_arsip:
+        if not is_boss:
+            st.error("🔒 Menu ini hanya bisa diakses oleh Owner & Admin.")
+        else:
+            df_arsip = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
+            if df_arsip.empty:
+                st.info("Arsip bersih (tidak ada channel busuk/suspend).")
+            else:
+                df_arsip['TANGGAL_DT'] = pd.to_datetime(df_arsip['TANGGAL'], dayfirst=True)
+                df_arsip['BULAN'] = df_arsip['TANGGAL_DT'].dt.strftime('%B %Y')
+                
+                list_bulan_arsip = sorted(df_arsip['BULAN'].unique(), reverse=True)
+                sel_bulan_arsip = st.selectbox("Pilih Bulan Rekap Arsip", list_bulan_arsip)
+                
+                display_arsip = df_arsip[df_arsip['BULAN'] == sel_bulan_arsip]
+                st.dataframe(display_arsip[["TANGGAL", "NAMA_CHANNEL", "STATUS", "PENCATAT"]], use_container_width=True)
                             
 # ==============================================================================
 # BAGIAN 6: MODUL UTAMA - RUANG PRODUKSI (VERSI TOTAL FULL - NO CUT)
@@ -3895,4 +3966,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
