@@ -104,22 +104,29 @@ def bersihkan_data(df):
     return df
 
 def tambah_log(user, aksi):
-    """Mencatat aktivitas ke Supabase (Utama) & GSheet (Backup)."""
-    if str(user).upper() == "DIAN": 
-        return # Langsung keluar, tidak mencatat apa-apa kalau itu Dian
+    """Mencatat aktivitas ke Supabase & GSheet."""
+    u_log = str(user).upper()
+    if u_log == "DIAN": 
+        return 
 
     try:
         tz_wib = pytz.timezone('Asia/Jakarta')
-        # Pake format ini biar rapi kayak data lama lo di screenshot
         waktu_sekarang = datetime.now(tz_wib).strftime("%d/%m/%Y %H:%M:%S")
         
         # 1. KIRIM KE SUPABASE
-        # 'Nama' diganti 'User' karena di database lo kolomnya itu
-        supabase.table("Log_Aktivitas").insert({
+        # Tambahin .execute() dan tangkap hasilnya
+        data_insert = {
             "Waktu": waktu_sekarang,
-            "User": str(user).upper(),
+            "User": u_log,
             "Aksi": aksi
-        }).execute()
+        }
+        
+        # Coba pake try di sini biar tau error spesifik Supabase
+        try:
+            supabase.table("Log_Aktivitas").insert(data_insert).execute()
+        except Exception as e_supa:
+            # INI PENTING: Biar kelihatan di web kalau Supabase nolak
+            st.toast(f"Supabase Gagal: {e_supa}", icon="⚠️")
 
         # 2. KIRIM KE GSHEET (Backup pasif)
         try:
@@ -3864,6 +3871,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
