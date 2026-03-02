@@ -132,44 +132,41 @@ def tambah_log(user, aksi):
     except Exception as e:
         print(f"Gagal mencatat log: {e}")
 # ==============================================================================
-# 6. SETUP DATABASE CHANNEL (TARUH DI SINI BIAR GAK LOADING)
+# 6. SETUP DATABASE CHANNEL & HP (KONEKSI GLOBAL)
 # ==============================================================================
 try:
     # Kita kunci koneksi sheet-nya secara global di sini
     sh_master = get_gspread_sh()
+    # Inisialisasi Worksheet Utama
     ws = sh_master.worksheet("Channel_Pintar")
+    ws_hp = sh_master.worksheet("Data_HP") # <--- TAMBAHIN INI BIAR TAB HP GAK ERROR
 except Exception as e:
-    st.error(f"Gagal koneksi ke Sheet 'Channel_Pintar': {e}")
+    st.error(f"Gagal koneksi ke Google Sheets: {e}")
 
 @st.cache_data(ttl=5)
 def load_data_channel():
     """Tarik data dari GSheet sekali aja buat dipake semua tab."""
     try:
+        # Pake ws yang sudah didefinisikan di atas
         data_raw = ws.get_all_records()
         return bersihkan_data(pd.DataFrame(data_raw))
     except Exception as e:
-        # st.error(f"Error tarik data: {e}")
         return pd.DataFrame()
-
-# Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
-df = load_data_channel()
 
 @st.cache_data(ttl=10)
 def load_data_hp():
+    """Fungsi khusus narik data HP."""
     try:
-        sh_hp = get_gspread_sh() # Panggil koneksi fresh
-        ws_hp = sh_hp.worksheet("Data_HP")
-        data = ws_hp.get_all_records()
-        if not data:
+        # Pake ws_hp yang sudah didefinisikan di atas
+        data_hp_raw = ws_hp.get_all_records()
+        if not data_hp_raw:
             return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-        df_res = pd.DataFrame(data)
-        # Standarisasi Nama Kolom (Buang spasi & Upper)
-        df_res.columns = [str(c).strip().upper() for c in df_res.columns]
-        return df_res
+        return bersihkan_data(pd.DataFrame(data_hp_raw))
     except Exception as e:
-        st.sidebar.error(f"⚠️ Gagal Load HP: {e}")
         return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-# Panggil fungsinya
+
+# TARIK DATA AWAL (Variabel Global)
+df = load_data_channel()
 df_hp = load_data_hp()
         
 # ==============================================================================
@@ -3536,52 +3533,64 @@ def tampilkan_database_channel():
                             else:
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
-    # ==========================================
-    # --- TAB HP: RADAR MASA AKTIF KARTU (DIRECT PULL) ---
-    # ==========================================
+    # ======================================================================
+    # --- TAB 4: MONITOR HP (VERSI LIVE - BYPASS CACHE) ---
+    # ======================================================================
     with tab_hp:
         st.subheader("📡 RADAR MASA AKTIF KARTU")
         
-        # 1. KONEKSI ULANG (BYPASS SEMUA CACHE)
+        # --- 1. PAKSA TARIK DATA LIVE (JANGAN PAKE FUNGSI LOAD DI ATAS) ---
         try:
-            ws_radar = sh.worksheet("Data_HP")
-            # Tarik data paling fresh detik ini juga
-            data_fresh = ws_radar.get_all_records()
-            df_radar = pd.DataFrame(data_fresh)
+            # Kita bikin koneksi baru khusus di dalam tab ini biar gak bentrok 
+            sh_live = get_gspread_sh()
+            ws_live = sh_live.worksheet("Data_HP")
+            
+            # Tarik data detik ini juga (Live)
+            records_live = ws_live.get_all_records()
+            df_radar = pd.DataFrame(records_live)
+            
             if not df_radar.empty:
                 df_radar.columns = [str(c).strip().upper() for c in df_radar.columns]
-                # Buang baris kosong biar gak Err Unit
-                df_radar = df_radar[df_radar['NAMA_HP'].astype(str).strip() != ""]
+                # Buang baris hantu yang gak ada namanya
+                df_radar = df_radar[df_radar['NAMA_HP'].astype(str).strip() != ""].copy()
         except Exception as e:
-            st.error(f"Gagal koneksi tab HP: {e}")
+            st.error(f"Koneksi GSheet Gagal: {e}")
             df_radar = pd.DataFrame()
 
-        # 2. FORM INPUT (LANGSUNG TEMBAK)
+        # --- 2. FORM INPUT UNIT ---
         if is_boss:
             with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
-                with st.form("form_hp_direct_input", clear_on_submit=True):
+                with st.form("form_hp_hardcore_input", clear_on_submit=True):
                     c1, c2 = st.columns(2)
-                    in_nama = c1.text_input("Nama Unit HP")
+                    in_nama = c1.text_input("Nama Unit HP", placeholder="HP 01")
                     in_no = c2.text_input("Nomor HP")
+                    
                     c3, c4 = st.columns(2)
                     in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
                     in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
                     
-                    if st.form_submit_button("🚀 SIMPAN UNIT"):
+                    if st.form_submit_button("🚀 SIMPAN UNIT SEKARANG"):
                         if in_nama and in_tgl:
-                            # Masukkan data ke GSheet
-                            ws_radar.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
-                            # RESET SEMUA CACHE AGAR DATA BARU KEBACA
-                            st.cache_data.clear()
-                            st.success(f"✅ {in_nama} Masuk!")
-                            time.sleep(1)
-                            st.rerun()
+                            try:
+                                # Input langsung pake ws_live yang tadi udah dibuat
+                                ws_live.append_row([in_nama, f"'{in_no}", in_prov, in_tgl], value_input_option='USER_ENTERED')
+                                
+                                # Hancurkan semua catatan lama (Cache)
+                                st.cache_data.clear()
+                                
+                                st.success(f"✅ {in_nama} Berhasil Masuk!")
+                                time.sleep(1)
+                                st.rerun() # Paksa web buat baca ulang dari baris 10 (df_radar di atas)
+                            except Exception as e:
+                                st.error(f"Gagal Simpan: {e}")
+                        else:
+                            st.warning("Nama dan Tanggal wajib diisi!")
 
         st.divider()
 
-        # 3. DISPLAY CARD
+        # --- 3. DISPLAY CARD RADAR (5 KOLOM) --- 
         if df_radar.empty:
-            st.info("Data HP masih kosong di GSheet.")
+            st.info("Data HP masih kosong di GSheet. Silakan tambah di atas.")
         else:
             cols_r = st.columns(5)
             for i, (idx, r) in enumerate(df_radar.iterrows()):
@@ -3590,29 +3599,33 @@ def tampilkan_database_channel():
                 
                 with cols_r[i % 5]:
                     try:
-                        # Hitung Tanggal
+                        # Logika Tanggal
                         t_dt = pd.to_datetime(u_tgl, dayfirst=True, errors='coerce')
                         if pd.isnat(t_dt):
                             bg_c, sisa = "#444", "?"
                         else:
                             sisa = (t_dt - datetime.now()).days
+                            # Warna Radar Gaya Original
                             bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
 
                         with st.container(border=True):
                             st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{u_name}</b></div>', unsafe_allow_html=True)
+                            
                             k1, k2 = st.columns(2)
                             k1.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:10px;'>{r.get('NOMOR_HP','-')}</b>", unsafe_allow_html=True)
                             k2.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>⏳ SISA</p><b style='font-size:11px;color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
-                            with st.popover("✏️"):
-                                en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"edit_hp_{idx}")
-                                et = st.text_input("Exp", value=u_tgl, key=f"edit_tg_{idx}")
-                                if st.button("SAVE", key=f"btn_hp_{idx}", type="primary"):
-                                    ws_radar.update_cell(idx+2, 2, f"'{en}")
-                                    ws_radar.update_cell(idx+2, 4, et)
-                                    st.cache_data.clear()
-                                    st.rerun()
-                    except: pass
+                            with st.popover("✏️", use_container_width=True):
+                                if is_boss:
+                                    en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"edit_no_final_{idx}")
+                                    et = st.text_input("Exp", value=u_tgl, key=f"edit_tg_final_{idx}")
+                                    if st.button("SAVE", key=f"edit_btn_final_{idx}", type="primary", use_container_width=True):
+                                        ws_live.update_cell(idx+2, 2, f"'{en}")
+                                        ws_live.update_cell(idx+2, 4, et)
+                                        st.cache_data.clear()
+                                        st.rerun()
+                    except:
+                        pass
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4038,6 +4051,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
