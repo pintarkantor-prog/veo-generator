@@ -3410,10 +3410,11 @@ def tampilkan_database_channel():
         st.error(f"Gagal koneksi: {e}"); return
 
     # --- 3. PEMBUATAN TAB ---
+    # Tambahkan 'key' unik biar Streamlit ngereset state tab-nya
     tab_standby, tab_proses, tab_jadwal, tab_hp, tab_sold, tab_arsip = st.tabs([
-        "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", "📱 MONITOR HP", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
-    ])
-
+        "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", 
+        "📱 MONITOR HP", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
+    ]) # Tambahkan key kalau perlu di versi baru: , key="tab_global_v2")
     # ======================================================================
     # --- TAB 1: STOK STANDBY ---
     # ======================================================================
@@ -3530,68 +3531,71 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (GAYA TAB STANDBY - FINAL) ---
+    # --- TAB 4: MONITOR HP (TEST REFRESH TOTAL) ---
     # ======================================================================
     with tab_hp:
+        # Gue kasih judul beda biar ketauan kalau refresh berhasil
+        st.subheader("📡 RADAR MONITORING HP - VERSI FRESH")
+        
+        # DEBUG: Cetak waktu sekarang biar tau webnya update atau enggak
+        st.caption(f"Terakhir Update: {datetime.now().strftime('%H:%M:%S')}")
+
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # --- A. DATABASE STOK STANDBY ---
-            with st.expander("🔐 DATABASE STOK STANDBY", expanded=True):
-                # Tombol Tambah Channel
-                if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
-                    st.session_state.form_baru = not st.session_state.get('form_baru', False)
-
-                if st.session_state.get('form_baru', False):
-                    with st.form("input_st_final_style", clear_on_submit=True):
-                        f1, f2, f3 = st.columns(3)
-                        v_nama = f1.text_input("Nama Channel")
-                        v_mail = f2.text_input("Email Login")
-                        v_pass = f3.text_input("Password")
-                        f4, f5 = st.columns([1, 2])
-                        v_subs = f4.text_input("Jumlah Subs")
-                        v_link = f5.text_input("Link Channel")
-                        if st.form_submit_button("🚀 SIMPAN DATA KE GSHEET"):
-                            if v_nama and v_mail:
-                                tz = pytz.timezone('Asia/Jakarta')
-                                tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                                ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                                st.cache_data.clear() # BERSIHKAN CACHE
-                                st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
+            # GANTI NAMA EXPANDER BIAR KETAUAN BEDANYA
+            with st.expander("📡 PANEL KENDALI UNIT HP", expanded=True):
+                # Form Tambah (Hanya Boss)
+                if is_boss:
+                    with st.form("form_tambah_hp_baru_v99", clear_on_submit=True):
+                        st.markdown("### ➕ Input Unit Baru")
+                        c1, c2 = st.columns(2)
+                        n_unit = c1.text_input("Identitas Unit", placeholder="Contoh: HP 1")
+                        n_nomer = c2.text_input("Nomor Kartu")
+                        
+                        c3, c4 = st.columns(2)
+                        n_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                        n_tgl = c4.text_input("Expired (DD/MM/YYYY)")
+                        
+                        if st.form_submit_button("🚀 KIRIM DATA KE GSHEET"):
+                            if n_unit and n_tgl:
+                                try:
+                                    # Pake ws_hp global lo
+                                    ws_hp.append_row([n_unit.upper(), f"'{n_nomer}", n_prov, n_tgl], value_input_option='USER_ENTERED')
+                                    st.cache_data.clear()
+                                    st.success("MASUK COK!"); time.sleep(1); st.rerun()
+                                except Exception as e:
+                                    st.error(f"Error: {e}")
+                            else:
+                                st.error("Isi semua, jangan ngasal!")
 
                 st.divider()
-
-                # Looping Data Standby
-                df_st = df[df['STATUS'] == 'STANDBY']
-                if df_st.empty:
-                    st.info("📭 Belum ada stok standby.")
+                
+                # BAGIAN DISPLAY CARD (PASTIKAN df_hp ADA ISINYA)
+                st.markdown("### 📡 Status Radar Aktif")
+                if df_hp.empty:
+                    st.info("Data HP masih kosong.")
                 else:
-                    for idx, r in df_st.iterrows():
-                        with st.container(border=True):
-                            st.markdown(f'<div style="padding:2px; background:#2D5A47; border-radius:5px; margin-bottom:10px; text-align:center;"><b style="color:white; font-size:11px;">📺 {str(r["NAMA_CHANNEL"]).upper()}</b></div>', unsafe_allow_html=True)
-                            c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([2.2, 1.2, 1.5, 0.8, 1, 0.8, 1.2, 0.5])
-                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA</p><b>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p><a href='{r['LINK_CHANNEL']}' target='_blank'>BUKA!</a>", unsafe_allow_html=True)
-                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
-                            with c7:
-                                opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
-                                if opsi != "-":
-                                    r_idx = idx + 2
-                                    if opsi == "PROSES":
-                                        df_p = df[df['STATUS'] == 'PROSES']
-                                        target_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
-                                        ws.update_cell(r_idx, 7, "PROSES"); ws.update_cell(r_idx, 8, target_hp)
-                                        ws.update_cell(r_idx, 9, ""); ws.update_cell(r_idx, 11, user_aktif)
-                                    else:
-                                        ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
-                                    st.cache_data.clear(); st.rerun()
-                            with c8:
+                    # Filter data asli lo
+                    df_hp_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
+                    
+                    grid = st.columns(5)
+                    for i, (idx, r) in enumerate(df_hp_view.iterrows()):
+                        with grid[i % 5]:
+                            # Logika Warna Sederhana
+                            with st.container(border=True):
+                                st.markdown(f"**{r['NAMA_HP']}**")
+                                st.caption(f"📞 {r['NOMOR_HP']}")
+                                st.write(f"⏳ {r['MASA_AKTIF']}")
+                                
+                                # Tombol Edit Popover
                                 with st.popover("✏️"):
-                                    # ... (Kode Edit Channel lo tetap sama di sini) ...
-                                    st.write("Edit Mode Active")
+                                    en = st.text_input("No", value=str(r['NOMOR_HP']), key=f"e_n_{idx}")
+                                    et = st.text_input("Exp", value=str(r['MASA_AKTIF']), key=f"e_t_{idx}")
+                                    if st.button("SAVE", key=f"btn_s_{idx}"):
+                                        ws_hp.update_cell(idx+2, 2, f"'{en}")
+                                        ws_hp.update_cell(idx+2, 4, et)
+                                        st.cache_data.clear(); st.rerun()
 
                         
     # ==========================================
@@ -4018,6 +4022,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
