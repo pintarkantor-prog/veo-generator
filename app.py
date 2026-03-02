@@ -424,22 +424,26 @@ def proses_login(user, pwd):
                 else:
                     st.session_state.user_level = user_level
 
-                # --- 3. FILTER LOG (BARU PANGGIL DI SINI) ---
+                # --- 3. FILTER LOG (PANGGIL DULUAN) ---
                 if user_key != "DIAN":
                     tambah_log(user_key, "LOGIN KE SISTEM")
 
                 current_lv = st.session_state.user_level
 
-                # --- 3. LOGIKA ABSEN & NOTIF ---
+                # --- 4. LOGIKA ABSEN & NOTIF ---
                 if current_lv in ["STAFF", "ADMIN"]:
                     log_absen_otomatis(user_key)
+                    # KASIH JEDA DI SINI! Biar Supabase & Absensi kelar kirim
+                    time.sleep(2) 
                     st.toast(f"Selamat bekerja, {user_key}!", icon="✅")
                 else:
+                    # Kalau owner cuma perlu sebentar
+                    time.sleep(0.5)
                     st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
 
-                # --- 4. BERSIHKAN URL & REFRESH ---
+                # --- 5. BERSIHKAN URL & REFRESH ---
                 st.query_params.clear() 
-                time.sleep(1) 
+                # Jangan sleep lagi di sini kalau di atas udah
                 st.rerun()
             else:
                 st.error("Password salah.")
@@ -3871,6 +3875,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
