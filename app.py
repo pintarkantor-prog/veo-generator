@@ -3559,41 +3559,32 @@ def tampilkan_database_channel():
 
         # --- 2. FORM INPUT UNIT ---
         if is_boss:
-            with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
-                # Kita gak pake st.form dulu biar kita dapet feedback instant 
+            with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=True):
                 c1, c2 = st.columns(2)
-                in_nama = c1.text_input("Nama Unit HP", key="hp_nama_fix")
-                in_no = c2.text_input("Nomor HP", key="hp_no_fix")
+                in_nama = c1.text_input("Nama Unit HP", key="debug_nama")
+                in_no = c2.text_input("Nomor HP", key="debug_no")
                 
                 c3, c4 = st.columns(2)
-                in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], key="hp_prov_fix")
-                in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026", key="hp_tgl_fix")
+                in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], key="debug_prov")
+                in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", key="debug_tgl")
                 
-                if st.button("🚀 SIMPAN UNIT SEKARANG", use_container_width=True, type="primary"):
-                    if in_nama and in_tgl:
-                        with st.spinner("Sedang menembak data ke Google Sheets..."):
-                            try:
-                                # 1. PAKSA KONEKSI FRESH (Bypass sh_master global)
-                                sh_direct = get_gspread_sh()
-                                ws_direct = sh_direct.worksheet("Data_HP")
-                                
-                                # 2. DETEKSI BARIS TERAKHIR SECARA MANUAL
-                                all_vals = ws_direct.get_all_values()
-                                next_row = len(all_vals) + 1
-                                
-                                # 3. INPUT DATA PAKE INSERT_ROW (Lebih Galak dari append_row)
-                                data_baru = [in_nama, f"'{in_no}", in_prov, in_tgl]
-                                ws_direct.insert_row(data_baru, next_row, value_input_option='USER_ENTERED')
-                                
-                                # 4. CLEAR CACHE & REFRESH
-                                st.cache_data.clear()
-                                st.success(f"✅ BERHASIL! {in_nama} masuk ke GSheet baris {next_row}")
-                                time.sleep(1.5)
-                                st.rerun()
-                            except Exception as e:
-                                st.error(f"❌ GAGAL TEMBAK: {e}")
-                    else:
-                        st.warning("Nama & Tanggal wajib diisi!")
+        # --- LOGIKA PAKSA MASUK (INSERT KE BARIS 2) ---
+        if st.button("🚀 PAKSA SIMPAN KE SHEET BARU", use_container_width=True, type="primary"):
+            if in_nama and in_tgl:
+                try:
+                    sh_new = get_gspread_sh()
+                    ws_new = sh_new.worksheet("Data_HP")
+                    
+                    # Kita pake insert_row(data, 2) biar PASTI masuk di bawah header
+                    data_baru = [in_nama, f"'{in_no}", in_prov, in_tgl]
+                    ws_new.insert_row(data_baru, 2, value_input_option='USER_ENTERED')
+                    
+                    st.cache_data.clear()
+                    st.success(f"🔥 MANTAP! {in_nama} Masuk di Baris 2!")
+                    time.sleep(1.5)
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Masih Gagal: {e}")
 
         st.divider()
 
@@ -4060,6 +4051,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
