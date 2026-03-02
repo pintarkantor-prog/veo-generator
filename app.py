@@ -2434,7 +2434,7 @@ def tampilkan_kendali_tim():
         # ======================================================================
         # --- 7. DATABASE AKUN AI (VERSI ASLI DIAN - INDENTASI TERKUNCI) ---
         # ======================================================================
-        with st.expander("🔐 DATABASE AKUN AI", expanded=True):
+        with st.expander("🔐 DATABASE AKUN AI", expanded=False):
             try:
                 # 1. Ambil Data
                 ws_akun = sh.worksheet("Akun_AI")
@@ -4088,6 +4088,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
