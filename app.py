@@ -3430,55 +3430,52 @@ def tampilkan_database_channel():
                                 </div>
                             """, unsafe_allow_html=True)
 
-                            # 7 KOLOM SEJAJAR (EMAIL, PW, NAMA, SUBS, LINK, OLEH, AKSI)
-                            c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1.5, 0.8, 1, 1, 1.2])
+                            # 8 KOLOM SEJAJAR (EMAIL, PW, NAMA, SUBS, LINK, OLEH, AKSI, EDIT)
+                            # Gue atur rasionya biar pas sejajar di layar
+                            c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.8, 1.2, 1.5, 0.8, 1, 0.8, 1.2, 0.5])
                             
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:14px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:14px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:14px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            # --- KOLOM 4: SUBSCRIBE (BISA EDIT MANUAL) ---
-                            with c4:
-                                st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBSCRIBE</p>", unsafe_allow_html=True)
-                                
-                                # Baris data dan tombol edit kecil sejajar
-                                c_subs_val, c_subs_edit = st.columns([3, 1])
-                                c_subs_val.markdown(f"<b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
-                                
-                                # Tombol edit mungil pake popover biar nggak ngerusak baris
-                                with c_subs_edit:
-                                    with st.popover("✏️", use_container_width=True):
-                                        new_s = st.text_input("Update Subs", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
-                                        if st.button("💾 SIMPAN", key=f"save_s_{idx}", use_container_width=True):
-                                            r_idx = idx + 2
-                                            ws.update_cell(r_idx, 5, new_s) # Update Kolom E (5)
-                                            st.toast(f"✅ Subs {r['NAMA_CHANNEL']} Updated!")
-                                            time.sleep(0.5)
-                                            st.rerun()
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
                             
-                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db;'>BUKA LINK CHANNEL</a>"
-                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK CHANNEL</p>{link_txt}", unsafe_allow_html=True)
+                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db;'>BUKA</a>"
+                            c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p>{link_txt}", unsafe_allow_html=True)
                             
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:14px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
 
-                            # AKSI DROPDOWN MINIMALIS
+                            # AKSI DROPDOWN MINIMALIS (Kolom 7)
                             with c7:
-                                
                                 opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
-                                
                                 if opsi != "-":
-                                    r_idx = idx + 2 # Baris GSheet
+                                    r_idx = idx + 2
                                     if opsi == "PROSES":
                                         df_p = df[df['STATUS'] == 'PROSES']
                                         target_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
                                         ws.update_cell(r_idx, 7, "PROSES"); ws.update_cell(r_idx, 8, target_hp)
                                         ws.update_cell(r_idx, 9, ""); ws.update_cell(r_idx, 11, user_aktif)
                                         st.rerun()
-                                    elif opsi == "SOLD":
-                                        ws.update_cell(r_idx, 7, "SOLD"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
-                                    elif opsi == "BUSUK":
-                                        ws.update_cell(r_idx, 7, "BUSUK"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
-                                    elif opsi == "SUSPEND":
-                                        ws.update_cell(r_idx, 7, "SUSPEND"); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
+                                    elif opsi in ["SOLD", "BUSUK", "SUSPEND"]:
+                                        ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
+
+                            # MASTER EDIT (Kolom 8 - Icon Pensil Mungil)
+                            with c8:
+                                with st.popover("✏️", use_container_width=True):
+                                    st.markdown("### 📝 EDIT DATA")
+                                    ed_mail = st.text_input("Email", value=str(r['EMAIL']), key=f"ed_m_{idx}")
+                                    ed_pass = st.text_input("Password", value=str(r['PASSWORD']), key=f"ed_p_{idx}")
+                                    ed_nama = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"ed_n_{idx}")
+                                    ed_subs = st.text_input("Subscribe", value=str(r['SUBSCRIBE']), key=f"ed_s_{idx}")
+                                    ed_link = st.text_input("Link Channel", value=str(r['LINK_CHANNEL']), key=f"ed_l_{idx}")
+                                    
+                                    if st.button("💾 SIMPAN", key=f"btnsave_{idx}", use_container_width=True):
+                                        r_idx = idx + 2
+                                        ws.update_cell(r_idx, 2, ed_mail) # B
+                                        ws.update_cell(r_idx, 3, ed_pass) # C
+                                        ws.update_cell(r_idx, 4, ed_nama) # D
+                                        ws.update_cell(r_idx, 5, ed_subs) # E
+                                        ws.update_cell(r_idx, 6, ed_link) # F
+                                        st.toast("✅ Data Berhasil Diperbarui!"); time.sleep(0.5); st.rerun()
 
     # ==========================================
     # TAB 3: JADWAL UPLOAD
@@ -3926,6 +3923,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
