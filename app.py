@@ -132,42 +132,38 @@ def tambah_log(user, aksi):
     except Exception as e:
         print(f"Gagal mencatat log: {e}")
 # ==============================================================================
-# 6. SETUP DATABASE CHANNEL & HP (KONEKSI GLOBAL)
+# 6. SETUP DATABASE CHANNEL (TARUH DI SINI BIAR GAK LOADING)
 # ==============================================================================
 try:
     # Kita kunci koneksi sheet-nya secara global di sini
     sh_master = get_gspread_sh()
-    # Inisialisasi Worksheet Utama
-    ws = sh_master.worksheet("Channel_Pintar")
-    ws_hp = sh_master.worksheet("Data_HP") # <--- TAMBAHIN INI BIAR TAB HP GAK ERROR
+    ws = sh_master.worksheet("Database_Channel")
 except Exception as e:
-    st.error(f"Gagal koneksi ke Google Sheets: {e}")
+    st.error(f"Gagal koneksi ke Sheet 'Database_Channel': {e}")
 
 @st.cache_data(ttl=5)
 def load_data_channel():
     """Tarik data dari GSheet sekali aja buat dipake semua tab."""
     try:
-        # Pake ws yang sudah didefinisikan di atas
         data_raw = ws.get_all_records()
         return bersihkan_data(pd.DataFrame(data_raw))
     except Exception as e:
+        # st.error(f"Error tarik data: {e}")
         return pd.DataFrame()
 
+# Ambil datanya SEKARANG (Variabel ini yang dipake di tab_standby nanti)
+df = load_data_channel()
+
+# Fungsi khusus narik data HP
 @st.cache_data(ttl=10)
 def load_data_hp():
-    """Fungsi khusus narik data HP."""
     try:
-        # Pake ws_hp yang sudah didefinisikan di atas
-        data_hp_raw = ws_hp.get_all_records()
-        if not data_hp_raw:
-            return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-        return bersihkan_data(pd.DataFrame(data_hp_raw))
-    except Exception as e:
-        return pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
+        ws_hp = sh_master.worksheet("Data_HP") # <--- Tembak sheet baru
+        return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
+    except:
+        return pd.DataFrame()
 
-# TARIK DATA AWAL (Variabel Global)
-df = load_data_channel()
-df_hp = load_data_hp()
+df_hp = load_data_hp() # Simpan ke variabel
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3533,90 +3529,75 @@ def tampilkan_database_channel():
                             else:
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
-    # ==========================================
-    # --- TAB HP: MONITOR MASA AKTIF (FIXED) ---
-    # ==========================================
+    # ======================================================================
+    # --- TAB 4: MONITOR HP (VARIABEL FIX SINKRON) ---
+    # ======================================================================
     with tab_hp:
         st.subheader("📡 RADAR MASA AKTIF KARTU")
         
-        # 1. TARIK DATA PAKAI GET_ALL_VALUES (LEBIH STABIL BUAT SHEET BARU)
-        try:
-            ws_radar = sh_master.worksheet("Data_HP")
-            all_data = ws_radar.get_all_values() # Tarik semua sel 
-            
-            if len(all_data) > 1:
-                # Ambil Header dari baris 1, data dari baris 2 ke bawah
-                df_radar = pd.DataFrame(all_data[1:], columns=all_data[0])
-                # Standarisasi Kolom
-                df_radar.columns = [str(c).strip().upper() for c in df_radar.columns]
-                # Buang baris yang Nama HP-nya kosong
-                df_radar = df_radar[df_radar['NAMA_HP'].str.strip() != ""].copy()
-            else:
-                df_radar = pd.DataFrame()
-        except Exception as e:
-            st.error(f"Gagal akses tab 'Data_HP': {e}")
-            df_radar = pd.DataFrame()
-
-        # 2. FORM INPUT (PAKE INSERT_ROW KE BARIS 2)
+        # --- 1. FORM INPUT UNIT HP BARU ---
         if is_boss:
             with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
-                with st.form("form_hp_new_sheet", clear_on_submit=True):
+                with st.form("form_hp_input_sinkron", clear_on_submit=True):
                     c1, c2 = st.columns(2)
-                    in_nama = c1.text_input("Nama Unit HP")
-                    in_no = c2.text_input("Nomor HP")
-                    c3, c4 = st.columns(2)
-                    in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                    in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
+                    v_nama = c1.text_input("Nama Unit HP (Contoh: HP 01)")
+                    v_no = c2.text_input("Nomor HP")
                     
-                    if st.form_submit_button("🚀 SIMPAN KE SHEET BARU"):
-                        if in_nama and in_tgl:
+                    c3, c4 = st.columns(2)
+                    v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    v_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
+                    
+                    if st.form_submit_button("🚀 SIMPAN UNIT"):
+                        if v_nama and v_tgl:
                             try:
-                                # KITA PAKSA MASUK KE BARIS 2 (DI BAWAH HEADER)
-                                row_baru = [in_nama, f"'{in_no}", in_prov, in_tgl]
-                                ws_radar.insert_row(row_baru, 2, value_input_option='USER_ENTERED')
+                                # Pake ws_hp (yang lo bikin di setup atas)
+                                # Pake value_input_option='USER_ENTERED' biar petik (') berfungsi
+                                ws_hp.append_row([v_nama, f"'{v_no}", v_prov, v_tgl], value_input_option='USER_ENTERED')
                                 
-                                st.cache_data.clear() # Bersihkan cache load_data_hp lo
-                                st.success("✅ BERHASIL MASUK DI BARIS 2!")
-                                time.sleep(1)
-                                st.rerun()
+                                st.cache_data.clear() # Cuci cache biar df_hp update
+                                st.success("✅ Berhasil Simpan!")
+                                time.sleep(1); st.rerun()
                             except Exception as e:
-                                st.error(f"Gagal Simpan: {e}")
+                                st.error(f"Gagal: {e}")
 
         st.divider()
 
-        # 3. DISPLAY CARD (GAYA RADAR) 
-        if df_radar.empty:
-            st.info("📭 Data HP masih kosong di GSheet. Coba input satu data dulu di atas.")
+        # --- 2. DISPLAY RADAR (PAKE df_hp DARI SETUP ATAS) ---
+        if df_hp.empty:
+            st.info("Data HP belum terisi di GSheet.")
         else:
-            cols_r = st.columns(5)
-            for i, (idx, r) in enumerate(df_radar.iterrows()):
-                u_name = str(r.get('NAMA_HP', '')).upper()
-                u_tgl = str(r.get('MASA_AKTIF', '')).strip()
-                
-                with cols_r[i % 5]:
+            # Bersihin data hantu
+            df_hp_clean = df_hp[df_hp['NAMA_HP'].astype(str).strip() != ""].copy()
+            
+            cols_hp = st.columns(5)
+            for i, (idx, r) in enumerate(df_hp_clean.iterrows()):
+                with cols_hp[i % 5]:
                     try:
-                        # Logika Hitung Tanggal
-                        t_dt = pd.to_datetime(u_tgl, dayfirst=True, errors='coerce')
-                        if pd.isnat(t_dt):
+                        # Logika Tanggal
+                        tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True, errors='coerce')
+                        if pd.isnat(tgl_exp):
                             bg_c, sisa = "#444", "?"
                         else:
-                            sisa = (t_dt - datetime.now()).days
+                            sisa = (tgl_exp - datetime.now()).days
                             bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
 
                         with st.container(border=True):
-                            st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{u_name}</b></div>', unsafe_allow_html=True)
-                            k1, k2 = st.columns(2)
-                            k1.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:10px;'>{r.get('NOMOR_HP','-')}</b>", unsafe_allow_html=True)
-                            k2.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>⏳ SISA</p><b style='font-size:11px;color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hr</b>", unsafe_allow_html=True)
+                            st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; color:white; font-size:11px;"><b>{str(r["NAMA_HP"]).upper()}</b></div>', unsafe_allow_html=True)
+                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR</p><b>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
                             
-                            with st.popover("✏️"):
-                                en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"ed_n_{idx}")
-                                et = st.text_input("Exp", value=u_tgl, key=f"ed_t_{idx}")
-                                if st.button("SAVE", key=f"btn_s_{idx}", type="primary"):
-                                    ws_radar.update_cell(idx+2, 2, f"'{en}")
-                                    ws_radar.update_cell(idx+2, 4, et)
+                            # Tombol Edit
+                            with st.popover("✏️ EDIT", use_container_width=True):
+                                new_no = st.text_input("No HP", value=str(r['NOMOR_HP']), key=f"ed_no_{idx}")
+                                new_tg = st.text_input("Exp", value=str(r['MASA_AKTIF']), key=f"ed_tg_{idx}")
+                                if st.button("💾 SAVE", key=f"btn_sv_{idx}", use_container_width=True, type="primary"):
+                                    # Update sel spesifik pake ws_hp (setup atas)
+                                    # Kolom B = 2, Kolom D = 4
+                                    ws_hp.update_cell(idx + 2, 2, f"'{new_no}")
+                                    ws_hp.update_cell(idx + 2, 4, new_tg)
                                     st.cache_data.clear(); st.rerun()
-                    except: pass
+                    except:
+                        pass
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4042,6 +4023,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
