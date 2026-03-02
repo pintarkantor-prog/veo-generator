@@ -3396,32 +3396,34 @@ def tampilkan_database_channel():
 
     # --- 2. KONEKSI & AMBIL DATA ---
     try:
-        sh = get_gspread_sh() # Variabel utama koneksi
-        
-        # A. TARIK DATA CHANNEL
+        sh = get_gspread_sh()
+        # Data Channel
         ws = sh.worksheet("Channel_Pintar")
         data = ws.get_all_records()
-        kolom_wajib = ["TANGGAL", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", 
-                       "LINK_CHANNEL", "STATUS", "HP", "SLOT", "KONTEN", "PENCATAT"]
-        df = pd.DataFrame(data) if data else pd.DataFrame(columns=kolom_wajib)
+        df = pd.DataFrame(data) if data else pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
         df.columns = [str(c).strip().upper() for c in df.columns]
 
-        # B. TARIK DATA HP (TAMBAHKAN INI BIAR RADAR GAK ERROR)
+        # Data HP (Tambahan buat Tab Baru)
         try:
-            ws_hp = sh.worksheet("Data_HP") #
+            ws_hp = sh.worksheet("Data_HP")
             data_hp = ws_hp.get_all_records()
-            df_hp = pd.DataFrame(data_hp) if data_hp else pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-            df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
+            df_hp = pd.DataFrame(data_hp) if data_hp else pd.DataFrame()
+            if not df_hp.empty:
+                df_hp.columns = [str(c).strip().upper() for c in df_hp.columns]
         except:
-            df_hp = pd.DataFrame(columns=['NAMA_HP', 'NOMOR_HP', 'PROVIDER', 'MASA_AKTIF'])
-
+            df_hp = pd.DataFrame()
     except Exception as e:
-        st.error(f"Gagal koneksi GSheet: {e}")
-        return
+        st.error(f"Gagal koneksi: {e}"); return
 
-    # --- 3. PEMBUATAN TAB ---
-    tab_standby, tab_proses, tab_jadwal, tab_sold, tab_arsip = st.tabs([
-        "📦 STOK STANDBY", "🚀 CHANNEL PROSES", "📅 JADWAL UPLOAD", "💰 SOLD CHANNEL", "📂 ARSIP CHANNEL"
+    # --- 3. PEMBUATAN TAB (TAMBAH MONITOR HP) ---
+    # Kita taruh di urutan kedua biar gampang dicek
+    tab_standby, tab_hp, tab_proses, tab_jadwal, tab_sold, tab_arsip = st.tabs([
+        "📦 STOK STANDBY", 
+        "🚀 CHANNEL PROSES", 
+        "📅 JADWAL UPLOAD", 
+        "📱 MONITOR HP", 
+        "💰 SOLD CHANNEL", 
+        "📂 ARSIP CHANNEL"
     ])
 
     # ======================================================================
@@ -3488,82 +3490,78 @@ def tampilkan_database_channel():
                                     # ... (Kode Edit Channel lo tetap sama di sini) ...
                                     st.write("Edit Mode Active")
 
-            # --- BAGIAN B: RADAR MONITORING KARTU HP (POSISI SEJAJAR EXPANDER ATAS) ---
-            st.write("") # Spacer biar gak nempel
-            with st.expander("📱 RADAR MONITORING KARTU HP", expanded=True):
-                # Ambil data HP langsung pake variabel 'sh' agar sinkron
-                try:
-                    df_hp_view = pd.DataFrame(sh.worksheet("Data_HP").get_all_records())
-                except:
-                    df_hp_view = pd.DataFrame()
-
-                # TOMBOL TAMBAH GAYA GSHEET
-                if is_boss:
-                    if st.button("➕ TAMBAH UNIT HP BARU", use_container_width=True, key="btn_hp_new_final"):
-                        st.session_state.form_hp_baru = not st.session_state.get('form_hp_baru', False)
-
-                    if st.session_state.get('form_hp_baru', False):
-                        with st.form("form_hp_new_final_style", clear_on_submit=True):
-                            f1, f2 = st.columns(2)
-                            v_nama = f1.text_input("Nama Unit HP", placeholder="HP 01")
-                            v_no = f2.text_input("Nomor HP")
-                            f3, f4 = st.columns(2)
-                            v_prov = f3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                            v_tgl = f4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
-                            
-                            if st.form_submit_button("🚀 SIMPAN UNIT"):
-                                if v_nama and v_tgl:
-                                    ws_hp = sh.worksheet("Data_HP")
-                                    ws_hp.append_row([v_nama, f"'{v_no}", v_prov, v_tgl]) # Pake ' biar gak jadi rumus
-                                    st.cache_data.clear(); st.success("Berhasil!"); time.sleep(1); st.rerun()
-
-                st.divider()
-
-                # DAFTAR CARD RADAR (5 KOLOM SEJAJAR)
-                if df_hp_view.empty:
-                    st.info("Data HP kosong di Sheet 'Data_HP'.")
-                else:
-                    cols_hp = st.columns(5)
-                    for i, (idx, r) in enumerate(df_hp_view.iterrows()):
-                        with cols_hp[i % 5]:
+# ==========================================
+    # --- TAB 2: MONITOR HP (RADAR STYLE) ---
+    # ==========================================
+    with tab_hp:
+        st.subheader("📡 RADAR MASA AKTIF KARTU")
+        
+        # --- A. FORM INPUT UNIT BARU (Hanya Admin/Owner) ---
+        if is_boss:
+            with st.expander("➕ DAFTARKAN UNIT HP BARU", expanded=False):
+                with st.form("form_tambah_hp_tab", clear_on_submit=True):
+                    c1, c2 = st.columns(2)
+                    in_nama = c1.text_input("Nama HP", placeholder="Contoh: HP 01")
+                    in_no = c2.text_input("Nomor HP", help="Gunakan tanda ' di awal jika manual di GSheet")
+                    
+                    c3, c4 = st.columns(2)
+                    in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)", placeholder="10/03/2026")
+                    
+                    if st.form_submit_button("🚀 SIMPAN UNIT"):
+                        if in_nama and in_tgl:
                             try:
-                                # Proteksi Data Kosong
-                                n_unit = str(r.get('NAMA_HP', f'UNIT {i+1}'))
-                                t_raw = str(r.get('MASA_AKTIF', '')).strip()
-                                
-                                if not t_raw or t_raw == 'nan':
-                                    st.caption(f"⚠️ {n_unit} Tgl Kosong")
-                                    continue
+                                ws_hp_ws = sh.worksheet("Data_HP")
+                                ws_hp_ws.append_row([in_nama, f"'{in_no}", in_prov, in_tgl])
+                                st.cache_data.clear() # Cuci cache
+                                st.success("Unit Berhasil Ditambah!"); time.sleep(1); st.rerun()
+                            except Exception as e: st.error(f"Gagal: {e}")
+        
+        st.divider()
 
-                                # Hitung Sisa Hari
-                                t_dt = pd.to_datetime(t_raw, dayfirst=True, errors='coerce')
-                                if pd.isnat(t_dt):
-                                    st.caption(f"❌ {n_unit} Tgl Salah")
-                                    continue
-
-                                sisa = (t_dt - datetime.now()).days
-                                bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
-
-                                with st.container(border=True):
-                                    # Header Nama HP
-                                    st.markdown(f"<div style='background:{bg_c};padding:5px;border-radius:5px;text-align:center;color:white;font-size:11px;'><b>{n_unit.upper()}</b></div>", unsafe_allow_html=True)
-                                    
-                                    # Info Sejajar (2 Kolom)
-                                    k1, k2 = st.columns(2)
-                                    k1.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>📞 {r.get('PROVIDER','')}</p><b style='font-size:10px;'>{r.get('NOMOR_HP','')}</b>", unsafe_allow_html=True)
-                                    k2.markdown(f"<p style='font-size:9px;color:#888;margin:0;'>⏳ SISA</p><b style='font-size:11px;color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hr</b>", unsafe_allow_html=True)
-                                    
-                                    # Tombol Edit Kecil
-                                    with st.popover("✏️"):
-                                        en = st.text_input("No HP", value=str(r.get('NOMOR_HP','')), key=f"en_{idx}")
-                                        et = st.text_input("Exp", value=t_raw, key=f"et_{idx}")
-                                        if st.button("SAVE", key=f"eb_{idx}", type="primary"):
-                                            ws_up = sh.worksheet("Data_HP")
-                                            ws_up.update_cell(idx+2, 2, f"'{en}")
-                                            ws_up.update_cell(idx+2, 4, et)
-                                            st.cache_data.clear(); st.rerun()
-                            except:
-                                st.caption(f"Err {i}")
+        # --- B. DISPLAY RADAR 5 KOLOM ---
+        if df_hp.empty:
+            st.info("Data HP masih kosong. Silakan tambah unit di atas.")
+        else:
+            cols_radar = st.columns(5)
+            for i, (idx, r) in enumerate(df_hp.iterrows()):
+                with cols_radar[i % 5]:
+                    try:
+                        # Proteksi Data Tanggal
+                        raw_tgl = str(r.get('MASA_AKTIF', '')).strip()
+                        tgl_dt = pd.to_datetime(raw_tgl, dayfirst=True, errors='coerce')
+                        
+                        if pd.isnat(tgl_dt):
+                            st.error(f"⚠️ {r.get('NAMA_HP')} Tgl Salah")
+                            continue
+                        
+                        sisa = (tgl_dt - datetime.now()).days
+                        # Warna Status Radar
+                        bg_color = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
+                        
+                        with st.container(border=True):
+                            st.markdown(f"""
+                                <div style="background:{bg_color}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;">
+                                    <b style="color:white; font-size:11px;">{str(r.get('NAMA_HP','')).upper()}</b>
+                                </div>
+                            """, unsafe_allow_html=True)
+                            
+                            st.markdown(f"<p style='font-size:10px; color:#888; margin:0;'>📞 {r.get('PROVIDER','')}</p><b style='font-size:12px;'>{r.get('NOMOR_HP','')}</b>", unsafe_allow_html=True)
+                            st.markdown(f"<p style='font-size:10px; color:#888; margin:0; margin-top:5px;'>⏳ SISA</p><b style='font-size:14px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
+                            
+                            # Tombol Edit (Popover)
+                            with st.popover("✏️", use_container_width=True):
+                                if not is_boss: st.warning("Akses Terbatas")
+                                else:
+                                    new_no = st.text_input("Edit Nomor", value=str(r.get('NOMOR_HP','')), key=f"tab_no_{idx}")
+                                    new_tg = st.text_input("Edit Expired", value=raw_tgl, key=f"tab_tg_{idx}")
+                                    if st.button("💾 UPDATE", key=f"tab_sv_{idx}", type="primary", use_container_width=True):
+                                        ws_up = sh.worksheet("Data_HP")
+                                        ws_up.update_cell(idx+2, 2, f"'{new_no}") # Update Kolom B
+                                        ws_up.update_cell(idx+2, 4, new_tg)       # Update Kolom D
+                                        st.cache_data.clear(); st.rerun()
+                    except:
+                        st.caption(f"Err Unit {i}")
 
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -3989,6 +3987,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
