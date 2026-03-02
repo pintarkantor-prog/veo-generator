@@ -1296,14 +1296,15 @@ def tampilkan_tugas_kerja():
         mask_bulan = (df_all_tugas['DEADLINE_DT'].dt.month == sekarang.month) & \
                      (df_all_tugas['DEADLINE_DT'].dt.year == sekarang.year)
 
-        # 2. STATUS WAJIB TAMPIL (Penyelamat Februari)
-        # Tugas dengan status ini GAK BOLEH ILANG kalau belum di-ACC/BATAL
-        status_penting = ["WAITING QC", "PROSES", "REVISI"]
+        # 2. STATUS DARURAT (Penyelamat data Februari lo yang di image_4319fe.png)
+        # Tambahkan status yang lo liat masih gantung di Supabase
+        status_aktif = ["PROSES", "WAITING QC", "REVISI"]
 
-        # 3. LOGIKA BARU: Tampilkan jika (Bulan Maret) ATAU (Status ada di list status_penting)
-        mask_tampilan = (mask_bulan) | (df_all_tugas['STATUS'].str.strip().str.upper().isin(status_penting))
+        # 3. LOGIKA GABUNGAN: 
+        # (Deadline Bulan Maret) ATAU (Statusnya masih PROSES/WAITING QC/REVISI)
+        mask_tampilan = (mask_bulan) | (df_all_tugas['STATUS'].str.strip().str.upper().isin(status_aktif))
 
-        # --- UPDATE VARIABEL ---
+        # --- UPDATE VARIABEL TAMPILAN ---
         df_tugas_tampil = df_all_tugas[mask_tampilan].copy()
         data_tugas = df_tugas_tampil.to_dict('records')
 
@@ -3766,6 +3767,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
