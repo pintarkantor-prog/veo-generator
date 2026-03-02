@@ -3453,41 +3453,45 @@ def tampilkan_database_channel():
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
                                     st.cache_data.clear(); st.rerun()
                             with c8:
+                                # Popover Edit Premium Minimalis dengan Auto-Log
                                 with st.popover("✏️"):
                                     st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
-                                    st.caption("Ubah data channel di bawah ini:")
                                     
-                                    # Baris 1: Nama & Email dengan Ikon
+                                    # Baris 1: Nama & Email
                                     ec1, ec2 = st.columns(2)
                                     e_nama_ch = ec1.text_input("📺 Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"enm_{idx}")
                                     e_mail_ch = ec2.text_input("📧 Email Login", value=str(r['EMAIL']), key=f"eml_{idx}")
                                     
-                                    # Baris 2: Password & Link dengan Ikon
+                                    # Baris 2: Password & Link
                                     ec3, ec4 = st.columns(2)
                                     e_pass_ch = ec3.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
                                     e_link_ch = ec4.text_input("🔗 Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
                                     
                                     st.divider()
                                     
-                                    # Tombol Simpan Premium
+                                    # Tombol Simpan dengan Pencatatan Otomatis ke Kolom L
                                     if st.button("💾 SIMPAN PERUBAHAN", key=f"sv_ch_{idx}", use_container_width=True, type="primary"):
                                         if e_nama_ch and e_mail_ch:
                                             try:
                                                 r_idx = idx + 2 
-                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Update Nama
-                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         # Update Email
-                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         # Update Password
-                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         # Update Link
+                                                # 1. Update Data Utama
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) 
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         
                                                 
-                                                st.cache_data.clear() # Buang cache
-                                                st.success("✅ Data Berhasil Diperbarui!")
-                                                time.sleep(0.5)
-                                                st.rerun() # Refresh tampilan
+                                                # 2. PENCATATAN OTOMATIS KE KOLOM L (EDITED)
+                                                tz = pytz.timezone('Asia/Jakarta')
+                                                waktu_edit = datetime.now(tz).strftime("%d/%m %H:%M")
+                                                log_edit = f"By {user_aktif} ({waktu_edit})"
+                                                ws_ch.update_cell(r_idx, 12, log_edit) # Kolom 12 adalah kolom L
+                                                
+                                                st.cache_data.clear()
+                                                st.success(f"✅ Data diperbarui: {log_edit}")
+                                                time.sleep(0.5); st.rerun()
                                             except Exception as e:
-                                                st.error(f"Gagal: {e}")
-                                        else:
-                                            st.error("Nama & Email gak boleh kosong!")
-
+                                                st.error(f"Error: {e}")
+                                                
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
     # ======================================================================
@@ -3605,26 +3609,45 @@ def tampilkan_database_channel():
                             ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROV</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
                             ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
 
-                            # --- 3. PROTEKSI EDIT (HANYA OWNER & ADMIN) ---
+                            # --- PROTEKSI EDIT (HANYA OWNER & ADMIN) ---
                             if is_boss:
                                 with st.popover("✏️ Edit Unit", use_container_width=True):
-                                    st.markdown(f"### Edit {r['NAMA_HP']}")
-                                    e_nama = st.text_input("Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
-                                    e_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
-                                    e_prov = st.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], 
+                                    st.markdown(f"#### 🛠️ EDIT UNIT: {r['NAMA_HP']}")
+                                    
+                                    # Baris 1: Nama & Nomor (Gaya Minimalis 2 Kolom)
+                                    ec1, ec2 = st.columns(2)
+                                    e_nama = ec1.text_input("📱 Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
+                                    e_no = ec2.text_input("📞 Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
+                                    
+                                    # Baris 2: Provider & Masa Aktif
+                                    ec3, ec4 = st.columns(2)
+                                    e_prov = ec3.selectbox("📡 Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"], 
                                                           index=["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"].index(r['PROVIDER']) if r['PROVIDER'] in ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"] else 0, 
                                                           key=f"ep_{idx}")
-                                    e_tgl = st.text_input("Masa Aktif (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
+                                    e_tgl = ec4.text_input("📅 Exp (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
                                     
-                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"btn_e_{idx}", use_container_width=True):
+                                    st.divider()
+                                    
+                                    # Tombol Simpan Tanpa Log Edit
+                                    if st.button("💾 SIMPAN PERUBAHAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
                                         if e_nama and e_no:
-                                            ws_unit_hp.update_cell(idx + 2, 1, e_nama.upper())
-                                            ws_unit_hp.update_cell(idx + 2, 2, f"'{e_no}")
-                                            ws_unit_hp.update_cell(idx + 2, 3, e_prov)
-                                            ws_unit_hp.update_cell(idx + 2, 4, e_tgl)
-                                            st.cache_data.clear(); st.rerun()
+                                            try:
+                                                r_idx = idx + 2 # Header + baris data
+                                                
+                                                # Update 4 Kolom Utama Saja
+                                                ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
+                                                ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
+                                                ws_unit_hp.update_cell(r_idx, 3, e_prov)
+                                                ws_unit_hp.update_cell(r_idx, 4, e_tgl)
+                                                
+                                                st.cache_data.clear() # Bersihkan cache
+                                                st.success("✅ Perubahan Berhasil Disimpan!")
+                                                time.sleep(0.5)
+                                                st.rerun() # Refresh halaman
+                                            except Exception as e:
+                                                st.error(f"Gagal: {e}")
                                         else:
-                                            st.error("Data tidak boleh kosong!")
+                                            st.error("Nama & Nomor wajib diisi!")
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -4050,6 +4073,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
