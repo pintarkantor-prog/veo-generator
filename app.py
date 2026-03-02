@@ -3544,49 +3544,37 @@ def tampilkan_database_channel():
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
     # ======================================================================
-    # --- TAB 4: MONITOR HP (MODEL STANDBY UI) ---
+    # --- TAB 4: MONITOR HP (MODEL STABIL - ANTI REDIRECT) ---
     # ======================================================================
     with tab_hp:
-        st.subheader("📡 RADAR MONITORING UNIT")
-        
-        # SATU WADAH EXPANDER BESAR
-        with st.expander("📱 PANEL KENDALI UNIT & MONITOR RADAR", expanded=True):
-            
-            if is_boss:
-                # --- TOMBOL MODEL STANDBY ---
-                if st.button("➕ TAMBAH UNIT HP BARU", use_container_width=True):
-                    # Toggle status form_hp di session state
-                    st.session_state.form_hp = not st.session_state.get('form_hp', False)
 
-                # Cek apakah form harus muncul
-                if st.session_state.get('form_hp', False):
-                    with st.form("form_hp_minimalis_style", clear_on_submit=True):
-                        st.markdown("### 📝 Form Registrasi Unit")
-                        # Layout 2 Kolom 2 Baris sesuai request sebelumnya
-                        c1, c2 = st.columns(2)
-                        v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
-                        v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
-                        
-                        c3, c4 = st.columns(2)
-                        v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                        v_tgl = c4.date_input("Masa Aktif Kartu")
-                        
-                        if st.form_submit_button("🚀 SIMPAN UNIT KE GSHEET"):
-                            if v_nama and v_no:
-                                try:
-                                    tgl_fix = v_tgl.strftime("%d/%m/%Y")
-                                    # Simpan ke baris 2 agar data terbaru di atas
-                                    ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
-                                    
-                                    # Tutup form setelah simpan
-                                    st.session_state.form_hp = False
-                                    st.cache_data.clear()
-                                    st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
-                                    time.sleep(1); st.rerun()
-                                except Exception as e:
-                                    st.error(f"Gagal Simpan: {e}")
-                            else:
-                                st.error("Nama dan Nomor wajib diisi!")
+        with st.expander("📱 MONITOR UNIT HP", expanded=True):
+            
+            # --- 1. FORM INPUT (TAMPIL TERUS BIAR GAK REDIRECT) ---
+            if is_boss:
+                with st.form("form_hp_fix_statis", clear_on_submit=True):
+                    st.markdown("### ➕ Tambah Unit Baru")
+                    c1, c2 = st.columns(2)
+                    v_nama = c1.text_input("Nama Unit (Contoh: HP 01)")
+                    v_no = c2.text_input("Nomor HP (Contoh: 0812...)")
+                    
+                    c3, c4 = st.columns(2)
+                    v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    v_tgl = c4.date_input("Masa Aktif Kartu")
+                    
+                    if st.form_submit_button("🚀 SIMPAN UNIT"):
+                        if v_nama and v_no:
+                            try:
+                                tgl_fix = v_tgl.strftime("%d/%m/%Y")
+                                ws_unit_hp.insert_row([str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 2, value_input_option='USER_ENTERED')
+                                st.cache_data.clear()
+                                st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
+                                time.sleep(1)
+                                st.rerun() # Sekarang rerun-nya bakal lebih stabil
+                            except Exception as e:
+                                st.error(f"Error: {e}")
+                        else:
+                            st.error("Nama & Nomor wajib diisi!")
 
             st.divider()
 
@@ -3615,10 +3603,10 @@ def tampilkan_database_channel():
                             
                             # Info 2 Kolom
                             ic1, ic2 = st.columns(2)
-                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
-                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXP</p><b style='font-size:10px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
+                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 NOMOR</p><b style='font-size:14px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                            ic1.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>📅 EXPIRED</p><b style='font-size:11px;'>{r['MASA_AKTIF']}</b>", unsafe_allow_html=True)
                             
-                            ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROV</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
+                            ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📡 PROVIDER</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
                             ic2.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
 
                             # --- PROTEKSI EDIT (HANYA OWNER & ADMIN) ---
@@ -4085,6 +4073,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
