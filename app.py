@@ -3513,62 +3513,88 @@ def tampilkan_database_channel():
                             else:
                                 st.code(f"⚪ {s}: (Kosong)")
                                 
+    # ======================================================================
+    # --- TAB 4: MONITOR HP (VERSI 3.0 - ANTI CACHE) ---
+    # ======================================================================
     with tab_hp:
-        st.subheader("📡 RADAR MONITORING HP - VERSI FRESH")
+        st.subheader("📡 RADAR MONITORING UNIT - V.3.0")
         
-        # BUNGKUS DALAM SATU EXPANDER SESUAI REQUEST
-        with st.expander("📱 RADAR MASA AKTIF HP", expanded=True):
+        # SATU EXPANDER BESAR (BUNGKUS INPUT & RADAR)
+        with st.expander("📱 PANEL KENDALI UNIT & KARTU", expanded=True):
+            
+            # --- BAGIAN A: FORM INPUT (VALIDASI GALAK) ---
             if is_boss:
                 st.markdown("### ➕ Tambah Unit Baru")
-                with st.form("form_hp_internal_fresh", clear_on_submit=True):
+                # Nama form diganti jadi 'form_hp_v3' biar gak nyangkut
+                with st.form("form_hp_v3", clear_on_submit=True):
                     c1, c2 = st.columns(2)
-                    v_nama = c1.text_input("Nama Unit HP (Wajib)", placeholder="Contoh: HP 1")
-                    v_nomer = c2.text_input("Nomor HP (Wajib)")
+                    in_nama = c1.text_input("Nama Unit (Contoh: HP 1)")
+                    in_no = c2.text_input("Nomor HP")
                     
                     c3, c4 = st.columns(2)
-                    v_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
-                    v_tgl = c4.text_input("Masa Aktif (Wajib: DD/MM/YYYY)", placeholder="10/03/2026")
+                    in_prov = c3.selectbox("Provider", ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"])
+                    in_tgl = c4.text_input("Masa Aktif (DD/MM/YYYY)")
                     
-                    if st.form_submit_button("🚀 SIMPAN UNIT"):
-                        # VALIDASI GALAK: Cek manual di sini biar gak Zonk
-                        if not v_nama or not v_nomer or not v_tgl:
-                            st.error("❌ GAGAL! Semua kolom wajib diisi, jangan ada yang kosong!")
+                    submit_hp = st.form_submit_button("🚀 SIMPAN KE GSHEET")
+                    
+                    if submit_hp:
+                        # VALIDASI KERAS: Percobaan 1 & 2 lo dicegat di sini
+                        if not in_nama or not in_no or not in_tgl:
+                            st.error("❌ GAGAL! Nama, Nomor, dan Tanggal WAJIB diisi semua!")
+                        elif "/" not in in_tgl:
+                            st.error("❌ FORMAT TANGGAL SALAH! Gunakan '/' (Contoh: 03/03/2026)")
                         else:
                             try:
-                                # Pakai insert_row agar HP 4 atau HP 1 muncul paling atas
-                                ws_hp.insert_row([str(v_nama).upper(), f"'{v_nomer}", v_prov, v_tgl], 2, value_input_option='USER_ENTERED')
+                                # Pakai ws_hp yang ditarik di Setup Satu Pintu (Bagian 2B)
+                                ws_hp.insert_row([str(in_nama).upper(), f"'{in_no}", in_prov, in_tgl], 2, value_input_option='USER_ENTERED')
                                 st.cache_data.clear()
-                                st.success(f"✅ {v_nama} BERHASIL DISIMPAN!"); time.sleep(1); st.rerun()
+                                st.success(f"✅ {in_nama} Berhasil Disimpan!")
+                                time.sleep(1)
+                                st.rerun() 
                             except Exception as e:
-                                st.error(f"Gagal: {e}")
+                                st.error(f"Gagal Simpan: {e}")
 
             st.divider()
-            
-            # --- BAGIAN RADAR CARD (FORCE DISPLAY) ---
-            # Pastikan NAMA_HP dibaca sebagai string agar identitas 'HP 1' nggak ilang
-            df_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
-            
-            if df_view.empty:
-                st.info("📭 Radar masih kosong. Silakan input di atas.")
-            else:
-                grid = st.columns(5)
-                for i, (idx, r) in enumerate(df_view.iterrows()):
-                    with grid[i % 5]:
-                        try:
-                            # Logika Warna Card
-                            t_exp = pd.to_datetime(str(r['MASA_AKTIF']), dayfirst=True, errors='coerce')
-                            if pd.isnat(t_exp):
-                                bg_c, sisa = "#444", "?"
-                            else:
-                                sisa = (t_exp - datetime.now()).days
-                                bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
 
-                            with st.container(border=True):
-                                st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{str(r["NAMA_HP"]).upper()}</b></div>', unsafe_allow_html=True)
-                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
-                                st.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
-                        except:
-                            pass
+            # --- BAGIAN B: RADAR CARD (FORCE DISPLAY) ---
+            # Kita pastiin df_hp (dari setup awal) dipaksa jadi string
+            if df_hp.empty:
+                st.info("📭 Radar masih kosong. Belum ada HP terdaftar.")
+            else:
+                # Filter baris yang kolom NAMA_HP nya gak kosong
+                df_view = df_hp[df_hp['NAMA_HP'].astype(str).str.strip() != ""].copy()
+                
+                if df_view.empty:
+                    st.info("Data HP di GSheet belum valid.")
+                else:
+                    cols_hp = st.columns(5)
+                    for i, (idx, r) in enumerate(df_view.iterrows()):
+                        with cols_hp[i % 5]:
+                            try:
+                                # Logika Hitung Hari
+                                u_tgl = str(r['MASA_AKTIF']).strip()
+                                t_exp = pd.to_datetime(u_tgl, dayfirst=True, errors='coerce')
+                                
+                                if pd.isnat(t_exp):
+                                    bg_c, sisa = "#444", "?"
+                                else:
+                                    sisa = (t_exp - datetime.now()).days
+                                    bg_c = "#2D5A47" if sisa > 7 else ("#A67C00" if sisa >= 0 else "#962D2D")
+
+                                with st.container(border=True):
+                                    st.markdown(f'<div style="background:{bg_c}; padding:5px; border-radius:5px; text-align:center; margin-bottom:10px;"><b style="color:white; font-size:11px;">{str(r["NAMA_HP"]).upper()}</b></div>', unsafe_allow_html=True)
+                                    st.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r.get('PROVIDER','-')}</p><b style='font-size:11px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
+                                    st.markdown(f"<p style='margin:0; font-size:9px; color:#888; margin-top:5px;'>⏳ SISA</p><b style='font-size:12px; color:{'#ff4b4b' if str(sisa).isdigit() and sisa < 3 else 'white'};'>{sisa} Hari</b>", unsafe_allow_html=True)
+                                    
+                                    with st.popover("✏️"):
+                                        en = st.text_input("No HP", value=str(r['NOMOR_HP']), key=f"ed_no_v3_{idx}")
+                                        et = st.text_input("Exp", value=u_tgl, key=f"ed_tg_v3_{idx}")
+                                        if st.button("SAVE", key=f"btn_sv_v3_{idx}"):
+                                            ws_hp.update_cell(idx + 2, 2, f"'{en}")
+                                            ws_hp.update_cell(idx + 2, 4, et)
+                                            st.cache_data.clear(); st.rerun()
+                            except:
+                                pass
                         
     # ==========================================
     # TAB 4 & 5: SOLD & ARSIP (OWNER & ADMIN)
@@ -3994,6 +4020,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
