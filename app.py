@@ -3384,16 +3384,15 @@ def tampilkan_database_channel():
     ])
 
     # ======================================================================
-    # --- TAB 1: STOK STANDBY (GAYA CARD ORIGINAL DIAN - 7 KOLOM) ---
+    # --- TAB 1: STOK STANDBY (GAYA CARD ORIGINAL DIAN - FINAL RAPI) ---
     # ======================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # 1. BUNGKUS BESAR DALAM 1 EXPANDER
             with st.expander("🔐 DATABASE STOK STANDBY", expanded=True):
                 
-                # --- TOMBOL TAMBAH CHANNEL ---
+                # --- TOMBOL TAMBAH (Minimalis) ---
                 if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
                     st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
@@ -3421,7 +3420,6 @@ def tampilkan_database_channel():
                     st.info("📭 Belum ada stok standby.")
                 else:
                     for idx, r in df_st.iterrows():
-                        # TIAP BARIS ADALAH SATU CARD BERWARNA
                         with st.container(border=True):
                             # HEADER CARD (Warna Hijau Gelap Standby)
                             st.markdown(f"""
@@ -3430,21 +3428,20 @@ def tampilkan_database_channel():
                                 </div>
                             """, unsafe_allow_html=True)
 
-                            # 8 KOLOM SEJAJAR (EMAIL, PW, NAMA, SUBS, LINK, OLEH, AKSI, EDIT)
-                            # Gue atur rasionya biar pas sejajar di layar
-                            c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.8, 1.2, 1.5, 0.8, 1, 0.8, 1.2, 0.5])
+                            # 8 KOLOM SEJAJAR (Rasio diperketat biar Minimalis)
+                            c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([2.2, 1.2, 1.5, 0.8, 1, 0.8, 1.2, 0.5])
                             
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:14px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:14px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📺 NAMA CHANNEL</p><b style='font-size:14px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
                             c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:14px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
                             
-                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db;'>BUKA</a>"
+                            link_txt = f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='font-size:14px; color:#3498db; text-decoration:none;'>BUKA</a>"
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 LINK</p>{link_txt}", unsafe_allow_html=True)
                             
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:14px;'>{r.get('PENCATAT', '-')}</b>", unsafe_allow_html=True)
 
-                            # AKSI DROPDOWN MINIMALIS (Kolom 7)
+                            # AKSI DROPDOWN (Kolom 7)
                             with c7:
                                 opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
                                 if opsi != "-":
@@ -3458,10 +3455,10 @@ def tampilkan_database_channel():
                                     elif opsi in ["SOLD", "BUSUK", "SUSPEND"]:
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif); st.rerun()
 
-                            # MASTER EDIT (Kolom 8 - Icon Pensil Mungil)
+                            # MASTER EDIT (Kolom 8 - Minimalis)
                             with c8:
                                 with st.popover("✏️", use_container_width=True):
-                                    st.markdown("### 📝 EDIT DATA")
+                                    st.markdown("### 📝 **EDIT DATA**")
                                     ed_mail = st.text_input("Email", value=str(r['EMAIL']), key=f"ed_m_{idx}")
                                     ed_pass = st.text_input("Password", value=str(r['PASSWORD']), key=f"ed_p_{idx}")
                                     ed_nama = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"ed_n_{idx}")
@@ -3470,13 +3467,13 @@ def tampilkan_database_channel():
                                     
                                     if st.button("💾 SIMPAN", key=f"btnsave_{idx}", use_container_width=True):
                                         r_idx = idx + 2
-                                        ws.update_cell(r_idx, 2, ed_mail) # B
-                                        ws.update_cell(r_idx, 3, ed_pass) # C
-                                        ws.update_cell(r_idx, 4, ed_nama) # D
-                                        ws.update_cell(r_idx, 5, ed_subs) # E
-                                        ws.update_cell(r_idx, 6, ed_link) # F
-                                        st.toast("✅ Data Berhasil Diperbarui!"); time.sleep(0.5); st.rerun()
-
+                                        ws.update_cell(r_idx, 2, ed_mail)
+                                        ws.update_cell(r_idx, 3, ed_pass)
+                                        ws.update_cell(r_idx, 4, ed_nama)
+                                        ws.update_cell(r_idx, 5, ed_subs)
+                                        ws.update_cell(r_idx, 6, ed_link)
+                                        st.toast("✅ Update Berhasil!"); time.sleep(0.5); st.rerun()
+                                        
     # ==========================================
     # TAB 3: JADWAL UPLOAD
     # ==========================================
@@ -3923,6 +3920,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
