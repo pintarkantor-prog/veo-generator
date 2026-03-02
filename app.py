@@ -138,7 +138,7 @@ def tambah_log(user, aksi):
 try:
     sh_master = get_gspread_sh()
     ws = sh_master.worksheet("Channel_Pintar")
-    ws_hp = sh_master.worksheet("Data_HP") 
+    ws_unit_hp = sh_master.worksheet("Data_HP") 
 except Exception as e:
     # Jangan pake st.error di luar fungsi kalau gak mau aplikasinya berhenti total
     print(f"❌ Koneksi GSheet Gagal: {e}")
@@ -151,7 +151,7 @@ def load_data_channel():
 
 def load_data_hp():
     try:
-        return bersihkan_data(pd.DataFrame(ws_hp.get_all_records()))
+        return bersihkan_data(pd.DataFrame(ws_unit_hp.get_all_records()))
     except:
         return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
 
@@ -4066,6 +4066,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
