@@ -1327,8 +1327,8 @@ def tampilkan_tugas_kerja():
             # --- 1. AMBIL DATA REAL DARI ARUS KAS SUPABASE ---
             df_kas_all.columns = [str(c).strip().upper() for c in df_kas_all.columns]
             
-            # Cari baris yang kategorinya 'Gaji Tim', ada nama staf, DAN di periode bulan/tahun yang dipilih
-            mask_bonus_real = (df_kas_all['KATEGORI'].str.upper() == 'GAJI TIM') & \
+            # Cari baris yang kategorinya ' Tim', ada nama staf, DAN di periode bulan/tahun yang dipilih
+            mask_bonus_real = (df_kas_all['KATEGORI'].str.upper() == ' TIM') & \
                               (df_kas_all['KETERANGAN'].str.upper().str.contains(target_user, na=False)) & \
                               (pd.to_datetime(df_kas_all['TANGGAL']).dt.month == sekarang.month) & \
                               (pd.to_datetime(df_kas_all['TANGGAL']).dt.year == sekarang.year)
@@ -1617,7 +1617,7 @@ def tampilkan_tugas_kerja():
                                                         # Kirim ke Arus Kas Supabase
                                                         supabase.table("Arus_Kas").insert({
                                                             "Tanggal": tgl_tugas, "Tipe": "PENGELUARAN", 
-                                                            "Kategori": "Gaji Tim", "Nominal": nom_bonus, 
+                                                            "Kategori": " Tim", "Nominal": nom_bonus, 
                                                             "Keterangan": ket_bonus, "Pencatat": "SISTEM (AUTO-ACC)"
                                                         }).execute()
                                                         
@@ -2952,7 +2952,7 @@ def tampilkan_area_staf():
 
                     <p style="font-weight: bold; margin-top: 30px; margin-bottom: 10px;">II. SISTEM PENGGAJIAN & APRESIASI KINERJA</p>
                     <p style="margin-left: 20px;">
-                    <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus akan disalurkan pada tanggal 1 s/d 3 setiap bulannya.<br>
+                    <b>Periode Pembayaran:</b> Hak upah, tunjangan, dan bonus akan disalurkan pada tanggal 2 s/d 5 setiap bulannya.<br>
                     <b>Struktur Upah:</b> Terdiri dari Gaji Pokok, Tunjangan Kinerja khusus Staff Uploader dan Admin, Serta khusus Staff Editor Bonus Absensi dan Bonus Performa yang dihitung berdasarkan Video HQ (High Quality) yang berhasil diproduksi.<br>
                     </p>
 
@@ -3215,7 +3215,7 @@ def tampilkan_area_staf():
                 <div style="margin-left: 20px;">
                     1. <b>Base Salary:</b> Pihak Kedua berhak menerima upah pokok sebesar <b>Rp {gaji_pokok_staf}</b> per periode bulan berjalan.* <br>
                     2. <b>Bonus Performa:</b> Dihitung berdasarkan data validasi sistem (ACC Video dan atau Kinerja).<br>
-                    3. <b>Waktu Pembayaran:</b> Gaji dibayarkan pada tanggal 1 s/d 3 setiap bulannya melalui transfer bank/e-wallet.
+                    3. <b>Waktu Pembayaran:</b> Gaji dibayarkan pada tanggal 2 s/d 5 setiap bulannya melalui transfer bank/e-wallet.
                 </div>
                 <p style="font-size: 10px; color: #666; font-style: italic; margin-left: 20px; margin-top: 5px;">
                     *Upah pokok dapat disesuaikan secara proporsional berdasarkan jumlah kehadiran (Presensi) Pihak Kedua.
@@ -3753,6 +3753,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
