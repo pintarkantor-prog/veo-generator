@@ -3153,7 +3153,7 @@ def tampilkan_area_staf():
                 belum_sign = [s.upper() for s in daftar_staff_monitor if s not in signed_users]
                 if belum_sign:
                     st.write("")
-                    if st.button(f"📢 BOM WA ({len(belum_sign)} STAFF BELUM)", use_container_width=True, type="primary"):
+                    if st.button(f"📢 KIRIM WA MASSAL ({len(belum_sign)} STAFF BELUM)", use_container_width=True, type="primary"):
                         tag_nama = ", ".join(belum_sign)
                         pesan_grup = f"📢 *PENGUMUMAN*\n\nMohon perhatian: *{tag_nama}*\nSegera sign kontrak periode *{bulan_sekarang}*."
                         kirim_notif_wa(pesan_grup)
@@ -3525,7 +3525,7 @@ def tampilkan_database_channel():
                                         time.sleep(1.5)
                                         st.rerun()
 
-        # --- RADAR MASA AKTIF HP (5 KOLOM SEJAJAR) ---
+    # 2. --- RADAR MONITORING KARTU HP (5 KOLOM SEJAJAR) ---
     with st.expander("📱 RADAR MONITORING KARTU HP", expanded=True):
         if df_hp.empty:
             st.info("Data HP masih kosong di Sheet 'Data_HP'.")
@@ -3535,14 +3535,12 @@ def tampilkan_database_channel():
             for i, (idx, r) in enumerate(df_hp.iterrows()):
                 with cols_hp[i % 5]:
                     try:
-                        # Logika Hitung Hari (Kolom MASA_AKTIF)
                         tgl_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True)
                         sisa = (tgl_exp - datetime.now()).days
                         
-                        # Penentu Warna
-                        bg_c = "#2D5A47" # Hijau (Aman)
-                        if sisa < 0: bg_c = "#962D2D" # Merah (Mati)
-                        elif sisa <= 7: bg_c = "#A67C00" # Kuning (Warning)
+                        bg_c = "#2D5A47" # Hijau
+                        if sisa < 0: bg_c = "#962D2D" # Merah
+                        elif sisa <= 7: bg_c = "#A67C00" # Kuning
 
                         with st.container(border=True):
                             # Header Nama HP
@@ -3552,25 +3550,22 @@ def tampilkan_database_channel():
                                 </div>
                             """, unsafe_allow_html=True)
                             
-                            # Info Nomor & Provider
-                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR ({r['PROVIDER']})</p><p style='margin:0; font-size:12px;'><b>{r['NOMOR_HP']}</b></p>", unsafe_allow_html=True)
+                            # Info Nomor & Sisa (2 Kolom Sejajar)
+                            k_data1, k_data2 = st.columns(2)
+                            k_data1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>📞 {r['PROVIDER']}</p><p style='margin:0; font-size:11px;'><b>{r['NOMOR_HP']}</b></p>", unsafe_allow_html=True)
+                            k_data2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>⏳ SISA</p><p style='margin:0; font-size:12px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>", unsafe_allow_html=True)
                             
-                            # Info Sisa Hari
-                            st.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:5px;'>⏳ SISA</p><p style='margin:0; font-size:14px; color:{'#ff4b4b' if sisa < 3 else 'white'};'><b>{sisa} Hari</b></p>", unsafe_allow_html=True)
-                            
-                            # --- FITUR EDIT (HANYA ADMIN/OWNER) ---
+                            # --- FITUR EDIT ---
                             with st.popover("✏️", use_container_width=True):
-                                is_auth = str(user_aktif).upper() in ["ADMIN", "OWNER", "DIAN"]
-                                
                                 new_no = st.text_input("Nomor HP", value=str(r['NOMOR_HP']), key=f"hno_{idx}", disabled=not is_auth)
                                 new_pv = st.text_input("Provider", value=str(r['PROVIDER']), key=f"hpv_{idx}", disabled=not is_auth)
                                 new_tg = st.text_input("Tgl Expired", value=str(r['MASA_AKTIF']), key=f"htg_{idx}", help="Format: DD/MM/YYYY", disabled=not is_auth)
                                 
                                 if st.button("💾 SAVE", key=f"hsv_{idx}", use_container_width=True, type="primary", disabled=not is_auth):
                                     ws_hp = sh_master.worksheet("Data_HP")
-                                    r_idx = idx + 2
-                                    # Update kolom A sampai D
-                                    ws_hp.update(f"A{r_idx}:D{r_idx}", [[r['NAMA_HP'], new_no, new_pv, new_tg]])
+                                    # Pake tanda ' biar GSheet gak error pas simpan edit
+                                    no_edit_fix = f"'{new_no}" if not new_no.startswith("'") else new_no
+                                    ws_hp.update(f"A{idx+2}:D{idx+2}", [[r['NAMA_HP'], no_edit_fix, new_pv, new_tg]])
                                     st.toast("✅ Updated!"); time.sleep(1.5); st.rerun()
                     except:
                         st.caption(f"Format {r['NAMA_HP']} Error")
@@ -4021,6 +4016,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
