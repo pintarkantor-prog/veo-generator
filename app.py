@@ -3425,10 +3425,10 @@ def tampilkan_database_channel():
             # --- 2. RENDER DASHBOARD UI (BALIK KE GAYA st.write) ---
             with st.container(border=True):
                 c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2.2])
-                c1.metric("📦 STANDBY", f"{total_st}", delta=status_stok, delta_color=warna_stok)
-                c2.metric("🚀 PROSES", f"{total_pr}", delta="ON PROCESS")
+                c1.metric("📦 CH STANDBY", f"{total_st}", delta=status_stok, delta_color=warna_stok)
+                c2.metric("🚀 CH PROSES", f"{total_pr}", delta="ON PROCESS")
                 c3.metric("📱 UNIT HP", f"{hp_aktif}", delta="LIVE")
-                c4.metric("💰 SOLD (MO)", f"{sold_ini}", delta="Bulan Ini")
+                c4.metric("💰 SOLD (BLN)", f"{sold_ini}", delta="Bulan Ini")
                 
                 # INI YANG LO MAU: Pake gaya st.write di Kolom 5
                 with c5:
@@ -3788,7 +3788,7 @@ def tampilkan_database_channel():
                         sisa = (t_exp - now_indo).days
                         
                         if sisa > 10: color_code = "#2D5A47" # AMAN
-                        elif 4 <= sisa <= 10: color_code = "#A67C00" # WASPADA
+                        elif 4 <= sisa <= 10: color_code = "#B8860B" # WASPADA
                         else: color_code = "#962D2D" # KRITIS (MERAH)
                     except:
                         color_code = "#444"; sisa = "?"
@@ -3842,45 +3842,72 @@ def tampilkan_database_channel():
                                             st.error(f"Gagal: {e}")
                         
     # ==============================================================================
-    # TAB 5 & 6: SOLD & ARSIP (FULL DATA - CLEAN AUDIT MODE)
+    # TAB 5: SOLD CHANNEL (3 METRICS + PERIOD FILTER)
     # ==============================================================================
     with tab_sold:
         if not is_boss: 
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
-            # --- 1. LOGIKA DASHBOARD SOLD ---
+            # --- 1. SETUP FILTER PERIODE ---
+            tz = pytz.timezone('Asia/Jakarta')
+            now_indo = datetime.now(tz)
+            
+            col_f1, col_f2 = st.columns([1, 1])
+            with col_f1:
+                list_bulan = {
+                    "01": "Januari", "02": "Februari", "03": "Maret", "04": "April", 
+                    "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus", 
+                    "09": "September", "10": "Oktober", "11": "November", "12": "Desember"
+                }
+                # Default ke bulan sekarang
+                sel_bln_nama = st.selectbox("📅 Pilih Bulan Audit", list(list_bulan.values()), index=now_indo.month - 1)
+                # Cari kodenya (misal "Maret" -> "03")
+                sel_bln_code = [k for k, v in list_bulan.items() if v == sel_bln_nama][0]
+
+            with col_f2:
+                # List tahun dari 2024 sampai 2026 (sesuai tahun sekarang)
+                sel_thn = st.selectbox("📆 Pilih Tahun", ["2024", "2025", "2026"], index=2)
+
+            # String filter untuk nyari di Kolom L (format MM/YYYY)
+            filter_periode = f"{sel_bln_code}/{sel_thn}"
+            
+            # --- 2. LOGIKA HITUNG DATA ---
             df_sold_all = df[df['STATUS'] == 'SOLD'].copy()
             
-            tz = pytz.timezone('Asia/Jakarta')
-            bln_now = datetime.now(tz).strftime("%m/%Y")
+            # TOTAL EVER (Semua yang statusnya SOLD)
+            total_ever = len(df_sold_all)
             
-            # Performa dari Kolom L (Index 11)
-            sold_bulan_ini = len(df_sold_all[df_sold_all.iloc[:, 11].astype(str).str.contains(bln_now, na=False)])
-            total_sold_ever = len(df_sold_all)
+            # DATA BULAN PILIHAN (Berdasarkan Filter)
+            df_selected = df_sold_all[df_sold_all.iloc[:, 11].astype(str).str.contains(filter_periode, na=False)]
+            total_selected = len(df_selected)
+            
+            # DATA BULAN LALU (Murni mundur 1 bulan dari bulan yang dipilih)
+            # Logika: Jika Jan 2026, maka bulan lalu Des 2025
+            date_selected = datetime.strptime(f"01/{filter_periode}", "%d/%m/%Y")
+            date_prev = (date_selected - timedelta(days=1))
+            filter_prev = date_prev.strftime("%m/%Y")
+            
+            total_prev = len(df_sold_all[df_sold_all.iloc[:, 11].astype(str).str.contains(filter_prev, na=False)])
 
-            # --- 2. RENDER MINI DASHBOARD SOLD ---
+            # --- 3. RENDER 3 METRIK UTAMA ---
             with st.container(border=True):
-                c1, c2, c3 = st.columns([1, 1, 2.5])
-                c1.metric("💰 TOTAL SOLD", f"{total_sold_ever}", delta="All Time")
-                c2.metric("📅 BULAN INI", f"{sold_bulan_ini}", delta=f"Periode {bln_now}")
-                with c3:
-                    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
-                    st.write(f"📢 **INFO SALES:** Total **{sold_bulan_ini}** akun laku di bulan ini. Stok standby harus tetap aman!")
+                m1, m2, m3 = st.columns(3)
+                m1.metric("💰 TOTAL SOLD (ALL TIME)", f"{total_ever}", delta="Seluruh Sejarah")
+                m2.metric(f"📅 {sel_bln_nama.upper()} {sel_thn}", f"{total_selected}", delta=f"Periode Terpilih")
+                m3.metric(f"🕒 BULAN SEBELUMNYA", f"{total_prev}", delta=f"Data {filter_prev}", delta_color="off")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 3. DATABASE SOLD (CLEAN COLUMN) ---
-            if df_sold_all.empty:
-                st.info("Belum ada channel yang terjual.")
+            # --- 4. DATABASE TABEL (IKUT FILTER) ---
+            st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
+            if df_selected.empty:
+                st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
             else:
-                # Kolom L (Index 11) dipasang sebagai Tanggal Terakhir
-                df_sold_all['TGL_LAST'] = df_sold_all.iloc[:, 11].astype(str)
-                
-                # Susunan Kolom: Tanggal Last, Email, Pass, Nama, Subs, Link, Status
-                cols_sold = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
+                df_selected['TGL_LAST'] = df_selected.iloc[:, 11].astype(str)
+                cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 st.dataframe(
-                    df_sold_all[cols_sold], 
+                    df_selected[cols_view], 
                     use_container_width=True, 
                     hide_index=True,
                     column_config={
@@ -3893,34 +3920,38 @@ def tampilkan_database_channel():
                         "STATUS": st.column_config.TextColumn("⚙️ STATUS")
                     }
                 )
-
+                
+    # ==============================================================================
+    # TAB 6: ARSIP CHANNEL (3 METRICS: TOTAL, BUSUK, SUSPEND)
+    # ==============================================================================
     with tab_arsip:
         if not is_boss: 
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
             # --- 1. LOGIKA DASHBOARD ARSIP ---
             df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
+            total_arsip = len(df_a)
             total_busuk = len(df_a[df_a['STATUS'] == 'BUSUK'])
             total_suspend = len(df_a[df_a['STATUS'] == 'SUSPEND'])
 
+            # --- 2. RENDER 3 METRIK UTAMA ---
             with st.container(border=True):
-                ca1, ca2, ca3 = st.columns([1, 1, 2.5])
-                ca1.metric("💀 TOTAL ARSIP", f"{len(df_a)}", delta="Loss Control", delta_color="inverse")
-                ca2.metric("📉 SUSPEND", f"{total_suspend}", delta="Check Periodic")
-                with ca3:
-                    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
-                    st.write(f"📢 **INFO AUDIT:** Segera bersihkan akun **BUSUK** dari database jika sudah tidak diperlukan.")
+                ca1, ca2, ca3 = st.columns(3)
+                ca1.metric("💀 TOTAL ARSIP", f"{total_arsip}", delta="Busuk + Suspend", delta_color="inverse")
+                ca2.metric("📉 TOTAL BUSUK", f"{total_busuk}", delta="Loss", delta_color="inverse")
+                ca3.metric("🚫 TOTAL SUSPEND", f"{total_suspend}", delta="Check Again", delta_color="off")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 2. DATABASE ARSIP (CLEAN COLUMN) ---
+            # --- 3. DATABASE ARSIP (CLEAN COLUMN) ---
+            st.markdown("##### 📂 DAFTAR AKUN ARSIP (HISTORY AUDIT)")
             if df_a.empty:
                 st.info("Arsip masih bersih. Performa tim mantap!")
             else:
-                # Kolom L (Index 11) dipasang sebagai Tanggal Terakhir
+                # Kolom L (Index 11) dipasang sebagai Tanggal Terakhir Kejadian
                 df_a['TGL_KEJADIAN'] = df_a.iloc[:, 11].astype(str)
                 
-                # Susunan Kolom: Tanggal Last, Email, Pass, Nama, Subs, Link, Status
+                # Susunan Kolom sesuai permintaan
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 st.dataframe(
@@ -4347,6 +4378,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
