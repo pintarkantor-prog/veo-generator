@@ -3522,34 +3522,32 @@ def tampilkan_database_channel():
         if df_p.empty:
             st.info("Belum ada channel dalam status PROSES.")
         else:
-            # CSS UNTUK MENGHILANGKAN JARAK ANTAR BARIS
+        # --- CSS SAKTI UNTUK MERAPATKAN BARIS & FONT ---
             st.markdown("""
                 <style>
-                /* Menghapus padding bawaan streamlit antar block */
-                [data-testid="stVerticalBlock"] > div { margin-bottom: -22px !important; }
+                /* Perkecil jarak antar elemen vertical */
+                [data-testid="stVerticalBlock"] > div { margin-bottom: -25px !important; }
                 
-                .ultra-header { 
-                    background:#2D5A47; padding:5px 10px; border-radius:5px 5px 0 0; 
-                    display:flex; font-weight:bold; color:white; font-size:11px;
-                }
-                .ultra-row { 
-                    display:flex; padding:2px 10px; border-bottom:1px solid #333; 
-                    align-items:center; font-size:11px; line-height: 1;
-                }
+                /* Pengaturan font global untuk tabel ini */
+                .u-text { font-size: 11px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .u-bold { font-weight: bold; font-size: 11px !important; }
+                
+                /* Menghilangkan padding berlebih pada kolom */
+                [data-testid="column"] { padding: 0px 2px !important; }
                 </style>
             """, unsafe_allow_html=True)
 
-            # --- HEADER KOLOM (Warna Ijo Card) ---
+            # --- HEADER KOLOM (Warna Ijo GSheet) ---
             st.markdown("""
-                <div class="ultra-header">
-                    <div style="width: 7%;">📱 UNIT</div>
-                    <div style="width: 20%;">📧 EMAIL</div>
-                    <div style="width: 10%;">🔑 PASS</div>
-                    <div style="width: 20%;">📺 NAMA CHANNEL</div>
-                    <div style="width: 8%;">📊 SUBS</div>
-                    <div style="width: 7%; text-align:center;">🔗 LINK</div>
-                    <div style="width: 20%;">⚙️ STATUS</div>
-                    <div style="width: 8%; text-align:right;">🛠️</div>
+                <div style="background:#2D5A47; padding:4px 10px; border-radius:5px 5px 0 0; display:flex; color:white; font-size:11px; font-weight:bold;">
+                    <div style="width: 6%;">UNIT</div>
+                    <div style="width: 20%;">EMAIL</div>
+                    <div style="width: 10%;">PASS</div>
+                    <div style="width: 20%;">CHANNEL</div>
+                    <div style="width: 8%;">SUBS</div>
+                    <div style="width: 6%; text-align:center;">URL</div>
+                    <div style="width: 24%;">STATUS</div>
+                    <div style="width: 6%; text-align:right;">🛠️</div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -3558,44 +3556,47 @@ def tampilkan_database_channel():
             unique_hps = df_p['HP'].unique().tolist()
 
             for idx, r in df_p.iterrows():
+                # Zebra Striping per Unit HP
                 hp_idx = unique_hps.index(r['HP'])
                 bg_color = "#1E1E1E" if hp_idx % 2 == 0 else "#262626"
                 
                 with st.container():
-                    st.markdown(f"<div style='background:{bg_color}; border-bottom:1px solid #333;'>", unsafe_allow_html=True)
+                    # Bungkus dalam div warna untuk visual striping
+                    st.markdown(f"<div style='background:{bg_color}; padding:2px 10px; border-bottom:1px solid #333;'>", unsafe_allow_html=True)
                     
-                    # Layout Kolom Lengkap
-                    c0, c1, c2, c3, c4, c5, c6, c7 = st.columns([0.7, 2, 1, 2, 0.8, 0.7, 2, 0.6])
+                    # Layout Kolom yang Sangat Presisi (Total 100%)
+                    c0, c1, c2, c3, c4, c5, c6, c7 = st.columns([0.6, 2, 1, 2, 0.8, 0.6, 2.4, 0.6])
                     
-                    c0.markdown(f"**{r['HP']}**") # HP
-                    c1.markdown(f"<span title='{r['EMAIL']}'>{r['EMAIL']}</span>", unsafe_allow_html=True) # Email
-                    c2.markdown("`XXXX`" if r['PASSWORD'] == "XXXX" else f"`{r['PASSWORD']}`") # Password
-                    c3.markdown(f"<b>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True) # Nama
-                    c4.write(r['SUBSCRIBE']) # Subs
+                    c0.markdown(f"<p class='u-bold'>{r['HP']}</p>", unsafe_allow_html=True) # UNIT
+                    c1.markdown(f"<p class='u-text' title='{r['EMAIL']}'>{r['EMAIL']}</p>", unsafe_allow_html=True) # EMAIL
+                    c2.markdown(f"<code style='font-size:10px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True) # PASS
+                    c3.markdown(f"<p class='u-text' title='{r['NAMA_CHANNEL']}'>{r['NAMA_CHANNEL']}</p>", unsafe_allow_html=True) # NAMA
+                    c4.markdown(f"<p class='u-text'>{r['SUBSCRIBE']}</p>", unsafe_allow_html=True) # SUBS
                     
-                    # Link Icon
+                    # Link Icon (Anti-Melebar)
                     if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
-                        c5.markdown(f"[🔗]({r['LINK_CHANNEL']})")
+                        c5.markdown(f"<div style='text-align:center;'><a href='{r['LINK_CHANNEL']}' target='_blank'>🔗</a></div>", unsafe_allow_html=True)
                     else:
-                        c5.write("-")
+                        c5.markdown("<div style='text-align:center;'>-</div>", unsafe_allow_html=True)
 
-                    # Status Selector
+                    # Selector Status
                     new_st = c6.selectbox("ST", ["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"], 
                                          index=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"].index(r['STATUS']), 
                                          key=f"cp_f_{idx}", label_visibility="collapsed")
                     
+                    # Tombol FIX (Hanya muncul jika status berubah)
                     if new_st != r['STATUS']:
                         if c6.button("✅ FIX", key=f"fx_f_{idx}", use_container_width=True):
-                            ws.update_cell(idx + 2, 7, new_st)
+                            ws.update_cell(idx + 2, 7, new_st) # Update STATUS
                             st.cache_data.clear(); st.rerun()
 
-                    # Edit Popover
+                    # Popover Edit
                     with c7:
                         with st.popover("⋮"):
                             st.markdown(f"**Edit {r['NAMA_CHANNEL']}**")
                             e_subs = st.text_input("Subs", value=str(r['SUBSCRIBE']), key=f"es_f_{idx}")
                             if st.button("Simpan", key=f"sv_f_{idx}"):
-                                ws.update_cell(idx + 2, 5, e_subs)
+                                ws.update_cell(idx + 2, 5, e_subs) # Update SUBS
                                 st.cache_data.clear(); st.rerun()
                     
                     st.markdown("</div>", unsafe_allow_html=True)
@@ -4177,6 +4178,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
