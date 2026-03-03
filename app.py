@@ -1732,7 +1732,7 @@ def tampilkan_tugas_kerja():
     # =========================================================
     # --- 4.5. SISTEM KLAIM AI (FIXED INDENTATION) ---
     # =========================================================
-    if user_level in ["STAFF", "ADMIN"]:
+    if user_level in ["STAFF", "ADMIN", "UPLOADER"]:
         st.write("")
         
         with st.expander("⚡ KLAIM AKUN AI DISINI", expanded=False):
@@ -1909,7 +1909,8 @@ def tampilkan_tugas_kerja():
             st.info(f"📭 Tidak ada riwayat tugas pada {bln_arsip_nama} {thn_arsip}.")
                 
 def tampilkan_kendali_tim():    
-    user_level = st.session_state.get("user_level", "STAFF")
+    user_sekarang = st.session_state.get("user_aktif", "tamu").lower()
+    user_level = st.session_state.get("user_level", "STAFF").upper()
 
     if user_level not in ["OWNER", "ADMIN"]:
         st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
@@ -4388,6 +4389,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
