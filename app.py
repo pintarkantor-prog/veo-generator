@@ -3583,7 +3583,7 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (KOP KEREN - NO BUNGKUS - PRINT A4)
+    # TAB 3: JADWAL UPLOAD (ROBOTO - A4 PRECISION - GREEN HP)
     # ==============================================================================
     with tab_jadwal:
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
@@ -3611,7 +3611,7 @@ def tampilkan_database_channel():
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
                             "REAL_IDX": None, "HP_N": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_radar_final_fix"
+                        use_container_width=True, hide_index=True, key="editor_radar_roboto_v1"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
@@ -3631,41 +3631,41 @@ def tampilkan_database_channel():
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 3. SUSUN HTML UNTUK PRINT (KOP KEREN) ---
+            # --- 3. SUSUN HTML UNTUK PRINT (ROBOTO & A4 SIZE) ---
             rows_html = ""
             for i, r in enumerate(df_display.itertuples()):
-                # Grouping Warna Background berdasarkan index biar kontras
-                bg_row = "#FFFFFF" if i % 2 == 0 else "#F9F9F9"
+                bg_row = "#FFFFFF" if i % 2 == 0 else "#FBFBFB"
                 p = r.PAGI if str(r.PAGI) != 'nan' else '-'
                 s = r.SIANG if str(r.SIANG) != 'nan' else '-'
                 o = r.SORE if str(r.SORE) != 'nan' else '-'
                 
                 rows_html += f"""
                     <tr style='background-color:{bg_row};'>
-                        <td style='border:1px solid #777; padding:8px; text-align:center;'><b>{r.HP_DISPLAY}</b></td>
-                        <td style='border:1px solid #777; padding:8px; text-align:left;'>{r.NAMA_CHANNEL}</td>
-                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{p}</td>
-                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{s}</td>
-                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{o}</td>
+                        <td style='border:1px solid #bbb; padding:10px; text-align:center; color:#2D5A47;'><b>{r.HP_DISPLAY}</b></td>
+                        <td style='border:1px solid #bbb; padding:10px; text-align:left;'>{r.NAMA_CHANNEL}</td>
+                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{p}</td>
+                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{s}</td>
+                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{o}</td>
                     </tr>
                 """
 
             tgl_str = datetime.now().strftime("%d %B %Y")
-            html_kop_keren = f"""
-                <div style='font-family:Arial, sans-serif; max-width:800px; margin:auto;'>
-                    <div style='text-align:center; padding:10px 0; border-bottom:3px solid #2D5A47; margin-bottom:20px;'>
-                        <h1 style='margin:0; font-size:32px; color:black; text-transform:uppercase; letter-spacing:2px;'>RADAR JADWAL UPLOAD</h1>
-                        <p style='margin:5px 0 0 0; font-size:14px; color:#888;'>Periode: {tgl_str}</p>
+            html_masterpiece = f"""
+                <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' rel='stylesheet'>
+                <div style="font-family:'Roboto', sans-serif; width:700px; margin:auto; padding:20px;">
+                    <div style='text-align:center; padding:15px 0; border-bottom:3px solid #2D5A47; margin-bottom:25px;'>
+                        <h1 style='margin:0; font-size:28px; color:#222; text-transform:uppercase; letter-spacing:1px;'>RADAR JADWAL UPLOAD</h1>
+                        <p style='margin:8px 0 0 0; font-size:13px; color:#999;'>PERIODE: {tgl_str}</p>
                     </div>
                     
-                    <table style='width:100%; border-collapse:collapse; border:1px solid #777; font-size:13px;'>
+                    <table style='width:100%; border-collapse:collapse; border:1px solid #bbb; font-size:12px;'>
                         <thead>
-                            <tr style='background-color:#E0E0E0; color:black;'>
-                                <th style='border:1px solid #777; padding:12px;'><b>HP</b></th>
-                                <th style='border:1px solid #777; padding:12px; text-align:left;'><b>NAMA CHANNEL</b></th>
-                                <th style='border:1px solid #777; padding:12px;'><b>PAGI</b></th>
-                                <th style='border:1px solid #777; padding:12px;'><b>SIANG</b></th>
-                                <th style='border:1px solid #777; padding:12px;'><b>SORE</b></th>
+                            <tr style='background-color:#F2F2F2; color:#333;'>
+                                <th style='border:1px solid #bbb; padding:12px; width:40px;'>HP</th>
+                                <th style='border:1px solid #bbb; padding:12px; text-align:left;'>NAMA CHANNEL</th>
+                                <th style='border:1px solid #bbb; padding:12px; width:100px;'>PAGI</th>
+                                <th style='border:1px solid #bbb; padding:12px; width:100px;'>SIANG</th>
+                                <th style='border:1px solid #bbb; padding:12px; width:100px;'>SORE</th>
                             </tr>
                         </thead>
                         <tbody>{rows_html}</tbody>
@@ -3686,10 +3686,10 @@ def tampilkan_database_channel():
                 }, hide_index=True, use_container_width=True
             )
 
-            # --- 5. TOMBOL DOWNLOAD (BEBAS TANPA BUNGKUS) ---
+            # --- 5. TOMBOL DOWNLOAD (BEBAS) ---
             st.markdown("<br>", unsafe_allow_html=True)
             if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF/PRINT)", use_container_width=True):
-                st.components.v1.html(html_kop_keren + "<script>window.print();</script>", height=0)
+                st.components.v1.html(html_masterpiece + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4236,6 +4236,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
