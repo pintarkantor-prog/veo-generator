@@ -3082,7 +3082,7 @@ def tampilkan_area_staf():
         
         # Ambil Nama Staf
         staf_nama = staff_mapping.get(user_login, user_login.upper())
-        nama_direktur = "DIAN SETYA WARDANA"
+        nama_direktur = "Dian Setya Wardana"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         last_update = "1 Maret 2026 | 23:59 WIB"
 
@@ -4392,6 +4392,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
