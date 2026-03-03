@@ -170,27 +170,28 @@ OPTS_RATIO = ["9:16", "16:9", "1:1"]
 
 def rakit_prompt_sakral(aksi, style, light, arah, shot, cam):
     style_map = {
-        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, macro-detail fidelity, f/1.8 lens focus, depth map rendering.",
+        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, tactile micro-textures, f/4.0 lens for optical depth, no-blooming.",
         "Animasi 3D Pixar": "Disney style 3D, Octane render, ray-traced global illumination, premium subsurface scattering.",
         "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric fog, sharp reflections, high contrast.",
         "Anime Jepang": "Studio Ghibli style, hand-painted watercolor textures, soft cel shading, lush aesthetic."
     }
     
     light_map = {
-        "Senja Cerah (Golden)": "4 PM golden hour, warm amber highlights, dramatic long shadows, high local contrast.",
+        "Senja Cerah (Golden)": "4 PM golden hour, warm amber highlights, dramatic long shadows, cinematic haze.",
         "Studio Bersih": "Professional studio setup, rim lighting, clean shadows, commercial photography look.",
         "Neon Cyberpunk": "Vibrant pink and blue rim light, deep noir shadows, cinematic volumetric lighting.",
         "Malam Indigo": "Cinematic night, moonlight shading, deep indigo tones, clean silhouettes.",
-        "Siang Alami": "Daylight balanced exposure, neutral color temperature, crystal clear atmosphere."
+        "Siang Alami": "Midday sun, 5600K color, sharp shadows, polarized lens filter, controlled exposure, non-blooming highlights."
     }
 
     s_cmd = style_map.get(style, "Cinematic optical clarity.")
     l_cmd = light_map.get(light, "Balanced exposure.")
     
-    # --- PERBAIKAN: Hapus label "Technical:" agar lebih clean ---
+    # tech_logic tetep clean sesuai kemauan lo
     tech_logic = f"{shot} framing, {arah} angle, {cam} motion, cinematic optical rendering."
-
-    return f"{s_cmd} {tech_logic} {l_cmd}"
+    
+    # Return gabungan semuanya biar rapi
+    return f"{s_cmd} {l_cmd} {tech_logic}"
     
 MASTER_CHAR = {
     "Custom": {"fisik": "", "versi_pakaian": {"Manual": ""}}, 
@@ -4025,26 +4026,29 @@ def tampilkan_ruang_produksi():
             # Status jika login lewat jam 10 malam
             st.markdown("<p style='color: #ff4b4b; font-size: 13px; margin-top:-15px; margin-bottom: 20px;'>🚫 <b>Access Denied:</b> Operational Window Closed</p>", unsafe_allow_html=True)
 
-    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI FINAL KLIMIS) ---
+    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM SINEMATIK) ---
     QB_IMG = (
-        "8k RAW optical clarity, cinematic depth of field, f/1.8 aperture, "
-        "bokeh background, razor-sharp focus on subject detail, "
+        "8k RAW optical clarity, cinematic depth of field, f/4.0 aperture, " # Diubah dari 1.8 ke 4.0
+        "razor-sharp focus on subject, controlled exposure, " # Tambah controlled exposure
         "high-index lens glass look, CPL filter, sub-surface scattering, "
         "physically-based rendering, hyper-detailed surface micro-textures, "
-        "anisotropic filtering, ray-traced ambient occlusion"
+        "non-blooming highlights, ray-traced ambient occlusion" # Tambah non-blooming
     )
 
     QB_VID = (
-        "Unreal Engine 5.4, 24fps cinematic motion, ultra-clear, 8k UHD, high dynamic range, "
-        "professional color grading, ray-traced reflections, hyper-detailed textures, "
-        "temporal anti-aliasing, zero digital noise, clean pixels, "
-        "smooth motion interpolation, high-fidelity physical interaction"
+        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, " # Ganti UE 5.4 ke film stock
+        "high dynamic range, professional color grading, ray-traced reflections, "
+        "hyper-detailed textures, temporal anti-aliasing, "
+        "subtle film grain, smooth motion interpolation, " # Ganti zero noise ke subtle grain
+        "high-fidelity physical interaction"
     )
 
     # --- INI DIA YANG KURANG: NEGATIVE BASE ---
     negative_base = (
-        "muscular, bodybuilder, shredded, male anatomy, human skin, human anatomy, "
-        "realistic flesh, skin pores, blurry, distorted surface, "
+        "plastic skin, doll-like, fake face, cartoonish, low quality, "
+        "oversaturated colors, high-contrast bloom, blown-out highlights, " # Buang silau
+        "blurry, distorted surface, double head, messy facial features, "
+        "extra fingers, deformed limbs." # Hapus larangan anatomi manusia
     )
     
     no_text_strict = (
@@ -4262,10 +4266,10 @@ def tampilkan_ruang_produksi():
                     
                     # 2. Mantra IMAGE (Infinte Depth of Field)
                     style_map_img = {
-                        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, tactile micro-textures, f/11 aperture, infinite depth of field.",
-                        "Animasi 3D Pixar": "Disney style 3D, Octane render, ray-traced global illumination, premium subsurface scattering.",
-                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric fog, sharp reflections, high contrast.",
-                        "Anime Jepang": "Studio Ghibli style, hand-painted watercolor textures, soft cel shading, lush aesthetic."
+                        "Sangat Nyata": "Cinematic RAW format, hyper-defined skin textures, 8k resolution, f/4.0 lens for optical depth, controlled exposure, sharp subject isolation.",
+                        "Animasi 3D Pixar": "Disney-style 3D render, Octane engine, ray-traced global illumination, high-end subsurface scattering, vibrant clay-like textures.",
+                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric smog, sharp ray-traced reflections, high contrast noir lighting.",
+                        "Anime Jepang": "Studio Ghibli aesthetic, hand-painted watercolor textures, master-level cel shading, lush environmental details."
                     }
                     s_img = style_map_img.get(sc['style'], "Cinematic optical clarity.")
                     mantra_statis = f"{s_img} {sc['shot']} framing, {sc['arah']} angle, razor-sharp optical focus, {sc['light']}."
@@ -4288,7 +4292,7 @@ def tampilkan_ruang_produksi():
                         f"{final_identity}\n"
                         f"SCENE: {sc['aksi']}\n"
                         f"LOCATION: {sc['loc']}\n"
-                        f"VISUAL: {mantra_statis} NO SOFTENING, extreme edge-enhancement.\n"
+                        f"VISUAL: {mantra_statis} Optical clarity, high-definition micro-detail, zero-bloom.\n"
                         f"QUALITY: {QB_IMG}\n"
                         f"NEGATIVE: {negative_base} {no_text_strict}\n"
                         f"FORMAT: 9:16 Vertical Framing"
@@ -4302,7 +4306,7 @@ def tampilkan_ruang_produksi():
                         f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, clean textures.\n"
+                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n" # Tekstur kayu jeruk aman!
                         f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
@@ -4384,6 +4388,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
