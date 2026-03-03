@@ -3400,47 +3400,41 @@ def tampilkan_database_channel():
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            # --- 1. LOGIKA HITUNG DATA (Real-time) ---
-            total_st = len(df[df['STATUS'] == 'STANDBY'])
-            total_pr = len(df[df['STATUS'] == 'PROSES'])
-            hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
-            
-            # SOLD BULAN INI (Maret 2026)
-            bln_now = datetime.now().strftime("%m/%Y") 
-            total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 0].str.contains(bln_now, na=False))])
-            
-            # ARSIP (Suspend + Busuk)
-            total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
+        # --- 1. LOGIKA HITUNG DATA (Real-time) ---
+        total_st = len(df[df['STATUS'] == 'STANDBY'])
+        total_pr = len(df[df['STATUS'] == 'PROSES'])
+        hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
+        
+        # LOGIKA SOLD BULAN INI (Berdasarkan Kolom Keterangan/Index 11)
+        bln_ini = datetime.now().strftime("%m/%Y")
+        total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
+        
+        # ARSIP (Suspend + Busuk)
+        total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- 2. RENDER DASHBOARD UI (MENIRU GAYA RADAR LO) ---
-            with st.container(border=True):
-                # Kita bagi kolom sesuai rasio favorit lo: [1, 1, 1, 1.2, 1.5]
-                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.5])
-                
-                with c1:
-                    st.metric("📦 STANDBY", f"{total_st}")
-                
-                with c2:
-                    st.metric("🚀 PROSES", f"{total_pr}", delta="↑ Running", delta_color="normal")
-                
-                with c3:
-                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Slot Terisi")
-                
-                with c4:
-                    st.metric(
-                        "💰 SOLD (MO)", 
-                        f"{total_sold_mo}", 
-                        delta=f"Bulan: {datetime.now().strftime('%B')}",
-                        delta_color="normal"
-                    )
-                
-                with c5:
-                    # Meniru gaya st.write di kolom 5 lo
-                    st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
-                    st.write(f"📢 **INFO SISTEM:** \n\n Terdapat **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan stok Standby tetap aman!")
+        # --- 2. RENDER DASHBOARD UI (SEJAJAR & COMPACT) ---
+        with st.container(border=True):
+            # Rasio kolom disesuaikan agar teks info punya ruang
+            c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.8])
+            
+            with c1:
+                st.metric("📦 STANDBY", f"{total_st}")
+            
+            with c2:
+                st.metric("🚀 PROSES", f"{total_pr}", delta="↑ Running")
+            
+            with c3:
+                st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Slot Terisi")
+            
+            with c4:
+                st.metric("💰 SOLD (MO)", f"{total_sold_mo}", delta=f"{datetime.now().strftime('%B')}")
+            
+            with c5:
+                # Padding top 15px biar sejajar sama angka metric di sebelah
+                st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+                st.info(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan Stok Standby Selalu Aman!")
 
-            # Tanpa Divider (Sesuai request lo sebelumnya)
-            st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
             # --- 1.2 HEADER & TOMBOL TAMBAH ---
             hc1, hc2 = st.columns([3, 1])
@@ -3502,15 +3496,24 @@ def tampilkan_database_channel():
                     key="grid_st_pro_locked"
                 )
 
-                # --- 5. LOGIKA UPDATE KE GSHEET (DENGAN AUTO-ASSIGN HP) ---
+                # --- 5. LOGIKA UPDATE KE GSHEET (DENGAN TANGGAL SOLD AKURAT) ---
                 if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
                     try:
+                        tz = pytz.timezone('Asia/Jakarta')
                         for i, row in edited_st.iterrows():
                             idx_asli = int(row['REAL_IDX'])
                             old_val = df.iloc[idx_asli]
+                            r_gs = idx_asli + 2 # Baris GSheet
                             
-                            # Logika Auto-Assign HP jika status berubah ke PROSES
-                            if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
+                            # A. LOGIKA KHUSUS SOLD (Biar Dashboard Akurat)
+                            if row['STATUS'] == 'SOLD' and old_val['STATUS'] != 'SOLD':
+                                tgl_laku = datetime.now(tz).strftime("%d/%m/%Y")
+                                ws.update_cell(r_gs, 7, "SOLD")
+                                # Kita tulis di Kolom 12 (L) buat filter dashboard
+                                ws.update_cell(r_gs, 12, f"SOLD: {tgl_laku}")
+                            
+                            # B. LOGIKA AUTO-ASSIGN HP (Status berubah ke PROSES)
+                            elif row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
                                 df_p_now = df[df['STATUS'] == 'PROSES'].copy()
                                 hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
                                 
@@ -3520,17 +3523,15 @@ def tampilkan_database_channel():
                                         target_hp = str(h)
                                         break
                                 
-                                r_gs = idx_asli + 2
                                 ws.update_cell(r_gs, 7, "PROSES")
                                 ws.update_cell(r_gs, 8, target_hp)
-                                tz = pytz.timezone('Asia/Jakarta')
                                 ws.update_cell(r_gs, 12, f"Auto HP {target_hp} ({datetime.now(tz).strftime('%H:%M')})")
                             
-                            # Logika Update Data Biasa
+                            # C. LOGIKA UPDATE DATA UMUM
                             elif (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL'] or 
                                   row['PASSWORD'] != old_val['PASSWORD'] or row['NAMA_CHANNEL'] != old_val['NAMA_CHANNEL'] or
                                   row['SUBSCRIBE'] != old_val['SUBSCRIBE'] or row['LINK_CHANNEL'] != old_val['LINK_CHANNEL']):
-                                r_gs = idx_asli + 2
+                                
                                 ws.update_cell(r_gs, 2, row['EMAIL'])
                                 ws.update_cell(r_gs, 3, row['PASSWORD'])
                                 ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
@@ -3538,8 +3539,11 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                                 ws.update_cell(r_gs, 7, row['STATUS'])
 
-                        st.cache_data.clear(); st.rerun()
-                    except Exception as e: st.error(f"Error: {e}")
+                        st.cache_data.clear()
+                        st.success("Data Berhasil Diperbarui!")
+                        st.rerun()
+                    except Exception as e: 
+                        st.error(f"❌ Gagal Update: {e}")
                     
     # ==============================================================================
     # TAB 2: MONITORING PROSES (EKSLUSIF PRO: OWNER, ADMIN, UPLOADER)
@@ -4276,6 +4280,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
