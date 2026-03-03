@@ -3494,7 +3494,7 @@ def tampilkan_database_channel():
                     pass
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (SMART SLOT MODE - NO EXTRA COLUMN)
+    # TAB 2: CHANNEL PROSES (GSHEET ENGINE - PURE GRID)
     # ==============================================================================
     with tab_proses:
         st.markdown("### 🚀 MONITORING PROSES (AUTO-SAVE)")
@@ -3516,16 +3516,16 @@ def tampilkan_database_channel():
                 for _, r in rows_hp.iterrows():
                     final_display_list.append({
                         "REAL_IDX": r['REAL_IDX'],
-                        "HP": f"HP {hp_id}",
+                        "HP": f"HP {hp_id}", # Memastikan tulisan lengkap "HP 1"
                         "EMAIL": r['EMAIL'] if r['EMAIL'] else "--- KOSONG ---",
                         "PASSWORD": r['PASSWORD'],
                         "NAMA_CHANNEL": r['NAMA_CHANNEL'],
-                        "SUBSCRIBE": str(r['SUBSCRIBE']),
+                        "SUBSCRIBE": str(r['SUBSCRIBE']) if r['EMAIL'] else "", # Kosongkan jika laci kosong
                         "LINK_CHANNEL": r['LINK_CHANNEL'],
                         "STATUS": r['STATUS']
                     })
                 
-                # Tambahkan laci kosong jika kurang dari 3
+                # Tambahkan laci dummy jika kurang dari 3
                 current_count = len(rows_hp)
                 for _ in range(max(0, 3 - current_count)):
                     final_display_list.append({
@@ -3534,14 +3534,14 @@ def tampilkan_database_channel():
                         "EMAIL": "--- KOSONG ---",
                         "PASSWORD": "",
                         "NAMA_CHANNEL": "",
-                        "SUBSCRIBE": "0",
+                        "SUBSCRIBE": "", 
                         "LINK_CHANNEL": "",
                         "STATUS": "PROSES"
                     })
 
             df_display = pd.DataFrame(final_display_list)
 
-            # 3. KONFIGURASI KOLOM (TANPA KOLOM NO)
+            # 3. KONFIGURASI KOLOM (RATA KIRI & PIXEL)
             config_p = {
                 "HP": st.column_config.TextColumn("📱 UNIT", width=80, disabled=True),
                 "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250),
@@ -3556,13 +3556,13 @@ def tampilkan_database_channel():
                 "REAL_IDX": None
             }
 
-            # 4. DATA EDITOR (Gunakan Index Bawaan Streamlit)
+            # 4. DATA EDITOR (TOTAL HIDE INDEX)
             edited_p = st.data_editor(
                 df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]],
                 column_config=config_p,
                 use_container_width=True,
-                hide_index=False, # Munculkan index bawaan streamlit biar tetep ada nomer barisnya
-                key="grid_proses_v5"
+                hide_index=True, # INI YANG BIKIN NOMER INDEX ILANG TOTAL
+                key="grid_proses_pure_v1"
             )
 
             # 5. LOGIKA AUTO-SAVE
@@ -3586,13 +3586,11 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                                 ws.update_cell(r_gs, 7, row['STATUS'])
                                 
-                                # Log Edited By
                                 tz = pytz.timezone('Asia/Jakarta')
                                 log_msg = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
                                 ws.update_cell(r_gs, 12, log_msg)
                         
                         elif row['EMAIL'] != "--- KOSONG ---" and row['EMAIL'] != "":
-                            # Input manual ke laci kosong
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                             v_hp = row['HP'].replace("HP ", "")
@@ -4181,6 +4179,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
