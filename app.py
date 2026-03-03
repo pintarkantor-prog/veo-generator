@@ -3498,24 +3498,56 @@ def tampilkan_database_channel():
                                             except Exception as e:
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
-    # ======================================================================
-    # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
-    # ======================================================================
+    # ==============================================================================
+    # TAB 2: CHANNEL PROSES (MODEL STOK STANDBY - MONITOR ONLY)
+    # ==============================================================================
     with tab_proses:
-        st.subheader("🚀 MONITORING CHANNEL PROSES")
+        st.markdown("### 🚀 MONITORING CHANNEL PROSES")
         
-        # Filter data yang statusnya PROSES
-        df_p = df[df['STATUS'] == 'PROSES']
-        
+        # Filter hanya data yang statusnya 'PROSES'
+        df_p = df[df['STATUS'] == 'PROSES'].copy()
+
         if df_p.empty:
-            st.info("📭 Belum ada channel yang sedang dalam proses upload.")
+            st.info("Belum ada channel dalam status PROSES. Silahkan pindahkan dari Tab Standby.")
         else:
-            # Tampilan dalam bentuk DataFrame atau Card (Gue kasih DataFrame biar rapi dulu)
-            kolom_lihat = ["NAMA_CHANNEL", "HP", "SLOT", "KONTEN", "PENCATAT"]
-            st.dataframe(df_p[kolom_lihat], use_container_width=True, hide_index=True)
-            
-            st.divider()
-            st.caption("Tips: Untuk mengubah status ke SOLD atau BUSUK, silakan lakukan di TAB STOK STANDBY.")
+            # Looping per 3 Baris untuk Label HP Gede
+            # Misal kita handle sampai 10 unit HP (30 Baris awal GSheet)
+            for hp_num in range(1, 11):
+                start_idx = (hp_num - 1) * 3
+                end_idx = start_idx + 3
+                
+                # Filter data berdasarkan slot baris HP tersebut
+                df_hp_slot = df_p[(df_p.index >= start_idx) & (df_p.index < end_idx)]
+                
+                # Hanya tampilkan Header jika ada data PROSES di slot tersebut
+                if not df_hp_slot.empty:
+                    st.markdown(f"""
+                        <div style="background:#1E1E1E; padding:15px; border-radius:10px; border-left: 8px solid #FF4B4B; margin-top:20px; margin-bottom:10px;">
+                            <h1 style="color:white; margin:0; font-size:40px;">📱 UNIT: HP {hp_num}</h1>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Tampilkan Card dengan style yang sama persis dengan Standby
+                    for idx, r in df_hp_slot.iterrows():
+                        with st.container(border=True):
+                            # Baris Header Card (Ijo)
+                            st.markdown(f'<div style="background:#2D5A47; padding:3px; border-radius:3px; text-align:center;"><b style="color:white;">📺 {r["NAMA_CHANNEL"]}</b></div>', unsafe_allow_html=True)
+                            
+                            # Layout Kolom Data (Persis Standby)
+                            c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 2, 1, 1, 1])
+                            
+                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><b style='font-size:12px;'>{r['EMAIL']}</b>", unsafe_allow_html=True)
+                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASS</p><b style='font-size:12px;'>XXXX</b>", unsafe_allow_html=True) # Password disensor
+                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🆔 NAMA</p><b style='font-size:12px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:12px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                            
+                            # Link
+                            if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
+                                c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><a href='{r['LINK_CHANNEL']}' style='font-size:11px; text-decoration:none; color:#4facfe;'>BUKA!</a>", unsafe_allow_html=True)
+                            else:
+                                c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><b style='font-size:11px; color:#555;'>NONE</b>", unsafe_allow_html=True)
+                                
+                            c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>👤 OLEH</p><b style='font-size:12px;'>{r['PENCATAT']}</b>", unsafe_allow_html=True)
 
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4094,6 +4126,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
