@@ -3583,67 +3583,102 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (SISTEM SLOT PARKIR STATIS)
+    # TAB 3: JADWAL UPLOAD (FLEXIBLE SLOT & DYNAMIC RADAR)
     # ==============================================================================
     with tab_jadwal:
-        st.markdown("### 📅 RADAR JADWAL HARIAN (FIXED SLOTS)")
+        st.markdown("### 📅 JADWAL UPLOAD HARIAN")
 
-        # 1. Ambil data PROSES
+        # --- 1. SETUP DATA ---
         df_j = df[df['STATUS'] == 'PROSES'].copy()
-        
-        # --- PROTEKSI EDIT JAM (Khusus PRO) ---
+
+        # --- 2. EDIT JAM OPERASIONAL (FLEXIBLE SLOT) ---
         if is_pro:
-            with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
-                # Kita tampilkan semua yang sedang PROSES agar jamnya bisa diedit
-                df_j['REAL_IDX'] = df_j.index
-                edited_j = st.data_editor(
-                    df_j[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
-                    column_config={"REAL_IDX": None, "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True)},
-                    use_container_width=True, hide_index=True, key="edit_parkir_statis"
-                )
-                if not edited_j.equals(df_j[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
-                    for _, row in edited_j.iterrows():
-                        r_gs = int(row['REAL_IDX']) + 2
-                        ws.update_cell(r_gs, 13, str(row['PAGI'])) 
-                        ws.update_cell(r_gs, 14, str(row['SIANG']))
-                        ws.update_cell(r_gs, 15, str(row['SORE']))
-                    st.cache_data.clear(); st.rerun()
+            with st.expander("🛠️ EDIT JAM OPERASIONAL (UNIT HP AKTIF)", expanded=False):
+                st.caption("📝 Edit jam kerja untuk tiap unit HP yang sedang PROSES.")
+                
+                if df_j.empty:
+                    st.warning("Belum ada HP yang berstatus PROSES untuk diatur jamnya.")
+                else:
+                    # Ambil index asli buat simpan ke GSheet
+                    df_j['REAL_IDX'] = df_j.index
+                    # Urutkan berdasarkan nomor HP biar lo nggak pusing
+                    df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
+                    df_j_sorted = df_j.sort_values('HP_N')
+
+                    config_edit = {
+                        "HP": st.column_config.TextColumn("📱 HP", width=60, disabled=True),
+                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200, disabled=True),
+                        "PAGI": st.column_config.TextColumn("🌅 PAGI", placeholder="Contoh: 08:15"),
+                        "SIANG": st.column_config.TextColumn("☀️ SIANG", placeholder="Contoh: 12:00"),
+                        "SORE": st.column_config.TextColumn("🌆 SORE", placeholder="Contoh: 15:00"),
+                        "REAL_IDX": None, "HP_N": None
+                    }
+                    
+                    edited_j = st.data_editor(
+                        df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
+                        column_config=config_edit,
+                        use_container_width=True, hide_index=True, key="editor_flex_slot"
+                    )
+
+                    # Simpan perubahan ke GSheet (Kolom 13, 14, 15)
+                    if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
+                        try:
+                            with st.spinner("💾 Menyimpan jam ke Radar..."):
+                                for _, row in edited_j.iterrows():
+                                    r_gs = int(row['REAL_IDX']) + 2
+                                    ws.update_cell(r_gs, 13, str(row['PAGI'])) 
+                                    ws.update_cell(r_gs, 14, str(row['SIANG']))
+                                    ws.update_cell(r_gs, 15, str(row['SORE']))
+                                st.cache_data.clear()
+                                st.success("Jadwal tersimpan!")
+                                st.rerun()
+                        except Exception as e:
+                            st.error(f"Gagal simpan: {e}")
 
         st.divider()
 
-        # --- 2. VISUAL RADAR (MAPPING SLOT 1-10) ---
-        # Tentukan berapa banyak HP yang mau lo tampilin di radar (Contoh: 1 s/d 10)
-        max_hp = 10 
+        # --- 3. VISUAL RADAR (MODEL CARD DINAMIS - CANTIK) ---
+        st.markdown("#### 📱 VISUAL RADAR")
         
-        grid = st.columns(3)
-        for n in range(1, max_hp + 1):
-            hp_str = str(n)
-            with grid[(n-1) % 3]:
-                with st.container(border=True):
-                    # Header HP Tetap
-                    st.markdown(f"<div style='background:#00FFAA; color:black; text-align:center; font-weight:bold; border-radius:5px;'>📱 UNIT HP {hp_str}</div>", unsafe_allow_html=True)
-                    
-                    # Ambil data akun yang nempel di nomor HP ini
-                    data_slot = df_j[df_j['HP'].astype(str) == hp_str]
-                    
-                    # Kita paksa tampilkan 2 baris (Slot 1 & Slot 2)
-                    for s in range(2):
-                        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-                        if s < len(data_slot):
-                            # Jika ada isinya
-                            r = data_slot.iloc[s]
-                            st.markdown(f"<div style='background:#2D5A47; padding:5px; border-radius:3px; font-size:12px;'>📺 {r['NAMA_CHANNEL']}</div>", unsafe_allow_html=True)
-                            
-                            c1, c2, c3 = st.columns(3)
-                            c1.caption(f"🌅 {r.get('PAGI', '-')}")
-                            c2.caption(f"☀️ {r.get('SIANG', '-')}")
-                            c3.caption(f"🌆 {r.get('SORE', '-')}")
-                        else:
-                            # Jika kosong, baris tetep ada tapi abu-abu
-                            st.markdown("<div style='background:#333; padding:5px; border-radius:3px; font-size:12px; border:1px dashed #555; color:#777; text-align:center;'>--- KOSONG ---</div>", unsafe_allow_html=True)
-                            st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+        if df_j.empty:
+            st.info("Radar Kosong: Belum ada akun di Tab Proses.")
+        else:
+            # Refresh data view setelah sort
+            df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
+            df_view = df_j.sort_values('HP_N')
+            
+            # Kelompokkan per HP (Satu HP bisa punya 2 akun/slot)
+            groups = df_view.groupby('HP')
+            
+            # Grid 4 Kolom sesuai model card lo
+            kolom_card = st.columns(4)
+            
+            for idx, (hp_id, group) in enumerate(groups):
+                with kolom_card[idx % 4]:
+                    with st.container(border=True):
+                        # Header Kartu dengan Warna Solid (Gaya Model Bonus Lo)
+                        st.markdown(f'<div style="text-align:center; padding:5px; background:#1d976c; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;"><b style="color:white; font-size:14px;">📱 UNIT HP {hp_id}</b></div>', unsafe_allow_html=True)
                         
-                        if s == 0: st.markdown("<hr style='margin:5px 0; border:0.1px solid #444'>", unsafe_allow_html=True)
+                        # Loop tiap akun yang ada di HP tersebut (Biasanya max 2)
+                        for _, r in group.iterrows():
+                            # Nama Channel (Hijau Transparan/Dark)
+                            st.markdown(f"<div style='background:rgba(29, 151, 108, 0.1); padding:8px; border-radius:4px; margin-top:5px;'><b>📺 {r['NAMA_CHANNEL']}</b></div>", unsafe_allow_html=True)
+                            
+                            # Info Jam 3 Kolom Minimalis
+                            m1, m2, m3 = st.columns(3)
+                            
+                            # Filter biar nggak muncul tulisan 'nan' kalau kosong
+                            p = r['PAGI'] if str(r['PAGI']) != 'nan' and r['PAGI'] != "" else "-"
+                            s = r['SIANG'] if str(r['SIANG']) != 'nan' and r['SIANG'] != "" else "-"
+                            o = r['SORE'] if str(r['SORE']) != 'nan' and r['SORE'] != "" else "-"
+
+                            m1.markdown(f"<p style='margin:0; font-size:8px; color:#888;'>PAGI</p><b style='font-size:11px;'>{p}</b>", unsafe_allow_html=True)
+                            m2.markdown(f"<p style='margin:0; font-size:8px; color:#888;'>SIANG</p><b style='font-size:11px;'>{s}</b>", unsafe_allow_html=True)
+                            m3.markdown(f"<p style='margin:0; font-size:8px; color:#888;'>SORE</p><b style='font-size:11px;'>{o}</b>", unsafe_allow_html=True)
+                            
+                            st.markdown("<hr style='margin:5px 0; border:0.1px solid #333'>", unsafe_allow_html=True)
+
+        st.caption("💡 *Hanya HP dengan status PROSES yang muncul di Radar.*")
                                 
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4190,6 +4225,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
