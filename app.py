@@ -3583,12 +3583,15 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (CLEAN MONITORING - GROUPED VIEW)
+    # TAB 3: JADWAL UPLOAD (LEFT ALIGNED & EXPORT PDF)
     # ==============================================================================
     with tab_jadwal:
+        from fpdf import FPDF
+        import base64
+
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
 
-        # 1. SETUP DATA (Hanya yang sedang PROSES)
+        # 1. SETUP DATA
         df_j = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_j.empty:
@@ -3603,8 +3606,12 @@ def tampilkan_database_channel():
 
                     edited_j = st.data_editor(
                         df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
-                        column_config={"REAL_IDX": None, "HP_N": None},
-                        use_container_width=True, hide_index=True, key="editor_jam_fix_final"
+                        column_config={
+                            "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True),
+                            "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
+                            "REAL_IDX": None, "HP_N": None
+                        },
+                        use_container_width=True, hide_index=True, key="editor_rata_kiri"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
@@ -3613,23 +3620,56 @@ def tampilkan_database_channel():
                             ws.update_cell(r_gs, 13, str(row['PAGI'])) 
                             ws.update_cell(r_gs, 14, str(row['SIANG']))
                             ws.update_cell(r_gs, 15, str(row['SORE']))
-                        st.cache_data.clear()
-                        st.rerun()
+                        st.cache_data.clear(); st.rerun()
 
             st.divider()
 
-            # --- 2. TAMPILAN RADAR (CLEAN LIST - GROUPED HP) ---
+            # --- 2. FITUR DOWNLOAD PDF ---
+            def generate_pdf(dataframe):
+                pdf = FPDF()
+                pdf.add_page()
+                pdf.set_font("Arial", "B", 16)
+                pdf.cell(190, 10, "RADAR JADWAL UPLOAD", ln=True, align="C")
+                pdf.ln(5)
+                
+                # Header Tabel PDF
+                pdf.set_font("Arial", "B", 10)
+                pdf.set_fill_color(200, 200, 200)
+                pdf.cell(15, 8, "HP", 1, 0, "C", True)
+                pdf.cell(85, 8, "NAMA CHANNEL", 1, 0, "L", True)
+                pdf.cell(30, 8, "PAGI", 1, 0, "C", True)
+                pdf.cell(30, 8, "SIANG", 1, 0, "C", True)
+                pdf.cell(30, 8, "SORE", 1, 1, "C", True)
+                
+                # Isi Tabel PDF
+                pdf.set_font("Arial", "", 9)
+                for _, r in dataframe.iterrows():
+                    pdf.cell(15, 7, str(r['HP_DISPLAY']), 1, 0, "C")
+                    pdf.cell(85, 7, str(r['NAMA_CHANNEL']), 1, 0, "L")
+                    pdf.cell(30, 7, str(r['PAGI']) if str(r['PAGI']) != 'nan' else "-", 1, 0, "C")
+                    pdf.cell(30, 7, str(r['SIANG']) if str(r['SIANG']) != 'nan' else "-", 1, 0, "C")
+                    pdf.cell(30, 7, str(r['SORE']) if str(r['SORE']) != 'nan' else "-", 1, 1, "C")
+                
+                return pdf.output(dest="S").encode("latin-1")
+
+            # --- 3. TAMPILAN RADAR (RATA KIRI & GROUPED) ---
             st.markdown("#### 📱 MONITORING UPLOAD")
             
-            # Urutkan berdasarkan HP agar rapi
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
-
-            # Logika Grouping: Hilangkan angka HP yang duplikat agar tampil bersih
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # Tampilkan sebagai Dataframe Statis tanpa kolom penanda
+            # Tombol Download PDF
+            pdf_bytes = generate_pdf(df_display)
+            st.download_button(
+                label="📥 Download Jadwal (PDF)",
+                data=pdf_bytes,
+                file_name="jadwal_upload.pdf",
+                mime="application/pdf",
+            )
+
+            # Tabel Rata Kiri di Web
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
@@ -3642,8 +3682,6 @@ def tampilkan_database_channel():
                 hide_index=True,
                 use_container_width=True
             )
-            
-            st.caption("💡 *Tampilan di atas sudah di-grouping berdasarkan Unit HP.*")
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4190,6 +4228,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
