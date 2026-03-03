@@ -3513,72 +3513,89 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (FULL INLINE EDIT MODE)
+    # TAB 2: CHANNEL PROSES (ADVANCED SLOT MONITORING)
     # ==============================================================================
     with tab_proses:
-        st.markdown("### 🚀 MONITORING PROSES (EDITABLE GRID)")
+        # Layout Header: Judul di kiri, Tombol Save di pojok kanan
+        hc1, hc2 = st.columns([3, 1])
+        hc1.markdown("### 🚀 MONITORING PROSES (EDITABLE GRID)")
         
-        # 1. Filter data status 'PROSES'
-        df_p = df[df['STATUS'] == 'PROSES'].copy()
+        # 1. LOGIKA SLOT PATEN (HP 1 = 3 Baris, dst)
+        # Kita buat dataframe kosong dulu buat semua slot HP (misal 10 HP = 30 baris)
+        total_hp = 10
+        rows_per_hp = 3
+        
+        slot_data = []
+        for h in range(1, total_hp + 1):
+            for s in range(1, rows_per_hp + 1):
+                slot_data.append({
+                    "HP": h,
+                    "SLOT": s,
+                    "EMAIL": "", "PASSWORD": "", "NAMA_CHANNEL": "--- KOSONG ---",
+                    "SUBSCRIBE": 0, "LINK_CHANNEL": "", "STATUS": "STANDBY",
+                    "INDEX_GS": (h-1)*3 + (s-1) # Tracking baris asli GSheet
+                })
+        
+        df_slots = pd.DataFrame(slot_data)
 
-        if df_p.empty:
-            st.info("Belum ada channel dalam status PROSES.")
-        else:
-            # 2. Siapkan data dengan index asli GSheet
-            df_display = df_p[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]].reset_index()
+        # 2. ISI SLOT DENGAN DATA ASLI GSHEET
+        # Timpa slot kosong dengan data dari df utama jika index-nya cocok
+        for idx, r in df.iterrows():
+            if idx < len(df_slots):
+                df_slots.iloc[idx, 2:] = [
+                    r['EMAIL'], r['PASSWORD'], r['NAMA_CHANNEL'], 
+                    r['SUBSCRIBE'], r['LINK_CHANNEL'], r['STATUS'], idx
+                ]
 
-            # 3. Konfigurasi Kolom (Hanya Subs & Status yang bisa diedit)
-            config = {
-                "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium", disabled=True),
-                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small", disabled=True),
-                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium", disabled=True),
-                "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d", help="Ketik jumlah subs baru di sini"),
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small", disabled=True),
-                "STATUS": st.column_config.SelectboxColumn(
-                    "⚙️ STATUS",
-                    width="medium",
-                    options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"],
-                    required=True
-                ),
-                "index": None # Sembunyikan index bantuan
-            }
+        # 3. FILTER: Hanya tampilkan HP yang ada isinya (Status PROSES) atau Slot Standby-nya
+        # Tapi tetep jaga grouping per HP
+        df_display = df_slots.copy()
 
-            # 4. Tampilkan Tabel Editor
-            edited_rows = st.data_editor(
-                df_display,
-                column_config=config,
-                use_container_width=True,
-                hide_index=True,
-                key="editor_proses_inline"
-            )
+        # 4. KONFIGURASI KOLOM
+        config = {
+            "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
+            "SLOT": st.column_config.TextColumn("🔢", width="small", disabled=True),
+            "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium", disabled=True),
+            "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium", disabled=True),
+            "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d"),
+            "STATUS": st.column_config.SelectboxColumn(
+                "⚙️ STATUS", width="medium",
+                options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"]
+            ),
+            "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small", disabled=True),
+            "PASSWORD": None, "INDEX_GS": None # Sembunyikan kolom teknis
+        }
 
-            # 5. Logika Simpan Perubahan
-            if st.button("💾 UPDATE DATA GSHEET", use_container_width=True, type="primary"):
+        # 5. TAMPILAN DATA EDITOR
+        # Streamlit Data Editor otomatis update di session_state saat lo tekan Enter
+        edited_df = st.data_editor(
+            df_display,
+            column_config=config,
+            use_container_width=True,
+            hide_index=True,
+            key="grid_proses_v2"
+        )
+
+        # 6. TOMBOL SAVE DI POJOK KANAN (Kecil Saja)
+        with hc2:
+            if st.button("💾 SAVE CHANGES", use_container_width=True, type="primary"):
                 try:
-                    with st.spinner("Mengirim data ke Radar..."):
-                        for i, row in edited_rows.iterrows():
-                            # Ambil data asli dari GSheet
-                            real_idx = row['index'] + 2 
-                            
-                            # Bandingkan dengan data lama (df_p) biar cuma update yang berubah
-                            old_row = df_p.loc[row['index']]
-                            
-                            # Update jika Subs atau Status berubah
-                            if (row['STATUS'] != old_row['STATUS']) or (str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE'])):
-                                ws.update_cell(real_idx, 7, row['STATUS']) # Update Kolom G
-                                ws.update_cell(real_idx, 5, row['SUBSCRIBE']) # Update Kolom E
-                                
-                                # Jika berubah status, catat log di kolom L (EDITED)
-                                tz = pytz.timezone('Asia/Jakarta')
-                                log_edit = f"By {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
-                                ws.update_cell(real_idx, 12, log_edit)
+                    # Cek baris mana aja yang berubah dibanding data awal
+                    # Disini kita update GSheet cuma buat baris yang status/subs-nya beda
+                    for i, row in edited_df.iterrows():
+                        idx_asli = int(row['INDEX_GS'])
+                        old_val = df.iloc[idx_asli]
                         
-                        st.cache_data.clear()
-                        st.success("✅ Perubahan berhasil disimpan ke GSheet!")
-                        time.sleep(0.8); st.rerun()
+                        if (row['STATUS'] != old_val['STATUS']) or (str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
+                            real_row_gs = idx_asli + 2
+                            ws.update_cell(real_row_gs, 7, row['STATUS']) # Kolom G
+                            ws.update_cell(real_row_gs, 5, row['SUBSCRIBE']) # Kolom E
+                    
+                    st.cache_data.clear()
+                    st.success("Tersinkron!")
+                    st.rerun()
                 except Exception as e:
-                    st.error(f"Gagal Simpan: {e}")
+                    st.error(f"Error: {e}")
                     
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4157,6 +4174,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
