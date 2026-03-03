@@ -1873,10 +1873,13 @@ def tampilkan_tugas_kerja():
             # 1. Saring berdasarkan Status
             df_laci = df_laci[df_laci['STATUS'].isin(['FINISH', 'CANCELED'])]
             
-            # 2. Saring jika user adalah STAFF
-            if st.session_state.get("user_level") == "STAFF":
+            # (ADMIN dan OWNER lolos, bisa liat semua)
+            user_lvl_skrg = st.session_state.get("user_level", "STAFF").upper()
+            
+            if user_lvl_skrg in ["STAFF", "UPLOADER"]:
                 user_skrg = st.session_state.get("user_aktif", "").upper()
-                df_laci = df_laci[df_laci['STAF'].str.upper() == user_skrg]
+                if 'STAF' in df_laci.columns:
+                    df_laci = df_laci[df_laci['STAF'].str.upper() == user_skrg]
             
             # 3. Cek apakah setelah disaring masih ada data?
             if not df_laci.empty:
@@ -4389,6 +4392,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
