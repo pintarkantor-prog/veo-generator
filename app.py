@@ -3446,7 +3446,6 @@ def tampilkan_database_channel():
                     st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
                     st.write(f"📢 **INFO SISTEM:**")
                     st.write(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk).")
-                    st.write("Pastikan Stok Standby Selalu Aman!")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
@@ -4294,6 +4293,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
