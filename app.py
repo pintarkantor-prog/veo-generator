@@ -3394,105 +3394,104 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (GSHEET AUTO-SAVE + STATIC NUMBERING)
+    # TAB 1: STOK STANDBY (FULL LEFT ALIGN + AUTO-LOG)
     # ==============================================================================
     with tab_standby:
-        if not is_pro:
-            st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
+        # Header: Judul & Tombol Tambah (Sejajar Kanan)
+        hc1, hc2 = st.columns([3, 1])
+        hc1.markdown("### 🔐 DATABASE STOK STANDBY")
+        
+        if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
+            st.session_state.form_baru = not st.session_state.get('form_baru', False)
+
+        # --- FORM INPUT (Tetap Ada Buat Data Baru) ---
+        if st.session_state.get('form_baru', False):
+            with st.container(border=True):
+                with st.form("input_st_v4", clear_on_submit=True):
+                    f1, f2, f3 = st.columns(3)
+                    v_mail = f1.text_input("📧 Email Login")
+                    v_pass = f2.text_input("🔑 Password")
+                    v_nama = f3.text_input("📺 Nama Channel")
+                    f4, f5 = st.columns([1, 2])
+                    v_subs = f4.text_input("📊 Jumlah Subs")
+                    v_link = f5.text_input("🔗 Link Channel")
+                    if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
+                        if v_nama and v_mail:
+                            tz = pytz.timezone('Asia/Jakarta')
+                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                            # Simpan ke GSheet (Pencatat awal: user_aktif)
+                            ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
+                            st.cache_data.clear(); st.success("Data Masuk!"); st.rerun()
+
+        # --- VIEW DATABASE STANDBY ---
+        df_st = df[df['STATUS'] == 'STANDBY'].copy()
+
+        if df_st.empty:
+            st.info("Belum ada stok standby.")
         else:
-            # Header Layout: Judul & Tombol Tambah Sejajar
-            hc1, hc2 = st.columns([3, 1])
-            hc1.markdown("### 🔐 DATABASE STOK STANDBY")
+            # 1. BIKIN NOMOR URUT & REAL INDEX
+            df_st['NO'] = range(1, len(df_st) + 1)
+            df_st['REAL_IDX'] = df_st.index 
             
-            if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
-                st.session_state.form_baru = not st.session_state.get('form_baru', False)
+            # Pastikan kolom subscribe jadi string biar rata kiri
+            df_st['SUBSCRIBE'] = df_st['SUBSCRIBE'].astype(str)
 
-            # --- FORM INPUT ---
-            if st.session_state.get('form_baru', False):
-                with st.container(border=True):
-                    with st.form("input_st_v3", clear_on_submit=True):
-                        f1, f2, f3 = st.columns(3)
-                        v_mail = f1.text_input("Email Login")
-                        v_pass = f2.text_input("Password")
-                        v_nama = f3.text_input("Nama Channel")
-                        f4, f5 = st.columns([1, 2])
-                        v_subs = f4.text_input("Jumlah Subs")
-                        v_link = f5.text_input("Link Channel")
-                        if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
-                            if v_nama and v_mail:
-                                tz = pytz.timezone('Asia/Jakarta')
-                                tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                                ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                                st.cache_data.clear(); st.success("Tersimpan!"); st.rerun()
+            # 2. KONFIGURASI KOLOM (SEMUA RATA KIRI)
+            config_st = {
+                "NO": st.column_config.TextColumn("Nomer", width=50, disabled=True),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250),
+                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
+                # Pake TextColumn biar rata kiri
+                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
+                "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=100, disabled=True),
+                "STATUS": st.column_config.SelectboxColumn(
+                    "⚙️ STATUS", width=130,
+                    options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
+                ),
+                "REAL_IDX": None 
+            }
 
-            # --- DATABASE VIEW ---
-            # Filter data STANDBY
-            df_st = df[df['STATUS'] == 'STANDBY'].copy()
+            # 3. DATA EDITOR: AUTO-SAVE ENGINE
+            edited_st = st.data_editor(
+                df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
+                column_config=config_st,
+                use_container_width=True,
+                hide_index=True,
+                key="grid_st_v4"
+            )
 
-            if df_st.empty:
-                st.info("Belum ada stok standby.")
-            else:
-                # BUAT KOLOM NOMOR URUT STATIS (1, 2, 3...)
-                df_st['NO'] = range(1, len(df_st) + 1)
-                
-                # Simpan index asli GSheet ke kolom tersembunyi untuk keperluan update
-                df_st['REAL_IDX'] = df_st.index 
-
-                config_st = {
-                    "NO": st.column_config.TextColumn("Nomer", width=50, disabled=True), # Sempit aja buat angka
-                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250), # Email biasanya panjang
-                    "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
-                    "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width=80, format="%d"),
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
-                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=100, disabled=True),
-                    "STATUS": st.column_config.SelectboxColumn(
-                        "⚙️ STATUS", width=130,
-                        options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
-                    ),
-                    "REAL_IDX": None 
-                }
-
-                # DATA EDITOR: Enter = Auto Save
-                edited_st = st.data_editor(
-                    df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
-                    column_config=config_st,
-                    use_container_width=True,
-                    hide_index=True,
-                    key="grid_st_v3"
-                )
-
-                # --- LOGIKA AUTO-SAVE ---
-                # Membandingkan dengan state awal di session state (untuk efisiensi API)
-                if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
-                    try:
-                        for i, row in edited_st.iterrows():
-                            # Ambil Index Asli dari GSheet
-                            idx_asli = int(row['REAL_IDX'])
-                            old_val = df.iloc[idx_asli]
+            # --- 4. LOGIKA AUTO-SAVE & LOGGING ---
+            if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
+                try:
+                    for i, row in edited_st.iterrows():
+                        idx_asli = int(row['REAL_IDX'])
+                        old_val = df.iloc[idx_asli]
+                        
+                        # Cek apakah ada sel yang berubah (Enter)
+                        if (row['EMAIL'] != old_val['EMAIL'] or row['PASSWORD'] != old_val['PASSWORD'] or 
+                            row['NAMA_CHANNEL'] != old_val['NAMA_CHANNEL'] or row['SUBSCRIBE'] != str(old_val['SUBSCRIBE']) or
+                            row['LINK_CHANNEL'] != old_val['LINK_CHANNEL'] or row['STATUS'] != old_val['STATUS']):
                             
-                            # Cek perubahan
-                            if (row['EMAIL'] != old_val['EMAIL'] or row['PASSWORD'] != old_val['PASSWORD'] or 
-                                row['NAMA_CHANNEL'] != old_val['NAMA_CHANNEL'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE']) or
-                                row['LINK_CHANNEL'] != old_val['LINK_CHANNEL'] or row['STATUS'] != old_val['STATUS']):
-                                
-                                r_gs = idx_asli + 2
-                                ws.update_cell(r_gs, 2, row['EMAIL'])
-                                ws.update_cell(r_gs, 3, row['PASSWORD'])
-                                ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
-                                ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
-                                ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
-                                ws.update_cell(r_gs, 7, row['STATUS'])
-                                
-                                # Log Edited By & Time (Kolom L / 12)
-                                tz = pytz.timezone('Asia/Jakarta')
-                                log_edit = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
-                                ws.update_cell(r_gs, 12, log_edit)
-                                
-                        st.cache_data.clear()
-                        st.rerun()
-                    except:
-                        pass
+                            r_gs = idx_asli + 2
+                            # Update Data Pokok
+                            ws.update_cell(r_gs, 2, row['EMAIL'])
+                            ws.update_cell(r_gs, 3, row['PASSWORD'])
+                            ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
+                            ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
+                            ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
+                            ws.update_cell(r_gs, 7, row['STATUS'])
+                            
+                            # Update LOG EDIT (Siapa & Kapan) di Kolom L (12)
+                            tz = pytz.timezone('Asia/Jakarta')
+                            log_msg = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
+                            ws.update_cell(r_gs, 12, log_msg)
+                            
+                    st.cache_data.clear()
+                    st.rerun()
+                except:
+                    pass
                                                 
     # ==============================================================================
     # TAB 2: CHANNEL PROSES (PERMANENT SLOT MODE)
@@ -4149,6 +4148,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
