@@ -3394,7 +3394,7 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (CLEAN & MINIMALIST DASHBOARD)
+    # TAB 1: STOK STANDBY (VITAL MONITORING DASHBOARD)
     # ==============================================================================
     with tab_standby:
         if not is_pro:
@@ -3405,35 +3405,50 @@ def tampilkan_database_channel():
             total_pr = len(df[df['STATUS'] == 'PROSES'])
             hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
-            # SOLD BULAN INI (Berdasarkan Kolom Keterangan/Index 11)
-            bln_ini = datetime.now().strftime("%m/%Y")
-            total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
+            # A. Delta Vital: Selisih Standby - Proses
+            selisih_st = total_st - total_pr
             
-            # ARSIP (Suspend + Busuk)
+            # B. Logika SOLD: Bulan Ini vs Bulan Lalu
+            now = datetime.now()
+            bln_ini = now.strftime("%m/%Y")
+            
+            # Hitung Bulan Lalu (Logic Mundur 1 Bulan)
+            first_day_this_month = now.replace(day=1)
+            last_day_last_month = first_day_this_month - timedelta(days=1)
+            bln_lalu = last_day_last_month.strftime("%m/%Y")
+            
+            # Filter Data (Gunakan Index 11 / Kolom Keterangan sesuai update sebelumnya)
+            sold_ini = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
+            sold_lalu = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_lalu, na=False))])
+            
+            # C. Hitung Delta Sold (Kenaikan/Penurunan)
+            diff_sold = sold_ini - sold_lalu
+            
+            # ARSIP
             total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- 2. RENDER DASHBOARD UI (SIMPEL & SEJAJAR) ---
+            # --- 2. RENDER DASHBOARD UI ---
             with st.container(border=True):
-                # Rasio kolom disesuaikan agar teks info di kanan dapet tempat cukup
-                c1, c2, c3, c4, c5 = st.columns([0.8, 0.8, 0.8, 1, 2.1])
+                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2])
                 
                 with c1:
-                    st.metric("📦 STANDBY", f"{total_st}")
+                    # Delta: Standby minus Proses
+                    st.metric("📦 STANDBY", f"{total_st}", delta=f"{selisih_st} Sisa", delta_color="normal" if selisih_st > 0 else "inverse")
                 
                 with c2:
-                    st.metric("🚀 PROSES", f"{total_pr}")
+                    st.metric("🚀 PROSES", f"{total_pr}", delta="On Process")
                 
                 with c3:
-                    st.metric("📱 UNIT HP", f"{hp_aktif}")
+                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Live")
                 
                 with c4:
-                    st.metric("💰 SOLD (MO)", f"{total_sold_mo}")
+                    # Delta: Perbandingan jualan bulan ini vs bulan lalu
+                    st.metric("💰 SOLD (MO)", f"{sold_ini}", delta=f"{diff_sold} vs Bln Lalu")
                 
                 with c5:
-                    # Sejajarkan teks dengan angka metric menggunakan margin-top
-                    st.markdown("<div style='margin-top: 18px;'></div>", unsafe_allow_html=True)
-                    # Pakai st.write biar teksnya bersih tanpa background biru box info
-                    st.write(f"📢 Total **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan Stok Standby Selalu Aman!")
+                    st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
+                    st.write(f"📢 **INFO SISTEM:**")
+                    st.write(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk). \n\n Pastikan Stok Standby Selalu Aman!")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
@@ -4281,6 +4296,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
