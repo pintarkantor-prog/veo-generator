@@ -3394,96 +3394,101 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (DATA EDITOR MODE - SAMA PERSIS TAB PROSES)
+    # TAB 1: STOK STANDBY (GSHEET AUTO-SAVE MODE)
     # ==============================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # Header Layout: Judul & Tombol Simpan Sejajar
+            # Header Layout: Judul & Tombol Tambah Sejajar di Kanan
             hc1, hc2 = st.columns([3, 1])
-            hc1.markdown("### 🔐 DATABASE STOK STANDBY (EDITABLE GRID)")
+            hc1.markdown("### 🔐 DATABASE STOK STANDBY")
             
-            # Tombol Tambah Channel (Tetap Ada di Atas Grid)
-            if st.button("➕ TAMBAH CHANNEL BARU", use_container_width=True):
+            if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
+            # --- FORM INPUT MANUAL ---
             if st.session_state.get('form_baru', False):
-                with st.form("input_standby_new"):
-                    f1, f2, f3 = st.columns(3)
-                    v_mail = f1.text_input("Email Login")
-                    v_pass = f2.text_input("Password")
-                    v_nama = f3.text_input("Nama Channel")
-                    f4, f5 = st.columns([1, 2])
-                    v_subs = f4.text_input("Jumlah Subs")
-                    v_link = f5.text_input("Link Channel")
-                    if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
-                        if v_nama and v_mail:
-                            tz = pytz.timezone('Asia/Jakarta')
-                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                            st.cache_data.clear(); st.success("Berhasil!"); time.sleep(0.5); st.rerun()
+                with st.container(border=True):
+                    with st.form("input_st_new", clear_on_submit=True):
+                        f1, f2, f3 = st.columns(3)
+                        v_mail = f1.text_input("Email Login")
+                        v_pass = f2.text_input("Password")
+                        v_nama = f3.text_input("Nama Channel")
+                        f4, f5 = st.columns([1, 2])
+                        v_subs = f4.text_input("Jumlah Subs")
+                        v_link = f5.text_input("Link Channel")
+                        if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
+                            if v_nama and v_mail:
+                                tz = pytz.timezone('Asia/Jakarta')
+                                tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                # Simpan baris baru (Kolom K = user_aktif sebagai pencatat awal)
+                                ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
+                                st.cache_data.clear(); st.success("Tersimpan!"); st.rerun()
 
-            st.divider()
-
-            # 1. FILTER DATA STANDBY
+            # --- DATABASE VIEW (AUTO-SAVE ENGINE) ---
             df_st = df[df['STATUS'] == 'STANDBY'].copy().reset_index()
 
             if df_st.empty:
                 st.info("Belum ada stok standby.")
             else:
-                # 2. KONFIGURASI KOLOM (SAMA PERSIS TAB PROSES)
+                # Konfigurasi Kolom sesuai request lo
                 config_st = {
-                    "HP": st.column_config.TextColumn("📱 UNIT", width="small"),
+                    "index": st.column_config.TextColumn("NO", width="small", disabled=True),
                     "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium"),
                     "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small"),
                     "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium"),
                     "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d"),
                     "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small"),
+                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width="small", disabled=True),
                     "STATUS": st.column_config.SelectboxColumn(
                         "⚙️ STATUS", width="medium",
                         options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
-                    ),
-                    "index": None 
+                    )
                 }
 
-                # 3. TAMPILAN DATA EDITOR
+                # DATA EDITOR: Enter = Save Otomatis
+                # Setiap ada perubahan di grid, 'edited_rows' akan menangkap data yang diubah
                 edited_st = st.data_editor(
-                    df_st[["index", "HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]],
+                    df_st[["index", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS"]],
                     column_config=config_st,
                     use_container_width=True,
                     hide_index=True,
-                    key="grid_standby_editor"
+                    key="grid_standby_autosave"
                 )
 
-                # 4. TOMBOL SAVE DI POJOK KANAN (Sejajar Judul)
-                with hc2:
-                    if st.button("💾 SAVE CHANGES", key="btn_save_st", use_container_width=True, type="primary"):
-                        try:
-                            with st.spinner("Sinkronisasi..."):
-                                for i, row in edited_st.iterrows():
-                                    real_idx = int(row['index']) + 2
-                                    old_row = df.loc[row['index']]
-                                    
-                                    # Update jika ada perbedaan data atau status
-                                    if (row['STATUS'] != old_row['STATUS'] or 
-                                        str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE']) or
-                                        row['EMAIL'] != old_row['EMAIL'] or
-                                        row['HP'] != old_row['HP']):
-                                        
-                                        ws.update_cell(real_idx, 2, row['EMAIL'])
-                                        ws.update_cell(real_idx, 3, row['PASSWORD'])
-                                        ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'])
-                                        ws.update_cell(real_idx, 5, row['SUBSCRIBE'])
-                                        ws.update_cell(real_idx, 6, row['LINK_CHANNEL'])
-                                        ws.update_cell(real_idx, 7, row['STATUS'])
-                                        ws.update_cell(real_idx, 8, row['HP']) # Bisa isi HP manual di sini
+                # --- LOGIKA AUTO-SAVE (TANPA TOMBOL) ---
+                # Membandingkan df awal dengan edited_st secara otomatis
+                if not edited_st.equals(df_st[["index", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS"]]):
+                    try:
+                        for i, row in edited_st.iterrows():
+                            idx_asli = int(row['index'])
+                            old_val = df.iloc[idx_asli]
+                            
+                            # Cek kolom mana yang berubah
+                            if (row['EMAIL'] != old_val['EMAIL'] or row['PASSWORD'] != old_val['PASSWORD'] or 
+                                row['NAMA_CHANNEL'] != old_val['NAMA_CHANNEL'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE']) or
+                                row['LINK_CHANNEL'] != old_val['LINK_CHANNEL'] or row['STATUS'] != old_val['STATUS']):
                                 
-                                st.cache_data.clear()
-                                st.success("Database Standby Terupdate!")
-                                time.sleep(0.5); st.rerun()
-                        except Exception as e:
-                            st.error(f"Error: {e}")
+                                real_row = idx_asli + 2
+                                # 1. Update Data Utama
+                                ws.update_cell(real_row, 2, row['EMAIL'])
+                                ws.update_cell(real_row, 3, row['PASSWORD'])
+                                ws.update_cell(real_row, 4, row['NAMA_CHANNEL'])
+                                ws.update_cell(real_row, 5, row['SUBSCRIBE'])
+                                ws.update_cell(real_row, 6, row['LINK_CHANNEL'])
+                                ws.update_cell(real_row, 7, row['STATUS'])
+                                
+                                # 2. LOGIKA PENCATAT & WAKTU EDIT (Kolom L / 12)
+                                tz = pytz.timezone('Asia/Jakarta')
+                                waktu_sekarang = datetime.now(tz).strftime("%d/%m %H:%M")
+                                log_edit = f"Ed: {user_aktif} ({waktu_sekarang})"
+                                ws.update_cell(real_row, 12, log_edit) # Kolom L = Edited By
+                                
+                        st.cache_data.clear()
+                        st.rerun() # Refresh untuk sinkronisasi tampilan
+                    except Exception as e:
+                        pass # Menghindari error flashing saat typing
                                                 
     # ==============================================================================
     # TAB 2: CHANNEL PROSES (PERMANENT SLOT MODE)
@@ -4140,6 +4145,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
