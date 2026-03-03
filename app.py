@@ -3394,49 +3394,53 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (GAYA RADAR UI - COMPACT & INFORMATIF)
+    # TAB 1: STOK STANDBY (GAYA RADAR UI - FIXED INDENTATION)
     # ==============================================================================
     with tab_standby:
+        # --- 1. PROTEKSI AKSES ---
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
+            st.info("Hubungi Admin jika Anda memerlukan bantuan terkait stok akun.")
         else:
-        # --- 1. LOGIKA HITUNG DATA (Real-time) ---
-        total_st = len(df[df['STATUS'] == 'STANDBY'])
-        total_pr = len(df[df['STATUS'] == 'PROSES'])
-        hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
-        
-        # LOGIKA SOLD BULAN INI (Berdasarkan Kolom Keterangan/Index 11)
-        bln_ini = datetime.now().strftime("%m/%Y")
-        total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
-        
-        # ARSIP (Suspend + Busuk)
-        total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
+            # --- SEMUA DI BAWAH INI SEKARANG SUDAH MASUK 1 TAB (4 SPASI) ---
+            
+            # --- 1. LOGIKA HITUNG DATA (Real-time) ---
+            total_st = len(df[df['STATUS'] == 'STANDBY'])
+            total_pr = len(df[df['STATUS'] == 'PROSES'])
+            hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
+            
+            # LOGIKA SOLD BULAN INI (Berdasarkan Kolom Keterangan/Index 11)
+            bln_ini = datetime.now().strftime("%m/%Y")
+            total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
+            
+            # ARSIP (Suspend + Busuk)
+            total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-        # --- 2. RENDER DASHBOARD UI (SEJAJAR & COMPACT) ---
-        with st.container(border=True):
-            # Rasio kolom disesuaikan agar teks info punya ruang
-            c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.8])
-            
-            with c1:
-                st.metric("📦 STANDBY", f"{total_st}")
-            
-            with c2:
-                st.metric("🚀 PROSES", f"{total_pr}", delta="↑ Running")
-            
-            with c3:
-                st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Slot Terisi")
-            
-            with c4:
-                st.metric("💰 SOLD (MO)", f"{total_sold_mo}", delta=f"{datetime.now().strftime('%B')}")
-            
-            with c5:
-                # Padding top 15px biar sejajar sama angka metric di sebelah
-                st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
-                st.info(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan Stok Standby Selalu Aman!")
+            # --- 2. RENDER DASHBOARD UI (SEJAJAR & COMPACT) ---
+            with st.container(border=True):
+                # Rasio kolom disesuaikan agar teks info punya ruang
+                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.8])
+                
+                with c1:
+                    st.metric("📦 STANDBY", f"{total_st}")
+                
+                with c2:
+                    st.metric("🚀 PROSES", f"{total_pr}", delta="↑ Running")
+                
+                with c3:
+                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Slot Terisi")
+                
+                with c4:
+                    st.metric("💰 SOLD (MO)", f"{total_sold_mo}", delta=f"{datetime.now().strftime('%B')}")
+                
+                with c5:
+                    # Padding top 15px biar sejajar sama angka metric di sebelah
+                    st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+                    st.info(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan Stok Standby Selalu Aman!")
 
-        st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 1.2 HEADER & TOMBOL TAMBAH ---
+            # --- 3. HEADER & TOMBOL TAMBAH ---
             hc1, hc2 = st.columns([3, 1])
             hc1.markdown("##### 🔐 DATABASE STOK STANDBY")
             
@@ -4280,6 +4284,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
