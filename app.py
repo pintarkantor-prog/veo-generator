@@ -3583,64 +3583,86 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (MODEL KARTU TABEL - STATIC TIME)
+    # TAB 3: JADWAL UPLOAD (DIRECT EDIT MEMO - KOLOM 13, 14, 15)
     # ==============================================================================
     with tab_jadwal:
-        st.markdown("### 📅 RADAR JADWAL UPLOAD (VIEW MODE)")
-        
-        # 1. Ambil data yang sedang PROSES
+        st.markdown("### 📅 RADAR JADWAL UPLOAD (DIRECT EDIT)")
+
+        # 1. Filter data yang statusnya PROSES
         df_j = df[df['STATUS'] == 'PROSES'].copy()
-        
+
         if df_j.empty:
-            st.info("Belum ada akun di Tab Proses untuk dijadwalkan.")
+            st.info("Belum ada akun di Tab Proses.")
         else:
-            # Sorting HP agar urut
-            hp_list = sorted([str(x) for x in df_j['HP'].unique() if str(x).strip() != ""])
+            # Proteksi: Hanya OWNER, ADMIN, UPLOADER yang bisa edit Jam
+            if is_pro:
+                st.caption("📝 *Anda level PRO: Silakan edit jam langsung pada tabel di bawah.*")
+                
+                # Buat tabel editor minimalis untuk input jam
+                df_j['REAL_IDX'] = df_j.index
+                config_j = {
+                    "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200, disabled=True),
+                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=80),
+                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=80),
+                    "SORE": st.column_config.TextColumn("🌆 SORE", width=80),
+                    "REAL_IDX": None
+                }
+                
+                # Pastikan kolom PAGI, SIANG, SORE dibaca dari urutan kolom yang benar (13, 14, 15)
+                edited_j = st.data_editor(
+                    df_j[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
+                    column_config=config_j,
+                    use_container_width=True,
+                    hide_index=True,
+                    key="editor_jadwal_vFinal"
+                )
+
+                # Logika Simpan Jam ke Kolom Ujung (13, 14, 15)
+                if not edited_j.equals(df_j[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
+                    try:
+                        for _, row in edited_j.iterrows():
+                            r_gs = int(row['REAL_IDX']) + 2
+                            # UPDATE: Kita tembak kolom 13, 14, dan 15 agar tidak menabrak EDITED
+                            ws.update_cell(r_gs, 13, str(row['PAGI'])) 
+                            ws.update_cell(r_gs, 14, str(row['SIANG']))
+                            ws.update_cell(r_gs, 15, str(row['SORE']))
+                        st.cache_data.clear()
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Gagal simpan jam: {e}")
             
-            # Buat Grid 3 Kolom Kartu
-            cols_radar = st.columns(3)
+            st.divider()
             
-            for i, hp_id in enumerate(hp_list):
-                with cols_radar[i % 3]:
-                    # Bikin kontainer kartu buat tiap HP
+            # --- 2. TAMPILAN KARTU CANTIK (UNTUK SEMUA USER/STAFF) ---
+            st.markdown("#### 📱 VISUAL RADAR")
+            grid = st.columns(3)
+            # Urutkan HP secara numerik
+            df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
+            df_display = df_j.sort_values('HP_N')
+
+            for i, (hp_id, group) in enumerate(df_display.groupby('HP')):
+                with grid[i % 3]:
                     with st.container(border=True):
-                        st.markdown(f"<div style='background-color:#444; padding:5px; border-radius:5px; text-align:center;'><b>📱 UNIT HP {hp_id}</b></div>", unsafe_allow_html=True)
+                        # Desain Header Kartu
+                        st.markdown(f"<div style='text-align:center; background-color:#1E1E1E; padding:5px; border-radius:10px; border:1px solid #00FFAA; color:#00FFAA; margin-bottom:10px;'><b>UNIT HP {hp_id}</b></div>", unsafe_allow_html=True)
                         
-                        # Filter data untuk HP ini
-                        data_hp = df_j[df_j['HP'].astype(str) == hp_id]
-                        
-                        # HEADER TABEL DALAM KARTU
-                        h1, h2, h3, h4 = st.columns([2, 1, 1, 1])
-                        h1.caption("NAMA CHANNEL")
-                        h2.caption("PAGI")
-                        h3.caption("SIANG")
-                        h4.caption("SORE")
-                        
-                        # ISI DATA (Maksimal 2-3 baris sesuai slot lo)
-                        # Kita loop data asli yang ada di GSheet untuk HP tersebut
-                        for _, row in data_hp.iterrows():
-                            c1, c2, c3, c4 = st.columns([2, 1, 1, 1])
+                        for _, r in group.iterrows():
+                            st.markdown(f"**📺 {r['NAMA_CHANNEL']}**")
+                            c1, c2, c3 = st.columns(3)
                             
-                            # Kolom 1: Nama Channel (Background Hijau sesuai gambar lo)
-                            c1.markdown(f"<div style='background-color:#2D5A47; padding:2px 5px; border-radius:3px; font-size:12px; height:30px; overflow:hidden;'>{row['NAMA_CHANNEL']}</div>", unsafe_allow_html=True)
+                            # Menampilkan jam dari data GSheet
+                            val_pagi = r['PAGI'] if str(r['PAGI']) != 'nan' else '-'
+                            val_siang = r['SIANG'] if str(r['SIANG']) != 'nan' else '-'
+                            val_sore = r['SORE'] if str(r['SORE']) != 'nan' else '-'
                             
-                            # Kolom 2, 3, 4: Waktu Statis (Tinggal nampilin hasil ketikan lo di GSheet)
-                            # Pastikan di GSheet lo ada kolom bernama 'PAGI', 'SIANG', 'SORE'
-                            c2.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('PAGI', '')}</div>", unsafe_allow_html=True)
-                            c3.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('SIANG', '')}</div>", unsafe_allow_html=True)
-                            c4.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('SORE', '')}</div>", unsafe_allow_html=True)
-                        
-                        # Jika HP cuma isi 1 akun, kita kasih baris kosong biar tetep model 2 slot
-                        if len(data_hp) < 2:
-                            for _ in range(2 - len(data_hp)):
-                                b1, b2, b3, b4 = st.columns([2, 1, 1, 1])
-                                b1.markdown("<div style='background-color:#333; padding:2px 5px; height:30px; border:1px dashed #555;'></div>", unsafe_allow_html=True)
-                                b2.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
-                                b3.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
-                                b4.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
-        
-        st.divider()
-        st.caption("💡 Jadwal ini otomatis mengikuti urutan akun di Tab PROSES.")
+                            c1.caption("🌅")
+                            c1.write(f"**{val_pagi}**")
+                            c2.caption("☀️")
+                            c2.write(f"**{val_siang}**")
+                            c3.caption("🌆")
+                            c3.write(f"**{val_sore}**")
+                            st.markdown("<hr style='margin:5px 0; border:0.1px solid #333'>", unsafe_allow_html=True)
                                 
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4187,6 +4209,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
