@@ -3494,47 +3494,48 @@ def tampilkan_database_channel():
                     pass
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (GSHEET ENGINE - PURE GRID)
+    # TAB 2: CHANNEL PROSES (SMART SLOT - PURE DATABASE MODE)
     # ==============================================================================
     with tab_proses:
         st.markdown("### 🚀 MONITORING PROSES (AUTO-SAVE)")
 
-        # 1. IDENTIFIKASI HP YANG AKTIF
-        hp_aktif = sorted(df[df['STATUS'] == 'PROSES']['HP'].unique().tolist())
+        # 1. IDENTIFIKASI HP AKTIF (Sapu Jagat Mode - Anti Error)
+        raw_hp = df[df['STATUS'] == 'PROSES']['HP'].dropna().unique().tolist()
+        hp_aktif = sorted([str(h).strip() for h in raw_hp if str(h).strip() != ""])
 
         if not hp_aktif:
             st.info("Belum ada unit HP yang aktif. Pindahkan channel dari Tab Standby.")
         else:
             final_display_list = []
             
-            # 2. LOGIKA 3 BARIS PER HP
+            # 2. LOGIKA 3 BARIS PER HP (TRIK MERGE VISUAL)
             for hp_id in hp_aktif:
-                rows_hp = df[df['HP'] == hp_id].copy()
+                # Ambil data asli untuk HP ini
+                # Kita filter pake string karena hp_aktif isinya string
+                rows_hp = df[df['HP'].astype(str) == hp_id].copy()
                 rows_hp['REAL_IDX'] = rows_hp.index
                 
-                # Masukkan data yang ada
+                # Masukkan data yang ada (Maksimal 3)
                 for i, (_, r) in enumerate(rows_hp.iterrows()):
-                    final_display_list.append({
-                        "REAL_IDX": r['REAL_IDX'],
-                        # TRIK DISINI: Tampilkan HP cuma di baris pertama (index 0)
-                        "HP": f"📱 HP {hp_id}" if i == 0 else "", 
-                        "EMAIL": r['EMAIL'] if r['EMAIL'] else "--- KOSONG ---",
-                        "PASSWORD": r['PASSWORD'],
-                        "NAMA_CHANNEL": r['NAMA_CHANNEL'],
-                        "SUBSCRIBE": str(r['SUBSCRIBE']) if r['EMAIL'] else "",
-                        "LINK_CHANNEL": r['LINK_CHANNEL'],
-                        "STATUS": r['STATUS']
-                    })
+                    if i < 3:
+                        final_display_list.append({
+                            "REAL_IDX": r['REAL_IDX'],
+                            "HP": f"📱 HP {hp_id}" if i == 0 else "", # Label cuma di baris 1
+                            "EMAIL": r['EMAIL'] if r['EMAIL'] else "--- KOSONG ---",
+                            "PASSWORD": r['PASSWORD'],
+                            "NAMA_CHANNEL": r['NAMA_CHANNEL'],
+                            "SUBSCRIBE": str(r['SUBSCRIBE']) if r['EMAIL'] else "",
+                            "LINK_CHANNEL": r['LINK_CHANNEL'],
+                            "STATUS": r['STATUS']
+                        })
                 
-                # Tambahkan laci dummy jika kurang dari 3
+                # Tambahkan laci dummy jika data asli < 3
                 current_count = len(rows_hp)
                 for j in range(max(0, 3 - current_count)):
-                    # Hitung posisi dummy (misal data asli cuma 1, berarti dummy mulai di index 1 dan 2)
                     posisi_dummy = current_count + j
                     final_display_list.append({
                         "REAL_IDX": -1,
-                        # TRIK DISINI JUGA: Cek apakah dummy ini di baris pertama (jika data asli 0)
-                        "HP": f"📱 HP {hp_id}" if posisi_dummy == 0 else "",
+                        "HP": f"📱 HP {hp_id}" if posisi_dummy == 0 else "", # Label jika dummy di baris 1
                         "EMAIL": "--- KOSONG ---",
                         "PASSWORD": "",
                         "NAMA_CHANNEL": "",
@@ -3545,9 +3546,9 @@ def tampilkan_database_channel():
 
             df_display = pd.DataFrame(final_display_list)
 
-            # 3. KONFIGURASI KOLOM (RATA KIRI & PIXEL)
+            # 3. KONFIGURASI KOLOM
             config_p = {
-                "HP": st.column_config.TextColumn("📱 UNIT", width=80, disabled=True),
+                "HP": st.column_config.TextColumn("UNIT", width=80, disabled=True),
                 "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250),
                 "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
                 "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
@@ -3560,29 +3561,26 @@ def tampilkan_database_channel():
                 "REAL_IDX": None
             }
 
-            # 4. DATA EDITOR (TOTAL HIDE INDEX)
+            # 4. DATA EDITOR (HIDE INDEX)
             edited_p = st.data_editor(
                 df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]],
                 column_config=config_p,
                 use_container_width=True,
-                hide_index=True, # INI YANG BIKIN NOMER INDEX ILANG TOTAL
-                key="grid_proses_pure_v1"
+                hide_index=True,
+                key="grid_proses_vFinal"
             )
 
-            # --- 5. LOGIKA AUTO-SAVE (ANTI-SAMPAH) ---
+            # 5. LOGIKA AUTO-SAVE (ENTER = SAVE)
             if not edited_p.equals(df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]]):
                 try:
                     for i, row in edited_p.iterrows():
                         idx_asli = int(row['REAL_IDX'])
                         
-                        # A. JIKA EDIT BARIS YANG SUDAH ADA DI GSHEET (REAL_IDX bukan -1)
+                        # EDIT DATA LAMA
                         if idx_asli != -1:
                             old_val = df.iloc[idx_asli]
-                            
-                            # Jika lo sengaja ngosongin email yang tadinya ada isinya
                             final_email = "" if row['EMAIL'] == "--- KOSONG ---" else row['EMAIL']
                             
-                            # Cek perubahan (Enter)
                             if (final_email != old_val['EMAIL'] or row['STATUS'] != old_val['STATUS'] or 
                                 row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
                                 
@@ -3594,25 +3592,21 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                                 ws.update_cell(r_gs, 7, row['STATUS'])
                                 
-                                # Log siapa yang edit
                                 tz = pytz.timezone('Asia/Jakarta')
-                                log_msg = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
-                                ws.update_cell(r_gs, 12, log_msg)
+                                ws.update_cell(r_gs, 12, f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})")
                         
-                        # B. JIKA NGISI BARIS DUMMY (MANUAL INPUT)
-                        # Syarat: Email harus diisi sesuatu yang bukan "--- KOSONG ---"
+                        # INPUT BARIS DUMMY (MANUAL)
                         elif row['EMAIL'] != "--- KOSONG ---" and str(row['EMAIL']).strip() != "":
-                            # Cari nomor HP-nya (ambil dari baris atasnya kalau kena efek merge)
-                            target_hp = row['HP']
-                            if target_hp == "":
+                            # Cari HP ID kalau kolom HP kosong (merge visual)
+                            t_hp = row['HP']
+                            if t_hp == "":
                                 for b_idx in range(i, -1, -1):
                                     if edited_p.iloc[b_idx]['HP'] != "":
-                                        target_hp = edited_p.iloc[b_idx]['HP']
+                                        t_hp = edited_p.iloc[b_idx]['HP']
                                         break
                             
-                            v_hp_clean = target_hp.replace("📱 HP ", "")
+                            v_hp_clean = t_hp.replace("📱 HP ", "")
                             
-                            # Baru deh simpan ke GSheet sebagai baris baru
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                             ws.append_row([tgl, row['EMAIL'], row['PASSWORD'], row['NAMA_CHANNEL'], 
@@ -4200,6 +4194,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
