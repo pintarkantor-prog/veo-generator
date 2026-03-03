@@ -3583,7 +3583,7 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (EFFICIENT LIST & CHECKLIST)
+    # TAB 3: JADWAL UPLOAD (CLEAN MONITORING - PRINT READY)
     # ==============================================================================
     with tab_jadwal:
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
@@ -3594,67 +3594,56 @@ def tampilkan_database_channel():
         if df_j.empty:
             st.info("Belum ada akun di Tab Proses.")
         else:
-            # --- BAGIAN EDIT (Hanya Muncul buat Pro) ---
+            # --- PROTEKSI EDIT JAM (Khusus Level PRO) ---
             if is_pro:
                 with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
 
+                    # Editor untuk update jam permanen ke GSheet
                     edited_j = st.data_editor(
                         df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
-                        column_config={
-                            "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True),
-                            "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200, disabled=True),
-                            "REAL_IDX": None, "HP_N": None
-                        },
-                        use_container_width=True, hide_index=True, key="edit_jam_radar_v_final"
+                        column_config={"REAL_IDX": None, "HP_N": None},
+                        use_container_width=True, hide_index=True, key="editor_jam_fix_final"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
                         for _, row in edited_j.iterrows():
                             r_gs = int(row['REAL_IDX']) + 2
-                            ws.update_cell(r_gs, 13, str(row['PAGI'])) # Kolom 13
-                            ws.update_cell(r_gs, 14, str(row['SIANG'])) # Kolom 14
-                            ws.update_cell(r_gs, 15, str(row['SORE'])) # Kolom 15
-                        st.cache_data.clear(); st.rerun()
+                            ws.update_cell(r_gs, 13, str(row['PAGI'])) 
+                            ws.update_cell(r_gs, 14, str(row['SIANG']))
+                            ws.update_cell(r_gs, 15, str(row['SORE']))
+                        st.cache_data.clear()
+                        st.rerun()
 
             st.divider()
 
-            # --- 2. VISUAL RADAR LIST (EFFICIENT VIEW) ---
-            st.markdown("#### 📱 LIST JADWAL AKTIF")
+            # --- 2. TAMPILAN RADAR (MIRRORING ONLY - NO RERUN) ---
+            st.markdown("#### 📱 MONITORING UPLOAD")
+            st.caption("💡 *Tips: Klik kanan pada tabel > 'Download as CSV' atau gunakan fitur Print Browser (Ctrl+P) untuk cetak jadwal.*")
             
-            # Header Tabel
-            h1, h2, h3, h4, h5, h6 = st.columns([0.5, 2, 1, 1, 1, 1.5])
-            h1.caption("HP")
-            h2.caption("NAMA CHANNEL")
-            h3.caption("🌅 PAGI")
-            h4.caption("☀️ SIANG")
-            h5.caption("🌆 SORE")
-            h6.caption("✅ CHECKLIST")
-
-            # Urutkan Data View berdasarkan nomor HP
+            # Urutkan berdasarkan HP agar rapi saat dilihat/diprint
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values('HP_N')
 
-            for idx, r in df_display.iterrows():
-                with st.container(border=True):
-                    c1, c2, c3, c4, c5, c6 = st.columns([0.5, 2, 1, 1, 1, 1.5])
-                    
-                    c1.markdown(f"**{r['HP']}**")
-                    c2.markdown(f"<div style='background:#2D5A47; padding:2px 8px; border-radius:4px; font-size:13px;'>{r['NAMA_CHANNEL']}</div>", unsafe_allow_html=True)
-                    
-                    # Mirroring Jam dari GSheet
-                    c3.write(r.get('PAGI', '-'))
-                    c4.write(r.get('SIANG', '-'))
-                    c5.write(r.get('SORE', '-'))
-                    
-                    # Penanda Upload (Checklist)
-                    with c6:
-                        col_p, col_s, col_o = st.columns(3)
-                        col_p.checkbox("P", key=f"p_{idx}")
-                        col_s.checkbox("S", key=f"s_{idx}")
-                        col_o.checkbox("O", key=f"o_{idx}")
+            # Kita tampilkan sebagai Dataframe Statis (View Only) agar stabil
+            # Kita tambahkan kolom kosong 'CHECK' agar ada ruang buat mereka nyoret manual di kertas
+            df_display['CHECKLIST (Manual)'] = "[ ] P | [ ] S | [ ] O"
+
+            st.dataframe(
+                df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "CHECKLIST (Manual)"]],
+                column_config={
+                    "HP": st.column_config.TextColumn("📱 HP", width=50),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250),
+                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=100),
+                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=100),
+                    "SORE": st.column_config.TextColumn("🌆 SORE", width=100),
+                    "CHECKLIST (Manual)": st.column_config.TextColumn("📝 TANDA TANGAN / CEK", width=200),
+                },
+                hide_index=True,
+                use_container_width=True
+            )
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4201,6 +4190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
