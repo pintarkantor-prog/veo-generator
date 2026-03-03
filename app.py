@@ -3608,9 +3608,9 @@ def tampilkan_database_channel():
                     config_edit = {
                         "HP": st.column_config.TextColumn("📱 HP", width=60, disabled=True),
                         "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200, disabled=True),
-                        "PAGI": st.column_config.TextColumn("🌅 PAGI", placeholder="Contoh: 08:15"),
-                        "SIANG": st.column_config.TextColumn("☀️ SIANG", placeholder="Contoh: 12:00"),
-                        "SORE": st.column_config.TextColumn("🌆 SORE", placeholder="Contoh: 15:00"),
+                        "PAGI": st.column_config.TextColumn("🌅 PAGI"), # Placeholder dibuang
+                        "SIANG": st.column_config.TextColumn("☀️ SIANG"), # Placeholder dibuang
+                        "SORE": st.column_config.TextColumn("🌆 SORE"), # Placeholder dibuang
                         "REAL_IDX": None, "HP_N": None
                     }
                     
@@ -4225,6 +4225,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
