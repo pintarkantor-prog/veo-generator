@@ -3444,7 +3444,7 @@ def tampilkan_database_channel():
                 "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=150),
                 # Pake TextColumn biar rata kiri
                 "SUBSCRIBE": st.column_config.TextColumn("📊 SUBSCRIBE", width=80), 
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK CHANNEL", width=150),
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK CHANNEL", width=200),
                 "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=60, disabled=True),
                 "STATUS": st.column_config.SelectboxColumn(
                     "⚙️ STATUS", width=130,
@@ -4148,6 +4148,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
