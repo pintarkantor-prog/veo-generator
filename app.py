@@ -3394,97 +3394,89 @@ def tampilkan_database_channel():
     ])
     
     # ======================================================================
-    # --- TAB 1: STOK STANDBY (ULTRA COMPACT GRID) ---
+    # --- TAB 1: STOK STANDBY (UNIFORM COMPACT STYLE) ---
     # ======================================================================
     with tab_standby:
         if not is_pro:
             st.warning(f"⚠️ Akses Terbatas untuk {user_aktif}.")
         else:
-            # --- A. HEADER & TOMBOL TAMBAH ---
+            # --- A. HEADER & TOMBOL TAMBAH (Sejajar Pojok Kanan) ---
             hc1, hc2 = st.columns([3, 1])
             hc1.markdown("### 🔐 DATABASE STOK STANDBY")
             
-            # Tombol Tambah Channel di Pojok Kanan Atas
             if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
-            # --- B. FORM INPUT (Hanya muncul jika tombol diklik) ---
+            # --- B. FORM INPUT (Pop-up Style Container) ---
             if st.session_state.get('form_baru', False):
                 with st.container(border=True):
-                    with st.form("input_st_final_style", clear_on_submit=True):
+                    with st.form("form_tambah_standby", clear_on_submit=True):
                         f1, f2, f3 = st.columns(3)
                         v_mail = f1.text_input("📧 Email Login")
                         v_pass = f2.text_input("🔑 Password")
                         v_nama = f3.text_input("📺 Nama Channel")
-                        
                         f4, f5 = st.columns([1, 2])
-                        v_subs = f4.text_input("📊 Jumlah Subs (Angka)")
+                        v_subs = f4.text_input("📊 Jumlah Subs")
                         v_link = f5.text_input("🔗 Link Channel")
-                        
-                        if st.form_submit_button("🚀 SIMPAN DATA KE GSHEET", use_container_width=True):
+                        if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
                             if v_nama and v_mail:
                                 tz = pytz.timezone('Asia/Jakarta')
                                 tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                                # Simpan ke GSheet
                                 ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
                                 st.cache_data.clear()
-                                st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
-                            else:
-                                st.error("Nama & Email wajib diisi!")
+                                st.success("Data Berhasil Ditambahkan!"); time.sleep(1); st.rerun()
 
             st.divider()
 
-            # --- C. DATABASE VIEW (COMPACT GRID STYLE) ---
+            # --- C. COMPACT GRID VIEW (Sama Persis Tab Proses) ---
             df_st = df[df['STATUS'] == 'STANDBY']
             
             if df_st.empty:
                 st.info("📭 Belum ada stok standby.")
             else:
-                # HEADER TABEL (Ijo Card Style)
+                # Header Tanpa Background Ijo (Sesuai Request)
                 st.markdown("""
-                    <div style="background:#2D5A47; padding:8px 15px; border-radius:5px 5px 0 0; display:flex; color:white; font-size:11px; font-weight:bold;">
-                        <div style="width: 22%;">📧 EMAIL</div>
+                    <div style="padding:5px 10px; border-bottom:2px solid #333; display:flex; font-weight:bold; color:#888; font-size:11px;">
+                        <div style="width: 25%;">📧 EMAIL LOGIN</div>
                         <div style="width: 12%;">🔑 PASS</div>
-                        <div style="width: 20%;">📺 CHANNEL</div>
+                        <div style="width: 22%;">📺 NAMA CHANNEL</div>
                         <div style="width: 8%;">📊 SUBS</div>
-                        <div style="width: 10%;">🔗 URL</div>
-                        <div style="width: 8%;">👤 OLEH</div>
-                        <div style="width: 15%;">⚙️ AKSI</div>
+                        <div style="width: 8%; text-align:center;">🔗 URL</div>
+                        <div style="width: 20%;">⚙️ AKSI (PINDAH STATUS)</div>
                         <div style="width: 5%; text-align:right;">🛠️</div>
                     </div>
                 """, unsafe_allow_html=True)
 
-                # CSS untuk merapatkan baris
+                # CSS untuk memangkas spasi antar baris
                 st.markdown("<style>[data-testid='column'] { padding: 0px 2px !important; }</style>", unsafe_allow_html=True)
 
                 for idx, r in df_st.iterrows():
-                    # Zebra Striping Manual (Abu Tua & Hitam)
+                    # Zebra Striping Manual per Baris
                     bg_row = "#1E1E1E" if idx % 2 == 0 else "#262626"
                     
                     with st.container():
                         st.markdown(f"<div style='background:{bg_row}; padding:5px 10px; border-bottom:1px solid #333;'>", unsafe_allow_html=True)
-                        c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([2.2, 1.2, 2, 0.8, 1, 0.8, 1.5, 0.5])
+                        # Grid Kolom Standby
+                        c1, c2, c3, c4, c5, c6, c7 = st.columns([2.5, 1.2, 2.2, 0.8, 0.8, 2, 0.5])
                         
-                        # Data Columns
                         c1.markdown(f"<span style='font-size:11px;'>{r['EMAIL']}</span>", unsafe_allow_html=True)
                         c2.markdown(f"<code style='font-size:10px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                         c3.markdown(f"<b style='font-size:11px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
                         c4.markdown(f"<span style='font-size:11px;'>{r['SUBSCRIBE']}</span>", unsafe_allow_html=True)
                         
+                        # Link URL Icon
                         if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
-                            c5.markdown(f"<a href='{r['LINK_CHANNEL']}' target='_blank' style='text-decoration:none;'>🔗 BUKA</a>", unsafe_allow_html=True)
+                            c5.markdown(f"<div style='text-align:center;'><a href='{r['LINK_CHANNEL']}' target='_blank'>🔗</a></div>", unsafe_allow_html=True)
                         else:
-                            c5.write("-")
-                            
-                        c6.markdown(f"<span style='font-size:10px; color:#888;'>{r.get('PENCATAT', '-')}</span>", unsafe_allow_html=True)
-                        
-                        # Kolom Aksi (Dropdown Pindah Status)
-                        with c7:
-                            opsi = st.selectbox("Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"sel_{idx}", label_visibility="collapsed")
+                            c5.markdown("<div style='text-align:center;'>-</div>", unsafe_allow_html=True)
+
+                        # Dropdown Aksi (Pindah Status & Slot HP)
+                        with c6:
+                            opsi = st.selectbox("Pilih Aksi", ["-", "PROSES", "SOLD", "BUSUK", "SUSPEND"], key=f"st_sel_{idx}", label_visibility="collapsed")
                             if opsi != "-":
                                 r_idx = idx + 2
                                 if opsi == "PROSES":
-                                    # Logika Cari Slot HP Kosong Otomatis
+                                    # Logika Auto-Fill Laci HP
                                     df_p = df[df['STATUS'] == 'PROSES']
                                     target_hp = next((h for h in range(1, 26) if len(df_p[df_p['HP'] == h]) < 3), 1)
                                     ws.update_cell(r_idx, 7, "PROSES")
@@ -3492,16 +3484,15 @@ def tampilkan_database_channel():
                                 else:
                                     ws.update_cell(r_idx, 7, opsi)
                                 
-                                ws.update_cell(r_idx, 11, user_aktif)
                                 st.cache_data.clear(); st.rerun()
                         
-                        # Kolom Edit (Popover)
-                        with c8:
+                        # Tombol Edit (Popover)
+                        with c7:
                             with st.popover("✏️"):
                                 st.markdown(f"**EDIT: {r['NAMA_CHANNEL']}**")
-                                e_nama = st.text_input("Nama", value=r['NAMA_CHANNEL'], key=f"enm_{idx}")
-                                e_subs = st.text_input("Subs", value=str(r['SUBSCRIBE']), key=f"esb_{idx}")
-                                if st.button("Simpan", key=f"sv_{idx}"):
+                                e_nama = st.text_input("Nama", value=r['NAMA_CHANNEL'], key=f"ed_nm_{idx}")
+                                e_subs = st.text_input("Subs", value=str(r['SUBSCRIBE']), key=f"ed_sb_{idx}")
+                                if st.button("Simpan", key=f"ed_btn_{idx}", use_container_width=True):
                                     ws.update_cell(idx+2, 4, e_nama.upper())
                                     ws.update_cell(idx+2, 5, int(e_subs) if e_subs.isdigit() else 0)
                                     st.cache_data.clear(); st.rerun()
@@ -4163,6 +4154,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
