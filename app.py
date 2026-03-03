@@ -3583,7 +3583,7 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (SISTEM STABIL - ZERO IMPORT & ICON RESTORED)
+    # TAB 3: JADWAL UPLOAD (CLEAN TABLE - NO LOGO - PRINT BELOW)
     # ==============================================================================
     with tab_jadwal:
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
@@ -3594,7 +3594,7 @@ def tampilkan_database_channel():
         if df_j.empty:
             st.info("Belum ada akun di Tab Proses.")
         else:
-            # --- PROTEKSI EDIT JAM (Khusus PRO) ---
+            # --- PROTEKSI EDIT JAM (Khusus Level PRO) ---
             if is_pro:
                 with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
@@ -3611,7 +3611,7 @@ def tampilkan_database_channel():
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
                             "REAL_IDX": None, "HP_N": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_fix_final_banget"
+                        use_container_width=True, hide_index=True, key="editor_clean_final"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
@@ -3625,66 +3625,46 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. FUNGSI LOGO PINTAR.png (PASTIKAN base64 SUDAH DI IMPORT DI PALING ATAS FILE) ---
-            def get_img_as_base64(path):
-                try:
-                    with open(path, "rb") as f:
-                        return base64.b64encode(f.read()).decode()
-                except: return ""
-
-            img_base64 = get_img_as_base64("PINTAR.png")
-
-            # --- 3. PREPARASI DATA DISPLAY & PRINT ---
+            # --- 2. PREPARASI DATA DISPLAY & PRINT ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 4. LOGIKA WARNA GROUPING HP (ABU-ABU) ---
-            color_1 = "#f2f2f2" # Abu Muda
-            color_2 = "#d9d9d9" # Abu Tua
-            hp_color_map = {}
-            for h_id in df_display['HP_N'].unique():
-                hp_color_map[h_id] = color_1 if len(hp_color_map) % 2 == 0 else color_2
-
+            # --- 3. SUSUN HTML UNTUK PRINT (TANPA LOGO - HEADER ABU-ABU) ---
+            # Kita set warna baris selang-seling abu-abu tipis
             rows_html = ""
-            for _, r in df_display.iterrows():
-                bg_c = hp_color_map.get(r['HP_N'], "#FFFFFF")
-                p = r['PAGI'] if str(r['PAGI']) != 'nan' else '-'
-                s = r['SIANG'] if str(r['SIANG']) != 'nan' else '-'
-                o = r['SORE'] if str(r['SORE']) != 'nan' else '-'
+            for i, r in enumerate(df_display.itertuples()):
+                bg_row = "#FFFFFF" if i % 2 == 0 else "#F9F9F9"
+                p = r.PAGI if str(r.PAGI) != 'nan' else '-'
+                s = r.SIANG if str(r.SIANG) != 'nan' else '-'
+                o = r.SORE if str(r.SORE) != 'nan' else '-'
                 
                 rows_html += f"""
-                    <tr style='background-color:{bg_c};'>
-                        <td style='border:1px solid #999; padding:8px; text-align:center;'><b>{r['HP_DISPLAY']}</b></td>
-                        <td style='border:1px solid #999; padding:8px; text-align:left;'>{r['NAMA_CHANNEL']}</td>
-                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{p}</td>
-                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{s}</td>
-                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{o}</td>
+                    <tr style='background-color:{bg_row};'>
+                        <td style='border:1px solid #777; padding:8px; text-align:center;'><b>{r.HP_DISPLAY}</b></td>
+                        <td style='border:1px solid #777; padding:8px; text-align:left;'>{r.NAMA_CHANNEL}</td>
+                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{p}</td>
+                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{s}</td>
+                        <td style='border:1px solid #777; padding:8px; text-align:center;'>{o}</td>
                     </tr>
                 """
 
-            # --- 5. HTML FULL PRINT (GAYA KONTRAK) ---
-            tgl_now = datetime.now().strftime("%d %B %Y")
-            html_content = f"""
-                <div style='font-family:Arial, sans-serif; padding:10px;'>
-                    <div style='display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #2D5A47; padding-bottom:10px; margin-bottom:15px;'>
-                        <div style='display:flex; align-items:center;'>
-                            <img src='data:image/png;base64,{img_base64}' style='height:60px; margin-right:20px;'>
-                            <div>
-                                <h1 style='margin:0; font-size:24px; color:#2D5A47;'>RADAR JADWAL UPLOAD</h1>
-                                <p style='margin:0; font-size:14px; color:#666;'>Periode: {tgl_now}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <table style='width:100%; border-collapse:collapse; font-size:13px;'>
+            # Susun CSS agar pas diprint A4
+            tgl_str = datetime.now().strftime("%d %B %Y")
+            html_print = f"""
+                <div style='font-family:Arial, sans-serif; max-width:800px; margin:auto;'>
+                    <h2 style='text-align:center; margin-bottom:5px;'>RADAR JADWAL UPLOAD</h2>
+                    <p style='text-align:center; font-size:14px; margin-bottom:20px;'>Periode: {tgl_str}</p>
+                    
+                    <table style='width:100%; border-collapse:collapse; border:1px solid #777; font-size:13px;'>
                         <thead>
-                            <tr style='background-color:#2D5A47; color:white;'>
-                                <th style='padding:10px; border:1px solid #ccc;'><b>HP</b></th>
-                                <th style='padding:10px; border:1px solid #ccc; text-align:left;'><b>NAMA CHANNEL</b></th>
-                                <th style='padding:10px; border:1px solid #ccc;'><b>PAGI</b></th>
-                                <th style='padding:10px; border:1px solid #ccc;'><b>SIANG</b></th>
-                                <th style='padding:10px; border:1px solid #ccc;'><b>SORE</b></th>
+                            <tr style='background-color:#E0E0E0; color:black;'>
+                                <th style='border:1px solid #777; padding:10px; width:50px;'>HP</th>
+                                <th style='border:1px solid #777; padding:10px; text-align:left;'>NAMA CHANNEL</th>
+                                <th style='border:1px solid #777; padding:10px;'>PAGI</th>
+                                <th style='border:1px solid #777; padding:10px;'>SIANG</th>
+                                <th style='border:1px solid #777; padding:10px;'>SORE</th>
                             </tr>
                         </thead>
                         <tbody>{rows_html}</tbody>
@@ -3692,11 +3672,7 @@ def tampilkan_database_channel():
                 </div>
             """
 
-            st.success("✅ Radar Jadwal sudah siap cetak.")
-            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF)", use_container_width=True):
-                st.components.v1.html(html_content + "<script>window.print();</script>", height=0)
-
-            # --- 6. MONITORING VIEW (ICON RESTORED) ---
+            # --- 4. MONITORING VIEW (WEB TAMPILAN) ---
             st.markdown("#### 📱 MONITORING VIEW")
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
@@ -3708,6 +3684,11 @@ def tampilkan_database_channel():
                     "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
                 }, hide_index=True, use_container_width=True
             )
+
+            # --- 5. TOMBOL DOWNLOAD DI BAWAH ---
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF/PRINT)", use_container_width=True):
+                st.components.v1.html(html_print + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4254,6 +4235,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
