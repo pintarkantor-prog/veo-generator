@@ -3582,37 +3582,49 @@ def tampilkan_database_channel():
                         st.cache_data.clear(); st.rerun()
                     except Exception as e: st.error(f"Error: {e}")
                     
-    # ======================================================================
-    # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
-    # ======================================================================
+    # ==============================================================================
+    # TAB 3: JADWAL UPLOAD (⏰ JAM MATI - AUTO MAPPING)
+    # ==============================================================================
     with tab_jadwal:
-        st.subheader("📅 JADWAL UPLOAD HARIAN")
-        
-        # Ambil data proses lagi buat dipetain ke jadwal
-        df_j = df[df['STATUS'] == 'PROSES']
-        
+        st.markdown("### 📅 RADAR JADWAL UPLOAD (SLOT TETAP)")
+
+        # --- 1. DEFINISI JAM MATI (Urutan Laci) ---
+        # Baris 1 di Tab Proses = Jam Pertama
+        # Baris 2 di Tab Proses = Jam Kedua
+        jam_mati = ["08:15", "08:30"] # Sesuaikan jamnya di sini, Sai
+
+        # --- 2. AMBIL DATA PROSES ---
+        df_j = df[df['STATUS'] == 'PROSES'].copy()
+
         if df_j.empty:
-            st.info("📅 Jadwal masih kosong.")
+            st.info("Belum ada akun di Tab Proses.")
         else:
-            # List HP yang ada isinya (diurutkan)
-            hp_aktif = sorted([int(x) for x in df_j['HP'].unique() if str(x).isdigit()])
+            # Sorting HP biar rapi 1, 2, 3...
+            df_j['HP_NUM'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
+            df_j = df_j.sort_values(by=['HP_NUM', 'EMAIL'])
+
+            # Buat Grid Tampilan (3 Kolom HP per baris)
+            cols = st.columns(3)
             
-            # Buat tampilan per HP (3 Kolom per baris)
-            cols_j = st.columns(3)
-            for i, n_hp in enumerate(hp_aktif):
-                with cols_j[i % 3]:
+            # Grouping per HP
+            groups = df_j.groupby('HP')
+            for i, (hp_id, group) in enumerate(groups):
+                with cols[i % 3]:
                     with st.container(border=True):
-                        st.markdown(f"### 📱 HP {n_hp}")
-                        d_hp = df_j[df_j['HP'] == n_hp]
+                        st.markdown(f"#### 📱 UNIT HP {hp_id}")
                         
-                        # Cek Slot Pagi, Siang, Sore
-                        for s in ["PAGI", "SIANG", "SORE"]:
-                            cek = d_hp[d_hp['SLOT'] == s]
-                            if not cek.empty:
-                                nama_ch = cek.iloc[0]['NAMA_CHANNEL']
-                                st.success(f"✅ **{s}**: {nama_ch}")
+                        # Kita loop berdasarkan jumlah Jam Mati yang kita punya
+                        for index_jam, waktu in enumerate(jam_mati):
+                            # Cek apakah ada data di baris ke-index_jam untuk HP ini
+                            if index_jam < len(group):
+                                nama_ch = group.iloc[index_jam]['NAMA_CHANNEL']
+                                st.success(f"**{waktu}** | {nama_ch}")
                             else:
-                                st.code(f"⚪ {s}: (Kosong)")
+                                # Jika laci ke-2 kosong, tampilkan kosong
+                                st.code(f"⚪ {waktu}: (Kosong)")
+        
+        st.divider()
+        st.caption("💡 Jadwal ini otomatis mengikuti urutan akun di Tab PROSES.")
                                 
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4159,6 +4171,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
