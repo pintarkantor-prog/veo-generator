@@ -3583,9 +3583,11 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (HTML PRINT MODE - RATA KIRI)
+    # TAB 3: JADWAL UPLOAD (HTML PRINT PRO MODE - ZEBRA STRIPES)
     # ==============================================================================
     with tab_jadwal:
+        import datetime # Buat tanggal berjalan
+
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
 
         # 1. SETUP DATA (Hanya yang sedang PROSES)
@@ -3608,15 +3610,15 @@ def tampilkan_database_channel():
                             "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
                             "REAL_IDX": None, "HP_N": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_print_html"
+                        use_container_width=True, hide_index=True, key="edit_print_html_pro"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
                         for _, row in edited_j.iterrows():
                             r_gs = int(row['REAL_IDX']) + 2
-                            ws.update_cell(r_gs, 13, str(row['PAGI'])) 
-                            ws.update_cell(r_gs, 14, str(row['SIANG']))
-                            ws.update_cell(r_gs, 15, str(row['SORE']))
+                            ws.update_cell(r_gs, 13, str(row['PAGI'])) # Kolom 13
+                            ws.update_cell(r_gs, 14, str(row['SIANG'])) # Kolom 14
+                            ws.update_cell(r_gs, 15, str(row['SORE'])) # Kolom 15
                         st.cache_data.clear(); st.rerun()
 
             st.divider()
@@ -3627,48 +3629,77 @@ def tampilkan_database_channel():
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 3. TOMBOL PRINT (GAYA KONTRAK) ---
-            # Susun Tabel HTML untuk Print
+            # --- 3. LOGIKA WARNA SELANG SELING (ZEBRA STRIPES) ---
+            # Tentukan warna dasar abu-abu
+            color_ganjil = "#f9f9f9" # Abu sangat muda
+            color_genap = "#eaeaea"  # Abu sedikit tua
+
             rows_html = ""
             for _, r in df_display.iterrows():
+                # Tentukan warna baris berdasarkan nomor HP (Ganjil/Genap)
+                row_bg_color = color_ganjil if r['HP_N'] % 2 != 0 else color_genap
+                
+                # Biar baris yang HP-nya kosong (duplicated) tetep dapet warna yang sama kayak grupnya
+                if r['HP_DISPLAY'] == "":
+                    # Kita cek warna baris sebelumnya (Ini logic agak rumit tapi worth it)
+                    # Tapi biar simpel, kita pake warna yang sama aja selama satu grup HP
+                    row_bg_color = row_bg_color # Tetep pake warna grup HPnya
+
                 pagi = r['PAGI'] if str(r['PAGI']) != 'nan' else "-"
                 siang = r['SIANG'] if str(r['SIANG']) != 'nan' else "-"
                 sore = r['SORE'] if str(r['SORE']) != 'nan' else "-"
                 rows_html += f"""
-                    <tr>
-                        <td style='text-align:center; border:1px solid black; padding:5px;'>{r['HP_DISPLAY']}</td>
-                        <td style='text-align:left; border:1px solid black; padding:5px;'>{r['NAMA_CHANNEL']}</td>
-                        <td style='text-align:center; border:1px solid black; padding:5px;'>{pagi}</td>
-                        <td style='text-align:center; border:1px solid black; padding:5px;'>{siang}</td>
-                        <td style='text-align:center; border:1px solid black; padding:5px;'>{sore}</td>
+                    <tr style='background-color:{row_bg_color};'>
+                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'><b>{r['HP_DISPLAY']}</b></td>
+                        <td style='text-align:left; border:1px solid #ccc; padding:8px;'>{r['NAMA_CHANNEL']}</td>
+                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{pagi}</td>
+                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{siang}</td>
+                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{sore}</td>
                     </tr>
                 """
 
-            html_jadwal = f"""
-                <div style='font-family:Arial, sans-serif;'>
-                    <h2 style='text-align:center;'>RADAR JADWAL UPLOAD</h2>
-                    <table style='width:100%; border-collapse:collapse;'>
+            # --- 4. SUSUN HTML PRINT (LOGO, JUDUL, TANGGAL) ---
+            # Link Logo Pintar lo (Ganti dengan URL asli lo)
+            url_logo = "URL_LOGO_PINTAR_LO_DI_SINI" 
+            
+            # Ambil tanggal hari ini
+            tgl_hari_ini = datetime.date.today().strftime("%d %B %Y")
+
+            html_jadwal_pro = f"""
+                <div style='font-family:Arial, sans-serif; padding:20px;'>
+                    <div style='display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid black; padding-bottom:10px; margin-bottom:20px;'>
+                        <div style='display:flex; align-items:center;'>
+                            <img src='{url_logo}' alt='Logo Pintar' style='height:60px; margin-right:15px;'>
+                            <div>
+                                <h1 style='margin:0; font-size:24px;'>RADAR JADWAL UPLOAD</h1>
+                                <p style='margin:0; font-size:14px; color:#555;'>Periode: {tgl_hari_ini}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table style='width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;'>
                         <thead>
-                            <tr style='background-color:#f2f2f2;'>
-                                <th style='border:1px solid black; padding:8px;'>HP</th>
-                                <th style='border:1px solid black; padding:8px;'>NAMA CHANNEL</th>
-                                <th style='border:1px solid black; padding:8px;'>PAGI</th>
-                                <th style='border:1px solid black; padding:8px;'>SIANG</th>
-                                <th style='border:1px solid black; padding:8px;'>SORE</th>
+                            <tr style='background-color:#2D5A47; color:white;'>
+                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>HP</th>
+                                <th style='border:1px solid #ccc; padding:10px; text-align:left;'>NAMA CHANNEL</th>
+                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>PAGI</th>
+                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>SIANG</th>
+                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>SORE</th>
                             </tr>
                         </thead>
                         <tbody>
                             {rows_html}
                         </tbody>
                     </table>
+                    <p style='font-size:10px; color:#888; text-align:center; margin-top:15px;'><i>*Jadwal ini dicetak otomatis dari Sistem Pintar AI Lab.</i></p>
                 </div>
             """
 
-            st.success("✅ Radar Jadwal sudah siap untuk dicetak.")
-            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF)", use_container_width=True):
-                st.components.v1.html(html_jadwal + "<script>window.print();</script>", height=0)
+            st.success("✅ Radar Jadwal siap cetak Pro.")
+            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF PRO)", use_container_width=True):
+                st.components.v1.html(html_jadwal_pro + "<script>window.print();</script>", height=0)
 
-            # --- 4. TAMPILAN WEB (RATA KIRI) ---
+            # --- 5. TAMPILAN WEB (RATA KIRI) ---
             st.markdown("#### 📱 MONITORING VIEW")
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
@@ -4228,4 +4259,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
