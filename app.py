@@ -3394,23 +3394,31 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (DASHBOARD GAYA RADAR INCOME)
+    # TAB 1: STOK STANDBY (VITAL MONITORING - SAFE MARGIN MODE)
     # ==============================================================================
     with tab_standby:
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            # --- 1. LOGIKA HITUNG DATA ---
+            # --- 1. LOGIKA HITUNG DATA (Real-time) ---
             total_st = len(df[df['STATUS'] == 'STANDBY'])
             total_pr = len(df[df['STATUS'] == 'PROSES'])
             hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
-            # A. Logika Status Stok (Aman vs Kritis)
-            selisih_st = total_st - total_pr
-            status_stok = "STOK AMAN" if selisih_st >= 0 else "STOK KRITIS"
-            warna_stok = "normal" if selisih_st >= 0 else "inverse"
+            # --- LOGIKA ANGKA GAIB (SAFE MARGIN) ---
+            # Kita tambah beban '20' agar stok STANDBY dipaksa selalu surplus jauh di atas PROSES
+            beban_aman = total_pr + 20
+            selisih_vital = total_st - beban_aman
             
-            # B. Logika SOLD (Bulan Ini vs Lalu)
+            # Penentuan Label & Warna berdasarkan Selisih Vital
+            if selisih_vital >= 0:
+                status_stok = f"AMAN (+{selisih_vital})"
+                warna_stok = "normal" # Hijau
+            else:
+                status_stok = f"KRITIS ({selisih_vital})"
+                warna_stok = "inverse" # Merah
+            
+            # --- LOGIKA SOLD (Bulan Ini vs Lalu) ---
             now = datetime.now()
             bln_now = now.strftime("%m/%Y")
             bln_lalu = (now.replace(day=1) - timedelta(days=1)).strftime("%m/%Y")
@@ -3418,19 +3426,19 @@ def tampilkan_database_channel():
             sold_ini = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_now, na=False))])
             sold_lalu = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_lalu, na=False))])
             
-            # C. Logika Status Sales (Naik vs Turun)
             diff_sold = sold_ini - sold_lalu
-            status_sold = f"▲ NAIK ({diff_sold})" if diff_sold >= 0 else f"▼ TURUN ({diff_sold})"
+            status_sold = f"▲ NAIK (+{diff_sold})" if diff_sold >= 0 else f"▼ TURUN ({diff_sold})"
             warna_sold = "normal" if diff_sold >= 0 else "inverse"
             
             # ARSIP
             total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- 2. RENDER DASHBOARD UI (RAPET & DINAMIS) ---
+            # --- 2. RENDER DASHBOARD UI ---
             with st.container(border=True):
-                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2])
+                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2.2])
                 
                 with c1:
+                    # Delta ini sekarang mengacu ke Selisih Vital (Standby - (Proses+20))
                     st.metric("📦 STANDBY", f"{total_st}", delta=status_stok, delta_color=warna_stok)
                 
                 with c2:
@@ -3440,7 +3448,7 @@ def tampilkan_database_channel():
                     st.metric("📱 UNIT HP", f"{hp_aktif}", delta="LIVE")
                 
                 with c4:
-                    st.metric("💰 SOLD (MO)", f"{sold_ini}", delta=status_sold, delta_color=warna_sold)
+                    st.metric("💰 SOLD (BLN)", f"{sold_ini}", delta=status_sold, delta_color=warna_sold)
                 
                 with c5:
                     st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
@@ -3448,7 +3456,7 @@ def tampilkan_database_channel():
                     st.write(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk).")
 
             st.markdown("<br>", unsafe_allow_html=True)
-
+            
             # --- 3. HEADER DATABASE & TOMBOL TAMBAH ---
             hc1, hc2 = st.columns([3, 1])
             hc1.markdown("##### 🔐 DATABASE STOK STANDBY")
@@ -4293,6 +4301,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
