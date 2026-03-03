@@ -3397,15 +3397,30 @@ def tampilkan_database_channel():
     # TAB 1: STOK STANDBY (EKSLUSIF PRO: OWNER, ADMIN, UPLOADER)
     # ==============================================================================
     with tab_standby:
-        # --- 1. PROTEKSI AKSES: Cek apakah user punya level PRO ---
+        # --- 1. PROTEKSI AKSES ---
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
             st.info("Hubungi Admin jika Anda memerlukan bantuan terkait stok akun.")
         else:
-            hc1, hc2 = st.columns([3, 1])
-            hc1.markdown("### 🔐 DATABASE STOK STANDBY")
+            # --- [TAMBAHAN BARU] 1.1 DASHBOARD METRIC ---
+            # Kita hitung di sini biar realtime
+            total_st = len(df[df['STATUS'] == 'STANDBY'])
+            total_pr = len(df[df['STATUS'] == 'PROSES'])
+            # Hitung HP yang unik dan tidak kosong
+            hp_terisi = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
+
+            st.markdown("### 📊 DASHBOARD OPERASIONAL")
+            m1, m2, m3 = st.columns(3)
+            m1.metric("📦 STOK STANDBY", f"{total_st} Akun")
+            m2.metric("🚀 TOTAL PROSES", f"{total_pr} Akun")
+            m3.metric("📱 HP TERISI", f"{hp_terisi} Unit")
             
-            # Tombol Tambah Akun (Hanya muncul untuk PRO)
+            st.markdown("<br>", unsafe_allow_html=True) # Spasi pengganti divider
+
+            # --- 1.2 HEADER & TOMBOL TAMBAH ---
+            hc1, hc2 = st.columns([3, 1])
+            hc1.markdown("##### 🔐 DATABASE STOK STANDBY")
+            
             if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
@@ -3462,7 +3477,7 @@ def tampilkan_database_channel():
                     key="grid_st_pro_locked"
                 )
 
-                # --- 5. LOGIKA UPDATE KE GSHEET ---
+                # --- 5. LOGIKA UPDATE KE GSHEET (DENGAN AUTO-ASSIGN HP) ---
                 if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
                     try:
                         for i, row in edited_st.iterrows():
@@ -3487,7 +3502,9 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 12, f"Auto HP {target_hp} ({datetime.now(tz).strftime('%H:%M')})")
                             
                             # Logika Update Data Biasa
-                            elif (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL']):
+                            elif (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL'] or 
+                                  row['PASSWORD'] != old_val['PASSWORD'] or row['NAMA_CHANNEL'] != old_val['NAMA_CHANNEL'] or
+                                  row['SUBSCRIBE'] != old_val['SUBSCRIBE'] or row['LINK_CHANNEL'] != old_val['LINK_CHANNEL']):
                                 r_gs = idx_asli + 2
                                 ws.update_cell(r_gs, 2, row['EMAIL'])
                                 ws.update_cell(r_gs, 3, row['PASSWORD'])
@@ -3507,7 +3524,7 @@ def tampilkan_database_channel():
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            st.markdown("### 🚀 MONITORING PROSES (MAX 2 SLOT)")
+            st.markdown("##### 🚀 MONITORING PROSES (MAX 2 SLOT HP)")
 
             df_p = df[df['STATUS'] == 'PROSES'].copy()
 
@@ -3586,8 +3603,6 @@ def tampilkan_database_channel():
     # TAB 3: JADWAL UPLOAD (ROBOTO - A4 PRECISION - GREEN HP)
     # ==============================================================================
     with tab_jadwal:
-        st.markdown("### 📅 RADAR JADWAL UPLOAD")
-
         # 1. SETUP DATA (Hanya Akun PROSES)
         df_j = df[df['STATUS'] == 'PROSES'].copy()
 
@@ -3596,7 +3611,7 @@ def tampilkan_database_channel():
         else:
             # --- PROTEKSI EDIT JAM (Khusus Level PRO) ---
             if is_pro:
-                with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
+                with st.expander("🛠️ EDIT JAM UPLOAD (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
@@ -3674,7 +3689,7 @@ def tampilkan_database_channel():
             """
 
             # --- 4. MONITORING VIEW (WEB) ---
-            st.markdown("#### 📱 MONITORING VIEW")
+            st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
@@ -4236,6 +4251,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
