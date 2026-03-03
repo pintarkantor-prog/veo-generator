@@ -3892,7 +3892,7 @@ def tampilkan_database_channel():
             # --- 3. RENDER 3 METRIK UTAMA ---
             with st.container(border=True):
                 m1, m2, m3 = st.columns(3)
-                m1.metric("💰 TOTAL SOLD (ALL TIME)", f"{total_ever}", delta="Seluruh Sejarah")
+                m1.metric("💰 TOTAL SOLD", f"{total_ever}", delta="Keseluruhan")
                 m2.metric(f"📅 {sel_bln_nama.upper()} {sel_thn}", f"{total_selected}", delta=f"Periode Terpilih")
                 m3.metric(f"🕒 BULAN SEBELUMNYA", f"{total_prev}", delta=f"Data {filter_prev}", delta_color="off")
 
@@ -4378,6 +4378,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
