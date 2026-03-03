@@ -3499,63 +3499,67 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (MODEL KERJA + KOLOM UNIT HP)
+    # TAB 2: CHANNEL PROSES (LAYOUT UNIT HP - TANPA KOLOM OLEH)
     # ==============================================================================
     with tab_proses:
         st.markdown("### 🚀 MONITORING & EKSEKUSI PROSES")
         
-        # Filter hanya data yang statusnya 'PROSES'
+        # Filter data status 'PROSES' saja dari GSheet
         df_p = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_p.empty:
             st.info("Belum ada channel dalam status PROSES. Silahkan pindahkan dari Tab Standby.")
         else:
-            # Tampilkan Card dengan Tambahan Kolom UNIT di Kiri
             for idx, r in df_p.iterrows():
-                # Logika Penentuan Nama HP Berdasarkan Slot Baris (Paten)
+                # Logika Penentuan Nama HP Berdasarkan Slot Baris (3 Baris per HP)
                 hp_num = (idx // 3) + 1 
                 
                 with st.container(border=True):
-                    # Baris Header Card (Ijo)
+                    # Header Card Hijau (Tetap Persis Standby)
                     st.markdown(f'<div style="background:#2D5A47; padding:3px; border-radius:3px; text-align:center;"><b style="color:white;">📺 {r["NAMA_CHANNEL"]}</b></div>', unsafe_allow_html=True)
                     
-                    # Layout Kolom (C0 buat UNIT HP, sisanya data)
-                    c0, c1, c2, c3, c4, c5, c6 = st.columns([1.2, 2, 1, 2, 1, 1, 1])
+                    # Layout Kolom Baru: Kolom Oleh Dibuang, Kolom Unit Ditambah di Kiri
+                    # c0 = Unit HP, c1 = Email, c2 = Password, c3 = Nama, c4 = Subs, c5 = Link, c6 = Status, c7 = Edit
+                    c0, c1, c2, c3, c4, c5, c6, c7 = st.columns([1.2, 2, 1, 2, 1, 1, 1.5, 0.5])
                     
-                    # KOLOM PERTAMA: NAMA HP (Gede & Bold)
+                    # KOLOM 1: NAMA HP (Gede & Merah Bold)
                     c0.markdown(f"<p style='margin:0; font-size:10px; color:#FF4B4B;'>📱 UNIT</p><b style='font-size:18px;'>HP {hp_num}</b>", unsafe_allow_html=True)
                     
                     c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><b style='font-size:12px;'>{r['EMAIL']}</b>", unsafe_allow_html=True)
-                    c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:12px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
+                    c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASS</p><b style='font-size:12px;'>XXXX</b>", unsafe_allow_html=True)
                     c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🆔 NAMA</p><b style='font-size:12px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                    c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:12px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
                     
-                    # Status Selector (Langsung di Card buat gerak cepet)
-                    new_status = c4.selectbox("STATUS", ["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"], 
+                    # Link URL BUKA!
+                    if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
+                        c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><a href='{r['LINK_CHANNEL']}' style='font-size:11px; text-decoration:none; color:#4facfe;'>BUKA!</a>", unsafe_allow_html=True)
+                    else:
+                        c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><b style='font-size:11px; color:#555;'>NONE</b>", unsafe_allow_html=True)
+
+                    # Selector Status (SOLD, BUSUK, STANDBY, dll)
+                    new_status = c6.selectbox("STATUS", ["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"], 
                                              index=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"].index(r['STATUS']), 
                                              key=f"st_pr_{idx}", label_visibility="collapsed")
                     
-                    # Tombol Update Status Langsung
+                    # Tombol Update Cepat Status
                     if new_status != r['STATUS']:
-                        if c4.button("⚡ FIX", key=f"btn_st_{idx}", use_container_width=True):
-                            ws.update_cell(idx + 2, 7, new_status) # Kolom G: STATUS
-                            ws.update_cell(idx + 2, 8, f"HP {hp_num}") # Update Kolom H: HP biar sinkron
+                        if c6.button("⚡ FIX", key=f"btn_st_{idx}", use_container_width=True):
+                            r_idx = idx + 2 # Header + 1
+                            ws.update_cell(r_idx, 7, new_status) # Kolom G: STATUS
+                            ws.update_cell(r_idx, 8, f"HP {hp_num}") # Kolom H: HP
                             st.cache_data.clear(); st.rerun()
 
-                    # Link URL
-                    c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><a href='{r['LINK_CHANNEL']}' style='font-size:11px; text-decoration:none; color:#4facfe;'>BUKA!</a>", unsafe_allow_html=True)
-                    
-                    # Tombol EDIT (Pop Over Kayak Standby)
-                    with c6:
+                    # Popover Edit (Persis Standby)
+                    with c7:
                         with st.popover("✏️"):
-                            st.markdown(f"#### 🛠️ EDIT DATA: {r['NAMA_CHANNEL']}")
-                            # (Gunakan logika form edit yang sama dengan Standby di sini)
+                            st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
                             e_nama_ch = st.text_input("Nama Channel", value=str(r['NAMA_CHANNEL']), key=f"enm_p_{idx}")
                             e_subs_ch = st.text_input("Jumlah Subs", value=str(r['SUBSCRIBE']), key=f"esb_p_{idx}")
                             
                             if st.button("💾 SIMPAN", key=f"sv_p_{idx}", use_container_width=True, type="primary"):
                                 r_idx = idx + 2
-                                ws.update_cell(r_idx, 4, e_nama_ch.upper())
-                                ws.update_cell(r_idx, 5, e_subs_ch)
+                                ws.update_cell(r_idx, 4, e_nama_ch.upper()) # Kolom D
+                                ws.update_cell(r_idx, 5, e_subs_ch)       # Kolom E
                                 st.cache_data.clear(); st.rerun()
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4134,6 +4138,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
