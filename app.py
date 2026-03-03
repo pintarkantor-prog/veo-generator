@@ -3569,16 +3569,20 @@ def tampilkan_database_channel():
                 key="grid_proses_pure_v1"
             )
 
-            # 5. LOGIKA AUTO-SAVE
+            # --- 5. LOGIKA AUTO-SAVE (ANTI-SAMPAH) ---
             if not edited_p.equals(df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]]):
                 try:
                     for i, row in edited_p.iterrows():
                         idx_asli = int(row['REAL_IDX'])
                         
+                        # A. JIKA EDIT BARIS YANG SUDAH ADA DI GSHEET (REAL_IDX bukan -1)
                         if idx_asli != -1:
                             old_val = df.iloc[idx_asli]
+                            
+                            # Jika lo sengaja ngosongin email yang tadinya ada isinya
                             final_email = "" if row['EMAIL'] == "--- KOSONG ---" else row['EMAIL']
                             
+                            # Cek perubahan (Enter)
                             if (final_email != old_val['EMAIL'] or row['STATUS'] != old_val['STATUS'] or 
                                 row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
                                 
@@ -3590,16 +3594,29 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                                 ws.update_cell(r_gs, 7, row['STATUS'])
                                 
+                                # Log siapa yang edit
                                 tz = pytz.timezone('Asia/Jakarta')
                                 log_msg = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
                                 ws.update_cell(r_gs, 12, log_msg)
                         
-                        elif row['EMAIL'] != "--- KOSONG ---" and row['EMAIL'] != "":
+                        # B. JIKA NGISI BARIS DUMMY (MANUAL INPUT)
+                        # Syarat: Email harus diisi sesuatu yang bukan "--- KOSONG ---"
+                        elif row['EMAIL'] != "--- KOSONG ---" and str(row['EMAIL']).strip() != "":
+                            # Cari nomor HP-nya (ambil dari baris atasnya kalau kena efek merge)
+                            target_hp = row['HP']
+                            if target_hp == "":
+                                for b_idx in range(i, -1, -1):
+                                    if edited_p.iloc[b_idx]['HP'] != "":
+                                        target_hp = edited_p.iloc[b_idx]['HP']
+                                        break
+                            
+                            v_hp_clean = target_hp.replace("📱 HP ", "")
+                            
+                            # Baru deh simpan ke GSheet sebagai baris baru
                             tz = pytz.timezone('Asia/Jakarta')
                             tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            v_hp = row['HP'].replace("HP ", "")
                             ws.append_row([tgl, row['EMAIL'], row['PASSWORD'], row['NAMA_CHANNEL'], 
-                                           row['SUBSCRIBE'], row['LINK_CHANNEL'], "PROSES", v_hp, "", "", user_aktif])
+                                           row['SUBSCRIBE'], row['LINK_CHANNEL'], "PROSES", v_hp_clean, "", "", user_aktif])
                                 
                     st.cache_data.clear()
                     st.rerun()
@@ -4183,6 +4200,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
