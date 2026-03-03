@@ -3583,14 +3583,15 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (HTML PRINT PRO MODE - ZEBRA STRIPES)
+    # TAB 3: JADWAL UPLOAD (LOGO PINTAR & BACKGROUND BARIS SELANG-SELING)
     # ==============================================================================
     with tab_jadwal:
-        import datetime # Buat tanggal berjalan
+        import datetime
+        import base64
 
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
 
-        # 1. SETUP DATA (Hanya yang sedang PROSES)
+        # 1. SETUP DATA (PROSES)
         df_j = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_j.empty:
@@ -3598,120 +3599,99 @@ def tampilkan_database_channel():
         else:
             # --- PROTEKSI EDIT JAM (Khusus Level PRO) ---
             if is_pro:
-                with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
+                with st.expander("🛠️ EDIT JAM OPERASIONAL", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
 
                     edited_j = st.data_editor(
                         df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
-                        column_config={
-                            "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True),
-                            "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
-                            "REAL_IDX": None, "HP_N": None
-                        },
-                        use_container_width=True, hide_index=True, key="edit_print_html_pro"
+                        column_config={"REAL_IDX": None, "HP_N": None},
+                        use_container_width=True, hide_index=True, key="editor_pro_fix_zebra"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
                         for _, row in edited_j.iterrows():
                             r_gs = int(row['REAL_IDX']) + 2
-                            ws.update_cell(r_gs, 13, str(row['PAGI'])) # Kolom 13
-                            ws.update_cell(r_gs, 14, str(row['SIANG'])) # Kolom 14
-                            ws.update_cell(r_gs, 15, str(row['SORE'])) # Kolom 15
+                            ws.update_cell(r_gs, 13, str(row['PAGI'])) 
+                            ws.update_cell(r_gs, 14, str(row['SIANG']))
+                            ws.update_cell(r_gs, 15, str(row['SORE']))
                         st.cache_data.clear(); st.rerun()
 
             st.divider()
 
-            # --- 2. PREPARASI DATA UNTUK PRINT ---
+            # --- 2. FUNGSI LOGO (PINTAR.png) ---
+            def get_base64_logo(path):
+                try:
+                    with open(path, "rb") as image_file:
+                        return base64.b64encode(image_file.read()).decode()
+                except: return ""
+
+            logo_base64 = get_base64_logo("PINTAR.png")
+
+            # --- 3. PREPARASI DATA PRINT ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 3. LOGIKA WARNA SELANG SELING (ZEBRA STRIPES) ---
-            # Tentukan warna dasar abu-abu
-            color_ganjil = "#f9f9f9" # Abu sangat muda
-            color_genap = "#eaeaea"  # Abu sedikit tua
-
+            # --- 4. SUSUN BARIS HTML DENGAN BACKGROUND (BUKAN WARNA HURUF) ---
             rows_html = ""
-            for _, r in df_display.iterrows():
-                # Tentukan warna baris berdasarkan nomor HP (Ganjil/Genap)
-                row_bg_color = color_ganjil if r['HP_N'] % 2 != 0 else color_genap
+            for idx, r in enumerate(df_display.itertuples()):
+                # Logika Warna Background Baris Selang-Seling (Zebra)
+                # Ganjil: Putih, Genap: Abu Muda
+                bg_color = "#FFFFFF" if idx % 2 == 0 else "#F2F2F2"
                 
-                # Biar baris yang HP-nya kosong (duplicated) tetep dapet warna yang sama kayak grupnya
-                if r['HP_DISPLAY'] == "":
-                    # Kita cek warna baris sebelumnya (Ini logic agak rumit tapi worth it)
-                    # Tapi biar simpel, kita pake warna yang sama aja selama satu grup HP
-                    row_bg_color = row_bg_color # Tetep pake warna grup HPnya
-
-                pagi = r['PAGI'] if str(r['PAGI']) != 'nan' else "-"
-                siang = r['SIANG'] if str(r['SIANG']) != 'nan' else "-"
-                sore = r['SORE'] if str(r['SORE']) != 'nan' else "-"
                 rows_html += f"""
-                    <tr style='background-color:{row_bg_color};'>
-                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'><b>{r['HP_DISPLAY']}</b></td>
-                        <td style='text-align:left; border:1px solid #ccc; padding:8px;'>{r['NAMA_CHANNEL']}</td>
-                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{pagi}</td>
-                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{siang}</td>
-                        <td style='text-align:center; border:1px solid #ccc; padding:8px;'>{sore}</td>
+                    <tr style='background-color:{bg_color};'>
+                        <td style='border:1px solid #999; padding:8px; text-align:center;'><b>{r.HP_DISPLAY}</b></td>
+                        <td style='border:1px solid #999; padding:8px; text-align:left;'>{r.NAMA_CHANNEL}</td>
+                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{r.PAGI if str(r.PAGI) != 'nan' else '-'}</td>
+                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{r.SIANG if str(r.SIANG) != 'nan' else '-'}</td>
+                        <td style='border:1px solid #999; padding:8px; text-align:center;'>{r.SORE if str(r.SORE) != 'nan' else '-'}</td>
                     </tr>
                 """
 
-            # --- 4. SUSUN HTML PRINT (LOGO, JUDUL, TANGGAL) ---
-            # Link Logo Pintar lo (Ganti dengan URL asli lo)
-            url_logo = "URL_LOGO_PINTAR_LO_DI_SINI" 
-            
-            # Ambil tanggal hari ini
-            tgl_hari_ini = datetime.date.today().strftime("%d %B %Y")
-
-            html_jadwal_pro = f"""
-                <div style='font-family:Arial, sans-serif; padding:20px;'>
-                    <div style='display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid black; padding-bottom:10px; margin-bottom:20px;'>
+            # --- 5. HTML FULL DENGAN LOGO PINTAR.png ---
+            tgl_print = datetime.date.today().strftime("%d %B %Y")
+            html_pro = f"""
+                <div style='font-family:Arial, sans-serif; padding:10px;'>
+                    <div style='display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #2D5A47; padding-bottom:10px; margin-bottom:15px;'>
                         <div style='display:flex; align-items:center;'>
-                            <img src='{url_logo}' alt='Logo Pintar' style='height:60px; margin-right:15px;'>
+                            <img src='data:image/png;base64,{logo_base64}' style='height:70px; margin-right:20px;'>
                             <div>
-                                <h1 style='margin:0; font-size:24px;'>RADAR JADWAL UPLOAD</h1>
-                                <p style='margin:0; font-size:14px; color:#555;'>Periode: {tgl_hari_ini}</p>
+                                <h1 style='margin:0; font-size:26px; color:#2D5A47;'>RADAR JADWAL UPLOAD</h1>
+                                <p style='margin:0; font-size:14px; color:#666;'>Dicetak pada: {tgl_print}</p>
                             </div>
                         </div>
                     </div>
-
-                    <table style='width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;'>
+                    <table style='width:100%; border-collapse:collapse; font-size:13px;'>
                         <thead>
                             <tr style='background-color:#2D5A47; color:white;'>
-                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>HP</th>
-                                <th style='border:1px solid #ccc; padding:10px; text-align:left;'>NAMA CHANNEL</th>
-                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>PAGI</th>
-                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>SIANG</th>
-                                <th style='border:1px solid #ccc; padding:10px; text-align:center;'>SORE</th>
+                                <th style='padding:12px; border:1px solid #ccc;'>HP</th>
+                                <th style='padding:12px; border:1px solid #ccc; text-align:left;'>NAMA CHANNEL</th>
+                                <th style='padding:12px; border:1px solid #ccc;'>PAGI</th>
+                                <th style='padding:12px; border:1px solid #ccc;'>SIANG</th>
+                                <th style='padding:12px; border:1px solid #ccc;'>SORE</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {rows_html}
-                        </tbody>
+                        <tbody>{rows_html}</tbody>
                     </table>
-                    <p style='font-size:10px; color:#888; text-align:center; margin-top:15px;'><i>*Jadwal ini dicetak otomatis dari Sistem Pintar AI Lab.</i></p>
+                    <p style='text-align:center; font-size:10px; color:#999; margin-top:20px;'>Sistem Otomatis Pintar AI Lab</p>
                 </div>
             """
 
-            st.success("✅ Radar Jadwal siap cetak Pro.")
-            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF PRO)", use_container_width=True):
-                st.components.v1.html(html_jadwal_pro + "<script>window.print();</script>", height=0)
+            st.success("✅ Jadwal siap cetak dengan Logo PINTAR.")
+            if st.button("📄 DOWNLOAD JADWAL PDF (STYLISH)", use_container_width=True):
+                st.components.v1.html(html_pro + "<script>window.print();</script>", height=0)
 
-            # --- 5. TAMPILAN WEB (RATA KIRI) ---
-            st.markdown("#### 📱 MONITORING VIEW")
+            # View Web (Tetap Rata Kiri & Bersih)
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
                     "HP_DISPLAY": st.column_config.TextColumn("📱 HP", width=50),
                     "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
-                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
-                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
-                    "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
-                },
-                hide_index=True,
-                use_container_width=True
+                }, hide_index=True, use_container_width=True
             )
                         
     # ======================================================================
@@ -4259,5 +4239,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
