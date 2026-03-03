@@ -3394,163 +3394,193 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (AUTO-PILOT SLOT + FULL ICONS)
+    # TAB 1: STOK STANDBY (EKSLUSIF PRO: OWNER, ADMIN, UPLOADER)
     # ==============================================================================
     with tab_standby:
-        hc1, hc2 = st.columns([3, 1])
-        hc1.markdown("### 🔐 DATABASE STOK STANDBY")
-        
-        if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
-            st.session_state.form_baru = not st.session_state.get('form_baru', False)
-
-        if st.session_state.get('form_baru', False):
-            with st.container(border=True):
-                with st.form("input_v6_icon", clear_on_submit=True):
-                    f1, f2, f3 = st.columns(3)
-                    v_mail = f1.text_input("📧 Email Login")
-                    v_pass = f2.text_input("🔑 Password")
-                    v_nama = f3.text_input("📺 Nama Channel")
-                    f4, f5 = st.columns([1, 2])
-                    v_subs = f4.text_input("📊 Jumlah Subs")
-                    v_link = f5.text_input("🔗 Link Channel")
-                    if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
-                        if v_nama and v_mail:
-                            tz = pytz.timezone('Asia/Jakarta')
-                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
-                            st.cache_data.clear(); st.success("Data Masuk!"); st.rerun()
-
-        df_st = df[df['STATUS'] == 'STANDBY'].copy()
-
-        if df_st.empty:
-            st.info("Belum ada stok standby.")
+        # --- 1. PROTEKSI AKSES: Cek apakah user punya level PRO ---
+        if not is_pro:
+            st.warning("🔒 Akses Terbatas.")
+            st.info("Hubungi Admin jika Anda memerlukan bantuan terkait stok akun.")
         else:
-            df_st['NO'] = range(1, len(df_st) + 1)
-            df_st['REAL_IDX'] = df_st.index 
-            df_st['SUBSCRIBE'] = df_st['SUBSCRIBE'].astype(str)
+            hc1, hc2 = st.columns([3, 1])
+            hc1.markdown("### 🔐 DATABASE STOK STANDBY")
+            
+            # Tombol Tambah Akun (Hanya muncul untuk PRO)
+            if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
+                st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
-            # --- KONFIGURASI KOLOM DENGAN IKON LENGKAP ---
-            config_st = {
-                "NO": st.column_config.TextColumn("#️⃣ NO", width=40, disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220),
-                "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130),
-                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
-                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=120),
-                "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=80, disabled=True),
-                "STATUS": st.column_config.SelectboxColumn(
-                    "⚙️ STATUS", width=130,
-                    options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
-                ),
-                "REAL_IDX": None 
-            }
+            # --- 2. FORM INPUT AKUN BARU ---
+            if st.session_state.get('form_baru', False):
+                with st.container(border=True):
+                    with st.form("input_v6_icon", clear_on_submit=True):
+                        f1, f2, f3 = st.columns(3)
+                        v_mail = f1.text_input("📧 Email Login")
+                        v_pass = f2.text_input("🔑 Password")
+                        v_nama = f3.text_input("📺 Nama Channel")
+                        f4, f5 = st.columns([1, 2])
+                        v_subs = f4.text_input("📊 Jumlah Subs")
+                        v_link = f5.text_input("🔗 Link Channel")
+                        if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
+                            if v_nama and v_mail:
+                                tz = pytz.timezone('Asia/Jakarta')
+                                tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                ws.append_row([tgl, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif])
+                                st.cache_data.clear(); st.success("Data Masuk!"); st.rerun()
 
-            edited_st = st.data_editor(
-                df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
-                column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_v6_icon"
-            )
+            # --- 3. FILTER DATA STANDBY ---
+            df_st = df[df['STATUS'] == 'STANDBY'].copy()
 
-            if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
-                try:
-                    for i, row in edited_st.iterrows():
-                        idx_asli = int(row['REAL_IDX'])
-                        old_val = df.iloc[idx_asli]
-                        
-                        if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
-                            df_p_now = df[df['STATUS'] == 'PROSES'].copy()
-                            hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+            if df_st.empty:
+                st.info("Belum ada stok standby.")
+            else:
+                df_st['NO'] = range(1, len(df_st) + 1)
+                df_st['REAL_IDX'] = df_st.index 
+                df_st['SUBSCRIBE'] = df_st['SUBSCRIBE'].astype(str)
+
+                # Konfigurasi Kolom
+                config_st = {
+                    "NO": st.column_config.TextColumn("#️⃣ NO", width=40, disabled=True),
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220),
+                    "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
+                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=120),
+                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=80, disabled=True),
+                    "STATUS": st.column_config.SelectboxColumn(
+                        "⚙️ STATUS", width=130,
+                        options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
+                    ),
+                    "REAL_IDX": None 
+                }
+
+                # --- 4. DATA EDITOR ---
+                edited_st = st.data_editor(
+                    df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
+                    column_config=config_st, 
+                    use_container_width=True, 
+                    hide_index=True, 
+                    key="grid_st_pro_locked"
+                )
+
+                # --- 5. LOGIKA UPDATE KE GSHEET ---
+                if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
+                    try:
+                        for i, row in edited_st.iterrows():
+                            idx_asli = int(row['REAL_IDX'])
+                            old_val = df.iloc[idx_asli]
                             
-                            target_hp = "1"
-                            for h in range(1, 101):
-                                if hp_counts.get(str(h), 0) < 2:
-                                    target_hp = str(h)
-                                    break
+                            # Logika Auto-Assign HP jika status berubah ke PROSES
+                            if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
+                                df_p_now = df[df['STATUS'] == 'PROSES'].copy()
+                                hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+                                
+                                target_hp = "1"
+                                for h in range(1, 101):
+                                    if hp_counts.get(str(h), 0) < 2:
+                                        target_hp = str(h)
+                                        break
+                                
+                                r_gs = idx_asli + 2
+                                ws.update_cell(r_gs, 7, "PROSES")
+                                ws.update_cell(r_gs, 8, target_hp)
+                                tz = pytz.timezone('Asia/Jakarta')
+                                ws.update_cell(r_gs, 12, f"Auto HP {target_hp} ({datetime.now(tz).strftime('%H:%M')})")
                             
-                            r_gs = idx_asli + 2
-                            ws.update_cell(r_gs, 7, "PROSES")
-                            ws.update_cell(r_gs, 8, target_hp)
-                            tz = pytz.timezone('Asia/Jakarta')
-                            ws.update_cell(r_gs, 12, f"Auto HP {target_hp} ({datetime.now(tz).strftime('%H:%M')})")
-                        
-                        elif row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL']:
-                            r_gs = idx_asli + 2
-                            ws.update_cell(r_gs, 2, row['EMAIL'])
-                            ws.update_cell(r_gs, 3, row['PASSWORD'])
-                            ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
-                            ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
-                            ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
-                            ws.update_cell(r_gs, 7, row['STATUS'])
+                            # Logika Update Data Biasa
+                            elif (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL']):
+                                r_gs = idx_asli + 2
+                                ws.update_cell(r_gs, 2, row['EMAIL'])
+                                ws.update_cell(r_gs, 3, row['PASSWORD'])
+                                ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
+                                ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
+                                ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
+                                ws.update_cell(r_gs, 7, row['STATUS'])
 
-                    st.cache_data.clear(); st.rerun()
-                except Exception as e: st.error(f"Error: {e}")
-
+                        st.cache_data.clear(); st.rerun()
+                    except Exception as e: st.error(f"Error: {e}")
+                    
     # ==============================================================================
-    # TAB 2: MONITORING PROSES (AUTO-MERGE + FULL ICONS)
+    # TAB 2: MONITORING PROSES (EKSLUSIF PRO: OWNER, ADMIN, UPLOADER)
     # ==============================================================================
     with tab_proses:
-        st.markdown("### 🚀 MONITORING PROSES (MAX 2 SLOT)")
-
-        df_p = df[df['STATUS'] == 'PROSES'].copy()
-
-        if df_p.empty:
-            st.info("Semua unit HP kosong.")
+        # --- 1. PROTEKSI LIHAT: Jika bukan PRO, langsung tendang (Hidden Content) ---
+        if not is_pro:
+            st.warning("🔒 Akses Terbatas.")
         else:
-            df_p['HP_SORT'] = pd.to_numeric(df_p['HP'], errors='coerce').fillna(999)
-            df_p = df_p.sort_values(by=['HP_SORT', 'EMAIL'])
+            st.markdown("### 🚀 MONITORING PROSES (MAX 2 SLOT)")
 
-            display_list = []
-            for hp_id, group in df_p.groupby('HP'):
-                for i, (idx, r) in enumerate(group.iterrows()):
-                    display_list.append({
-                        "REAL_IDX": idx,
-                        "HP": f"📱 HP {hp_id}" if i == 0 else "", 
-                        "EMAIL": r['EMAIL'],
-                        "PASSWORD": r['PASSWORD'],
-                        "NAMA_CHANNEL": r['NAMA_CHANNEL'],
-                        "SUBSCRIBE": str(r['SUBSCRIBE']),
-                        "LINK_CHANNEL": r['LINK_CHANNEL'],
-                        "STATUS": r['STATUS']
-                    })
+            df_p = df[df['STATUS'] == 'PROSES'].copy()
 
-            df_display = pd.DataFrame(display_list)
-            
-            # --- KONFIGURASI KOLOM DENGAN IKON LENGKAP ---
-            config_p = {
-                "HP": st.column_config.TextColumn("📱 UNIT", width=90, disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220),
-                "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130),
-                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
-                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
-                "STATUS": st.column_config.SelectboxColumn(
-                    "⚙️ STATUS", width=130, 
-                    options=["PROSES", "SOLD", "STANDBY", "BUSUK", "SUSPEND"]
-                ),
-                "REAL_IDX": None
-            }
+            if df_p.empty:
+                st.info("Semua unit HP kosong.")
+            else:
+                # Sorting HP biar urut 1, 2, 3...
+                df_p['HP_SORT'] = pd.to_numeric(df_p['HP'], errors='coerce').fillna(999)
+                df_p = df_p.sort_values(by=['HP_SORT', 'EMAIL'])
 
-            edited_p = st.data_editor(df_display, column_config=config_p, use_container_width=True, hide_index=True, key="grid_p_v6_icon")
+                display_list = []
+                for hp_id, group in df_p.groupby('HP'):
+                    for i, (idx, r) in enumerate(group.iterrows()):
+                        display_list.append({
+                            "REAL_IDX": idx,
+                            "HP": f"📱 HP {hp_id}" if i == 0 else "", 
+                            "EMAIL": r['EMAIL'],
+                            "PASSWORD": r['PASSWORD'],
+                            "NAMA_CHANNEL": r['NAMA_CHANNEL'],
+                            "SUBSCRIBE": str(r['SUBSCRIBE']),
+                            "LINK_CHANNEL": r['LINK_CHANNEL'],
+                            "STATUS": r['STATUS']
+                        })
 
-            if not edited_p.equals(df_display):
-                try:
-                    for i, row in edited_p.iterrows():
-                        idx_asli = int(row['REAL_IDX'])
-                        old_val = df.iloc[idx_asli]
-                        if (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL'] or 
-                            row['PASSWORD'] != old_val['PASSWORD'] or row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
+                df_display = pd.DataFrame(display_list)
+                
+                # --- 2. KONFIGURASI KOLOM (Tetap Kunci Email, Pass, dll) ---
+                config_p = {
+                    "HP": st.column_config.TextColumn("📱 UNIT", width=90, disabled=True),
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220, disabled=True),
+                    "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130, disabled=True),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180, disabled=True),
+                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100, disabled=True),
+                    "STATUS": st.column_config.SelectboxColumn(
+                        "⚙️ STATUS", width=130, 
+                        options=["PROSES", "SOLD", "STANDBY", "BUSUK", "SUSPEND"]
+                    ),
+                    "REAL_IDX": None
+                }
+
+                # --- 3. DATA EDITOR: Hanya PRO yang bisa utak-atik ---
+                # Meski is_pro sudah di-filter di atas, disabled=not is_pro buat jaga-jaga 
+                edited_p = st.data_editor(
+                    df_display, 
+                    column_config=config_p, 
+                    use_container_width=True, 
+                    hide_index=True, 
+                    key="grid_p_pro_locked",
+                    disabled=not is_pro 
+                )
+
+                # --- 4. LOGIKA SAVE (Hanya dieksekusi oleh PRO) ---
+                if is_pro and not edited_p.equals(df_display):
+                    try:
+                        for i, row in edited_p.iterrows():
+                            idx_asli = int(row['REAL_IDX'])
+                            old_val = df.iloc[idx_asli]
                             
-                            r_gs = idx_asli + 2
-                            ws.update_cell(r_gs, 2, row['EMAIL'])
-                            ws.update_cell(r_gs, 3, row['PASSWORD'])
-                            ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
-                            ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
-                            ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
-                            ws.update_cell(r_gs, 7, row['STATUS'])
-                            
-                            if row['STATUS'] != 'PROSES':
-                                ws.update_cell(r_gs, 8, "")
-                    st.cache_data.clear(); st.rerun()
-                except Exception as e: st.error(f"Error: {e}")
+                            if (row['STATUS'] != old_val['STATUS'] or row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
+                                
+                                r_gs = idx_asli + 2
+                                ws.update_cell(r_gs, 5, row['SUBSCRIBE']) 
+                                ws.update_cell(r_gs, 7, row['STATUS'])    
+                                
+                                if row['STATUS'] != 'PROSES':
+                                    ws.update_cell(r_gs, 8, "")
+                                
+                                tz = pytz.timezone('Asia/Jakarta')
+                                ws.update_cell(r_gs, 12, f"Up: {user_aktif} ({datetime.now(tz).strftime('%H:%M')})")
+                        
+                        st.cache_data.clear(); st.rerun()
+                    except Exception as e: st.error(f"Error: {e}")
                     
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4129,6 +4159,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
