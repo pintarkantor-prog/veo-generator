@@ -2020,7 +2020,7 @@ def tampilkan_kendali_tim():
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         
         # FILTER: Ambil STAFF dan ADMIN. OWNER (Dian) jangan dimasukkan agar saldo tetap rahasia.
-        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
+        df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
         if not is_masa_depan:
             for _, s in df_staff_real.iterrows():
@@ -4389,6 +4389,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
