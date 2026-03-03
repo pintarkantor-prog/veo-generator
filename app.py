@@ -3513,21 +3513,25 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (FULL GSHEET EDITING MODE)
+    # TAB 2: CHANNEL PROSES (LOGIKA 3 BARIS OTOMATIS PER HP AKTIF)
     # ==============================================================================
     with tab_proses:
-        # Layout Header: Judul & Tombol Save sejajar di pojok kanan
+        # Layout Header: Judul & Tombol Save
         hc1, hc2 = st.columns([3, 1])
         hc1.markdown("### 🚀 MONITORING PROSES (EDITABLE GRID)")
         
-        # 1. FILTER DATA: Hanya ambil status 'PROSES' saja
-        # Ini biar status STANDBY gak nyampah di tab proses lo
-        df_p = df[df['STATUS'] == 'PROSES'].copy().reset_index()
+        # 1. IDENTIFIKASI HP YANG AKTIF (Status PROSES)
+        # Cari tahu unit HP mana saja yang punya minimal satu channel 'PROSES'
+        active_hps = df[df['STATUS'] == 'PROSES']['HP'].unique().tolist()
 
-        if df_p.empty:
-            st.info("Belum ada channel dalam status PROSES.")
+        if not active_hps:
+            st.info("Belum ada channel dalam status PROSES. Silahkan pindahkan dari Tab Standby.")
         else:
-            # 2. KONFIGURASI KOLOM (Semua Boleh Edit Kecuali HP)
+            # 2. FILTER DATA: Ambil 3 baris lengkap untuk setiap HP yang aktif
+            # Kita filter df utama berdasarkan list HP aktif tadi
+            df_display = df[df['HP'].isin(active_hps)].copy().reset_index()
+
+            # 3. KONFIGURASI KOLOM (GSheet Mode)
             config = {
                 "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
                 "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium"),
@@ -3539,37 +3543,49 @@ def tampilkan_database_channel():
                     "⚙️ STATUS", width="medium",
                     options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"]
                 ),
-                "index": None # Sembunyikan index teknis
+                "index": None # Sembunyikan index bantuan
             }
 
-            # 3. TAMPILAN DATA EDITOR
-            # Zebra striping per baris otomatis aktif di st.data_editor
+            # 4. TAMPILAN DATA EDITOR
+            # Urutkan berdasarkan HP agar per 3 baris ngumpul rapi
+            df_display = df_display.sort_values(by=['HP', 'index'])
+            
             edited_df = st.data_editor(
-                df_p[["index", "HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]],
+                df_display[["index", "HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]],
                 column_config=config,
                 use_container_width=True,
                 hide_index=True,
-                key="grid_proses_pro"
+                key="grid_proses_grouped"
             )
 
-            # 4. TOMBOL SAVE DI POJOK KANAN
+            # 5. TOMBOL SAVE DI POJOK KANAN
             with hc2:
                 if st.button("💾 SAVE CHANGES", use_container_width=True, type="primary"):
                     try:
                         with st.spinner("Sinkronisasi..."):
                             for i, row in edited_df.iterrows():
-                                real_idx = int(row['index']) + 2 # Tracking baris asli GSheet
+                                real_idx = int(row['index']) + 2 # Baris asli GSheet
                                 
-                                # Update semua kolom yang lo izinin edit tadi
-                                ws.update_cell(real_idx, 2, row['EMAIL'])         # Kolom B
-                                ws.update_cell(real_idx, 3, row['PASSWORD'])      # Kolom C
-                                ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'])  # Kolom D
-                                ws.update_cell(real_idx, 5, row['SUBSCRIBE'])     # Kolom E
-                                ws.update_cell(real_idx, 6, row['LINK_CHANNEL']) # Kolom F
-                                ws.update_cell(real_idx, 7, row['STATUS'])       # Kolom G
+                                # Cek perubahan data dibandingkan df awal
+                                old_row = df.loc[row['index']]
+                                
+                                # Update GSheet jika ada perubahan
+                                if (row['EMAIL'] != old_row['EMAIL'] or 
+                                    row['PASSWORD'] != old_row['PASSWORD'] or
+                                    row['NAMA_CHANNEL'] != old_row['NAMA_CHANNEL'] or
+                                    str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE']) or
+                                    row['LINK_CHANNEL'] != old_row['LINK_CHANNEL'] or
+                                    row['STATUS'] != old_row['STATUS']):
+                                    
+                                    ws.update_cell(real_idx, 2, row['EMAIL'])
+                                    ws.update_cell(real_idx, 3, row['PASSWORD'])
+                                    ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'])
+                                    ws.update_cell(real_idx, 5, row['SUBSCRIBE'])
+                                    ws.update_cell(real_idx, 6, row['LINK_CHANNEL'])
+                                    ws.update_cell(real_idx, 7, row['STATUS'])
                                 
                             st.cache_data.clear()
-                            st.success("Tersinkron!")
+                            st.success("Data Sinkron!")
                             time.sleep(0.5); st.rerun()
                     except Exception as e:
                         st.error(f"Error: {e}")
@@ -4151,6 +4167,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
