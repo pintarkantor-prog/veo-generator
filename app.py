@@ -3439,18 +3439,18 @@ def tampilkan_database_channel():
                 df_st['REAL_IDX'] = df_st.index 
 
                 config_st = {
-                    "NO": st.column_config.TextColumn("Nomer", width="small", disabled=True),
-                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium"),
-                    "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small"),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium"),
-                    "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d"),
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small"),
-                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width="small", disabled=True),
+                    "NO": st.column_config.TextColumn("Nomer", width=50, disabled=True), # Sempit aja buat angka
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250), # Email biasanya panjang
+                    "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
+                    "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width=80, format="%d"),
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
+                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=100, disabled=True),
                     "STATUS": st.column_config.SelectboxColumn(
-                        "⚙️ STATUS", width="medium",
+                        "⚙️ STATUS", width=130,
                         options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
                     ),
-                    "REAL_IDX": None # Sembunyikan kolom index asli
+                    "REAL_IDX": None 
                 }
 
                 # DATA EDITOR: Enter = Auto Save
@@ -4149,6 +4149,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
