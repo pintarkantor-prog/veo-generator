@@ -3467,9 +3467,7 @@ def tampilkan_database_channel():
                                     e_pass_ch = ec3.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
                                     e_link_ch = ec4.text_input("🔗 Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
 
-                                    # Baris 3: SUBSCRIBE (Tambahan Baru)
-                                    # Mengambil nilai angka dari GSheet Kolom E
-                                    e_subs_ch = st.number_input("📊 Jumlah Subscribe", value=int(r['SUBSCRIBE']) if str(r['SUBSCRIBE']).isdigit() else 0, key=f"esb_{idx}")
+                                    e_subs_ch = st.text_input("📊 Jumlah Subscribe", value=str(r['SUBSCRIBE']), key=f"esb_{idx}")
                                     
                                     st.divider()
                                     
@@ -3479,26 +3477,26 @@ def tampilkan_database_channel():
                                             try:
                                                 r_idx = idx + 2 
                                                 
-                                                # 1. Update Data Utama (Termasuk SUBSCRIBE ke Kolom 5)
-                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Kolom D: NAMA_CHANNEL
-                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)       # Kolom B: EMAIL
-                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)       # Kolom C: PASSWORD
-                                                ws_ch.update_cell(r_idx, 5, e_subs_ch)       # Kolom E: SUBSCRIBE
-                                                ws_ch.update_cell(r_idx, 6, e_link_ch)       # Kolom F: LINK_CHANNEL
+                                                # Pastikan e_subs_ch dikonversi ke angka sebelum masuk GSheet
+                                                subs_angka = int(e_subs_ch) if e_subs_ch.isdigit() else 0
                                                 
-                                                # 2. PENCATATAN OTOMATIS KE KOLOM L (EDITED)
+                                                # Update Kolom E (Kolom 5)
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) 
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)       
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)       
+                                                ws_ch.update_cell(r_idx, 5, subs_angka) # MASUK SEBAGAI ANGKA
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)       
+                                                
+                                                # Log Edited
                                                 tz = pytz.timezone('Asia/Jakarta')
-                                                waktu_edit = datetime.now(tz).strftime("%d/%m %H:%M")
-                                                log_edit = f"By {user_aktif} ({waktu_edit})"
-                                                ws_ch.update_cell(r_idx, 12, log_edit) # Kolom 12 adalah kolom L
+                                                log_edit = f"By {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
+                                                ws_ch.update_cell(r_idx, 12, log_edit) 
                                                 
                                                 st.cache_data.clear()
-                                                st.success(f"✅ Data diperbarui: {log_edit}")
+                                                st.success(f"✅ Data diperbarui!")
                                                 time.sleep(0.5); st.rerun()
                                             except Exception as e:
-                                                st.error(f"Error: {e}")
-                                        else:
-                                            st.error("Nama & Email wajib diisi!")
+                                                st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
@@ -4096,6 +4094,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
