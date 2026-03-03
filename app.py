@@ -3393,6 +3393,7 @@ def tampilkan_database_channel():
     # Perbaikan NameError
     is_pro = level_aktif in ["OWNER", "ADMIN", "UPLOADER"]
     is_boss = level_aktif in ["OWNER", "ADMIN"]
+    is_ceo = level_aktif in ["OWNER"]
 
     # --- 2. PENARIKAN DATA (Ditarik saat menu dibuka) ---
     with st.spinner("Sinkronisasi Radar..."):
@@ -3856,7 +3857,7 @@ def tampilkan_database_channel():
     # TAB 5: SOLD CHANNEL (3 METRICS + PERIOD FILTER)
     # ==============================================================================
     with tab_sold:
-        if not is_boss: 
+        if not is_ceo: 
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
             # --- 1. SETUP FILTER PERIODE ---
@@ -3936,7 +3937,7 @@ def tampilkan_database_channel():
     # TAB 6: ARSIP CHANNEL (3 METRICS: TOTAL, BUSUK, SUSPEND)
     # ==============================================================================
     with tab_arsip:
-        if not is_boss: 
+        if not is_ceo: 
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
             # --- 1. LOGIKA DASHBOARD ARSIP ---
@@ -4392,6 +4393,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
