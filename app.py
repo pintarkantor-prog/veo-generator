@@ -3513,66 +3513,77 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (GROUPING KONDISIONAL PER UNIT HP)
+    # TAB 2: CHANNEL PROSES (COMPACT GRID - IDEAL UNTUK 100+ CHANNEL)
     # ==============================================================================
     with tab_proses:
         st.markdown("### 🚀 MONITORING PROSES")
         
-        # 1. Ambil data yang statusnya PROSES
+        # Filter data status 'PROSES' saja
         df_p = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_p.empty:
             st.info("Belum ada channel dalam status PROSES.")
         else:
-            # 2. Ambil list unik HP yang ada di data (misal: HP 1, HP 2)
-            # Kita urutkan biar HP 1 muncul paling atas
-            list_hp = sorted(df_p['HP'].unique().tolist())
+            # --- HEADER TABEL (Hanya Muncul Sekali di Atas) ---
+            # Layout Kolom: UNIT | EMAIL | NAMA CHANNEL | SUBS | URL | STATUS | AKSI
+            h0, h1, h2, h3, h4, h5, h6 = st.columns([1, 2.5, 2, 1, 0.8, 1.5, 0.5])
+            h0.caption("📱 UNIT")
+            h1.caption("📧 EMAIL LOGIN")
+            h2.caption("📺 NAMA CHANNEL")
+            h3.caption("📊 SUBS")
+            h4.caption("🔗 LINK")
+            h5.caption("⚙️ STATUS")
+            h6.caption("🛠️")
+            st.divider()
 
-            for unit in list_hp:
-                if not unit: continue # Skip kalau kolom HP kosong
+            # --- LOOPING BARIS DATA ---
+            # Kita urutkan berdasarkan HP biar grupnya rapi
+            df_p = df_p.sort_values(by='HP')
+            
+            for idx, r in df_p.iterrows():
+                # Penentuan Warna Baris Alternating (Opsional agar mata gak pusing)
+                # Kita buat baris yang sangat tipis
+                with st.container():
+                    c0, c1, c2, c3, c4, c5, c6 = st.columns([1, 2.5, 2, 1, 0.8, 1.5, 0.5])
+                    
+                    # Kolom 0: UNIT HP (Gedein dikit biar keliatan batasnya)
+                    c0.markdown(f"**{r['HP'] if r['HP'] else '-'}**")
+                    
+                    # Kolom 1 & 2: Data Utama
+                    c1.markdown(f"<code style='font-size:12px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                    c2.markdown(f"<b style='font-size:12px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
+                    
+                    # Kolom 3: Subs
+                    c3.markdown(f"{r['SUBSCRIBE']}")
+                    
+                    # Kolom 4: Link (Icon aja biar hemat tempat)
+                    if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
+                        c4.markdown(f"[🔗]({r['LINK_CHANNEL']})")
+                    else:
+                        c4.caption("-")
+
+                    # Kolom 5: Status Selector (Compact Mode)
+                    new_st = c5.selectbox("ST", ["PROSES", "SOLD", "BUSUK", "STANDBY", "SUSPEND"], 
+                                         index=["PROSES", "SOLD", "BUSUK", "STANDBY", "SUSPEND"].index(r['STATUS']), 
+                                         key=f"st_cp_{idx}", label_visibility="collapsed")
+                    
+                    # Jika status berubah, muncul tombol fix kecil di sampingnya
+                    if new_st != r['STATUS']:
+                        if c5.button("✅ FIX", key=f"fx_cp_{idx}", use_container_width=True):
+                            ws.update_cell(idx + 2, 7, new_st)
+                            st.cache_data.clear(); st.rerun()
+
+                    # Kolom 6: Popover Edit (Tetap ada buat update Subs manual)
+                    with c6:
+                        with st.popover("⋮"):
+                            st.markdown(f"**Edit {r['NAMA_CHANNEL']}**")
+                            e_subs = st.text_input("Update Subs", value=str(r['SUBSCRIBE']), key=f"esb_cp_{idx}")
+                            if st.button("Simpan", key=f"sv_cp_{idx}"):
+                                ws.update_cell(idx + 2, 5, e_subs)
+                                st.cache_data.clear(); st.rerun()
                 
-                # 3. Bikin BLOK/BOX per Unit HP
-                with st.container(border=True):
-                    st.markdown(f"<h3 style='color:#FF4B4B; margin-bottom:10px;'>📱 {unit}</h3>", unsafe_allow_html=True)
-                    
-                    # 4. Filter channel yang nempel di HP ini saja
-                    df_unit = df_p[df_p['HP'] == unit]
-                    
-                    for idx, r in df_unit.iterrows():
-                        # Layout Card (Sama kaya Standby, tanpa kolom OLEH)
-                        # c1=Email, c2=Pass, c3=Nama, c4=Subs, c5=URL, c6=Status, c7=Edit
-                        with st.container(border=True):
-                            st.markdown(f'<div style="background:#2D5A47; padding:2px; border-radius:3px; text-align:center;"><b style="color:white; font-size:12px;">📺 {r["NAMA_CHANNEL"]}</b></div>', unsafe_allow_html=True)
-                            
-                            c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 2, 1, 1, 1.5, 0.5])
-                            
-                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><b style='font-size:12px;'>{r['EMAIL']}</b>", unsafe_allow_html=True)
-                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASS</p><b style='font-size:12px;'>XXXX</b>", unsafe_allow_html=True)
-                            c3.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🆔 NAMA</p><b style='font-size:12px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                            c4.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📊 SUBS</p><b style='font-size:12px;'>{r['SUBSCRIBE']}</b>", unsafe_allow_html=True)
-                            
-                            # Link
-                            if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
-                                c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><a href='{r['LINK_CHANNEL']}' style='font-size:11px; text-decoration:none; color:#4facfe;'>BUKA!</a>", unsafe_allow_html=True)
-                            else:
-                                c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔗 URL</p><b style='font-size:11px; color:#555;'>NONE</b>", unsafe_allow_html=True)
-
-                            # Status Selector & Fix
-                            new_st = c6.selectbox("ST", ["PROSES", "SOLD", "BUSUK", "STANDBY"], 
-                                                 index=["PROSES", "SOLD", "BUSUK", "STANDBY"].index(r['STATUS']), 
-                                                 key=f"st_p_{idx}", label_visibility="collapsed")
-                            
-                            if new_st != r['STATUS']:
-                                if c6.button("⚡ FIX", key=f"fx_p_{idx}", use_container_width=True):
-                                    ws.update_cell(idx + 2, 7, new_st)
-                                    st.cache_data.clear(); st.rerun()
-
-                            # Edit Popover
-                            with c7:
-                                with st.popover("✏️"):
-                                    st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
-                                    # ... Form edit subs manual dsb ...
-                                    st.write("Gunakan form edit seperti di standby")
+                # Garis tipis antar baris biar gak rapat banget
+                st.markdown("<hr style='margin:2px 0; opacity:0.1'>", unsafe_allow_html=True)
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
     # ======================================================================
@@ -4150,6 +4161,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
