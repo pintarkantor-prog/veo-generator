@@ -3394,28 +3394,44 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (EKSLUSIF PRO: OWNER, ADMIN, UPLOADER)
+    # TAB 1: STOK STANDBY (DASHBOARD COMPACT & DATABASE)
     # ==============================================================================
     with tab_standby:
-        # --- 1. PROTEKSI AKSES ---
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
-            st.info("Hubungi Admin jika Anda memerlukan bantuan terkait stok akun.")
         else:
-            # --- [TAMBAHAN BARU] 1.1 DASHBOARD METRIC ---
-            # Kita hitung di sini biar realtime
+            # --- A. LOGIKA HITUNG DATA (Real-time) ---
             total_st = len(df[df['STATUS'] == 'STANDBY'])
             total_pr = len(df[df['STATUS'] == 'PROSES'])
-            # Hitung HP yang unik dan tidak kosong
-            hp_terisi = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
-
-            st.markdown("### 📊 DASHBOARD OPERASIONAL")
-            m1, m2, m3 = st.columns(3)
-            m1.metric("📦 STOK STANDBY", f"{total_st} Akun")
-            m2.metric("🚀 TOTAL PROSES", f"{total_pr} Akun")
-            m3.metric("📱 HP TERISI", f"{hp_terisi} Unit")
+            hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
-            st.markdown("<br>", unsafe_allow_html=True) # Spasi pengganti divider
+            # Hitung Sold Bulan Ini (Filter Berdasarkan Kolom Tanggal jika ada)
+            # Sementara kita hitung total SOLD yang ada di database
+            total_sold = len(df[df['STATUS'] == 'SOLD'])
+            
+            # Hitung Arsip (Suspend + Busuk)
+            total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
+
+            # --- B. TAMPILAN DASHBOARD CARD (Gaya Gambar 2) ---
+            with st.container(border=True):
+                c1, c2, c3, c4, c5 = st.columns(5)
+                
+                # Card 1: Standby
+                c1.markdown(f"📦 **STANDBY**\n### {total_st}\n<small style='color:gray;'>Akun Antre</small>", unsafe_allow_html=True)
+                
+                # Card 2: Proses
+                c2.markdown(f"🚀 **PROSES**\n### {total_pr}\n<small style='color:green;'>↑ Running</small>", unsafe_allow_html=True)
+                
+                # Card 3: HP Aktif
+                c3.markdown(f"📱 **HP**\n### {hp_aktif}\n<small style='color:gray;'>Unit Terisi</small>", unsafe_allow_html=True)
+                
+                # Card 4: Sold
+                c4.markdown(f"💰 **SOLD**\n### {total_sold}\n<small style='color:orange;'>Total Terjual</small>", unsafe_allow_html=True)
+                
+                # Card 5: Arsip
+                c5.markdown(f"📁 **ARSIP**\n### {total_arsip}\n<small style='color:red;'>Sus/Busuk</small>", unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
 
             # --- 1.2 HEADER & TOMBOL TAMBAH ---
             hc1, hc2 = st.columns([3, 1])
@@ -4251,6 +4267,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
