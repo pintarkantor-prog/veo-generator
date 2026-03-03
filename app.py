@@ -3513,24 +3513,28 @@ def tampilkan_database_channel():
                 rows_hp['REAL_IDX'] = rows_hp.index
                 
                 # Masukkan data yang ada
-                for _, r in rows_hp.iterrows():
+                for i, (_, r) in enumerate(rows_hp.iterrows()):
                     final_display_list.append({
                         "REAL_IDX": r['REAL_IDX'],
-                        "HP": f"HP {hp_id}", # Memastikan tulisan lengkap "HP 1"
+                        # TRIK DISINI: Tampilkan HP cuma di baris pertama (index 0)
+                        "HP": f"📱 HP {hp_id}" if i == 0 else "", 
                         "EMAIL": r['EMAIL'] if r['EMAIL'] else "--- KOSONG ---",
                         "PASSWORD": r['PASSWORD'],
                         "NAMA_CHANNEL": r['NAMA_CHANNEL'],
-                        "SUBSCRIBE": str(r['SUBSCRIBE']) if r['EMAIL'] else "", # Kosongkan jika laci kosong
+                        "SUBSCRIBE": str(r['SUBSCRIBE']) if r['EMAIL'] else "",
                         "LINK_CHANNEL": r['LINK_CHANNEL'],
                         "STATUS": r['STATUS']
                     })
                 
                 # Tambahkan laci dummy jika kurang dari 3
                 current_count = len(rows_hp)
-                for _ in range(max(0, 3 - current_count)):
+                for j in range(max(0, 3 - current_count)):
+                    # Hitung posisi dummy (misal data asli cuma 1, berarti dummy mulai di index 1 dan 2)
+                    posisi_dummy = current_count + j
                     final_display_list.append({
                         "REAL_IDX": -1,
-                        "HP": f"HP {hp_id}",
+                        # TRIK DISINI JUGA: Cek apakah dummy ini di baris pertama (jika data asli 0)
+                        "HP": f"📱 HP {hp_id}" if posisi_dummy == 0 else "",
                         "EMAIL": "--- KOSONG ---",
                         "PASSWORD": "",
                         "NAMA_CHANNEL": "",
@@ -4179,6 +4183,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
