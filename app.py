@@ -2177,7 +2177,7 @@ def tampilkan_kendali_tim():
         performa_staf = {}
 
         # --- FIX: Loop dari STAFF biar Icha & Nissa gak ilang ---
-        df_staff_filtered = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])]
+        df_staff_filtered = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
         for idx, s in df_staff_filtered.reset_index().iterrows():
             n_up = str(s.get('NAMA', '')).strip().upper()
@@ -4388,6 +4388,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
