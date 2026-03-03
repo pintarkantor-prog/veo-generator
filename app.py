@@ -3453,7 +3453,7 @@ def tampilkan_database_channel():
                                         ws.update_cell(r_idx, 7, opsi); ws.update_cell(r_idx, 11, user_aktif)
                                     st.cache_data.clear(); st.rerun()
                             with c8:
-                                # Popover Edit Premium Minimalis dengan Auto-Log
+                                # Popover Edit Premium Minimalis dengan Update Subscribe
                                 with st.popover("✏️"):
                                     st.markdown(f"#### 🛠️ EDIT: {r['NAMA_CHANNEL']}")
                                     
@@ -3466,19 +3466,25 @@ def tampilkan_database_channel():
                                     ec3, ec4 = st.columns(2)
                                     e_pass_ch = ec3.text_input("🔑 Password", value=str(r['PASSWORD']), key=f"eps_{idx}")
                                     e_link_ch = ec4.text_input("🔗 Link URL", value=str(r['LINK_CHANNEL']), key=f"elk_{idx}")
+
+                                    # Baris 3: SUBSCRIBE (Tambahan Baru)
+                                    # Mengambil nilai angka dari GSheet Kolom E
+                                    e_subs_ch = st.number_input("📊 Jumlah Subscribe", value=int(r['SUBSCRIBE']) if str(r['SUBSCRIBE']).isdigit() else 0, key=f"esb_{idx}")
                                     
                                     st.divider()
                                     
-                                    # Tombol Simpan dengan Pencatatan Otomatis ke Kolom L
+                                    # Tombol Simpan
                                     if st.button("💾 SIMPAN PERUBAHAN", key=f"sv_ch_{idx}", use_container_width=True, type="primary"):
                                         if e_nama_ch and e_mail_ch:
                                             try:
                                                 r_idx = idx + 2 
-                                                # 1. Update Data Utama
-                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) 
-                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)         
-                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)         
-                                                ws_ch.update_cell(r_idx, 6, e_link_ch)         
+                                                
+                                                # 1. Update Data Utama (Termasuk SUBSCRIBE ke Kolom 5)
+                                                ws_ch.update_cell(r_idx, 4, e_nama_ch.upper()) # Kolom D: NAMA_CHANNEL
+                                                ws_ch.update_cell(r_idx, 2, e_mail_ch)       # Kolom B: EMAIL
+                                                ws_ch.update_cell(r_idx, 3, e_pass_ch)       # Kolom C: PASSWORD
+                                                ws_ch.update_cell(r_idx, 5, e_subs_ch)       # Kolom E: SUBSCRIBE
+                                                ws_ch.update_cell(r_idx, 6, e_link_ch)       # Kolom F: LINK_CHANNEL
                                                 
                                                 # 2. PENCATATAN OTOMATIS KE KOLOM L (EDITED)
                                                 tz = pytz.timezone('Asia/Jakarta')
@@ -3491,6 +3497,8 @@ def tampilkan_database_channel():
                                                 time.sleep(0.5); st.rerun()
                                             except Exception as e:
                                                 st.error(f"Error: {e}")
+                                        else:
+                                            st.error("Nama & Email wajib diisi!")
                                                 
     # ======================================================================
     # --- TAB 2: CHANNEL PROSES (🚀 MONITORING UPLOAD) ---
@@ -4088,6 +4096,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
