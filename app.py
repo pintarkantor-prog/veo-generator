@@ -456,7 +456,7 @@ def proses_login(user, pwd):
                     log_absen_otomatis(user_key)
                     st.toast(f"Selamat bekerja, {user_key}!", icon="✅")
                 else:
-                    st.toast(f"Mode Owner Aktif: {user_key}", icon="👑")
+                    st.toast(f"Mode VIP Aktif: {user_key}", icon="👑")
 
                 # --- 4. BERSIHKAN URL & REFRESH ---
                 st.query_params.clear() 
@@ -1348,7 +1348,7 @@ def tampilkan_tugas_kerja():
         except:
             level_asli_target = "STAFF" # Fallback kalau data gak ketemu
 
-        if user_level in ["STAFF", "ADMIN", "OWNER"]:        
+        if user_level in ["STAFF", "ADMIN", "OWNER", "UPLOADER"]:        
             mask_user = df_all_tugas['STAF'].str.strip() == target_user
             mask_finish = df_all_tugas['STATUS'].str.strip() == 'FINISH'
             df_arsip_user = df_all_tugas[mask_user & mask_finish & mask_bulan].copy()
@@ -1495,7 +1495,7 @@ def tampilkan_tugas_kerja():
                     st.error("Isi dulu instruksinya, Bos!")
 
     # --- 4. SETOR MANDIRI (VERSI SUPER LOCK) ---
-    if user_level == "STAFF":
+    if user_level in ["STAFF", "UPLOADER", "ADMIN"]:
         with st.expander("🚀 SETOR TUGAS MANDIRI", expanded=False):
             st.info("💡 **PENTING:** Setor 1 video per 1 kiriman agar bonus video & target bulanan terhitung otomatis oleh sistem.")
             
@@ -1704,7 +1704,7 @@ def tampilkan_tugas_kerja():
                                                 st.error("Isi alasan batal di kolom catatan!")
 
                                 # --- PANEL STAFF (SETOR) ---
-                                elif user_level == "STAFF": 
+                                elif user_level in ["STAFF", "UPLOADER", "ADMIN"]: 
                                     st.markdown("---")
                                     l_in = st.text_input("Paste Link GDrive:", value=t.get("LINK_HASIL", ""), key=f"l_{id_tugas}")
                                     if st.button("🚀 SETOR", key=f"b_{id_tugas}", use_container_width=True):
@@ -4388,6 +4388,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
