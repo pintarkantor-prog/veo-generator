@@ -3513,77 +3513,85 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (COMPACT GRID - IDEAL UNTUK 100+ CHANNEL)
+    # TAB 2: CHANNEL PROSES (COMPACT TABLE - ZEBRA BY UNIT)
     # ==============================================================================
     with tab_proses:
-        st.markdown("### 🚀 MONITORING PROSES")
-        
-        # Filter data status 'PROSES' saja
+        # Filter data status 'PROSES'
         df_p = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_p.empty:
             st.info("Belum ada channel dalam status PROSES.")
         else:
-            # --- HEADER TABEL (Hanya Muncul Sekali di Atas) ---
-            # Layout Kolom: UNIT | EMAIL | NAMA CHANNEL | SUBS | URL | STATUS | AKSI
-            h0, h1, h2, h3, h4, h5, h6 = st.columns([1, 2.5, 2, 1, 0.8, 1.5, 0.5])
-            h0.caption("📱 UNIT")
-            h1.caption("📧 EMAIL LOGIN")
-            h2.caption("📺 NAMA CHANNEL")
-            h3.caption("📊 SUBS")
-            h4.caption("🔗 LINK")
-            h5.caption("⚙️ STATUS")
-            h6.caption("🛠️")
-            st.divider()
+            # --- CSS UNTUK PRESS SPASI (Biar Rapat Kaya GSheet) ---
+            st.markdown("""
+                <style>
+                [data-testid="stVerticalBlock"] > div { margin-bottom: -15px; }
+                .compact-row { padding: 2px 5px; border-bottom: 1px solid #333; }
+                </style>
+            """, unsafe_allow_html=True)
+
+            # --- HEADER KOLOM (Warna Ijo Card) ---
+            st.markdown("""
+                <div style="background:#2D5A47; padding:8px; border-radius:5px 5px 0 0; display:flex; font-weight:bold; color:white; font-size:12px;">
+                    <div style="flex:1;">📱 UNIT</div>
+                    <div style="flex:2.5;">📧 EMAIL LOGIN</div>
+                    <div style="flex:2;">📺 NAMA CHANNEL</div>
+                    <div style="flex:1;">📊 SUBS</div>
+                    <div style="flex:0.8;">🔗 URL</div>
+                    <div style="flex:1.5;">⚙️ STATUS</div>
+                    <div style="flex:0.5; text-align:center;">🛠️</div>
+                </div>
+            """, unsafe_allow_html=True)
 
             # --- LOOPING BARIS DATA ---
-            # Kita urutkan berdasarkan HP biar grupnya rapi
+            # Pastikan urut berdasarkan HP
             df_p = df_p.sort_values(by='HP')
             
+            # Buat daftar unit unik untuk nentuin warna zebra
+            unique_hps = df_p['HP'].unique().tolist()
+
             for idx, r in df_p.iterrows():
-                # Penentuan Warna Baris Alternating (Opsional agar mata gak pusing)
-                # Kita buat baris yang sangat tipis
+                # Tentukan warna background berdasarkan urutan HP (Zebra Striping per Group)
+                hp_index = unique_hps.index(r['HP'])
+                bg_color = "#1E1E1E" if hp_index % 2 == 0 else "#262626" # Gelap & Agak Terang
+                
+                # Render Baris Manual pake Columns biar presisi
                 with st.container():
+                    st.markdown(f"<div class='compact-row' style='background:{bg_color};'>", unsafe_allow_html=True)
                     c0, c1, c2, c3, c4, c5, c6 = st.columns([1, 2.5, 2, 1, 0.8, 1.5, 0.5])
                     
-                    # Kolom 0: UNIT HP (Gedein dikit biar keliatan batasnya)
-                    c0.markdown(f"**{r['HP'] if r['HP'] else '-'}**")
+                    c0.markdown(f"**{r['HP']}**") # Kolom H: HP
+                    c1.markdown(f"<span style='font-size:12px;'>{r['EMAIL']}</span>", unsafe_allow_html=True) # Kolom B
+                    c2.markdown(f"<span style='font-size:12px; font-weight:500;'>{r['NAMA_CHANNEL']}</span>", unsafe_allow_html=True) # Kolom D
+                    c3.markdown(f"{r['SUBSCRIBE']}") # Kolom E
                     
-                    # Kolom 1 & 2: Data Utama
-                    c1.markdown(f"<code style='font-size:12px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                    c2.markdown(f"<b style='font-size:12px;'>{r['NAMA_CHANNEL']}</b>", unsafe_allow_html=True)
-                    
-                    # Kolom 3: Subs
-                    c3.markdown(f"{r['SUBSCRIBE']}")
-                    
-                    # Kolom 4: Link (Icon aja biar hemat tempat)
+                    # Link URL
                     if r['LINK_CHANNEL'] and r['LINK_CHANNEL'] != "-":
                         c4.markdown(f"[🔗]({r['LINK_CHANNEL']})")
                     else:
-                        c4.caption("-")
+                        c4.write("-")
 
-                    # Kolom 5: Status Selector (Compact Mode)
+                    # Status & FIX
                     new_st = c5.selectbox("ST", ["PROSES", "SOLD", "BUSUK", "STANDBY", "SUSPEND"], 
                                          index=["PROSES", "SOLD", "BUSUK", "STANDBY", "SUSPEND"].index(r['STATUS']), 
                                          key=f"st_cp_{idx}", label_visibility="collapsed")
                     
-                    # Jika status berubah, muncul tombol fix kecil di sampingnya
                     if new_st != r['STATUS']:
                         if c5.button("✅ FIX", key=f"fx_cp_{idx}", use_container_width=True):
-                            ws.update_cell(idx + 2, 7, new_st)
+                            ws.update_cell(idx + 2, 7, new_st) # Kolom G
                             st.cache_data.clear(); st.rerun()
 
-                    # Kolom 6: Popover Edit (Tetap ada buat update Subs manual)
+                    # Popover Edit
                     with c6:
                         with st.popover("⋮"):
                             st.markdown(f"**Edit {r['NAMA_CHANNEL']}**")
-                            e_subs = st.text_input("Update Subs", value=str(r['SUBSCRIBE']), key=f"esb_cp_{idx}")
+                            e_subs = st.text_input("Subs", value=str(r['SUBSCRIBE']), key=f"es_cp_{idx}")
                             if st.button("Simpan", key=f"sv_cp_{idx}"):
-                                ws.update_cell(idx + 2, 5, e_subs)
+                                ws.update_cell(idx + 2, 5, e_subs) # Kolom E
                                 st.cache_data.clear(); st.rerun()
-                
-                # Garis tipis antar baris biar gak rapat banget
-                st.markdown("<hr style='margin:2px 0; opacity:0.1'>", unsafe_allow_html=True)
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)
+                    
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
     # ======================================================================
@@ -4161,6 +4169,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
