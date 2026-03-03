@@ -3415,38 +3415,26 @@ def tampilkan_database_channel():
             tz = pytz.timezone('Asia/Jakarta')
             now_indo = datetime.now(tz)
             bln_ini = now_indo.strftime("%m/%Y")
-            bln_lalu = (now_indo.replace(day=1) - timedelta(days=1)).strftime("%m/%Y")
             
             mask_ini = (df['STATUS'] == 'SOLD') & (df.iloc[:, 11].astype(str).str.contains(bln_ini, na=False, case=False))
-            mask_lalu = (df['STATUS'] == 'SOLD') & (df.iloc[:, 11].astype(str).str.contains(bln_lalu, na=False, case=False))
             sold_ini = len(df[mask_ini])
-            sold_lalu = len(df[mask_lalu])
-            
-            diff_sold = sold_ini - sold_lalu
-            status_sold = f"▲ NAIK (+{diff_sold})" if diff_sold >= 0 else f"▼ TURUN ({diff_sold})"
-            warna_sold = "normal" if diff_sold >= 0 else "inverse"
             
             # HITUNG ARSIP (SUSPEND + BUSUK)
             total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- 2. RENDER DASHBOARD UI (INFO ARSIP BALIK LAGI!) ---
+            # --- 2. RENDER DASHBOARD UI (BALIK KE GAYA st.write) ---
             with st.container(border=True):
                 c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2.2])
                 c1.metric("📦 STANDBY", f"{total_st}", delta=status_stok, delta_color=warna_stok)
                 c2.metric("🚀 PROSES", f"{total_pr}", delta="ON PROCESS")
                 c3.metric("📱 UNIT HP", f"{hp_aktif}", delta="LIVE")
-                c4.metric("💰 SOLD (MO)", f"{sold_ini}", delta=status_sold, delta_color=warna_sold)
+                c4.metric("💰 SOLD (MO)", f"{sold_ini}", delta="Bulan Ini")
                 
-                # BAGIAN INFO ARSIP YANG TADI ILANG
+                # INI YANG LO MAU: Pake gaya st.write di Kolom 5
                 with c5:
                     st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
-                    st.markdown(f"""
-                    <div style="background-color:rgba(255, 75, 75, 0.1); padding:10px; border-radius:10px; border-left:5px solid #ff4b4b;">
-                        <span style="font-size:12px; color:#ff4b4b; font-weight:bold;">⚠️ RADAR INFO ARSIP</span><br>
-                        <span style="font-size:20px; font-weight:bold;">{total_arsip}</span> 
-                        <span style="font-size:12px; color:#666;">Akun (Suspend/Busuk)</span>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    st.write(f"📢 **INFO SISTEM:**")
+                    st.write(f"Terdapat **{total_arsip}** akun di arsip (Suspend/Busuk). Segera audit berkala!")
 
             st.markdown("<br>", unsafe_allow_html=True)
             
@@ -3500,7 +3488,7 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-                # --- 6. LOGIKA UPDATE KE GSHEET ---
+                # --- 6. LOGIKA UPDATE KE GSHEET (FULL MANUAL SLOT HP) ---
                 if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
                     try:
                         for i, row in edited_st.iterrows():
@@ -3535,9 +3523,9 @@ def tampilkan_database_channel():
                                 ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
                                 ws.update_cell(r_gs, 12, f"Up: {user_aktif} ({tgl_now})")
 
-                        st.cache_data.clear(); st.success("Radar Sinkron!"); st.rerun()
+                        st.cache_data.clear(); st.success("Data Sinkron!"); st.rerun()
                     except Exception as e: st.error(f"❌ Error: {e}")
-                    
+                        
     # ==============================================================================
     # TAB 2: MONITORING PROSES (RADAR SYNC & SLOT HP PROTECTION)
     # ==============================================================================
@@ -4359,6 +4347,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
