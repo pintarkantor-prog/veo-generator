@@ -3394,7 +3394,7 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (AUTO-PILOT SLOT)
+    # TAB 1: STOK STANDBY (AUTO-PILOT SLOT + FULL ICONS)
     # ==============================================================================
     with tab_standby:
         hc1, hc2 = st.columns([3, 1])
@@ -3405,7 +3405,7 @@ def tampilkan_database_channel():
 
         if st.session_state.get('form_baru', False):
             with st.container(border=True):
-                with st.form("input_v6", clear_on_submit=True):
+                with st.form("input_v6_icon", clear_on_submit=True):
                     f1, f2, f3 = st.columns(3)
                     v_mail = f1.text_input("📧 Email Login")
                     v_pass = f2.text_input("🔑 Password")
@@ -3429,16 +3429,25 @@ def tampilkan_database_channel():
             df_st['REAL_IDX'] = df_st.index 
             df_st['SUBSCRIBE'] = df_st['SUBSCRIBE'].astype(str)
 
+            # --- KONFIGURASI KOLOM DENGAN IKON LENGKAP ---
             config_st = {
-                "NO": st.column_config.TextColumn("#️⃣ NO", width=20, disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
-                "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=130, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
+                "NO": st.column_config.TextColumn("#️⃣ NO", width=40, disabled=True),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220),
+                "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130),
+                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
+                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=120),
+                "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=80, disabled=True),
+                "STATUS": st.column_config.SelectboxColumn(
+                    "⚙️ STATUS", width=130,
+                    options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
+                ),
                 "REAL_IDX": None 
             }
 
             edited_st = st.data_editor(
                 df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
-                column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_v6"
+                column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_v6_icon"
             )
 
             if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
@@ -3447,14 +3456,11 @@ def tampilkan_database_channel():
                         idx_asli = int(row['REAL_IDX'])
                         old_val = df.iloc[idx_asli]
                         
-                        # LOGIKA AUTO-SLOT (Maksimal 2 per HP)
                         if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
-                            # Ambil data HP yang beneran lagi PROSES sekarang
                             df_p_now = df[df['STATUS'] == 'PROSES'].copy()
-                            # Hitung isi tiap HP
                             hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
                             
-                            target_hp = "1" # Default mulai dari HP 1
+                            target_hp = "1"
                             for h in range(1, 101):
                                 if hp_counts.get(str(h), 0) < 2:
                                     target_hp = str(h)
@@ -3470,13 +3476,16 @@ def tampilkan_database_channel():
                             r_gs = idx_asli + 2
                             ws.update_cell(r_gs, 2, row['EMAIL'])
                             ws.update_cell(r_gs, 3, row['PASSWORD'])
+                            ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
+                            ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
+                            ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                             ws.update_cell(r_gs, 7, row['STATUS'])
 
                     st.cache_data.clear(); st.rerun()
                 except Exception as e: st.error(f"Error: {e}")
 
     # ==============================================================================
-    # TAB 2: MONITORING PROSES (AUTO-MERGE VIEW)
+    # TAB 2: MONITORING PROSES (AUTO-MERGE + FULL ICONS)
     # ==============================================================================
     with tab_proses:
         st.markdown("### 🚀 MONITORING PROSES (MAX 2 SLOT)")
@@ -3486,7 +3495,6 @@ def tampilkan_database_channel():
         if df_p.empty:
             st.info("Semua unit HP kosong.")
         else:
-            # Sorting HP biar urut 1, 2, 3...
             df_p['HP_SORT'] = pd.to_numeric(df_p['HP'], errors='coerce').fillna(999)
             df_p = df_p.sort_values(by=['HP_SORT', 'EMAIL'])
 
@@ -3506,24 +3514,39 @@ def tampilkan_database_channel():
 
             df_display = pd.DataFrame(display_list)
             
+            # --- KONFIGURASI KOLOM DENGAN IKON LENGKAP ---
             config_p = {
-                "HP": st.column_config.TextColumn("UNIT", width=80, disabled=True),
-                "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=120, options=["PROSES", "SOLD", "STANDBY", "BUSUK"]),
+                "HP": st.column_config.TextColumn("📱 UNIT", width=90, disabled=True),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL LOGIN", width=220),
+                "PASSWORD": st.column_config.TextColumn("🔑 PASSWORD", width=130),
+                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
+                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
+                "STATUS": st.column_config.SelectboxColumn(
+                    "⚙️ STATUS", width=130, 
+                    options=["PROSES", "SOLD", "STANDBY", "BUSUK", "SUSPEND"]
+                ),
                 "REAL_IDX": None
             }
 
-            edited_p = st.data_editor(df_display, column_config=config_p, use_container_width=True, hide_index=True, key="grid_p_v6")
+            edited_p = st.data_editor(df_display, column_config=config_p, use_container_width=True, hide_index=True, key="grid_p_v6_icon")
 
             if not edited_p.equals(df_display):
                 try:
                     for i, row in edited_p.iterrows():
                         idx_asli = int(row['REAL_IDX'])
                         old_val = df.iloc[idx_asli]
-                        if row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL']:
+                        if (row['STATUS'] != old_val['STATUS'] or row['EMAIL'] != old_val['EMAIL'] or 
+                            row['PASSWORD'] != old_val['PASSWORD'] or row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
+                            
                             r_gs = idx_asli + 2
                             ws.update_cell(r_gs, 2, row['EMAIL'])
+                            ws.update_cell(r_gs, 3, row['PASSWORD'])
+                            ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
+                            ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
+                            ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
                             ws.update_cell(r_gs, 7, row['STATUS'])
-                            # Kalau status ganti selain PROSES, kosongkan nomor HP-nya
+                            
                             if row['STATUS'] != 'PROSES':
                                 ws.update_cell(r_gs, 8, "")
                     st.cache_data.clear(); st.rerun()
@@ -4106,6 +4129,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
