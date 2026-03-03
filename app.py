@@ -2108,7 +2108,7 @@ def tampilkan_kendali_tim():
                                 "Kategori": f_kat,
                                 "Nominal": str(int(f_nom)),
                                 "Keterangan": f_ket,
-                                "User": user_sekarang.upper()
+                                "Pencatat": user_sekarang.upper()
                             }
                             supabase.table("Arus_Kas").insert(data_kas_sb).execute()
 
@@ -4389,6 +4389,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
