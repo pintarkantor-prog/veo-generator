@@ -3394,65 +3394,57 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (VITAL MONITORING - CORRECT COLOR LOGIC)
+    # TAB 1: STOK STANDBY (DASHBOARD GAYA RADAR INCOME)
     # ==============================================================================
     with tab_standby:
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            # --- 1. LOGIKA HITUNG DATA (Real-time) ---
+            # --- 1. LOGIKA HITUNG DATA ---
             total_st = len(df[df['STATUS'] == 'STANDBY'])
             total_pr = len(df[df['STATUS'] == 'PROSES'])
             hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
-            # A. Delta Vital: Standby - Proses (Harus Positif)
+            # A. Logika Status Stok (Aman vs Kritis)
             selisih_st = total_st - total_pr
-            # Logika Warna: Jika sisa stok minus, kasih warna MERAH (inverse)
-            warna_st = "normal" if selisih_st >= 0 else "inverse"
+            status_stok = "STOK AMAN" if selisih_st >= 0 else "STOK KRITIS"
+            warna_stok = "normal" if selisih_st >= 0 else "inverse"
             
-            # B. Logika SOLD: Bulan Ini vs Bulan Lalu
+            # B. Logika SOLD (Bulan Ini vs Lalu)
             now = datetime.now()
-            bln_ini = now.strftime("%m/%Y")
+            bln_now = now.strftime("%m/%Y")
+            bln_lalu = (now.replace(day=1) - timedelta(days=1)).strftime("%m/%Y")
             
-            # Logic Mundur 1 Bulan
-            first_day_this_month = now.replace(day=1)
-            last_day_last_month = first_day_this_month - timedelta(days=1)
-            bln_lalu = last_day_last_month.strftime("%m/%Y")
-            
-            # Filter Data (Gunakan Index 11 / Kolom Keterangan)
-            sold_ini = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_ini, na=False))])
+            sold_ini = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_now, na=False))])
             sold_lalu = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 11].str.contains(bln_lalu, na=False))])
             
-            # C. Hitung Delta Sold & Warna
+            # C. Logika Status Sales (Naik vs Turun)
             diff_sold = sold_ini - sold_lalu
+            status_sold = f"▲ NAIK ({diff_sold})" if diff_sold >= 0 else f"▼ TURUN ({diff_sold})"
             warna_sold = "normal" if diff_sold >= 0 else "inverse"
             
             # ARSIP
             total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- 2. RENDER DASHBOARD UI (FIXED COLORS & TEXT) ---
+            # --- 2. RENDER DASHBOARD UI (RAPET & DINAMIS) ---
             with st.container(border=True):
                 c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 2])
                 
                 with c1:
-                    # Plus = Ijo (Aman), Minus = Merah (Bahaya)
-                    st.metric("📦 STANDBY", f"{total_st}", delta=f"{selisih_st} Sisa", delta_color=warna_st)
+                    st.metric("📦 STANDBY", f"{total_st}", delta=status_stok, delta_color=warna_stok)
                 
                 with c2:
-                    st.metric("🚀 PROSES", f"{total_pr}", delta="On Process")
+                    st.metric("🚀 PROSES", f"{total_pr}", delta="ON PROCESS")
                 
                 with c3:
-                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Live")
+                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="LIVE")
                 
                 with c4:
-                    # Naik = Ijo (Untung), Turun = Merah (Rugi)
-                    st.metric("💰 SOLD (MO)", f"{sold_ini}", delta=f"{diff_sold} vs Bln Lalu", delta_color=warna_sold)
+                    st.metric("💰 SOLD (MO)", f"{sold_ini}", delta=status_sold, delta_color=warna_sold)
                 
                 with c5:
-                    # Padding top disesuaikan
-                    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
+                    st.markdown("<div style='margin-top: 12px;'></div>", unsafe_allow_html=True)
                     st.write(f"📢 **INFO SISTEM:**")
-                    # Teks dibuat rapet tanpa spasi paragraf berlebih
                     st.write(f"Total **{total_arsip}** akun di arsip (Suspend/Busuk).")
                     st.write("Pastikan Stok Standby Selalu Aman!")
 
@@ -4302,6 +4294,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
