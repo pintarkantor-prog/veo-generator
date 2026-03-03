@@ -3510,9 +3510,8 @@ def tampilkan_database_channel():
             
             # 2. LOGIKA 3 BARIS PER HP (TRIK MERGE VISUAL)
             for hp_id in hp_aktif:
-                # Ambil data asli untuk HP ini
-                # Kita filter pake string karena hp_aktif isinya string
-                rows_hp = df[df['HP'].astype(str) == hp_id].copy()
+                # PERBAIKAN: Tambahkan filter STATUS == 'PROSES'
+                rows_hp = df[(df['HP'].astype(str) == hp_id) & (df['STATUS'] == 'PROSES')].copy()
                 rows_hp['REAL_IDX'] = rows_hp.index
                 
                 # Masukkan data yang ada (Maksimal 3)
@@ -4194,6 +4193,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
