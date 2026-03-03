@@ -3615,6 +3615,43 @@ def tampilkan_database_channel():
                     st.rerun()
                 except:
                     pass
+
+        # --- 6. PENAMPUNGAN AKUN PROSES TANPA HP (ANTI-MACET) ---
+        # Tarik data yang statusnya sudah PROSES tapi kolom HP-nya masih kosong
+        df_ngambang = df[(df['STATUS'] == 'PROSES') & 
+                         ((df['HP'].isna()) | (df['HP'].astype(str).str.strip() == ""))]
+        
+        if not df_ngambang.empty:
+            st.divider() # Garis pembatas biar rapi
+            st.warning(f"⚠️ Ditemukan {len(df_ngambang)} akun PROSES yang belum dapet Unit HP!")
+            
+            df_ngambang['REAL_IDX'] = df_ngambang.index
+            
+            # Editor mini buat "nangkep" akun yang macet tadi
+            edited_ngambang = st.data_editor(
+                df_ngambang[["EMAIL", "NAMA_CHANNEL", "STATUS", "HP", "REAL_IDX"]],
+                column_config={
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", disabled=True),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", disabled=True),
+                    "STATUS": st.column_config.TextColumn("⚙️ STATUS", disabled=True),
+                    "HP": st.column_config.TextColumn("📱 ISI UNIT HP (Contoh: 1)", width=200),
+                    "REAL_IDX": None
+                },
+                hide_index=True,
+                use_container_width=True,
+                key="grid_ngambang_v1"
+            )
+            
+            # Logika simpan otomatis: Begitu HP diisi, dia masuk ke laci atas
+            if not edited_ngambang.equals(df_ngambang[["EMAIL", "NAMA_CHANNEL", "STATUS", "HP", "REAL_IDX"]]):
+                for i, row in edited_ngambang.iterrows():
+                    val_hp = str(row['HP']).strip()
+                    if val_hp != "" and val_hp != "None":
+                        r_gs = int(row['REAL_IDX']) + 2
+                        ws.update_cell(r_gs, 8, val_hp) # Update Kolom HP di GSheet
+                
+                st.cache_data.clear()
+                st.rerun()
                     
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4193,6 +4230,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
