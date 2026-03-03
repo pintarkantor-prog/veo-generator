@@ -1384,7 +1384,7 @@ def tampilkan_tugas_kerja():
             # --- SISIRAN FINAL: PENENTU PESAN & RADAR UI (KASTA VERSION) ---
             if level_asli_target in ["OWNER", "ADMIN", "UPLOADER"]:
                 status_ikon = "✨ VIP"
-                msg = "Akses Khusus: Tidak dipengaruhi sistem potongan SP harian."
+                msg = "Akses Khusus: Tidak dipengaruhi sistem."
                 tampil_h_kurang = 0 # VIP selalu terlihat bersih di radar
             else:
                 tampil_h_kurang = h_kurang
@@ -4389,6 +4389,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
