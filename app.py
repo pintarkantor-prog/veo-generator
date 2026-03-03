@@ -903,8 +903,9 @@ def tampilkan_ai_lab():
             if st.button("✨ GENERATE NASKAH CERITA", use_container_width=True, type="primary"):
                 if topik_m:
                     str_k = "\n".join(list_karakter)
-                    mantra_sakti = f"""Kamu adalah Scriptwriter Pro Pintar Media. 
-Buatkan naskah YouTube Shorts VIRAL dalam format TABEL MARKDOWN (Siap Copy-Paste ke GSheet).
+                    mantra_sakti = f"""
+Kamu adalah Scriptwriter Pro & Creative Director dari Pintar Media. 
+Tugasmu: Buat naskah YouTube Shorts yang VIRAL, NYESEK, dan SAVAGE dalam format TABEL MARKDOWN.
 
 --- DAFTAR KARAKTER & DETAIL FISIK ---
 {str_k}
@@ -914,29 +915,29 @@ Topik: {topik_m}
 Pola: {pola_m}
 Total Adegan: {adegan_m} (WAJIB {adegan_m} ADEGAN)
 
---- LOGIKA ALUR PER POLA (DIBAGI DALAM {adegan_m} ADEGAN) ---
-{f''' - ALUR REVENGE: Adegan 1-5 (Protagonis dihina/hartanya dirusak Antagonis), Adegan 6 (CTA Like/Subs via Dialog), Adegan 7-10 (Balas Dendam Savage/Anomali secara realistis), Adegan 11-12 (Ending Kepuasan Penonton).''' if pola_m == opsi_pola[0] else ''}
-{f''' - ALUR EMPATHY: Adegan 1-5 (Hook masalah nyesek/iba), Adegan 6 (CTA Like/Subs via Dialog), Adegan 7-10 (Perjuangan emosional karakter), Adegan 11-12 (Ending Haru).''' if pola_m == opsi_pola[1] else ''}
-{f''' - ALUR ABSURD RACE: Adegan 1-4 (Lomba konyol dimulai), Adegan 5-8 (Lomba chaos/lucu), Adegan 9-10 (Momen kritis), Adegan 11-12 (Hasil lomba & WAJIB CTA penonton tentukan pemenang via Like/Subs).''' if pola_m == opsi_pola[2] else ''}
-{f''' - ALUR KNOWLEDGE: Adegan 1-3 (Fakta unik awal), Adegan 4-6 (Dampak jangka pendek), Adegan 7-10 (Dampak jangka panjang/1 tahun kemudian), Adegan 11-12 (Edukasi penutup).''' if pola_m == opsi_pola[3] else ''}
+--- LOGIKA ALUR (STRATEGI PATAHAN) ---
+{f''' - ALUR REVENGE: Adegan 1-5 (Dihina/Diterlantarkan), Adegan 6 (CTA Emosional menyatu di dialog), Adegan 7-11 (Pembalasan Savage/Anomali Gila), Adegan 12 (Ending Silent/Puas).''' if pola_m == opsi_pola[0] else ''}
+{f''' - ALUR EMPATHY: Adegan 1-5 (Masalah nyesek/Harapan hancur), Adegan 6 (CTA Doa/Like menyatu di dialog), Adegan 7-11 (Perjuangan/Keajaiban), Adegan 12 (Ending Haru Mata Berkaca-kaca).''' if pola_m == opsi_pola[1] else ''}
+{f''' - ALUR ABSURD RACE: Adegan 1-4 (Start kacau), Adegan 5-8 (Chaos/Anomali lomba), Adegan 9-10 (Momen Kritis), Adegan 11-12 (Hasil & CTA Vote pemenang via Like/Subs).''' if pola_m == opsi_pola[2] else ''}
+{f''' - ALUR KNOWLEDGE: Adegan 1-3 (Fakta mengejutkan), Adegan 4-6 (Dampak buruk), Adegan 7-10 (Kondisi 1 tahun kemudian/Anomali), Adegan 11-12 (Kesimpulan Visual).''' if pola_m == opsi_pola[3] else ''}
 
 --- STANDAR PRODUKSI (WAJIB PATUH) ---
-1. LOKASI: Wajib DESKRIPTIF & DETAIL (Minimal 10-15 kata, gambarkan suasana lingkungan, benda sekitar, dan cuaca).
-2. NO MORAL: Jangan ada pesan moral atau nasihat bijak di akhir cerita.
-3. NO TEXT: Tanpa teks di layar, semua pesan disampaikan lewat visual dan dialog.
-4. BAHASA: Sehari hari (mudah dimengerti oleh penonton).
+1. NASKAH_VISUAL: WAJIB DETAIL & EMOSIONAL (Min 35 kata). Fokus pada mikro-ekspresi (bibir bergetar, rahang mengeras, mata kosong) dan detail lingkungan yang berantakan/nyata.
+2. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus pendek, natural, dan 'nyelekit'.
+3. LOKASI: Wajib DESKRIPTIF (Min 15 kata). Gambarkan suasana, benda sekitar, dan cuaca yang mendukung mood.
+4. NO MORAL & NO TEXT: Jangan ceramah! Biarkan penonton yang menyimpulkan. Tanpa teks di layar.
 
 --- FORMAT TABEL (KOLOM GSHEET) ---
 ID_IDE | JUDUL | STATUS | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | STYLE | UKURAN_GAMBAR | LIGHTING | ARAH_KAMERA | GERAKAN | LOKASI
 
---- DROPDOWN VALID ---
+--- DROPDOWN VALID (WAJIB DARI LIST INI) ---
 - STYLE: [{visual_m}]
 - UKURAN_GAMBAR: [Seluruh Badan / Setengah Badan / Sangat Dekat / Wajah & Bahu]
 - LIGHTING: [Siang Alami / Malam Indigo / Senja Cerah / Neon Cyberpunk / Fajar]
 - ARAH_KAMERA: [Sejajar Mata / Dari Atas / Dari Bawah / Dari Samping / Dari Belakang]
 - GERAKAN: [Diam (Tetap Napas) / Maju Perlahan / Ikuti Karakter / Goyang (Handheld)]
 
-Balas HANYA tabel Markdown.
+Balas HANYA tabel Markdown. No Basa-basi.
 """
                     st.divider()
                     st.success("✨ **Mantra ide cerita Siap!**")
@@ -961,8 +962,9 @@ Balas HANYA tabel Markdown.
                             headers = {"Authorization": f"Bearer {api_key_groq}", "Content-Type": "application/json"}
                             str_k = "\n".join(list_karakter)
                             
-                            prompt_otomatis = f"""Kamu adalah Creative Director & Scriptwriter Pro Pintar Media. 
-Buatkan naskah YouTube Shorts VIRAL dalam format TABEL MARKDOWN.
+                            prompt_otomatis = f"""
+Kamu adalah Sutradara Senior & Creative Director Pintar Media yang spesialis membuat konten YouTube Shorts dengan retensi tinggi. 
+Tugasmu: Buat naskah yang emosional, nyesek, dan punya plot twist "Savage" dalam format TABEL MARKDOWN.
 
 --- DAFTAR KARAKTER & DETAIL FISIK ---
 {str_k}
@@ -973,16 +975,20 @@ Pola: {pola_o}
 Total Adegan: {adegan_o} (WAJIB {adegan_o} ADEGAN)
 
 --- ATURAN MAIN (STRICT PRODUKSI) ---
-1. NASKAH_VISUAL: WAJIB DESKRIPTIF & PANJANG (Minimal 30-40 kata per adegan) Jelaskan aksi karakter, ekspresi wajah secara detail, dan interaksi dengan benda di sekitarnya.
-2. LOKASI: Harus Detail (Minimal 15 kata) Gambarkan suasana lingkungan, dan tumpukan benda/detail latar belakang agar terlihat nyata.
-3. DIALOG: Buat dialog yang natural, emosional. Gunakan bahasa sehari-hari yang luwes.
-4. NO MORAL & NO TEXT: Tanpa pesan moral dan tanpa teks di layar.
-5. STRUKTUR: Bagi {adegan_o} adegan menjadi fase Awal (Konflik), Tengah (Puncak/CTA Like & Subs), dan Akhir (Pembalasan Savage/Anomali).
+1. NASKAH_VISUAL: WAJIB DESKRIPTIF & EMOSIONAL (Min 40 kata per adegan). Jangan hanya tulis aksi, tapi jelaskan MIKRO-EKSPRESI (mata berkaca-kaca, tangan gemetar, rahang mengeras, senyum sinis). Fokus pada detail penderitaan atau kesombongan karakter agar AI Video dapat menangkap emosinya.
+2. LOKASI: Harus Detail (Min 20 kata). Gambarkan suasana yang mendukung mood (debu beterbangan, rintik hujan, cahaya senja remang, atau tumpukan sampah/benda berantakan) agar terlihat nyata dan sinematik.
+3. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus tajam, pendek, dan tidak bertele-tele. Gunakan jeda "..." untuk momen nyesek.
+4. NO MORAL & NO TEXT: Jangan ada ceramah atau nasihat bijak di akhir. Biarkan visual yang bicara. Dilarang ada teks/subtitle di dalam video.
+5. STRUKTUR ALUR PATAHAN (WAJIB PROPORSI):
+   - Adegan 1 sampai 5: FASE NYESEK (Konflik, penghinaan, atau harapan karakter yang dihancurkan secara tragis).
+   - Adegan 6: MOMEN PUNCAK & CTA. Masukkan ajakan Like/Subscribe yang menyatu dengan dialog emosional (Contoh: "Kalau kalian peduli sama nasib bapak ini, klik Like dan doakan di komentar ya...").
+   - Adegan 7 sampai 11: FASE SAVAGE/ANOMALI (Pembalasan dendam tak terduga, plot twist gila, atau kejadian aneh yang bikin penonton puas).
+   - Adegan 12: ENDING SILENT. Tanpa dialog, tutup dengan close-up ekspresi wajah karakter yang menunjukkan kemenangan atau kesedihan mendalam.
 
 --- FORMAT TABEL (WAJIB 5 KOLOM) ---
 JUDUL | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | LOKASI
 
-Balas HANYA tabel Markdown tanpa penjelasan apa pun.
+Balas HANYA tabel Markdown tanpa penjelasan atau basa-basi apa pun.
 """
                             payload = {
                                 "model": "llama-3.3-70b-versatile", 
@@ -4378,5 +4384,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
