@@ -3494,82 +3494,115 @@ def tampilkan_database_channel():
                     pass
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (PERMANENT SLOT MODE)
+    # TAB 2: CHANNEL PROSES (SMART SLOT MODE - NO EXTRA COLUMN)
     # ==============================================================================
     with tab_proses:
-        # Header Layout
-        hc1, hc2 = st.columns([3, 1])
-        hc1.markdown("### 🚀 MONITORING PROSES (PERMANENT SLOTS)")
-        
-        # 1. TENTUKAN UNIT HP YANG MAU DITAMPILKAN
-        # Kita ambil HP yang statusnya PROSES, atau HP yang sudah ada isinya di GSheet
-        hp_aktif = df[df['STATUS'] == 'PROSES']['HP'].unique().tolist()
-        
-        if not hp_aktif:
-            st.info("Belum ada unit HP yang aktif menjalankan proses.")
-        else:
-            # 2. AMBIL 3 BARIS UNTUK SETIAP HP AKTIF
-            df_display = df[df['HP'].isin(hp_aktif)].copy().reset_index()
-            
-            # Logika "KOSONG": Jika kolom EMAIL kosong, isi dengan "--- KOSONG ---"
-            df_display['EMAIL'] = df_display['EMAIL'].apply(lambda x: x if x and str(x).strip() != "" else "--- KOSONG ---")
-            df_display['NAMA_CHANNEL'] = df_display['NAMA_CHANNEL'].apply(lambda x: x if x and str(x).strip() != "" else "-")
+        st.markdown("### 🚀 MONITORING PROSES (AUTO-SAVE)")
 
-            # 3. KONFIGURASI KOLOM
-            config = {
-                "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium", help="Laci kosong bertanda --- KOSONG ---"),
-                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small"),
-                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium"),
-                "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d"),
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small"),
+        # 1. IDENTIFIKASI HP YANG AKTIF
+        hp_aktif = sorted(df[df['STATUS'] == 'PROSES']['HP'].unique().tolist())
+
+        if not hp_aktif:
+            st.info("Belum ada unit HP yang aktif. Pindahkan channel dari Tab Standby.")
+        else:
+            final_display_list = []
+            
+            # 2. LOGIKA 3 BARIS PER HP
+            for hp_id in hp_aktif:
+                rows_hp = df[df['HP'] == hp_id].copy()
+                rows_hp['REAL_IDX'] = rows_hp.index
+                
+                # Masukkan data yang ada
+                for _, r in rows_hp.iterrows():
+                    final_display_list.append({
+                        "REAL_IDX": r['REAL_IDX'],
+                        "HP": f"HP {hp_id}",
+                        "EMAIL": r['EMAIL'] if r['EMAIL'] else "--- KOSONG ---",
+                        "PASSWORD": r['PASSWORD'],
+                        "NAMA_CHANNEL": r['NAMA_CHANNEL'],
+                        "SUBSCRIBE": str(r['SUBSCRIBE']),
+                        "LINK_CHANNEL": r['LINK_CHANNEL'],
+                        "STATUS": r['STATUS']
+                    })
+                
+                # Tambahkan laci kosong jika kurang dari 3
+                current_count = len(rows_hp)
+                for _ in range(max(0, 3 - current_count)):
+                    final_display_list.append({
+                        "REAL_IDX": -1,
+                        "HP": f"HP {hp_id}",
+                        "EMAIL": "--- KOSONG ---",
+                        "PASSWORD": "",
+                        "NAMA_CHANNEL": "",
+                        "SUBSCRIBE": "0",
+                        "LINK_CHANNEL": "",
+                        "STATUS": "PROSES"
+                    })
+
+            df_display = pd.DataFrame(final_display_list)
+
+            # 3. KONFIGURASI KOLOM (TANPA KOLOM NO)
+            config_p = {
+                "HP": st.column_config.TextColumn("📱 UNIT", width=80, disabled=True),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250),
+                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
+                "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80),
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
                 "STATUS": st.column_config.SelectboxColumn(
-                    "⚙️ STATUS", width="medium",
-                    options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"]
+                    "⚙️ STATUS", width=130,
+                    options=["PROSES", "STANDBY", "SOLD", "BUSUK", "SUSPEND"]
                 ),
-                "index": None 
+                "REAL_IDX": None
             }
 
-            # 4. TAMPILAN DATA EDITOR (URUT BERDASARKAN UNIT HP)
-            df_display = df_display.sort_values(by=['HP', 'index'])
-            
-            edited_df = st.data_editor(
-                df_display[["index", "HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]],
-                column_config=config,
+            # 4. DATA EDITOR (Gunakan Index Bawaan Streamlit)
+            edited_p = st.data_editor(
+                df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]],
+                column_config=config_p,
                 use_container_width=True,
-                hide_index=True,
-                key="grid_proses_permanent"
+                hide_index=False, # Munculkan index bawaan streamlit biar tetep ada nomer barisnya
+                key="grid_proses_v5"
             )
 
-            # 5. TOMBOL SAVE DI POJOK KANAN
-            with hc2:
-                if st.button("💾 SAVE CHANGES", use_container_width=True, type="primary"):
-                    try:
-                        with st.spinner("Sinkronisasi..."):
-                            for i, row in edited_df.iterrows():
-                                real_idx = int(row['index']) + 2
-                                old_row = df.loc[row['index']]
-                                
-                                # Bersihkan kembali tanda "--- KOSONG ---" sebelum simpan ke GSheet
-                                final_email = "" if row['EMAIL'] == "--- KOSONG ---" else row['EMAIL']
-                                
-                                # Update jika ada perbedaan
-                                if (final_email != old_row['EMAIL'] or 
-                                    row['STATUS'] != old_row['STATUS'] or
-                                    str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE'])):
-                                    
-                                    ws.update_cell(real_idx, 2, final_email)
-                                    ws.update_cell(real_idx, 3, row['PASSWORD'])
-                                    ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'])
-                                    ws.update_cell(real_idx, 5, row['SUBSCRIBE'])
-                                    ws.update_cell(real_idx, 6, row['LINK_CHANNEL'])
-                                    ws.update_cell(real_idx, 7, row['STATUS'])
+            # 5. LOGIKA AUTO-SAVE
+            if not edited_p.equals(df_display[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS", "REAL_IDX"]]):
+                try:
+                    for i, row in edited_p.iterrows():
+                        idx_asli = int(row['REAL_IDX'])
+                        
+                        if idx_asli != -1:
+                            old_val = df.iloc[idx_asli]
+                            final_email = "" if row['EMAIL'] == "--- KOSONG ---" else row['EMAIL']
                             
-                            st.cache_data.clear()
-                            st.success("Slot Terupdate!")
-                            time.sleep(0.5); st.rerun()
-                    except Exception as e:
-                        st.error(f"Error: {e}")
+                            if (final_email != old_val['EMAIL'] or row['STATUS'] != old_val['STATUS'] or 
+                                row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
+                                
+                                r_gs = idx_asli + 2
+                                ws.update_cell(r_gs, 2, final_email)
+                                ws.update_cell(r_gs, 3, row['PASSWORD'])
+                                ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
+                                ws.update_cell(r_gs, 5, row['SUBSCRIBE'])
+                                ws.update_cell(r_gs, 6, row['LINK_CHANNEL'])
+                                ws.update_cell(r_gs, 7, row['STATUS'])
+                                
+                                # Log Edited By
+                                tz = pytz.timezone('Asia/Jakarta')
+                                log_msg = f"Ed: {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
+                                ws.update_cell(r_gs, 12, log_msg)
+                        
+                        elif row['EMAIL'] != "--- KOSONG ---" and row['EMAIL'] != "":
+                            # Input manual ke laci kosong
+                            tz = pytz.timezone('Asia/Jakarta')
+                            tgl = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                            v_hp = row['HP'].replace("HP ", "")
+                            ws.append_row([tgl, row['EMAIL'], row['PASSWORD'], row['NAMA_CHANNEL'], 
+                                           row['SUBSCRIBE'], row['LINK_CHANNEL'], "PROSES", v_hp, "", "", user_aktif])
+                                
+                    st.cache_data.clear()
+                    st.rerun()
+                except:
+                    pass
                     
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4148,6 +4181,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
