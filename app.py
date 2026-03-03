@@ -3513,68 +3513,72 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (GSHEET ENGINE VERSION)
+    # TAB 2: CHANNEL PROSES (FULL INLINE EDIT MODE)
     # ==============================================================================
     with tab_proses:
-        st.markdown("### 🚀 MONITORING PROSES (GSHEET MODE)")
+        st.markdown("### 🚀 MONITORING PROSES (EDITABLE GRID)")
         
-        # 1. Ambil data asli dan filter hanya yang PROSES
+        # 1. Filter data status 'PROSES'
         df_p = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_p.empty:
             st.info("Belum ada channel dalam status PROSES.")
         else:
-            # 2. Rapikan urutan kolom sesuai request lo
-            # Kolom: HP, EMAIL, PASSWORD, NAMA_CHANNEL, SUBSCRIBE, LINK_CHANNEL, STATUS
-            cols_show = ["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
-            df_display = df_p[cols_show].reset_index() # Reset index buat tracking baris asli
+            # 2. Siapkan data dengan index asli GSheet
+            df_display = df_p[["HP", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]].reset_index()
 
-            # 3. Konfigurasi Kolom (Biar cantik kayak GSheet)
+            # 3. Konfigurasi Kolom (Hanya Subs & Status yang bisa diedit)
             config = {
                 "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium"),
-                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small"),
-                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium"),
-                "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small"),
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small"),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium", disabled=True),
+                "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small", disabled=True),
+                "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium", disabled=True),
+                "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d", help="Ketik jumlah subs baru di sini"),
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width="small", disabled=True),
                 "STATUS": st.column_config.SelectboxColumn(
                     "⚙️ STATUS",
                     width="medium",
                     options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"],
                     required=True
                 ),
-                "index": None # Sembunyikan kolom index asli
+                "index": None # Sembunyikan index bantuan
             }
 
             # 4. Tampilkan Tabel Editor
-            # Ini yang bikin barisnya rapi dan gak bakal numpuk
-            edited_df = st.data_editor(
+            edited_rows = st.data_editor(
                 df_display,
                 column_config=config,
                 use_container_width=True,
                 hide_index=True,
-                key="editor_proses"
+                key="editor_proses_inline"
             )
 
-            # 5. Logika Simpan Otomatis (Jika ada perubahan status/data)
-            # Karena ini mode tabel, kita bisa tambahin tombol simpan masal biar irit API
-            if st.button("💾 SIMPAN SEMUA PERUBAHAN", use_container_width=True, type="primary"):
+            # 5. Logika Simpan Perubahan
+            if st.button("💾 UPDATE DATA GSHEET", use_container_width=True, type="primary"):
                 try:
-                    with st.spinner("Sinkronisasi ke GSheet..."):
-                        for i, row in edited_df.iterrows():
-                            # Ambil index asli baris di GSheet
+                    with st.spinner("Mengirim data ke Radar..."):
+                        for i, row in edited_rows.iterrows():
+                            # Ambil data asli dari GSheet
                             real_idx = row['index'] + 2 
                             
-                            # Update kolom status (Kolom 7/G) dan data lainnya
-                            ws.update_cell(real_idx, 7, row['STATUS'])
-                            ws.update_cell(real_idx, 5, row['SUBSCRIBE'])
-                            ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'].upper())
+                            # Bandingkan dengan data lama (df_p) biar cuma update yang berubah
+                            old_row = df_p.loc[row['index']]
                             
+                            # Update jika Subs atau Status berubah
+                            if (row['STATUS'] != old_row['STATUS']) or (str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE'])):
+                                ws.update_cell(real_idx, 7, row['STATUS']) # Update Kolom G
+                                ws.update_cell(real_idx, 5, row['SUBSCRIBE']) # Update Kolom E
+                                
+                                # Jika berubah status, catat log di kolom L (EDITED)
+                                tz = pytz.timezone('Asia/Jakarta')
+                                log_edit = f"By {user_aktif} ({datetime.now(tz).strftime('%d/%m %H:%M')})"
+                                ws.update_cell(real_idx, 12, log_edit)
+                        
                         st.cache_data.clear()
-                        st.success("✅ Semua data berhasil disinkronkan!")
-                        time.sleep(1); st.rerun()
+                        st.success("✅ Perubahan berhasil disimpan ke GSheet!")
+                        time.sleep(0.8); st.rerun()
                 except Exception as e:
-                    st.error(f"Error: {e}")
+                    st.error(f"Gagal Simpan: {e}")
                     
     # ======================================================================
     # --- TAB 3: JADWAL UPLOAD (📅 RADAR SLOT HP) ---
@@ -4153,6 +4157,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
