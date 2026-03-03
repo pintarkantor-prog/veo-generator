@@ -3583,45 +3583,61 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (⏰ JAM MATI - AUTO MAPPING)
+    # TAB 3: JADWAL UPLOAD (MODEL KARTU TABEL - STATIC TIME)
     # ==============================================================================
     with tab_jadwal:
-        st.markdown("### 📅 RADAR JADWAL UPLOAD (SLOT TETAP)")
-
-        # --- 1. DEFINISI JAM MATI (Urutan Laci) ---
-        # Baris 1 di Tab Proses = Jam Pertama
-        # Baris 2 di Tab Proses = Jam Kedua
-        jam_mati = ["08:15", "08:30"] # Sesuaikan jamnya di sini, Sai
-
-        # --- 2. AMBIL DATA PROSES ---
+        st.markdown("### 📅 RADAR JADWAL UPLOAD (VIEW MODE)")
+        
+        # 1. Ambil data yang sedang PROSES
         df_j = df[df['STATUS'] == 'PROSES'].copy()
-
+        
         if df_j.empty:
-            st.info("Belum ada akun di Tab Proses.")
+            st.info("Belum ada akun di Tab Proses untuk dijadwalkan.")
         else:
-            # Sorting HP biar rapi 1, 2, 3...
-            df_j['HP_NUM'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
-            df_j = df_j.sort_values(by=['HP_NUM', 'EMAIL'])
-
-            # Buat Grid Tampilan (3 Kolom HP per baris)
-            cols = st.columns(3)
+            # Sorting HP agar urut
+            hp_list = sorted([str(x) for x in df_j['HP'].unique() if str(x).strip() != ""])
             
-            # Grouping per HP
-            groups = df_j.groupby('HP')
-            for i, (hp_id, group) in enumerate(groups):
-                with cols[i % 3]:
+            # Buat Grid 3 Kolom Kartu
+            cols_radar = st.columns(3)
+            
+            for i, hp_id in enumerate(hp_list):
+                with cols_radar[i % 3]:
+                    # Bikin kontainer kartu buat tiap HP
                     with st.container(border=True):
-                        st.markdown(f"#### 📱 UNIT HP {hp_id}")
+                        st.markdown(f"<div style='background-color:#444; padding:5px; border-radius:5px; text-align:center;'><b>📱 UNIT HP {hp_id}</b></div>", unsafe_allow_html=True)
                         
-                        # Kita loop berdasarkan jumlah Jam Mati yang kita punya
-                        for index_jam, waktu in enumerate(jam_mati):
-                            # Cek apakah ada data di baris ke-index_jam untuk HP ini
-                            if index_jam < len(group):
-                                nama_ch = group.iloc[index_jam]['NAMA_CHANNEL']
-                                st.success(f"**{waktu}** | {nama_ch}")
-                            else:
-                                # Jika laci ke-2 kosong, tampilkan kosong
-                                st.code(f"⚪ {waktu}: (Kosong)")
+                        # Filter data untuk HP ini
+                        data_hp = df_j[df_j['HP'].astype(str) == hp_id]
+                        
+                        # HEADER TABEL DALAM KARTU
+                        h1, h2, h3, h4 = st.columns([2, 1, 1, 1])
+                        h1.caption("NAMA CHANNEL")
+                        h2.caption("PAGI")
+                        h3.caption("SIANG")
+                        h4.caption("SORE")
+                        
+                        # ISI DATA (Maksimal 2-3 baris sesuai slot lo)
+                        # Kita loop data asli yang ada di GSheet untuk HP tersebut
+                        for _, row in data_hp.iterrows():
+                            c1, c2, c3, c4 = st.columns([2, 1, 1, 1])
+                            
+                            # Kolom 1: Nama Channel (Background Hijau sesuai gambar lo)
+                            c1.markdown(f"<div style='background-color:#2D5A47; padding:2px 5px; border-radius:3px; font-size:12px; height:30px; overflow:hidden;'>{row['NAMA_CHANNEL']}</div>", unsafe_allow_html=True)
+                            
+                            # Kolom 2, 3, 4: Waktu Statis (Tinggal nampilin hasil ketikan lo di GSheet)
+                            # Pastikan di GSheet lo ada kolom bernama 'PAGI', 'SIANG', 'SORE'
+                            c2.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('PAGI', '')}</div>", unsafe_allow_html=True)
+                            c3.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('SIANG', '')}</div>", unsafe_allow_html=True)
+                            c4.markdown(f"<div style='border:1px solid #555; text-align:center; font-size:12px;'>{row.get('SORE', '')}</div>", unsafe_allow_html=True)
+                        
+                        # Jika HP cuma isi 1 akun, kita kasih baris kosong biar tetep model 2 slot
+                        if len(data_hp) < 2:
+                            for _ in range(2 - len(data_hp)):
+                                b1, b2, b3, b4 = st.columns([2, 1, 1, 1])
+                                b1.markdown("<div style='background-color:#333; padding:2px 5px; height:30px; border:1px dashed #555;'></div>", unsafe_allow_html=True)
+                                b2.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
+                                b3.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
+                                b4.markdown("<div style='border:1px solid #555; height:30px;'></div>", unsafe_allow_html=True)
         
         st.divider()
         st.caption("💡 Jadwal ini otomatis mengikuti urutan akun di Tab PROSES.")
@@ -4171,6 +4187,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
