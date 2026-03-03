@@ -3438,14 +3438,14 @@ def tampilkan_database_channel():
 
             # 2. KONFIGURASI KOLOM (SEMUA RATA KIRI)
             config_st = {
-                "NO": st.column_config.TextColumn("Nomer", width=50, disabled=True),
+                "NO": st.column_config.TextColumn("NO", width=30, disabled=True),
                 "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=250),
                 "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
                 "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=200),
                 # Pake TextColumn biar rata kiri
                 "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100),
-                "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=100, disabled=True),
+                "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=150),
+                "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=60, disabled=True),
                 "STATUS": st.column_config.SelectboxColumn(
                     "⚙️ STATUS", width=130,
                     options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]
@@ -4148,6 +4148,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
