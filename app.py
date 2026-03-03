@@ -2438,7 +2438,7 @@ def tampilkan_kendali_tim():
         with st.expander("💰 RINCIAN GAJI & SLIP", expanded=False):
             try:
                 ada_kerja = False
-                df_staff_raw_slip = df_staff[df_staff['LEVEL'].isin(['STAFF', 'ADMIN'])].copy()
+                df_staff_raw_slip = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])].copy()
                 kol_v = st.columns(2) 
                 
                 # --- 0. TARIK DATA KAS MASTER SEKALI SAJA (SINKRON MARET) ---
@@ -4388,6 +4388,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
