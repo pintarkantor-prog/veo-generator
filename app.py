@@ -3582,24 +3582,21 @@ def tampilkan_database_channel():
                         st.cache_data.clear(); st.rerun()
                     except Exception as e: st.error(f"Error: {e}")
                     
-    # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (LOGO PINTAR & BACKGROUND BARIS SELANG-SELING)
+# ==============================================================================
+    # TAB 3: JADWAL UPLOAD (SISTEM STABIL - LOGO PINTAR & ZEBRA BACKGROUND)
     # ==============================================================================
     with tab_jadwal:
-        import datetime
-        import base64
-
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
 
-        # 1. SETUP DATA (PROSES)
+        # 1. SETUP DATA (Hanya Akun PROSES)
         df_j = df[df['STATUS'] == 'PROSES'].copy()
 
         if df_j.empty:
             st.info("Belum ada akun di Tab Proses.")
         else:
-            # --- PROTEKSI EDIT JAM (Khusus Level PRO) ---
+            # --- PROTEKSI EDIT JAM (Khusus PRO) ---
             if is_pro:
-                with st.expander("🛠️ EDIT JAM OPERASIONAL", expanded=False):
+                with st.expander("🛠️ EDIT JAM OPERASIONAL (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
@@ -3607,7 +3604,7 @@ def tampilkan_database_channel():
                     edited_j = st.data_editor(
                         df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
                         column_config={"REAL_IDX": None, "HP_N": None},
-                        use_container_width=True, hide_index=True, key="editor_pro_fix_zebra"
+                        use_container_width=True, hide_index=True, key="editor_pro_statis_zebra_vfinal"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
@@ -3616,34 +3613,35 @@ def tampilkan_database_channel():
                             ws.update_cell(r_gs, 13, str(row['PAGI'])) 
                             ws.update_cell(r_gs, 14, str(row['SIANG']))
                             ws.update_cell(r_gs, 15, str(row['SORE']))
-                        st.cache_data.clear(); st.rerun()
+                        st.cache_data.clear()
+                        st.rerun()
 
             st.divider()
 
-            # --- 2. FUNGSI LOGO (PINTAR.png) ---
-            def get_base64_logo(path):
+            # --- 2. FUNGSI LOGO PINTAR.png (PASTIKAN import base64 ADA DI ATAS) ---
+            def get_b64_img(path):
                 try:
-                    with open(path, "rb") as image_file:
-                        return base64.b64encode(image_file.read()).decode()
+                    import base64 # Backup jika di atas belum ada
+                    with open(path, "rb") as f:
+                        return base64.b64encode(f.read()).decode()
                 except: return ""
 
-            logo_base64 = get_base64_logo("PINTAR.png")
+            img_b64 = get_b64_img("PINTAR.png")
 
-            # --- 3. PREPARASI DATA PRINT ---
+            # --- 3. PREPARASI DATA DISPLAY & PRINT ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 4. SUSUN BARIS HTML DENGAN BACKGROUND (BUKAN WARNA HURUF) ---
+            # --- 4. SUSUN HTML UNTUK PRINT (WARNA BACKGROUND ISI / ZEBRA) ---
             rows_html = ""
-            for idx, r in enumerate(df_display.itertuples()):
-                # Logika Warna Background Baris Selang-Seling (Zebra)
-                # Ganjil: Putih, Genap: Abu Muda
-                bg_color = "#FFFFFF" if idx % 2 == 0 else "#F2F2F2"
+            for i, r in enumerate(df_display.itertuples()):
+                # Warna Background Baris Selang-Seling
+                bg_c = "#FFFFFF" if i % 2 == 0 else "#F2F2F2"
                 
                 rows_html += f"""
-                    <tr style='background-color:{bg_color};'>
+                    <tr style='background-color:{bg_c};'>
                         <td style='border:1px solid #999; padding:8px; text-align:center;'><b>{r.HP_DISPLAY}</b></td>
                         <td style='border:1px solid #999; padding:8px; text-align:left;'>{r.NAMA_CHANNEL}</td>
                         <td style='border:1px solid #999; padding:8px; text-align:center;'>{r.PAGI if str(r.PAGI) != 'nan' else '-'}</td>
@@ -3652,40 +3650,40 @@ def tampilkan_database_channel():
                     </tr>
                 """
 
-            # --- 5. HTML FULL DENGAN LOGO PINTAR.png ---
-            tgl_print = datetime.date.today().strftime("%d %B %Y")
-            html_pro = f"""
+            # --- 5. HTML FULL (LOGIKA PRINT WINDOW) ---
+            tgl_sekarang = datetime.now().strftime("%d %B %Y")
+            html_final = f"""
                 <div style='font-family:Arial, sans-serif; padding:10px;'>
                     <div style='display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #2D5A47; padding-bottom:10px; margin-bottom:15px;'>
                         <div style='display:flex; align-items:center;'>
-                            <img src='data:image/png;base64,{logo_base64}' style='height:70px; margin-right:20px;'>
+                            <img src='data:image/png;base64,{img_b64}' style='height:60px; margin-right:20px;'>
                             <div>
-                                <h1 style='margin:0; font-size:26px; color:#2D5A47;'>RADAR JADWAL UPLOAD</h1>
-                                <p style='margin:0; font-size:14px; color:#666;'>Dicetak pada: {tgl_print}</p>
+                                <h1 style='margin:0; font-size:24px; color:#2D5A47;'>RADAR JADWAL UPLOAD</h1>
+                                <p style='margin:0; font-size:14px; color:#666;'>Periode: {tgl_sekarang}</p>
                             </div>
                         </div>
                     </div>
                     <table style='width:100%; border-collapse:collapse; font-size:13px;'>
                         <thead>
                             <tr style='background-color:#2D5A47; color:white;'>
-                                <th style='padding:12px; border:1px solid #ccc;'>HP</th>
-                                <th style='padding:12px; border:1px solid #ccc; text-align:left;'>NAMA CHANNEL</th>
-                                <th style='padding:12px; border:1px solid #ccc;'>PAGI</th>
-                                <th style='padding:12px; border:1px solid #ccc;'>SIANG</th>
-                                <th style='padding:12px; border:1px solid #ccc;'>SORE</th>
+                                <th style='padding:10px; border:1px solid #ccc;'>HP</th>
+                                <th style='padding:10px; border:1px solid #ccc; text-align:left;'>NAMA CHANNEL</th>
+                                <th style='padding:10px; border:1px solid #ccc;'>PAGI</th>
+                                <th style='padding:10px; border:1px solid #ccc;'>SIANG</th>
+                                <th style='padding:10px; border:1px solid #ccc;'>SORE</th>
                             </tr>
                         </thead>
                         <tbody>{rows_html}</tbody>
                     </table>
-                    <p style='text-align:center; font-size:10px; color:#999; margin-top:20px;'>Sistem Otomatis Pintar AI Lab</p>
                 </div>
             """
 
-            st.success("✅ Jadwal siap cetak dengan Logo PINTAR.")
-            if st.button("📄 DOWNLOAD JADWAL PDF (STYLISH)", use_container_width=True):
-                st.components.v1.html(html_pro + "<script>window.print();</script>", height=0)
+            st.success("✅ Radar Jadwal sudah siap cetak.")
+            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF)", use_container_width=True):
+                st.components.v1.html(html_final + "<script>window.print();</script>", height=0)
 
-            # View Web (Tetap Rata Kiri & Bersih)
+            # Mirroring View di Web (Rata Kiri)
+            st.markdown("#### 📱 MONITORING VIEW")
             st.dataframe(
                 df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
@@ -4239,6 +4237,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
