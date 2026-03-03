@@ -3513,28 +3513,31 @@ def tampilkan_database_channel():
                                                 st.error(f"Error: Pastikan Subscribe diisi angka! ({e})")
                                                 
     # ==============================================================================
-    # TAB 2: CHANNEL PROSES (LOGIKA 3 BARIS OTOMATIS PER HP AKTIF)
+    # TAB 2: CHANNEL PROSES (PERMANENT SLOT MODE)
     # ==============================================================================
     with tab_proses:
-        # Layout Header: Judul & Tombol Save
+        # Header Layout
         hc1, hc2 = st.columns([3, 1])
-        hc1.markdown("### 🚀 MONITORING PROSES (EDITABLE GRID)")
+        hc1.markdown("### 🚀 MONITORING PROSES (PERMANENT SLOTS)")
         
-        # 1. IDENTIFIKASI HP YANG AKTIF (Status PROSES)
-        # Cari tahu unit HP mana saja yang punya minimal satu channel 'PROSES'
-        active_hps = df[df['STATUS'] == 'PROSES']['HP'].unique().tolist()
-
-        if not active_hps:
-            st.info("Belum ada channel dalam status PROSES. Silahkan pindahkan dari Tab Standby.")
+        # 1. TENTUKAN UNIT HP YANG MAU DITAMPILKAN
+        # Kita ambil HP yang statusnya PROSES, atau HP yang sudah ada isinya di GSheet
+        hp_aktif = df[df['STATUS'] == 'PROSES']['HP'].unique().tolist()
+        
+        if not hp_aktif:
+            st.info("Belum ada unit HP yang aktif menjalankan proses.")
         else:
-            # 2. FILTER DATA: Ambil 3 baris lengkap untuk setiap HP yang aktif
-            # Kita filter df utama berdasarkan list HP aktif tadi
-            df_display = df[df['HP'].isin(active_hps)].copy().reset_index()
+            # 2. AMBIL 3 BARIS UNTUK SETIAP HP AKTIF
+            df_display = df[df['HP'].isin(hp_aktif)].copy().reset_index()
+            
+            # Logika "KOSONG": Jika kolom EMAIL kosong, isi dengan "--- KOSONG ---"
+            df_display['EMAIL'] = df_display['EMAIL'].apply(lambda x: x if x and str(x).strip() != "" else "--- KOSONG ---")
+            df_display['NAMA_CHANNEL'] = df_display['NAMA_CHANNEL'].apply(lambda x: x if x and str(x).strip() != "" else "-")
 
-            # 3. KONFIGURASI KOLOM (GSheet Mode)
+            # 3. KONFIGURASI KOLOM
             config = {
                 "HP": st.column_config.TextColumn("📱 UNIT", width="small", disabled=True),
-                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium"),
+                "EMAIL": st.column_config.TextColumn("📧 EMAIL", width="medium", help="Laci kosong bertanda --- KOSONG ---"),
                 "PASSWORD": st.column_config.TextColumn("🔑 PASS", width="small"),
                 "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width="medium"),
                 "SUBSCRIBE": st.column_config.NumberColumn("📊 SUBS", width="small", format="%d"),
@@ -3543,11 +3546,10 @@ def tampilkan_database_channel():
                     "⚙️ STATUS", width="medium",
                     options=["PROSES", "SOLD", "BUSUK", "SUSPEND", "STANDBY"]
                 ),
-                "index": None # Sembunyikan index bantuan
+                "index": None 
             }
 
-            # 4. TAMPILAN DATA EDITOR
-            # Urutkan berdasarkan HP agar per 3 baris ngumpul rapi
+            # 4. TAMPILAN DATA EDITOR (URUT BERDASARKAN UNIT HP)
             df_display = df_display.sort_values(by=['HP', 'index'])
             
             edited_df = st.data_editor(
@@ -3555,7 +3557,7 @@ def tampilkan_database_channel():
                 column_config=config,
                 use_container_width=True,
                 hide_index=True,
-                key="grid_proses_grouped"
+                key="grid_proses_permanent"
             )
 
             # 5. TOMBOL SAVE DI POJOK KANAN
@@ -3564,28 +3566,26 @@ def tampilkan_database_channel():
                     try:
                         with st.spinner("Sinkronisasi..."):
                             for i, row in edited_df.iterrows():
-                                real_idx = int(row['index']) + 2 # Baris asli GSheet
-                                
-                                # Cek perubahan data dibandingkan df awal
+                                real_idx = int(row['index']) + 2
                                 old_row = df.loc[row['index']]
                                 
-                                # Update GSheet jika ada perubahan
-                                if (row['EMAIL'] != old_row['EMAIL'] or 
-                                    row['PASSWORD'] != old_row['PASSWORD'] or
-                                    row['NAMA_CHANNEL'] != old_row['NAMA_CHANNEL'] or
-                                    str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE']) or
-                                    row['LINK_CHANNEL'] != old_row['LINK_CHANNEL'] or
-                                    row['STATUS'] != old_row['STATUS']):
+                                # Bersihkan kembali tanda "--- KOSONG ---" sebelum simpan ke GSheet
+                                final_email = "" if row['EMAIL'] == "--- KOSONG ---" else row['EMAIL']
+                                
+                                # Update jika ada perbedaan
+                                if (final_email != old_row['EMAIL'] or 
+                                    row['STATUS'] != old_row['STATUS'] or
+                                    str(row['SUBSCRIBE']) != str(old_row['SUBSCRIBE'])):
                                     
-                                    ws.update_cell(real_idx, 2, row['EMAIL'])
+                                    ws.update_cell(real_idx, 2, final_email)
                                     ws.update_cell(real_idx, 3, row['PASSWORD'])
                                     ws.update_cell(real_idx, 4, row['NAMA_CHANNEL'])
                                     ws.update_cell(real_idx, 5, row['SUBSCRIBE'])
                                     ws.update_cell(real_idx, 6, row['LINK_CHANNEL'])
                                     ws.update_cell(real_idx, 7, row['STATUS'])
-                                
+                            
                             st.cache_data.clear()
-                            st.success("Data Sinkron!")
+                            st.success("Slot Terupdate!")
                             time.sleep(0.5); st.rerun()
                     except Exception as e:
                         st.error(f"Error: {e}")
@@ -4167,6 +4167,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
