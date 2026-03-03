@@ -3394,43 +3394,52 @@ def tampilkan_database_channel():
     ])
     
     # ==============================================================================
-    # TAB 1: STOK STANDBY (DASHBOARD COMPACT & DATABASE)
+    # TAB 1: STOK STANDBY (GAYA RADAR UI - COMPACT & INFORMATIF)
     # ==============================================================================
     with tab_standby:
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            # --- A. LOGIKA HITUNG DATA (Real-time) ---
+            # --- 1. LOGIKA HITUNG DATA (Real-time) ---
             total_st = len(df[df['STATUS'] == 'STANDBY'])
             total_pr = len(df[df['STATUS'] == 'PROSES'])
             hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
-            # Hitung Sold Bulan Ini (Filter Berdasarkan Kolom Tanggal jika ada)
-            # Sementara kita hitung total SOLD yang ada di database
-            total_sold = len(df[df['STATUS'] == 'SOLD'])
+            # SOLD BULAN INI (Maret 2026)
+            bln_now = datetime.now().strftime("%m/%Y") 
+            total_sold_mo = len(df[(df['STATUS'] == 'SOLD') & (df.iloc[:, 0].str.contains(bln_now, na=False))])
             
-            # Hitung Arsip (Suspend + Busuk)
+            # ARSIP (Suspend + Busuk)
             total_arsip = len(df[df['STATUS'].isin(['SUSPEND', 'BUSUK'])])
 
-            # --- B. TAMPILAN DASHBOARD CARD (Gaya Gambar 2) ---
+            # --- 2. RENDER DASHBOARD UI (MENIRU GAYA RADAR LO) ---
             with st.container(border=True):
-                c1, c2, c3, c4, c5 = st.columns(5)
+                # Kita bagi kolom sesuai rasio favorit lo: [1, 1, 1, 1.2, 1.5]
+                c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1.2, 1.5])
                 
-                # Card 1: Standby
-                c1.markdown(f"📦 **STANDBY**\n### {total_st}\n<small style='color:gray;'>Akun Antre</small>", unsafe_allow_html=True)
+                with c1:
+                    st.metric("📦 STANDBY", f"{total_st}")
                 
-                # Card 2: Proses
-                c2.markdown(f"🚀 **PROSES**\n### {total_pr}\n<small style='color:green;'>↑ Running</small>", unsafe_allow_html=True)
+                with c2:
+                    st.metric("🚀 PROSES", f"{total_pr}", delta="↑ Running", delta_color="normal")
                 
-                # Card 3: HP Aktif
-                c3.markdown(f"📱 **HP**\n### {hp_aktif}\n<small style='color:gray;'>Unit Terisi</small>", unsafe_allow_html=True)
+                with c3:
+                    st.metric("📱 UNIT HP", f"{hp_aktif}", delta="Slot Terisi")
                 
-                # Card 4: Sold
-                c4.markdown(f"💰 **SOLD**\n### {total_sold}\n<small style='color:orange;'>Total Terjual</small>", unsafe_allow_html=True)
+                with c4:
+                    st.metric(
+                        "💰 SOLD (MO)", 
+                        f"{total_sold_mo}", 
+                        delta=f"Bulan: {datetime.now().strftime('%B')}",
+                        delta_color="normal"
+                    )
                 
-                # Card 5: Arsip
-                c5.markdown(f"📁 **ARSIP**\n### {total_arsip}\n<small style='color:red;'>Sus/Busuk</small>", unsafe_allow_html=True)
+                with c5:
+                    # Meniru gaya st.write di kolom 5 lo
+                    st.markdown("<div style='margin-top: 5px;'></div>", unsafe_allow_html=True)
+                    st.write(f"📢 **INFO SISTEM:** \n\n Terdapat **{total_arsip}** akun di arsip (Suspend/Busuk). Pastikan stok Standby tetap aman!")
 
+            # Tanpa Divider (Sesuai request lo sebelumnya)
             st.markdown("<br>", unsafe_allow_html=True)
 
             # --- 1.2 HEADER & TOMBOL TAMBAH ---
@@ -4267,6 +4276,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
