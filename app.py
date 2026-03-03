@@ -3641,11 +3641,11 @@ def tampilkan_database_channel():
                 
                 rows_html += f"""
                     <tr style='background-color:{bg_row};'>
-                        <td style='border:1px solid #bbb; padding:12px; text-align:center; color:#2D5A47;'><b>{r.HP_DISPLAY}</b></td>
-                        <td style='border:1px solid #bbb; padding:10px; text-align:left;'>{r.NAMA_CHANNEL}</td>
-                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{p}</td>
-                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{s}</td>
-                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{o}</td>
+                        <td style='border:1px solid #bbb; padding:11px; text-align:center; color:#2D5A47;'><b>{r.HP_DISPLAY}</b></td>
+                        <td style='border:1px solid #bbb; padding:11px; text-align:left;'>{r.NAMA_CHANNEL}</td>
+                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{p}</td>
+                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{s}</td>
+                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{o}</td>
                     </tr>
                 """
 
@@ -4236,6 +4236,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
