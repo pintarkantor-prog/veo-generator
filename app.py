@@ -3641,11 +3641,11 @@ def tampilkan_database_channel():
                 
                 rows_html += f"""
                     <tr style='background-color:{bg_row};'>
-                        <td style='border:1px solid #bbb; padding:10px; text-align:center; color:#2D5A47;'><b>{r.HP_DISPLAY}</b></td>
+                        <td style='border:1px solid #bbb; padding:12px; text-align:center; color:#2D5A47;'><b>{r.HP_DISPLAY}</b></td>
                         <td style='border:1px solid #bbb; padding:10px; text-align:left;'>{r.NAMA_CHANNEL}</td>
-                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{p}</td>
-                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{s}</td>
-                        <td style='border:1px solid #bbb; padding:10px; text-align:center; width:100px;'>{o}</td>
+                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{p}</td>
+                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{s}</td>
+                        <td style='border:1px solid #bbb; padding:12px; text-align:center; width:100px;'>{o}</td>
                     </tr>
                 """
 
@@ -3654,7 +3654,7 @@ def tampilkan_database_channel():
                 <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' rel='stylesheet'>
                 <div style="font-family:'Roboto', sans-serif; width:700px; margin:auto; padding:20px;">
                     <div style='text-align:center; padding:15px 0; border-bottom:3px solid #2D5A47; margin-bottom:25px;'>
-                        <h1 style='margin:0; font-size:28px; color:#222; text-transform:uppercase; letter-spacing:1px;'>RADAR JADWAL UPLOAD</h1>
+                        <h1 style='margin:0; font-size:28px; color:#222; text-transform:uppercase; letter-spacing:1px;'>JADWAL UPLOAD HARIAN</h1>
                         <p style='margin:8px 0 0 0; font-size:13px; color:#999;'>PERIODE: {tgl_str}</p>
                     </div>
                     
@@ -4236,6 +4236,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
