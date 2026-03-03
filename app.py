@@ -3440,7 +3440,7 @@ def tampilkan_database_channel():
             
             # --- 3. HEADER DATABASE & TOMBOL TAMBAH ---
             hc1, hc2 = st.columns([3, 1])
-            hc1.markdown("##### 🔐 DATABASE STOK STANDBY")
+            hc1.markdown("#### 🔐 DATABASE STOK STANDBY")
             
             if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
@@ -3533,7 +3533,7 @@ def tampilkan_database_channel():
         if not is_pro:
             st.warning("🔒 Akses Terbatas.")
         else:
-            st.markdown("##### 🚀 MONITORING PROSES (MAX 2 SLOT HP)")
+            st.markdown("#### 🚀 MONITORING PROSES (MAX 2 SLOT HP)")
 
             df_p = df[df['STATUS'] == 'PROSES'].copy()
 
@@ -4378,4 +4378,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
