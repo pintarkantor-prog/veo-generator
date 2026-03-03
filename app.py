@@ -3583,7 +3583,7 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (CLEAN MONITORING - PRINT READY)
+    # TAB 3: JADWAL UPLOAD (CLEAN MONITORING - GROUPED VIEW)
     # ==============================================================================
     with tab_jadwal:
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
@@ -3601,7 +3601,6 @@ def tampilkan_database_channel():
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
 
-                    # Editor untuk update jam permanen ke GSheet
                     edited_j = st.data_editor(
                         df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
                         column_config={"REAL_IDX": None, "HP_N": None},
@@ -3619,31 +3618,32 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. TAMPILAN RADAR (MIRRORING ONLY - NO RERUN) ---
+            # --- 2. TAMPILAN RADAR (CLEAN LIST - GROUPED HP) ---
             st.markdown("#### 📱 MONITORING UPLOAD")
-            st.caption("💡 *Tips: Klik kanan pada tabel > 'Download as CSV' atau gunakan fitur Print Browser (Ctrl+P) untuk cetak jadwal.*")
             
-            # Urutkan berdasarkan HP agar rapi saat dilihat/diprint
+            # Urutkan berdasarkan HP agar rapi
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
-            df_display = df_j.sort_values('HP_N')
+            df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
 
-            # Kita tampilkan sebagai Dataframe Statis (View Only) agar stabil
-            # Kita tambahkan kolom kosong 'CHECK' agar ada ruang buat mereka nyoret manual di kertas
-            df_display['CHECKLIST (Manual)'] = "[ ] P | [ ] S | [ ] O"
+            # Logika Grouping: Hilangkan angka HP yang duplikat agar tampil bersih
+            df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
+            df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
+            # Tampilkan sebagai Dataframe Statis tanpa kolom penanda
             st.dataframe(
-                df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "CHECKLIST (Manual)"]],
+                df_display[["HP_DISPLAY", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
-                    "HP": st.column_config.TextColumn("📱 HP", width=50),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250),
-                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=100),
-                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=100),
-                    "SORE": st.column_config.TextColumn("🌆 SORE", width=100),
-                    "CHECKLIST (Manual)": st.column_config.TextColumn("📝 TANDA TANGAN / CEK", width=200),
+                    "HP_DISPLAY": st.column_config.TextColumn("📱 HP", width=50),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
+                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
+                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
+                    "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
                 },
                 hide_index=True,
                 use_container_width=True
             )
+            
+            st.caption("💡 *Tampilan di atas sudah di-grouping berdasarkan Unit HP.*")
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4190,6 +4190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
