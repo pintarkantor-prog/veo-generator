@@ -3583,7 +3583,7 @@ def tampilkan_database_channel():
                     except Exception as e: st.error(f"Error: {e}")
                     
     # ==============================================================================
-    # TAB 3: JADWAL UPLOAD (KOP SURAT ORI - NO MENTAL - NO LOGO)
+    # TAB 3: JADWAL UPLOAD (KOP KEREN - NO BUNGKUS - PRINT A4)
     # ==============================================================================
     with tab_jadwal:
         st.markdown("### 📅 RADAR JADWAL UPLOAD")
@@ -3611,7 +3611,7 @@ def tampilkan_database_channel():
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
                             "REAL_IDX": None, "HP_N": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_paling_akhir_dah"
+                        use_container_width=True, hide_index=True, key="editor_radar_final_fix"
                     )
 
                     if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
@@ -3631,10 +3631,11 @@ def tampilkan_database_channel():
             df_display['HP_DISPLAY'] = df_display['HP'].astype(str)
             df_display.loc[df_display['HP_DISPLAY'].duplicated(), 'HP_DISPLAY'] = ""
 
-            # --- 3. SUSUN HTML UNTUK PRINT (KOP SURAT ORI TANPA LOGO) ---
+            # --- 3. SUSUN HTML UNTUK PRINT (KOP KEREN) ---
             rows_html = ""
             for i, r in enumerate(df_display.itertuples()):
-                bg_row = "#FFFFFF" if i % 2 == 0 else "#F9F9F9" #
+                # Grouping Warna Background berdasarkan index biar kontras
+                bg_row = "#FFFFFF" if i % 2 == 0 else "#F9F9F9"
                 p = r.PAGI if str(r.PAGI) != 'nan' else '-'
                 s = r.SIANG if str(r.SIANG) != 'nan' else '-'
                 o = r.SORE if str(r.SORE) != 'nan' else '-'
@@ -3649,11 +3650,13 @@ def tampilkan_database_channel():
                     </tr>
                 """
 
-            tgl_str = datetime.now().strftime("%d %B %Y") #
-            html_kop_surat = f"""
-                <div style='font-family:Arial, sans-serif; max-width:800px; margin:auto; text-align:center;'>
-                    <h1 style='margin:0; font-size:28px; border-bottom:3px solid #2D5A47; padding-bottom:10px;'>RADAR JADWAL UPLOAD</h1>
-                    <p style='margin:10px 0 25px 0; font-size:16px; font-weight:bold;'>Periode: {tgl_str}</p>
+            tgl_str = datetime.now().strftime("%d %B %Y")
+            html_kop_keren = f"""
+                <div style='font-family:Arial, sans-serif; max-width:800px; margin:auto;'>
+                    <div style='text-align:center; padding:10px 0; border-bottom:3px solid #2D5A47; margin-bottom:20px;'>
+                        <h1 style='margin:0; font-size:32px; color:black; text-transform:uppercase; letter-spacing:2px;'>RADAR JADWAL UPLOAD</h1>
+                        <p style='margin:5px 0 0 0; font-size:14px; color:#888;'>Periode: {tgl_str}</p>
+                    </div>
                     
                     <table style='width:100%; border-collapse:collapse; border:1px solid #777; font-size:13px;'>
                         <thead>
@@ -3683,12 +3686,10 @@ def tampilkan_database_channel():
                 }, hide_index=True, use_container_width=True
             )
 
-            # --- 5. TOMBOL DOWNLOAD (Bungkus form biar nggak mental ke standby) ---
+            # --- 5. TOMBOL DOWNLOAD (BEBAS TANPA BUNGKUS) ---
             st.markdown("<br>", unsafe_allow_html=True)
-            with st.form("cetak_radar_form"):
-                submitted = st.form_submit_button("📄 DOWNLOAD JADWAL UPLOAD (PDF/PRINT)", use_container_width=True)
-                if submitted:
-                    st.components.v1.html(html_kop_surat + "<script>window.print();</script>", height=0)
+            if st.button("📄 DOWNLOAD JADWAL UPLOAD (PDF/PRINT)", use_container_width=True):
+                st.components.v1.html(html_kop_keren + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (INPUT EXPANDER + CARD BEBAS) ---
@@ -4235,6 +4236,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
