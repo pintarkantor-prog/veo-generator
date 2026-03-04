@@ -3699,7 +3699,7 @@ def tampilkan_database_channel():
                     hide_index=True, 
                     key="grid_p_pro_locked",
                     disabled=not is_pro,
-                    height=None # <--- SET NONE BIAR GAK ADA BATAS (NGELOS!)
+                    height="auto" # <--- Ganti None jadi "auto"
                 )
                 # --- LOGIKA SAVE (SINKRON DENGAN RADAR & KEEP JAM) ---
                 if is_pro and not edited_p.equals(df_display):
@@ -4547,6 +4547,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
