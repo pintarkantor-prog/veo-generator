@@ -3691,10 +3691,7 @@ def tampilkan_database_channel():
                     ),
                     "REAL_IDX": None
                 }
-
-                # Rumus: (Jumlah baris + 1 header) * 35 pixel, maksimal mentok di 1100
-                tinggi_monitoring = min((len(df_display) + 1) * 35 + 40, 1100)
-
+                # CARA 1: Ngelos Total (Berapa pun datanya, tabel bakal manjang ke bawah)
                 edited_p = st.data_editor(
                     df_display, 
                     column_config=config_p, 
@@ -3702,7 +3699,7 @@ def tampilkan_database_channel():
                     hide_index=True, 
                     key="grid_p_pro_locked",
                     disabled=not is_pro,
-                    height=tinggi_monitoring # <--- PAKE VARIABEL INI
+                    height=None # <--- SET NONE BIAR GAK ADA BATAS (NGELOS!)
                 )
                 # --- LOGIKA SAVE (SINKRON DENGAN RADAR & KEEP JAM) ---
                 if is_pro and not edited_p.equals(df_display):
@@ -4550,6 +4547,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
