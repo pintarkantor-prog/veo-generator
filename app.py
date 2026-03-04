@@ -3484,14 +3484,14 @@ def tampilkan_database_channel():
                 df_st['SUBSCRIBE'] = df_st['SUBSCRIBE'].astype(str)
 
                 config_st = {
-                    "NO": st.column_config.TextColumn("#️⃣ NO", width=40, disabled=True),
+                    "NO": st.column_config.TextColumn("#️⃣ NO", width=30, disabled=True),
                     "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=220),
                     "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=130),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=140),
                     "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=120),
-                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=80, disabled=True),
-                    "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=130, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=220),
+                    "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=50, disabled=True),
+                    "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=100, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
                     "REAL_IDX": None 
                 }
 
@@ -4393,4 +4393,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
