@@ -3578,7 +3578,7 @@ def tampilkan_database_channel():
                                         "NAMA_CHANNEL": row['NAMA_CHANNEL'],
                                         "STATUS": row['STATUS'],
                                         "HP": target_hp,
-                                        "KETERANGAN": f"Up: {user_aktif} ({tgl_now})"
+                                        "EDITED": f"Up: {user_aktif} ({tgl_now})"
                                     }, on_conflict="EMAIL").execute()
 
                                     # --- B. UPDATE GSHEET (BATCH UPDATE - ANTI ERROR) ---
@@ -3681,7 +3681,7 @@ def tampilkan_database_channel():
                                             "STATUS": row['STATUS'],
                                             "SUBSCRIBE": str(row['SUBSCRIBE']),
                                             "HP": target_hp,
-                                            "KETERANGAN": f"Up: {user_aktif} ({tgl_now})"
+                                            "EDITED": f"Up: {user_aktif} ({tgl_now})"
                                         }, on_conflict="EMAIL").execute()
 
                                         # 3. UPDATE GSHEET (Backup & Jam Protection)
@@ -3761,7 +3761,7 @@ def tampilkan_database_channel():
                                             "PAGI": str(row['PAGI']) if row['PAGI'] else "",
                                             "SIANG": str(row['SIANG']) if row['SIANG'] else "",
                                             "SORE": str(row['SORE']) if row['SORE'] else "",
-                                            "KETERANGAN": f"Up: {user_aktif} (Jadwal {jam_log})"
+                                            "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
                                         }, on_conflict="EMAIL").execute()
 
                                         # 2. UPDATE GSHEET (Backup - Pake ws.update biar hemat API)
@@ -3981,14 +3981,18 @@ def tampilkan_database_channel():
             total_ever = len(df_sold_all)
             
             # Filter pake kolom KETERANGAN (isinya MM/YYYY) tapi ntar kita tampilin sebagai TGL_LAST
-            df_selected = df_sold_all[df_sold_all['KETERANGAN'].astype(str).str.contains(filter_periode, na=False)].copy()
+            df_selected = df_sold_all[df_sold_all['EDITED'].astype(str).str.contains(filter_periode, na=False)].copy()
             total_selected = len(df_selected)
+            
+            # --- TAMBAHKAN INI BIAR TABEL GAK ERROR ---
+            if not df_selected.empty:
+                df_selected['TGL_LAST'] = df_selected['EDITED']
             
             # Hitung data bulan lalu buat Delta Metric
             date_selected = datetime.strptime(f"01/{filter_periode}", "%d/%m/%Y")
             date_prev = (date_selected - timedelta(days=1))
             filter_prev = date_prev.strftime("%m/%Y")
-            total_prev = len(df_sold_all[df_sold_all['KETERANGAN'].astype(str).str.contains(filter_prev, na=False)])
+            total_prev = len(df_sold_all[df_sold_all['EDITED'].astype(str).str.contains(filter_prev, na=False)])
 
             # --- 3. RENDER 3 METRIK UTAMA (Original lo) ---
             with st.container(border=True):
@@ -4006,7 +4010,7 @@ def tampilkan_database_channel():
             else:
                 # INI KUNCI BIAR TABEL TETEP KAYAK KODE LO:
                 # Kita aliaskan kolom KETERANGAN jadi TGL_LAST biar config lo ga error
-                df_selected['TGL_LAST'] = df_selected['KETERANGAN']
+                df_selected['TGL_LAST'] = df_selected['EDITED']
                 
                 # Susunan kolom PERSIS punya lo
                 cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
@@ -4055,7 +4059,7 @@ def tampilkan_database_channel():
                 st.info("Arsip masih bersih. Performa tim mantap!")
             else:
                 # BIAR KOLOM GA ILANG: Map kolom KETERANGAN ke TGL_KEJADIAN
-                df_a['TGL_KEJADIAN'] = df_a['KETERANGAN']
+                df_a['TGL_KEJADIAN'] = df_a['EDITED']
                 
                 # Susunan Kolom PERSIS punya lo
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
@@ -4487,6 +4491,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
