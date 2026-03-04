@@ -3527,8 +3527,8 @@ def tampilkan_database_channel():
                                 # --- B. SIMPAN KE SUPABASE (WAJIB ADA INI BIAR MUNCUL DI WEB) ---
                                 try:
                                     supabase.table("Channel_Pintar").insert({
-                                        "TANGGAL": tgl_now,  # <--- INI BIAR GAK NULL LAGI
-                                        "EMAIL": v_mail,
+                                        "TANGGAL": tgl_now, 
+                                        "EMAIL": v_mail.strip().lower(),
                                         "PASSWORD": v_pass,
                                         "NAMA_CHANNEL": v_nama,
                                         "SUBSCRIBE": v_subs,
@@ -3539,11 +3539,17 @@ def tampilkan_database_channel():
                                     }).execute()
                                     
                                     st.cache_data.clear()
-                                    st.success("✅ Data Masuk ke Radar & Supabase!")
+                                    st.success("✅ MANTAP! Akun baru berhasil didaftarkan ke Radar.")
                                     time.sleep(1)
                                     st.rerun()
+
                                 except Exception as e:
-                                    st.error(f"❌ Supabase Error: {e}")
+                                    # CEK APAKAH ERRORNYA KARENA DUPLIKAT (KODE 23505)
+                                    if "23505" in str(e):
+                                        st.warning(f"⚠️ WADUH! Email **{v_mail}** udah ada di sistem!")
+                                    else:
+                                        # Kalau error lain (misal internet mati), tetep tampilin error aslinya
+                                        st.error(f"❌ Ada masalah teknis: {e}")
             # --- 5. GRID EDITOR STANDBY ---
             df_st = df[df['STATUS'] == 'STANDBY'].copy()
             if df_st.empty:
@@ -4522,6 +4528,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
