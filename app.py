@@ -133,30 +133,76 @@ def tambah_log(user, aksi):
         print(f"Gagal mencatat log: {e}")
         
 # ==============================================================================
-# 6. SETUP DATABASE GSHEET (VERSI FIX & STABIL)
+# 6. SETUP DATABASE HYBRID (SUPABASE + GSHEET BACKUP)
 # ==============================================================================
 try:
     sh_master = get_gspread_sh()
     ws = sh_master.worksheet("Channel_Pintar")
     ws_unit_hp = sh_master.worksheet("Data_HP") 
 except Exception as e:
-    # Jangan pake st.error di luar fungsi kalau gak mau aplikasinya berhenti total
     print(f"❌ Koneksi GSheet Gagal: {e}")
 
 def load_data_channel():
+    """Narik data dari Supabase (Utama), GSheet cuma Backup."""
     try:
+        # 1. Coba ambil dari Supabase dulu biar kenceng (Anti API Error)
+        res = supabase.table("Channel_Pintar").select("*").execute()
+        df = pd.DataFrame(res.data)
+        
+        if not df.empty:
+            return bersihkan_data(df)
+        
+        # 2. Kalau Supabase kosong/baru setup, lari ke GSheet
         return bersihkan_data(pd.DataFrame(ws.get_all_records()))
-    except:
-        return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
+    except Exception as e:
+        print(f"⚠️ Supabase Error, lari ke GSheet: {e}")
+        # 3. Emergency Backup: Langsung ke GSheet
+        try:
+            return bersihkan_data(pd.DataFrame(ws.get_all_records()))
+        except:
+            return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
 
 def load_data_hp():
+    """Load data unit HP (Bisa lo pindahin Supabase juga nanti kalau udah ribuan)."""
     try:
+        # Untuk data HP yang dikit, GSheet masih oke banget cok
         return bersihkan_data(pd.DataFrame(ws_unit_hp.get_all_records()))
     except:
         return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
 
-# JANGAN eksekusi df = load_data_channel() di sini! 
-# Kita panggil di dalam fungsi tampilkan_database_channel aja.
+def simpan_perubahan_channel(df_edited, user_aktif):
+    """Fungsi sakti untuk simpan massal ke Supabase & GSheet."""
+    try:
+        tz = pytz.timezone('Asia/Jakarta')
+        tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+        
+        # --- A. UPDATE SUPABASE (The Real Database) ---
+        # Kita pake upsert berdasarkan EMAIL sebagai kunci uniknya
+        data_to_supabase = df_edited.to_dict(orient='records')
+        supabase.table("Channel_Pintar").upsert(data_to_supabase, on_conflict="EMAIL").execute()
+        
+        # --- B. UPDATE GSHEET (Backup Pasif) ---
+        # Biar GSheet lo tetep update tapi gak bikin lemot, kita update range atau barisnya
+        # Ambil data GSheet utuh buat nyari index baris
+        df_gs_full = pd.DataFrame(ws.get_all_records())
+        
+        for i, row in df_edited.iterrows():
+            # Cari baris di GSheet berdasarkan EMAIL
+            match = df_gs_full[df_gs_full['EMAIL'] == row['EMAIL']]
+            if not match.empty:
+                r_gs = match.index[0] + 2 # +2 karena header
+                # Kita update kolom status sampe keterangan (Kolom G - L)
+                # Sesuaikan urutan ini dengan kolom GSheet lo!
+                ws.update(f"G{r_gs}:L{r_gs}", [[
+                    row['STATUS'], row['HP'], row['PAGI'], 
+                    row['SIANG'], row['SORE'], f"Up: {user_aktif} ({tgl_now})"
+                ]])
+        
+        st.cache_data.clear()
+        return True
+    except Exception as e:
+        st.error(f"Gagal Simpan: {e}")
+        return False
         
 # ==============================================================================
 # BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
@@ -3500,43 +3546,58 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-                # --- 6. LOGIKA UPDATE KE GSHEET (FULL MANUAL SLOT HP) ---
-                if not edited_st.equals(df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]]):
-                    try:
-                        for i, row in edited_st.iterrows():
-                            idx_asli = int(row['REAL_IDX'])
-                            old_val = df.iloc[idx_asli]
-                            r_gs = idx_asli + 2
-                            tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                            
-                            if row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
-                                ws.update_cell(r_gs, 7, row['STATUS'])
-                                ws.update_cell(r_gs, 8, "") 
-                                ws.update_cell(r_gs, 12, f"Up: {user_aktif} ({tgl_now})")
-                            
-                            elif row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
-                                df_p_now = df[df['STATUS'] == 'PROSES'].copy()
-                                hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
-                                target_hp = "1"
-                                for h in range(1, 101):
-                                    if hp_counts.get(str(h), 0) < 2:
-                                        target_hp = str(h)
-                                        break
-                                
-                                ws.update_cell(r_gs, 7, "PROSES")
-                                ws.update_cell(r_gs, 8, target_hp)
-                                ws.update_cell(r_gs, 12, f"Auto HP {target_hp} ({tgl_now})")
-                            
-                            else:
-                                if row['STATUS'] != old_val['STATUS']:
-                                    ws.update_cell(r_gs, 7, row['STATUS'])
-                                ws.update_cell(r_gs, 2, row['EMAIL'])
-                                ws.update_cell(r_gs, 3, row['PASSWORD'])
-                                ws.update_cell(r_gs, 4, row['NAMA_CHANNEL'])
-                                ws.update_cell(r_gs, 12, f"Up: {user_aktif} ({tgl_now})")
+                # --- 6. LOGIKA UPDATE MODERN (SUPABASE + GSHEET BATCH) ---
+                kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
+                if not edited_st.equals(df_st[kolom_cek]):
+                    if st.button("💾 KONFIRMASI PERUBAHAN STANDBY", use_container_width=True, type="primary"):
+                        try:
+                            with st.spinner("Sinkronisasi Radar & Supabase..."):
+                                for i, row in edited_st.iterrows():
+                                    idx_asli = int(row['REAL_IDX'])
+                                    old_val = df.iloc[idx_asli]
+                                    r_gs = idx_asli + 2
+                                    tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                    
+                                    # --- LOGIKA TARGET HP ANDALAN LO ---
+                                    target_hp = str(old_val['HP'])
+                                    if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
+                                        df_p_now = df[df['STATUS'] == 'PROSES'].copy()
+                                        hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+                                        target_hp = "1"
+                                        for h in range(1, 101):
+                                            if hp_counts.get(str(h), 0) < 2:
+                                                target_hp = str(h)
+                                                break
+                                    elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
+                                        target_hp = ""
 
-                        st.cache_data.clear(); st.success("Data Sinkron!"); st.rerun()
-                    except Exception as e: st.error(f"❌ Error: {e}")
+                                    # --- A. UPDATE SUPABASE (CEPAT) ---
+                                    supabase.table("Channel_Pintar").upsert({
+                                        "EMAIL": row['EMAIL'],
+                                        "PASSWORD": row['PASSWORD'],
+                                        "NAMA_CHANNEL": row['NAMA_CHANNEL'],
+                                        "STATUS": row['STATUS'],
+                                        "HP": target_hp,
+                                        "KETERANGAN": f"Up: {user_aktif} ({tgl_now})"
+                                    }, on_conflict="EMAIL").execute()
+
+                                    # --- B. UPDATE GSHEET (BATCH UPDATE - ANTI ERROR) ---
+                                    # Kita kirim Status (G), HP (H), sampe Keterangan (L) sekaligus
+                                    ws.update(f"G{r_gs}:L{r_gs}", [[
+                                        row['STATUS'], 
+                                        target_hp, 
+                                        str(old_val['PAGI']), 
+                                        str(old_val['SIANG']), 
+                                        str(old_val['SORE']), 
+                                        f"Up: {user_aktif} ({tgl_now})"
+                                    ]])
+
+                                st.cache_data.clear()
+                                st.success("✅ Database & Radar Sinkron!")
+                                time.sleep(1)
+                                st.rerun()
+                        except Exception as e:
+                            st.error(f"❌ Error: {e}")
                         
     # ==============================================================================
     # TAB 2: MONITORING PROSES (RADAR SYNC & SLOT HP PROTECTION)
@@ -3597,36 +3658,50 @@ def tampilkan_database_channel():
 
                 # --- LOGIKA SAVE (SINKRON DENGAN RADAR & KEEP JAM) ---
                 if is_pro and not edited_p.equals(df_display):
-                    try:
-                        tz = pytz.timezone('Asia/Jakarta')
-                        tgl_full = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                    if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
+                        try:
+                            with st.spinner("Sinkronisasi Radar..."):
+                                for i, row in edited_p.iterrows():
+                                    idx_asli = int(row['REAL_IDX'])
+                                    old_val = df.iloc[idx_asli]
+                                    r_gs = idx_asli + 2
+                                    tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                    
+                                    # Cek apakah ada perubahan status atau subscribe
+                                    if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
+                                        
+                                        # 1. TENTUKAN STATUS HP (Kalau keluar dari PROSES, HP jadi kosong)
+                                        target_hp = str(old_val['HP'])
+                                        if row['STATUS'] != 'PROSES':
+                                            target_hp = "" # Lepas slot HP agar bisa dipakai akun lain
 
-                        for i, row in edited_p.iterrows():
-                            idx_asli = int(row['REAL_IDX'])
-                            old_val = df.iloc[idx_asli]
-                            
-                            # Cek apakah ada perubahan status atau subscribe
-                            if (row['STATUS'] != old_val['STATUS'] or row['SUBSCRIBE'] != str(old_val['SUBSCRIBE'])):
-                                r_gs = idx_asli + 2
-                                
-                                # 1. Update Subs (Kolom 5) & Status (Kolom 7)
-                                ws.update_cell(r_gs, 5, row['SUBSCRIBE']) 
-                                ws.update_cell(r_gs, 7, row['STATUS'])    
-                                
-                                # 2. LOGIKA KRUSIAL: Jika pindah dari PROSES ke status lain (SOLD/STANDBY/dll)
-                                if row['STATUS'] != 'PROSES':
-                                    # KOSONGKAN HP (Kolom 8) agar slot bisa dipakai akun lain
-                                    ws.update_cell(r_gs, 8, "")
-                                    # PENTING: Kolom 13, 14, 15 (JAM) TIDAK DISENTUH! 
-                                    # Biar jam tetep nempel di baris ini buat channel pengganti nanti.
-                                
-                                # 3. CATATAN EDITED UNTUK RADAR SOLD
-                                ws.update_cell(r_gs, 12, f"Up: {user_aktif} ({tgl_full})")
-                        
-                        st.cache_data.clear()
-                        st.success("Status Diperbarui! Jam tetap aman di GSheet.")
-                        st.rerun()
-                    except Exception as e: st.error(f"Error: {e}")
+                                        # 2. UPDATE SUPABASE (The Real Database)
+                                        supabase.table("Channel_Pintar").upsert({
+                                            "EMAIL": row['EMAIL'],
+                                            "STATUS": row['STATUS'],
+                                            "SUBSCRIBE": str(row['SUBSCRIBE']),
+                                            "HP": target_hp,
+                                            "KETERANGAN": f"Up: {user_aktif} ({tgl_now})"
+                                        }, on_conflict="EMAIL").execute()
+
+                                        # 3. UPDATE GSHEET (Backup & Jam Protection)
+                                        # Pakai ws.update buat update kolom G (Status) dan H (HP) sekaligus
+                                        # Kolom I, J, K (Pagi, Siang, Sore) tetap pake old_val (AMAN!)
+                                        ws.update(f"G{r_gs}:L{r_gs}", [[
+                                            row['STATUS'], 
+                                            target_hp, 
+                                            str(old_val['PAGI']), 
+                                            str(old_val['SIANG']), 
+                                            str(old_val['SORE']), 
+                                            f"Up: {user_aktif} ({tgl_now})"
+                                        ]])
+
+                                st.cache_data.clear()
+                                st.success("✅ Status Diperbarui! Jam & Slot HP Sinkron.")
+                                time.sleep(1)
+                                st.rerun()
+                        except Exception as e:
+                            st.error(f"❌ Gagal update monitoring: {e}")
                     
     # ==============================================================================
     # TAB 3: JADWAL UPLOAD (FULL MANUAL - SLOT HP VERSION)
@@ -3647,37 +3722,64 @@ def tampilkan_database_channel():
             }
             tgl_str = f"{now_indo.day} {nama_bulan[now_indo.month]} {now_indo.year}"
 
-            # --- 1. FITUR EDIT JAM (MANUAL INPUT KE GSHEET) ---
+            # --- 1. FITUR EDIT JAM (VERSI HYBRID: SUPABASE + GSHEET BATCH) ---
             if is_pro:
                 with st.expander("🛠️ EDIT JAM UPLOAD (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
 
+                    # Kita ambil kolom EMAIL buat kunci di Supabase
+                    kolom_edit = ["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "EMAIL", "REAL_IDX"]
+                    
                     edited_j = st.data_editor(
-                        df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]],
+                        df_j_sorted[kolom_edit],
                         column_config={
                             "HP": st.column_config.TextColumn("📱 HP", width=50, disabled=True),
                             "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250, disabled=True),
                             "PAGI": st.column_config.TextColumn("🌅 PAGI"),
                             "SIANG": st.column_config.TextColumn("☀️ SIANG"),
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
+                            "EMAIL": None, # Sembunyikan email biar ga ribet diliat
                             "REAL_IDX": None
                         },
                         use_container_width=True, hide_index=True, key="editor_manual_full"
                     )
 
-                    if not edited_j.equals(df_j_sorted[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "REAL_IDX"]]):
-                        for _, row in edited_j.iterrows():
-                            r_gs = int(row['REAL_IDX']) + 2
-                            # SISTEM OVERWRITE: Langsung timpa kolom 13, 14, 15 di GSheet
-                            ws.update_cell(r_gs, 13, str(row['PAGI']) if row['PAGI'] else "") 
-                            ws.update_cell(r_gs, 14, str(row['SIANG']) if row['SIANG'] else "")
-                            ws.update_cell(r_gs, 15, str(row['SORE']) if row['SORE'] else "")
-                            ws.update_cell(r_gs, 12, f"Up: {user_aktif} (Manual {now_indo.strftime('%H:%M')})")
-                        
-                        st.cache_data.clear()
-                        st.rerun()
+                    # --- LOGIKA SIMPAN (TIDAK LONCAT-LONCAT) ---
+                    if not edited_j.equals(df_j_sorted[kolom_edit]):
+                        if st.button("💾 SIMPAN SEMUA JADWAL", use_container_width=True, type="primary"):
+                            try:
+                                with st.spinner("Sinkronisasi Jadwal..."):
+                                    for _, row in edited_j.iterrows():
+                                        r_gs = int(row['REAL_IDX']) + 2
+                                        jam_log = now_indo.strftime('%H:%M')
+                                        
+                                        # 1. UPDATE SUPABASE (The King - Kenceng)
+                                        supabase.table("Channel_Pintar").upsert({
+                                            "EMAIL": row['EMAIL'],
+                                            "PAGI": str(row['PAGI']) if row['PAGI'] else "",
+                                            "SIANG": str(row['SIANG']) if row['SIANG'] else "",
+                                            "SORE": str(row['SORE']) if row['SORE'] else "",
+                                            "KETERANGAN": f"Up: {user_aktif} (Jadwal {jam_log})"
+                                        }, on_conflict="EMAIL").execute()
+
+                                        # 2. UPDATE GSHEET (Backup - Pake ws.update biar hemat API)
+                                        # Langsung tembak 3 kolom jam sekaligus (M, N, O)
+                                        ws.update(f"M{r_gs}:O{r_gs}", [[
+                                            str(row['PAGI']) if row['PAGI'] else "",
+                                            str(row['SIANG']) if row['SIANG'] else "",
+                                            str(row['SORE']) if row['SORE'] else ""
+                                        ]])
+                                        # Update log di kolom L
+                                        ws.update_cell(r_gs, 12, f"Up: {user_aktif} (Jadwal {jam_log})")
+
+                                    st.cache_data.clear()
+                                    st.success("✅ Jadwal Berhasil Diperbarui!")
+                                    time.sleep(1)
+                                    st.rerun()
+                            except Exception as e:
+                                st.error(f"❌ Error Simpan Jadwal: {e}")
 
             st.divider()
 
@@ -3854,54 +3956,41 @@ def tampilkan_database_channel():
                                             st.error(f"Gagal: {e}")
                         
     # ==============================================================================
-    # TAB 5: SOLD CHANNEL (3 METRICS + PERIOD FILTER)
+    # TAB 5: SOLD CHANNEL (SINKRON SUPABASE - ORIGINAL UI)
     # ==============================================================================
     with tab_sold:
         if not is_ceo: 
-            st.error("🔒 Akses Khusus Owner & Admin.")
+            st.error("🔒 Akses Khusus Owner.")
         else:
-            # --- 1. SETUP FILTER PERIODE ---
+            # --- 1. SETUP FILTER PERIODE (Tetap Sama) ---
             tz = pytz.timezone('Asia/Jakarta')
             now_indo = datetime.now(tz)
             
             col_f1, col_f2 = st.columns([1, 1])
             with col_f1:
-                list_bulan = {
-                    "01": "Januari", "02": "Februari", "03": "Maret", "04": "April", 
-                    "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus", 
-                    "09": "September", "10": "Oktober", "11": "November", "12": "Desember"
-                }
-                # Default ke bulan sekarang
-                sel_bln_nama = st.selectbox("📅 Pilih Bulan Audit", list(list_bulan.values()), index=now_indo.month - 1)
-                # Cari kodenya (misal "Maret" -> "03")
+                list_bulan = {"01": "Januari", "02": "Februari", "03": "Maret", "04": "April", "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus", "09": "September", "10": "Oktober", "11": "November", "12": "Desember"}
+                sel_bln_nama = st.selectbox("📅 Pilih Bulan Audit", list(list_bulan.values()), index=now_indo.month - 1, key="tab_sold_bln")
                 sel_bln_code = [k for k, v in list_bulan.items() if v == sel_bln_nama][0]
-
             with col_f2:
-                # List tahun dari 2024 sampai 2026 (sesuai tahun sekarang)
-                sel_thn = st.selectbox("📆 Pilih Tahun", ["2024", "2025", "2026"], index=2)
+                sel_thn = st.selectbox("📆 Pilih Tahun", ["2024", "2025", "2026"], index=2, key="tab_sold_thn")
 
-            # String filter untuk nyari di Kolom L (format MM/YYYY)
             filter_periode = f"{sel_bln_code}/{sel_thn}"
             
             # --- 2. LOGIKA HITUNG DATA ---
             df_sold_all = df[df['STATUS'] == 'SOLD'].copy()
-            
-            # TOTAL EVER (Semua yang statusnya SOLD)
             total_ever = len(df_sold_all)
             
-            # DATA BULAN PILIHAN (Berdasarkan Filter)
-            df_selected = df_sold_all[df_sold_all.iloc[:, 11].astype(str).str.contains(filter_periode, na=False)]
+            # Filter pake kolom KETERANGAN (isinya MM/YYYY) tapi ntar kita tampilin sebagai TGL_LAST
+            df_selected = df_sold_all[df_sold_all['KETERANGAN'].astype(str).str.contains(filter_periode, na=False)].copy()
             total_selected = len(df_selected)
             
-            # DATA BULAN LALU (Murni mundur 1 bulan dari bulan yang dipilih)
-            # Logika: Jika Jan 2026, maka bulan lalu Des 2025
+            # Hitung data bulan lalu buat Delta Metric
             date_selected = datetime.strptime(f"01/{filter_periode}", "%d/%m/%Y")
             date_prev = (date_selected - timedelta(days=1))
             filter_prev = date_prev.strftime("%m/%Y")
-            
-            total_prev = len(df_sold_all[df_sold_all.iloc[:, 11].astype(str).str.contains(filter_prev, na=False)])
+            total_prev = len(df_sold_all[df_sold_all['KETERANGAN'].astype(str).str.contains(filter_prev, na=False)])
 
-            # --- 3. RENDER 3 METRIK UTAMA ---
+            # --- 3. RENDER 3 METRIK UTAMA (Original lo) ---
             with st.container(border=True):
                 m1, m2, m3 = st.columns(3)
                 m1.metric("💰 TOTAL SOLD", f"{total_ever}", delta="Keseluruhan")
@@ -3910,12 +3999,16 @@ def tampilkan_database_channel():
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 4. DATABASE TABEL (IKUT FILTER) ---
+            # --- 4. DATABASE TABEL (STYLE ORIGINAL LO) ---
             st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
             if df_selected.empty:
                 st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
             else:
-                df_selected['TGL_LAST'] = df_selected.iloc[:, 11].astype(str)
+                # INI KUNCI BIAR TABEL TETEP KAYAK KODE LO:
+                # Kita aliaskan kolom KETERANGAN jadi TGL_LAST biar config lo ga error
+                df_selected['TGL_LAST'] = df_selected['KETERANGAN']
+                
+                # Susunan kolom PERSIS punya lo
                 cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 st.dataframe(
@@ -3929,24 +4022,25 @@ def tampilkan_database_channel():
                         "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
                         "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
                         "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
-                        "STATUS": st.column_config.TextColumn("⚙️ STATUS")
+                        "STATUS": st.column_config.TextColumn("⚙️ STATUS") 
                     }
                 )
                 
     # ==============================================================================
-    # TAB 6: ARSIP CHANNEL (3 METRICS: TOTAL, BUSUK, SUSPEND)
+    # TAB 6: ARSIP CHANNEL (SINKRON SUPABASE - ORIGINAL UI)
     # ==============================================================================
     with tab_arsip:
         if not is_ceo: 
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
             # --- 1. LOGIKA DASHBOARD ARSIP ---
+            # df ini udah hasil load dari Supabase di awal aplikasi
             df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
             total_arsip = len(df_a)
             total_busuk = len(df_a[df_a['STATUS'] == 'BUSUK'])
             total_suspend = len(df_a[df_a['STATUS'] == 'SUSPEND'])
 
-            # --- 2. RENDER 3 METRIK UTAMA ---
+            # --- 2. RENDER 3 METRIK UTAMA (Original Style lo) ---
             with st.container(border=True):
                 ca1, ca2, ca3 = st.columns(3)
                 ca1.metric("💀 TOTAL ARSIP", f"{total_arsip}", delta="Busuk + Suspend", delta_color="inverse")
@@ -3955,15 +4049,15 @@ def tampilkan_database_channel():
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 3. DATABASE ARSIP (CLEAN COLUMN) ---
+            # --- 3. DATABASE ARSIP (SINKRON SUPABASE) ---
             st.markdown("##### 📂 DAFTAR AKUN ARSIP (HISTORY AUDIT)")
             if df_a.empty:
                 st.info("Arsip masih bersih. Performa tim mantap!")
             else:
-                # Kolom L (Index 11) dipasang sebagai Tanggal Terakhir Kejadian
-                df_a['TGL_KEJADIAN'] = df_a.iloc[:, 11].astype(str)
+                # BIAR KOLOM GA ILANG: Map kolom KETERANGAN ke TGL_KEJADIAN
+                df_a['TGL_KEJADIAN'] = df_a['KETERANGAN']
                 
-                # Susunan Kolom sesuai permintaan
+                # Susunan Kolom PERSIS punya lo
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 st.dataframe(
@@ -4393,6 +4487,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
