@@ -3571,18 +3571,9 @@ def tampilkan_database_channel():
                     "REAL_IDX": None 
                 }
 
-                # --- RUMUS LOSS DINAMIS (TARGET 50 BARIS) ---
-                # Itungan: (Jumlah Data * 35.2) + 40 Header
-                # Jika data ada 50, tingginya jadi ~1800px (Loss total ke bawah)
-                tinggi_st_loss = int((len(df_st) * 35.2) + 40)
-
                 edited_st = st.data_editor(
                     df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
-                    column_config=config_st, 
-                    use_container_width=True, 
-                    hide_index=True, 
-                    key="grid_st_pro_locked",
-                    height=tinggi_st_loss # <--- SEKARANG LOSS TOTAL SAMPE 50+ BARIS
+                    column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
                 # --- 6. LOGIKA UPDATE MODERN (SUPABASE + GSHEET BATCH) ---
