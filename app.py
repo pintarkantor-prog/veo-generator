@@ -3571,13 +3571,17 @@ def tampilkan_database_channel():
                     "REAL_IDX": None 
                 }
 
+                # Hitung tinggi dinamis: (jumlah baris + header) * 35 pixel
+                # Kita kasih batas maksimal 800 biar gak kepanjangan banget
+                tinggi_dinamis = min((len(df_st) + 1) * 35 + 3, 1000)
+
                 edited_st = st.data_editor(
                     df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
                     column_config=config_st, 
                     use_container_width=True, 
                     hide_index=True, 
                     key="grid_st_pro_locked",
-                    height=500 # <--- TAMBAHIN INI (500-600 px udah enak banget liatnya)
+                    height=tinggi_dinamis # <--- SEKARANG PAKE VARIABEL INI
                 )
 
                 # --- 6. LOGIKA UPDATE MODERN (SUPABASE + GSHEET BATCH) ---
@@ -4532,6 +4536,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
