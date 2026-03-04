@@ -2309,10 +2309,10 @@ def tampilkan_kendali_tim():
             # --- DISPLAY METRIC (7 KOLOM) ---
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
             
-            target_fix = len(nama_staff_asli) * 40
+            target_fix = len(nama_staff_asli) * 60
             c_r1.metric("🎯 TARGET IDEAL", f"{target_fix} Vid") 
             
-            persen_capaian = (rekap_v_total / target_fix * 100) if target_fix > 0 else 0
+            persen_capaian = (rekap_v_total / target_fix * 120) if target_fix > 0 else 0
             c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}%")
             
             c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_video_kolektif):,}", delta="LIVE SYNC")
@@ -4393,18 +4393,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
