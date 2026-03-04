@@ -3573,7 +3573,11 @@ def tampilkan_database_channel():
 
                 edited_st = st.data_editor(
                     df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
-                    column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
+                    column_config=config_st, 
+                    use_container_width=True, 
+                    hide_index=True, 
+                    key="grid_st_pro_locked",
+                    height=500 # <--- TAMBAHIN INI (500-600 px udah enak banget liatnya)
                 )
 
                 # --- 6. LOGIKA UPDATE MODERN (SUPABASE + GSHEET BATCH) ---
@@ -4528,6 +4532,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
