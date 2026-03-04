@@ -3485,13 +3485,13 @@ def tampilkan_database_channel():
 
                 config_st = {
                     "NO": st.column_config.TextColumn("#️⃣ NO", width=30, disabled=True),
-                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=220),
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
                     "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=130),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=140),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=130),
                     "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=220),
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=270),
                     "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=50, disabled=True),
-                    "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=100, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
+                    "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=80, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
                     "REAL_IDX": None 
                 }
 
@@ -4393,5 +4393,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
