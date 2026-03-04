@@ -3774,11 +3774,11 @@ def tampilkan_database_channel():
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     df_j_sorted = df_j.sort_values('HP_N')
 
-                    # Kita ambil kolom EMAIL buat kunci di Supabase
                     kolom_edit = ["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "EMAIL", "REAL_IDX"]
                     
-                    # TINGGI DINAMIS UNTUK EDITOR (Maks 500px biar ringkas di dalam expander)
-                    h_editor = min((len(df_j_sorted) + 1) * 35 + 40, 1100)
+                    # --- RUMUS LOSS TOTAL (NO LIMIT) ---
+                    # Kita pake angka 35.2 biar presisi tiap barisnya
+                    h_editor_loss = int((len(df_j_sorted) * 35.2) + 40)
 
                     edited_j = st.data_editor(
                         df_j_sorted[kolom_edit],
@@ -3791,8 +3791,10 @@ def tampilkan_database_channel():
                             "EMAIL": None,
                             "REAL_IDX": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_manual_full",
-                        height=h_editor
+                        use_container_width=True, 
+                        hide_index=True, 
+                        key="editor_manual_full",
+                        height=h_editor_loss # <--- SEKARANG UDAH LOSS TOTAL!
                     )
 
                     # --- LOGIKA SIMPAN (TIDAK LONCAT-LONCAT) ---
@@ -3860,6 +3862,11 @@ def tampilkan_database_channel():
 
             # --- 3. MONITORING VIEW (WEB) ---
             st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
+            
+            # RUMUS LOSS KHUSUS DATAFRAME (DIBIKIN RAPET & LOSS)
+            # 35 pixel per baris udah cukup banget buat st.dataframe
+            tinggi_jadwal_loss = int((len(df_display) * 35) + 38)
+            
             st.dataframe(
                 df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
@@ -3868,7 +3875,10 @@ def tampilkan_database_channel():
                     "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
                     "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
                     "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
-                }, hide_index=True, use_container_width=True
+                }, 
+                hide_index=True, 
+                use_container_width=True,
+                height=tinggi_jadwal_loss # <--- LOSS TANPA REM
             )
 
             # --- 4. PRINT PREVIEW (HTML) ---
@@ -4065,13 +4075,26 @@ def tampilkan_database_channel():
                 cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 # RUMUS TINGGI DINAMIS (Biar meja audit lega)
-                h_sold = min((len(df_selected) + 1) * 35 + 40, 1100)
+# --- 4. DATABASE TABEL (STYLE ORIGINAL LO - LOSSSSS 40 BARIS) ---
+            st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
+            if df_selected.empty:
+                st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
+            else:
+                # Aliaskan kolom EDITED ke TGL_LAST
+                df_selected['TGL_LAST'] = df_selected['EDITED']
+                
+                # Susunan kolom
+                cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
+                
+                # --- RUMUS LOSS DINAMIS (Target 40 Baris) ---
+                # Itungan: (Baris * 35.2) + 40 Header. 
+                tinggi_sold_loss = int((len(df_selected) * 35.2) + 40)
                 
                 st.dataframe(
                     df_selected[cols_view], 
                     use_container_width=True, 
                     hide_index=True,
-                    height=h_sold, # <--- BIAR DYNAMIS
+                    height=tinggi_sold_loss, # <--- LOSSS DINAMIS
                     column_config={
                         "TGL_LAST": st.column_config.TextColumn("⏰ TGL SOLD", width=180),
                         "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
@@ -4111,19 +4134,22 @@ def tampilkan_database_channel():
             if df_a.empty:
                 st.info("Arsip masih bersih. Performa tim mantap!")
             else:
-                # BIAR KOLOM GA ILANG: Map kolom KETERANGAN ke TGL_KEJADIAN
+                # Map kolom EDITED ke TGL_KEJADIAN
                 df_a['TGL_KEJADIAN'] = df_a['EDITED']
                 
-                # Susunan Kolom PERSIS punya lo
+                # Susunan Kolom
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
-                h_arsip = min((len(df_a) + 1) * 35 + 40, 1000)
+                # --- RUMUS LOSS DINAMIS (Target 40 Baris) ---
+                # Menggunakan pengali 35 pixel agar rapet dan pas.
+                # Tidak menggunakan min() agar benar-benar mengikuti jumlah data (Loss)
+                h_arsip_loss = int((len(df_a) * 35) + 40)
                 
                 st.dataframe(
                     df_a[cols_arsip], 
                     use_container_width=True, 
                     hide_index=True,
-                    height=h_arsip, # <--- BIAR DYNAMIS
+                    height=h_arsip_loss, # <--- SEKARANG LOSS DINAMIS
                     column_config={
                         "TGL_KEJADIAN": st.column_config.TextColumn("⏰ TGL KEJADIAN", width=180),
                         "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
@@ -4547,6 +4573,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
