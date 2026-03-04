@@ -4060,22 +4060,7 @@ def tampilkan_database_channel():
                 m2.metric(f"📅 {sel_bln_nama.upper()} {sel_thn}", f"{total_selected}", delta=f"Periode Terpilih")
                 m3.metric(f"🕒 BULAN SEBELUMNYA", f"{total_prev}", delta=f"Data {filter_prev}", delta_color="off")
 
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            # --- 4. DATABASE TABEL (STYLE ORIGINAL LO) ---
-            st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
-            if df_selected.empty:
-                st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
-            else:
-                # INI KUNCI BIAR TABEL TETEP KAYAK KODE LO:
-                # Kita aliaskan kolom KETERANGAN jadi TGL_LAST biar config lo ga error
-                df_selected['TGL_LAST'] = df_selected['EDITED']
-                
-                # Susunan kolom PERSIS punya lo
-                cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
-                
-                # RUMUS TINGGI DINAMIS (Biar meja audit lega)
-# --- 4. DATABASE TABEL (STYLE ORIGINAL LO - LOSSSSS 40 BARIS) ---
+            # --- 4. DATABASE TABEL (STYLE ORIGINAL LO - LOSSSSS 40 BARIS) ---
             st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
             if df_selected.empty:
                 st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
@@ -4573,6 +4558,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
