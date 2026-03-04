@@ -3488,8 +3488,8 @@ def tampilkan_database_channel():
                     "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
                     "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=130),
                     "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=130),
-                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=270),
+                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=50), 
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=300),
                     "PENCATAT": st.column_config.TextColumn("👤 OLEH", width=50, disabled=True),
                     "STATUS": st.column_config.SelectboxColumn("⚙️ STATUS", width=80, options=["STANDBY", "PROSES", "SOLD", "BUSUK", "SUSPEND"]),
                     "REAL_IDX": None 
@@ -3573,14 +3573,14 @@ def tampilkan_database_channel():
                 df_display = pd.DataFrame(display_list)
                 
                 config_p = {
-                    "HP": st.column_config.TextColumn("📱 UNIT", width=90, disabled=True),
-                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=220, disabled=True),
+                    "HP": st.column_config.TextColumn("📱 UNIT", width=50, disabled=True),
+                    "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200, disabled=True),
                     "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=130, disabled=True),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=180, disabled=True),
-                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80), 
-                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=100, disabled=True),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=130, disabled=True),
+                    "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=50), 
+                    "LINK_CHANNEL": st.column_config.LinkColumn("🔗 URL", width=300, disabled=True),
                     "STATUS": st.column_config.SelectboxColumn(
-                        "⚙️ STATUS", width=130, 
+                        "⚙️ STATUS", width=80, 
                         options=["PROSES", "SOLD", "STANDBY", "BUSUK", "SUSPEND"]
                     ),
                     "REAL_IDX": None
@@ -3713,7 +3713,7 @@ def tampilkan_database_channel():
                 df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
                 column_config={
                     "HP": st.column_config.TextColumn("📱 HP", width=50),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=300),
+                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250),
                     "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
                     "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
                     "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
@@ -4393,6 +4393,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
