@@ -1774,9 +1774,9 @@ def tampilkan_tugas_kerja():
                 if not list_opsi:
                     bisa_klaim = False
                     st.warning("😭 Stok akun sedang habis atau expired.")
-                elif len(akun_aktif_user) >= 3:
+                elif len(akun_aktif_user) >= 4:
                     bisa_klaim = False
-                    st.warning("🚫 Limit 3 akun aktif tercapai. Tunggu akun lama expired.")
+                    st.warning("🚫 Limit 4 akun aktif tercapai. Tunggu akun lama expired.")
 
                 # --- GANTI BAGIAN INI (Step 3) ---
                 if c_btn.button("🔓 KLAIM AKUN", use_container_width=True, disabled=not bisa_klaim):
@@ -4393,3 +4393,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
