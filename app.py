@@ -3527,6 +3527,7 @@ def tampilkan_database_channel():
                                 # --- B. SIMPAN KE SUPABASE (WAJIB ADA INI BIAR MUNCUL DI WEB) ---
                                 try:
                                     supabase.table("Channel_Pintar").insert({
+                                        "TANGGAL": tgl_now,  # <--- INI BIAR GAK NULL LAGI
                                         "EMAIL": v_mail,
                                         "PASSWORD": v_pass,
                                         "NAMA_CHANNEL": v_nama,
@@ -3597,6 +3598,7 @@ def tampilkan_database_channel():
                                     # --- A. UPDATE SUPABASE (CEPAT) ---
                                     try:
                                         supabase.table("Channel_Pintar").upsert({
+                                            "TANGGAL": tgl_now,  # <--- INI BIAR GAK NULL LAGI
                                             "EMAIL": row['EMAIL'],
                                             "PASSWORD": row['PASSWORD'],
                                             "NAMA_CHANNEL": row['NAMA_CHANNEL'],
@@ -4520,6 +4522,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
