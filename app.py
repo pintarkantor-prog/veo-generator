@@ -3573,7 +3573,7 @@ def tampilkan_database_channel():
 
                 # Hitung tinggi dinamis: (jumlah baris + header) * 35 pixel
                 # Kita kasih batas maksimal 800 biar gak kepanjangan banget
-                tinggi_dinamis = min((len(df_st) + 1) * 35 + 3, 1000)
+                tinggi_dinamis = min((len(df_st) + 1) * 35 + 3, 1200)
 
                 edited_st = st.data_editor(
                     df_st[["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]],
@@ -3692,15 +3692,18 @@ def tampilkan_database_channel():
                     "REAL_IDX": None
                 }
 
+                # Rumus: (Jumlah baris + 1 header) * 35 pixel, maksimal mentok di 1100
+                tinggi_monitoring = min((len(df_display) + 1) * 35 + 40, 1100)
+
                 edited_p = st.data_editor(
                     df_display, 
                     column_config=config_p, 
                     use_container_width=True, 
                     hide_index=True, 
                     key="grid_p_pro_locked",
-                    disabled=not is_pro 
+                    disabled=not is_pro,
+                    height=tinggi_monitoring # <--- PAKE VARIABEL INI
                 )
-
                 # --- LOGIKA SAVE (SINKRON DENGAN RADAR & KEEP JAM) ---
                 if is_pro and not edited_p.equals(df_display):
                     if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
@@ -3777,6 +3780,9 @@ def tampilkan_database_channel():
                     # Kita ambil kolom EMAIL buat kunci di Supabase
                     kolom_edit = ["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "EMAIL", "REAL_IDX"]
                     
+                    # TINGGI DINAMIS UNTUK EDITOR (Maks 500px biar ringkas di dalam expander)
+                    h_editor = min((len(df_j_sorted) + 1) * 35 + 40, 1100)
+
                     edited_j = st.data_editor(
                         df_j_sorted[kolom_edit],
                         column_config={
@@ -3785,10 +3791,11 @@ def tampilkan_database_channel():
                             "PAGI": st.column_config.TextColumn("🌅 PAGI"),
                             "SIANG": st.column_config.TextColumn("☀️ SIANG"),
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
-                            "EMAIL": None, # Sembunyikan email biar ga ribet diliat
+                            "EMAIL": None,
                             "REAL_IDX": None
                         },
-                        use_container_width=True, hide_index=True, key="editor_manual_full"
+                        use_container_width=True, hide_index=True, key="editor_manual_full",
+                        height=h_editor
                     )
 
                     # --- LOGIKA SIMPAN (TIDAK LONCAT-LONCAT) ---
@@ -4060,18 +4067,22 @@ def tampilkan_database_channel():
                 # Susunan kolom PERSIS punya lo
                 cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
+                # RUMUS TINGGI DINAMIS (Biar meja audit lega)
+                h_sold = min((len(df_selected) + 1) * 35 + 40, 1100)
+                
                 st.dataframe(
                     df_selected[cols_view], 
                     use_container_width=True, 
                     hide_index=True,
+                    height=h_sold, # <--- BIAR DYNAMIS
                     column_config={
                         "TGL_LAST": st.column_config.TextColumn("⏰ TGL SOLD", width=180),
-                        "EMAIL": st.column_config.TextColumn("📧 EMAIL"),
-                        "PASSWORD": st.column_config.TextColumn("🔑 PASS"),
-                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
-                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
-                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
-                        "STATUS": st.column_config.TextColumn("⚙️ STATUS") 
+                        "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
+                        "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=150),
+                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80),
+                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK", width=100),
+                        "STATUS": st.column_config.TextColumn("⚙️ STATUS", width=80) 
                     }
                 )
                 
@@ -4109,18 +4120,21 @@ def tampilkan_database_channel():
                 # Susunan Kolom PERSIS punya lo
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
+                h_arsip = min((len(df_a) + 1) * 35 + 40, 1000)
+                
                 st.dataframe(
                     df_a[cols_arsip], 
                     use_container_width=True, 
                     hide_index=True,
+                    height=h_arsip, # <--- BIAR DYNAMIS
                     column_config={
                         "TGL_KEJADIAN": st.column_config.TextColumn("⏰ TGL KEJADIAN", width=180),
-                        "EMAIL": st.column_config.TextColumn("📧 EMAIL"),
-                        "PASSWORD": st.column_config.TextColumn("🔑 PASS"),
-                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
-                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
-                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
-                        "STATUS": st.column_config.TextColumn("⚠️ STATUS")
+                        "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
+                        "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=150),
+                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80),
+                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK", width=100),
+                        "STATUS": st.column_config.TextColumn("⚠️ STATUS", width=100)
                     }
                 )
                             
@@ -4536,6 +4550,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
