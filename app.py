@@ -1052,18 +1052,16 @@ def tampilkan_ai_lab():
             if st.button("🚀 GENERATE SULTAN PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
-                # 1. RAKIT DNA PENDUKUNG (Berdasarkan Multiselect)
+                # 1. RAKIT DNA PENDUKUNG
                 dna_tambahan = ""
                 if pilihan_pendukung:
                     for p in pilihan_pendukung:
-                        dna_tambahan += f"ADDITIONAL CHARACTER ({p}): {MASTER_PENDUKUNG[p]}. "
+                        dna_tambahan += f"\n- Support Character ({p}): {MASTER_PENDUKUNG[p]}"
 
-                # 2. LOGIKA INJECT DNA BALUNG
-                # Cek apakah kata 'BALUNG' ada di teks, kalau nggak ada, suntik di depan.
-                if "BALUNG" in aksi_in.upper():
-                    final_action = aksi_in.replace("BALUNG", dna_final).replace("balung", dna_final)
-                else:
-                    final_action = f"{dna_final}. {aksi_in}"
+                # 2. LOGIKA ANTI-PENGULANGAN (CLEAN ACTION)
+                # Kita buat agar di ACTION, 'BALUNG' cuma jadi kata kunci singkat
+                # AI sudah tahu detailnya dari variabel VIDEO ENGINE di atas.
+                clean_action = aksi_in.replace("BALUNG", "The main skeleton character").replace("balung", "the main skeleton character")
 
                 # 3. RAKIT INSTRUKSI AUDIO
                 audio_instr = (
@@ -1077,14 +1075,16 @@ def tampilkan_ai_lab():
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **IMAGE PROMPT**")
-                    # f_auto sekarang dijamin aman karena diproses di atas button
-                    st.code(f"SCENE: {final_action}. {dna_tambahan} ENV: {env_in}. FRAMING: {f_auto}.")
+                    # Untuk Gambar (Midjourney/DALL-E), DNA lengkap wajib ada di dalam scene
+                    full_img_action = aksi_in.replace("BALUNG", dna_final).replace("balung", dna_final)
+                    st.code(f"CHARACTER: {dna_final}. \nSCENE: {full_img_action}. \nENV: {env_in}. \nFRAMING: {f_auto}.")
                 
                 with res2:
-                    st.warning("🎥 **VIDEO ENGINE PROMPT**")
+                    st.warning("🎥 **VIDEO ENGINE PROMPT (CLEAN VERSION)**")
+                    # Untuk Video (VEO/Sora), DNA dipisah biar AI nggak bingung
                     prompt_vid = (
-                        f"VIDEO ENGINE: {dna_final}. \n"
-                        f"ACTION: {final_action} in {env_in}. {dna_tambahan} \n"
+                        f"VIDEO ENGINE (MAIN CHARACTER DNA): \n{dna_final} \n\n"
+                        f"ACTION & SCENE: \n{clean_action} in {env_in}. {dna_tambahan} \n\n"
                         f"CAMERA: {m_auto}, {f_auto}. \n"
                         f"AUDIO SPECS: {audio_instr}. \n"
                         f"SOUND DESIGN: Cinematic ambiance of {env_in} with deep bass textures."
@@ -4736,6 +4736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
