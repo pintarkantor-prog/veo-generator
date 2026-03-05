@@ -892,23 +892,21 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (LOADER SELALU STANDBY)
+    # MESIN 1: ANATOMY (VERSI KONSISTENSI VIDEO SHORTS)
     # ==========================================================================
     with t_anatomi:
         st.subheader("🦴 ANATOMY MASTER GENERATOR")
         
-        # --- A. LOADER IDE (DITARUH DI LUAR IF BIAR SELALU MUNCUL) ---
+        # --- A. LOADER IDE ---
         naskah_default = ""
         id_pilih = None
         opsi_gudang = ["-- Ketik Manual --"]
 
-        # Cek apakah ada data di Supabase untuk niche ini
         if not df_ide.empty:
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
                 opsi_gudang += df_a.drop_duplicates(subset=['id_ide'])['topik'].tolist()
 
-        # Loader ini sekarang WAJIB muncul di atas form
         topik_sel = st.selectbox("📥 AMBIL IDE DARI GUDANG (ANATOMI):", opsi_gudang, key="loader_a")
         
         if topik_sel != "-- Ketik Manual --":
@@ -917,54 +915,67 @@ def tampilkan_ai_lab():
             id_pilih = data_row['id_ide']
             st.toast(f"Data '{topik_sel}' Berhasil ditarik!", icon="✅")
 
-        # --- B. FORM GENERATOR (PERSIS SCREENSHOT LO) ---
+        # --- B. FORM GENERATOR (IDENTITY LOCK & MOTION ENGINE) ---
         with st.container(border=True):
             c1, c2 = st.columns(2)
+            
+            # KUNCI KONSISTENSI (DNA & SOUL)
             char_sks = c1.text_input("👤 Karakter Utama (SKS)", value="MR. TULANG", key="c1_a")
-            dna_sks = c1.text_area("🧬 DNA Visual (SKS)", value="Hyper-realistic, aged bone, 8k...", key="d1_a")
-            char_sks2 = c2.text_input("👤 Karakter Pendukung", value="ORGAN", key="c2_a")
-            dna_sks2 = c2.text_area("🧬 DNA Pendukung", value="Wet texture, pulsating muscle...", key="d2_a")
+            dna_sks = c1.text_area("🧬 DNA Visual (Konsistensi)", 
+                value="Hyper-realistic human skeleton, aged bone texture with micro-cracks, translucent ribcage, cinematic rim lighting, 8k resolution, vertical orientation.", 
+                key="d1_a", height=100)
+            
+            char_soul = c2.text_input("👤 Acting Style", value="Fluid Anatomical", key="c2_a")
+            soul_sks = c2.text_area("⚙️ Soul & Motion Engine", 
+                value="High-fidelity physical simulation, realistic organ vibration, electricity simulation, slow-motion impact, high dynamic range.", 
+                key="s2_a", height=100)
 
             st.markdown("---")
-            # Naskah Visual akan terisi otomatis jika ada ide yang dipilih
             naskah_input = st.text_area("📝 NASKAH VISUAL / AKSI", value=naskah_default, height=150, key="nas_a")
 
+            # SETTING SINEMATIK
             s1, s2, s3 = st.columns(3)
-            style = s1.selectbox("🎨 Style", ["Cinematic RAW", "3D Animation", "X-Ray"], key="sty_a")
-            lighting = s2.selectbox("💡 Lighting", ["Rim Light", "Neon", "Daylight"], key="light_a")
-            camera = s3.selectbox("🎥 Camera", ["Close Up", "Static", "Wide"], key="cam_a")
+            style = s1.selectbox("🎨 Style", ["ANATOMI Cinematic 8k RAW", "Unreal Engine 5.4 render style", "X-Ray Futuristic", "3D Medical Animation"], key="sty_a")
+            lighting = s2.selectbox("💡 Lighting", ["Cinematic Rim Lighting", "Neon Glow", "Global Illumination", "Volumetric Fog"], key="light_a")
+            camera = s3.selectbox("🎥 Camera", ["Dynamic Camera Movement", "Extreme Close-up Focus", "Static Cinematic Shot", "Bird Eye View"], key="cam_a")
 
-            # --- C. TOMBOL GENERATE (3 OUTPUT SEKALIGUS) ---
-            if st.button("🔥 GENERATE 3 PROMPTS (ANATOMY)", type="primary", use_container_width=True):
+            # --- C. TOMBOL GENERATE (3 OUTPUT) ---
+            if st.button("🔥 GENERATE MASTER PROMPTS (ANATOMY)", type="primary", use_container_width=True):
                 st.divider()
                 r1, r2, r3 = st.columns(3)
                 
                 with r1:
                     st.error("🎙️ **ELEVENLABS**")
-                    st.code(f"[Deep Voice]: {naskah_input}")
+                    st.code(f"Voice: Deep Authority\nScript: {naskah_input}", language="text")
+                
                 with r2:
                     st.success("🖼️ **IMAGE (GEMINI)**")
-                    st.code(f"{style}, {char_sks} ({dna_sks}), {naskah_input}, {lighting}")
+                    # RAKITAN DNA + NASKAH + STYLE
+                    p_img = f"CHARACTER: {char_sks}. DNA: {dna_sks}. SCENE: {naskah_input}. STYLE: {style}, {lighting}, macro photography."
+                    st.code(p_img, language="text")
+                
                 with r3:
                     st.warning("🎥 **VIDEO (VEO)**")
-                    st.code(f"VEO ENGINE: {char_sks}, {camera}, Action: {naskah_input}, {style}")
+                    # RAKITAN SOUL + ACTION + CAMERA
+                    p_vid = f"VEO VIDEO ENGINE:\nCHARACTER: {char_sks}. SOUL/ACTING: {soul_sks}. ACTION: {naskah_input}. MOTION: {camera}, high-fidelity tissue simulation, {style}."
+                    st.code(p_vid, language="text")
 
-            # Tombol Selesai muncul hanya jika data ditarik dari Gudang
+            # Tombol Selesai
             if id_pilih:
                 if st.button("🏁 SELESAI & ARCHIVE PROJECT", use_container_width=True):
                     supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
                     st.rerun()
 
     # ==========================================================================
-    # TAB LAIN (Nanti rumusnya beda lagi, misal Grandma pake SKS Nenek)
+    # TAB LAIN (BEDA KEY & BEDA MANTRA)
     # ==========================================================================
     with t_grandma:
         st.subheader("👵 GRANDMA GENERATOR")
-        st.info("Mesin khusus dengan rumus prompt cerita nenek.")
+        st.info("Form Nenek Standby (Ganti key _a jadi _g jika ingin diaktifkan).")
 
     with t_minecraft:
         st.subheader("⛏️ MINECRAFT GENERATOR")
-        st.info("Mesin khusus dengan rumus prompt gaya kotak-kotak.")
+        st.info("Form Minecraft Standby (Ganti key _a jadi _m jika ingin diaktifkan).")
 
     with t_random:
         st.subheader("🎲 RANDOM GENERATOR")
@@ -4546,6 +4557,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
