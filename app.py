@@ -1037,59 +1037,55 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-        # --- 7. BLOK BRAINSTORMING (MESIN PERAKIT MANTRA - VERSI STORYTELLING PRO) ---
+        # --- 7. BLOK BRAINSTORMING (MESIN PERAKIT MANTRA - VERSI FINAL SULTAN) ---
         st.write("") 
-        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (BAHASA INDONESIA FULL)", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
-                st.markdown('<p class="small-label">1. PILIH TIPE CERITA</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">1. TIPE KONTEN</p>', unsafe_allow_html=True)
                 tipe_cerita = st.selectbox("TIPE_C", [
-                    "🔬 Simulasi Tubuh (Bahaya Sehari-hari)",
-                    "📈 Evolusi Kronologis (Transformation)",
-                    "🏛️ Sejarah & Reinkarnasi (Storyteller)",
-                    "🌀 Anomali & Absurd (What If?)"
+                    "🔬 Simulasi Bahaya Tubuh (Medis)",
+                    "📈 Evolusi & Transformasi (Kronologis)",
+                    "🏛️ Sejarah & Mitologi (Storyteller)",
+                    "🌀 Skenario Absurd (What If?)"
                 ], label_visibility="collapsed")
             with col_t2:
-                st.markdown('<p class="small-label">2. JUMLAH ADEGAN (DETAIL)</p>', unsafe_allow_html=True)
-                jml_adegan = st.selectbox("JML_A", ["10 Adegan", "12 Adegan", "15 Adegan (Rekomendasi)"], index=2, label_visibility="collapsed")
+                st.markdown('<p class="small-label">2. JUMLAH CUT (ADENGAN)</p>', unsafe_allow_html=True)
+                jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut (Sangat Detail)"], index=2, label_visibility="collapsed")
 
-            st.markdown('<p class="small-label">3. KETIK IDE SINGKAT</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya duduk terlalu lama...", label_visibility="collapsed")
+            st.markdown('<p class="small-label">3. IDE VIDEO (MISAL: BAHAYA MINUM MINUMAN ENERGI SETIAP HARI)</p>', unsafe_allow_html=True)
+            ide_singkat = st.text_input("G_IDE", placeholder="Ketik ide di sini...", label_visibility="collapsed")
             
             if ide_singkat:
-                # --- INSTRUKSI STRUKTUR CERITA ---
-                instr_struktur = """Struktur Cerita (WAJIB):
-1. HOOK (Adegan 1-2): Mulai dengan pertanyaan atau fakta mengejutkan yang relatable. Jangan langsung ke inti.
-2. STORY (Adegan 3-6): Jelaskan prosesnya secara santai tapi informatif. 
-3. INSIGHT (Adegan 7-10): Berikan detail anatomi yang dalam (medis/fakta unik) dengan bahasa yang mudah dimengerti.
-4. EVOLUSI (Adegan 11-13): Tunjukkan perubahan fisik final yang dramatis.
-5. CLOSING (Adegan 14-15): Pesan moral atau pertanyaan balik ke penonton."""
+                # --- INSTRUKSI STRUKTUR & CTA SPESIFIK ---
+                instr_final = """PANDUAN NARASI VO (Gaya Storytelling):
+1. PEMBUKAAN (HOOK): Mulai dengan narasi yang bikin orang berhenti scrolling. Jangan langsung ke inti, tapi pancing dengan rasa penasaran atau keresahan.
+2. NARASI ALUR: Gunakan bahasa Indonesia sehari-hari yang luwes, enak didengar, dan informatif. Jangan kaku kayak buku teks. Jelaskan 'Kenapa' dan 'Bagaimana' secara detail.
+3. CTA ORGANIK: Selipkan ajakan Subscribe di tengah video (Adegan 8-10). Hubungkan dengan alur cerita nya ( pakai kalimat yang "memaksa penonton klik subscribe").
+4. CLOSING: Berikan kesimpulan yang 'Deep' atau pertanyaan yang memancing penonton buat komen.
 
-                # --- INSTRUKSI NARASI: LUWES & INFORMATIF ---
-                instr_narasi = """Gaya Narasi VO: 
-- Gunakan bahasa Indonesia sehari-hari yang enak didengar (seperti ngobrol sama teman pintar).
-- Gunakan 'Kamu'. Hindari kata-kata kaku. 
-- Berikan analogi sederhana agar fakta medis/informatifnya mudah masuk ke otak.
-- Gunakan intonasi yang dinamis (ada saatnya santai, ada saatnya serius/peringatan)."""
+PANDUAN VISUAL (DALAM BAHASA INDONESIA):
+- Deskripsikan Visual dalam Bahasa Indonesia yang sangat mendalam dan teknis.
+- Jelaskan posisi tulang, organ mana yang bercahaya, warna cahayanya, dan detak jantungnya.
+- Deskripsikan pergerakan kamera: Zoom in pelan, muter 360 derajat, atau close-up sangat dekat ke arah saraf."""
 
-                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton transparan). 
+                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami adalah SKELETON TRANSPARAN dengan organ dalam yang terlihat.
 Tugas kamu: Buatkan naskah video cinematic (90 detik) tentang: {ide_singkat}.
 
 KONSEP: {tipe_cerita}.
-{instr_struktur}
-{instr_narasi}
+{instr_final}
 
-FORMAT OUTPUT (Tabel): 
+FORMAT OUTPUT (WAJIB TABEL): 
 - No Adegan
-- Narasi VO (Bagi menjadi potongan pendek-pendek. Pastikan narasi mengalir halus antar adegan).
-- Visual Action (Bahasa Inggris, jelaskan detail organ/tulang yang bereaksi, pencahayaan, dan pergerakan kamera).
+- Narasi VO (Bahasa Indonesia Luwes, Menarik, dan Informatif).
+- Deskripsi Visual (FULL BAHASA INDONESIA: Jelaskan secara detail, karena akan digunakan untuk prompt visual).
 - Wardrobe & Environment.
 
-Catatan: Sisipkan CTA 'Klik Subscribe' di Adegan ke-8 saat penonton sedang fokus melihat detail anatomi."""
+Catatan: Buat pembukaannya sangat menarik (Hook) dan penutup yang berkesan!"""
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info("💡 **Tips Bos:** Beritahu staff, kalau narasinya masih terasa kaku, suruh Gemini: 'Ubah narasinya jadi lebih santai, seperti gaya bercerita konten kreator edukasi viral.'")
+                st.info("💡 **PESAN BUAT STAFF:** Copy mantra di atas ke Gemini.")
                 
     # --- TAB LAIN (STANDBY) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4672,6 +4668,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
