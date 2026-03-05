@@ -877,196 +877,127 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
-# ==============================================================================
-# BAGIAN 5: PINTAR AI LAB - PRO EDITION (SYNCHRONIZED MANTRA)
-# ==============================================================================
-
 def tampilkan_ai_lab():
-    st.title("🧠 PINTAR AI LAB")
-    st.info("🚀 **Gaskeun!** Ide cerita di mode **Manual**, atau langsung jadi naskah di mode **Otomatis**!")
+    st.title("🧠 PINTAR AI LAB - PRODUCTION FACTORY")
+    st.markdown("---")
     
-    # --- 1. KONFIGURASI & SESSION STATE ---
-    if 'lab_hasil_otomatis' not in st.session_state: st.session_state.lab_hasil_otomatis = ""
-    if 'jumlah_karakter' not in st.session_state: st.session_state.jumlah_karakter = 2
-    if 'memori_n' not in st.session_state: st.session_state.memori_n = {}
-    if 'memori_s' not in st.session_state: st.session_state.memori_s = {}
-    
-    # 4 NICHE UTAMA
-    opsi_pola = [
-        "Revenge (Direndahkan -> Balas Dendam)",
-        "Empathy (Iba -> Pesan Moral)",
-        "Absurd Race (Lomba Konyol -> Interaktif CTA)",
-        "Knowledge (Fakta Harian -> Edukasi)"
-    ]
-    opsi_visual = ["Sangat Nyata", "Gaya Cyberpunk", "3D Pixar Style", "Anime Style"]
+    # 1. AMBIL SESSION USER
+    user_aktif = st.session_state.get("user_aktif", "STAFF").upper()
+    tz = pytz.timezone('Asia/Jakarta')
 
+    # 2. FETCH DATA DARI SUPABASE (Hanya yang belum DONE)
     try:
-        api_key_groq = st.secrets["GROQ_API_KEY"]
-    except:
-        api_key_groq = None
+        # Mengambil data dari tabel 'Ide_Pintar'
+        res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
+        df_ide = pd.DataFrame(res.data)
+    except Exception as e:
+        st.error(f"❌ Koneksi Supabase Gagal: {e}")
+        return
 
-    # --- 2. AREA PENGATURAN KARAKTER ---
-    st.subheader("👤 Pengaturan Karakter")
-    c_add, c_rem, c_spacer = st.columns([0.25, 0.25, 0.5])
-    with c_add:
-        if st.button("➕ Tambah Karakter", use_container_width=True) and st.session_state.jumlah_karakter < 4:
-            st.session_state.jumlah_karakter += 1
-            st.rerun()
-    with c_rem:
-        if st.button("➖ Kurang Karakter", use_container_width=True) and st.session_state.jumlah_karakter > 1:
-            st.session_state.jumlah_karakter -= 1
-            st.rerun()
+    # 3. TAB BERDASARKAN NICHE
+    t_anatomi, t_evolusi, t_misteri, t_sejarah, t_luxury = st.tabs([
+        "🦴 ANATOMI", "🐒 EVOLUSI", "👻 MISTERI", "⏳ SEJARAH", "💎 LUXURY"
+    ])
 
-    list_karakter = []
-    with st.expander("👥 DETAIL KARAKTER", expanded=True):
-        char_cols = st.columns(2)
-        for i in range(st.session_state.jumlah_karakter):
-            if i not in st.session_state.memori_n: st.session_state.memori_n[i] = ""
-            if i not in st.session_state.memori_s: st.session_state.memori_s[i] = ""
-            with char_cols[i % 2]:
+    # --- FUNGSI UTAMA MESIN PRODUKSI ---
+    def render_mesin(niche_name):
+        if df_ide.empty:
+            st.info("📭 Belum ada ide di database Supabase.")
+            return
+
+        # Filter ide berdasarkan niche tab
+        df_n = df_ide[df_ide['niche'] == niche_name]
+        
+        if df_n.empty:
+            st.warning(f"Gudang ide untuk niche {niche_name} sedang kosong.")
+            return
+
+        # --- A. SELECTBOX PILIH TOPIK ---
+        topik_sel = st.selectbox(f"💡 PILIH TOPIK {niche_name}:", df_n['topik'].tolist(), key=f"sel_{niche_name}")
+        data = df_n[df_n['topik'] == topik_sel].iloc[0]
+        id_db = data['id']
+        
+        # --- B. LOGIKA LOCK SYSTEM ---
+        status_db = data.get('status', 'TERSEDIA')
+        user_p = data.get('user_produksi', '')
+
+        is_locked_by_others = (status_db == "DIPAKAI") and (user_aktif not in user_p)
+        is_locked_by_me = (status_db == "DIPAKAI") and (user_aktif in user_p)
+
+        if is_locked_by_others:
+            st.error(f"🔒 IDE INI SEDANG DIKERJAKAN: {user_p}")
+        else:
+            # Jika tersedia, tampilkan tombol Ambil
+            if not is_locked_by_me:
+                if st.button(f"🚀 AMBIL & KUNCI IDE", key=f"btn_lock_{id_db}", use_container_width=True, type="primary"):
+                    waktu_skrg = datetime.now(tz).strftime("%H:%M")
+                    tag_user = f"{user_aktif} ({waktu_skrg})"
+                    supabase.table("Ide_Pintar").update({
+                        "status": "DIPAKAI", 
+                        "user_produksi": tag_user
+                    }).eq("id", id_db).execute()
+                    st.rerun()
+            
+            # --- C. AREA PRODUKSI (JIKA SUDAH DIKUNCI USER) ---
+            if is_locked_by_me:
+                st.success(f"🔓 Anda sedang memproduksi: **{topik_sel}**")
+                
+                # SEKSI 1: NARASI (ELEVENLABS)
                 with st.container(border=True):
-                    label_k = "Karakter Utama" if i == 0 else f"Karakter {i+1}"
-                    st.markdown(f"**{label_k}**")
-                    st.session_state.memori_n[i] = st.text_input(f"N{i}", value=st.session_state.memori_n[i], key=f"inp_n_{i}", placeholder="Nama...", label_visibility="collapsed")
-                    st.session_state.memori_s[i] = st.text_input(f"S{i}", value=st.session_state.memori_s[i], key=f"inp_s_{i}", placeholder="Detail sifat/fisik...", label_visibility="collapsed")
-                    n_f = st.session_state.memori_n[i] if st.session_state.memori_n[i] else label_k
-                    list_karakter.append(f"{i+1}. {n_f.upper()}: {st.session_state.memori_s[i]}")
-
-    st.write("---")
-
-    # --- 3. TAB MENU (MANUAL & OTOMATIS) ---
-    tab_manual, tab_otomatis = st.tabs(["🛠️ Mode Manual", "⚡ Mode Otomatis"])
-
-    # MODE MANUAL
-    with tab_manual:
-        with st.expander("📝 KONFIGURASI MANUAL", expanded=True):
-            col_m1, col_m2 = st.columns([2, 1])
-            with col_m1:
-                st.markdown("**📝 Topik Utama**")
-                topik_m = st.text_area("T", placeholder="Ketik ide ceritanya di sini...", height=245, key="m_topik", label_visibility="collapsed")
-            with col_m2:
-                st.markdown("**🎭 Pola & Style**")
-                pola_m = st.selectbox("Pola", opsi_pola, key="m_pola")
-                visual_m = st.selectbox("Visual", opsi_visual, key="m_visual")
-                adegan_m = st.number_input("Jumlah Adegan", 3, 15, 12, key="m_adegan")
-
-            if st.button("✨ GENERATE NASKAH CERITA", use_container_width=True, type="primary"):
-                if topik_m:
-                    str_k = "\n".join(list_karakter)
-                    mantra_sakti = f"""
-Kamu adalah Scriptwriter Pro & Creative Director dari Pintar Media. 
-Tugasmu: Buat naskah YouTube Shorts yang VIRAL, NYESEK, dan SAVAGE dalam format TABEL MARKDOWN.
-
---- DAFTAR KARAKTER & DETAIL FISIK ---
-{str_k}
-
---- KONSEP UTAMA ---
-Topik: {topik_m}
-Pola: {pola_m}
-Total Adegan: {adegan_m} (WAJIB {adegan_m} ADEGAN)
-
---- LOGIKA ALUR (STRATEGI PATAHAN) ---
-{f''' - ALUR REVENGE: Adegan 1-5 (Dihina/Diterlantarkan), Adegan 6 (CTA Emosional menyatu di dialog), Adegan 7-11 (Pembalasan Savage/Anomali Gila), Adegan 12 (Ending Silent/Puas).''' if pola_m == opsi_pola[0] else ''}
-{f''' - ALUR EMPATHY: Adegan 1-5 (Masalah nyesek/Harapan hancur), Adegan 6 (CTA Doa/Like menyatu di dialog), Adegan 7-11 (Perjuangan/Keajaiban), Adegan 12 (Ending Haru Mata Berkaca-kaca).''' if pola_m == opsi_pola[1] else ''}
-{f''' - ALUR ABSURD RACE: Adegan 1-4 (Start kacau), Adegan 5-8 (Chaos/Anomali lomba), Adegan 9-10 (Momen Kritis), Adegan 11-12 (Hasil & CTA Vote pemenang via Like/Subs).''' if pola_m == opsi_pola[2] else ''}
-{f''' - ALUR KNOWLEDGE: Adegan 1-3 (Fakta mengejutkan), Adegan 4-6 (Dampak buruk), Adegan 7-10 (Kondisi 1 tahun kemudian/Anomali), Adegan 11-12 (Kesimpulan Visual).''' if pola_m == opsi_pola[3] else ''}
-
---- STANDAR PRODUKSI (WAJIB PATUH) ---
-1. NASKAH_VISUAL: WAJIB DETAIL & EMOSIONAL (Min 35 kata). Fokus pada mikro-ekspresi (bibir bergetar, rahang mengeras, mata kosong) dan detail lingkungan yang berantakan/nyata.
-2. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus pendek, natural, dan 'nyelekit'.
-3. LOKASI: Wajib DESKRIPTIF (Min 15 kata). Gambarkan suasana, benda sekitar, dan cuaca yang mendukung mood.
-4. NO MORAL & NO TEXT: Jangan ceramah! Biarkan penonton yang menyimpulkan. Tanpa teks di layar.
-
---- FORMAT TABEL (KOLOM GSHEET) ---
-ID_IDE | JUDUL | STATUS | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | STYLE | UKURAN_GAMBAR | LIGHTING | ARAH_KAMERA | GERAKAN | LOKASI
-
---- DROPDOWN VALID (WAJIB DARI LIST INI) ---
-- STYLE: [{visual_m}]
-- UKURAN_GAMBAR: [Seluruh Badan / Setengah Badan / Sangat Dekat / Wajah & Bahu]
-- LIGHTING: [Siang Alami / Malam Indigo / Senja Cerah / Neon Cyberpunk / Fajar]
-- ARAH_KAMERA: [Sejajar Mata / Dari Atas / Dari Bawah / Dari Samping / Dari Belakang]
-- GERAKAN: [Diam (Tetap Napas) / Maju Perlahan / Ikuti Karakter / Goyang (Handheld)]
-
-Balas HANYA tabel Markdown. No Basa-basi.
-"""
-                    st.divider()
-                    st.success("✨ **Mantra ide cerita Siap!**")
-                    st.code(mantra_sakti, language="text")
-
-    # MODE OTOMATIS
-    with tab_otomatis:
-        with st.expander("⚡ KONFIGURASI OTOMATIS", expanded=True):
-            col_o1, col_o2 = st.columns([2, 1])
-            with col_o1:
-                st.markdown("**📝 Topik Utama**")
-                topik_o = st.text_area("O", placeholder="Ketik ide ceritanya di sini...", height=245, key="o_topik", label_visibility="collapsed")
-            with col_o2:
-                st.markdown("**⚙️ Konfigurasi Otomatis**")
-                pola_o = st.selectbox("Pola Cerita", opsi_pola, key="o_pola")
-                adegan_o = st.number_input("Jumlah Adegan", 3, 15, 12, key="o_adegan_api")
-
-            if st.button("🔥 GENERATE NASKAH CERITA", use_container_width=True, type="primary"):
-                if api_key_groq and topik_o:
-                    with st.spinner("lagi ngetik naskah..."):
-                        try:
-                            headers = {"Authorization": f"Bearer {api_key_groq}", "Content-Type": "application/json"}
-                            str_k = "\n".join(list_karakter)
-                            
-                            prompt_otomatis = f"""
-Kamu adalah Sutradara Senior & Creative Director Pintar Media yang spesialis membuat konten YouTube Shorts dengan retensi tinggi. 
-Tugasmu: Buat naskah yang emosional, nyesek, dan punya plot twist "Savage" dalam format TABEL MARKDOWN.
-
---- DAFTAR KARAKTER & DETAIL FISIK ---
-{str_k}
-
-KONSEP:
-Topik: {topik_o}
-Pola: {pola_o}
-Total Adegan: {adegan_o} (WAJIB {adegan_o} ADEGAN)
-
---- ATURAN MAIN (STRICT PRODUKSI) ---
-1. NASKAH_VISUAL: WAJIB DESKRIPTIF & EMOSIONAL (Min 40 kata per adegan). Jangan hanya tulis aksi, tapi jelaskan MIKRO-EKSPRESI (mata berkaca-kaca, tangan gemetar, rahang mengeras, senyum sinis). Fokus pada detail penderitaan atau kesombongan karakter agar AI Video dapat menangkap emosinya.
-2. LOKASI: Harus Detail (Min 20 kata). Gambarkan suasana yang mendukung mood (debu beterbangan, rintik hujan, cahaya senja remang, atau tumpukan sampah/benda berantakan) agar terlihat nyata dan sinematik.
-3. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus tajam, pendek, dan tidak bertele-tele. Gunakan jeda "..." untuk momen nyesek.
-4. NO MORAL & NO TEXT: Jangan ada ceramah atau nasihat bijak di akhir. Biarkan visual yang bicara. Dilarang ada teks/subtitle di dalam video.
-5. STRUKTUR ALUR PATAHAN (WAJIB PROPORSI):
-   - Adegan 1 sampai 5: FASE NYESEK (Konflik, penghinaan, atau harapan karakter yang dihancurkan secara tragis).
-   - Adegan 6: MOMEN PUNCAK & CTA. Masukkan ajakan Like/Subscribe yang menyatu dengan dialog emosional (Contoh: "Kalau kalian peduli sama nasib bapak ini, klik Like dan doakan di komentar ya...").
-   - Adegan 7 sampai 11: FASE SAVAGE/ANOMALI (Pembalasan dendam tak terduga, plot twist gila, atau kejadian aneh yang bikin penonton puas).
-   - Adegan 12: ENDING SILENT. Tanpa dialog, tutup dengan close-up ekspresi wajah karakter yang menunjukkan kemenangan atau kesedihan mendalam.
-
---- FORMAT TABEL (WAJIB 5 KOLOM) ---
-JUDUL | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | LOKASI
-
-Balas HANYA tabel Markdown tanpa penjelasan atau basa-basi apa pun.
-"""
-                            payload = {
-                                "model": "llama-3.3-70b-versatile", 
-                                "messages": [{"role": "user", "content": prompt_otomatis}],
-                                "temperature": 0.7
-                            }
-                            res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-                            st.session_state.lab_hasil_otomatis = res.json()['choices'][0]['message']['content']
-                            st.toast("Naskah Berhasil Dibuat!", icon="✅")
-                        except Exception as e:
-                            st.error(f"Error: {e}")
-
-        if st.session_state.lab_hasil_otomatis:
-            with st.expander("🎬 NASKAH JADI (OTOMATIS)", expanded=True):
-                st.markdown(st.session_state.lab_hasil_otomatis)
+                    st.markdown("### 🎙️ 1. NARASI ELEVENLABS")
+                    st.text_area("Copy narasi di bawah ini:", value=data['narasi'], height=180, key=f"txt_{id_db}")
+                
                 st.divider()
-                btn_col1, btn_col2, btn_col3 = st.columns(3)
-                with btn_col1:
-                    if st.button("🚀 KIRIM KE RUANG PRODUKSI", use_container_width=True):
-                        if 'data_produksi' not in st.session_state: st.session_state.data_produksi = {}
-                        st.session_state.naskah_siap_produksi = st.session_state.lab_hasil_otomatis
-                        st.toast("Naskah sukses terkirim!", icon="🚀")
-                with btn_col2:
-                    if st.button("🗑️ BERSIHKAN NASKAH", use_container_width=True):
-                        st.session_state.lab_hasil_otomatis = ""
-                        st.rerun()
-                with btn_col3:
-                    st.download_button("📥 DOWNLOAD (.txt)", st.session_state.lab_hasil_otomatis, file_name="naskah.txt", use_container_width=True)
+
+                # SEKSI 2: PROMPT GENERATOR (10 SCENE)
+                st.markdown("### 🎬 2. PROMPT VIDEO (10 SCENES)")
+                
+                # Fungsi Rakit Prompt Internal
+                def rakit_prompt(topic, style_type):
+                    presets = {
+                        "MEDICAL": "3D medical animation style, anatomical detail, cinematic rim lighting, dark background",
+                        "HORROR": "cinematic horror, eerie misty atmosphere, high contrast, dramatic shadows",
+                        "XRAY": "futuristic x-ray scan, neon blue glowing skeletal, transparent body detail",
+                        "REAL": "hyper-realistic photorealistic, 8k, natural lighting, documentary aesthetic",
+                        "CINEMATIC": "anamorphic cinematic style, motion blur, epic lighting, highly detailed texture"
+                    }
+                    scenes = [
+                        "Scene 1: Hook (Extreme Close Up)", "Scene 2: Initial Reaction", 
+                        "Scene 3: Detail Transformation", "Scene 4: Dynamic Angle", 
+                        "Scene 5: Internal Body View", "Scene 6: Intense Evolution",
+                        "Scene 7: Side Impact View", "Scene 8: Wide Transformation", 
+                        "Scene 9: Climax Visual", "Scene 10: Final Outro (Slow Motion)"
+                    ]
+                    prefix = presets.get(style_type, "3D animation")
+                    return [f"{prefix}, {s} of {topic}, 8k, highly detailed, vertical orientation." for s in scenes]
+
+                # Tabs untuk 5 Varian Visual
+                v_tabs = st.tabs(["🎥 MEDICAL", "💀 HORROR", "⚡ X-RAY", "🌍 REALISTIC", "🎬 EPIC"])
+                v_keys = ["MEDICAL", "HORROR", "XRAY", "REAL", "CINEMATIC"]
+                
+                for i, v_tab in enumerate(v_tabs):
+                    with v_tab:
+                        p_list = rakit_prompt(topik_sel, v_keys[i])
+                        for idx, p_text in enumerate(p_list, 1):
+                            st.text_input(f"Adegan {idx}", value=p_text, key=f"p_{i}_{idx}_{id_db}")
+
+                # TOMBOL SELESAI
+                st.write("---")
+                if st.button("🏁 TANDAI SELESAI PRODUKSI", key=f"done_{id_db}", use_container_width=True):
+                    supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id", id_db).execute()
+                    st.toast(f"Topik {topik_sel} Selesai!", icon="✅")
+                    time.sleep(1)
+                    st.rerun()
+
+    # --- 4. RENDER SETIAP NICHE ---
+    with t_anatomi: render_mesin("ANATOMI")
+    with t_evolusi: render_mesin("EVOLUSI")
+    with t_misteri: render_mesin("MISTERI")
+    with t_sejarah: render_mesin("SEJARAH")
+    with t_luxury:  render_mesin("LUXURY")
+# ==============================================================================
+# BAGIAN 4: GUDANG IDE                                                         
+# ==============================================================================        
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4644,6 +4575,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
