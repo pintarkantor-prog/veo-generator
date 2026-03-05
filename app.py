@@ -892,35 +892,33 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (SELALU STANDBY)
+    # MESIN 1: ANATOMY (LOADER SELALU STANDBY)
     # ==========================================================================
     with t_anatomi:
         st.subheader("🦴 ANATOMY MASTER GENERATOR")
         
-        # --- KUNCI: LOADER IDE (HANYA MUNCUL JIKA ADA DATA DI SUPABASE) ---
-        naskah_default = "" # Dasar kosong buat manual
+        # --- A. LOADER IDE (DITARUH DI LUAR IF BIAR SELALU MUNCUL) ---
+        naskah_default = ""
         id_pilih = None
+        opsi_gudang = ["-- Ketik Manual --"]
 
+        # Cek apakah ada data di Supabase untuk niche ini
         if not df_ide.empty:
-            # Filter niche ANATOMI (Samakan dengan ejaan di database lo)
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
-                df_unik = df_a.drop_duplicates(subset=['id_ide'])
-                
-                # --- INI KOLOM PENARIK IDENYA, BOS! ---
-                topik_sel = st.selectbox("📥 AMBIL IDE DARI GUDANG (ANATOMY):", 
-                                        ["-- Ketik Manual --"] + df_unik['topik'].tolist(), 
-                                        key="loader_a")
-                
-                if topik_sel != "-- Ketik Manual --":
-                    data_row = df_a[df_a['topik'] == topik_sel].iloc[0]
-                    naskah_default = data_row['narasi'] # Naskah dari DB masuk ke sini
-                    id_pilih = data_row['id_ide']
-                    st.toast(f"Data '{topik_sel}' Berhasil ditarik!", icon="✅")
+                opsi_gudang += df_a.drop_duplicates(subset=['id_ide'])['topik'].tolist()
+
+        # Loader ini sekarang WAJIB muncul di atas form
+        topik_sel = st.selectbox("📥 AMBIL IDE DARI GUDANG (ANATOMI):", opsi_gudang, key="loader_a")
+        
+        if topik_sel != "-- Ketik Manual --":
+            data_row = df_ide[df_ide['topik'] == topik_sel].iloc[0]
+            naskah_default = data_row['narasi']
+            id_pilih = data_row['id_ide']
+            st.toast(f"Data '{topik_sel}' Berhasil ditarik!", icon="✅")
 
         # --- B. FORM GENERATOR (PERSIS SCREENSHOT LO) ---
         with st.container(border=True):
-            # 1. IDENTITY LOCK
             c1, c2 = st.columns(2)
             char_sks = c1.text_input("👤 Karakter Utama (SKS)", value="MR. TULANG", key="c1_a")
             dna_sks = c1.text_area("🧬 DNA Visual (SKS)", value="Hyper-realistic, aged bone, 8k...", key="d1_a")
@@ -928,10 +926,9 @@ def tampilkan_ai_lab():
             dna_sks2 = c2.text_area("🧬 DNA Pendukung", value="Wet texture, pulsating muscle...", key="d2_a")
 
             st.markdown("---")
-            # --- NASKAH: Injeksi naskah_default ke sini ---
+            # Naskah Visual akan terisi otomatis jika ada ide yang dipilih
             naskah_input = st.text_area("📝 NASKAH VISUAL / AKSI", value=naskah_default, height=150, key="nas_a")
 
-            # 3. SETTING TAMBAHAN
             s1, s2, s3 = st.columns(3)
             style = s1.selectbox("🎨 Style", ["Cinematic RAW", "3D Animation", "X-Ray"], key="sty_a")
             lighting = s2.selectbox("💡 Lighting", ["Rim Light", "Neon", "Daylight"], key="light_a")
@@ -952,9 +949,8 @@ def tampilkan_ai_lab():
                     st.warning("🎥 **VIDEO (VEO)**")
                     st.code(f"VEO ENGINE: {char_sks}, {camera}, Action: {naskah_input}, {style}")
 
-            # TOMBOL SELESAI (Hanya muncul kalau sedang ngerjain ide dari Gudang)
+            # Tombol Selesai muncul hanya jika data ditarik dari Gudang
             if id_pilih:
-                st.write("")
                 if st.button("🏁 SELESAI & ARCHIVE PROJECT", use_container_width=True):
                     supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
                     st.rerun()
@@ -4550,6 +4546,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
