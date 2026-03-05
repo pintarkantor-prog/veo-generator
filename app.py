@@ -3858,7 +3858,7 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. LOGIKA GENERATE TABEL (12 HP PER HALAMAN - AESTHETIC VERSION) ---
+            # --- 2. LOGIKA GENERATE TABEL (12 HP PER HALAMAN - FULL AESTHETIC) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
@@ -3899,12 +3899,12 @@ def tampilkan_database_channel():
                     
                     hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
                     
-                    # --- WARNA SELANG SELING (ZEBRA) PERSIS GAMBAR 2 ---
+                    # WARNA SELANG SELING (ZEBRA) - Abu-abu Halus
                     bg_color = "#FFFFFF" if i % 2 == 0 else "#F4F4F4"
                     
                     html_all_pages += f"""
                         <tr style="background-color: {bg_color} !important;">
-                            <td class="col-hp">{hp_view}</td>
+                            <td class="col-hp" style="border-right: 1px solid #CCC !important;">{hp_view}</td>
                             <td class="col-ch">{r.NAMA_CHANNEL}</td>
                             <td class="col-jam">{p}</td>
                             <td class="col-jam">{s}</td>
@@ -3927,7 +3927,7 @@ def tampilkan_database_channel():
                 }, hide_index=True, use_container_width=True
             )
 
-            # --- 4. STYLE SULTAN AESTHETIC (GARIS TIPIS & TAJAM) ---
+            # --- 4. STYLE SULTAN AESTHETIC V2 (FULL ABU-ABU + HEADER HITAM) ---
             html_masterpiece = f"""
             <style>
                 @media print {{
@@ -3945,27 +3945,29 @@ def tampilkan_database_channel():
                     table {{ 
                         width: 100%; 
                         border-collapse: collapse; 
-                        border: 1px solid #333; /* GARIS TIPIS TAPI TEGAS */
+                        border: 1px solid #CCC; /* SEMUA GARIS LUAR ABU-ABU */
                         table-layout: fixed;
                     }}
                     
+                    /* HEADER HITAM SOLID */
                     th {{ 
-                        background-color: #333 !important; 
+                        background-color: #1A1A1A !important; 
                         color: white !important; 
                         padding: 10px; 
                         border: 1px solid #333; 
                         font-size: 12px;
+                        -webkit-print-color-adjust: exact;
                     }}
                     
                     td {{ 
-                        border: 1px solid #CCC; /* Garis dalam lebih halus */
+                        border: 1px solid #CCC; /* SEMUA GARIS DALAM ABU-ABU */
                         padding: 8px 10px; 
                         font-size: 14px; 
                         color: #111;
                         line-height: 1.3;
                     }}
                     
-                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #F0F0F0 !important; border-right: 1.5px solid #333; }}
+                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #F8F8F8 !important; }}
                     .col-ch {{ text-align: left; font-weight: 500; padding-left: 12px; }}
                     .col-jam {{ text-align: center; font-weight: bold; color: #C00 !important; }}
                     
@@ -3975,7 +3977,7 @@ def tampilkan_database_channel():
             {html_all_pages}
             """
             
-            if st.button("📄 PRINT JADWAL SULTAN", use_container_width=True, type="primary"):
+            if st.button("📄 PRINT JADWAL", use_container_width=True, type="primary"):
                 st.components.v1.html(html_masterpiece + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
@@ -4642,6 +4644,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
