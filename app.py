@@ -762,8 +762,8 @@ def pasang_css_kustom():
             font-weight: 600 !important;
             font-size: 14px !important;
         }
-        /* 8. COPY TO CLIPBOARD - BUTTON STYLING */
-        /* Kotak kodenya kita buat lebih tegas */
+        /* 8. COPY TO CLIPBOARD - UPDATE 2026 GAHAR MODE */
+        /* Pastikan container kodenya relative */
         .stCodeBlock {
             border: 1px solid #30363d !important;
             border-radius: 10px !important;
@@ -772,45 +772,47 @@ def pasang_css_kustom():
             position: relative !important;
         }
         
-        /* Targetkan tombol copy dan kontainernya */
-        div[data-testid="stCopyButton"] button, 
-        button[title="Copy to clipboard"] {
+        /* Tembak langsung ke div pembungkus tombol copy */
+        div[data-testid="stCopyButton"] {
+            position: absolute !important;
+            right: 10px !important;
+            top: 10px !important;
+            z-index: 1000 !important;
+        }
+
+        /* Paksa tombolnya jadi gede dan ijo */
+        div[data-testid="stCopyButton"] button {
             background-color: #238636 !important;
-            color: white !important;
+            width: 50px !important;  /* Ukuran tombol lebih berwibawa */
+            height: 50px !important; 
             border-radius: 8px !important;
-            border: none !important;
-            width: 40px !important; /* Paksa lebar tombol */
-            height: 40px !important; /* Paksa tinggi tombol */
-            margin-right: 10px !important;
-            margin-top: 10px !important;
-            transition: all 0.2s ease-in-out !important;
+            border: 2px solid #3fb950 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            z-index: 99 !important;
+            transition: transform 0.2s !important;
         }
 
-        /* INI KUNCINYA: Memperbesar ikon di dalam tombol */
-        div[data-testid="stCopyButton"] button svg,
-        button[title="Copy to clipboard"] svg {
-            transform: scale(1.8) !important; /* Ikon jadi 1.8x lebih besar */
+        /* INI KONTROL IKONNYA - Kita paksa gede */
+        div[data-testid="stCopyButton"] button svg {
+            width: 30px !important; 
+            height: 30px !important;
             fill: white !important;
-        }
-        
-        /* Efek saat kursor menempel (Hover) */
-        div[data-testid="stCopyButton"] button:hover,
-        button[title="Copy to clipboard"]:hover {
-            background-color: #2ea043 !important;
-            transform: scale(1.1) !important; /* Tombol membesar dikit pas dihover */
-            cursor: pointer !important;
+            color: white !important;
         }
 
-        /* Saat diklik */
-        div[data-testid="stCopyButton"] button:active,
-        button[title="Copy to clipboard"]:active {
-            background-color: #3fb950 !important;
+        /* Hover Effect */
+        div[data-testid="stCopyButton"] button:hover {
+            background-color: #2ea043 !important;
+            transform: scale(1.2) !important;
+            border-color: white !important;
         }
-        
+
+        /* Menghilangkan bayangan default yang ganggu */
+        div[data-testid="stCopyButton"] button:focus {
+            box-shadow: none !important;
+            outline: none !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 
@@ -4657,6 +4659,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
