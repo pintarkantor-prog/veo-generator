@@ -2980,7 +2980,7 @@ def tampilkan_area_staf():
         tgl_hari_ini = now.strftime("%d %B %Y")
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
         nama_direktur = "Dian Setya Wardana"
-        last_update = "2 Maret 2026 | 00:40 WIB"
+        last_update = "5 Maret 2026 | 12:10 WIB"
 
         # --- EXPANDER UTAMA ---
         with st.expander("🤝 Budaya Kerja & Peraturan", expanded=False):
@@ -3133,7 +3133,7 @@ def tampilkan_area_staf():
         staf_nama = staff_mapping.get(user_login, user_login.upper())
         nama_direktur = "Dian Setya Wardana"
         nomor_ahu = "AHU-011181.AH.01.31.Tahun 2025"
-        last_update = "1 Maret 2026 | 23:59 WIB"
+        last_update = "5 Maret 2026 | 12:11 WIB"
 
         # --- 2. AMBIL GAJI DARI SUPABASE (SETELAH IDENTITAS SIAP) ---
         gaji_pokok_staf = "0"
@@ -4539,6 +4539,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
