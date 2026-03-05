@@ -894,9 +894,10 @@ def tampilkan_ai_lab():
         st.error(f"❌ Koneksi Supabase Gagal: {e}")
         return
 
-    # 3. TAB BERDASARKAN NICHE (4 Supabase + 2 Manual Placeholder)
-    t_anatomi, t_evolusi, t_misteri, t_sejarah, t_luxury, t_grandma, t_minecraft = st.tabs([
-        "🦴 ANATOMI", "🐒 EVOLUSI", "👻 MISTERI", "⏳ SEJARAH", "💎 LUXURY", "👵 GRANDMA", "⛏️ MINECRAFT"
+    # 3. TAB BERDASARKAN NICHE (Supabase & Manual Placeholders)
+    # Urutan: 5 Utama -> 2 Khusus -> 1 Random
+    t_anatomi, t_evolusi, t_misteri, t_sejarah, t_luxury, t_grandma, t_minecraft, t_random = st.tabs([
+        "🦴 ANATOMI", "🐒 EVOLUSI", "👻 MISTERI", "⏳ SEJARAH", "💎 LUXURY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
     ])
 
     # --- FUNGSI UTAMA MESIN PRODUKSI (SUPABASE MODE) ---
@@ -976,7 +977,7 @@ def tampilkan_ai_lab():
                                 prompt_final = f"{prefix}, {row['narasi']}, 8k, vertical shorts orientation."
                                 st.text_area(f"Prompt S{no_sc} ({v_keys[i]})", value=prompt_final, height=90, key=f"p_{id_ide_pilih}_{no_sc}_{i}")
 
-                # TOMBOL SELESAI (Update semua adegan jadi DONE)
+                # TOMBOL SELESAI
                 st.write("---")
                 if st.button("🏁 SEMUA ADEGAN SELESAI PRODUKSI", key=f"done_{id_ide_pilih}", use_container_width=True, type="primary"):
                     supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_ide_pilih).execute()
@@ -992,12 +993,14 @@ def tampilkan_ai_lab():
     with t_luxury:  render_mesin_multi_scene("LUXURY")
     
     with t_grandma:
-        st.subheader("👵 NICHE GRANDMA STORY")
-        st.info("Tab ini akan mengambil data dari GSheet lain. (Coming Soon)")
+        st.info("Coming Soon...")
         
     with t_minecraft:
-        st.subheader("⛏️ NICHE MINECRAFT FAKTA")
-        st.info("Tab ini akan mengambil data dari GSheet lain. (Coming Soon)")
+        st.info("Coming Soon...")
+
+    with t_random:
+        st.info("Coming Soon...")
+        render_mesin_multi_scene("RANDOM")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4575,6 +4578,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
