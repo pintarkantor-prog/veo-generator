@@ -953,7 +953,7 @@ def tampilkan_ai_lab():
             with r1c2:
                 st.markdown('<p class="small-label">🧬 MANTRA DNA (OTOMATIS)</p>', unsafe_allow_html=True)
                 dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
-                dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=True, label_visibility="collapsed")
+                dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=False, label_visibility="collapsed")
 
             # Row 2: Input Visual & Setting
             col_kiri, col_kanan = st.columns([2, 1])
@@ -4587,6 +4587,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
