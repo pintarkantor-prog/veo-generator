@@ -878,14 +878,13 @@ def tampilkan_navigasi_sidebar():
     return pilihan
 
 def tampilkan_ai_lab():
-    # --- 1. PINTU UTAMA: OWNER ONLY ---
-    user_level = st.session_state.get("user_level", "").upper()
-    if user_level != "OWNER":
+    # --- 1. AUTH CHECK OWNER ---
+    if st.session_state.get("user_level", "").upper() != "OWNER":
         st.error("🚫 Akses Terbatas.")
         st.stop()
 
-    # --- 2. MASTER DATA (BALUNG ONLY) ---
-    MASTER_CHAR = {
+    # --- 2. MASTER DATA (BALUNG CORE) ---
+    MASTER_CHAR_LAB = {
         "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
         "BALUNG": {
             "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
@@ -900,9 +899,40 @@ def tampilkan_ai_lab():
         }
     }
 
+    # --- 3. MASTER VISUAL MAPPING (Safe Naming) ---
+    # Nama variabel unik agar tidak bentrok dengan menu lain
+    style_map_lab = {
+        "Sinematik": "ANATOMI Cinematic 8k, photorealistic, hyper-detailed",
+        "Rontgen": "X-Ray style, glowing skeletal structure, neon accents",
+        "3D Animasi": "Unreal Engine 5.4 render, high-end 3D animation",
+        "Medis Jadul": "Vintage medical illustration, parchment texture, hand-drawn"
+    }
+
+    light_map_lab = {
+        "Lampu Tepi (Rim)": "strong rim lighting, backlit, glow edges",
+        "Menyala (Neon)": "neon bioluminescent glow, glowing internal organs",
+        "Cahaya Film": "volumetric lighting, cinematic god rays",
+        "Terang Studio": "soft studio lighting, high key, clear detail",
+        "Suram (Moody)": "dramatic shadows, chiaroscuro, moody atmosphere"
+    }
+
+    frame_map_lab = {
+        "Sangat Dekat (Detail)": "Extreme Close-up",
+        "Setengah Badan (Medium)": "Medium Shot",
+        "Seluruh Badan (Wide)": "Wide Shot",
+        "Dari Atas (Top Down)": "Top-down bird's eye view"
+    }
+
+    move_map_lab = {
+        "Diam Saja": "Static camera",
+        "Maju Pelan (Dolly In)": "Slow Dolly In movement",
+        "Muter (Orbit)": "360-degree orbit camera movement",
+        "Geser (Pan)": "Horizontal dynamic pan movement"
+    }
+
     st.title("🧠 PINTAR AI LAB")
 
-    # --- 3. FETCH DATA ---
+    # --- 4. FETCH DATA SUPABASE ---
     df_ide = pd.DataFrame()
     try:
         q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
@@ -913,8 +943,7 @@ def tampilkan_ai_lab():
     topik_list = ["-- MODE MANUAL --"]
     if not df_ide.empty:
         topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
-    
-    topik_sel = st.selectbox("📥 Pilih Project yang Ingin Diproduksi:", topik_list)
+    topik_sel = st.selectbox("📥 Pilih Project:", topik_list)
 
     current_row = {}
     if topik_sel != "-- MODE MANUAL --":
@@ -926,78 +955,57 @@ def tampilkan_ai_lab():
 
     st.divider()
 
-    # --- 4. FORM PRODUKSI ---
-    t_anatomi, t_grandma, t_minecraft, t_random = st.tabs([
-        "🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
-    ])
+    # --- 5. FORM PRODUKSI ---
+    t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
 
     with t_anatomi:
-        # Master Script Editor
-        if current_row:
-            with st.expander("🎙️ MASTER VO SCRIPT (Editor)", expanded=False):
-                try:
-                    res_vo = supabase.table("ide_pintar").select("id, narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
-                    for i, r in enumerate(res_vo.data):
-                        new_vo = st.text_input(f"Adegan {i+1}", value=r['narasi_vo'], key=f"edit_vo_{r['id']}")
-                        if new_vo != r['narasi_vo']:
-                            supabase.table("ide_pintar").update({"narasi_vo": new_vo}).eq("id", r['id']).execute()
-                except: st.write("Gagal memuat editor script.")
-
-        # FORM GENERATOR (MODIFIKASI VISUAL ABU-ABU & SEJAJAR)
         with st.container(border=True):
-            # Row 1: Karakter & DNA (Dibuat SEJAJAR ATAS-BAWAH)
+            # Baris 1: Karakter & DNA
             r1c1, r1c2 = st.columns(2)
-            
             with r1c1:
-                # Kolom kiri: Dropdown bertumpuk
-                char_pilih = st.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
-                outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
+                char_pilih = st.selectbox("👤 Karakter", list(MASTER_CHAR_LAB.keys()), index=1)
+                outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
                 db_baju = current_row.get('wardrobe', "Original")
                 idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
                 wardrobe = st.selectbox("👕 Outfit", outfit_opt, index=idx_b)
             
             with r1c2:
-                # Kolom kanan: Mantra DNA (DIBUKA KUNCINYA & SEJAJAR)
-                # Tinggi 160 adalah sweet spot agar sejajar atas (label) & bawah (input) dengan r1c1
-                st.text_area("🧬 Mantra DNA (Otomatis)", 
-                            value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), 
-                            height=160, 
-                            disabled=False,
-                            help="Mantra otomatis berdasarkan pilihan karakter & outfit.")
+                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
+                dna_final = st.text_area("🧬 Mantra DNA (Otomatis)", value=dna_text, height=160)
 
-            # Row 2: Tata Letak Visual
+            # Baris 2: Visual Input
             col_kiri, col_kanan = st.columns([2, 1])
-            
             with col_kiri:
                 st.markdown("🎥 **AKSI VISUAL**")
                 aksi_in = st.text_area("Aksi (Gerakan Karakter)", value=current_row.get('visual_prompt', ''), height=150)
                 
                 c_env, c_vo = st.columns(2)
                 env_in = c_env.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=80)
-                
-                # VO Ref tetap dibuka kuncinya agar tidak abu-abu kusam, tapi tetap informatif
-                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Referensi)", 
-                                        value=current_row.get('narasi_vo', ''), 
-                                        height=80, 
-                                        disabled=False)
+                vo_ref = c_vo.text_area("🎙️ Panduan VO", value=current_row.get('narasi_vo', ''), height=80)
             
             with col_kanan:
                 st.markdown("⚙️ **SETTING**")
-                style_map = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
-                st_sel = st.selectbox("🎨 Gaya Visual", list(style_map.keys()))
-                fr_sel = st.selectbox("📸 Ukuran Gambar", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
-                mv_sel = st.selectbox("🎥 Gerak Kamera", ["Static", "Slow Dolly In", "Orbit Move", "Dynamic Pan"])
-                
+                # Dropdown ambil dari Mapping unik LAB
+                st_sel = st.selectbox("🎨 Gaya Visual", list(style_map_lab.keys()))
+                lt_sel = st.selectbox("💡 Pencahayaan", list(light_map_lab.keys()))
+                fr_sel = st.selectbox("📸 Ukuran Gambar", list(frame_map_lab.keys()))
+                mv_sel = st.selectbox("🎥 Gerak Kamera", list(move_map_lab.keys()))
+
             # --- GENERATE ACTION ---
             if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
                 res1, res2 = st.columns(2)
+                
+                # Rakitan Mantra menggunakan variabel Lab
+                bumbu = f"STYLE: {style_map_lab[st_sel]}, LIGHTING: {light_map_lab[lt_sel]}"
+                
                 with res1:
                     st.success("🖼️ **GEMINI IMAGE PROMPT**")
-                    st.code(f"CHARACTER: {char_pilih}. {MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {fr_sel} framing.")
+                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. {bumbu}, {frame_map_lab[fr_sel]} framing.")
+                
                 with res2:
                     st.warning("🎥 **VEO VIDEO PROMPT**")
-                    st.code(f"VEO ENGINE: {char_pilih}. {MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel} movement. STYLE: {style_map[st_sel]}.")
+                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. {move_map_lab[mv_sel]}. {bumbu}.")
 
             if current_row:
                 if st.button("✅ SELESAI & LANJUT", use_container_width=True):
@@ -4585,6 +4593,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
