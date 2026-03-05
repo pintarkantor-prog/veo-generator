@@ -3651,8 +3651,8 @@ def tampilkan_database_channel():
                 st.info("Semua unit HP kosong.")
             else:
                 # Sorting HP biar urut (Biar enak liat slot 1, 2, 3...)
-                df_p['HP_SORT'] = pd.to_numeric(df_p['HP'], errors='coerce').fillna(999)
-                df_p = df_p.sort_values(by=['HP_SORT', 'EMAIL'])
+                df_p['HP_NUM'] = df_p['HP'].astype(str).str.extract('(\d+)').astype(float).fillna(999)
+                df_p = df_p.sort_values(by=['HP_NUM', 'EMAIL'])
 
                 display_list = []
                 for hp_id, group in df_p.groupby('HP'):
@@ -4539,6 +4539,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
