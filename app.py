@@ -960,20 +960,17 @@ def tampilkan_ai_lab():
             
             with col_kiri:
                 st.markdown('<p class="small-label">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
-                aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=150, label_visibility="collapsed")
+                aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=120, label_visibility="collapsed")
                 
                 sub_kiri, sub_kanan = st.columns(2)
                 with sub_kiri:
                     st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                    env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=100, label_visibility="collapsed")
+                    env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
                 with sub_kanan:
                     st.markdown('<p class="small-label">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
-                    vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=100, disabled=True, label_visibility="collapsed")
+                    vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=70, disabled=True, label_visibility="collapsed")
             
             with col_kanan:
-                # Setting Visual (Langsung Tampil, Gak Pake Expander Lagi)
-                st.markdown('<p class="small-label">⚙️ SETTING VISUAL</p>', unsafe_allow_html=True)
-                
                 s1, s2 = st.columns(2)
                 with s1:
                     st.markdown('<p class="small-label">🎨 GAYA</p>', unsafe_allow_html=True)
@@ -4587,6 +4584,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
