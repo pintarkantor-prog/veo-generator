@@ -3650,12 +3650,15 @@ def tampilkan_database_channel():
             if df_p.empty:
                 st.info("Semua unit HP kosong.")
             else:
-                # Sorting HP biar urut (Biar enak liat slot 1, 2, 3...)
+                # --- FIX SORTING (Agar HP 1, 2... 10, 11 urut lurus) ---
+                # Mengambil angka dari teks "HP 01" atau "HP 1"
                 df_p['HP_NUM'] = df_p['HP'].astype(str).str.extract('(\d+)').astype(float).fillna(999)
+                # Sort berdasarkan angka HP, lalu Email
                 df_p = df_p.sort_values(by=['HP_NUM', 'EMAIL'])
 
                 display_list = []
-                for hp_id, group in df_p.groupby('HP'):
+                # Pakai sort=False agar groupby tidak mengacak urutan yang sudah dibuat
+                for hp_id, group in df_p.groupby('HP', sort=False):
                     for i, (idx, r) in enumerate(group.iterrows()):
                         display_list.append({
                             "REAL_IDX": idx,
@@ -4539,6 +4542,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
