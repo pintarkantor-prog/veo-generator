@@ -908,11 +908,17 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MAPPING SETTING ANATOMY ---
-        style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
-        light_map_lab = {"Rim Light": "strong rim lighting", "Neon Glow": "neon glow", "Volumetric": "cinematic rays", "Soft Studio": "soft lighting"}
-        frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Wide": "Wide Shot"}
-        move_map_lab = {"Diam": "Static", "Maju": "Slow Dolly In", "Muter": "Orbit", "Geser": "Pan"}
+        # --- 3. MAPPING SETTING ANATOMY (UPGRADED) ---
+        style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "X-Ray Neon": "X-Ray style, glowing skeletal structure, neon accents", "3D Animasi": "Unreal Engine 5.4 render"}
+        light_map_lab = {"Garis Tepi": "strong rim lighting", "Neon Glow": "neon glow", "Bertekstur": "volumetric rays", "Soft Studio": "soft lighting"}
+        frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Seluruh Badan": "Wide Shot"}
+        move_map_lab = {
+            "Diam": "Static camera", 
+            "Zoom Pelan": "Slow Dolly In, gradual zoom", 
+            "Muter (Orbit)": "Orbit camera movement", 
+            "Geser (Pan)": "Horizontal pan",
+            "Ikuti Kamera": "Follow shot, camera following the subject"
+        }
 
         # --- 4. FETCH DATA ANATOMY ---
         df_ide = pd.DataFrame()
@@ -935,6 +941,13 @@ def tampilkan_ai_lab():
                 current_row = df_active.iloc[0].to_dict()
                 if current_row['status'] == 'READY':
                     supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
+
+        # --- MANTRA MANUAL (ASISTEN STAFF) ---
+        with st.expander("🧬 ASISTEN MANTRA (QUICK COPY)", expanded=False):
+            st.info("Gunakan mantra ini untuk membantu Gemini Image/Veo jika visual kurang pas:")
+            st.code("Buatkan visual yang sangat detail dengan pencahayaan dramatis, fokus pada tekstur organ dalam yang bercahaya.")
+            st.code("Tambahkan efek partikel debu di udara (volumetric lighting) agar suasana terlihat lebih nyata.")
+            st.code("Pastikan kulit transparan karakter terlihat memiliki subsurface scattering yang realistis.")
 
         # --- 6. PRODUCTION BOARD ---
         with st.expander("🛠️ PRODUCTION BOARD: ANATOMY", expanded=True):
@@ -960,16 +973,15 @@ def tampilkan_ai_lab():
             col_kiri, col_kanan = st.columns([2, 1])
             
             with col_kiri:
+                # NARASI VO SEKARANG DALAM EXPANDER (Selalu muncul)
+                with st.expander("🎙️ NARASI VO / IDE BARU", expanded=True):
+                    vo_input = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=80, label_visibility="collapsed", placeholder="Ketik narasi atau ide baru di sini...")
+
                 st.markdown('<p class="small-label">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
                 aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=120, label_visibility="collapsed")
                 
-                sub_kiri, sub_kanan = st.columns(2)
-                with sub_kiri:
-                    st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                    env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
-                with sub_kanan:
-                    st.markdown('<p class="small-label">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
-                    vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=70, disabled=True, label_visibility="collapsed")
+                st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
             
             with col_kanan:
                 s1, s2 = st.columns(2)
@@ -998,7 +1010,7 @@ def tampilkan_ai_lab():
                     st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. {bumbu}, {frame_map_lab[fr_sel]} framing.")
                 with res2:
                     st.warning("🎥 **VEO VIDEO PROMPT**")
-                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. {move_map_lab[mv_sel]}. {bumbu}.")
+                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {move_map_lab[mv_sel]}. {bumbu}.")
 
             if current_row:
                 if st.button("✅ SELESAI & LANJUT", use_container_width=True):
@@ -4591,6 +4603,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
