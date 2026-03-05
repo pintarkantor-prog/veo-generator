@@ -3897,52 +3897,50 @@ def tampilkan_database_channel():
                 }, hide_index=True, use_container_width=True
             )
 
+            # --- 4. PRINT PREVIEW (HTML) ---
+            html_masterpiece = f"""
             <style>
-                @media print {
-                    @page { size: A4; margin: 1cm; }
-                    body { font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; -webkit-print-color-adjust: exact; }
+                @media print {{
+                    @page {{ size: A4; margin: 1cm; }}
+                    body {{ font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; -webkit-print-color-adjust: exact; }}
                     
-                    .safe-container { width: 100%; max-width: 720px; margin: 0 auto; }
+                    /* CONTAINER UTAMA */
+                    .safe-container {{ width: 100%; max-width: 720px; margin: 0 auto; }}
                     
-                    .header-box { border-bottom: 4px solid #1E1E1E; padding-bottom: 5px; margin-bottom: 15px; text-align: center; }
-                    h2 { font-size: 24px; margin: 0; letter-spacing: 1px; color: #000; }
-                    .meta-info { font-size: 12px; color: #555; margin-top: 5px; }
+                    .header-box {{ border-bottom: 4px solid #1E1E1E; padding-bottom: 5px; margin-bottom: 15px; text-align: center; }}
+                    h2 {{ font-size: 24px; margin: 0; letter-spacing: 1px; color: #000; }}
                     
-                    table { 
+                    table {{ 
                         width: 100%; 
                         border-collapse: collapse; 
                         table-layout: fixed; 
                         border: 1px solid #000;
-                    }
+                    }}
                     
-                    /* --- HEADER: Padding gue ciutin biar ramping --- */
-                    th { 
+                    th {{ 
                         background-color: #1E1E1E !important; 
                         color: #FFF !important; 
-                        padding: 4px 5px; /* CIUTKAN DARI 12px KE 4px */
-                        font-size: 13px;  /* NAIKKAN DARI 11px */
+                        padding: 4px 5px; 
+                        font-size: 13px; 
                         text-transform: uppercase;
                         border: 1px solid #000;
-                    }
+                    }}
                     
-                    /* --- ISI TABEL: Font Gede (14px), Padding Minimalis --- */
-                    td { 
-                        padding: 3px 5px; /* CIUTKAN DARI 10px KE 3px */
-                        font-size: 14px;  /* NAIKKAN DARI 11px */
-                        border: 1px solid #DDD; 
+                    td {{ 
+                        padding: 3px 5px; 
+                        font-size: 14px; /* Font Gede sesuai request lo */
+                        border: 1px solid #000; 
                         color: #000;
-                        line-height: 1.1; /* BIAR TEKS RAPET ATAS BAWAH */
+                        line-height: 1.1; /* Baris tetep slim */
                         word-wrap: break-word;
-                    }
+                    }}
                     
-                    .col-unit { width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; border-right: 2px solid #000; }
-                    .col-channel { width: 45%; font-weight: 600; text-align: left; padding-left: 10px; }
-                    .col-time { width: 15%; text-align: center; font-weight: 700; color: #C00 !important; background: #FFF !important; }
+                    .col-unit {{ width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; }}
+                    .col-channel {{ width: 45%; font-weight: 600; text-align: left; }}
+                    .col-time {{ width: 15%; text-align: center; font-weight: 700; color: #C00 !important; }}
                     
-                    tr:nth-child(even) { background-color: #FAFAFA !important; }
-                    
-                    .footer-note { margin-top: 10px; font-size: 9px; text-align: right; color: #999; font-style: italic; }
-                }
+                    tr:nth-child(even) {{ background-color: #FAFAFA !important; }}
+                }}
             </style>
             
             <div class="safe-container">
@@ -4636,6 +4634,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
