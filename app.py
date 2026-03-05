@@ -3799,46 +3799,60 @@ def tampilkan_database_channel():
                         use_container_width=True, hide_index=True, key="editor_manual_full"
                     )
 
-                    # --- LOGIKA SIMPAN (TIDAK LONCAT-LONCAT) ---
-                    if not edited_j.equals(df_j_sorted[kolom_edit]):
-                        if st.button("💾 SIMPAN SEMUA JADWAL", use_container_width=True, type="primary"):
-                            try:
-                                with st.spinner("Sinkronisasi Jadwal..."):
-                                    for _, row in edited_j.iterrows():
-                                        # 1. CARI BARIS BERDASARKAN EMAIL (GPS)
-                                        target_email = row['EMAIL'].strip().lower()
-                                        cell = ws.find(target_email)
+                    if st.button("💾 SIMPAN SEMUA JADWAL", use_container_width=True, type="primary"):
+                        try:
+                            with st.spinner("Sinkronisasi Massal (Anti-Limit)..."):
+                                # 1. AMBIL SEMUA DATA GSHEET SEKALIGUS (HANYA 1 PANGGILAN API)
+                                all_values = ws.get_all_values()
+                                # Buat peta: email -> nomor baris (biar nyarinya kilat di memori)
+                                email_to_row = {r[1].strip().lower(): i + 1 for i, r in enumerate(all_values) if len(r) > 1}
+                                
+                                updates_gsheet = []
+                                jam_log = now_indo.strftime('%H:%M')
+                                
+                                for _, row in edited_j.iterrows():
+                                    target_email = row['EMAIL'].strip().lower()
+                                    
+                                    if target_email in email_to_row:
+                                        r_gs = email_to_row[target_email]
                                         
-                                        if cell:
-                                            actual_row = cell.row
-                                            jam_log = now_indo.strftime('%H:%M')
-                                            
-                                            # 2. UPDATE SUPABASE
-                                            supabase.table("Channel_Pintar").upsert({
-                                                "EMAIL": target_email,
-                                                "PAGI": str(row['PAGI']) if row['PAGI'] else "",
-                                                "SIANG": str(row['SIANG']) if row['SIANG'] else "",
-                                                "SORE": str(row['SORE']) if row['SORE'] else "",
-                                                "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
-                                            }, on_conflict="EMAIL").execute()
+                                        # --- A. UPDATE SUPABASE (SUPABASE BIASANYA GAK ADA LIMIT) ---
+                                        supabase.table("Channel_Pintar").upsert({
+                                            "EMAIL": target_email,
+                                            "PAGI": str(row['PAGI']) if row['PAGI'] else "",
+                                            "SIANG": str(row['SIANG']) if row['SIANG'] else "",
+                                            "SORE": str(row['SORE']) if row['SORE'] else "",
+                                            "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
+                                        }, on_conflict="EMAIL").execute()
 
-                                            # 3. UPDATE GSHEET (SEKALI TEMBAK M SAMPAI O + L)
-                                            # Update kolom L, M, N, O sekaligus biar hemat API
-                                            ws.update(f"L{actual_row}:O{actual_row}", [[
+                                        # --- B. TAMPUNG DATA UPDATE UNTUK GSHEET ---
+                                        # Kita siapkan batch update untuk kolom L, M, N, O
+                                        updates_gsheet.append({
+                                            'range': f'L{r_gs}:O{r_gs}',
+                                            'values': [[
                                                 f"Up: {user_aktif} (Jadwal {jam_log})",
                                                 str(row['PAGI']) if row['PAGI'] else "",
                                                 str(row['SIANG']) if row['SIANG'] else "",
                                                 str(row['SORE']) if row['SORE'] else ""
-                                            ]])
-                                        else:
-                                            st.error(f"Email {target_email} tidak ketemu di GSheet!")
+                                            ]]
+                                        })
+                                    else:
+                                        st.warning(f"⚠️ Email {target_email} tidak ditemukan di GSheet.")
 
-                                    st.cache_data.clear()
-                                    st.success("✅ Jadwal Berhasil Diperbarui!")
-                                    time.sleep(1)
-                                    st.rerun()
-                            except Exception as e:
-                                st.error(f"❌ Error Simpan Jadwal: {e}")
+                                # 2. TEMBAK SEMUA UPDATE GSHEET SEKALIGUS (HANYA 1 PANGGILAN API)
+                                if updates_gsheet:
+                                    ws.batch_update(updates_gsheet)
+
+                                st.cache_data.clear()
+                                st.success(f"✅ Berhasil! {len(updates_gsheet)} Jadwal sinkron massal.")
+                                time.sleep(1)
+                                st.rerun()
+                                
+                        except Exception as e:
+                            if "429" in str(e):
+                                st.error("❌ Google Sheets Limit! Tunggu 1 menit lalu coba lagi.")
+                            else:
+                                st.error(f"❌ Terjadi Kesalahan: {e}")
 
             st.divider()
 
@@ -4622,6 +4636,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
