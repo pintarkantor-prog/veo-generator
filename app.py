@@ -2983,7 +2983,7 @@ def tampilkan_area_staf():
         last_update = "2 Maret 2026 | 00:40 WIB"
 
         # --- EXPANDER UTAMA ---
-        with st.expander("##### 🤝 Budaya Kerja & Peraturan", expanded=False):
+        with st.expander("🤝 Budaya Kerja & Peraturan", expanded=False):
 
             # --- KONSTRUKSI HTML (A4 PRINT READY + FULL TEKS) ---
             html_master_pdf = f"""
@@ -3030,7 +3030,7 @@ def tampilkan_area_staf():
                 <div style="font-size: 13px; text-align: justify;">
                     <p style="font-weight: bold; margin-bottom: 10px;">I. KETENTUAN WAKTU KERJA & DISIPLIN</p>
                     <p style="margin-left: 20px;">
-                    <b>Jam Operasional:</b> Senin – Sabtu: pukul 08:30 s/d 16:30 WIB.<br>
+                    <b>Jam Operasional:</b> Senin – Sabtu: pukul 08:00 s/d 16:00 WIB.<br>
                     <b>Waktu Istirahat:</b><br>
                     Senin – Sabtu: 11:30 – 12:30 WIB.<br>
                     Kecuali Jumat: 11:30 – 13:00 WIB (Penyesuaian waktu ibadah dan rehat mingguan).<br>
@@ -3270,7 +3270,7 @@ def tampilkan_area_staf():
                 <p style="font-weight: bold; margin-top: 25px; margin-bottom: 5px;">BAB I: KEDISIPLINAN & OPERASIONAL</p>
                 <p style="font-weight: bold; margin-bottom: 5px;">Pasal 1: Waktu Kerja, Hari Kerja, & Hak Libur</p>
                 <div style="margin-left: 20px;">
-                    <b>Waktu Kerja Efektif:</b> Pukul 08:30 s/d 16:30 WIB.<br>
+                    <b>Waktu Kerja Efektif:</b> Pukul 08:00 s/d 16:00 WIB.<br>
                     <b>Hari Kerja:</b> Senin s/d Sabtu.<br>
                     <b>Waktu Istirahat:</b><br>
                     - Senin – Sabtu: 11:30 – 12:30 WIB.<br>
@@ -4539,6 +4539,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
