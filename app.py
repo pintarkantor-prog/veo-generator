@@ -1018,16 +1018,35 @@ def tampilkan_ai_lab():
             with ac3:
                 mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
 
-            # --- ROW 3: INPUT AKSI & NARASI ---
-            st.markdown('<p class="small-label">🎥 AKSI VISUAL (Sebut "BALUNG" atau Nama Pendukung untuk Inject DNA)</p>', unsafe_allow_html=True)
-            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=100, label_visibility="collapsed", placeholder="Contoh: BALUNG sedang berdiskusi dengan DOKTER...")
+            # --- ROW 3: INPUT AKSI & CHEAT SHEET (TUKAR BAGIAN INI) ---
+            st.markdown('<p class="small-label">🎥 PRODUKSI VISUAL & DAFTAR KARAKTER (KETIK NAMA DI KOTAK UNTUK INJECT DNA)</p>', unsafe_allow_html=True)
+            
+            # Kita bagi dua: Kiri buat ngetik, Kanan buat daftar nama (Cheat Sheet)
+            col_aksi, col_cheat = st.columns([3, 1]) 
+            
+            with col_cheat:
+                st.info("🧬 **LIST DNA**")
+                # Tombol sontekan biar staff tinggal liat & ketik
+                st.code("BALUNG") 
+                for nama_pendukung in MASTER_PENDUKUNG.keys():
+                    st.code(nama_pendukung)
+                st.caption("💡 Ketik nama di atas agar DNA-nya otomatis masuk ke prompt.")
 
+            with col_aksi:
+                aksi_in = st.text_area("A_I", 
+                    value=current_row.get('visual_prompt', ''), 
+                    height=215, # Tinggi disesuaikan biar sejajar sama info box
+                    label_visibility="collapsed", 
+                    placeholder="Contoh: BALUNG sedang berdiskusi dengan DOKTER di laboratorium...")
+
+            # --- LANJUT KE ENV & VO ---
+            st.divider()
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
                 env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=68, label_visibility="collapsed")
             with c2:
-                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO (UNTUK AUDIO VIDEO)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO</p>', unsafe_allow_html=True)
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
 
             # --- GENERATE PROCESS ---
@@ -4715,6 +4734,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
