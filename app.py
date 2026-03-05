@@ -769,32 +769,48 @@ def pasang_css_kustom():
             border-radius: 10px !important;
             background-color: #0d1117 !important;
             padding: 10px !important;
+            position: relative !important;
         }
         
-        /* Tombol copy bawaan Streamlit dibuat besar & berwarna hijau */
+        /* Targetkan tombol copy dan kontainernya */
+        div[data-testid="stCopyButton"] button, 
         button[title="Copy to clipboard"] {
             background-color: #238636 !important;
             color: white !important;
-            transform: scale(1.6); /* Memperbesar ukuran ikon */
-            margin-right: 15px !important;
-            margin-top: 15px !important;
-            border-radius: 6px !important;
+            border-radius: 8px !important;
             border: none !important;
+            width: 40px !important; /* Paksa lebar tombol */
+            height: 40px !important; /* Paksa tinggi tombol */
+            margin-right: 10px !important;
+            margin-top: 10px !important;
             transition: all 0.2s ease-in-out !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 99 !important;
+        }
+
+        /* INI KUNCINYA: Memperbesar ikon di dalam tombol */
+        div[data-testid="stCopyButton"] button svg,
+        button[title="Copy to clipboard"] svg {
+            transform: scale(1.8) !important; /* Ikon jadi 1.8x lebih besar */
+            fill: white !important;
         }
         
         /* Efek saat kursor menempel (Hover) */
+        div[data-testid="stCopyButton"] button:hover,
         button[title="Copy to clipboard"]:hover {
             background-color: #2ea043 !important;
-            transform: scale(1.8) !important;
+            transform: scale(1.1) !important; /* Tombol membesar dikit pas dihover */
             cursor: pointer !important;
         }
 
-        /* Menghilangkan background bawaan agar warna hijau kita solid */
+        /* Saat diklik */
+        div[data-testid="stCopyButton"] button:active,
         button[title="Copy to clipboard"]:active {
             background-color: #3fb950 !important;
         }
-
+        
         </style>
     """, unsafe_allow_html=True)
 
@@ -4641,6 +4657,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
