@@ -1000,7 +1000,6 @@ def tampilkan_ai_lab():
 
     with t_random:
         st.info("Coming Soon...")
-        render_mesin_multi_scene("RANDOM")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4578,6 +4577,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
