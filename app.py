@@ -1018,29 +1018,25 @@ def tampilkan_ai_lab():
             with ac3:
                 mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
 
-            # --- ROW 3: INPUT AKSI & CHEAT SHEET (TUKAR BAGIAN INI) ---
-            st.markdown('<p class="small-label">🎥 PRODUKSI VISUAL & DAFTAR KARAKTER (KETIK NAMA DI KOTAK UNTUK INJECT DNA)</p>', unsafe_allow_html=True)
+            # --- ROW 3: INPUT AKSI & DROPDOWN KARAKTER (SULTAN VERSION) ---
+            st.markdown('<p class="small-label">🎥 PRODUKSI VISUAL & SELEKSI KARAKTER</p>', unsafe_allow_html=True)
             
-            # Kita bagi dua: Kiri buat ngetik, Kanan buat daftar nama (Cheat Sheet)
-            col_aksi, col_cheat = st.columns([3, 1]) 
-            
-            with col_cheat:
-                st.info("🧬 **LIST DNA**")
-                # Tombol sontekan biar staff tinggal liat & ketik
-                st.code("BALUNG") 
-                for nama_pendukung in MASTER_PENDUKUNG.keys():
-                    st.code(nama_pendukung)
-                st.caption("💡 Ketik nama di atas agar DNA-nya otomatis masuk ke prompt.")
+            # 1. Dropdown Karakter Pendukung (Multiselect)
+            # Staff tinggal pilih siapa aja yang ada di frame ini
+            pilihan_pendukung = st.multiselect(
+                "PILIH KARAKTER TAMBAHAN (DNA OTOMATIS DI-INJECT):",
+                list(MASTER_PENDUKUNG.keys()),
+                placeholder="Pilih karakter pendukung..."
+            )
 
-            with col_aksi:
-                aksi_in = st.text_area("A_I", 
-                    value=current_row.get('visual_prompt', ''), 
-                    height=215, # Tinggi disesuaikan biar sejajar sama info box
-                    label_visibility="collapsed", 
-                    placeholder="Contoh: BALUNG sedang berdiskusi dengan DOKTER di laboratorium...")
+            # 2. Kotak Aksi
+            aksi_in = st.text_area("A_I", 
+                value=current_row.get('visual_prompt', ''), 
+                height=150, 
+                label_visibility="collapsed", 
+                placeholder="Deskripsikan apa yang terjadi di adegan ini...")
 
             # --- LANJUT KE ENV & VO ---
-            st.divider()
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
@@ -1049,43 +1045,36 @@ def tampilkan_ai_lab():
                 st.markdown('<p class="small-label">🎙️ TEKS NARASI VO</p>', unsafe_allow_html=True)
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
 
-            # --- GENERATE PROCESS ---
-            f_auto, m_auto = auto_visual_mapping(aksi_in)
-
+            # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
             if st.button("🚀 GENERATE SULTAN PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
-                # --- LOGIKA AUTO-INJECT MULTI-KARAKTER ---
-                # Mulai dengan teks aksi asli
-                final_action = aksi_in
+                # RAKIT DNA PENDUKUNG YANG DIPILIH
+                dna_tambahan = ""
+                if pilihan_pendukung:
+                    for p in pilihan_pendukung:
+                        dna_tambahan += f"\nADDITIONAL CHARACTER ({p}): {MASTER_PENDUKUNG[p]}. "
+
+                # Inject DNA Balung otomatis (karena dia Bintang Utamanya)
+                final_action = aksi_in.replace("BALUNG", dna_final).replace("balung", dna_final)
                 
-                # 1. Inject Karakter Utama (BALUNG)
-                final_action = final_action.replace("BALUNG", dna_final).replace("balung", dna_final)
-                
-                # 2. Inject Karakter Pendukung dari MASTER_PENDUKUNG
-                for key, dna_pendukung in MASTER_PENDUKUNG.items():
-                    final_action = final_action.replace(key, dna_pendukung)
-                
-                # --- RAKIT INSTRUKSI AUDIO ---
-                audio_instr = (
-                    f"Voice Profile: {voice_type}. "
-                    f"Accent: {accent_type}. "
-                    f"Delivery Mood: {mood_audio}. "
-                    f"Narration: '{vo_ref}'"
-                )
-                
+                # Jika staff lupa ngetik BALUNG, kita tambahkan DNA-nya di depan
+                if "BALUNG" not in aksi_in.upper():
+                    final_action = f"{dna_final}. {aksi_in}"
+
+                audio_instr = f"Voice: {voice_type}, Accent: {accent_type}, Mood: {mood_audio}. Narrating: '{vo_ref}'"
+
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **IMAGE PROMPT**")
-                    st.code(f"SCENE: {final_action}. ENV: {env_in}. FRAMING: {f_auto}.")
+                    st.code(f"SCENE: {final_action}. {dna_tambahan} ENV: {env_in}. FRAMING: {f_auto}.")
                 with res2:
                     st.warning("🎥 **VIDEO ENGINE PROMPT**")
                     prompt_vid = (
-                        f"VIDEO ENGINE: Cinematic multi-character interaction. \n"
-                        f"ACTION: {final_action} in {env_in}. \n"
+                        f"VIDEO ENGINE: {dna_final}. \n"
+                        f"ACTION: {final_action} in {env_in}. {dna_tambahan} \n"
                         f"CAMERA: {m_auto}, {f_auto}. \n"
-                        f"AUDIO SPECS: {audio_instr}. \n"
-                        f"SOUND DESIGN: Ambient sounds of {env_in} with layered foley for characters."
+                        f"AUDIO SPECS: {audio_instr}."
                     )
                     st.code(prompt_vid)
 
@@ -4734,6 +4723,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
