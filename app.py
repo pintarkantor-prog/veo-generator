@@ -895,9 +895,9 @@ def tampilkan_ai_lab():
         # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
         MASTER_CHAR_LAB = {
             "BALUNG": {
-                "fisik": "Hyper-realistic human skeleton, natural aged bone texture, realistic anatomical details, encased in a thin layer of translucent human skin, natural subsurface scattering, 8k resolution, daylight ambiance, realistic shadows.",
+                "fisik": "National Geographic documentary style, extreme close-up of a human skeleton, bones have detailed aged texture and hyper-realistic anatomy. Encased in a thick, gel-like layer of transparent human skin, realistic dermal texture with visible pores and fine hairs. The soft, fleshy transparent tissue scatters natural daylight (strong SSS). Intricate internal organs are visible within the cavity, glowing with a soft, warm, natural bioluminescence like deep-sea creatures, suspended in transparent tissue.",
                 "pakaian": {
-                    "Original": "Skeleton only, no clothes, pure anatomical look.",
+                    "Original": "Pure anatomical look, no clothes. Filmed on a 100mm macro lens with natural film grain. Focus on the contrast between the hard bone, the soft transparent skin, and the organic organs within. Shot with natural sunlight, visible dust motes in the air, deep shadows, imperfections on the skin surface.",
                     "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
                     "Jubah Kerajaan": "Royal crimson velvet tunic, heavy gold-threaded embroidery, high standing collar.",
                     "Baju Kantoran": "Formal white button-up shirt with a sleek black tie and charcoal trousers.",
@@ -4736,6 +4736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
