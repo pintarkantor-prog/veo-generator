@@ -3898,48 +3898,51 @@ def tampilkan_database_channel():
             )
 
             # --- 4. PRINT PREVIEW (HTML) ---
-            html_masterpiece = f"""
             <style>
                 @media print {{
                     @page {{ size: A4; margin: 1cm; }}
                     body {{ font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; -webkit-print-color-adjust: exact; }}
                     
-                    /* CONTAINER UTAMA */
-                    .safe-container {{ width: 100%; max-width: 720px; margin: 0 auto; }}
+                    /* CONTAINER: Gue kecilin dikit lebarnya biar garis kanan aman */
+                    .safe-container {{ width: 100%; max-width: 700px; margin: 0 auto; }}
                     
-                    .header-box {{ border-bottom: 4px solid #1E1E1E; padding-bottom: 5px; margin-bottom: 15px; text-align: center; }}
-                    h2 {{ font-size: 24px; margin: 0; letter-spacing: 1px; color: #000; }}
+                    .header-box {{ border-bottom: 4px solid #1E1E1E; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }}
+                    h2 {{ font-size: 24px; margin: 0; letter-spacing: 1px; color: #000; font-weight: 800; }}
+                    .meta-info {{ font-size: 12px; color: #555; margin-top: 5px; }}
                     
                     table {{ 
                         width: 100%; 
                         border-collapse: collapse; 
                         table-layout: fixed; 
-                        border: 1px solid #000;
+                        border: 2px solid #000;
                     }}
                     
+                    /* HEADER: Font tebel, padding pas */
                     th {{ 
                         background-color: #1E1E1E !important; 
                         color: #FFF !important; 
-                        padding: 4px 5px; 
-                        font-size: 13px; 
+                        padding: 10px 5px; 
+                        font-size: 12px; 
                         text-transform: uppercase;
                         border: 1px solid #000;
                     }}
                     
+                    /* ISI: Font 13px (Gede tapi gak lebay), Padding 6px biar lega */
                     td {{ 
-                        padding: 3px 5px; 
-                        font-size: 14px; /* Font Gede sesuai request lo */
+                        padding: 6px 8px; 
+                        font-size: 13px; 
                         border: 1px solid #000; 
                         color: #000;
-                        line-height: 1.1; /* Baris tetep slim */
+                        line-height: 1.4; /* Kasih napas antar baris */
                         word-wrap: break-word;
                     }}
                     
-                    .col-unit {{ width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; }}
-                    .col-channel {{ width: 45%; font-weight: 600; text-align: left; }}
+                    .col-unit {{ width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; border-right: 2px solid #000; }}
+                    .col-channel {{ width: 45%; font-weight: 600; text-align: left; padding-left: 10px; }}
                     .col-time {{ width: 15%; text-align: center; font-weight: 700; color: #C00 !important; }}
                     
                     tr:nth-child(even) {{ background-color: #FAFAFA !important; }}
+                    .footer-note {{ margin-top: 15px; font-size: 10px; text-align: right; color: #666; font-style: italic; border-top: 1px solid #EEE; padding-top: 5px; }}
                 }}
             </style>
             
@@ -4634,6 +4637,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
