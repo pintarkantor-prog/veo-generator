@@ -762,52 +762,39 @@ def pasang_css_kustom():
             font-weight: 600 !important;
             font-size: 14px !important;
         }
-        /* 8. JURUS SAPU JAGAT - CSS BRUTE FORCE */
+        /* 8. COPY TO CLIPBOARD - BUTTON STYLING */
+        /* Kotak kodenya kita buat lebih tegas */
         .stCodeBlock {
             border: 1px solid #30363d !important;
             border-radius: 10px !important;
             background-color: #0d1117 !important;
-            padding: 15px !important;
-            position: relative !important;
-        }
-
-        /* Tembak semua tombol yang ada di pojok kanan atas blok kode */
-        .stCodeBlock button {
-            background-color: #238636 !important;
-            width: 55px !important; /* Gedein biar mantap */
-            height: 55px !important;
-            border-radius: 10px !important;
-            border: 2px solid #3fb950 !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            transform: scale(1.3) !important; /* Paksa scale lagi */
-            z-index: 1000 !important;
-        }
-
-        /* Tembak Ikon SVG di dalem tombolnya */
-        .stCodeBlock button svg {
-            width: 35px !important;
-            height: 35px !important;
-            fill: white !important;
-            color: white !important;
-        }
-
-        /* Hilangkan efek filter bawaan Streamlit yang bikin burem */
-        .stCodeBlock button:hover {
-            background-color: #2ea043 !important;
-            transform: scale(1.5) !important;
-        }
-
-        /* Paksa posisi ke pojok kanan atas */
-        .stCodeBlock > div {
-            position: static !important;
+            padding: 10px !important;
         }
         
-        /* Selector tambahan jika Streamlit pakai elemen baru */
-        [data-testid="stCopyButton"] button {
-            min-width: 50px !important;
-            min-height: 50px !important;
+        /* Tombol copy bawaan Streamlit dibuat besar & berwarna hijau */
+        button[title="Copy to clipboard"] {
+            background-color: #238636 !important;
+            color: white !important;
+            transform: scale(2.6); /* Memperbesar ukuran ikon */
+            margin-right: 15px !important;
+            margin-top: 15px !important;
+            border-radius: 6px !important;
+            border: none !important;
+            transition: all 0.2s ease-in-out !important;
         }
+        
+        /* Efek saat kursor menempel (Hover) */
+        button[title="Copy to clipboard"]:hover {
+            background-color: #2ea043 !important;
+            transform: scale(1.8) !important;
+            cursor: pointer !important;
+        }
+
+        /* Menghilangkan background bawaan agar warna hijau kita solid */
+        button[title="Copy to clipboard"]:active {
+            background-color: #3fb950 !important;
+        }
+
         </style>
     """, unsafe_allow_html=True)
 
@@ -4654,4 +4641,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
