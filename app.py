@@ -1037,9 +1037,9 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-        # --- 7. BLOK BRAINSTORMING (ASISTEN IDE GEMINI - VERSI BAHASA LUWES) ---
+        # --- 7. BLOK BRAINSTORMING (MESIN PERAKIT MANTRA - VERSI STORYTELLING PRO) ---
         st.write("") 
-        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (DIRECTOR MODE)", expanded=False):
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
                 st.markdown('<p class="small-label">1. PILIH TIPE CERITA</p>', unsafe_allow_html=True)
@@ -1050,41 +1050,46 @@ def tampilkan_ai_lab():
                     "🌀 Anomali & Absurd (What If?)"
                 ], label_visibility="collapsed")
             with col_t2:
-                st.markdown('<p class="small-label">2. JUMLAH ADEGAN (PACING)</p>', unsafe_allow_html=True)
-                jml_adegan = st.selectbox("JML_A", ["7 Adegan (Fast)", "10 Adegan (Medium)", "15 Adegan (Detailed Cinematic)"], index=1, label_visibility="collapsed")
+                st.markdown('<p class="small-label">2. JUMLAH ADEGAN (DETAIL)</p>', unsafe_allow_html=True)
+                jml_adegan = st.selectbox("JML_A", ["10 Adegan", "12 Adegan", "15 Adegan (Rekomendasi)"], index=2, label_visibility="collapsed")
 
             st.markdown('<p class="small-label">3. KETIK IDE SINGKAT</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya makan mie instan tiap malam...", label_visibility="collapsed")
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya duduk terlalu lama...", label_visibility="collapsed")
             
             if ide_singkat:
-                # --- INSTRUKSI NARASI: LUWES, ASYIK, NGGAK KAKU ---
-                instr_narasi = """Gaya Bahasa: Gunakan bahasa Indonesia sehari-hari yang luwes dan enak didengar (conversational). 
-Gunakan kata sapaan 'Kamu'. Hindari bahasa yang terlalu formal seperti 'Merupakan' atau 'Adalah'. 
-Buat seolah-olah kamu lagi cerita langsung ke penonton tentang hal yang gawat tapi asyik disimak. 
-Gunakan kata-kata yang deskriptif: 'bergejolak', 'nyut-nyutan', 'keropos', atau 'cling'."""
+                # --- INSTRUKSI STRUKTUR CERITA ---
+                instr_struktur = """Struktur Cerita (WAJIB):
+1. HOOK (Adegan 1-2): Mulai dengan pertanyaan atau fakta mengejutkan yang relatable. Jangan langsung ke inti.
+2. STORY (Adegan 3-6): Jelaskan prosesnya secara santai tapi informatif. 
+3. INSIGHT (Adegan 7-10): Berikan detail anatomi yang dalam (medis/fakta unik) dengan bahasa yang mudah dimengerti.
+4. EVOLUSI (Adegan 11-13): Tunjukkan perubahan fisik final yang dramatis.
+5. CLOSING (Adegan 14-15): Pesan moral atau pertanyaan balik ke penonton."""
 
-                # --- INSTRUKSI ADEGAN: CINEMATIC CUT ---
-                instr_adegan = f"""Pacing: Buatkan {jml_adegan}. Penting: 1 kalimat narasi bisa dipecah jadi 2-3 visual adegan yang berbeda sudut pandang. 
-Visual harus dinamis (berubah tiap beberapa detik). Tunjukkan perubahan anatomi Balung yang detil di tiap cut-nya."""
+                # --- INSTRUKSI NARASI: LUWES & INFORMATIF ---
+                instr_narasi = """Gaya Narasi VO: 
+- Gunakan bahasa Indonesia sehari-hari yang enak didengar (seperti ngobrol sama teman pintar).
+- Gunakan 'Kamu'. Hindari kata-kata kaku. 
+- Berikan analogi sederhana agar fakta medis/informatifnya mudah masuk ke otak.
+- Gunakan intonasi yang dinamis (ada saatnya santai, ada saatnya serius/peringatan)."""
 
-                mantra_final = f"""Saya asisten produksi PINTAR AI. Karakter utama kami adalah BALUNG (Skeleton transparan). 
-Tugas kamu: Buatkan naskah video cinematic 60-90 detik tentang: {ide_singkat}.
+                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton transparan). 
+Tugas kamu: Buatkan naskah video cinematic (90 detik) tentang: {ide_singkat}.
 
 KONSEP: {tipe_cerita}.
+{instr_struktur}
 {instr_narasi}
-{instr_adegan}
 
 FORMAT OUTPUT (Tabel): 
 - No Adegan
-- Narasi VO (Bahasa yang luwes, enak didengar, dan informatif).
-- Visual Action (Bahasa Inggris, jelaskan detail tulang/organ, lighting, dan pergerakan).
+- Narasi VO (Bagi menjadi potongan pendek-pendek. Pastikan narasi mengalir halus antar adegan).
+- Visual Action (Bahasa Inggris, jelaskan detail organ/tulang yang bereaksi, pencahayaan, dan pergerakan kamera).
 - Wardrobe & Environment.
 
-Catatan: Sisipkan ajakan Subscribe (CTA) di tengah-tengah cerita pas lagi seru-serunya!"""
+Catatan: Sisipkan CTA 'Klik Subscribe' di Adegan ke-8 saat penonton sedang fokus melihat detail anatomi."""
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info("✨ **Tips Buat Staff:** Langsung copy mantra di atas. Kalau Gemini ngasih narasi yang masih kaku, suruh dia 'Bikin lebih luwes lagi bahasanya'.")
+                st.info("💡 **Tips Bos:** Beritahu staff, kalau narasinya masih terasa kaku, suruh Gemini: 'Ubah narasinya jadi lebih santai, seperti gaya bercerita konten kreator edukasi viral.'")
                 
     # --- TAB LAIN (STANDBY) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4667,6 +4672,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
