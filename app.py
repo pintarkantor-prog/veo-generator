@@ -3844,7 +3844,7 @@ def tampilkan_database_channel():
 
             # --- 2. DISPLAY JADWAL (MURNI DARI GSHEET) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
-            df_display = df_j.sort_values(['HP_N', 'NAMA_CHANNEL'])
+            df_display = df_j.sort_values(['HP_N', 'PAGI'])
 
             rows_html = ""
             for i, r in enumerate(df_display.itertuples()):
@@ -4622,6 +4622,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
