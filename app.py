@@ -3861,108 +3861,85 @@ def tampilkan_database_channel():
             # --- 2. DISPLAY JADWAL (MURNI DARI GSHEET) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
+            
+            list_hp_unik = df_display['HP'].unique()
+            total_hal = (len(list_hp_unik) + 11) // 12
+            html_all_pages = "" 
 
-            rows_html = ""
-            for i, r in enumerate(df_display.itertuples()):
-                # Ambil data murni dari GSheet (p, s, o)
-                p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
-                s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
-                o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
-
-                bg_row = "#FFFFFF" if i % 2 == 0 else "#FBFBFB"
-                # Logika agar nomor HP cuma muncul sekali di baris pertama tiap grup
-                hp_val = str(r.HP)
-                hp_view = hp_val if i == 0 or hp_val != str(df_display.iloc[i-1]['HP']) else ""
+            for start_idx in range(0, len(list_hp_unik), 12):
+                hp_halaman_ini = list_hp_unik[start_idx : start_idx + 12]
+                df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
+                hal_ke = (start_idx // 12) + 1
                 
-                rows_html += f"""
-                    <tr style='background-color:{bg_row};'>
-                        <td class='hp-cell'>{hp_view}</td>
-                        <td class='channel-cell'>{r.NAMA_CHANNEL}</td>
-                        <td class='time-cell'>{p}</td>
-                        <td class='time-cell'>{s}</td>
-                        <td class='time-cell'>{o}</td>
-                    </tr>
+                # Buka Container Halaman
+                html_all_pages += f"""
+                <div class="print-container {'page-break' if hal_ke < total_hal else ''}">
+                    <div class="header-box">
+                        <div style="float: left; font-size: 10px; color: #777;">PINTAR MEDIA</div>
+                        <div style="float: right; font-size: 10px; color: #777;">HALAMAN {hal_ke} / {total_hal}</div>
+                        <div style="clear: both;"></div>
+                        <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
+                        <p class="sub">Periode: <b>{tgl_str}</b> | Unit HP {hp_halaman_ini[0]} - {hp_halaman_ini[-1]}</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">HP</th>
+                                <th style="width: 45%;">CHANNEL YOUTUBE</th>
+                                <th style="width: 15%;">🌅 PAGI</th>
+                                <th style="width: 15%;">☀️ SIANG</th>
+                                <th style="width: 15%;">🌆 SORE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                 """
+                
+                # Isi Baris Data (Zebra Color)
+                for i, r in enumerate(df_page.itertuples()):
+                    p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
+                    s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
+                    o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
+                    
+                    hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
+                    # Zebra color: Putih & Abu-abu tipis
+                    row_bg = "#FFFFFF" if i % 2 == 0 else "#F2F2F2"
+                    
+                    html_all_pages += f"""
+                        <tr style="background-color: {row_bg} !important;">
+                            <td class="col-hp">{hp_view}</td>
+                            <td class="col-ch">{r.NAMA_CHANNEL}</td>
+                            <td class="col-jam">{p}</td>
+                            <td class="col-jam">{s}</td>
+                            <td class="col-jam">{o}</td>
+                        </tr>
+                    """
+                
+                html_all_pages += "</tbody></table></div>"
 
-            # --- 3. MONITORING VIEW (WEB) ---
-            st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
-            st.dataframe(
-                df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
-                column_config={
-                    "HP": st.column_config.TextColumn("📱 HP", width=50),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250),
-                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
-                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
-                    "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
-                }, hide_index=True, use_container_width=True
-            )
-
-            # --- 4. PRINT PREVIEW (HTML) ---
+            # --- 3. GABUNGKAN KE MASTERPIECE (ANTI-ERROR) ---
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    @page {{ size: A4 portrait; margin: 0.8cm; }}
+                    @page {{ size: A4 portrait; margin: 1cm; }}
                     * {{ box-sizing: border-box; }}
-                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; padding: 0; margin: 0; }}
-                    
-                    .print-container {{ width: 100%; max-width: 700px; margin: 0 auto; }}
-                    
-                    /* --- KUNCI UTAMA: Jangan potong baris di tengah tabel --- */
-                    table {{ 
-                        width: 100%; 
-                        border-collapse: collapse; 
-                        border: 2px solid #000; 
-                        table-layout: fixed;
-                        page-break-inside: auto; /* Izinkan tabel pindah halaman */
-                    }}
-                    
-                    tr {{ 
-                        page-break-inside: avoid; /* JANGAN POTONG DI DALAM BARIS */
-                        page-break-after: auto; 
-                    }}
-
-                    /* CSS untuk maksa pindah halaman setiap 12 HP */
-                    .page-break {{ page-break-after: always; display: block; height: 0; }}
-
-                    th {{ background-color: #333 !important; color: white !important; padding: 10px; border: 1px solid #000; font-size: 13px; }}
-                    td {{ border: 1px solid #333; padding: 8px; font-size: 14px; color: #000; line-height: 1.2; word-wrap: break-word; }}
-                    
-                    /* Styling Kolom */
-                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #f2f2f2 !important; border-right: 2px solid #000; }}
-                    .col-ch {{ width: 45%; font-weight: 500; text-align: left; padding-left: 10px; }}
-                    .col-jam {{ width: 15%; text-align: center; font-weight: bold; color: #d32f2f !important; }}
-                    
-                    /* Warna Zebra */
-                    tr:nth-child(even) {{ background-color: #f9f9f9 !important; }}
-                    
-                    .header-box {{ text-align: center; border-bottom: 3px solid #000; margin-bottom: 20px; padding-bottom: 10px; }}
-                    .footer-note {{ margin-top: 15px; text-align: right; font-size: 10px; color: #666; font-style: italic; }}
+                    body {{ font-family: sans-serif; margin: 0; padding: 0; }}
+                    .print-container {{ width: 100%; max-width: 680px; margin: 0 auto; padding-top: 10px; }}
+                    .page-break {{ page-break-after: always; }}
+                    .header-box {{ text-align: center; border-bottom: 3px solid #000; margin-bottom: 15px; }}
+                    h2 {{ margin: 5px 0; font-size: 20px; }}
+                    .sub {{ font-size: 12px; margin-bottom: 10px; }}
+                    table {{ width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed; }}
+                    th {{ background-color: #222 !important; color: white !important; padding: 8px; border: 1px solid #000; font-size: 12px; }}
+                    td {{ border: 1px solid #333; padding: 6px 8px; font-size: 13px; color: #000; }}
+                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background: #EEE !important; border-right: 2px solid #000; }}
+                    .col-ch {{ text-align: left; font-weight: 500; }}
+                    .col-jam {{ text-align: center; font-weight: bold; color: #D32F2F !important; }}
                 }}
             </style>
-            
-            <div class="print-container">
-                <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
-                <p.sub>Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-hp">📱 HP</th>
-                            <th class="col-channel">📺 CHANNEL</th>
-                            <th class="col-jam">🌅 PAGI</th>
-                            <th class="col-jam">☀️ SIANG</th>
-                            <th class="col-jam">🌆 SORE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows_html}
-                    </tbody>
-                </table>
-                <div class="footer">Pintar Media System - V3.0 Final</div>
-            </div>
+            {html_all_pages}
             """
             
-            if st.button("📄 PRINT JADWAL", use_container_width=True, type="primary"):
+            if st.button("📄 PRINT JADWAL SULTAN", use_container_width=True, type="primary"):
                 st.components.v1.html(html_masterpiece + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
@@ -4629,4 +4606,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
