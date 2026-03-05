@@ -877,120 +877,134 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
+# --- FUNGSI KHUSUS DATABASE KARAKTER (ISOLASI) ---
+def get_library_karakter():
+    """
+    Menampung database fisik dan pakaian. 
+    Hanya dipanggil di dalam fungsi tampilkan_ai_lab.
+    """
+    return {
+        "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
+        "BALUNG": {
+            "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
+            "pakaian": {
+                "Original": "Skeleton only, no clothes, pure anatomical look.",
+                "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
+                "Jubah Kerajaan": "Royal crimson velvet tunic, heavy gold-threaded embroidery, high standing collar.",
+                "Baju Kantoran": "Formal white button-up shirt with a sleek black tie and charcoal trousers.",
+                "Hoodie Hitam": "Streetwear style oversized black hoodie with premium fabric texture.",
+                "Versi Sultan": "Charcoal three-piece suit, metallic gold brocade patterns, black silk shirt, thick gold link chain, diamond-encrusted watch."
+            }
+        }
+    }
+
 def tampilkan_ai_lab():
-    st.title("🧠 PINTAR AI LAB - THE PRODUCTION LINE")
+    st.title("🧠 PINTAR AI LAB - PRODUCTION HUB")
     
-    # 1. FETCH SEMUA DATA YANG BELUM 'DONE'
+    # 1. LOAD DATABASE INTERNAL
+    lib_char = get_library_karakter()
+    
+    # 2. FETCH DATA SUPABASE
     df_ide = pd.DataFrame()
     try:
         res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
         df_ide = pd.DataFrame(res.data)
-    except Exception as e:
-        st.error(f"Gagal koneksi database: {e}")
+    except: pass
 
     t_anatomi, t_grandma, t_minecraft, t_random = st.tabs([
         "🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (SINGLE QUEUE SYSTEM)
+    # TAB: ANATOMY (SISTEM ANTRIAN + BALUNG CORE)
     # ==========================================================================
     with t_anatomi:
+        current_row = {} 
+        
+        # --- A. LOADER PROJECT ---
         if not df_ide.empty:
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
-            
-            # --- A. LOADER PROJECT (Harus muncul duluan!) ---
             if not df_a.empty:
-                df_unik = df_a.drop_duplicates(subset=['id_ide'])
-                topik_sel = st.selectbox("📥 PILIH PROJECT UNTUK MULAI PRODUKSI:", 
-                                        ["-- Pilih Project --"] + df_unik['topik'].tolist(), key="sel_proj_a")
+                topik_list = ["-- MODE MANUAL (Input Bebas) --"] + df_a.drop_duplicates('topik')['topik'].tolist()
+                topik_sel = st.selectbox("📥 LOAD DATA DARI GUDANG IDE:", topik_list, key="sel_a")
                 
-                if topik_sel != "-- Pilih Project --":
-                    id_pilih = df_unik[df_unik['topik'] == topik_sel].iloc[0]['id_ide']
-                    # Ambil semua adegan untuk project ini
-                    df_all_sc = df_a[df_a['id_ide'] == id_pilih].sort_values('no_adegan')
-                    
-                    # 1. BOX MASTER SCRIPT (Full VO buat ElevenLabs)
-                    with st.expander("🎙️ MASTER SCRIPT (VO UNTUK ELEVENLABS)", expanded=False):
-                        full_vo = " ".join(df_all_sc['narasi_vo'].astype(str).tolist())
-                        st.text_area("Copy naskah utuh ini ke ElevenLabs:", value=full_vo, height=150)
-                    
-                    st.divider()
-
-                    # 2. FILTER ADEGAN YANG AKTIF (Cari yang statusnya belum DONE)
-                    # Karena kita pake sistem antrian, kita ambil 1 baris teratas yang ketemu
-                    df_active = df_all_sc[df_all_sc['status'] != "DONE"]
-                    
+                if topik_sel != "-- MODE MANUAL (Input Bebas) --":
+                    df_active = df_a[(df_a['topik'] == topik_sel) & (df_a['status'] != "DONE")].sort_values('no_adegan')
                     if not df_active.empty:
-                        row = df_active.iloc[0] # Ini "Antrian" terdepan
-                        
-                        st.subheader(f"🎬 ANTRIAN AKTIF: Adegan {row['no_adegan']}")
-                        
-                        # --- B. MASTER WARDROBE & IDENTITY LOCK ---
-                        with st.expander("🛡️ GLOBAL IDENTITY & WARDROBE", expanded=True):
-                            c1, c2 = st.columns(2)
-                            char_name = c1.text_input("👤 Karakter Utama", value="MR. TULANG")
-                            
-                            # Fitur Wardrobe sesuai diskusi kita
-                            opt_baju = ["Tanpa Baju (Skeleton Only)", "Jas Lab Putih", "Jubah Kerajaan", "Baju Kantoran", "Zirah Perang"]
-                            baju_db = row.get('wardrobe', "Tanpa Baju (Skeleton Only)")
-                            idx_baju = opt_baju.index(baju_db) if baju_db in opt_baju else 0
-                            wardrobe = c1.selectbox("👕 Pilih Pakaian Karakter", opt_baju, index=idx_baju)
-                            
-                            dna_base = "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, 8k."
-                            dna_final = c2.text_area("🧬 DNA + Wardrobe Mantra", 
-                                                    value=f"{dna_base} Character is wearing {wardrobe}.", height=100)
+                        current_row = df_active.iloc[0].to_dict()
+                        st.info(f"📍 Antrian Aktif: {topik_sel} | Adegan {current_row['no_adegan']}")
 
-                        # --- C. FORM GENERATOR (SINGLE BOX) ---
-                        with st.container(border=True):
-                            col_vo, col_vis, col_set = st.columns([1, 1, 1])
-                            
-                            with col_vo:
-                                st.markdown("🎙️ **VO REFERENCE**")
-                                st.info(row['narasi_vo'])
-                            
-                            with col_vis:
-                                st.markdown("🎥 **VISUAL & ENV**")
-                                aksi = st.text_area("Aksi Karakter", value=row['visual_prompt'], height=100)
-                                latar = st.text_area("Latar/Lokasi (Environment)", value=row.get('environment', 'Di sebuah ruangan.'), height=70)
-                            
-                            with col_set:
-                                st.markdown("⚙️ **SETTING**")
-                                style_sc = st.selectbox("Style", ["ANATOMI Cinematic 8k", "X-Ray", "UE 5.4"], key=f"sty_{row['id']}")
-                                cam_sc = st.selectbox("Camera", ["Extreme Close-up", "Dynamic", "Wide Shot"], key=f"cam_{row['id']}")
-                                light_sc = st.selectbox("Light", ["Rim Light", "Neon Glow", "Soft Studio"], key=f"lt_{row['id']}")
+        # --- B. MASTER SCRIPT BOX ---
+        if current_row:
+            with st.expander("🎙️ MASTER SCRIPT (VO FULL)", expanded=False):
+                all_vo = df_a[df_a['id_ide'] == current_row['id_ide']].sort_values('no_adegan')['narasi_vo'].tolist()
+                st.text_area("Copy naskah utuh:", value=" ".join(map(str, all_vo)), height=120)
 
-                            # --- TOMBOL GENERATE ---
-                            if st.button(f"🔥 GENERATE PROMPT S{row['no_adegan']}", use_container_width=True):
-                                st.divider()
-                                r1, r2 = st.columns(2)
-                                with r1:
-                                    st.success("🖼️ **GEMINI IMAGE**")
-                                    st.code(f"CHARACTER: {char_name}. DNA: {dna_final}. SCENE: {aksi}. ENVIRONMENT: {latar}. STYLE: {style_sc}, {light_sc}, {cam_sc} framing.")
-                                with r2:
-                                    st.warning("🎥 **VEO VIDEO**")
-                                    st.code(f"VEO ENGINE: {char_name}. MOTION: Organic physics, fluid skin. ACTION: {aksi} in {latar}. STYLE: {style_sc}, {cam_sc} movement.")
+        st.markdown("---")
 
-                        st.write("")
-                        # --- TOMBOL SELESAI & NEXT ---
-                        if st.button("✅ SELESAI & LANJUT KE ADEGAN BERIKUTNYA", type="primary", use_container_width=True):
-                            # Update status ke DONE di database agar antrian bergeser
-                            supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id", row['id']).execute()
-                            st.success(f"Adegan {row['no_adegan']} Berhasil diarsip! Memuat antrian berikutnya...")
-                            st.rerun()
+        # --- C. IDENTITY & WARDROBE LOCK (BALUNG ONLY) ---
+        with st.expander("🛡️ CHARACTER IDENTITY & WARDROBE", expanded=True):
+            ci1, ci2 = st.columns(2)
+            
+            # Pilih Tokoh (Cuma Balung & Custom)
+            char_pilih = ci1.selectbox("👤 Pilih Karakter Utama", list(lib_char.keys()), index=1)
+            
+            # Pilih Baju
+            outfit_options = list(lib_char[char_pilih]["pakaian"].keys())
+            wardrobe = ci1.selectbox("👕 Pilih Outfit / Pakaian", outfit_options)
+            
+            # Rakit Mantra
+            fisik_dna = lib_char[char_pilih]["fisik"]
+            baju_dna = lib_char[char_pilih]["pakaian"][wardrobe]
+            dna_final = ci2.text_area("🧬 DNA + Wardrobe Mantra", 
+                                    value=f"{fisik_dna} Character is wearing {baju_dna}".strip(), height=110)
 
-                    else:
-                        st.balloons()
-                        st.success("🎉 SEMUA ADEGAN DALAM PROJECT INI TELAH SELESAI DIPRODUKSI!")
-            else:
-                st.info("Belum ada data project dengan niche ANATOMI di database.")
-        else:
-            st.warning("Database kosong atau semua project sudah selesai dikerjakan.")
+        # --- D. PRODUCTION INTERFACE ---
+        with st.container(border=True):
+            st.subheader("🎬 PRODUCTION INTERFACE")
+            c_vo, c_vis, c_set = st.columns([1, 1, 1])
+            
+            with c_vo:
+                st.markdown("🎙️ **VO SCRIPT**")
+                vo_input = st.text_area("Narasi Suara", value=current_row.get('narasi_vo', ''), height=200)
+            
+            with c_vis:
+                st.markdown("🎥 **VISUAL & WORLD**")
+                aksi_input = st.text_area("Aksi Karakter", value=current_row.get('visual_prompt', ''), height=100)
+                latar_input = st.text_area("Latar / Environment", value=current_row.get('environment', ''), height=65)
+            
+            with c_set:
+                st.markdown("⚙️ **CAMERA & STYLE**")
+                style_sc = st.selectbox("Style", ["ANATOMI Cinematic 8k", "X-Ray", "UE 5.4 Render"])
+                cam_framing = st.selectbox("📸 Framing (Image)", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
+                cam_movement = st.selectbox("🎥 Movement (Video)", ["Static", "Slow Dolly In", "Dynamic Pan", "Orbit Move", "Tilt Up"])
+                light_sc = st.selectbox("Lighting", ["Rim Light", "Neon Glow", "Volumetric", "Golden Hour"])
 
-    # TAB LAINNYA (Standby)
-    with t_grandma: st.info("Grandma Generator Standby.")
-    with t_minecraft: st.info("Minecraft Generator Standby.")
-    with t_random: st.info("Random Generator Standby.")
+            # --- E. GENERATE ACTION ---
+            if st.button("🔥 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
+                st.divider()
+                r1, r2, r3 = st.columns(3)
+                with r1:
+                    st.error("🎙️ ELEVENLABS")
+                    st.code(vo_input, language="text")
+                with r2:
+                    st.success("🖼️ GEMINI IMAGE")
+                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_input}. ENVIRONMENT: {latar_input}. STYLE: {style_sc}, {light_sc}, {cam_framing} framing.", language="text")
+                with r3:
+                    st.warning("🎥 VEO VIDEO")
+                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_input} in {latar_input}. MOTION: {cam_movement} movement. STYLE: {style_sc}.", language="text")
+
+            # --- F. QUEUE CONTROL ---
+            if current_row:
+                st.write("")
+                if st.button(f"✅ SELESAI ADEGAN {current_row['no_adegan']} & LANJUT", use_container_width=True):
+                    supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id", current_row['id']).execute()
+                    st.rerun()
+
+    # Tab lain dibiarin kosong 
+    with t_grandma: st.info("Grandma Mode Standby")
+    with t_minecraft: st.info("Minecraft Mode Standby")
+    with t_random: st.info("Random Mode Standby")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4568,6 +4582,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
