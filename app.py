@@ -945,9 +945,11 @@ def tampilkan_ai_lab():
 
         # FORM GENERATOR (MODIFIKASI VISUAL ABU-ABU & SEJAJAR)
         with st.container(border=True):
-            # Row 1: Karakter & DNA (Dibuat sejajar batas bawah)
+            # Row 1: Karakter & DNA (Dibuat SEJAJAR ATAS-BAWAH)
             r1c1, r1c2 = st.columns(2)
+            
             with r1c1:
+                # Kolom kiri: Dropdown bertumpuk
                 char_pilih = st.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
                 outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
                 db_baju = current_row.get('wardrobe', "Original")
@@ -955,29 +957,29 @@ def tampilkan_ai_lab():
                 wardrobe = st.selectbox("👕 Outfit", outfit_opt, index=idx_b)
             
             with r1c2:
-                # Kolom Mantra dibuat disabled agar berwarna ABU-ABU dan sejajar
+                # Kolom kanan: Mantra DNA (DIBUKA KUNCINYA & SEJAJAR)
+                # Tinggi 160 adalah sweet spot agar sejajar atas (label) & bawah (input) dengan r1c1
                 st.text_area("🧬 Mantra DNA (Otomatis)", 
                             value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), 
-                            height=125, # Tinggi disesuaikan agar sejajar batas bawah dengan r1c1
-                            disabled=True)
+                            height=160, 
+                            disabled=False,
+                            help="Mantra otomatis berdasarkan pilihan karakter & outfit.")
 
-            # Row 2: Tata Letak Visual (Fokus Utama)
+            # Row 2: Tata Letak Visual
             col_kiri, col_kanan = st.columns([2, 1])
             
             with col_kiri:
                 st.markdown("🎥 **AKSI VISUAL**")
-                # Kolom ISIAN (Tetap putih/aktif)
                 aksi_in = st.text_area("Aksi (Gerakan Karakter)", value=current_row.get('visual_prompt', ''), height=150)
                 
                 c_env, c_vo = st.columns(2)
-                # Kolom ISIAN (Tetap putih/aktif)
                 env_in = c_env.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=80)
                 
-                # Kolom BUKAN ISIAN (Dibuat ABU-ABU / Disabled)
-                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Hanya Baca)", 
+                # VO Ref tetap dibuka kuncinya agar tidak abu-abu kusam, tapi tetap informatif
+                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Referensi)", 
                                         value=current_row.get('narasi_vo', ''), 
                                         height=80, 
-                                        disabled=True)
+                                        disabled=False)
             
             with col_kanan:
                 st.markdown("⚙️ **SETTING**")
@@ -985,7 +987,7 @@ def tampilkan_ai_lab():
                 st_sel = st.selectbox("🎨 Gaya Visual", list(style_map.keys()))
                 fr_sel = st.selectbox("📸 Ukuran Gambar", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
                 mv_sel = st.selectbox("🎥 Gerak Kamera", ["Static", "Slow Dolly In", "Orbit Move", "Dynamic Pan"])
-
+                
             # --- GENERATE ACTION ---
             if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
@@ -4583,6 +4585,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
