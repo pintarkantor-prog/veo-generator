@@ -3871,14 +3871,13 @@ def tampilkan_database_channel():
                 df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                 hal_ke = (start_idx // 12) + 1
                 
-                # Buka Container Halaman
                 html_all_pages += f"""
                 <div class="print-container {'page-break' if hal_ke < total_hal else ''}">
                     <div class="header-box">
                         <div style="float: left; font-size: 10px; color: #777; font-weight: bold;">PINTAR MEDIA</div>
                         <div style="float: right; font-size: 10px; color: #777; font-weight: bold;">HALAMAN {hal_ke} / {total_hal}</div>
                         <div style="clear: both;"></div>
-                        <h2 style="text-align: center; margin: 10px 0;">📋 JADWAL UPLOAD PINTAR MEDIA</h2>
+                        <h2 style="text-align: center; margin: 10px 0; font-family: sans-serif;">📋 JADWAL UPLOAD PINTAR MEDIA</h2>
                         <p style="text-align: center; font-size: 12px; margin-bottom: 15px;">Periode: <b>{tgl_str}</b> | Unit HP {hp_halaman_ini[0]} - {hp_halaman_ini[-1]}</p>
                     </div>
                     <table>
@@ -3894,19 +3893,21 @@ def tampilkan_database_channel():
                         <tbody>
                 """
                 
-                # Isi Baris Data (Zebra Color Jelas)
+                # --- ISI BARIS DENGAN ZEBRA COLOR ---
                 for i, r in enumerate(df_page.itertuples()):
                     p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
                     s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
                     o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
                     
                     hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
-                    # Zebra color selang-seling biar jelas
-                    row_bg = "#FFFFFF" if i % 2 == 0 else "#F1F1F1"
+                    
+                    # WARNA ZEBRA: Baris genap putih, baris ganjil abu-abu muda jelas
+                    # Kita pake inline style biar printer 'terpaksa' ngerender warnanya
+                    bg_color = "#FFFFFF" if i % 2 == 0 else "#EFEFEF"
                     
                     html_all_pages += f"""
-                        <tr style="background-color: {row_bg} !important;">
-                            <td style="text-align: center; font-weight: bold; border-right: 2px solid #000; background: #EEE !important;">{hp_view}</td>
+                        <tr style="background-color: {bg_color} !important;">
+                            <td style="text-align: center; font-weight: bold; border-right: 2px solid #000; background: #E0E0E0 !important;">{hp_view}</td>
                             <td style="text-align: left; padding-left: 10px; font-weight: 500;">{r.NAMA_CHANNEL}</td>
                             <td style="text-align: center; font-weight: bold; color: #D32F2F !important;">{p}</td>
                             <td style="text-align: center; font-weight: bold; color: #D32F2F !important;">{s}</td>
@@ -3916,7 +3917,7 @@ def tampilkan_database_channel():
                 
                 html_all_pages += "</tbody></table></div>"
 
-            # --- 3. MONITORING VIEW (TAMPILAN WEB YANG TADI ILANG) ---
+            # --- 3. MONITORING VIEW (WEB) ---
             st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
             st.dataframe(
                 df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
@@ -3936,7 +3937,7 @@ def tampilkan_database_channel():
                     @page {{ size: A4 portrait; margin: 1cm; }}
                     * {{ box-sizing: border-box; }}
                     body {{ font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: white; }}
-                    .print-container {{ width: 100%; max-width: 680px; margin: 0 auto; }}
+                    .print-container {{ width: 100%; max-width: 680px; margin: 0 auto; padding-bottom: 20px; }}
                     .page-break {{ page-break-after: always; }}
                     table {{ width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed; }}
                     th {{ background-color: #222 !important; color: white !important; padding: 8px; border: 1px solid #000; font-size: 12px; text-transform: uppercase; }}
@@ -4613,6 +4614,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
