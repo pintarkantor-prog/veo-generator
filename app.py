@@ -936,17 +936,17 @@ def tampilkan_ai_lab():
         # Row 1: Karakter & DNA
         r1c1, r1c2 = st.columns(2)
         with r1c1:
-            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
             char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=1, label_visibility="collapsed")
             
-            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">👕 OUTFIT / PAKAIAN</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">👕 OUTFIT / PAKAIAN</p>', unsafe_allow_html=True)
             outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
             db_baju = current_row.get('wardrobe', "Original")
             idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
             wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
         
         with r1c2:
-            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🧬 MANTRA DNA (OTOMATIS)</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">🧬 MANTRA DNA (OTOMATIS)</p>', unsafe_allow_html=True)
             dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
             dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=True, label_visibility="collapsed")
 
@@ -954,15 +954,15 @@ def tampilkan_ai_lab():
         col_kiri, col_kanan = st.columns([2, 1])
         
         with col_kiri:
-            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
             aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=150, label_visibility="collapsed")
             
             sub_kiri, sub_kanan = st.columns(2)
             with sub_kiri:
-                st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🌍 LATAR CERITA</p>', unsafe_allow_html=True)
                 env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=100, label_visibility="collapsed")
             with sub_kanan:
-                st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🎙️ PANDUAN VO</p>', unsafe_allow_html=True)
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=100, disabled=True, label_visibility="collapsed")
         
         with col_kanan:
@@ -970,19 +970,19 @@ def tampilkan_ai_lab():
                 # Baris 1 Setting
                 s1, s2 = st.columns(2)
                 with s1:
-                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">🎨 GAYA</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎨 GAYA</p>', unsafe_allow_html=True)
                     st_sel = st.selectbox("S1", list(style_map_lab.keys()), label_visibility="collapsed")
                 with s2:
-                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">💡 CAHAYA</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">💡 CAHAYA</p>', unsafe_allow_html=True)
                     lt_sel = st.selectbox("S2", list(light_map_lab.keys()), label_visibility="collapsed")
                 
                 # Baris 2 Setting
                 s3, s4 = st.columns(2)
                 with s3:
-                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">📸 FRAME</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">📸 FRAME</p>', unsafe_allow_html=True)
                     fr_sel = st.selectbox("S3", list(frame_map_lab.keys()), label_visibility="collapsed")
                 with s4:
-                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">🎥 GERAK</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎥 GERAK</p>', unsafe_allow_html=True)
                     mv_sel = st.selectbox("S4", list(move_map_lab.keys()), label_visibility="collapsed")
 
         # --- GENERATE ACTION ---
@@ -4578,6 +4578,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
