@@ -1037,25 +1037,24 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-            # --- 💡 BRAINSTORMING STAFF (GENERATE PERINTAH GEMINI) ---
-            # Diletakkan di paling bawah Production Board
-            st.divider()
-            with st.expander("💡 BRAINSTORMING: MINTA BANTUAN GEMINI (NASKAH MANUAL)", expanded=False):
-                st.markdown('<p class="small-label">KETIK IDE SINGKATMU DI SINI</p>', unsafe_allow_html=True)
-                ide_singkat = st.text_input("G_IDE", placeholder="Misal: Kenapa tulang bisa kuat...", label_visibility="collapsed")
-                
-                if ide_singkat:
-                    mantra_raw = f"""Gue asisten produksi PINTAR AI. Karakter utama: BALUNG (Skeleton transparan). 
-Tugas lo: Buatkan naskah video 60 detik (10-12 adegan) tentang: {ide_singkat}.
+        # --- 7. BLOK BRAINSTORMING (TERPISAH DI LUAR PRODUCTION BOARD) ---
+        st.write("") # Spasi dikit biar gak nempel
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI", expanded=False):
+            st.markdown('<p class="small-label">KETIK TOPIK / IDE SINGKAT</p>', unsafe_allow_html=True)
+            ide_singkat = st.text_input("G_IDE", placeholder="Misal: Kenapa mata bisa berkedip...", label_visibility="collapsed")
+            
+            if ide_singkat:
+                mantra_raw = f"""Gue asisten produksi PINTAR AI. Karakter utama: BALUNG (Skeleton transparan). 
+Tugas lo: Buatkan naskah video 60 detik (5-7 adegan) tentang: {ide_singkat}.
 FORMAT OUTPUT (Tabel): 
 - No Adegan
 - Narasi VO (Bahasa Indonesia santai)
 - Visual Action (Bahasa Inggris, fokus gerakan tubuh Balung)
 Note: Gak usah kasih setting kamera atau lighting. Gue mau atur sendiri."""
-                    
-                    st.code(mantra_raw, language="text")
-                    st.warning("Copy mantra di atas ke Gemini untuk bantuan narasi!")
-
+                
+                st.code(mantra_raw, language="text")
+                st.warning("Staff! Copy mantra di atas ke Gemini. Masalah kamera & lighting lo atur sendiri pake panel produksi di atas!")
+                
     # --- TAB LAIN (STANDBY) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
@@ -4642,6 +4641,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
