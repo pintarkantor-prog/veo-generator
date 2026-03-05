@@ -3901,63 +3901,79 @@ def tampilkan_database_channel():
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; }}
-                    .print-container {{ width: 100%; max-width: 800px; margin: auto; padding: 20px; }}
-                    h2 {{ text-align: center; color: #1E1E1E; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }}
-                    p.sub {{ text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }}
+                    /* PENGATURAN KERTAS & MARGIN */
+                    @page {{ size: A4 portrait; margin: 1cm; }}
                     
-                    table {{ width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #333; table-layout: fixed; }}
+                    * {{ box-sizing: border-box; }}
+                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; padding: 0; margin: 0; background: white; }}
                     
-                    /* Header Tetap Elegan */
-                    th {{ background-color: #333 !important; color: white !important; padding: 12px; border: 1px solid #444; font-size: 14px; text-transform: uppercase; }}
+                    /* CONTAINER UTAMA - DIKECILIN DIKIT BIAR GARIS KANAN AMAN */
+                    .print-container {{ width: 100%; max-width: 700px; margin: 0 auto; padding: 0; }}
                     
-                    /* --- ISI TABEL: FONT GEDE (15px) & PADDING LEGA (8px) --- */
-                    td {{ 
-                        border: 1px solid #bbb; 
-                        padding: 8px 10px; /* Kembali ke padding awal biar gak mampet */
-                        font-size: 15px;   /* Font digedein sesuai request */
-                        color: #333; 
-                        line-height: 1.3;
-                        word-wrap: break-word;
+                    /* KUNCI BREAK SETIAP 12 GROUP HP */
+                    .hp-group-break {{ page-break-after: always; }}
+                    
+                    h2 {{ text-align: center; color: #1A1A1A; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 5px 0; font-size: 22px; }}
+                    p.sub {{ text-align: center; color: #555; margin: 0 0 25px 0; font-size: 13px; }}
+                    
+                    table {{ 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        border: 2px solid #333; 
+                        table-layout: fixed; /* Lock lebar biar kolom gak melar */
                     }}
                     
-                    /* Warna Zebra Selang-Seling (Anti-Pusing) */
-                    tr:nth-child(even) {{ background-color: #f2f2f2 !important; }}
+                    th {{ 
+                        background-color: #333 !important; 
+                        color: white !important; 
+                        padding: 10px; 
+                        border: 1px solid #444; 
+                        font-size: 12px; 
+                        text-transform: uppercase; 
+                    }}
                     
-                    .hp-cell {{ background-color: #f9f9f9 !important; font-weight: bold; text-align: center; color: #000; font-size: 16px; width: 80px; }}
-                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 15px; }}
-                    .time-cell {{ text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; width: 100px; color: #d32f2f; }}
+                    td {{ 
+                        border: 1px solid #bbb; 
+                        padding: 8px; 
+                        font-size: 13px; 
+                        color: #333; 
+                        word-wrap: break-word; /* Teks patah kebawah kalau kepanjangan */
+                    }}
                     
-                    .footer {{ margin-top: 30px; text-align: right; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }}
+                    /* Lock Lebar Kolom */
+                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #f9f9f9 !important; border-right: 2px solid #333; }}
+                    .col-channel {{ width: 45%; }}
+                    .col-jam {{ width: 15%; text-align: center; font-family: 'Courier New', monospace; font-weight: bold; color: #d32f2f; }}
+                    
+                    /* --- WARNA FILL SELANG-SELING (ZEBRA) --- */
+                    tr:nth-child(even) {{ background-color: #f6f6f6 !important; }}
+                    
+                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 10px; }}
+                    .footer {{ margin-top: 15px; text-align: right; font-size: 9px; color: #999; font-style: italic; border-top: 1px solid #eee; padding-top: 5px; }}
                 }}
             </style>
             
             <div class="print-container">
                 <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
-                <p class="sub">Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
+                <p.sub>Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
                 
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 12%;">📱 HP</th>
-                            <th style="width: 43%;">📺 CHANNEL</th>
-                            <th style="width: 15%;">🌅 PAGI</th>
-                            <th style="width: 15%;">☀️ SIANG</th>
-                            <th style="width: 15%;">🌆 SORE</th>
+                            <th class="col-hp">📱 HP</th>
+                            <th class="col-channel">📺 CHANNEL</th>
+                            <th class="col-jam">🌅 PAGI</th>
+                            <th class="col-jam">☀️ SIANG</th>
+                            <th class="col-jam">🌆 SORE</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows_html}
                     </tbody>
                 </table>
-                <div class="footer">
-                    Pintar Media System - {datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')} WIB
-                </div>
+                <div class="footer">Pintar Media System - V3.0 Final</div>
             </div>
             """
-            
-            if st.button("📄 PRINT JADWAL", use_container_width=True, type="primary"):
-                st.components.v1.html(html_masterpiece + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (ANTI-CRASH & SLOT HP PROTECTION) ---
@@ -4623,6 +4639,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
