@@ -883,7 +883,7 @@ def tampilkan_ai_lab():
         st.error("🚫 Akses Terbatas.")
         st.stop()
 
-    # --- 2. MASTER DATA (BALUNG CORE) ---
+    # --- 2. MASTER DATA (BALUNG ONLY) ---
     MASTER_CHAR_LAB = {
         "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
         "BALUNG": {
@@ -899,40 +899,15 @@ def tampilkan_ai_lab():
         }
     }
 
-    # --- 3. MASTER VISUAL MAPPING (Safe Naming) ---
-    # Nama variabel unik agar tidak bentrok dengan menu lain
-    style_map_lab = {
-        "Sinematik": "ANATOMI Cinematic 8k, photorealistic, hyper-detailed",
-        "Rontgen": "X-Ray style, glowing skeletal structure, neon accents",
-        "3D Animasi": "Unreal Engine 5.4 render, high-end 3D animation",
-        "Medis Jadul": "Vintage medical illustration, parchment texture, hand-drawn"
-    }
-
-    light_map_lab = {
-        "Lampu Tepi (Rim)": "strong rim lighting, backlit, glow edges",
-        "Menyala (Neon)": "neon bioluminescent glow, glowing internal organs",
-        "Cahaya Film": "volumetric lighting, cinematic god rays",
-        "Terang Studio": "soft studio lighting, high key, clear detail",
-        "Suram (Moody)": "dramatic shadows, chiaroscuro, moody atmosphere"
-    }
-
-    frame_map_lab = {
-        "Sangat Dekat (Detail)": "Extreme Close-up",
-        "Setengah Badan (Medium)": "Medium Shot",
-        "Seluruh Badan (Wide)": "Wide Shot",
-        "Dari Atas (Top Down)": "Top-down bird's eye view"
-    }
-
-    move_map_lab = {
-        "Diam Saja": "Static camera",
-        "Maju Pelan (Dolly In)": "Slow Dolly In movement",
-        "Muter (Orbit)": "360-degree orbit camera movement",
-        "Geser (Pan)": "Horizontal dynamic pan movement"
-    }
+    # --- 3. MAPPING SETTING (Lab Unique Names) ---
+    style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
+    light_map_lab = {"Rim Light": "strong rim lighting", "Neon Glow": "neon glow", "Volumetric": "cinematic rays", "Soft Studio": "soft lighting"}
+    frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Wide": "Wide Shot"}
+    move_map_lab = {"Diam": "Static", "Maju": "Slow Dolly In", "Muter": "Orbit", "Geser": "Pan"}
 
     st.title("🧠 PINTAR AI LAB")
 
-    # --- 4. FETCH DATA SUPABASE ---
+    # --- FETCH DATA ---
     df_ide = pd.DataFrame()
     try:
         q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
@@ -955,67 +930,77 @@ def tampilkan_ai_lab():
 
     st.divider()
 
-    # --- 5. FORM PRODUKSI ---
     t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
 
     with t_anatomi:
-        with st.container(border=True):
-            # Baris 1: Karakter & DNA
-            r1c1, r1c2 = st.columns(2)
-            with r1c1:
-                char_pilih = st.selectbox("👤 Karakter", list(MASTER_CHAR_LAB.keys()), index=1)
-                outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
-                db_baju = current_row.get('wardrobe', "Original")
-                idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
-                wardrobe = st.selectbox("👕 Outfit", outfit_opt, index=idx_b)
+        # Row 1: Karakter & DNA
+        r1c1, r1c2 = st.columns(2)
+        with r1c1:
+            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
+            char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=1, label_visibility="collapsed")
             
-            with r1c2:
-                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
-                dna_final = st.text_area("🧬 Mantra DNA (Otomatis)", value=dna_text, height=160)
+            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">👕 OUTFIT / PAKAIAN</p>', unsafe_allow_html=True)
+            outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
+            db_baju = current_row.get('wardrobe', "Original")
+            idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
+            wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
+        
+        with r1c2:
+            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🧬 MANTRA DNA (OTOMATIS)</p>', unsafe_allow_html=True)
+            dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
+            dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=True, label_visibility="collapsed")
 
-            # Baris 2: Visual Input
-            col_kiri, col_kanan = st.columns([2, 1])
-            with col_kiri:
-                st.markdown("🎥 **AKSI VISUAL**")
-                aksi_in = st.text_area("Aksi (Gerakan Karakter)", value=current_row.get('visual_prompt', ''), height=150)
-                
-                c_env, c_vo = st.columns(2)
-                env_in = c_env.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=80)
-                vo_ref = c_vo.text_area("🎙️ Panduan VO", value=current_row.get('narasi_vo', ''), height=80)
+        # Row 2: Input Visual & Setting
+        col_kiri, col_kanan = st.columns([2, 1])
+        
+        with col_kiri:
+            st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
+            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=150, label_visibility="collapsed")
             
-            with col_kanan:
-                st.markdown("⚙️ **SETTING**")
-                # Dropdown ambil dari Mapping unik LAB
-                st_sel = st.selectbox("🎨 Gaya Visual", list(style_map_lab.keys()))
-                lt_sel = st.selectbox("💡 Pencahayaan", list(light_map_lab.keys()))
-                fr_sel = st.selectbox("📸 Ukuran Gambar", list(frame_map_lab.keys()))
-                mv_sel = st.selectbox("🎥 Gerak Kamera", list(move_map_lab.keys()))
+            sub_kiri, sub_kanan = st.columns(2)
+            with sub_kiri:
+                st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=100, label_visibility="collapsed")
+            with sub_kanan:
+                st.markdown('<p style="color:#2ecc71; font-weight:bold; margin-bottom:-15px;">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
+                vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=100, disabled=True, label_visibility="collapsed")
+        
+        with col_kanan:
+            with st.expander("⚙️ **SETTING VISUAL**", expanded=True):
+                # Baris 1 Setting
+                s1, s2 = st.columns(2)
+                with s1:
+                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">🎨 GAYA</p>', unsafe_allow_html=True)
+                    st_sel = st.selectbox("S1", list(style_map_lab.keys()), label_visibility="collapsed")
+                with s2:
+                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">💡 CAHAYA</p>', unsafe_allow_html=True)
+                    lt_sel = st.selectbox("S2", list(light_map_lab.keys()), label_visibility="collapsed")
+                
+                # Baris 2 Setting
+                s3, s4 = st.columns(2)
+                with s3:
+                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">📸 FRAME</p>', unsafe_allow_html=True)
+                    fr_sel = st.selectbox("S3", list(frame_map_lab.keys()), label_visibility="collapsed")
+                with s4:
+                    st.markdown('<p style="color:#2ecc71; font-weight:bold; font-size:12px; margin-bottom:-15px;">🎥 GERAK</p>', unsafe_allow_html=True)
+                    mv_sel = st.selectbox("S4", list(move_map_lab.keys()), label_visibility="collapsed")
 
-            # --- GENERATE ACTION ---
-            if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
-                st.divider()
-                res1, res2 = st.columns(2)
-                
-                # Rakitan Mantra menggunakan variabel Lab
-                bumbu = f"STYLE: {style_map_lab[st_sel]}, LIGHTING: {light_map_lab[lt_sel]}"
-                
-                with res1:
-                    st.success("🖼️ **GEMINI IMAGE PROMPT**")
-                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. {bumbu}, {frame_map_lab[fr_sel]} framing.")
-                
-                with res2:
-                    st.warning("🎥 **VEO VIDEO PROMPT**")
-                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. {move_map_lab[mv_sel]}. {bumbu}.")
+        # --- GENERATE ACTION ---
+        if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
+            st.divider()
+            bumbu = f"STYLE: {style_map_lab[st_sel]}, LIGHTING: {light_map_lab[lt_sel]}"
+            res1, res2 = st.columns(2)
+            with res1:
+                st.success("🖼️ **GEMINI IMAGE PROMPT**")
+                st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. {bumbu}, {frame_map_lab[fr_sel]} framing.")
+            with res2:
+                st.warning("🎥 **VEO VIDEO PROMPT**")
+                st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. {move_map_lab[mv_sel]}. {bumbu}.")
 
             if current_row:
                 if st.button("✅ SELESAI & LANJUT", use_container_width=True):
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
-
-    # Tab lain Standby
-    with t_grandma: st.info("Grandma Mode Standby")
-    with t_minecraft: st.info("Minecraft Mode Standby")
-    with t_random: st.info("Random Mode Standby")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4593,6 +4578,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
