@@ -1018,7 +1018,7 @@ def tampilkan_ai_lab():
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                env_in = st.text_input("E_I", value=current_row.get('environment', ''), height=68, label_visibility="collapsed")
+                env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=68, label_visibility="collapsed")
             with c2:
                 st.markdown('<p class="small-label">🎙️ TEKS NARASI VO UNTUK ADEGAN INI</p>', unsafe_allow_html=True)
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
@@ -4692,6 +4692,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
