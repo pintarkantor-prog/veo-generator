@@ -895,7 +895,7 @@ def tampilkan_ai_lab():
         # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
         MASTER_CHAR_LAB = {
             "SKELETON TRANSPARAN": {
-                "fisik": "Hyper-realistic human skeleton, translucent crystal-like bones, bioluminescent internal organs glowing softly, encased in a thin layer of translucent human skin, subsurface scattering, 8k resolution, cinematic lighting, strong rim lighting.",
+                "fisik": "Hyper-realistic human skeleton, natural aged bone texture, realistic anatomical details, encased in a thin layer of translucent human skin, natural subsurface scattering, 8k resolution, daylight ambiance, realistic shadows.",
                 "pakaian": {
                     "Original": "Skeleton only, no clothes, pure anatomical look.",
                     "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
@@ -4692,6 +4692,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
