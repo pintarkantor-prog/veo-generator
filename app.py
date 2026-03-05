@@ -3901,71 +3901,43 @@ def tampilkan_database_channel():
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    /* Ganti @page pake ini biar gak Syntax Error */
-                    body {{ 
-                        font-family: 'Inter', 'Segoe UI', sans-serif; 
-                        -webkit-print-color-adjust: exact; 
-                        margin: 0;
-                        padding: 0.5cm; /* Ini pengganti margin: 1cm */
-                    }}
+                    body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; }}
+                    .print-container {{ width: 100%; max-width: 800px; margin: auto; padding: 20px; }}
+                    h2 {{ text-align: center; color: #1E1E1E; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }}
+                    p.sub {{ text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }}
                     
-                    .safe-container {{ 
-                        width: 100%; 
-                        max-width: 700px; 
-                        margin: 0 auto; 
-                    }}
+                    table {{ width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #333; table-layout: fixed; }}
                     
-                    .header-box {{ 
-                        border-bottom: 4px solid #1E1E1E; 
-                        padding-bottom: 10px; 
-                        margin-bottom: 20px; 
-                        text-align: center; 
-                    }}
-
-                    table {{ 
-                        width: 100%; 
-                        border-collapse: collapse; 
-                        table-layout: fixed; 
-                        border: 2px solid #000;
-                    }}
+                    th {{ background-color: #333 !important; color: white !important; padding: 12px; border: 1px solid #444; font-size: 14px; text-transform: uppercase; }}
                     
-                    th {{ 
-                        background-color: #1E1E1E !important; 
-                        color: #FFF !important; 
-                        padding: 10px 5px; 
-                        font-size: 13px; 
-                        text-transform: uppercase;
-                        border: 1px solid #000;
-                    }}
-                    
+                    /* --- INI YANG LO MAU: Font Gede (15px) tapi Padding Kecil (4px) biar Gak Melar --- */
                     td {{ 
-                        padding: 6px 8px; 
-                        font-size: 14px; 
-                        border: 1px solid #000; 
-                        color: #000;
-                        line-height: 1.4; 
+                        border: 1px solid #bbb; 
+                        padding: 4px 8px; 
+                        font-size: 15px; 
+                        color: #333; 
+                        line-height: 1.2;
                         word-wrap: break-word;
                     }}
                     
-                    .col-unit {{ width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; border-right: 2px solid #000; }}
-                    .col-channel {{ width: 45%; font-weight: 600; text-align: left; padding-left: 10px; }}
-                    .col-time {{ width: 15%; text-align: center; font-weight: 700; color: #C00 !important; }}
+                    .hp-cell {{ background-color: #f9f9f9; font-weight: bold; text-align: center; color: #000; font-size: 16px; width: 80px; }}
+                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 15px; }}
+                    .time-cell {{ text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; width: 100px; color: #d32f2f; }}
                     
-                    tr:nth-child(even) {{ background-color: #FAFAFA !important; }}
+                    tr:nth-child(even) {{ background-color: #f2f2f2; }}
+                    .footer {{ margin-top: 30px; text-align: right; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }}
                 }}
             </style>
             
-            <div class="safe-container">
-                <div class="header-box">
-                    <h2>PINTAR MEDIA - JADWAL UPLOAD</h2>
-                    <div class="meta-info">📅 {tgl_str} | 👤 Admin: {user_aktif}</div>
-                </div>
+            <div class="print-container">
+                <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
+                <p class="sub">Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
                 
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 10%;">📱 UNIT HP</th>
-                            <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
+                            <th style="width: 12%;">📱 HP</th>
+                            <th style="width: 43%;">📺 CHANNEL</th>
                             <th style="width: 15%;">🌅 PAGI</th>
                             <th style="width: 15%;">☀️ SIANG</th>
                             <th style="width: 15%;">🌆 SORE</th>
@@ -3975,7 +3947,9 @@ def tampilkan_database_channel():
                         {rows_html}
                     </tbody>
                 </table>
-                <div class="footer-note">Pintar Media System - Dicetak pada {datetime.now(tz).strftime('%H:%M:%S')} WIB</div>
+                <div class="footer">
+                    Pintar Media System - {datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')} WIB
+                </div>
             </div>
             """
             
@@ -4646,6 +4620,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
