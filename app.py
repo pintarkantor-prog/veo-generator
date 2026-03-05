@@ -892,48 +892,56 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY
+    # MESIN 1: ANATOMY (SELALU STANDBY)
     # ==========================================================================
     with t_anatomi:
         st.subheader("🦴 ANATOMY MASTER GENERATOR")
         
-        naskah_default = ""
-        id_pilih = None # <--- KUNCI: Biar nggak crash kalau manual
-        
-        # --- A. AUTO-FILL (Hanya jika ada data) ---
+        # --- KUNCI: LOADER IDE (HANYA MUNCUL JIKA ADA DATA DI SUPABASE) ---
+        naskah_default = "" # Dasar kosong buat manual
+        id_pilih = None
+
         if not df_ide.empty:
-            # Pastikan kolom niche sesuai ejaan di DB lo (Case Sensitive)
+            # Filter niche ANATOMI (Samakan dengan ejaan di database lo)
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
                 df_unik = df_a.drop_duplicates(subset=['id_ide'])
-                topik_sel = st.selectbox("📥 LOAD DARI GUDANG IDE:", ["-- Ketik Manual --"] + df_unik['topik'].tolist(), key="sel_a")
+                
+                # --- INI KOLOM PENARIK IDENYA, BOS! ---
+                topik_sel = st.selectbox("📥 AMBIL IDE DARI GUDANG (ANATOMY):", 
+                                        ["-- Ketik Manual --"] + df_unik['topik'].tolist(), 
+                                        key="loader_a")
                 
                 if topik_sel != "-- Ketik Manual --":
                     data_row = df_a[df_a['topik'] == topik_sel].iloc[0]
-                    naskah_default = data_row['narasi']
-                    id_pilih = data_row['id_ide'] # <--- Ambil ID buat tombol Selesai
-                    st.success(f"✅ Data '{topik_sel}' loaded!")
+                    naskah_default = data_row['narasi'] # Naskah dari DB masuk ke sini
+                    id_pilih = data_row['id_ide']
+                    st.toast(f"Data '{topik_sel}' Berhasil ditarik!", icon="✅")
 
-        # --- B. FORM GENERATOR (STANDBY) ---
+        # --- B. FORM GENERATOR (PERSIS SCREENSHOT LO) ---
         with st.container(border=True):
+            # 1. IDENTITY LOCK
             c1, c2 = st.columns(2)
-            char_sks = c1.text_input("👤 Karakter Utama", value="MR. TULANG", key="c1_a")
-            dna_sks = c1.text_area("🧬 DNA Visual", value="Hyper-realistic, aged bone, 8k...", key="d1_a")
+            char_sks = c1.text_input("👤 Karakter Utama (SKS)", value="MR. TULANG", key="c1_a")
+            dna_sks = c1.text_area("🧬 DNA Visual (SKS)", value="Hyper-realistic, aged bone, 8k...", key="d1_a")
             char_sks2 = c2.text_input("👤 Karakter Pendukung", value="ORGAN", key="c2_a")
             dna_sks2 = c2.text_area("🧬 DNA Pendukung", value="Wet texture, pulsating muscle...", key="d2_a")
 
             st.markdown("---")
-            # KUNCI: Pake value=naskah_default biar auto-fill jalan
-            naskah_input = st.text_area("📝 NASKAH VISUAL", value=naskah_default, height=150, key="nas_a")
+            # --- NASKAH: Injeksi naskah_default ke sini ---
+            naskah_input = st.text_area("📝 NASKAH VISUAL / AKSI", value=naskah_default, height=150, key="nas_a")
 
+            # 3. SETTING TAMBAHAN
             s1, s2, s3 = st.columns(3)
             style = s1.selectbox("🎨 Style", ["Cinematic RAW", "3D Animation", "X-Ray"], key="sty_a")
             lighting = s2.selectbox("💡 Lighting", ["Rim Light", "Neon", "Daylight"], key="light_a")
             camera = s3.selectbox("🎥 Camera", ["Close Up", "Static", "Wide"], key="cam_a")
 
+            # --- C. TOMBOL GENERATE (3 OUTPUT SEKALIGUS) ---
             if st.button("🔥 GENERATE 3 PROMPTS (ANATOMY)", type="primary", use_container_width=True):
                 st.divider()
                 r1, r2, r3 = st.columns(3)
+                
                 with r1:
                     st.error("🎙️ **ELEVENLABS**")
                     st.code(f"[Deep Voice]: {naskah_input}")
@@ -944,9 +952,10 @@ def tampilkan_ai_lab():
                     st.warning("🎥 **VIDEO (VEO)**")
                     st.code(f"VEO ENGINE: {char_sks}, {camera}, Action: {naskah_input}, {style}")
 
-            # --- C. TOMBOL SELESAI (Hanya muncul kalau narik dari DB) ---
+            # TOMBOL SELESAI (Hanya muncul kalau sedang ngerjain ide dari Gudang)
             if id_pilih:
-                if st.button("🏁 SELESAI & ARCHIVE KE DONE", use_container_width=True):
+                st.write("")
+                if st.button("🏁 SELESAI & ARCHIVE PROJECT", use_container_width=True):
                     supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
                     st.rerun()
 
@@ -4541,6 +4550,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
