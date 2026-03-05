@@ -877,13 +877,22 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
-# --- FUNGSI KHUSUS DATABASE KARAKTER (ISOLASI) ---
-def get_library_karakter():
-    """
-    Menampung database fisik dan pakaian. 
-    Hanya dipanggil di dalam fungsi tampilkan_ai_lab.
-    """
-    return {
+def tampilkan_ai_lab():
+    # ==========================================================================
+    # 1. AUTH CHECK (Sesuai Logic User Level Lo)
+    # ==========================================================================
+    user_sekarang = st.session_state.get("user_aktif", "tamu").lower()
+    user_level = st.session_state.get("user_level", "STAFF").upper()
+
+    if user_level not in ["OWNER"]:
+        st.error("🚫 Maaf, area rahasia! masih pengembangan!")
+        st.stop()
+
+    # ==========================================================================
+    # 2. MASTER DATABASE (DI DALAM FUNGSI - PRIVAT & AMAN)
+    # ==========================================================================
+    # Dictionary ini cuma idup di dalem fungsi ini, nggak bakal bocor keluar.
+    MASTER_CHAR = {
         "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
         "BALUNG": {
             "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
@@ -898,107 +907,116 @@ def get_library_karakter():
         }
     }
 
-def tampilkan_ai_lab():
-    st.title("🧠 PINTAR AI LAB - PRODUCTION HUB")
+    # ==========================================================================
+    # 3. PRODUCTION INTERFACE
+    # ==========================================================================
+    st.title("🧠 PINTAR AI LAB - OWNER HUB")
+    st.sidebar.success(f"🔓 Akses Owner: {user_sekarang.capitalize()}")
     
-    # 1. LOAD DATABASE INTERNAL
-    lib_char = get_library_karakter()
+    # --- PILIH STAFF (Buat locking database adegan) ---
+    st.markdown("### 👷 Penugasan Staff")
+    staff_tugas = st.selectbox("Siapa staff yang sedang menjalankan perintah ini?", 
+                             ["", "Icha", "Budi", "Santi", "Agus"], key="staff_assign")
     
-    # 2. FETCH DATA SUPABASE
+    if not staff_tugas:
+        st.warning("Pilih nama staff dulu untuk memulai antrian produksi.")
+        st.stop()
+
+    # 4. FETCH DATA SUPABASE
     df_ide = pd.DataFrame()
     try:
-        res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
+        # Syarat: READY & No Lock ATAU Sedang dikerjakan staff terpilih
+        query = f"or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.{staff_tugas}))"
+        res = supabase.table("ide_pintar").select("*").or_(query).execute()
         df_ide = pd.DataFrame(res.data)
-    except: pass
+    except Exception as e:
+        st.error(f"Koneksi DB Gagal: {e}")
 
-    t_anatomi, t_grandma, t_minecraft, t_random = st.tabs([
-        "🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
-    ])
+    # Tabs Produksi
+    t_anatomi, t_grandma, t_minecraft = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT"])
 
-    # ==========================================================================
-    # TAB: ANATOMY (SISTEM ANTRIAN + BALUNG CORE)
-    # ==========================================================================
     with t_anatomi:
-        current_row = {} 
+        current_row = {}
         
         # --- A. LOADER PROJECT ---
         if not df_ide.empty:
-            df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
-            if not df_a.empty:
-                topik_list = ["-- MODE MANUAL (Input Bebas) --"] + df_a.drop_duplicates('topik')['topik'].tolist()
-                topik_sel = st.selectbox("📥 LOAD DATA DARI GUDANG IDE:", topik_list, key="sel_a")
-                
-                if topik_sel != "-- MODE MANUAL (Input Bebas) --":
-                    df_active = df_a[(df_a['topik'] == topik_sel) & (df_a['status'] != "DONE")].sort_values('no_adegan')
-                    if not df_active.empty:
-                        current_row = df_active.iloc[0].to_dict()
-                        st.info(f"📍 Antrian Aktif: {topik_sel} | Adegan {current_row['no_adegan']}")
+            topik_list = ["-- MODE MANUAL --"] + df_ide.drop_duplicates('topik')['topik'].tolist()
+            topik_sel = st.selectbox("📥 PILIH PROJECT ANTRIAN:", topik_list, key="sel_a_owner")
+            
+            if topik_sel != "-- MODE MANUAL --":
+                df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
+                if not df_active.empty:
+                    current_row = df_active.iloc[0].to_dict()
+                    
+                    # Auto-Lock di DB
+                    if current_row['status'] == 'READY':
+                        supabase.table("ide_pintar").update({
+                            "status": "PROCESSING",
+                            "locked_by": staff_tugas
+                        }).eq("id", current_row['id']).execute()
+                    
+                    st.info(f"📍 Sedang Produksi: {topik_sel} | Adegan {current_row['no_adegan']}")
 
-        # --- B. MASTER SCRIPT BOX ---
+        # --- B. MASTER SCRIPT ---
         if current_row:
             with st.expander("🎙️ MASTER SCRIPT (VO FULL)", expanded=False):
-                all_vo = df_a[df_a['id_ide'] == current_row['id_ide']].sort_values('no_adegan')['narasi_vo'].tolist()
-                st.text_area("Copy naskah utuh:", value=" ".join(map(str, all_vo)), height=120)
+                try:
+                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
+                    full_vo = " ".join([r['narasi_vo'] for r in res_vo.data])
+                    st.text_area("Copy Script untuk ElevenLabs:", value=full_vo, height=120)
+                except: pass
 
         st.markdown("---")
 
-        # --- C. IDENTITY & WARDROBE LOCK (BALUNG ONLY) ---
+        # --- C. IDENTITY & WARDROBE ---
         with st.expander("🛡️ CHARACTER IDENTITY & WARDROBE", expanded=True):
             ci1, ci2 = st.columns(2)
+            char_pilih = ci1.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
             
-            # Pilih Tokoh (Cuma Balung & Custom)
-            char_pilih = ci1.selectbox("👤 Pilih Karakter Utama", list(lib_char.keys()), index=1)
+            outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
+            db_baju = current_row.get('wardrobe', "Original")
+            idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
+            wardrobe = ci1.selectbox("👕 Outfit", outfit_opt, index=idx_b)
             
-            # Pilih Baju
-            outfit_options = list(lib_char[char_pilih]["pakaian"].keys())
-            wardrobe = ci1.selectbox("👕 Pilih Outfit / Pakaian", outfit_options)
-            
-            # Rakit Mantra
-            fisik_dna = lib_char[char_pilih]["fisik"]
-            baju_dna = lib_char[char_pilih]["pakaian"][wardrobe]
-            dna_final = ci2.text_area("🧬 DNA + Wardrobe Mantra", 
-                                    value=f"{fisik_dna} Character is wearing {baju_dna}".strip(), height=110)
+            dna_final = ci2.text_area("🧬 Mantra DNA", 
+                                    value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), 
+                                    height=110)
 
-        # --- D. PRODUCTION INTERFACE ---
+        # --- D. PRODUCTION FORM ---
         with st.container(border=True):
-            st.subheader("🎬 PRODUCTION INTERFACE")
+            st.subheader(f"🎬 FORM PRODUKSI: Adegan {current_row.get('no_adegan', 'MANUAL')}")
             c_vo, c_vis, c_set = st.columns([1, 1, 1])
             
             with c_vo:
                 st.markdown("🎙️ **VO SCRIPT**")
-                vo_input = st.text_area("Narasi Suara", value=current_row.get('narasi_vo', ''), height=200)
+                vo_in = st.text_area("Narasi", value=current_row.get('narasi_vo', ''), height=200)
             
             with c_vis:
                 st.markdown("🎥 **VISUAL & WORLD**")
-                aksi_input = st.text_area("Aksi Karakter", value=current_row.get('visual_prompt', ''), height=100)
-                latar_input = st.text_area("Latar / Environment", value=current_row.get('environment', ''), height=65)
+                aksi_in = st.text_area("Aksi", value=current_row.get('visual_prompt', ''), height=100)
+                env_in = st.text_area("Latar", value=current_row.get('environment', ''), height=65)
             
             with c_set:
-                st.markdown("⚙️ **CAMERA & STYLE**")
-                style_sc = st.selectbox("Style", ["ANATOMI Cinematic 8k", "X-Ray", "UE 5.4 Render"])
-                cam_framing = st.selectbox("📸 Framing (Image)", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
-                cam_movement = st.selectbox("🎥 Movement (Video)", ["Static", "Slow Dolly In", "Dynamic Pan", "Orbit Move", "Tilt Up"])
-                light_sc = st.selectbox("Lighting", ["Rim Light", "Neon Glow", "Volumetric", "Golden Hour"])
+                st.markdown("⚙️ **SETTING**")
+                style_map = {
+                    "Sinematik Kedokteran": "ANATOMI Cinematic 8k, photorealistic",
+                    "Mode Rontgen": "X-Ray style, glowing skeletal structure",
+                    "3D Unreal Engine": "Unreal Engine 5.4 render, high-end 3D"
+                }
+                st_sel = st.selectbox("🎨 Gaya", list(style_map.keys()))
+                fr_sel = st.selectbox("📸 Framing", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
+                mv_sel = st.selectbox("🎥 Gerakan Kamera", ["Static", "Slow Dolly In", "Orbit Move"])
+                lt_sel = st.selectbox("Lighting", ["Rim Light", "Neon Glow", "Volumetric"])
 
-            # --- E. GENERATE ACTION ---
+            # --- E. GENERATE ---
             if st.button("🔥 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
-                r1, r2, r3 = st.columns(3)
-                with r1:
-                    st.error("🎙️ ELEVENLABS")
-                    st.code(vo_input, language="text")
-                with r2:
-                    st.success("🖼️ GEMINI IMAGE")
-                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_input}. ENVIRONMENT: {latar_input}. STYLE: {style_sc}, {light_sc}, {cam_framing} framing.", language="text")
-                with r3:
-                    st.warning("🎥 VEO VIDEO")
-                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_input} in {latar_input}. MOTION: {cam_movement} movement. STYLE: {style_sc}.", language="text")
+                st.code(f"GEMINI: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {lt_sel}, {fr_sel}.")
+                st.code(f"VEO: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel}. STYLE: {style_map[st_sel]}.")
 
-            # --- F. QUEUE CONTROL ---
             if current_row:
-                st.write("")
-                if st.button(f"✅ SELESAI ADEGAN {current_row['no_adegan']} & LANJUT", use_container_width=True):
-                    supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id", current_row['id']).execute()
+                if st.button("✅ SELESAI & LANJUT", use_container_width=True):
+                    supabase.table("ide_pintar").update({"status": "DONE", "locked_by": staff_tugas}).eq("id", current_row['id']).execute()
                     st.rerun()
 
     # Tab lain dibiarin kosong 
@@ -4582,6 +4600,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
