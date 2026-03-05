@@ -3904,27 +3904,30 @@ def tampilkan_database_channel():
                     body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; }}
                     .print-container {{ width: 100%; max-width: 800px; margin: auto; padding: 20px; }}
                     h2 {{ text-align: center; color: #1E1E1E; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }}
-                    p.sub {{ text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }}
+                    p.sub {{ text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }}
                     
                     table {{ width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #333; table-layout: fixed; }}
                     
+                    /* Header Tetap Elegan */
                     th {{ background-color: #333 !important; color: white !important; padding: 12px; border: 1px solid #444; font-size: 14px; text-transform: uppercase; }}
                     
-                    /* --- INI YANG LO MAU: Font Gede (15px) tapi Padding Kecil (4px) biar Gak Melar --- */
+                    /* --- ISI TABEL: FONT GEDE (15px) & PADDING LEGA (8px) --- */
                     td {{ 
                         border: 1px solid #bbb; 
-                        padding: 4px 8px; 
-                        font-size: 15px; 
+                        padding: 8px 10px; /* Kembali ke padding awal biar gak mampet */
+                        font-size: 15px;   /* Font digedein sesuai request */
                         color: #333; 
-                        line-height: 1.2;
+                        line-height: 1.3;
                         word-wrap: break-word;
                     }}
                     
-                    .hp-cell {{ background-color: #f9f9f9; font-weight: bold; text-align: center; color: #000; font-size: 16px; width: 80px; }}
+                    /* Warna Zebra Selang-Seling (Anti-Pusing) */
+                    tr:nth-child(even) {{ background-color: #f2f2f2 !important; }}
+                    
+                    .hp-cell {{ background-color: #f9f9f9 !important; font-weight: bold; text-align: center; color: #000; font-size: 16px; width: 80px; }}
                     .channel-cell {{ font-weight: 500; text-align: left; padding-left: 15px; }}
                     .time-cell {{ text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; width: 100px; color: #d32f2f; }}
                     
-                    tr:nth-child(even) {{ background-color: #f2f2f2; }}
                     .footer {{ margin-top: 30px; text-align: right; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }}
                 }}
             </style>
@@ -4620,6 +4623,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
