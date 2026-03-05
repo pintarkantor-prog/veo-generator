@@ -3996,7 +3996,7 @@ def tampilkan_database_channel():
                                                 time.sleep(0.5)
                                                 st.rerun()
                                             else:
-                                                st.error("❌ Data HP asli tidak ditemukan di GSheet!")
+                                                st.error("❌ Nama HP ini sudah terdaftar!")
                                                 
                                         except Exception as e:
                                             st.error(f"Gagal Update: {e}")
@@ -4539,5 +4539,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
