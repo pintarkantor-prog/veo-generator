@@ -3978,19 +3978,30 @@ def tampilkan_database_channel():
                                 if st.button("💾 SIMPAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
                                     if e_nama and e_no:
                                         try:
-                                            # idx+2 karena baris 1 adalah header GSheet
-                                            r_idx = idx + 2
-                                            ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
-                                            ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
-                                            ws_unit_hp.update_cell(r_idx, 3, e_prov)
-                                            ws_unit_hp.update_cell(r_idx, 4, e_tgl)
+                                            # 1. Cari baris asli berdasarkan Nama HP awal
+                                            target_cell = ws_unit_hp.find(str(r['NAMA_HP']))
                                             
-                                            st.cache_data.clear()
-                                            st.success("✅ Berhasil!")
-                                            time.sleep(0.5)
-                                            st.rerun()
+                                            if target_cell:
+                                                r_idx = target_cell.row # Dapet baris yang bener
+                                                
+                                                # 2. Update satu per satu ke kolom yang tepat
+                                                ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
+                                                ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
+                                                ws_unit_hp.update_cell(r_idx, 3, e_prov)
+                                                ws_unit_hp.update_cell(r_idx, 4, e_tgl)
+                                                
+                                                # 3. Bersihkan cache dan refresh tampilan
+                                                st.cache_data.clear()
+                                                st.success(f"✅ {e_nama} Berhasil Diupdate!")
+                                                time.sleep(0.5)
+                                                st.rerun()
+                                            else:
+                                                st.error("❌ Data HP asli tidak ditemukan di GSheet!")
+                                                
                                         except Exception as e:
-                                            st.error(f"Gagal: {e}")
+                                            st.error(f"Gagal Update: {e}")
+                                    else:
+                                        st.error("Nama & Nomor HP wajib diisi!")
                         
     # ==============================================================================
     # TAB 5: SOLD CHANNEL (SINKRON SUPABASE - ORIGINAL UI)
@@ -4528,4 +4539,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
