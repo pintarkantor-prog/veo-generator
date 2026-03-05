@@ -878,9 +878,9 @@ def tampilkan_navigasi_sidebar():
     return pilihan
 
 def tampilkan_ai_lab():
-    st.title("🧠 PINTAR AI LAB - PRODUCTION HUB")
+    st.title("🧠 PINTAR AI LAB - MULTI SCENE PRODUCTION")
     
-    # 1. FETCH DATA
+    # 1. FETCH DATA DARI SUPABASE
     df_ide = pd.DataFrame()
     try:
         res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
@@ -892,79 +892,84 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (VERSI KONSISTENSI VIDEO SHORTS)
+    # MESIN 1: ANATOMY (MULTI-SCENE LOSS KE BAWAH)
     # ==========================================================================
     with t_anatomi:
-        st.subheader("🦴 ANATOMY MASTER GENERATOR")
+        st.subheader("🦴 ANATOMY MASTER GENERATOR (MULTI-SCENE)")
         
-        # --- A. LOADER IDE ---
-        naskah_default = ""
         id_pilih = None
-        opsi_gudang = ["-- Ketik Manual --"]
+        df_adegan = pd.DataFrame()
 
+        # --- A. LOADER IDE (UNTUK NARIK SELURUH ADEGAN) ---
         if not df_ide.empty:
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
-                opsi_gudang += df_a.drop_duplicates(subset=['id_ide'])['topik'].tolist()
+                df_unik = df_a.drop_duplicates(subset=['id_ide'])
+                topik_sel = st.selectbox("📥 LOAD PROJECT DARI GUDANG (ANATOMY):", 
+                                        ["-- Ketik Manual --"] + df_unik['topik'].tolist(), 
+                                        key="loader_a")
+                
+                if topik_sel != "-- Ketik Manual --":
+                    # Ambil SEMUA baris yang punya id_ide yang sama
+                    id_pilih = df_unik[df_unik['topik'] == topik_sel].iloc[0]['id_ide']
+                    df_adegan = df_a[df_a['id_ide'] == id_pilih].sort_values('no_adegan')
+                    st.success(f"✅ {len(df_adegan)} Adegan '{topik_sel}' Berhasil ditarik!")
 
-        topik_sel = st.selectbox("📥 AMBIL IDE DARI GUDANG (ANATOMI):", opsi_gudang, key="loader_a")
-        
-        if topik_sel != "-- Ketik Manual --":
-            data_row = df_ide[df_ide['topik'] == topik_sel].iloc[0]
-            naskah_default = data_row['narasi']
-            id_pilih = data_row['id_ide']
-            st.toast(f"Data '{topik_sel}' Berhasil ditarik!", icon="✅")
-
-        # --- B. FORM GENERATOR (IDENTITY LOCK & MOTION ENGINE) ---
-        with st.container(border=True):
+        # --- B. GLOBAL IDENTITY LOCK (Cukup Setting 1x buat Semua Adegan) ---
+        with st.expander("🛡️ GLOBAL IDENTITY LOCK (Karakter SKS)", expanded=True):
             c1, c2 = st.columns(2)
-            
-            # KUNCI KONSISTENSI (DNA & SOUL)
-            char_sks = c1.text_input("👤 Karakter Utama (SKS)", value="MR. TULANG", key="c1_a")
+            char_sks = c1.text_input("👤 Nama Karakter Utama", value="MR. TULANG", key="char_name_a")
             dna_sks = c1.text_area("🧬 DNA Visual (Konsistensi)", 
-                value="Hyper-realistic human skeleton, aged bone texture with micro-cracks, translucent ribcage, cinematic rim lighting, 8k resolution, vertical orientation.", 
-                key="d1_a", height=100)
+                value="Hyper-realistic human skeleton, aged bone texture, translucent ribcage, cinematic rim lighting, 8k.", 
+                key="dna_global_a", height=80)
             
-            char_soul = c2.text_input("👤 Acting Style", value="Fluid Anatomical", key="c2_a")
-            soul_sks = c2.text_area("⚙️ Soul & Motion Engine", 
-                value="High-fidelity physical simulation, realistic organ vibration, electricity simulation, slow-motion impact, high dynamic range.", 
-                key="s2_a", height=100)
+            soul_name = c2.text_input("👤 Style Gerakan", value="Fluid Anatomical", key="soul_name_a")
+            soul_sks = c2.text_area("⚙️ Motion Engine", 
+                value="High-fidelity physical simulation, realistic organ vibration, electricity simulation, slow-mo.", 
+                key="soul_global_a", height=80)
 
+        st.markdown("---")
+
+        # --- C. PRODUCTION LINE (LOOPING ADEGAN KE BAWAH) ---
+        # Jika manual, kita kasih 1 adegan kosong. Jika dari DB, kita looping sebanyak isi DB.
+        list_loop = df_adegan if not df_adegan.empty else pd.DataFrame([{"no_adegan": 1, "narasi": "", "id": "manual"}])
+
+        for _, row in list_loop.iterrows():
+            no_sc = row['no_adegan']
+            with st.container(border=True):
+                st.markdown(f"#### 🎬 ADEGAN {no_sc}")
+                
+                col_naskah, col_set = st.columns([1.5, 1])
+                
+                with col_naskah:
+                    naskah_sc = st.text_area(f"📝 NASKAH VISUAL S{no_sc}", value=row['narasi'], height=150, key=f"nas_a_{row['id']}")
+                    dialog_sc = st.text_input(f"💬 Dialog S{no_sc}", value=row.get('dialog_1', ''), key=f"dia_a_{row['id']}")
+
+                with col_set:
+                    style_sc = st.selectbox(f"🎨 Style S{no_sc}", ["Cinematic RAW", "UE 5.4 Render", "X-Ray"], key=f"sty_a_{row['id']}")
+                    lighting_sc = st.selectbox(f"💡 Lighting S{no_sc}", ["Rim Light", "Neon Glow", "Volumetric"], key=f"lt_a_{row['id']}")
+                    camera_sc = st.selectbox(f"🎥 Camera S{no_sc}", ["Extreme Macro", "Close-up", "Dynamic"], key=f"cam_a_{row['id']}")
+
+                # TOMBOL GENERATE PER ADEGAN
+                if st.button(f"🔥 GENERATE PROMPT ADEGAN {no_sc}", key=f"btn_gen_a_{row['id']}", use_container_width=True):
+                    st.divider()
+                    r1, r2, r3 = st.columns(3)
+                    with r1:
+                        st.error("🎙️ **ELEVENLABS**")
+                        st.code(f"Voice: Deep Authority\nScript: {naskah_sc}\nDialog: {dialog_sc}")
+                    with r2:
+                        st.success("🖼️ **IMAGE (GEMINI)**")
+                        st.code(f"DNA: {dna_sks}. SCENE: {naskah_sc}. STYLE: {style_sc}, {lighting_sc}, 8k RAW.")
+                    with r3:
+                        st.warning("🎥 **VIDEO (VEO)**")
+                        st.code(f"ENGINE: {char_sks}. MOTION: {soul_sks}, {camera_sc}. ACTION: {naskah_sc}, {style_sc}.")
+
+        # --- D. GLOBAL FINISH ---
+        if id_pilih:
             st.markdown("---")
-            naskah_input = st.text_area("📝 NASKAH VISUAL / AKSI", value=naskah_default, height=150, key="nas_a")
-
-            # SETTING SINEMATIK
-            s1, s2, s3 = st.columns(3)
-            style = s1.selectbox("🎨 Style", ["ANATOMI Cinematic 8k RAW", "Unreal Engine 5.4 render style", "X-Ray Futuristic", "3D Medical Animation"], key="sty_a")
-            lighting = s2.selectbox("💡 Lighting", ["Cinematic Rim Lighting", "Neon Glow", "Global Illumination", "Volumetric Fog"], key="light_a")
-            camera = s3.selectbox("🎥 Camera", ["Dynamic Camera Movement", "Extreme Close-up Focus", "Static Cinematic Shot", "Bird Eye View"], key="cam_a")
-
-            # --- C. TOMBOL GENERATE (3 OUTPUT) ---
-            if st.button("🔥 GENERATE MASTER PROMPTS (ANATOMY)", type="primary", use_container_width=True):
-                st.divider()
-                r1, r2, r3 = st.columns(3)
-                
-                with r1:
-                    st.error("🎙️ **ELEVENLABS**")
-                    st.code(f"Voice: Deep Authority\nScript: {naskah_input}", language="text")
-                
-                with r2:
-                    st.success("🖼️ **IMAGE (GEMINI)**")
-                    # RAKITAN DNA + NASKAH + STYLE
-                    p_img = f"CHARACTER: {char_sks}. DNA: {dna_sks}. SCENE: {naskah_input}. STYLE: {style}, {lighting}, macro photography."
-                    st.code(p_img, language="text")
-                
-                with r3:
-                    st.warning("🎥 **VIDEO (VEO)**")
-                    # RAKITAN SOUL + ACTION + CAMERA
-                    p_vid = f"VEO VIDEO ENGINE:\nCHARACTER: {char_sks}. SOUL/ACTING: {soul_sks}. ACTION: {naskah_input}. MOTION: {camera}, high-fidelity tissue simulation, {style}."
-                    st.code(p_vid, language="text")
-
-            # Tombol Selesai
-            if id_pilih:
-                if st.button("🏁 SELESAI & ARCHIVE PROJECT", use_container_width=True):
-                    supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
-                    st.rerun()
+            if st.button("🏁 SELESAI & ARCHIVE SELURUH PROJECT", type="primary", use_container_width=True):
+                supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
+                st.rerun()
 
     # ==========================================================================
     # TAB LAIN (BEDA KEY & BEDA MANTRA)
@@ -4557,6 +4562,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
