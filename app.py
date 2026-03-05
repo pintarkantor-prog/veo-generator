@@ -3780,9 +3780,11 @@ def tampilkan_database_channel():
                 with st.expander("🛠️ EDIT JAM UPLOAD (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
-                    df_j_sorted = df_j.sort_values('HP_N')
+                    
+                    # KUNCI: Editor sekarang diurutkan berdasarkan No HP DAN Jam Pagi.
+                    # Jadi pas lo buka expander, urutannya udah selang-seling rapi.
+                    df_j_sorted = df_j.sort_values(['HP_N', 'PAGI'])
 
-                    # Kita ambil kolom EMAIL buat kunci di Supabase
                     kolom_edit = ["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "EMAIL", "REAL_IDX"]
                     
                     edited_j = st.data_editor(
@@ -3793,7 +3795,7 @@ def tampilkan_database_channel():
                             "PAGI": st.column_config.TextColumn("🌅 PAGI"),
                             "SIANG": st.column_config.TextColumn("☀️ SIANG"),
                             "SORE": st.column_config.TextColumn("🌆 SORE"),
-                            "EMAIL": None, # Sembunyikan email biar ga ribet diliat
+                            "EMAIL": None, 
                             "REAL_IDX": None
                         },
                         use_container_width=True, hide_index=True, key="editor_manual_full"
@@ -4636,6 +4638,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
