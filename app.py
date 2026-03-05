@@ -3974,6 +3974,9 @@ def tampilkan_database_channel():
                 <div class="footer">Pintar Media System - V3.0 Final</div>
             </div>
             """
+            
+            if st.button("📄 PRINT JADWAL", use_container_width=True, type="primary"):
+                st.components.v1.html(html_masterpiece + "<script>window.print();</script>", height=0)
                         
     # ======================================================================
     # --- TAB 4: MONITOR HP (ANTI-CRASH & SLOT HP PROTECTION) ---
@@ -4639,24 +4642,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
