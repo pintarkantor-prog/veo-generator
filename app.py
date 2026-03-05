@@ -3885,43 +3885,73 @@ def tampilkan_database_channel():
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; }}
-                    .print-container {{ width: 100%; max-width: 800px; margin: auto; padding: 20px; }}
-                    h2 {{ text-align: center; color: #1E1E1E; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }}
-                    p.sub {{ text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }}
-                    table {{ width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #333; }}
-                    th {{ background-color: #333 !important; color: white !important; padding: 12px; border: 1px solid #444; font-size: 13px; text-transform: uppercase; }}
-                    td {{ border: 1px solid #bbb; padding: 10px; font-size: 13px; color: #333; }}
-                    .hp-cell {{ background-color: #f9f9f9; font-weight: bold; text-align: center; color: #000; font-size: 15px; width: 80px; }}
-                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 15px; }}
-                    .time-cell {{ text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; width: 100px; color: #d32f2f; }}
-                    tr:nth-child(even) {{ background-color: #f2f2f2; }}
-                    .footer {{ margin-top: 30px; text-align: right; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }}
+                    @page {{ size: A4; margin: 1cm; }}
+                    body {{ font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; -webkit-print-color-adjust: exact; }}
+                    
+                    /* CONTAINER UTAMA - DIKUNCI BIAR GAK MELEBAR */
+                    .safe-container {{ width: 100%; max-width: 720px; margin: 0 auto; }}
+                    
+                    .header-box {{ border-bottom: 4px solid #1E1E1E; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }}
+                    h2 {{ font-size: 24px; margin: 0; letter-spacing: 1px; color: #000; }}
+                    .meta-info {{ font-size: 12px; color: #555; margin-top: 5px; }}
+                    
+                    /* TABEL SULTAN - GARIS TEGAS & FIX WIDTH */
+                    table {{ 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        table-layout: fixed; /* Kunci lebar kolom */
+                        border: 1px solid #000;
+                    }}
+                    
+                    th {{ 
+                        background-color: #1E1E1E !important; 
+                        color: #FFF !important; 
+                        padding: 12px 5px; 
+                        font-size: 11px; 
+                        text-transform: uppercase;
+                        border: 1px solid #000;
+                    }}
+                    
+                    td {{ 
+                        padding: 10px 5px; 
+                        font-size: 11px; 
+                        border: 1px solid #DDD; 
+                        color: #000;
+                        word-wrap: break-word; /* Anti meluber ke kanan */
+                    }}
+                    
+                    /* JATAH LEBAR (TOTAL 100%) */
+                    .col-unit {{ width: 10%; font-weight: 800; text-align: center; background: #F5F5F5 !important; border-right: 2px solid #000; }}
+                    .col-channel {{ width: 45%; font-weight: 600; text-align: left; padding-left: 10px; }}
+                    .col-time {{ width: 15%; text-align: center; font-weight: 700; color: #C00; background: #FFF !important; }}
+                    
+                    tr:nth-child(even) {{ background-color: #FAFAFA !important; }}
+                    
+                    .footer-note {{ margin-top: 15px; font-size: 9px; text-align: right; color: #999; font-style: italic; }}
                 }}
             </style>
             
-            <div class="print-container">
-                <h2>📋 JADWAL UPLOAD PINTAR AI LAB</h2>
-                <p class="sub">Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
+            <div class="safe-container">
+                <div class="header-box">
+                    <h2>PINTAR AI LAB - JADWAL UPLOAD</h2>
+                    <div class="meta-info">📅 {tgl_str} | 👤 Admin: {user_aktif}</div>
+                </div>
                 
                 <table>
                     <thead>
                         <tr>
-                            <th>📱 UNIT HP</th>
-                            <th>📺 NAMA CHANNEL</th>
-                            <th>🌅 PAGI</th>
-                            <th>☀️ SIANG</th>
-                            <th>🌆 SORE</th>
+                            <th style="width: 10%;">UNIT</th>
+                            <th style="width: 45%;">CHANNEL YOUTUBE</th>
+                            <th style="width: 15%;">🌅 PAGI</th>
+                            <th style="width: 15%;">☀️ SIANG</th>
+                            <th style="width: 15%;">🌆 SORE</th>
                         </tr>
                     </thead>
                     <tbody>
                         {rows_html}
                     </tbody>
                 </table>
-                
-                <div class="footer">
-                    Dicetak otomatis oleh Sistem PINTAR AI LAB - {datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')} WIB
-                </div>
+                <div class="footer-note">Sistem Otomatis Radar V2 - Dicetak pada {datetime.now(tz).strftime('%H:%M:%S')} WIB</div>
             </div>
             """
             
@@ -4592,6 +4622,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
