@@ -1009,7 +1009,7 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-        # --- 7. BLOK BRAINSTORMING (VERSI FINAL SULTAN: KOLOM TERPISAH) ---
+        # --- 7. BLOK BRAINSTORMING (VERSI FINAL SULTAN: ADAPTIF & WAJIB EKSIS) ---
         st.write("") 
         with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (BAHASA INDONESIA FULL)", expanded=False):
             col_t1, col_t2 = st.columns(2)
@@ -1026,19 +1026,19 @@ def tampilkan_ai_lab():
                 jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
 
             st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Apa jadinya kalau ginjal berhenti bekerja...", label_visibility="collapsed")
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Efek begadang 7 hari berturut-turut...", label_visibility="collapsed")
             
             if ide_singkat:
                 # --- DAFTAR OUTFIT RESMI DARI MASTER_CHAR_LAB ---
                 daftar_baju = "Original, Jas Lab Putih, Jubah Kerajaan, Baju Kantoran, Hoodie Hitam, Versi Sultan"
 
-                # --- LOGIKA INSTRUKSI VISUAL ADAPTIF ---
+                # --- LOGIKA INSTRUKSI VISUAL ADAPTIF & WAJIB HADIR ---
                 if "Medis" in tipe_cerita:
-                    v_guide = "Fokus pada anatomi: saraf, aliran darah, detak jantung, dan organ transparan."
+                    v_guide = "Fokus pada anatomi: saraf bergetar, aliran darah, detak jantung, dan reaksi organ transparan."
                 elif "Evolusi" in tipe_cerita:
-                    v_guide = "Fokus pada transformasi: tulang mengeras, massa otot tumbuh, dan pancaran aura."
+                    v_guide = "Fokus pada transformasi: tulang mengeras/berubah warna, massa otot tumbuh, dan pancaran aura."
                 elif "Sejarah" in tipe_cerita:
-                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan cahaya obor/matahari."
+                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan interaksi karakter dengan lingkungan."
                 else:
                     v_guide = "Fokus pada anomali: teknologi masa depan, efek visual gila, dan kontras warna neon."
 
@@ -1046,13 +1046,18 @@ def tampilkan_ai_lab():
 Tugas kamu: Buatkan naskah video cinematic ({jml_adegan}) tentang: {ide_singkat}.
 
 KONSEP: {tipe_cerita}.
-NARASI VO: Bahasa Indonesia luwes, asyik, informatif, gunakan sapaan 'Kamu'.
-CTA: Selipkan di tengah video, harus nyambung dengan bahaya/alur ceritanya.
+
+ATURAN WAJIB (MANDATORY):
+1. Karakter SKELETON TRANSPARAN HARUS MUNCUL DI SETIAP ADEGAN. Tidak boleh ada adegan tanpa dia.
+2. HOOK: Mulai dengan narasi pembukaan yang menarik rasa penasaran, jangan langsung ke inti masalah.
+3. NARASI VO: Bahasa Indonesia luwes, asyik, informatif, gunakan sapaan 'Kamu'. Ceritakan apa yang dirasakan karakter tersebut.
+4. CTA ORGANIK: Selipkan di tengah video, buat kalimat ajakan Subscribe yang spesifik nyambung dengan alur ceritanya.
+5. CLOSING: Berikan kesimpulan yang mendalam (deep) atau pertanyaan untuk penonton.
 
 FORMAT OUTPUT (WAJIB TABEL 5 KOLOM): 
 1. No Adegan
 2. Narasi VO (Bahasa Indonesia Luwes).
-3. Deskripsi Visual (FULL INDONESIA: {v_guide} + pergerakan kamera).
+3. Deskripsi Visual (FULL INDONESIA DETAIL: {v_guide} + jelaskan posisi karakter dan pergerakan kamera).
 4. Wardrobe (HANYA PILIH DARI: {daftar_baju}).
 5. Environment (Lokasi/Setting tempat yang dramatis).
 
@@ -1060,7 +1065,7 @@ Catatan: Wardrobe harus menyesuaikan alur cerita (Misal: Awal video 'Original', 
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info(f"💡 **INFO STAFF:** Copy mantra ini. Masukkan hasil tabel Gemini ke kolom database satu per satu. Jangan ada yang tertukar!")
+                st.info(f"💡 **INFO STAFF:** Copy mantra ini. Pastikan setiap adegan di hasil Gemini selalu menampilkan si Karakter Utama. Input ke database satu per satu!")
                 
     # --- TAB LAIN (STANDBY) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4643,6 +4648,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
