@@ -762,39 +762,57 @@ def pasang_css_kustom():
             font-weight: 600 !important;
             font-size: 14px !important;
         }
-        /* 8. COPY TO CLIPBOARD - BUTTON STYLING */
-        /* Kotak kodenya kita buat lebih tegas */
+        /* 8. COPY TO CLIPBOARD - UPDATE 2026 GAHAR MODE */
+        /* Pastikan container kodenya relative */
         .stCodeBlock {
             border: 1px solid #30363d !important;
             border-radius: 10px !important;
             background-color: #0d1117 !important;
             padding: 10px !important;
+            position: relative !important;
         }
         
-        /* Tombol copy bawaan Streamlit dibuat besar & berwarna hijau */
-        button[title="Copy to clipboard"] {
+        /* Tembak langsung ke div pembungkus tombol copy */
+        div[data-testid="stCopyButton"] {
+            position: absolute !important;
+            right: 10px !important;
+            top: 10px !important;
+            z-index: 1000 !important;
+        }
+
+        /* Paksa tombolnya jadi gede dan ijo */
+        div[data-testid="stCopyButton"] button {
             background-color: #238636 !important;
+            width: 50px !important;  /* Ukuran tombol lebih berwibawa */
+            height: 50px !important; 
+            border-radius: 8px !important;
+            border: 2px solid #3fb950 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: transform 0.2s !important;
+        }
+
+        /* INI KONTROL IKONNYA - Kita paksa gede */
+        div[data-testid="stCopyButton"] button svg {
+            width: 30px !important; 
+            height: 30px !important;
+            fill: white !important;
             color: white !important;
-            transform: scale(1.6); /* Memperbesar ukuran ikon */
-            margin-right: 15px !important;
-            margin-top: 15px !important;
-            border-radius: 6px !important;
-            border: none !important;
-            transition: all 0.2s ease-in-out !important;
         }
-        
-        /* Efek saat kursor menempel (Hover) */
-        button[title="Copy to clipboard"]:hover {
+
+        /* Hover Effect */
+        div[data-testid="stCopyButton"] button:hover {
             background-color: #2ea043 !important;
-            transform: scale(1.8) !important;
-            cursor: pointer !important;
+            transform: scale(1.2) !important;
+            border-color: white !important;
         }
 
-        /* Menghilangkan background bawaan agar warna hijau kita solid */
-        button[title="Copy to clipboard"]:active {
-            background-color: #3fb950 !important;
+        /* Menghilangkan bayangan default yang ganggu */
+        div[data-testid="stCopyButton"] button:focus {
+            box-shadow: none !important;
+            outline: none !important;
         }
-
         </style>
     """, unsafe_allow_html=True)
 
@@ -877,196 +895,193 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
-# ==============================================================================
-# BAGIAN 5: PINTAR AI LAB - PRO EDITION (SYNCHRONIZED MANTRA)
-# ==============================================================================
-
 def tampilkan_ai_lab():
+    # --- 1. PINTU UTAMA: OWNER ONLY ---
+    if st.session_state.get("user_level", "").upper() != "OWNER":
+        st.error("🚫 Akses Terbatas.")
+        st.stop()
+
     st.title("🧠 PINTAR AI LAB")
-    st.info("🚀 **Gaskeun!** Ide cerita di mode **Manual**, atau langsung jadi naskah di mode **Otomatis**!")
-    
-    # --- 1. KONFIGURASI & SESSION STATE ---
-    if 'lab_hasil_otomatis' not in st.session_state: st.session_state.lab_hasil_otomatis = ""
-    if 'jumlah_karakter' not in st.session_state: st.session_state.jumlah_karakter = 2
-    if 'memori_n' not in st.session_state: st.session_state.memori_n = {}
-    if 'memori_s' not in st.session_state: st.session_state.memori_s = {}
-    
-    # 4 NICHE UTAMA
-    opsi_pola = [
-        "Revenge (Direndahkan -> Balas Dendam)",
-        "Empathy (Iba -> Pesan Moral)",
-        "Absurd Race (Lomba Konyol -> Interaktif CTA)",
-        "Knowledge (Fakta Harian -> Edukasi)"
-    ]
-    opsi_visual = ["Sangat Nyata", "Gaya Cyberpunk", "3D Pixar Style", "Anime Style"]
+    st.divider()
 
-    try:
-        api_key_groq = st.secrets["GROQ_API_KEY"]
-    except:
-        api_key_groq = None
+    t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
 
-    # --- 2. AREA PENGATURAN KARAKTER ---
-    st.subheader("👤 Pengaturan Karakter")
-    c_add, c_rem, c_spacer = st.columns([0.25, 0.25, 0.5])
-    with c_add:
-        if st.button("➕ Tambah Karakter", use_container_width=True) and st.session_state.jumlah_karakter < 4:
-            st.session_state.jumlah_karakter += 1
-            st.rerun()
-    with c_rem:
-        if st.button("➖ Kurang Karakter", use_container_width=True) and st.session_state.jumlah_karakter > 1:
-            st.session_state.jumlah_karakter -= 1
-            st.rerun()
+    # ==========================================================================
+    # TAB: ANATOMY (SEMUA DATA ISOLASI DI SINI)
+    # ==========================================================================
+    with t_anatomi:
+        # --- 2. MASTER DATA ANATOMY (ISOLASI) ---
+        MASTER_CHAR_LAB = {
+            "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
+            "BALUNG": {
+                "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
+                "pakaian": {
+                    "Original": "Skeleton only, no clothes, pure anatomical look.",
+                    "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
+                    "Jubah Kerajaan": "Royal crimson velvet tunic, heavy gold-threaded embroidery, high standing collar.",
+                    "Baju Kantoran": "Formal white button-up shirt with a sleek black tie and charcoal trousers.",
+                    "Hoodie Hitam": "Streetwear style oversized black hoodie with premium fabric texture.",
+                    "Versi Sultan": "Charcoal three-piece suit, metallic gold brocade patterns, black silk shirt, thick gold link chain, diamond-encrusted watch."
+                }
+            }
+        }
 
-    list_karakter = []
-    with st.expander("👥 DETAIL KARAKTER", expanded=True):
-        char_cols = st.columns(2)
-        for i in range(st.session_state.jumlah_karakter):
-            if i not in st.session_state.memori_n: st.session_state.memori_n[i] = ""
-            if i not in st.session_state.memori_s: st.session_state.memori_s[i] = ""
-            with char_cols[i % 2]:
-                with st.container(border=True):
-                    label_k = "Karakter Utama" if i == 0 else f"Karakter {i+1}"
-                    st.markdown(f"**{label_k}**")
-                    st.session_state.memori_n[i] = st.text_input(f"N{i}", value=st.session_state.memori_n[i], key=f"inp_n_{i}", placeholder="Nama...", label_visibility="collapsed")
-                    st.session_state.memori_s[i] = st.text_input(f"S{i}", value=st.session_state.memori_s[i], key=f"inp_s_{i}", placeholder="Detail sifat/fisik...", label_visibility="collapsed")
-                    n_f = st.session_state.memori_n[i] if st.session_state.memori_n[i] else label_k
-                    list_karakter.append(f"{i+1}. {n_f.upper()}: {st.session_state.memori_s[i]}")
+        # --- 3. MAPPING SETTING ANATOMY ---
+        style_map_lab = {
+            "Sinematik": "ANATOMI Cinematic 8k", 
+            "Tulang Menyala (Neon)": "X-Ray style, glowing skeletal structure, neon accents", 
+            "3D Animasi": "Unreal Engine 5.4 render, high-end 3D"
+        }
+        light_map_lab = {
+            "Garis Tepi": "strong rim lighting, backlit", 
+            "Neon Glow": "neon bioluminescent glow", 
+            "Bertekstur": "volumetric lighting, cinematic god rays", 
+            "Soft Studio": "soft studio lighting, high clarity"
+        }
+        frame_map_lab = {
+            "Sangat Dekat": "Extreme Close-up", 
+            "Medium": "Medium Shot", 
+            "Seluruh Badan": "Wide Shot"
+        }
+        move_map_lab = {
+            "Diam": "Static camera", 
+            "Zoom Pelan": "Slow Dolly In, gradual zoom", 
+            "Muter (Orbit)": "Orbit camera movement", 
+            "Geser (Pan)": "Horizontal pan",
+            "Ikuti Kamera": "Follow shot, camera following subject"
+        }
 
-    st.write("---")
+        # --- 4. FETCH DATA ANATOMY ---
+        df_ide = pd.DataFrame()
+        try:
+            q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
+            res = supabase.table("ide_pintar").select("*").or_(q).execute()
+            df_ide = pd.DataFrame(res.data)
+        except: pass
 
-    # --- 3. TAB MENU (MANUAL & OTOMATIS) ---
-    tab_manual, tab_otomatis = st.tabs(["🛠️ Mode Manual", "⚡ Mode Otomatis"])
+        # --- 5. DROPDOWN PROYEK ANATOMY ---
+        topik_list = ["-- MODE MANUAL --"]
+        if not df_ide.empty:
+            topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
+        topik_sel = st.selectbox("📥 Pilih Project (Anatomy):", topik_list)
 
-    # MODE MANUAL
-    with tab_manual:
-        with st.expander("📝 KONFIGURASI MANUAL", expanded=True):
-            col_m1, col_m2 = st.columns([2, 1])
-            with col_m1:
-                st.markdown("**📝 Topik Utama**")
-                topik_m = st.text_area("T", placeholder="Ketik ide ceritanya di sini...", height=245, key="m_topik", label_visibility="collapsed")
-            with col_m2:
-                st.markdown("**🎭 Pola & Style**")
-                pola_m = st.selectbox("Pola", opsi_pola, key="m_pola")
-                visual_m = st.selectbox("Visual", opsi_visual, key="m_visual")
-                adegan_m = st.number_input("Jumlah Adegan", 3, 15, 12, key="m_adegan")
+        current_row = {}
+        if topik_sel != "-- MODE MANUAL --":
+            df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
+            if not df_active.empty:
+                current_row = df_active.iloc[0].to_dict()
+                if current_row['status'] == 'READY':
+                    supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
 
-            if st.button("✨ GENERATE NASKAH CERITA", use_container_width=True, type="primary"):
-                if topik_m:
-                    str_k = "\n".join(list_karakter)
-                    mantra_sakti = f"""
-Kamu adalah Scriptwriter Pro & Creative Director dari Pintar Media. 
-Tugasmu: Buat naskah YouTube Shorts yang VIRAL, NYESEK, dan SAVAGE dalam format TABEL MARKDOWN.
+        # --- 6. PRODUCTION BOARD ---
+        with st.expander("🛠️ PRODUCTION BOARD: ANATOMY", expanded=True):
+            
+            # --- BOX NASKAH FULL VO (STAY ON TOP) ---
+            st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
+            full_script = ""
+            if current_row:
+                try:
+                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
+                    full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
+                except: pass
+            st.text_area("MASTER_VO", value=full_script, height=120, label_visibility="collapsed", placeholder="Naskah lengkap project...")
 
---- DAFTAR KARAKTER & DETAIL FISIK ---
-{str_k}
+            st.divider()
 
---- KONSEP UTAMA ---
-Topik: {topik_m}
-Pola: {pola_m}
-Total Adegan: {adegan_m} (WAJIB {adegan_m} ADEGAN)
+            # Row 1: Karakter & DNA
+            r1c1, r1c2 = st.columns(2)
+            with r1c1:
+                st.markdown('<p class="small-label">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
+                char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=1, label_visibility="collapsed")
+                
+                st.markdown('<p class="small-label">👕 OUTFIT / PAKAIAN</p>', unsafe_allow_html=True)
+                outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
+                db_baju = current_row.get('wardrobe', "Original")
+                idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
+                wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
+            
+            with r1c2:
+                st.markdown('<p class="small-label">🧬 MANTRA DNA (BISA EDIT)</p>', unsafe_allow_html=True)
+                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
+                dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=False, label_visibility="collapsed")
 
---- LOGIKA ALUR (STRATEGI PATAHAN) ---
-{f''' - ALUR REVENGE: Adegan 1-5 (Dihina/Diterlantarkan), Adegan 6 (CTA Emosional menyatu di dialog), Adegan 7-11 (Pembalasan Savage/Anomali Gila), Adegan 12 (Ending Silent/Puas).''' if pola_m == opsi_pola[0] else ''}
-{f''' - ALUR EMPATHY: Adegan 1-5 (Masalah nyesek/Harapan hancur), Adegan 6 (CTA Doa/Like menyatu di dialog), Adegan 7-11 (Perjuangan/Keajaiban), Adegan 12 (Ending Haru Mata Berkaca-kaca).''' if pola_m == opsi_pola[1] else ''}
-{f''' - ALUR ABSURD RACE: Adegan 1-4 (Start kacau), Adegan 5-8 (Chaos/Anomali lomba), Adegan 9-10 (Momen Kritis), Adegan 11-12 (Hasil & CTA Vote pemenang via Like/Subs).''' if pola_m == opsi_pola[2] else ''}
-{f''' - ALUR KNOWLEDGE: Adegan 1-3 (Fakta mengejutkan), Adegan 4-6 (Dampak buruk), Adegan 7-10 (Kondisi 1 tahun kemudian/Anomali), Adegan 11-12 (Kesimpulan Visual).''' if pola_m == opsi_pola[3] else ''}
+            # Row 2: Input Visual & Setting (STRUKTUR ASLI)
+            col_kiri, col_kanan = st.columns([2, 1])
+            
+            with col_kiri:
+                st.markdown('<p class="small-label">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
+                aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=120, label_visibility="collapsed")
+                
+                sub_kiri, sub_kanan = st.columns(2)
+                with sub_kiri:
+                    st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                    env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
+                with sub_kanan:
+                    st.markdown('<p class="small-label">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
+                    vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=70, disabled=True, label_visibility="collapsed")
+            
+            with col_kanan:
+                st.markdown('<p class="small-label">⚙️ SETTING VISUAL</p>', unsafe_allow_html=True)
+                s1, s2 = st.columns(2)
+                with s1:
+                    st.markdown('<p class="small-label">🎨 GAYA</p>', unsafe_allow_html=True)
+                    st_sel = st.selectbox("S1", list(style_map_lab.keys()), label_visibility="collapsed")
+                with s2:
+                    st.markdown('<p class="small-label">💡 CAHAYA</p>', unsafe_allow_html=True)
+                    lt_sel = st.selectbox("S2", list(light_map_lab.keys()), label_visibility="collapsed")
+                
+                s3, s4 = st.columns(2)
+                with s3:
+                    st.markdown('<p class="small-label">📸 FRAME</p>', unsafe_allow_html=True)
+                    fr_sel = st.selectbox("S3", list(frame_map_lab.keys()), label_visibility="collapsed")
+                with s4:
+                    st.markdown('<p class="small-label">🎥 GERAK</p>', unsafe_allow_html=True)
+                    mv_sel = st.selectbox("S4", list(move_map_lab.keys()), label_visibility="collapsed")
 
---- STANDAR PRODUKSI (WAJIB PATUH) ---
-1. NASKAH_VISUAL: WAJIB DETAIL & EMOSIONAL (Min 35 kata). Fokus pada mikro-ekspresi (bibir bergetar, rahang mengeras, mata kosong) dan detail lingkungan yang berantakan/nyata.
-2. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus pendek, natural, dan 'nyelekit'.
-3. LOKASI: Wajib DESKRIPTIF (Min 15 kata). Gambarkan suasana, benda sekitar, dan cuaca yang mendukung mood.
-4. NO MORAL & NO TEXT: Jangan ceramah! Biarkan penonton yang menyimpulkan. Tanpa teks di layar.
-
---- FORMAT TABEL (KOLOM GSHEET) ---
-ID_IDE | JUDUL | STATUS | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | STYLE | UKURAN_GAMBAR | LIGHTING | ARAH_KAMERA | GERAKAN | LOKASI
-
---- DROPDOWN VALID (WAJIB DARI LIST INI) ---
-- STYLE: [{visual_m}]
-- UKURAN_GAMBAR: [Seluruh Badan / Setengah Badan / Sangat Dekat / Wajah & Bahu]
-- LIGHTING: [Siang Alami / Malam Indigo / Senja Cerah / Neon Cyberpunk / Fajar]
-- ARAH_KAMERA: [Sejajar Mata / Dari Atas / Dari Bawah / Dari Samping / Dari Belakang]
-- GERAKAN: [Diam (Tetap Napas) / Maju Perlahan / Ikuti Karakter / Goyang (Handheld)]
-
-Balas HANYA tabel Markdown. No Basa-basi.
-"""
-                    st.divider()
-                    st.success("✨ **Mantra ide cerita Siap!**")
-                    st.code(mantra_sakti, language="text")
-
-    # MODE OTOMATIS
-    with tab_otomatis:
-        with st.expander("⚡ KONFIGURASI OTOMATIS", expanded=True):
-            col_o1, col_o2 = st.columns([2, 1])
-            with col_o1:
-                st.markdown("**📝 Topik Utama**")
-                topik_o = st.text_area("O", placeholder="Ketik ide ceritanya di sini...", height=245, key="o_topik", label_visibility="collapsed")
-            with col_o2:
-                st.markdown("**⚙️ Konfigurasi Otomatis**")
-                pola_o = st.selectbox("Pola Cerita", opsi_pola, key="o_pola")
-                adegan_o = st.number_input("Jumlah Adegan", 3, 15, 12, key="o_adegan_api")
-
-            if st.button("🔥 GENERATE NASKAH CERITA", use_container_width=True, type="primary"):
-                if api_key_groq and topik_o:
-                    with st.spinner("lagi ngetik naskah..."):
-                        try:
-                            headers = {"Authorization": f"Bearer {api_key_groq}", "Content-Type": "application/json"}
-                            str_k = "\n".join(list_karakter)
-                            
-                            prompt_otomatis = f"""
-Kamu adalah Sutradara Senior & Creative Director Pintar Media yang spesialis membuat konten YouTube Shorts dengan retensi tinggi. 
-Tugasmu: Buat naskah yang emosional, nyesek, dan punya plot twist "Savage" dalam format TABEL MARKDOWN.
-
---- DAFTAR KARAKTER & DETAIL FISIK ---
-{str_k}
-
-KONSEP:
-Topik: {topik_o}
-Pola: {pola_o}
-Total Adegan: {adegan_o} (WAJIB {adegan_o} ADEGAN)
-
---- ATURAN MAIN (STRICT PRODUKSI) ---
-1. NASKAH_VISUAL: WAJIB DESKRIPTIF & EMOSIONAL (Min 40 kata per adegan). Jangan hanya tulis aksi, tapi jelaskan MIKRO-EKSPRESI (mata berkaca-kaca, tangan gemetar, rahang mengeras, senyum sinis). Fokus pada detail penderitaan atau kesombongan karakter agar AI Video dapat menangkap emosinya.
-2. LOKASI: Harus Detail (Min 20 kata). Gambarkan suasana yang mendukung mood (debu beterbangan, rintik hujan, cahaya senja remang, atau tumpukan sampah/benda berantakan) agar terlihat nyata dan sinematik.
-3. DIALOG: HARAM BAHASA BAKU. Gunakan bahasa tongkrongan (lo, gue, emangnya, nggak, kok, sih). Dialog harus tajam, pendek, dan tidak bertele-tele. Gunakan jeda "..." untuk momen nyesek.
-4. NO MORAL & NO TEXT: Jangan ada ceramah atau nasihat bijak di akhir. Biarkan visual yang bicara. Dilarang ada teks/subtitle di dalam video.
-5. STRUKTUR ALUR PATAHAN (WAJIB PROPORSI):
-   - Adegan 1 sampai 5: FASE NYESEK (Konflik, penghinaan, atau harapan karakter yang dihancurkan secara tragis).
-   - Adegan 6: MOMEN PUNCAK & CTA. Masukkan ajakan Like/Subscribe yang menyatu dengan dialog emosional (Contoh: "Kalau kalian peduli sama nasib bapak ini, klik Like dan doakan di komentar ya...").
-   - Adegan 7 sampai 11: FASE SAVAGE/ANOMALI (Pembalasan dendam tak terduga, plot twist gila, atau kejadian aneh yang bikin penonton puas).
-   - Adegan 12: ENDING SILENT. Tanpa dialog, tutup dengan close-up ekspresi wajah karakter yang menunjukkan kemenangan atau kesedihan mendalam.
-
---- FORMAT TABEL (WAJIB 5 KOLOM) ---
-JUDUL | NASKAH_VISUAL | DIALOG_ACTOR_1 | DIALOG_ACTOR_2 | LOKASI
-
-Balas HANYA tabel Markdown tanpa penjelasan atau basa-basi apa pun.
-"""
-                            payload = {
-                                "model": "llama-3.3-70b-versatile", 
-                                "messages": [{"role": "user", "content": prompt_otomatis}],
-                                "temperature": 0.7
-                            }
-                            res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-                            st.session_state.lab_hasil_otomatis = res.json()['choices'][0]['message']['content']
-                            st.toast("Naskah Berhasil Dibuat!", icon="✅")
-                        except Exception as e:
-                            st.error(f"Error: {e}")
-
-        if st.session_state.lab_hasil_otomatis:
-            with st.expander("🎬 NASKAH JADI (OTOMATIS)", expanded=True):
-                st.markdown(st.session_state.lab_hasil_otomatis)
+            # --- GENERATE ACTION ---
+            if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
-                btn_col1, btn_col2, btn_col3 = st.columns(3)
-                with btn_col1:
-                    if st.button("🚀 KIRIM KE RUANG PRODUKSI", use_container_width=True):
-                        if 'data_produksi' not in st.session_state: st.session_state.data_produksi = {}
-                        st.session_state.naskah_siap_produksi = st.session_state.lab_hasil_otomatis
-                        st.toast("Naskah sukses terkirim!", icon="🚀")
-                with btn_col2:
-                    if st.button("🗑️ BERSIHKAN NASKAH", use_container_width=True):
-                        st.session_state.lab_hasil_otomatis = ""
-                        st.rerun()
-                with btn_col3:
-                    st.download_button("📥 DOWNLOAD (.txt)", st.session_state.lab_hasil_otomatis, file_name="naskah.txt", use_container_width=True)
+                bumbu = f"STYLE: {style_map_lab[st_sel]}, LIGHTING: {light_map_lab[lt_sel]}"
+                res1, res2 = st.columns(2)
+                with res1:
+                    st.success("🖼️ **GEMINI IMAGE PROMPT**")
+                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. {bumbu}, {frame_map_lab[fr_sel]} framing.")
+                with res2:
+                    st.warning("🎥 **VEO VIDEO PROMPT**")
+                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {move_map_lab[mv_sel]}. {bumbu}.")
+
+            if current_row:
+                if st.button("✅ SELESAI & LANJUT", use_container_width=True):
+                    supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
+                    st.rerun()
+
+        # --- 7. BLOK BRAINSTORMING (TERPISAH DI LUAR PRODUCTION BOARD) ---
+        st.write("") # Spasi dikit biar gak nempel
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI", expanded=False):
+            st.markdown('<p class="small-label">KETIK TOPIK / IDE SINGKAT</p>', unsafe_allow_html=True)
+            ide_singkat = st.text_input("G_IDE", placeholder="Misal: Kenapa mata bisa berkedip...", label_visibility="collapsed")
+            
+            if ide_singkat:
+                mantra_raw = f"""Gue asisten produksi PINTAR AI. Karakter utama: BALUNG (Skeleton transparan). 
+Tugas lo: Buatkan naskah video 60 detik (5-7 adegan) tentang: {ide_singkat}.
+FORMAT OUTPUT (Tabel): 
+- No Adegan
+- Narasi VO (Bahasa Indonesia santai)
+- Visual Action (Bahasa Inggris, fokus gerakan tubuh Balung)
+Note: Gak usah kasih setting kamera atau lighting. Gue mau atur sendiri."""
+                
+                st.code(mantra_raw, language="text")
+                st.warning("Staff! Copy mantra di atas ke Gemini. Masalah kamera & lighting lo atur sendiri pake panel produksi di atas!")
+                
+    # --- TAB LAIN (STANDBY) ---
+    with t_grandma: st.info("👵 Grandma Mode Standby.")
+    with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
+    with t_random: st.info("🎲 Random Mode Standby.")
+
+    # --- TAB LAIN (STANDBY) ---
+    with t_grandma: st.info("👵 Grandma Mode Standby.")
+    with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
+    with t_random: st.info("🎲 Random Mode Standby.")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4644,9 +4659,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
