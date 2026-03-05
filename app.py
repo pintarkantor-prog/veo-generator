@@ -878,7 +878,7 @@ def tampilkan_navigasi_sidebar():
     return pilihan
 
 def tampilkan_ai_lab():
-    st.title("🧠 PINTAR AI LAB - MULTI SCENE PRODUCTION")
+    st.title("🧠 PINTAR AI LAB - PRODUCTION HUB")
     
     # 1. FETCH DATA DARI SUPABASE
     df_ide = pd.DataFrame()
@@ -892,7 +892,7 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (MULTI-SCENE LOSS KE BAWAH)
+    # MESIN 1: ANATOMY (FOKUS NARASI VO - TANPA DIALOG)
     # ==========================================================================
     with t_anatomi:
         st.subheader("🦴 ANATOMY MASTER GENERATOR (MULTI-SCENE)")
@@ -900,7 +900,7 @@ def tampilkan_ai_lab():
         id_pilih = None
         df_adegan = pd.DataFrame()
 
-        # --- A. LOADER IDE (UNTUK NARIK SELURUH ADEGAN) ---
+        # --- A. LOADER IDE ---
         if not df_ide.empty:
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
@@ -910,12 +910,11 @@ def tampilkan_ai_lab():
                                         key="loader_a")
                 
                 if topik_sel != "-- Ketik Manual --":
-                    # Ambil SEMUA baris yang punya id_ide yang sama
                     id_pilih = df_unik[df_unik['topik'] == topik_sel].iloc[0]['id_ide']
                     df_adegan = df_a[df_a['id_ide'] == id_pilih].sort_values('no_adegan')
                     st.success(f"✅ {len(df_adegan)} Adegan '{topik_sel}' Berhasil ditarik!")
 
-        # --- B. GLOBAL IDENTITY LOCK (Cukup Setting 1x buat Semua Adegan) ---
+        # --- B. GLOBAL IDENTITY LOCK (SKS) ---
         with st.expander("🛡️ GLOBAL IDENTITY LOCK (Karakter SKS)", expanded=True):
             c1, c2 = st.columns(2)
             char_sks = c1.text_input("👤 Nama Karakter Utama", value="MR. TULANG", key="char_name_a")
@@ -923,15 +922,15 @@ def tampilkan_ai_lab():
                 value="Hyper-realistic human skeleton, aged bone texture, translucent ribcage, cinematic rim lighting, 8k.", 
                 key="dna_global_a", height=80)
             
-            soul_name = c2.text_input("👤 Style Gerakan", value="Fluid Anatomical", key="soul_name_a")
-            soul_sks = c2.text_area("⚙️ Motion Engine", 
+            motion_style = c2.text_input("👤 Style Gerakan", value="Fluid Anatomical", key="soul_name_a")
+            motion_engine = c2.text_area("⚙️ Motion Engine", 
                 value="High-fidelity physical simulation, realistic organ vibration, electricity simulation, slow-mo.", 
                 key="soul_global_a", height=80)
 
         st.markdown("---")
 
-        # --- C. PRODUCTION LINE (LOOPING ADEGAN KE BAWAH) ---
-        # Jika manual, kita kasih 1 adegan kosong. Jika dari DB, kita looping sebanyak isi DB.
+        # --- C. PRODUCTION LINE (LOOPING ADEGAN LOSS KE BAWAH) ---
+        # Pakai data dari DB kalau ada, kalau nggak pakai 1 slot kosong buat manual
         list_loop = df_adegan if not df_adegan.empty else pd.DataFrame([{"no_adegan": 1, "narasi": "", "id": "manual"}])
 
         for _, row in list_loop.iterrows():
@@ -942,27 +941,33 @@ def tampilkan_ai_lab():
                 col_naskah, col_set = st.columns([1.5, 1])
                 
                 with col_naskah:
-                    naskah_sc = st.text_area(f"📝 NASKAH VISUAL S{no_sc}", value=row['narasi'], height=150, key=f"nas_a_{row['id']}")
-                    dialog_sc = st.text_input(f"💬 Dialog S{no_sc}", value=row.get('dialog_1', ''), key=f"dia_a_{row['id']}")
+                    # Fokus cuma ke naskah visual/narasi cerita
+                    naskah_sc = st.text_area(f"📝 NASKAH VISUAL & NARASI S{no_sc}", value=row['narasi'], height=200, key=f"nas_a_{row['id']}")
 
                 with col_set:
-                    style_sc = st.selectbox(f"🎨 Style S{no_sc}", ["Cinematic RAW", "UE 5.4 Render", "X-Ray"], key=f"sty_a_{row['id']}")
-                    lighting_sc = st.selectbox(f"💡 Lighting S{no_sc}", ["Rim Light", "Neon Glow", "Volumetric"], key=f"lt_a_{row['id']}")
-                    camera_sc = st.selectbox(f"🎥 Camera S{no_sc}", ["Extreme Macro", "Close-up", "Dynamic"], key=f"cam_a_{row['id']}")
+                    style_sc = st.selectbox(f"🎨 Style S{no_sc}", ["ANATOMI Cinematic 8k RAW", "UE 5.4 Render", "X-Ray"], key=f"sty_a_{row['id']}")
+                    lighting_sc = st.selectbox(f"💡 Lighting S{no_sc}", ["Cinematic Rim Light", "Neon Glow", "Volumetric"], key=f"lt_a_{row['id']}")
+                    camera_sc = st.selectbox(f"🎥 Camera S{no_sc}", ["Extreme Macro", "Close-up Focus", "Dynamic"], key=f"cam_a_{row['id']}")
 
                 # TOMBOL GENERATE PER ADEGAN
                 if st.button(f"🔥 GENERATE PROMPT ADEGAN {no_sc}", key=f"btn_gen_a_{row['id']}", use_container_width=True):
                     st.divider()
                     r1, r2, r3 = st.columns(3)
+                    
                     with r1:
-                        st.error("🎙️ **ELEVENLABS**")
-                        st.code(f"Voice: Deep Authority\nScript: {naskah_sc}\nDialog: {dialog_sc}")
+                        st.error("🎙️ **ELEVENLABS (VO)**")
+                        # Output langsung berupa narasi cerita untuk VO
+                        st.code(f"Voice: Deep Authority / Storyteller\nScript: {naskah_sc}")
+                        
                     with r2:
                         st.success("🖼️ **IMAGE (GEMINI)**")
-                        st.code(f"DNA: {dna_sks}. SCENE: {naskah_sc}. STYLE: {style_sc}, {lighting_sc}, 8k RAW.")
+                        # Prompt gambar yang konsisten pake DNA SKS
+                        st.code(f"CHARACTER: {char_sks}. DNA: {dna_sks}. SCENE: {naskah_sc}. STYLE: {style_sc}, {lighting_sc}, 8k RAW.")
+                        
                     with r3:
                         st.warning("🎥 **VIDEO (VEO)**")
-                        st.code(f"ENGINE: {char_sks}. MOTION: {soul_sks}, {camera_sc}. ACTION: {naskah_sc}, {style_sc}.")
+                        # Prompt video yang luwes pake Motion Engine
+                        st.code(f"VEO ENGINE: {char_sks}. MOTION: {motion_engine}, {camera_sc}. ACTION: {naskah_sc}, {style_sc}.")
 
         # --- D. GLOBAL FINISH ---
         if id_pilih:
@@ -4562,6 +4567,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
