@@ -2708,7 +2708,7 @@ def tampilkan_area_staf():
                 st.write("• **TUNJANGAN KERJA**: Rp 500.000 (target 70 video perbulan).")
 
             # --- III. MODUL PANDUAN (FULL DETAIL A-E) ---
-            with st.expander("##### 📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
+            with st.expander("📜 III. MODUL PANDUAN STRUKTUR KONTEN AI (HQ)", expanded=False):
                 html_konten_pdf = f"""
                 <div style="background: white; padding: 50px; font-family: 'Arial', sans-serif; color: black; line-height: 1.6; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px;">
                     
@@ -4528,3 +4528,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
