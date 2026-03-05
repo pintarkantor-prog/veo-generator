@@ -775,7 +775,7 @@ def pasang_css_kustom():
         button[title="Copy to clipboard"] {
             background-color: #238636 !important;
             color: white !important;
-            transform: scale(5.6); /* Memperbesar ukuran ikon */
+            transform: scale(1.6); /* Memperbesar ukuran ikon */
             margin-right: 15px !important;
             margin-top: 15px !important;
             border-radius: 6px !important;
@@ -786,7 +786,7 @@ def pasang_css_kustom():
         /* Efek saat kursor menempel (Hover) */
         button[title="Copy to clipboard"]:hover {
             background-color: #2ea043 !important;
-            transform: scale(5.8) !important;
+            transform: scale(1.8) !important;
             cursor: pointer !important;
         }
 
@@ -4641,6 +4641,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
