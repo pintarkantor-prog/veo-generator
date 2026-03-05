@@ -883,59 +883,60 @@ def tampilkan_ai_lab():
         st.error("🚫 Akses Terbatas.")
         st.stop()
 
-    # --- 2. MASTER DATA (BALUNG ONLY) ---
-    MASTER_CHAR_LAB = {
-        "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
-        "BALUNG": {
-            "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
-            "pakaian": {
-                "Original": "Skeleton only, no clothes, pure anatomical look.",
-                "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
-                "Jubah Kerajaan": "Royal crimson velvet tunic, heavy gold-threaded embroidery, high standing collar.",
-                "Baju Kantoran": "Formal white button-up shirt with a sleek black tie and charcoal trousers.",
-                "Hoodie Hitam": "Streetwear style oversized black hoodie with premium fabric texture.",
-                "Versi Sultan": "Charcoal three-piece suit, metallic gold brocade patterns, black silk shirt, thick gold link chain, diamond-encrusted watch."
-            }
-        }
-    }
-
-    # --- 3. MAPPING SETTING ---
-    style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
-    light_map_lab = {"Rim Light": "strong rim lighting", "Neon Glow": "neon glow", "Volumetric": "cinematic rays", "Soft Studio": "soft lighting"}
-    frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Wide": "Wide Shot"}
-    move_map_lab = {"Diam": "Static", "Maju": "Slow Dolly In", "Muter": "Orbit", "Geser": "Pan"}
-
     st.title("🧠 PINTAR AI LAB")
-
-    # --- FETCH DATA ---
-    df_ide = pd.DataFrame()
-    try:
-        q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
-        res = supabase.table("ide_pintar").select("*").or_(q).execute()
-        df_ide = pd.DataFrame(res.data)
-    except: pass
-
-    topik_list = ["-- MODE MANUAL --"]
-    if not df_ide.empty:
-        topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
-    topik_sel = st.selectbox("📥 Pilih Project:", topik_list)
-
-    current_row = {}
-    if topik_sel != "-- MODE MANUAL --":
-        df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
-        if not df_active.empty:
-            current_row = df_active.iloc[0].to_dict()
-            if current_row['status'] == 'READY':
-                supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
-
     st.divider()
 
     t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
 
     # ==========================================================================
-    # TAB: ANATOMY (DIBUNGKUS EXPANDER SESUAI MAU LO)
+    # TAB: ANATOMY (SEMUA DATA ISOLASI DI SINI)
     # ==========================================================================
     with t_anatomi:
+        # --- 2. MASTER DATA ANATOMY (ISOLASI) ---
+        MASTER_CHAR_LAB = {
+            "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
+            "BALUNG": {
+                "fisik": "Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.",
+                "pakaian": {
+                    "Original": "Skeleton only, no clothes, pure anatomical look.",
+                    "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
+                    "Jubah Kerajaan": "Royal crimson velvet tunic, heavy gold-threaded embroidery, high standing collar.",
+                    "Baju Kantoran": "Formal white button-up shirt with a sleek black tie and charcoal trousers.",
+                    "Hoodie Hitam": "Streetwear style oversized black hoodie with premium fabric texture.",
+                    "Versi Sultan": "Charcoal three-piece suit, metallic gold brocade patterns, black silk shirt, thick gold link chain, diamond-encrusted watch."
+                }
+            }
+        }
+
+        # --- 3. MAPPING SETTING ANATOMY ---
+        style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
+        light_map_lab = {"Rim Light": "strong rim lighting", "Neon Glow": "neon glow", "Volumetric": "cinematic rays", "Soft Studio": "soft lighting"}
+        frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Wide": "Wide Shot"}
+        move_map_lab = {"Diam": "Static", "Maju": "Slow Dolly In", "Muter": "Orbit", "Geser": "Pan"}
+
+        # --- 4. FETCH DATA ANATOMY ---
+        df_ide = pd.DataFrame()
+        try:
+            q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
+            res = supabase.table("ide_pintar").select("*").or_(q).execute()
+            df_ide = pd.DataFrame(res.data)
+        except: pass
+
+        # --- 5. DROPDOWN PROYEK ANATOMY ---
+        topik_list = ["-- MODE MANUAL --"]
+        if not df_ide.empty:
+            topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
+        topik_sel = st.selectbox("📥 Pilih Project (Anatomy):", topik_list)
+
+        current_row = {}
+        if topik_sel != "-- MODE MANUAL --":
+            df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
+            if not df_active.empty:
+                current_row = df_active.iloc[0].to_dict()
+                if current_row['status'] == 'READY':
+                    supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
+
+        # --- 6. PRODUCTION BOARD ---
         with st.expander("🛠️ PRODUCTION BOARD: ANATOMY", expanded=True):
             
             # Row 1: Karakter & DNA
@@ -1004,9 +1005,15 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-    with t_grandma: st.info("Grandma Mode Standby")
-    with t_minecraft: st.info("Minecraft Mode Standby")
-    with t_random: st.info("Random Mode Standby")
+    # ==========================================================================
+    # TAB LAIN: TETAP BERSIH & STANDBY
+    # ==========================================================================
+    with t_grandma: 
+        st.info("👵 Grandma Mode Standby - Data isolated.")
+    with t_minecraft: 
+        st.info("⛏️ Minecraft Mode Standby - Data isolated.")
+    with t_random: 
+        st.info("🎲 Random Mode Standby - Data isolated.")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4584,6 +4591,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
