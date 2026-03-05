@@ -908,16 +908,29 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MAPPING SETTING ANATOMY (UPGRADED) ---
-        style_map_lab = {"Sinematik": "ANATOMI Cinematic 8k", "X-Ray Neon": "X-Ray style, glowing skeletal structure, neon accents", "3D Animasi": "Unreal Engine 5.4 render"}
-        light_map_lab = {"Garis Tepi": "strong rim lighting", "Neon Glow": "neon glow", "Bertekstur": "volumetric rays", "Soft Studio": "soft lighting"}
-        frame_map_lab = {"Detail": "Extreme Close-up", "Medium": "Medium Shot", "Seluruh Badan": "Wide Shot"}
+        # --- 3. MAPPING SETTING ANATOMY ---
+        style_map_lab = {
+            "Sinematik": "ANATOMI Cinematic 8k", 
+            "Tulang Menyala (Neon)": "X-Ray style, glowing skeletal structure, neon accents", 
+            "3D Animasi": "Unreal Engine 5.4 render, high-end 3D"
+        }
+        light_map_lab = {
+            "Garis Tepi": "strong rim lighting, backlit", 
+            "Neon Glow": "neon bioluminescent glow", 
+            "Bertekstur": "volumetric lighting, cinematic god rays", 
+            "Soft Studio": "soft studio lighting, high clarity"
+        }
+        frame_map_lab = {
+            "Sangat Dekat": "Extreme Close-up", 
+            "Medium": "Medium Shot", 
+            "Seluruh Badan": "Wide Shot"
+        }
         move_map_lab = {
             "Diam": "Static camera", 
             "Zoom Pelan": "Slow Dolly In, gradual zoom", 
             "Muter (Orbit)": "Orbit camera movement", 
             "Geser (Pan)": "Horizontal pan",
-            "Ikuti Kamera": "Follow shot, camera following the subject"
+            "Ikuti Kamera": "Follow shot, camera following subject"
         }
 
         # --- 4. FETCH DATA ANATOMY ---
@@ -942,16 +955,21 @@ def tampilkan_ai_lab():
                 if current_row['status'] == 'READY':
                     supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
 
-        # --- MANTRA MANUAL (ASISTEN STAFF) ---
-        with st.expander("🧬 ASISTEN MANTRA (QUICK COPY)", expanded=False):
-            st.info("Gunakan mantra ini untuk membantu Gemini Image/Veo jika visual kurang pas:")
-            st.code("Buatkan visual yang sangat detail dengan pencahayaan dramatis, fokus pada tekstur organ dalam yang bercahaya.")
-            st.code("Tambahkan efek partikel debu di udara (volumetric lighting) agar suasana terlihat lebih nyata.")
-            st.code("Pastikan kulit transparan karakter terlihat memiliki subsurface scattering yang realistis.")
-
         # --- 6. PRODUCTION BOARD ---
         with st.expander("🛠️ PRODUCTION BOARD: ANATOMY", expanded=True):
             
+            # --- BOX NASKAH FULL VO (STAY ON TOP) ---
+            st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
+            full_script = ""
+            if current_row:
+                try:
+                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
+                    full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
+                except: pass
+            st.text_area("MASTER_VO", value=full_script, height=120, label_visibility="collapsed", placeholder="Naskah lengkap project...")
+
+            st.divider()
+
             # Row 1: Karakter & DNA
             r1c1, r1c2 = st.columns(2)
             with r1c1:
@@ -965,25 +983,27 @@ def tampilkan_ai_lab():
                 wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
             
             with r1c2:
-                st.markdown('<p class="small-label">🧬 MANTRA DNA (OTOMATIS)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🧬 MANTRA DNA (BISA EDIT)</p>', unsafe_allow_html=True)
                 dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
                 dna_final = st.text_area("DNA_F", value=dna_text, height=126, disabled=False, label_visibility="collapsed")
 
-            # Row 2: Input Visual & Setting
+            # Row 2: Input Visual & Setting (STRUKTUR ASLI)
             col_kiri, col_kanan = st.columns([2, 1])
             
             with col_kiri:
-                # NARASI VO SEKARANG DALAM EXPANDER (Selalu muncul)
-                with st.expander("🎙️ NARASI VO / IDE BARU", expanded=True):
-                    vo_input = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=80, label_visibility="collapsed", placeholder="Ketik narasi atau ide baru di sini...")
-
                 st.markdown('<p class="small-label">🎥 AKSI (GERAKAN KARAKTER)</p>', unsafe_allow_html=True)
                 aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=120, label_visibility="collapsed")
                 
-                st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
+                sub_kiri, sub_kanan = st.columns(2)
+                with sub_kiri:
+                    st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                    env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=70, label_visibility="collapsed")
+                with sub_kanan:
+                    st.markdown('<p class="small-label">🎙️ PANDUAN VO (ABU-ABU)</p>', unsafe_allow_html=True)
+                    vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=70, disabled=True, label_visibility="collapsed")
             
             with col_kanan:
+                st.markdown('<p class="small-label">⚙️ SETTING VISUAL</p>', unsafe_allow_html=True)
                 s1, s2 = st.columns(2)
                 with s1:
                     st.markdown('<p class="small-label">🎨 GAYA</p>', unsafe_allow_html=True)
@@ -1017,15 +1037,10 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-    # ==========================================================================
-    # TAB LAIN: TETAP BERSIH & STANDBY
-    # ==========================================================================
-    with t_grandma: 
-        st.info("👵 Grandma Mode Standby - Data isolated.")
-    with t_minecraft: 
-        st.info("⛏️ Minecraft Mode Standby - Data isolated.")
-    with t_random: 
-        st.info("🎲 Random Mode Standby - Data isolated.")
+    # --- TAB LAIN (STANDBY) ---
+    with t_grandma: st.info("👵 Grandma Mode Standby.")
+    with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
+    with t_random: st.info("🎲 Random Mode Standby.")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4603,6 +4618,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
