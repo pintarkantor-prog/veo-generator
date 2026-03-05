@@ -880,10 +880,9 @@ def tampilkan_navigasi_sidebar():
 def tampilkan_ai_lab():
     st.title("🧠 PINTAR AI LAB - TRUE STORYTELLER")
     
-    # 1. FETCH DATA (Ambil Kolom Narasi & Visual)
+    # 1. FETCH DATA (Ambil Kolom Lengkap)
     df_ide = pd.DataFrame()
     try:
-        # Asumsi di Supabase lo ada kolom: 'narasi_vo' dan 'visual_prompt'
         res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
         df_ide = pd.DataFrame(res.data)
     except: pass
@@ -893,7 +892,7 @@ def tampilkan_ai_lab():
     ])
 
     # ==========================================================================
-    # MESIN 1: ANATOMY (PEMISAHAN VO & VISUAL)
+    # MESIN 1: ANATOMY (SYNC DATABASE TOTAL)
     # ==========================================================================
     with t_anatomi:
         st.subheader("🦴 ANATOMY MASTER GENERATOR")
@@ -901,7 +900,7 @@ def tampilkan_ai_lab():
         id_pilih = None
         df_adegan = pd.DataFrame()
 
-        # --- A. LOADER IDE (Suntik Data ke 2 Jalur Berbeda) ---
+        # --- A. LOADER IDE ---
         if not df_ide.empty:
             df_a = df_ide[df_ide['niche'].str.upper() == "ANATOMI"]
             if not df_a.empty:
@@ -924,7 +923,8 @@ def tampilkan_ai_lab():
         st.markdown("---")
 
         # --- C. PRODUCTION LINE (LOOPING ADEGAN) ---
-        list_loop = df_adegan if not df_adegan.empty else pd.DataFrame([{"no_adegan": 1, "narasi_vo": "", "visual_prompt": "", "id": "manual"}])
+        # Jika manual, buat data dummy agar kolom tetap muncul
+        list_loop = df_adegan if not df_adegan.empty else pd.DataFrame([{"no_adegan": 1, "narasi_vo": "", "visual_prompt": "", "style": "ANATOMI Cinematic 8k", "camera": "Extreme Close-up", "lighting": "Rim Light", "id": "manual"}])
 
         for _, row in list_loop.iterrows():
             with st.container(border=True):
@@ -934,49 +934,59 @@ def tampilkan_ai_lab():
                 
                 with col_vo:
                     st.markdown("🎙️ **ELEVENLABS (VO)**")
-                    # NARASI: Apa yang diomongin narator (Storytelling)
                     vo_text = st.text_area(f"Cerita/Script S{row['no_adegan']}", 
                                          value=row.get('narasi_vo', ''), 
-                                         placeholder="Contoh: Apa jadinya jika tubuhmu...",
                                          height=200, key=f"vo_a_{row['id']}")
 
                 with col_vis:
                     st.markdown("🎥 **VISUAL (AI PROMPT)**")
-                    # VISUAL: Instruksi buat AI Video/Gambar
-                    vis_text = st.text_area(f"Aksi/Kamera S{row['no_adegan']}", 
+                    # Di sini Icha isi AKSI-nya saja tanpa nulis camera lagi
+                    vis_text = st.text_area(f"Aksi S{row['no_adegan']}", 
                                           value=row.get('visual_prompt', ''), 
-                                          placeholder="Contoh: Extreme close up, jantung berdetak...",
+                                          placeholder="Contoh: Jantung berdetak kencang dengan aliran listrik biru...",
                                           height=200, key=f"vis_a_{row['id']}")
 
                 with col_set:
-                    st.markdown("⚙️ **SETTING**")
-                    style_sc = st.selectbox(f"🎨 Style S{row['no_adegan']}", ["ANATOMI Cinematic 8k", "X-Ray"], key=f"sty_a_{row['id']}")
-                    camera_sc = st.selectbox(f"📸 Camera S{row['no_adegan']}", ["Extreme Close-up", "Dynamic"], key=f"cam_a_{row['id']}")
-                    lighting_sc = st.selectbox(f"💡 Light S{row['no_adegan']}", ["Rim Light", "Neon Glow"], key=f"lt_a_{row['id']}")
+                    st.markdown("⚙️ **SETTING (SYNC DB)**")
+                    
+                    # LOGIKA SYNC: Mencocokkan data DB dengan list opsi dropdown
+                    def get_idx(options, value):
+                        try: return options.index(value)
+                        except: return 0
 
-                # --- TOMBOL GENERATE (HASILNYA BEDA JALUR) ---
+                    opt_style = ["ANATOMI Cinematic 8k", "X-Ray", "UE 5.4 Render"]
+                    style_sc = st.selectbox(f"🎨 Style S{row['no_adegan']}", opt_style, 
+                                            index=get_idx(opt_style, row.get('style')), key=f"sty_a_{row['id']}")
+                    
+                    opt_cam = ["Extreme Close-up", "Dynamic", "Static", "Wide Shot"]
+                    camera_sc = st.selectbox(f"📸 Camera S{row['no_adegan']}", opt_cam, 
+                                             index=get_idx(opt_cam, row.get('camera')), key=f"cam_a_{row['id']}")
+                    
+                    opt_light = ["Rim Light", "Neon Glow", "Volumetric", "Soft Studio"]
+                    lighting_sc = st.selectbox(f"💡 Light S{row['no_adegan']}", opt_light, 
+                                               index=get_idx(opt_light, row.get('lighting')), key=f"lt_a_{row['id']}")
+
+                # --- D. TOMBOL GENERATE (RAKITAN BERSIH) ---
                 if st.button(f"🔥 GENERATE PROMPT S{row['no_adegan']}", key=f"btn_a_{row['id']}", use_container_width=True):
                     st.divider()
                     r1, r2, r3 = st.columns(3)
                     
                     with r1:
                         st.error("🎙️ **ELEVENLABS SCRIPT**")
-                        # Murni Script Cerita
                         st.code(vo_text)
                     with r2:
                         st.success("🖼️ **IMAGE (GEMINI)**")
-                        # Gabungan SKS + Instruksi Visual
-                        st.code(f"CHARACTER: {char_sks}. DNA: {dna_sks}. SCENE: {vis_text}. STYLE: {style_sc}, {lighting_sc}.")
+                        # Rakitan: Identity + Visual Narasi + Style + Lighting + Camera (Framing)
+                        st.code(f"CHARACTER: {char_sks}. DNA: {dna_sks}. SCENE: {vis_text}. STYLE: {style_sc}, {lighting_sc}, {camera_sc} framing.")
                     with r3:
                         st.warning("🎥 **VIDEO (VEO)**")
-                        # Gabungan SKS + Gerakan + Instruksi Visual
-                        st.code(f"VEO ENGINE: {char_sks}. MOTION: {motion_eng}, {camera_sc}. ACTION: {vis_text}, {style_sc}.")
+                        # Rakitan: Engine + Motion + Visual Narasi + Camera Move + Style
+                        st.code(f"VEO ENGINE: {char_sks}. MOTION: {motion_eng}, {camera_sc} movement. ACTION: {vis_text}, {style_sc}.")
 
         if id_pilih:
             if st.button("🏁 SELESAI & ARCHIVE", type="primary", use_container_width=True):
                 supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_pilih).execute()
                 st.rerun()
-
     # ==========================================================================
     # TAB LAIN (BEDA KEY & BEDA MANTRA)
     # ==========================================================================
@@ -4568,6 +4578,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
