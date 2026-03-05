@@ -762,56 +762,51 @@ def pasang_css_kustom():
             font-weight: 600 !important;
             font-size: 14px !important;
         }
-        /* 8. COPY TO CLIPBOARD - UPDATE 2026 GAHAR MODE */
-        /* Pastikan container kodenya relative */
+        /* 8. JURUS SAPU JAGAT - CSS BRUTE FORCE */
         .stCodeBlock {
             border: 1px solid #30363d !important;
             border-radius: 10px !important;
             background-color: #0d1117 !important;
-            padding: 10px !important;
+            padding: 15px !important;
             position: relative !important;
         }
-        
-        /* Tembak langsung ke div pembungkus tombol copy */
-        div[data-testid="stCopyButton"] {
-            position: absolute !important;
-            right: 10px !important;
-            top: 10px !important;
+
+        /* Tembak semua tombol yang ada di pojok kanan atas blok kode */
+        .stCodeBlock button {
+            background-color: #238636 !important;
+            width: 55px !important; /* Gedein biar mantap */
+            height: 55px !important;
+            border-radius: 10px !important;
+            border: 2px solid #3fb950 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            transform: scale(1.3) !important; /* Paksa scale lagi */
             z-index: 1000 !important;
         }
 
-        /* Paksa tombolnya jadi gede dan ijo */
-        div[data-testid="stCopyButton"] button {
-            background-color: #238636 !important;
-            width: 50px !important;  /* Ukuran tombol lebih berwibawa */
-            height: 50px !important; 
-            border-radius: 8px !important;
-            border: 2px solid #3fb950 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            transition: transform 0.2s !important;
-        }
-
-        /* INI KONTROL IKONNYA - Kita paksa gede */
-        div[data-testid="stCopyButton"] button svg {
-            width: 30px !important; 
-            height: 30px !important;
+        /* Tembak Ikon SVG di dalem tombolnya */
+        .stCodeBlock button svg {
+            width: 35px !important;
+            height: 35px !important;
             fill: white !important;
             color: white !important;
         }
 
-        /* Hover Effect */
-        div[data-testid="stCopyButton"] button:hover {
+        /* Hilangkan efek filter bawaan Streamlit yang bikin burem */
+        .stCodeBlock button:hover {
             background-color: #2ea043 !important;
-            transform: scale(1.2) !important;
-            border-color: white !important;
+            transform: scale(1.5) !important;
         }
 
-        /* Menghilangkan bayangan default yang ganggu */
-        div[data-testid="stCopyButton"] button:focus {
-            box-shadow: none !important;
-            outline: none !important;
+        /* Paksa posisi ke pojok kanan atas */
+        .stCodeBlock > div {
+            position: static !important;
+        }
+        
+        /* Selector tambahan jika Streamlit pakai elemen baru */
+        [data-testid="stCopyButton"] button {
+            min-width: 50px !important;
+            min-height: 50px !important;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -4659,3 +4654,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
