@@ -1046,35 +1046,48 @@ def tampilkan_ai_lab():
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
 
             # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
+            f_auto, m_auto = auto_visual_mapping(aksi_in)
+
+            # --- BUTTON GENERATE ---
             if st.button("🚀 GENERATE SULTAN PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
-                # RAKIT DNA PENDUKUNG YANG DIPILIH
+                # 1. RAKIT DNA PENDUKUNG (Berdasarkan Multiselect)
                 dna_tambahan = ""
                 if pilihan_pendukung:
                     for p in pilihan_pendukung:
-                        dna_tambahan += f"\nADDITIONAL CHARACTER ({p}): {MASTER_PENDUKUNG[p]}. "
+                        dna_tambahan += f"ADDITIONAL CHARACTER ({p}): {MASTER_PENDUKUNG[p]}. "
 
-                # Inject DNA Balung otomatis (karena dia Bintang Utamanya)
-                final_action = aksi_in.replace("BALUNG", dna_final).replace("balung", dna_final)
-                
-                # Jika staff lupa ngetik BALUNG, kita tambahkan DNA-nya di depan
-                if "BALUNG" not in aksi_in.upper():
+                # 2. LOGIKA INJECT DNA BALUNG
+                # Cek apakah kata 'BALUNG' ada di teks, kalau nggak ada, suntik di depan.
+                if "BALUNG" in aksi_in.upper():
+                    final_action = aksi_in.replace("BALUNG", dna_final).replace("balung", dna_final)
+                else:
                     final_action = f"{dna_final}. {aksi_in}"
 
-                audio_instr = f"Voice: {voice_type}, Accent: {accent_type}, Mood: {mood_audio}. Narrating: '{vo_ref}'"
-
+                # 3. RAKIT INSTRUKSI AUDIO
+                audio_instr = (
+                    f"Voice Profile: {voice_type}. "
+                    f"Accent: {accent_type}. "
+                    f"Mood: {mood_audio}. "
+                    f"Narration: '{vo_ref}'"
+                )
+                
+                # --- TAMPILKAN HASIL ---
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **IMAGE PROMPT**")
+                    # f_auto sekarang dijamin aman karena diproses di atas button
                     st.code(f"SCENE: {final_action}. {dna_tambahan} ENV: {env_in}. FRAMING: {f_auto}.")
+                
                 with res2:
                     st.warning("🎥 **VIDEO ENGINE PROMPT**")
                     prompt_vid = (
                         f"VIDEO ENGINE: {dna_final}. \n"
                         f"ACTION: {final_action} in {env_in}. {dna_tambahan} \n"
                         f"CAMERA: {m_auto}, {f_auto}. \n"
-                        f"AUDIO SPECS: {audio_instr}."
+                        f"AUDIO SPECS: {audio_instr}. \n"
+                        f"SOUND DESIGN: Cinematic ambiance of {env_in} with deep bass textures."
                     )
                     st.code(prompt_vid)
 
@@ -4723,6 +4736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
