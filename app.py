@@ -3858,7 +3858,7 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. DISPLAY JADWAL (MURNI DARI GSHEET) ---
+            # --- 2. LOGIKA GENERATE TABEL (12 HP PER HALAMAN - AESTHETIC VERSION) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
@@ -3874,17 +3874,16 @@ def tampilkan_database_channel():
                 html_all_pages += f"""
                 <div class="print-container {'page-break' if hal_ke < total_hal else ''}">
                     <div class="header-box">
-                        <div style="float: left; font-size: 10px; color: #777; font-weight: bold;">PINTAR MEDIA</div>
-                        <div style="float: right; font-size: 10px; color: #777; font-weight: bold;">HALAMAN {hal_ke} / {total_hal}</div>
+                        <div style="float: right; font-size: 10px; font-weight: bold; color: #888;">HALAMAN {hal_ke} / {total_hal}</div>
                         <div style="clear: both;"></div>
-                        <h2 style="text-align: center; margin: 10px 0; font-family: sans-serif;">📋 JADWAL UPLOAD PINTAR MEDIA</h2>
-                        <p style="text-align: center; font-size: 12px; margin-bottom: 15px;">Periode: <b>{tgl_str}</b> | Unit HP {hp_halaman_ini[0]} - {hp_halaman_ini[-1]}</p>
+                        <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
+                        <p class="sub">Periode: <b>{tgl_str}</b> | Unit HP {hp_halaman_ini[0]} - {hp_halaman_ini[-1]}</p>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 12%;">📱 HP</th>
-                                <th style="width: 43%;">📺 CHANNEL YOUTUBE</th>
+                                <th style="width: 10%;">📱 HP</th>
+                                <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
                                 <th style="width: 15%;">🌅 PAGI</th>
                                 <th style="width: 15%;">☀️ SIANG</th>
                                 <th style="width: 15%;">🌆 SORE</th>
@@ -3893,7 +3892,6 @@ def tampilkan_database_channel():
                         <tbody>
                 """
                 
-                # --- ISI BARIS DENGAN ZEBRA COLOR ---
                 for i, r in enumerate(df_page.itertuples()):
                     p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
                     s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
@@ -3901,17 +3899,16 @@ def tampilkan_database_channel():
                     
                     hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
                     
-                    # WARNA ZEBRA: Baris genap putih, baris ganjil abu-abu muda jelas
-                    # Kita pake inline style biar printer 'terpaksa' ngerender warnanya
-                    bg_color = "#FFFFFF" if i % 2 == 0 else "#EFEFEF"
+                    # --- WARNA SELANG SELING (ZEBRA) PERSIS GAMBAR 2 ---
+                    bg_color = "#FFFFFF" if i % 2 == 0 else "#F4F4F4"
                     
                     html_all_pages += f"""
                         <tr style="background-color: {bg_color} !important;">
-                            <td style="text-align: center; font-weight: bold; border-right: 2px solid #000; background: #E0E0E0 !important;">{hp_view}</td>
-                            <td style="text-align: left; padding-left: 10px; font-weight: 500;">{r.NAMA_CHANNEL}</td>
-                            <td style="text-align: center; font-weight: bold; color: #D32F2F !important;">{p}</td>
-                            <td style="text-align: center; font-weight: bold; color: #D32F2F !important;">{s}</td>
-                            <td style="text-align: center; font-weight: bold; color: #D32F2F !important;">{o}</td>
+                            <td class="col-hp">{hp_view}</td>
+                            <td class="col-ch">{r.NAMA_CHANNEL}</td>
+                            <td class="col-jam">{p}</td>
+                            <td class="col-jam">{s}</td>
+                            <td class="col-jam">{o}</td>
                         </tr>
                     """
                 
@@ -3930,18 +3927,49 @@ def tampilkan_database_channel():
                 }, hide_index=True, use_container_width=True
             )
 
-            # --- 4. PRINT PREVIEW MASTERPIECE ---
+            # --- 4. STYLE SULTAN AESTHETIC (GARIS TIPIS & TAJAM) ---
             html_masterpiece = f"""
             <style>
                 @media print {{
                     @page {{ size: A4 portrait; margin: 1cm; }}
                     * {{ box-sizing: border-box; }}
-                    body {{ font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: white; }}
-                    .print-container {{ width: 100%; max-width: 680px; margin: 0 auto; padding-bottom: 20px; }}
+                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background: white; }}
+                    
+                    .print-container {{ width: 100%; max-width: 690px; margin: 0 auto; }}
                     .page-break {{ page-break-after: always; }}
-                    table {{ width: 100%; border-collapse: collapse; border: 2px solid #000; table-layout: fixed; }}
-                    th {{ background-color: #222 !important; color: white !important; padding: 8px; border: 1px solid #000; font-size: 12px; text-transform: uppercase; }}
-                    td {{ border: 1px solid #333; padding: 6px 8px; font-size: 13px; color: #000; }}
+
+                    .header-box {{ text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 5px; }}
+                    h2 {{ font-size: 20px; margin: 5px 0; color: #000; }}
+                    .sub {{ font-size: 12px; color: #666; }}
+
+                    table {{ 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        border: 1px solid #333; /* GARIS TIPIS TAPI TEGAS */
+                        table-layout: fixed;
+                    }}
+                    
+                    th {{ 
+                        background-color: #333 !important; 
+                        color: white !important; 
+                        padding: 10px; 
+                        border: 1px solid #333; 
+                        font-size: 12px;
+                    }}
+                    
+                    td {{ 
+                        border: 1px solid #CCC; /* Garis dalam lebih halus */
+                        padding: 8px 10px; 
+                        font-size: 14px; 
+                        color: #111;
+                        line-height: 1.3;
+                    }}
+                    
+                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #F0F0F0 !important; border-right: 1.5px solid #333; }}
+                    .col-ch {{ text-align: left; font-weight: 500; padding-left: 12px; }}
+                    .col-jam {{ text-align: center; font-weight: bold; color: #C00 !important; }}
+                    
+                    .footer-note {{ margin-top: 10px; text-align: right; font-size: 9px; color: #999; }}
                 }}
             </style>
             {html_all_pages}
@@ -4614,6 +4642,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
