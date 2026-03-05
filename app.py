@@ -894,7 +894,7 @@ def tampilkan_ai_lab():
     with t_anatomi:
         # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
         MASTER_CHAR_LAB = {
-            "SKELETON TRANSPARAN": {
+            "BALUNG": {
                 "fisik": "Hyper-realistic human skeleton, natural aged bone texture, realistic anatomical details, encased in a thin layer of translucent human skin, natural subsurface scattering, 8k resolution, daylight ambiance, realistic shadows.",
                 "pakaian": {
                     "Original": "Skeleton only, no clothes, pure anatomical look.",
@@ -906,6 +906,12 @@ def tampilkan_ai_lab():
                 }
             },
             "Custom": {"fisik": "", "pakaian": {"Manual": ""}}
+        }
+
+        MASTER_PENDUKUNG = {
+            "BALUNG_TUA": "An elderly human skeleton, darkened aged bones, slightly hunched, wearing tattered brown robes.",
+            "PENYULUH": "A young female doctor, wearing a clean white lab coat, holding a holographic tablet, realistic human skin.",
+            "ZOMBIE": "A decaying humanoid figure, pale grey skin, glowing red eyes, tattered clothing."
         }
 
         # --- MASTER DATA AUDIO (PROFIL PROFESIONAL) ---
@@ -971,9 +977,10 @@ def tampilkan_ai_lab():
                 if current_row['status'] == 'READY':
                     supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
 
-        # --- 5. PRODUCTION BOARD (MULTI-VOICE VERSION) ---
+        # --- 5. PRODUCTION BOARD (MULTI-CHARACTER & SULTAN AUDIO) ---
         with st.expander("🛠️ PRODUCTION BOARD: SULTAN CINEMATIC", expanded=True):
             
+            # --- VIEW MASTER SCRIPT ---
             st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
             full_script = ""
             if current_row:
@@ -985,10 +992,10 @@ def tampilkan_ai_lab():
 
             st.divider()
 
-            # Row 1: Karakter & DNA
+            # --- ROW 1: KARAKTER UTAMA & DNA ---
             col_char, col_dna = st.columns([1, 2])
             with col_char:
-                st.markdown('<p class="small-label">👤 KARAKTER & OUTFIT</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
                 char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=0, label_visibility="collapsed")
                 
                 outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
@@ -997,12 +1004,12 @@ def tampilkan_ai_lab():
                 wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
             
             with col_dna:
-                st.markdown('<p class="small-label">🧬 DNA MANTRA (FIXED GLOW)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🧬 DNA MANTRA (AUTO-INJECTOR READY)</p>', unsafe_allow_html=True)
                 dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
                 dna_final = st.text_area("DNA_F", value=dna_text, height=100, label_visibility="collapsed")
 
-            # Row 2: Setting Audio Profil Profesional
-            st.markdown('<p class="small-label">🔊 SETTING AUDIO (PROFESSIONAL AI VOICE)</p>', unsafe_allow_html=True)
+            # --- ROW 2: SETTING AUDIO (MASTER KONSISTEN) ---
+            st.markdown('<p class="small-label">🔊 SETTING AUDIO (PROFESSIONAL PROFILE)</p>', unsafe_allow_html=True)
             ac1, ac2, ac3 = st.columns(3)
             with ac1:
                 voice_type = st.selectbox("TIPE SUARA", MASTER_AUDIO_LAB["Tipe"])
@@ -1011,27 +1018,39 @@ def tampilkan_ai_lab():
             with ac3:
                 mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
 
-            # Row 3: Aksi Visual & VO Adegan
-            st.markdown('<p class="small-label">🎥 DESKRIPSI AKSI VISUAL (PROMPT INDONESIA)</p>', unsafe_allow_html=True)
-            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=100, label_visibility="collapsed")
+            # --- ROW 3: INPUT AKSI & NARASI ---
+            st.markdown('<p class="small-label">🎥 AKSI VISUAL (Sebut "BALUNG" atau Nama Pendukung untuk Inject DNA)</p>', unsafe_allow_html=True)
+            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=100, label_visibility="collapsed", placeholder="Contoh: BALUNG sedang berdiskusi dengan DOKTER...")
 
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
                 env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=68, label_visibility="collapsed")
             with c2:
-                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO UNTUK ADEGAN INI</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO (UNTUK AUDIO VIDEO)</p>', unsafe_allow_html=True)
                 vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
 
-            # --- GENERATE ACTION ---
+            # --- GENERATE PROCESS ---
             f_auto, m_auto = auto_visual_mapping(aksi_in)
 
             if st.button("🚀 GENERATE SULTAN PROMPT", type="primary", use_container_width=True):
                 st.divider()
-                # Rakit Instruksi Audio yang Sangat Spesifik
+                
+                # --- LOGIKA AUTO-INJECT MULTI-KARAKTER ---
+                # Mulai dengan teks aksi asli
+                final_action = aksi_in
+                
+                # 1. Inject Karakter Utama (BALUNG)
+                final_action = final_action.replace("BALUNG", dna_final).replace("balung", dna_final)
+                
+                # 2. Inject Karakter Pendukung dari MASTER_PENDUKUNG
+                for key, dna_pendukung in MASTER_PENDUKUNG.items():
+                    final_action = final_action.replace(key, dna_pendukung)
+                
+                # --- RAKIT INSTRUKSI AUDIO ---
                 audio_instr = (
                     f"Voice Profile: {voice_type}. "
-                    f"Accent/Dialect: {accent_type}. "
+                    f"Accent: {accent_type}. "
                     f"Delivery Mood: {mood_audio}. "
                     f"Narration: '{vo_ref}'"
                 )
@@ -1039,23 +1058,27 @@ def tampilkan_ai_lab():
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **IMAGE PROMPT**")
-                    st.code(f"CHARACTER: {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. FRAMING: {f_auto}.")
+                    st.code(f"SCENE: {final_action}. ENV: {env_in}. FRAMING: {f_auto}.")
                 with res2:
-                    st.warning("🎥 **VIDEO ENGINE PROMPT (CINEMATIC AUDIO)**")
+                    st.warning("🎥 **VIDEO ENGINE PROMPT**")
                     prompt_vid = (
-                        f"VIDEO ENGINE: {dna_final}. \n"
-                        f"ACTION: {aksi_in} in {env_in}. \n"
+                        f"VIDEO ENGINE: Cinematic multi-character interaction. \n"
+                        f"ACTION: {final_action} in {env_in}. \n"
                         f"CAMERA: {m_auto}, {f_auto}. \n"
                         f"AUDIO SPECS: {audio_instr}. \n"
-                        f"SOUND DESIGN: Cinematic ambiance of {env_in} with deep bass textures."
+                        f"SOUND DESIGN: Ambient sounds of {env_in} with layered foley for characters."
                     )
                     st.code(prompt_vid)
 
+            # --- NAVIGATION ---
             if current_row:
-                if st.button("✅ SELESAI & LANJUT", use_container_width=True):
-                    supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
-                    st.rerun()
-
+                if st.button("✅ SELESAI & LANJUT KE ADEGAN BERIKUTNYA", use_container_width=True):
+                    try:
+                        supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
+                        st.rerun()
+                    except:
+                        st.error("Koneksi bermasalah saat update status.")
+                        
         # --- 7. BLOK BRAINSTORMING (VERSI ADAPTIF SULTAN) ---
         st.write("") 
         with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
@@ -4692,6 +4715,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
