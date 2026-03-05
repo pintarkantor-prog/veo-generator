@@ -3901,55 +3901,42 @@ def tampilkan_database_channel():
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    /* PENGATURAN KERTAS & MARGIN */
-                    @page {{ size: A4 portrait; margin: 1cm; }}
-                    
+                    @page {{ size: A4 portrait; margin: 0.8cm; }}
                     * {{ box-sizing: border-box; }}
-                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; padding: 0; margin: 0; background: white; }}
+                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; padding: 0; margin: 0; }}
                     
-                    /* CONTAINER UTAMA - DIKECILIN DIKIT BIAR GARIS KANAN AMAN */
-                    .print-container {{ width: 100%; max-width: 700px; margin: 0 auto; padding: 0; }}
+                    .print-container {{ width: 100%; max-width: 700px; margin: 0 auto; }}
                     
-                    /* KUNCI BREAK SETIAP 12 GROUP HP */
-                    .hp-group-break {{ page-break-after: always; }}
-                    
-                    h2 {{ text-align: center; color: #1A1A1A; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 5px 0; font-size: 22px; }}
-                    p.sub {{ text-align: center; color: #555; margin: 0 0 25px 0; font-size: 13px; }}
-                    
+                    /* --- KUNCI UTAMA: Jangan potong baris di tengah tabel --- */
                     table {{ 
                         width: 100%; 
                         border-collapse: collapse; 
-                        border: 2px solid #333; 
-                        table-layout: fixed; /* Lock lebar biar kolom gak melar */
+                        border: 2px solid #000; 
+                        table-layout: fixed;
+                        page-break-inside: auto; /* Izinkan tabel pindah halaman */
                     }}
                     
-                    th {{ 
-                        background-color: #333 !important; 
-                        color: white !important; 
-                        padding: 10px; 
-                        border: 1px solid #444; 
-                        font-size: 12px; 
-                        text-transform: uppercase; 
+                    tr {{ 
+                        page-break-inside: avoid; /* JANGAN POTONG DI DALAM BARIS */
+                        page-break-after: auto; 
                     }}
+
+                    /* CSS untuk maksa pindah halaman setiap 12 HP */
+                    .page-break {{ page-break-after: always; display: block; height: 0; }}
+
+                    th {{ background-color: #333 !important; color: white !important; padding: 10px; border: 1px solid #000; font-size: 13px; }}
+                    td {{ border: 1px solid #333; padding: 8px; font-size: 14px; color: #000; line-height: 1.2; word-wrap: break-word; }}
                     
-                    td {{ 
-                        border: 1px solid #bbb; 
-                        padding: 8px; 
-                        font-size: 13px; 
-                        color: #333; 
-                        word-wrap: break-word; /* Teks patah kebawah kalau kepanjangan */
-                    }}
+                    /* Styling Kolom */
+                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #f2f2f2 !important; border-right: 2px solid #000; }}
+                    .col-ch {{ width: 45%; font-weight: 500; text-align: left; padding-left: 10px; }}
+                    .col-jam {{ width: 15%; text-align: center; font-weight: bold; color: #d32f2f !important; }}
                     
-                    /* Lock Lebar Kolom */
-                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #f9f9f9 !important; border-right: 2px solid #333; }}
-                    .col-channel {{ width: 45%; }}
-                    .col-jam {{ width: 15%; text-align: center; font-family: 'Courier New', monospace; font-weight: bold; color: #d32f2f; }}
+                    /* Warna Zebra */
+                    tr:nth-child(even) {{ background-color: #f9f9f9 !important; }}
                     
-                    /* --- WARNA FILL SELANG-SELING (ZEBRA) --- */
-                    tr:nth-child(even) {{ background-color: #f6f6f6 !important; }}
-                    
-                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 10px; }}
-                    .footer {{ margin-top: 15px; text-align: right; font-size: 9px; color: #999; font-style: italic; border-top: 1px solid #eee; padding-top: 5px; }}
+                    .header-box {{ text-align: center; border-bottom: 3px solid #000; margin-bottom: 20px; padding-bottom: 10px; }}
+                    .footer-note {{ margin-top: 15px; text-align: right; font-size: 10px; color: #666; font-style: italic; }}
                 }}
             </style>
             
@@ -4642,3 +4629,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
