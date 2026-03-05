@@ -1009,7 +1009,7 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-        # --- 7. BLOK BRAINSTORMING (MESIN PERAKIT MANTRA - VERSI FINAL SULTAN) ---
+        # --- 7. BLOK BRAINSTORMING (VERSI FINAL SULTAN: KOLOM TERPISAH) ---
         st.write("") 
         with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (BAHASA INDONESIA FULL)", expanded=False):
             col_t1, col_t2 = st.columns(2)
@@ -1023,41 +1023,44 @@ def tampilkan_ai_lab():
                 ], label_visibility="collapsed")
             with col_t2:
                 st.markdown('<p class="small-label">2. JUMLAH CUT (ADENGAN)</p>', unsafe_allow_html=True)
-                jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut (Sangat Detail)"], index=2, label_visibility="collapsed")
+                jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
 
-            st.markdown('<p class="small-label">3. IDE VIDEO (MISAL: BAHAYA MINUM MINUMAN ENERGI SETIAP HARI)</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Ketik ide di sini...", label_visibility="collapsed")
+            st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Apa jadinya kalau ginjal berhenti bekerja...", label_visibility="collapsed")
             
             if ide_singkat:
-                # --- INSTRUKSI STRUKTUR & CTA SPESIFIK ---
-                instr_final = """PANDUAN NARASI VO (Gaya Storytelling):
-1. PEMBUKAAN (HOOK): Mulai dengan narasi yang bikin orang berhenti scrolling. Jangan langsung ke inti, tapi pancing dengan rasa penasaran atau keresahan.
-2. NARASI ALUR: Gunakan bahasa Indonesia sehari-hari yang luwes, enak didengar, dan informatif. Jangan kaku kayak buku teks. Jelaskan 'Kenapa' dan 'Bagaimana' secara detail.
-3. CTA ORGANIK: Selipkan ajakan Subscribe di tengah video (Adegan 8-10). Hubungkan dengan alur cerita nya ( pakai kalimat yang "memaksa penonton klik subscribe").
-4. CLOSING: Berikan kesimpulan yang 'Deep' atau pertanyaan yang memancing penonton buat komen.
+                # --- DAFTAR OUTFIT RESMI DARI MASTER_CHAR_LAB ---
+                daftar_baju = "Original, Jas Lab Putih, Jubah Kerajaan, Baju Kantoran, Hoodie Hitam, Versi Sultan"
 
-PANDUAN VISUAL (DALAM BAHASA INDONESIA):
-- Deskripsikan Visual dalam Bahasa Indonesia yang sangat mendalam dan teknis.
-- Jelaskan posisi tulang, organ mana yang bercahaya, warna cahayanya, dan detak jantungnya.
-- Deskripsikan pergerakan kamera: Zoom in pelan, muter 360 derajat, atau close-up sangat dekat ke arah saraf."""
+                # --- LOGIKA INSTRUKSI VISUAL ADAPTIF ---
+                if "Medis" in tipe_cerita:
+                    v_guide = "Fokus pada anatomi: saraf, aliran darah, detak jantung, dan organ transparan."
+                elif "Evolusi" in tipe_cerita:
+                    v_guide = "Fokus pada transformasi: tulang mengeras, massa otot tumbuh, dan pancaran aura."
+                elif "Sejarah" in tipe_cerita:
+                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan cahaya obor/matahari."
+                else:
+                    v_guide = "Fokus pada anomali: teknologi masa depan, efek visual gila, dan kontras warna neon."
 
-                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami adalah SKELETON TRANSPARAN dengan organ dalam yang terlihat.
-Tugas kamu: Buatkan naskah video cinematic (90 detik) tentang: {ide_singkat}.
+                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: SKELETON TRANSPARAN.
+Tugas kamu: Buatkan naskah video cinematic ({jml_adegan}) tentang: {ide_singkat}.
 
 KONSEP: {tipe_cerita}.
-{instr_final}
+NARASI VO: Bahasa Indonesia luwes, asyik, informatif, gunakan sapaan 'Kamu'.
+CTA: Selipkan di tengah video, harus nyambung dengan bahaya/alur ceritanya.
 
-FORMAT OUTPUT (WAJIB TABEL): 
-- No Adegan
-- Narasi VO (Bahasa Indonesia Luwes, Menarik, dan Informatif).
-- Deskripsi Visual (FULL BAHASA INDONESIA: Jelaskan secara detail, karena akan digunakan untuk prompt visual).
-- Wardrobe & Environment.
+FORMAT OUTPUT (WAJIB TABEL 5 KOLOM): 
+1. No Adegan
+2. Narasi VO (Bahasa Indonesia Luwes).
+3. Deskripsi Visual (FULL INDONESIA: {v_guide} + pergerakan kamera).
+4. Wardrobe (HANYA PILIH DARI: {daftar_baju}).
+5. Environment (Lokasi/Setting tempat yang dramatis).
 
-Catatan: Buat pembukaannya sangat menarik (Hook) dan penutup yang berkesan!"""
+Catatan: Wardrobe harus menyesuaikan alur cerita (Misal: Awal video 'Original', akhir video 'Versi Sultan')."""
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info("💡 **PESAN BUAT STAFF:** Copy mantra di atas ke Gemini.")
+                st.info(f"💡 **INFO STAFF:** Copy mantra ini. Masukkan hasil tabel Gemini ke kolom database satu per satu. Jangan ada yang tertukar!")
                 
     # --- TAB LAIN (STANDBY) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4640,6 +4643,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
