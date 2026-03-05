@@ -885,45 +885,49 @@ def tampilkan_ai_lab():
     user_aktif = st.session_state.get("user_aktif", "STAFF").upper()
     tz = pytz.timezone('Asia/Jakarta')
 
-    # 2. FETCH DATA DARI SUPABASE (Hanya yang belum DONE)
+    # 2. FETCH DATA DARI SUPABASE
     try:
-        # Mengambil data dari tabel 'Ide_Pintar'
         res = supabase.table("Ide_Pintar").select("*").neq("status", "DONE").execute()
         df_ide = pd.DataFrame(res.data)
     except Exception as e:
         st.error(f"❌ Koneksi Supabase Gagal: {e}")
         return
 
-    # 3. TAB BERDASARKAN NICHE (Supabase & Manual Placeholders)
-    # Urutan: 5 Utama -> 2 Khusus -> 1 Random
+    # 3. TAB BERDASARKAN NICHE
     t_anatomi, t_evolusi, t_misteri, t_sejarah, t_luxury, t_grandma, t_minecraft, t_random = st.tabs([
         "🦴 ANATOMI", "🐒 EVOLUSI", "👻 MISTERI", "⏳ SEJARAH", "💎 LUXURY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
     ])
 
-    # --- FUNGSI UTAMA MESIN PRODUKSI (SUPABASE MODE) ---
+    # --- FUNGSI UTAMA MESIN PRODUKSI (SKS UPGRADED) ---
     def render_mesin_multi_scene(niche_name):
         if df_ide.empty:
             st.info("📭 Belum ada ide di database Supabase.")
             return
 
-        # Filter ide berdasarkan niche tab
         df_n = df_ide[df_ide['niche'] == niche_name]
-        
         if df_n.empty:
             st.warning(f"Gudang ide untuk niche {niche_name} sedang kosong.")
             return
 
-        # --- A. GROUPING DATA (Agar di selectbox cuma muncul judul unik) ---
+        # --- A. GROUPING DATA ---
         df_unik = df_n.drop_duplicates(subset=['id_ide'])
         opsi_topik = df_unik['topik'].tolist()
-        
         topik_sel = st.selectbox(f"💡 PILIH KONTEN {niche_name}:", opsi_topik, key=f"sel_{niche_name}")
         
-        # Ambil data utama (untuk cek status lock)
         data_utama = df_unik[df_unik['topik'] == topik_sel].iloc[0]
         id_ide_pilih = data_utama['id_ide']
+
+        # --- B. PANEL SKS KARAKTER (DNA & SOUL) ---
+        # Taruh di sini biar Icha setting sekali buat semua adegan
+        with st.expander("🧬 PANEL CONFIGURATION SKS (DNA & SOUL)", expanded=True):
+            col_sks1, col_sks2 = st.columns(2)
+            with col_sks1:
+                char_name = st.text_input("NAMA KARAKTER", value="MR. TULANG", key=f"n_{niche_name}")
+                char_dna = st.text_area("DNA VISUAL (SKS)", value="Hyper-realistic human skeleton, aged bone texture, cinematic rim lighting, 8k", key=f"d_{niche_name}", height=100)
+            with col_sks2:
+                char_soul = st.text_area("SOUL & MOTION (SKS)", value="Fluid anatomical physics, slow-motion movement, high-fidelity simulation", key=f"s_{niche_name}", height=100)
         
-        # --- B. LOGIKA LOCK SYSTEM ---
+        # --- C. LOGIKA LOCK SYSTEM ---
         status_db = data_utama.get('status', 'TERSEDIA')
         user_p = data_utama.get('user_produksi', '')
 
@@ -933,56 +937,41 @@ def tampilkan_ai_lab():
         if is_locked_by_others:
             st.error(f"🔒 SEDANG DIKERJAKAN: {user_p}")
         else:
-            # Jika tersedia, tampilkan tombol Ambil
             if not is_locked_by_me:
                 if st.button(f"🚀 AMBIL & KUNCI: {topik_sel}", key=f"btn_{id_ide_pilih}", use_container_width=True, type="primary"):
-                    waktu_skrg = datetime.now(tz).strftime("%H:%M")
-                    tag_user = f"{user_aktif} ({waktu_skrg})"
-                    # Update SEMUA adegan yang punya id_ide sama
-                    supabase.table("Ide_Pintar").update({
-                        "status": "DIPAKAI", 
-                        "user_produksi": tag_user
-                    }).eq("id_ide", id_ide_pilih).execute()
+                    tag = f"{user_aktif} ({datetime.now(tz).strftime('%H:%M')})"
+                    supabase.table("Ide_Pintar").update({"status": "DIPAKAI", "user_produksi": tag}).eq("id_ide", id_ide_pilih).execute()
                     st.rerun()
             
-            # --- C. AREA PRODUKSI MULTI-SCENE (JIKA SUDAH DIKUNCI USER) ---
+            # --- D. AREA PRODUKSI (JIKA SUDAH DIKUNCI) ---
             if is_locked_by_me:
-                # Ambil SEMUA adegan untuk id_ide ini, urutkan
                 df_adegan = df_n[df_n['id_ide'] == id_ide_pilih].sort_values('no_adegan')
+                st.success(f"🔓 SKS Active: **{topik_sel}** ({len(df_adegan)} Adegan)")
                 
-                st.success(f"🔓 Anda sedang memproduksi {len(df_adegan)} Adegan: **{topik_sel}**")
-                
-                # LOOPING ADEGAN: LOSS KE BAWAH
                 for _, row in df_adegan.iterrows():
                     no_sc = row['no_adegan']
                     with st.container(border=True):
                         st.markdown(f"#### 🎬 ADEGAN {no_sc}")
                         st.info(f"**Visual Dasar:** {row['narasi']}")
                         
-                        # Tabs untuk 5 Varian Visual per Adegan
-                        v_tabs = st.tabs(["🎥 MEDICAL", "💀 HORROR", "⚡ X-RAY", "🌍 REAL", "🎬 EPIC"])
-                        v_keys = ["MEDICAL", "HORROR", "XRAY", "REAL", "CINEMATIC"]
+                        col_g, col_v = st.columns(2)
                         
-                        presets = {
-                            "MEDICAL": "3D medical animation style, anatomical detail, cinematic rim lighting, dark background",
-                            "HORROR": "cinematic horror, eerie misty atmosphere, high contrast, dramatic shadows",
-                            "XRAY": "futuristic x-ray scan, neon blue glowing skeletal, transparent body detail",
-                            "REAL": "hyper-realistic photorealistic, 8k, natural lighting, documentary aesthetic",
-                            "CINEMATIC": "anamorphic cinematic style, motion blur, epic lighting, highly detailed texture"
-                        }
-
-                        for i, v_tab in enumerate(v_tabs):
-                            with v_tab:
-                                prefix = presets.get(v_keys[i], "")
-                                prompt_final = f"{prefix}, {row['narasi']}, 8k, vertical shorts orientation."
-                                st.text_area(f"Prompt S{no_sc} ({v_keys[i]})", value=prompt_final, height=90, key=f"p_{id_ide_pilih}_{no_sc}_{i}")
+                        # --- RAKITAN PROMPT GEMINI (Pake DNA SKS) ---
+                        with col_g:
+                            st.markdown("📷 **GEMINI SKS PROMPT**")
+                            p_gemini = f"CHARACTER: {char_name}\nDNA: {char_dna}\nSCENE: {row['narasi']}\nSTYLE: Cinematic 8k RAW, Unreal Engine 5 render, macro photography."
+                            st.text_area(f"Copy Gemini S{no_sc}", value=p_gemini, height=200, key=f"gem_{id_ide_pilih}_{no_sc}")
+                        
+                        # --- RAKITAN PROMPT VEO (Pake Soul SKS) ---
+                        with col_v:
+                            st.markdown("🎥 **VEO SKS PROMPT**")
+                            p_veo = f"CHARACTER: {char_name}\nSOUL/MOTION: {char_soul}\nACTION: {row['narasi']}\nPHYSICS: High-fidelity simulation, high dynamic range, slow motion."
+                            st.text_area(f"Copy Veo S{no_sc}", value=p_veo, height=200, key=f"veo_{id_ide_pilih}_{no_sc}")
 
                 # TOMBOL SELESAI
                 st.write("---")
                 if st.button("🏁 SEMUA ADEGAN SELESAI PRODUKSI", key=f"done_{id_ide_pilih}", use_container_width=True, type="primary"):
                     supabase.table("Ide_Pintar").update({"status": "DONE"}).eq("id_ide", id_ide_pilih).execute()
-                    st.toast(f"Topik {topik_sel} Berhasil Diselesaikan!", icon="✅")
-                    time.sleep(1)
                     st.rerun()
 
     # --- 4. RENDER SETIAP TAB ---
@@ -992,14 +981,10 @@ def tampilkan_ai_lab():
     with t_sejarah: render_mesin_multi_scene("SEJARAH")
     with t_luxury:  render_mesin_multi_scene("LUXURY")
     
-    with t_grandma:
-        st.info("Coming Soon...")
-        
-    with t_minecraft:
-        st.info("Coming Soon...")
-
-    with t_random:
-        st.info("Coming Soon...")
+    # Tab manual/coming soon tetap ada
+    with t_grandma: st.info("Coming Soon...")
+    with t_minecraft: st.info("Coming Soon...")
+    with t_random: st.info("Coming Soon...")
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -4577,6 +4562,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
