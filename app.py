@@ -917,8 +917,8 @@ def tampilkan_ai_lab():
         with st.expander("🛡️ GLOBAL IDENTITY LOCK (SKS)", expanded=True):
             c1, c2 = st.columns(2)
             char_sks = c1.text_input("👤 Nama Karakter Utama", value="MR. TULANG", key="char_name_a")
-            dna_sks = c1.text_area("🧬 DNA Visual (Konsistensi)", value="Hyper-realistic human skeleton, aged bone, 8k...", key="dna_a", height=80)
-            motion_eng = c2.text_area("⚙️ Motion Engine", value="High-fidelity physics, organ vibration...", key="soul_a", height=120)
+            dna_sks = c1.text_area("🧬 DNA Visual (Konsistensi)", value="Hyper-realistic human skeleton, aged bone, encased in a thin layer of translucent transparent human skin, subsurface scattering, visible internal organs through skin, 8k, cinematic lighting.", key="dna_a", height=80)
+            motion_eng = c2.text_area("⚙️ Motion Engine", value="High-fidelity organic physics, realistic skin elasticity, pulsating muscle tissue movement, subsurface scattering light flicker, fluid internal organ vibration, 4k cinematic motion blur.", key="soul_a", height=120)
 
         st.markdown("---")
 
@@ -4578,6 +4578,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
