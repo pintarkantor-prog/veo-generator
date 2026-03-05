@@ -3576,65 +3576,72 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-                # --- 6. LOGIKA UPDATE MODERN (SUPABASE + GSHEET BATCH) ---
+                # --- 6. LOGIKA UPDATE MODERN (SISTEM ANTI-NGACAK / CARI EMAIL) ---
                 kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
                 if not edited_st.equals(df_st[kolom_cek]):
                     if st.button("💾 KONFIRMASI PERUBAHAN STANDBY", use_container_width=True, type="primary"):
                         try:
                             with st.spinner("Sinkronisasi Radar & Supabase..."):
                                 for i, row in edited_st.iterrows():
-                                    idx_asli = int(row['REAL_IDX'])
-                                    old_val = df.iloc[idx_asli]
-                                    r_gs = idx_asli + 2
-                                    tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                    # --- A. CARI BARIS ASLI DI GSHEET (GPS SYSTEM) ---
+                                    target_email = row['EMAIL'].strip().lower()
+                                    cell = ws.find(target_email)
                                     
-                                    # --- LOGIKA TARGET HP ANDALAN LO ---
-                                    target_hp = str(old_val['HP'])
-                                    if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
-                                        df_p_now = df[df['STATUS'] == 'PROSES'].copy()
-                                        hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
-                                        target_hp = "1"
-                                        for h in range(1, 101):
-                                            if hp_counts.get(str(h), 0) < 2:
-                                                target_hp = str(h)
-                                                break
-                                    elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
-                                        target_hp = ""
+                                    if cell:
+                                        r_gs = cell.row # DAPET BARIS YANG BENER!
+                                        idx_asli = int(row['REAL_IDX'])
+                                        old_val = df.iloc[idx_asli]
+                                        tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                        
+                                        # --- B. LOGIKA TARGET HP (SLOT PROTECTION) ---
+                                        target_hp = str(old_val['HP'])
+                                        if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
+                                            df_p_now = df[df['STATUS'] == 'PROSES'].copy()
+                                            hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+                                            target_hp = "1"
+                                            for h in range(1, 101):
+                                                if hp_counts.get(str(h), 0) < 2:
+                                                    target_hp = str(h)
+                                                    break
+                                        elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
+                                            target_hp = ""
 
-                                    # --- A. UPDATE SUPABASE (CEPAT) ---
-                                    try:
-                                        supabase.table("Channel_Pintar").upsert({
-                                            "TANGGAL": tgl_now,  # <--- INI BIAR GAK NULL LAGI
-                                            "EMAIL": row['EMAIL'],
-                                            "PASSWORD": row['PASSWORD'],
-                                            "NAMA_CHANNEL": row['NAMA_CHANNEL'],
-                                            "SUBSCRIBE": str(row['SUBSCRIBE']), # Pastiin string
-                                            "LINK_CHANNEL": row['LINK_CHANNEL'],
-                                            "STATUS": row['STATUS'],
-                                            "HP": target_hp,
-                                            "PENCATAT": row['PENCATAT'],
-                                            "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                        }, on_conflict="EMAIL").execute()
-                                    except Exception as e:
-                                        st.error(f"❌ Gagal Update Supabase: {e}")
+                                        # --- C. UPDATE SUPABASE ---
+                                        try:
+                                            supabase.table("Channel_Pintar").upsert({
+                                                "TANGGAL": tgl_now,
+                                                "EMAIL": target_email,
+                                                "PASSWORD": row['PASSWORD'],
+                                                "NAMA_CHANNEL": row['NAMA_CHANNEL'],
+                                                "SUBSCRIBE": str(row['SUBSCRIBE']),
+                                                "LINK_CHANNEL": row['LINK_CHANNEL'],
+                                                "STATUS": row['STATUS'],
+                                                "HP": target_hp,
+                                                "PENCATAT": row['PENCATAT'],
+                                                "EDITED": f"Up: {user_aktif} ({tgl_now})"
+                                            }, on_conflict="EMAIL").execute()
+                                        except Exception as e_supa:
+                                            st.error(f"Gagal Supabase ({target_email}): {e_supa}")
 
-                                    # --- B. UPDATE GSHEET (BATCH UPDATE - ANTI ERROR) ---
-                                    # Kita kirim Status (G), HP (H), sampe Keterangan (L) sekaligus
-                                    ws.update(f"G{r_gs}:L{r_gs}", [[
-                                        row['STATUS'], 
-                                        target_hp, 
-                                        str(old_val['PAGI']), 
-                                        str(old_val['SIANG']), 
-                                        str(old_val['SORE']), 
-                                        f"Up: {user_aktif} ({tgl_now})"
-                                    ]])
+                                        # --- D. UPDATE GSHEET (BATCH UPDATE - TEPAT SASARAN) ---
+                                        # Pakai r_gs hasil temuan ws.find tadi
+                                        ws.update(f"G{r_gs}:L{r_gs}", [[
+                                            row['STATUS'], 
+                                            target_hp, 
+                                            str(old_val['PAGI']), 
+                                            str(old_val['SIANG']), 
+                                            str(old_val['SORE']), 
+                                            f"Up: {user_aktif} ({tgl_now})"
+                                        ]])
+                                    else:
+                                        st.error(f"Email {target_email} tidak ditemukan di GSheet!")
 
                                 st.cache_data.clear()
                                 st.success("✅ Database & Radar Sinkron!")
                                 time.sleep(1)
                                 st.rerun()
                         except Exception as e:
-                            st.error(f"❌ Error: {e}")
+                            st.error(f"❌ Error Global: {e}")
                         
     # ==============================================================================
     # TAB 2: MONITORING PROSES (RADAR SYNC & SLOT HP PROTECTION)
@@ -3696,52 +3703,58 @@ def tampilkan_database_channel():
                     disabled=not is_pro 
                 )
 
-                # --- LOGIKA SAVE (SINKRON DENGAN RADAR & KEEP JAM) ---
+                # --- LOGIKA SAVE (SINKRON DENGAN RADAR & GPS SYSTEM) ---
                 if is_pro and not edited_p.equals(df_display):
                     if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
                         try:
-                            with st.spinner("Sinkronisasi Radar..."):
+                            with st.spinner("Sinkronisasi Radar & GSheet..."):
                                 for i, row in edited_p.iterrows():
-                                    idx_asli = int(row['REAL_IDX'])
-                                    old_val = df.iloc[idx_asli]
-                                    r_gs = idx_asli + 2
-                                    tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                    # 1. CARI BARIS ASLI DI GSHEET BERDASARKAN EMAIL (ANTI MELESET)
+                                    target_email = row['EMAIL'].strip().lower()
+                                    cell = ws.find(target_email)
                                     
-                                    # Cek apakah ada perubahan status atau subscribe
-                                    if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
+                                    if cell:
+                                        r_gs = cell.row # DAPET BARIS YANG BENER!
+                                        idx_asli = int(row['REAL_IDX'])
+                                        old_val = df.iloc[idx_asli]
+                                        tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                         
-                                        # 1. TENTUKAN STATUS HP (Kalau keluar dari PROSES, HP jadi kosong)
-                                        target_hp = str(old_val['HP'])
-                                        if row['STATUS'] != 'PROSES':
-                                            target_hp = "" # Lepas slot HP agar bisa dipakai akun lain
+                                        # Cek apakah ada perubahan status atau subscribe
+                                        if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
+                                            
+                                            # TENTUKAN STATUS HP (Kalau keluar dari PROSES, HP jadi kosong)
+                                            target_hp = str(old_val['HP'])
+                                            if row['STATUS'] != 'PROSES':
+                                                target_hp = "" 
 
-                                        # 2. UPDATE SUPABASE (The Real Database)
-                                        supabase.table("Channel_Pintar").upsert({
-                                            "EMAIL": row['EMAIL'],
-                                            "STATUS": row['STATUS'],
-                                            "SUBSCRIBE": str(row['SUBSCRIBE']),
-                                            "HP": target_hp,
-                                            "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                        }, on_conflict="EMAIL").execute()
+                                            # 2. UPDATE SUPABASE
+                                            supabase.table("Channel_Pintar").upsert({
+                                                "EMAIL": target_email,
+                                                "STATUS": row['STATUS'],
+                                                "SUBSCRIBE": str(row['SUBSCRIBE']),
+                                                "HP": target_hp,
+                                                "EDITED": f"Up: {user_aktif} ({tgl_now})"
+                                            }, on_conflict="EMAIL").execute()
 
-                                        # 3. UPDATE GSHEET (Backup & Jam Protection)
-                                        # Pakai ws.update buat update kolom G (Status) dan H (HP) sekaligus
-                                        # Kolom I, J, K (Pagi, Siang, Sore) tetap pake old_val (AMAN!)
-                                        ws.update(f"G{r_gs}:L{r_gs}", [[
-                                            row['STATUS'], 
-                                            target_hp, 
-                                            str(old_val['PAGI']), 
-                                            str(old_val['SIANG']), 
-                                            str(old_val['SORE']), 
-                                            f"Up: {user_aktif} ({tgl_now})"
-                                        ]])
+                                            # 3. UPDATE GSHEET (TEPAT SASARAN KE BARIS r_gs)
+                                            # Update Status (G) sampai Keterangan (L)
+                                            ws.update(f"G{r_gs}:L{r_gs}", [[
+                                                row['STATUS'], 
+                                                target_hp, 
+                                                str(old_val['PAGI']), 
+                                                str(old_val['SIANG']), 
+                                                str(old_val['SORE']), 
+                                                f"Up: {user_aktif} ({tgl_now})"
+                                            ]])
+                                    else:
+                                        st.error(f"Email {target_email} tidak ditemukan di GSheet!")
 
                                 st.cache_data.clear()
-                                st.success("✅ Status Diperbarui! Jam & Slot HP Sinkron.")
+                                st.success("✅ Status Diperbarui! Data Sinkron Tepat Sasaran.")
                                 time.sleep(1)
                                 st.rerun()
                         except Exception as e:
-                            st.error(f"❌ Gagal update monitoring: {e}")
+                            st.error(f"❌ Gagal update: {e}")
                     
     # ==============================================================================
     # TAB 3: JADWAL UPLOAD (FULL MANUAL - SLOT HP VERSION)
@@ -3792,27 +3805,33 @@ def tampilkan_database_channel():
                             try:
                                 with st.spinner("Sinkronisasi Jadwal..."):
                                     for _, row in edited_j.iterrows():
-                                        r_gs = int(row['REAL_IDX']) + 2
-                                        jam_log = now_indo.strftime('%H:%M')
+                                        # 1. CARI BARIS BERDASARKAN EMAIL (GPS)
+                                        target_email = row['EMAIL'].strip().lower()
+                                        cell = ws.find(target_email)
                                         
-                                        # 1. UPDATE SUPABASE (The King - Kenceng)
-                                        supabase.table("Channel_Pintar").upsert({
-                                            "EMAIL": row['EMAIL'],
-                                            "PAGI": str(row['PAGI']) if row['PAGI'] else "",
-                                            "SIANG": str(row['SIANG']) if row['SIANG'] else "",
-                                            "SORE": str(row['SORE']) if row['SORE'] else "",
-                                            "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
-                                        }, on_conflict="EMAIL").execute()
+                                        if cell:
+                                            actual_row = cell.row
+                                            jam_log = now_indo.strftime('%H:%M')
+                                            
+                                            # 2. UPDATE SUPABASE
+                                            supabase.table("Channel_Pintar").upsert({
+                                                "EMAIL": target_email,
+                                                "PAGI": str(row['PAGI']) if row['PAGI'] else "",
+                                                "SIANG": str(row['SIANG']) if row['SIANG'] else "",
+                                                "SORE": str(row['SORE']) if row['SORE'] else "",
+                                                "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
+                                            }, on_conflict="EMAIL").execute()
 
-                                        # 2. UPDATE GSHEET (Backup - Pake ws.update biar hemat API)
-                                        # Langsung tembak 3 kolom jam sekaligus (M, N, O)
-                                        ws.update(f"M{r_gs}:O{r_gs}", [[
-                                            str(row['PAGI']) if row['PAGI'] else "",
-                                            str(row['SIANG']) if row['SIANG'] else "",
-                                            str(row['SORE']) if row['SORE'] else ""
-                                        ]])
-                                        # Update log di kolom L
-                                        ws.update_cell(r_gs, 12, f"Up: {user_aktif} (Jadwal {jam_log})")
+                                            # 3. UPDATE GSHEET (SEKALI TEMBAK M SAMPAI O + L)
+                                            # Update kolom L, M, N, O sekaligus biar hemat API
+                                            ws.update(f"L{actual_row}:O{actual_row}", [[
+                                                f"Up: {user_aktif} (Jadwal {jam_log})",
+                                                str(row['PAGI']) if row['PAGI'] else "",
+                                                str(row['SIANG']) if row['SIANG'] else "",
+                                                str(row['SORE']) if row['SORE'] else ""
+                                            ]])
+                                        else:
+                                            st.error(f"Email {target_email} tidak ketemu di GSheet!")
 
                                     st.cache_data.clear()
                                     st.success("✅ Jadwal Berhasil Diperbarui!")
@@ -3841,11 +3860,11 @@ def tampilkan_database_channel():
                 
                 rows_html += f"""
                     <tr style='background-color:{bg_row};'>
-                        <td style='border:1px solid #bbb; padding:11px; text-align:center; color:#2D5A47;'><b>{hp_view}</b></td>
-                        <td style='border:1px solid #bbb; padding:11px; text-align:left;'>{r.NAMA_CHANNEL}</td>
-                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{p}</td>
-                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{s}</td>
-                        <td style='border:1px solid #bbb; padding:11px; text-align:center; width:100px;'>{o}</td>
+                        <td class='hp-cell'>{hp_view}</td>
+                        <td class='channel-cell'>{r.NAMA_CHANNEL}</td>
+                        <td class='time-cell'>{p}</td>
+                        <td class='time-cell'>{s}</td>
+                        <td class='time-cell'>{o}</td>
                     </tr>
                 """
 
@@ -3864,21 +3883,46 @@ def tampilkan_database_channel():
 
             # --- 4. PRINT PREVIEW (HTML) ---
             html_masterpiece = f"""
-                <div style="font-family:sans-serif; width:700px; margin:auto; padding:20px;">
-                    <h2 style='text-align:center;'>JADWAL UPLOAD - {tgl_str}</h2>
-                    <table style='width:100%; border-collapse:collapse;'>
-                        <thead>
-                            <tr style='background-color:#F2F2F2;'>
-                                <th style='border:1px solid #bbb; padding:10px;'>HP</th>
-                                <th style='border:1px solid #bbb; padding:10px;'>CHANNEL</th>
-                                <th style='border:1px solid #bbb; padding:10px;'>PAGI</th>
-                                <th style='border:1px solid #bbb; padding:10px;'>SIANG</th>
-                                <th style='border:1px solid #bbb; padding:10px;'>SORE</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows_html}</tbody>
-                    </table>
+            <style>
+                @media print {{
+                    body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; }}
+                    .print-container {{ width: 100%; max-width: 800px; margin: auto; padding: 20px; }}
+                    h2 {{ text-align: center; color: #1E1E1E; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }}
+                    p.sub {{ text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }}
+                    table {{ width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid #333; }}
+                    th {{ background-color: #333 !important; color: white !important; padding: 12px; border: 1px solid #444; font-size: 13px; text-transform: uppercase; }}
+                    td {{ border: 1px solid #bbb; padding: 10px; font-size: 13px; color: #333; }}
+                    .hp-cell {{ background-color: #f9f9f9; font-weight: bold; text-align: center; color: #000; font-size: 15px; width: 80px; }}
+                    .channel-cell {{ font-weight: 500; text-align: left; padding-left: 15px; }}
+                    .time-cell {{ text-align: center; font-family: 'Courier New', Courier, monospace; font-weight: bold; width: 100px; color: #d32f2f; }}
+                    tr:nth-child(even) {{ background-color: #f2f2f2; }}
+                    .footer {{ margin-top: 30px; text-align: right; font-size: 10px; color: #aaa; border-top: 1px solid #eee; padding-top: 10px; }}
+                }}
+            </style>
+            
+            <div class="print-container">
+                <h2>📋 JADWAL UPLOAD PINTAR AI LAB</h2>
+                <p class="sub">Periode Tayang: <b>{tgl_str}</b> | User: {user_aktif}</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>📱 UNIT HP</th>
+                            <th>📺 NAMA CHANNEL</th>
+                            <th>🌅 PAGI</th>
+                            <th>☀️ SIANG</th>
+                            <th>🌆 SORE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows_html}
+                    </tbody>
+                </table>
+                
+                <div class="footer">
+                    Dicetak otomatis oleh Sistem PINTAR AI LAB - {datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')} WIB
                 </div>
+            </div>
             """
             
             if st.button("📄 PRINT JADWAL", use_container_width=True, type="primary"):
@@ -3925,46 +3969,47 @@ def tampilkan_database_channel():
             st.info("Radar unit HP masih kosong.")
         else:
             tz = pytz.timezone('Asia/Jakarta')
-            now_indo = datetime.now(tz).date() # Kita pake date saja untuk perbandingan expired
+            now_indo = datetime.now(tz).date()
             
-            df_hp['NAMA_HP'] = df_hp['NAMA_HP'].astype(str)
-            # Filter baris kosong agar tidak ngerusak visual
-            df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].copy()
+            # --- FIX URUTAN HP (Agar 1, 2, 3... urut lurus) ---
+            df_hp['HP_NUM'] = df_hp['NAMA_HP'].astype(str).str.extract('(\d+)').astype(float).fillna(999)
+            df_view = df_hp[df_hp['NAMA_HP'].str.strip() != ""].sort_values('HP_NUM').copy()
             
             # Tampilan Grid 4 Kolom
             grid = st.columns(4) 
             for i, (idx, r) in enumerate(df_view.iterrows()):
                 with grid[i % 4]:
-                    # --- LOGIKA WARNA SISA HARI ---
+                    # --- LOGIKA WARNA SISA HARI (ANTI-CRASH) ---
                     try:
-                        # Parsing tanggal dengan penanganan error format
                         t_exp = pd.to_datetime(r['MASA_AKTIF'], dayfirst=True).date()
                         sisa = (t_exp - now_indo).days
                         
-                        if sisa > 10: color_code = "#2D5A47" # AMAN
-                        elif 4 <= sisa <= 10: color_code = "#B8860B" # WASPADA
-                        else: color_code = "#962D2D" # KRITIS (MERAH)
+                        if sisa > 10: color_code = "#2D5A47" # HIJAU (AMAN)
+                        elif 4 <= sisa <= 10: color_code = "#B8860B" # KUNING (WASPADA)
+                        else: color_code = "#962D2D" # MERAH (KRITIS)
                     except:
                         color_code = "#444"; sisa = "?"
 
                     with st.container(border=True):
-                        # Header Unit
+                        # Header Unit dengan indikator Sisa Hari
                         st.markdown(f'''
                             <div style="background:{color_code}; padding:5px; border-radius:5px; text-align:center; margin-bottom:12px;">
                                 <b style="color:white; font-size:18px;">{r["NAMA_HP"]}</b>
                             </div>
                         ''', unsafe_allow_html=True)
                         
-                        # Info Detail
+                        # Info Detail (📞 Nomor & 📡 Provider)
                         ic1, ic2 = st.columns(2)
                         ic1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📞 NOMOR</p><b style='font-size:14px;'>{r['NOMOR_HP']}</b>", unsafe_allow_html=True)
-                        ic1.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:8px;'>📅 EXPIRED</p><code style='font-size:11px;'>{r['MASA_AKTIF']}</code>", unsafe_allow_html=True)
-                        
                         ic2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📡 PROVIDER</p><b style='font-size:11px;'>{r['PROVIDER']}</b>", unsafe_allow_html=True)
                         
-                        # Sisa Hari
+                        # Info Expired & Sisa Hari
+                        st.divider()
+                        sc1, sc2 = st.columns(2)
+                        sc1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><code style='font-size:11px;'>{r['MASA_AKTIF']}</code>", unsafe_allow_html=True)
+                        
                         sisa_color = "#ff4b4b" if isinstance(sisa, int) and sisa < 4 else "#ffffff"
-                        ic2.markdown(f"<p style='margin:0; font-size:10px; color:#888; margin-top:8px;'>⏳ SISA</p><b style='font-size:14px; color:{sisa_color};'>{sisa} Hari</b>", unsafe_allow_html=True)
+                        sc2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:14px; color:{sisa_color};'>{sisa} Hari</b>", unsafe_allow_html=True)
 
                         # --- FITUR EDIT (HANYA BOS) ---
                         if is_boss:
@@ -4032,7 +4077,9 @@ def tampilkan_database_channel():
             total_ever = len(df_sold_all)
             
             # Filter pake kolom KETERANGAN (isinya MM/YYYY) tapi ntar kita tampilin sebagai TGL_LAST
-            df_selected = df_sold_all[df_sold_all['EDITED'].astype(str).str.contains(filter_periode, na=False)].copy()
+            regex_periode = f".*{sel_bln_code}/{sel_thn}.*"
+            df_selected = df_sold_all[df_sold_all['EDITED'].astype(str).str.match(regex_periode, na=False)].copy()
+            
             total_selected = len(df_selected)
             
             # --- TAMBAHKAN INI BIAR TABEL GAK ERROR ---
@@ -4109,7 +4156,7 @@ def tampilkan_database_channel():
             if df_a.empty:
                 st.info("Arsip masih bersih. Performa tim mantap!")
             else:
-                # BIAR KOLOM GA ILANG: Map kolom KETERANGAN ke TGL_KEJADIAN
+                df_a = df_a.sort_values(by=['EDITED'], ascending=False)
                 df_a['TGL_KEJADIAN'] = df_a['EDITED']
                 
                 # Susunan Kolom PERSIS punya lo
@@ -4126,7 +4173,10 @@ def tampilkan_database_channel():
                         "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
                         "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
                         "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
-                        "STATUS": st.column_config.TextColumn("⚠️ STATUS")
+                        "STATUS": st.column_config.TextColumn(
+                            "⚠️ STATUS", 
+                            help="BUSUK = Masalah Teknis/Kartu, SUSPEND = Banned YouTube"
+                        )
                     }
                 )
                             
@@ -4542,6 +4592,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
