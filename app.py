@@ -3933,15 +3933,15 @@ def tampilkan_database_channel():
             
             <div class="safe-container">
                 <div class="header-box">
-                    <h2>PINTAR AI LAB - JADWAL UPLOAD</h2>
+                    <h2>PINTAR MEDIA - JADWAL UPLOAD</h2>
                     <div class="meta-info">📅 {tgl_str} | 👤 Admin: {user_aktif}</div>
                 </div>
                 
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 10%;">UNIT</th>
-                            <th style="width: 45%;">CHANNEL YOUTUBE</th>
+                            <th style="width: 10%;">📱 UNIT HP</th>
+                            <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
                             <th style="width: 15%;">🌅 PAGI</th>
                             <th style="width: 15%;">☀️ SIANG</th>
                             <th style="width: 15%;">🌆 SORE</th>
@@ -3951,7 +3951,7 @@ def tampilkan_database_channel():
                         {rows_html}
                     </tbody>
                 </table>
-                <div class="footer-note">Sistem Otomatis Radar V2 - Dicetak pada {datetime.now(tz).strftime('%H:%M:%S')} WIB</div>
+                <div class="footer-note">Pintar Media System - Dicetak pada {datetime.now(tz).strftime('%H:%M:%S')} WIB</div>
             </div>
             """
             
@@ -4622,6 +4622,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
