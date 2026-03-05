@@ -877,7 +877,6 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
-
 def tampilkan_ai_lab():
     # --- 1. PINTU UTAMA: OWNER ONLY ---
     user_level = st.session_state.get("user_level", "").upper()
@@ -933,7 +932,7 @@ def tampilkan_ai_lab():
     ])
 
     with t_anatomi:
-        # Master Script (Hanya muncul kalau ada project)
+        # Master Script Editor
         if current_row:
             with st.expander("🎙️ MASTER VO SCRIPT (Editor)", expanded=False):
                 try:
@@ -944,28 +943,41 @@ def tampilkan_ai_lab():
                             supabase.table("ide_pintar").update({"narasi_vo": new_vo}).eq("id", r['id']).execute()
                 except: st.write("Gagal memuat editor script.")
 
-        # FORM GENERATOR
+        # FORM GENERATOR (MODIFIKASI VISUAL ABU-ABU & SEJAJAR)
         with st.container(border=True):
-            # Row 1: Karakter & DNA
+            # Row 1: Karakter & DNA (Dibuat sejajar batas bawah)
             r1c1, r1c2 = st.columns(2)
-            char_pilih = r1c1.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
-            outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
-            db_baju = current_row.get('wardrobe', "Original")
-            idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
-            wardrobe = r1c1.selectbox("👕 Outfit", outfit_opt, index=idx_b)
-            dna_final = r1c2.text_area("🧬 Mantra DNA", value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), height=110)
+            with r1c1:
+                char_pilih = st.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
+                outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
+                db_baju = current_row.get('wardrobe', "Original")
+                idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
+                wardrobe = st.selectbox("👕 Outfit", outfit_opt, index=idx_b)
+            
+            with r1c2:
+                # Kolom Mantra dibuat disabled agar berwarna ABU-ABU dan sejajar
+                st.text_area("🧬 Mantra DNA (Otomatis)", 
+                            value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), 
+                            height=125, # Tinggi disesuaikan agar sejajar batas bawah dengan r1c1
+                            disabled=True)
 
             # Row 2: Tata Letak Visual (Fokus Utama)
             col_kiri, col_kanan = st.columns([2, 1])
             
             with col_kiri:
                 st.markdown("🎥 **AKSI VISUAL**")
+                # Kolom ISIAN (Tetap putih/aktif)
                 aksi_in = st.text_area("Aksi (Gerakan Karakter)", value=current_row.get('visual_prompt', ''), height=150)
                 
                 c_env, c_vo = st.columns(2)
+                # Kolom ISIAN (Tetap putih/aktif)
                 env_in = c_env.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=80)
-                # VO Cuma Panduan (Locked)
-                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Read-only)", value=current_row.get('narasi_vo', ''), height=80, disabled=True)
+                
+                # Kolom BUKAN ISIAN (Dibuat ABU-ABU / Disabled)
+                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Hanya Baca)", 
+                                        value=current_row.get('narasi_vo', ''), 
+                                        height=80, 
+                                        disabled=True)
             
             with col_kanan:
                 st.markdown("⚙️ **SETTING**")
@@ -974,17 +986,16 @@ def tampilkan_ai_lab():
                 fr_sel = st.selectbox("📸 Ukuran Gambar", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
                 mv_sel = st.selectbox("🎥 Gerak Kamera", ["Static", "Slow Dolly In", "Orbit Move", "Dynamic Pan"])
 
-            # --- GENERATE ACTION (HANYA GAMBAR & VIDEO) ---
-            if st.button("🔥 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
+            # --- GENERATE ACTION ---
+            if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
-                # Hasil cuma 2 kolom biar lega
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **GEMINI IMAGE PROMPT**")
-                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {fr_sel} framing.")
+                    st.code(f"CHARACTER: {char_pilih}. {MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {fr_sel} framing.")
                 with res2:
                     st.warning("🎥 **VEO VIDEO PROMPT**")
-                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel} movement. STYLE: {style_map[st_sel]}.")
+                    st.code(f"VEO ENGINE: {char_pilih}. {MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel} movement. STYLE: {style_map[st_sel]}.")
 
             if current_row:
                 if st.button("✅ SELESAI & LANJUT", use_container_width=True):
@@ -4572,6 +4583,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
