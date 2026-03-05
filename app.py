@@ -889,14 +889,13 @@ def tampilkan_ai_lab():
     t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
 
     # ==========================================================================
-    # TAB: ANATOMY (AUTO-PILOT MODE)
+    # TAB: ANATOMY (SULTAN AUTO-PILOT)
     # ==========================================================================
     with t_anatomi:
-        # --- 2. MASTER DATA ANATOMY (DNA DENGAN CAHAYA TETAP) ---
+        # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
         MASTER_CHAR_LAB = {
-            "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
             "SKELETON TRANSPARAN": {
-                "fisik": "Hyper-realistic human skeleton, aged bone with bioluminescent neon glow, encased in a thin layer of translucent human skin, subsurface scattering, visible glowing internal organs, 8k, cinematic lighting, strong rim lighting.",
+                "fisik": "Hyper-realistic human skeleton, translucent crystal-like bones, bioluminescent internal organs glowing softly, encased in a thin layer of translucent human skin, subsurface scattering, 8k resolution, cinematic lighting, strong rim lighting.",
                 "pakaian": {
                     "Original": "Skeleton only, no clothes, pure anatomical look.",
                     "Jas Lab Putih": "Professional white lab coat, knee-length, stethoscope around the neck.",
@@ -905,37 +904,60 @@ def tampilkan_ai_lab():
                     "Hoodie Hitam": "Streetwear style oversized black hoodie with premium fabric texture.",
                     "Versi Sultan": "Charcoal three-piece suit, metallic gold brocade patterns, black silk shirt, thick gold link chain, diamond-encrusted watch."
                 }
-            }
+            },
+            "Custom": {"fisik": "", "pakaian": {"Manual": ""}}
         }
 
-        # --- 3. AUTO-MAPPING LOGIC (PENGGANTI DROPDOWN MANUAL) ---
+        # --- MASTER DATA AUDIO (PROFIL PROFESIONAL) ---
+        MASTER_AUDIO_LAB = {
+            "Tipe": [
+                "Pria (35th), Suara Berat, Narator Profesional, Berwibawa",
+                "Pria (25th), Suara Serak Basah, Santai, Cool",
+                "Wanita (28th), Suara Lembut, Elegan, Tenang (Sultry)",
+                "Pria (50th), Suara Serak Tua, Bijak, Berwibawa (Wise Elder)",
+                "Wanita (20th), Suara Ceria, Tinggi, Energik",
+                "Suara AI (Deep Tech), Datar, Misterius, Futuristik"
+            ],
+            "Aksen": [
+                "Indonesia Formal (TV News Style)",
+                "Casual Jakarta (Anak Selatan Style)",
+                "Medok Jawa (Halus/Kromo)",
+                "Logat Batak (Tegas/Powerfull)",
+                "Logat Melayu (Lembut/Bernada)"
+            ],
+            "Mood": [
+                "Dramatis & Puitis (Banyak Jeda)",
+                "Mencekam & Horror (Bisikan)",
+                "Edukasi (Jelas & Informatif)",
+                "Sarkas & Sinis (Provokatif)",
+                "Semangat Meledak-ledak"
+            ]
+        }
+
+        # --- 3. AUTO-MAPPING LOGIC ---
         def auto_visual_mapping(prompt_teks):
             p = prompt_teks.lower()
+            frame = "Medium Shot" 
+            gerak = "Static camera" 
             
-            # Auto Frame
-            frame = "Medium Shot" # Default
-            if any(x in p for x in ["close up", "sangat dekat", "detail", "wajah", "organ"]):
+            if any(x in p for x in ["close up", "sangat dekat", "extreme", "detail", "macro"]):
                 frame = "Extreme Close-up"
-            elif any(x in p for x in ["wide", "seluruh badan", "jauh"]):
+            elif any(x in p for x in ["wide", "seluruh badan", "jauh", "landscape"]):
                 frame = "Wide Shot"
                 
-            # Auto Gerak
-            gerak = "Static camera" # Default
-            if any(x in p for x in ["zoom", "muter", "orbit", "dolly", "gerak", "maju"]):
+            if any(x in p for x in ["zoom", "muter", "orbit", "dolly", "maju", "mundur", "pull-back", "camera moves"]):
                 gerak = "Dynamic Motion (Orbit/Dolly)"
             
             return frame, gerak
 
-        # --- 4. FETCH DATA ANATOMY ---
+        # --- 4. FETCH DATA FROM SUPABASE ---
         df_ide = pd.DataFrame()
         try:
-            # Menggunakan API Supabase (Asumsi variabel 'supabase' sudah didefinisikan secara global)
             q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
             res = supabase.table("ide_pintar").select("*").or_(q).execute()
             df_ide = pd.DataFrame(res.data)
         except: pass
 
-        # --- 5. DROPDOWN PROYEK ANATOMY ---
         topik_list = ["-- MODE MANUAL --"]
         if not df_ide.empty:
             topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
@@ -949,8 +971,8 @@ def tampilkan_ai_lab():
                 if current_row['status'] == 'READY':
                     supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
 
-        # --- 6. PRODUCTION BOARD (RINGKAS & OTOMATIS) ---
-        with st.expander("🛠️ PRODUCTION BOARD: AUTO-PILOT", expanded=True):
+        # --- 5. PRODUCTION BOARD (MULTI-VOICE VERSION) ---
+        with st.expander("🛠️ PRODUCTION BOARD: SULTAN CINEMATIC", expanded=True):
             
             st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
             full_script = ""
@@ -959,14 +981,15 @@ def tampilkan_ai_lab():
                     res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
                     full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
                 except: pass
-            st.text_area("MASTER_VO", value=full_script, height=100, label_visibility="collapsed")
+            st.text_area("MASTER_VO", value=full_script, height=80, label_visibility="collapsed")
 
             st.divider()
 
+            # Row 1: Karakter & DNA
             col_char, col_dna = st.columns([1, 2])
             with col_char:
                 st.markdown('<p class="small-label">👤 KARAKTER & OUTFIT</p>', unsafe_allow_html=True)
-                char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=1, label_visibility="collapsed")
+                char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=0, label_visibility="collapsed")
                 
                 outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
                 db_baju = current_row.get('wardrobe', "Original")
@@ -974,44 +997,68 @@ def tampilkan_ai_lab():
                 wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
             
             with col_dna:
-                st.markdown('<p class="small-label">🧬 DNA MANTRA (FIXED LIGHTING)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🧬 DNA MANTRA (FIXED GLOW)</p>', unsafe_allow_html=True)
                 dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
                 dna_final = st.text_area("DNA_F", value=dna_text, height=100, label_visibility="collapsed")
 
-            # Input Utama dari Gemini
-            st.markdown('<p class="small-label">🎥 DESKRIPSI AKSI & LINGKUNGAN (DARI GEMINI)</p>', unsafe_allow_html=True)
-            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=100, label_visibility="collapsed", placeholder="Prompt visual bahasa Indonesia...")
+            # Row 2: Setting Audio Profil Profesional
+            st.markdown('<p class="small-label">🔊 SETTING AUDIO (PROFESSIONAL AI VOICE)</p>', unsafe_allow_html=True)
+            ac1, ac2, ac3 = st.columns(3)
+            with ac1:
+                voice_type = st.selectbox("TIPE SUARA", MASTER_AUDIO_LAB["Tipe"])
+            with ac2:
+                accent_type = st.selectbox("LOGAT / AKSEN", MASTER_AUDIO_LAB["Aksen"])
+            with ac3:
+                mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
+
+            # Row 3: Aksi Visual & VO Adegan
+            st.markdown('<p class="small-label">🎥 DESKRIPSI AKSI VISUAL (PROMPT INDONESIA)</p>', unsafe_allow_html=True)
+            aksi_in = st.text_area("A_I", value=current_row.get('visual_prompt', ''), height=100, label_visibility="collapsed")
 
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
                 env_in = st.text_input("E_I", value=current_row.get('environment', ''), label_visibility="collapsed")
             with c2:
-                st.markdown('<p class="small-label">🎙️ PANDUAN VO ADEGAN INI</p>', unsafe_allow_html=True)
-                st.text_input("V_R", value=current_row.get('narasi_vo', ''), disabled=True, label_visibility="collapsed")
+                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO UNTUK ADEGAN INI</p>', unsafe_allow_html=True)
+                vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
 
-            # --- PROSES OTOMATISASI ---
+            # --- GENERATE ACTION ---
             f_auto, m_auto = auto_visual_mapping(aksi_in)
 
-            if st.button("🚀 GENERATE ALL PROMPTS (AUTO-PILOT)", type="primary", use_container_width=True):
+            if st.button("🚀 GENERATE SULTAN PROMPT", type="primary", use_container_width=True):
                 st.divider()
+                # Rakit Instruksi Audio yang Sangat Spesifik
+                audio_instr = (
+                    f"Voice Profile: {voice_type}. "
+                    f"Accent/Dialect: {accent_type}. "
+                    f"Delivery Mood: {mood_audio}. "
+                    f"Narration: '{vo_ref}'"
+                )
+                
                 res1, res2 = st.columns(2)
                 with res1:
                     st.success("🖼️ **IMAGE PROMPT**")
-                    # Cahaya dan Style sudah masuk di DNA_FINAL
-                    st.code(f"SCENE: {aksi_in}. CHARACTER DNA: {dna_final}. ENVIRONMENT: {env_in}. FRAMING: {f_auto}.")
+                    st.code(f"CHARACTER: {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. FRAMING: {f_auto}.")
                 with res2:
-                    st.warning("🎥 **VIDEO PROMPT**")
-                    st.code(f"VIDEO ENGINE: {dna_final}. ACTION: {aksi_in} in {env_in}. CAMERA: {m_auto}, {f_auto}.")
+                    st.warning("🎥 **VIDEO ENGINE PROMPT (CINEMATIC AUDIO)**")
+                    prompt_vid = (
+                        f"VIDEO ENGINE: {dna_final}. \n"
+                        f"ACTION: {aksi_in} in {env_in}. \n"
+                        f"CAMERA: {m_auto}, {f_auto}. \n"
+                        f"AUDIO SPECS: {audio_instr}. \n"
+                        f"SOUND DESIGN: Cinematic ambiance of {env_in} with deep bass textures."
+                    )
+                    st.code(prompt_vid)
 
             if current_row:
-                if st.button("✅ SELESAI & LANJUT KE ADEGAN BERIKUTNYA", use_container_width=True):
+                if st.button("✅ SELESAI & LANJUT", use_container_width=True):
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-        # --- 7. BLOK BRAINSTORMING (VERSI FINAL SULTAN: ADAPTIF & WAJIB EKSIS) ---
+        # --- 7. BLOK BRAINSTORMING (VERSI ADAPTIF SULTAN) ---
         st.write("") 
-        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (BAHASA INDONESIA FULL)", expanded=False):
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
                 st.markdown('<p class="small-label">1. TIPE KONTEN</p>', unsafe_allow_html=True)
@@ -1026,19 +1073,18 @@ def tampilkan_ai_lab():
                 jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
 
             st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Efek begadang 7 hari berturut-turut...", label_visibility="collapsed")
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya makan mi instan 100 hari...", label_visibility="collapsed")
             
             if ide_singkat:
-                # --- DAFTAR OUTFIT RESMI DARI MASTER_CHAR_LAB ---
-                daftar_baju = "Original, Jas Lab Putih, Jubah Kerajaan, Baju Kantoran, Hoodie Hitam, Versi Sultan"
+                # OUTFIT LOCK DARI MASTER
+                baju_list = ", ".join(list(MASTER_CHAR_LAB["SKELETON TRANSPARAN"]["pakaian"].keys()))
 
-                # --- LOGIKA INSTRUKSI VISUAL ADAPTIF & WAJIB HADIR ---
                 if "Medis" in tipe_cerita:
                     v_guide = "Fokus pada anatomi: saraf bergetar, aliran darah, detak jantung, dan reaksi organ transparan."
                 elif "Evolusi" in tipe_cerita:
-                    v_guide = "Fokus pada transformasi: tulang mengeras/berubah warna, massa otot tumbuh, dan pancaran aura."
+                    v_guide = "Fokus pada transformasi: tulang mengeras, massa otot tumbuh, dan pancaran aura."
                 elif "Sejarah" in tipe_cerita:
-                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan interaksi karakter dengan lingkungan."
+                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan cahaya matahari."
                 else:
                     v_guide = "Fokus pada anomali: teknologi masa depan, efek visual gila, dan kontras warna neon."
 
@@ -1049,25 +1095,23 @@ KONSEP: {tipe_cerita}.
 
 ATURAN WAJIB (MANDATORY):
 1. Karakter SKELETON TRANSPARAN HARUS MUNCUL DI SETIAP ADEGAN. Tidak boleh ada adegan tanpa dia.
-2. HOOK: Mulai dengan narasi pembukaan yang menarik rasa penasaran, jangan langsung ke inti masalah.
-3. NARASI VO: Bahasa Indonesia luwes, asyik, informatif, gunakan sapaan 'Kamu'. Ceritakan apa yang dirasakan karakter tersebut.
-4. CTA ORGANIK: Selipkan di tengah video, buat kalimat ajakan Subscribe yang spesifik nyambung dengan alur ceritanya.
-5. CLOSING: Berikan kesimpulan yang mendalam (deep) atau pertanyaan untuk penonton.
+2. HOOK: Mulai dengan narasi pembukaan yang puitis dan bikin penasaran. Gunakan jeda (elipsis '...') agar narasi enak didengar.
+3. NARASI VO: Bahasa Indonesia luwes, asyik, informatif. Jangan kaku. Gunakan sapaan 'Kamu'. 
+4. CTA ORGANIK: Selipkan di tengah video, ajakan Subscribe harus nyambung dengan alur cerita.
+5. CLOSING: Berikan kesimpulan yang 'Deep' atau pertanyaan untuk penonton.
 
 FORMAT OUTPUT (WAJIB TABEL 5 KOLOM): 
 1. No Adegan
-2. Narasi VO (Bahasa Indonesia Luwes).
-3. Deskripsi Visual (FULL INDONESIA DETAIL: {v_guide} + jelaskan posisi karakter dan pergerakan kamera).
-4. Wardrobe (HANYA PILIH DARI: {daftar_baju}).
-5. Environment (Lokasi/Setting tempat yang dramatis).
-
-Catatan: Wardrobe harus menyesuaikan alur cerita (Misal: Awal video 'Original', akhir video 'Versi Sultan')."""
+2. Narasi VO (Gunakan jeda napas '...' agar puitis).
+3. Deskripsi Visual (INDONESIA DETAIL: {v_guide} + jelaskan posisi karakter dan gerakan kamera).
+4. Wardrobe (PILIH DARI MASTER: {baju_list}).
+5. Environment (Lokasi adegan dramatis)."""
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info(f"💡 **INFO STAFF:** Copy mantra ini. Pastikan setiap adegan di hasil Gemini selalu menampilkan si Karakter Utama. Input ke database satu per satu!")
-                
-    # --- TAB LAIN (STANDBY) ---
+                st.info("💡 **INFO STAFF:** Copy mantra ini. Masukkan hasil tabel Gemini ke database satu per satu!")
+
+    # --- TAB LAIN ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -4648,6 +4692,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
