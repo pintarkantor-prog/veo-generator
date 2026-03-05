@@ -877,14 +877,15 @@ def tampilkan_navigasi_sidebar():
         
     return pilihan
 
+
 def tampilkan_ai_lab():
-    # --- 1. PINTU UTAMA: CUMA OWNER (LO) ---
+    # --- 1. PINTU UTAMA: OWNER ONLY ---
     user_level = st.session_state.get("user_level", "").upper()
     if user_level != "OWNER":
         st.error("🚫 Akses Terbatas.")
         st.stop()
 
-    # --- 2. MASTER DATA (BALUNG ONLY - DI DALAM DEF) ---
+    # --- 2. MASTER DATA (BALUNG ONLY) ---
     MASTER_CHAR = {
         "Custom": {"fisik": "", "pakaian": {"Manual": ""}},
         "BALUNG": {
@@ -902,26 +903,22 @@ def tampilkan_ai_lab():
 
     st.title("🧠 PINTAR AI LAB")
 
-    # --- 3. FETCH DATA (LANGSUNG LOAD ANTRIAN) ---
+    # --- 3. FETCH DATA ---
     df_ide = pd.DataFrame()
     try:
-        # Load data READY atau yang sedang lo kerjain sebagai OWNER
         q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
         res = supabase.table("ide_pintar").select("*").or_(q).execute()
         df_ide = pd.DataFrame(res.data)
     except: pass
 
-    # Loader Project
     topik_list = ["-- MODE MANUAL --"]
     if not df_ide.empty:
         topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
     
     topik_sel = st.selectbox("📥 Pilih Project yang Ingin Diproduksi:", topik_list)
 
-    # Logic Antrian (Otomatis Lock as OWNER)
     current_row = {}
     if topik_sel != "-- MODE MANUAL --":
-        # Ambil data adegan terkecil
         df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
         if not df_active.empty:
             current_row = df_active.iloc[0].to_dict()
@@ -930,56 +927,71 @@ def tampilkan_ai_lab():
 
     st.divider()
 
-    # --- 4. FORM PRODUKSI (TABS DEFINED CLEARLY) ---
-    # Pastikan jumlah variabel di kiri sama dengan jumlah list di kanan st.tabs
+    # --- 4. FORM PRODUKSI ---
     t_anatomi, t_grandma, t_minecraft, t_random = st.tabs([
         "🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"
     ])
 
     with t_anatomi:
+        # Master Script (Hanya muncul kalau ada project)
         if current_row:
-            with st.expander("🎙️ MASTER VO SCRIPT", expanded=False):
+            with st.expander("🎙️ MASTER VO SCRIPT (Editor)", expanded=False):
                 try:
-                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
-                    st.text_area("Full VO:", value=" ".join([str(r['narasi_vo']) for r in res_vo.data]), height=100)
-                except: pass
+                    res_vo = supabase.table("ide_pintar").select("id, narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
+                    for i, r in enumerate(res_vo.data):
+                        new_vo = st.text_input(f"Adegan {i+1}", value=r['narasi_vo'], key=f"edit_vo_{r['id']}")
+                        if new_vo != r['narasi_vo']:
+                            supabase.table("ide_pintar").update({"narasi_vo": new_vo}).eq("id", r['id']).execute()
+                except: st.write("Gagal memuat editor script.")
 
+        # FORM GENERATOR
         with st.container(border=True):
-            # Row 1: Karakter & Baju
+            # Row 1: Karakter & DNA
             r1c1, r1c2 = st.columns(2)
             char_pilih = r1c1.selectbox("👤 Karakter", list(MASTER_CHAR.keys()), index=1)
             outfit_opt = list(MASTER_CHAR[char_pilih]["pakaian"].keys())
-            
-            # Sync baju dari DB
             db_baju = current_row.get('wardrobe', "Original")
             idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
             wardrobe = r1c1.selectbox("👕 Outfit", outfit_opt, index=idx_b)
-            
             dna_final = r1c2.text_area("🧬 Mantra DNA", value=f"{MASTER_CHAR[char_pilih]['fisik']} Wearing {MASTER_CHAR[char_pilih]['pakaian'][wardrobe]}".strip(), height=110)
 
-            # Row 2: Konten
-            r2c1, r2c2, r2c3 = st.columns([1, 1, 1])
-            vo_in = r2c1.text_area("🎙️ Narasi Suara", value=current_row.get('narasi_vo', ''), height=180)
-            aksi_in = r2c2.text_area("🎥 Aksi Visual", value=current_row.get('visual_prompt', ''), height=90)
-            env_in = r2c2.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=55)
+            # Row 2: Tata Letak Visual (Fokus Utama)
+            col_kiri, col_kanan = st.columns([2, 1])
             
-            # Row 3: Setting (Bahasa Indonesia)
-            style_map = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
-            st_sel = r2c3.selectbox("🎨 Gaya Visual", list(style_map.keys()))
-            fr_sel = r2c3.selectbox("📸 Ukuran Gambar", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
-            mv_sel = r2c3.selectbox("🎥 Gerak Kamera", ["Static", "Slow Dolly In", "Orbit Move"])
+            with col_kiri:
+                st.markdown("🎥 **AKSI VISUAL**")
+                aksi_in = st.text_area("Aksi (Gerakan Karakter)", value=current_row.get('visual_prompt', ''), height=150)
+                
+                c_env, c_vo = st.columns(2)
+                env_in = c_env.text_area("🌍 Latar / Env", value=current_row.get('environment', ''), height=80)
+                # VO Cuma Panduan (Locked)
+                vo_ref = c_vo.text_area("🎙️ Panduan Suara (Read-only)", value=current_row.get('narasi_vo', ''), height=80, disabled=True)
+            
+            with col_kanan:
+                st.markdown("⚙️ **SETTING**")
+                style_map = {"Sinematik": "ANATOMI Cinematic 8k", "Rontgen": "X-Ray style", "3D Animasi": "Unreal Engine 5.4 render"}
+                st_sel = st.selectbox("🎨 Gaya Visual", list(style_map.keys()))
+                fr_sel = st.selectbox("📸 Ukuran Gambar", ["Extreme Close-up", "Medium Shot", "Wide Shot"])
+                mv_sel = st.selectbox("🎥 Gerak Kamera", ["Static", "Slow Dolly In", "Orbit Move", "Dynamic Pan"])
 
-            if st.button("🚀 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
+            # --- GENERATE ACTION (HANYA GAMBAR & VIDEO) ---
+            if st.button("🔥 GENERATE ALL PROMPTS", type="primary", use_container_width=True):
                 st.divider()
-                st.code(f"GEMINI: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {fr_sel} framing.")
-                st.code(f"VEO: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel} movement. STYLE: {style_map[st_sel]}.")
+                # Hasil cuma 2 kolom biar lega
+                res1, res2 = st.columns(2)
+                with res1:
+                    st.success("🖼️ **GEMINI IMAGE PROMPT**")
+                    st.code(f"CHARACTER: {char_pilih}. {dna_final}. SCENE: {aksi_in}. ENV: {env_in}. STYLE: {style_map[st_sel]}, {fr_sel} framing.")
+                with res2:
+                    st.warning("🎥 **VEO VIDEO PROMPT**")
+                    st.code(f"VEO ENGINE: {char_pilih}. {dna_final}. ACTION: {aksi_in} in {env_in}. MOTION: {mv_sel} movement. STYLE: {style_map[st_sel]}.")
 
             if current_row:
                 if st.button("✅ SELESAI & LANJUT", use_container_width=True):
                     supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
                     st.rerun()
 
-    # Tab lain tetap aman tanpa error
+    # Tab lain Standby
     with t_grandma: st.info("Grandma Mode Standby")
     with t_minecraft: st.info("Minecraft Mode Standby")
     with t_random: st.info("Random Mode Standby")
@@ -4560,6 +4572,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
