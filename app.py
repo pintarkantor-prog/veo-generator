@@ -1739,7 +1739,12 @@ def tampilkan_ai_lab():
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
 
             st.write("")
-            btn_gen = st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True)
+            btn_gen = st.button(
+                "🚀 GENERATE VIDEO PROMPT", 
+                type="primary", 
+                use_container_width=True, 
+                key="btn_generate_video"
+            )
 
         # --- LOGIC GENERATOR ---
         if btn_gen:
@@ -1768,6 +1773,9 @@ def tampilkan_ai_lab():
                     )
 
                 # --- 5. NUANSA HIDUP (LIVING ATMOSPHERE) ---
+                import random
+                pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
+                
                 living_details = (
                     "Atmospheric cinematic lighting. Tiny dust motes dancing in the light rays. "
                     "Subtle background sounds of distant crickets and a soft evening breeze. "
@@ -1775,7 +1783,7 @@ def tampilkan_ai_lab():
                     "Hyper-realistic skin textures with visible sweat and fine wrinkles on the character."
                 )
 
-                # --- 6. RAKIT FINAL PROMPT (STRICTLY REALISTIC) ---
+                # --- 6. RAKIT FINAL PROMPT ---
                 video_prompt = (
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
@@ -5397,6 +5405,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
