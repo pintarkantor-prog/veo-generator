@@ -1752,7 +1752,6 @@ def tampilkan_ai_lab():
                 "Harsh, raw, and very marginal urban-village vibe."
             )
         }
-        # --- 3. MASTER AUDIO & PERFORMANCE (HUMAN-LIKE ACTING) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
                 "Bahasa Indonesia Desa (Sederhana, tulus, agak medok kampungan)",
@@ -1767,23 +1766,23 @@ def tampilkan_ai_lab():
                 "Napas Lelah (Bicara sambil ambil napas panjang karena capek)",
                 "Berbisik Malu (Suara kecil banget, sangat rendah hati)",
                 "Tersenyum Getir (Suara tegar tapi kedengeran sedih)",
-                "Bangga & Semangat (Suara sedikit napas cepat karena senang)",
                 "Gumam Syukur (Bicara sambil bisik-bisik 'Alhamdulillah')",
-                "Kaget & Kagum (Suara serak kaget pas liat lampu nyala)"
+                "Suara Serak Kering (Voice sounds dry and thirsty from fasting)", # Tambahan Buka Puasa
+                "Nada Berdoa (Speaking in a soft, prayerful, and shaky tone)" # Tambahan Buka Puasa
             ],
             "Physical Action": [
-                "Tangan gemetar pas pegang objek (Shaky hands touching the object)",
+                "Tangan gemetar pas pegang gelas (Shaky hands holding the glass cup)", # Lebih spesifik
                 "Ngusap keringat pake ujung baju (Wiping sweat with the hem)",
                 "Benerin pinggiran tikar pas duduk (Adjusting the mat edge)",
                 "Bengong sedih liat ke depan (Staring sadly into distance)",
-                "Ngusap debu di meja pake kain (Wiping dust off the table)",
-                "Berdiri tegap mandangin robot (Standing tall admiring the robot)",
-                "Duduk bersila dengan tenang (Sitting cross-legged on the floor)",
+                "Menatap nasi dengan tulus (Looking at the food with deep gratitude)", # Tambahan
+                "Membasahi bibir yang pecah-pecah (Slowly licking dry, chapped lips)", # Tambahan
                 "Pijat bahu karena pegel (Massaging stiff shoulders)",
                 "Nunduk malu mainin ujung baju (Looking down playing with shirt hem)",
                 "Ngusap perut karena laper (Gently rubbing a hungry stomach)",
                 "Menelan ludah dengan tenggorokan bergetar (Swallowing nervously with visible throat movement)",
-                "Mata berkedip pelan dan berat (Slow and heavy natural eye blinking)"
+                "Mata berkedip pelan dan berat (Slow and heavy natural eye blinking)",
+                "Menengadah ke atas seolah berdoa (Looking up slightly as if praying)" # Tambahan
             ]
         }
 
@@ -5708,6 +5707,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
