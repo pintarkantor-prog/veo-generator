@@ -2118,20 +2118,8 @@ def tampilkan_ai_lab():
             st.code(sultan_video_story, language="text")
                 
     with t_random:
-        # Menampilkan status mesin yang lagi "Standby" tapi tetap hidup
-        st.markdown("### 🎲 RANDOM ENGINE STATUS")
-        st.status("System Ready. Waiting for Luck...", expanded=False)
-        
-        # Tambahan info proses biar user gak bingung
-        st.info("💡 **Tips Sultan:** Klik tombol di bawah untuk membiarkan AI menentukan nasib karakter. Mesin akan mengacak Scene, Outfit, hingga Metamorfosis secara otomatis!")
-        
-        # Contoh tambahan visual biar gak melompong
-        if st.button("✨ ACTIVATE RANDOM CHAOS", use_container_width=True):
-            with st.spinner("🎲 Mengacak Takdir Sultan..."):
-                # Di sini nanti logika random lo jalan
-                import time
-                time.sleep(1) # Simulasi proses mikir
-                st.success("Chaos Generated! Cek parameter di atas.")      
+        st.status("Sedang proses...", expanded=False)
+     
                 
 def tampilkan_gudang_ide():
     # --- 1. CSS OVERLAY ---
@@ -5727,6 +5715,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
