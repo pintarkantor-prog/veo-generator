@@ -1770,7 +1770,7 @@ def tampilkan_ai_lab():
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 user_dialog = st.text_area("Input Dialog", 
                                           placeholder=f"Tulis dialog {char_key} di sini...",
-                                          height=150, label_visibility="collapsed")
+                                          height=165, label_visibility="collapsed")
             with c6:
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
@@ -5443,6 +5443,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
