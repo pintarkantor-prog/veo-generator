@@ -1924,15 +1924,12 @@ def tampilkan_ai_lab():
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
     # ============================================================
-    with t_transform:
-        st.markdown("### ⚡ SULTAN TRANSFORMATION ENGINE")
-        
-        with st.expander("🛠️ DIRECTOR'S SCRIPT (COMPLETE CONTROL)", expanded=True):
-            st.info("💡 Tips: Gunakan Dual Dialog untuk percakapan yang jelas. Set kamera untuk hasil sinematik.")
+    with t_transform:        
+        with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
 
             # --- ROW 1: LOKASI ---
             st.markdown('<p class="small-label">🌍 LOKASI & ATMOSFER (SCENE SETTING)</p>', unsafe_allow_html=True)
-            user_scene = st.text_area("Latar Belakang", 
+            user_scene = st.text_area("", 
                                      placeholder="Contoh: Di teras rumah kayu tua saat hujan badai malam hari, lampu bohlam bergoyang, ada kabut tipis.", height=70)
 
             st.divider()
@@ -5654,6 +5651,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
