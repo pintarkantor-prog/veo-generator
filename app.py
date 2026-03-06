@@ -1337,82 +1337,90 @@ def tampilkan_ai_lab():
         # --- 1. MASTER DNA MANUSIA ASLI (FULL BODY & NATURAL SKIN) ---
         MASTER_FAMILY_SOUL = {
             "Nenek (The Grandma)": (
-                "Full body wide shot, real elderly Indonesian woman. Deeply weathered, dusty skin with visible age spots. "
-                "Authentic deep wrinkles, messy gray hair with stray strands. Tired, sunken, and melancholic eyes. "
-                "Her face looks exhausted and humble, showing a life of hard work. Strictly no crying, no tears."
+                "A kind-hearted, elderly Indonesian woman (Nenek) with a gentle and motherly face. "
+                "Warm brown skin (sawo matang) with realistic fine wrinkles and natural age spots. "
+                "Soft, calm, and weary eyes. Her gray hair is neatly tied back in a traditional low bun (sanggul sederhana). "
+                "Her expression is humble, shy, and peaceful. A classic representation of a wise village grandmother. "
+                "Clean skin, no dirt, no makeup, strictly no tears."
             ),
             "Kakek (The Grandpa)": (
-                "Full body wide shot, real elderly Indonesian man. Sun-burnt leathery skin, white stubble, face and forehead "
-                "covered in subtle dry dust and sweat. Stooped posture, hollow cheeks, and a weary, sad facial expression. "
-                "Looks like a tired village laborer. Strictly no crying."
+                "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
+                "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
+                "His eyes are calm and wise, showing a life of honest work. Stooped but dignified posture. "
+                "He looks like a retired village teacher or farmer. Clean appearance, no dirt, no crying."
             ),
             "Ibu (The Mother)": (
-                "Full body wide shot, middle-aged Indonesian woman (40s). Natural sawo matang skin, dull and unpolished. "
-                "Face shows early aging, subtle crow's feet, and tired dark circles under her eyes. "
-                "Her hair is messy, tied up in a simple loose bun with stray strands. Exhausted but resilient expression. "
-                "Hands look rough from daily manual chores. Strictly no makeup, no tears."
+                "A beautiful middle-aged Indonesian woman (40s) with a natural and unpolished face. "
+                "Smooth sawo matang skin, healthy and clean. Her hair is neatly tied in a ponytail with a few stray strands. "
+                "Kind, resilient eyes with subtle laugh lines. Her expression is warm and hardworking. "
+                "A typical devoted village mother. No makeup, no jewelry, strictly no tears."
             ),
             "Bapak (The Father)": (
-                "Full body wide shot, middle-aged Indonesian man (40s). Dark sun-drenched skin, rugged facial features. "
-                "Thin mustache and subtle stubble. Forehead covered in sweat and light dust from hard labor. "
-                "Shoulders look heavy and tired. Melancholic, stoic, and quiet expression. "
-                "A true representation of a weary village worker. Strictly no crying."
+                "A strong, middle-aged Indonesian man (40s) with rugged but clean facial features. "
+                "Deep tan skin from working outdoors. Short, neat black hair and a thin, well-kept mustache. "
+                "His expression is stoic, calm, and protective. Broad shoulders, looking like a reliable "
+                "village head or laborer. Clean skin, no dirt, strictly no crying."
             ),
             "Gadis Cantik": (
-                "Full body wide shot, beautiful young Indonesian woman. Natural sawo matang skin looking dull and unpolished. "
-                "Slightly messy hair, dark circles under the eyes (mata panda), no makeup. "
-                "Her expression is somber, quiet, and deeply sad. Authentic village girl aesthetic."
+                "A beautiful young Indonesian woman with an authentic 'Gadis Desa' look. "
+                "Radiant sawo matang skin, clean and natural without any makeup. "
+                "Long, straight black hair neatly falling over her shoulders. Large, expressive brown eyes "
+                "with a shy and melancholic look. She has a sweet but sad smile. "
+                "Pure, modest, and naturally stunning. No makeup, no tears."
             ),
             "Anak Laki-laki": (
-                "Full body wide shot, young Indonesian village boy. Sun-tanned, dusty skin. Messy, uncombed hair. "
-                "Face and hands are slightly dirty with dry earth/dust. His eyes are bright but look quiet and humble, "
-                "reflecting a simple, poor upbringing. No tears."
+                "A cheerful young Indonesian village boy with a bright, clean face. "
+                "Sun-tanned skin and messy but clean black hair. His eyes are full of wonder and humility. "
+                "A warm, innocent smile that shows his simple and happy upbringing. "
+                "Looking like a smart and active village child. Clean appearance, no tears."
             ),
             "Anak Perempuan": (
-                "Full body wide shot, cute young Indonesian girl. Natural black messy hair, dusty cheeks, and dry lips. "
-                "Simple and humble appearance. Her expression is shy and melancholic, looking slightly downcast and tired."
+                "A cute young Indonesian girl with a round, innocent face. "
+                "Smooth tan skin and shiny black hair with simple bangs. Her eyes are large and shy. "
+                "She has a gentle and sweet expression, looking modest and well-behaved. "
+                "A pure and humble representation of a village child. Clean skin, no tears."
             )
         }
 
-        # --- 2. MASTER WARDROBE (SULTAN LUSUH EDITION) ---
+        # --- 2. MASTER WARDROBE (KELUARGA DESA BERSAHAJA - CLEAN & HUMBLE) ---
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Lusuh": "Faded, over-washed cotton daster with holes, frayed collar, and yellow sweat stains. Thin fabric showing years of wear.",
-                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth with visible patches and rough stitching.",
-                "Mukena Bordir": "Old yellowish white silk mukena with fraying lace, heavy fabric drapes covering the whole body."
+                "Daster Batik Klasik": "A clean, modest cotton daster with traditional floral batik patterns. The colors are slightly faded from many washes, but the fabric is neat and well-maintained.",
+                "Kebaya Kutubaru": "Traditional flowery cotton kebaya, paired with a neat brown batik jarik cloth. The look is humble, classic, and very dignified for an elderly woman.",
+                "Mukena Putih Bersih": "A simple, clean white cotton mukena with minimal lace. The fabric drapes gracefully, looking peaceful and serene."
             },
             "Kakek": {
-                "Kaos Singlet & Peci": "Yellowish, thin white singlet (kaos oblong) with bacon-neck collar, a dusty faded black peci, and a worn-out sarung.",
-                "Kaos Sobek & Sarung": "A torn white undershirt with visible holes and sweat-drenched back, paired with a very faded, frayed plaid sarung.",
-                "Baju Koko & Peci": "Simple white koko shirt with a missing top button and a black peci.",
-                "Batik Lengan Panjang": "Vintage long-sleeved batik shirt with faded patterns and worn-out cuffs."
+                "Kaos Oblong & Peci": "A clean white short-sleeved undershirt (kaos oblong) paired with a neat black peci and a well-folded traditional sarung.",
+                "Kemeja Pendek & Sarung": "A simple, short-sleeved button-up shirt in a neutral color, worn with a classic plaid sarung (sarung kotak-kotak). Clean and respectable.",
+                "Baju Koko & Peci": "A modest white koko shirt, neatly pressed, paired with a black peci and a dark sarung for prayer.",
+                "Batik Lengan Panjang": "A vintage long-sleeved batik shirt with traditional patterns. The fabric looks soft and aged but very neat."
             },
             "Ibu": {
-                "Daster Lusuh & Hijab": "Old faded daster with visible grease stains and a simple, worn-out bergo hijab, looking very humble and tired.",
-                "Kaos Lusuh & Hijab": "Thin, oversized faded t-shirt with sweat marks on the neck, paired with a simple dark hijab, showing signs of hard work.",
-                "Kebaya Sederhana": "Simple daily cotton kebaya with a plain hijab and a cheap safety pin visible."
+                "Daster Motif & Hijab": "A clean cotton daster with bright floral motifs, paired with a simple, neatly pinned bergo hijab. A typical look of a hardworking but tidy village mother.",
+                "Kaos Polos & Hijab": "A simple, long-sleeved modest t-shirt in a soft color, paired with a neat dark-colored hijab. Clean and practical.",
+                "Kebaya Harian": "A simple daily cotton kebaya with a plain matching hijab, looking modest and elegant in its simplicity."
             },
             "Bapak": {
-                "Kaos Lusuh & Sarung": "Thin faded t-shirt with bacon-neck collar and a worn-out plaid sarung tied loosely at the waist with a visible knot.",
-                "Kaos Singlet & Peci": "Yellowish white singlet with sweat stains under the arms, a dusty black peci, and a faded sarung.",
-                "Kaos & Kolor Lusuh": "Very thin old t-shirt with holes and faded, loose cotton boxer shorts (kolor), looking extremely poor.",
-                "Baju Koko & Sarung": "Simple white koko with wrinkled sleeves and a faded plaid sarung for prayer."
+                "Kaos Berkerah & Sarung": "A simple polo shirt or collared t-shirt, tucked neatly or worn casually with a well-tied plaid sarung. Clean and masculine.",
+                "Baju Koko & Peci": "A clean, ironed white koko shirt with a black peci and a neat sarung, ready for the mosque.",
+                "Kemeja Flanel & Celana": "An old but clean flannel shirt worn over a simple t-shirt, with modest cotton trousers. A rugged, hardworking village man look.",
+                "Batik Sederhana": "A short-sleeved batik shirt with simple patterns, looking formal enough for village gatherings."
             },
             "Gadis Cantik": { 
-                "Daster Lusuh": "Faded, oversized cotton daster, looking unpolished and humble with a slightly torn hem on a village girl.",
-                "Kaos Lusuh": "Thin, faded t-shirt with several oil stains and frayed hem, showing her natural unpolished beauty.",
-                "Kebaya Modern": "Simple lace kebaya with a few loose threads and a long batik skirt.", 
-                "Hijab & Tunik": "Simple pashmina and a linen tunik that looks over-washed and slightly shrunken." 
+                "Daster Cantik": "A modest, colorful floral daster that fits well, showing a natural and fresh village girl aesthetic. Clean and charming.",
+                "Tunik & Legging": "A long, simple linen tunik in a soft pastel color, looking modest and youthful. Neatly maintained.",
+                "Kebaya Modern": "A simple lace kebaya with a long batik skirt, looking elegant and traditional for a young woman.", 
+                "Hijab & Gamis": "A simple, flowy gamis dress with a matching pashmina, looking pure and graceful." 
             },
             "Anak Laki-laki": { 
-                "Kaos Lusuh": "Dirty, faded t-shirt with cracked graphic print, missing stitching on the sleeves, and visible dust stains.",
-                "Setelan Lusuh": "Tattered oversized t-shirt and worn-out short pants with a broken elastic waist, looking like a poor village child.",
-                "Seragam SD": "Indonesian white-and-red school uniform, the white shirt is yellowish and the red pants are faded to pinkish-red." 
+                "Kaos Bersih": "A simple, clean t-shirt with a modest graphic or plain color, paired with neat short pants. Looking like a well-behaved village boy.",
+                "Kemeja Cilik & Celana": "A small button-up checkered shirt, tucked into cotton shorts. Simple, clean, and humble.",
+                "Seragam SD": "A neat Indonesian white-and-red school uniform. The white shirt is bright and the red pants are well-pressed." 
             },
             "Anak Perempuan": { 
-                "Dress Lusuh": "Old, faded hand-me-down dress with fraying lace, missing buttons, and very thin fabric.",
-                "Setelan Lusuh": "Faded t-shirt and simple cotton skirt with visible dirt smudges, looking dusty and humble.",
-                "Seragam SD": "Indonesian white-and-red school uniform, slightly oversized with a wrinkled collar." 
+                "Dress Bunga": "A simple cotton dress with small floral prints and a little ribbon. Clean, cute, and modest.",
+                "Setelan Kaos & Rok": "A clean t-shirt with a simple cotton skirt. Looking fresh and humble like a village child after a bath.",
+                "Seragam SD": "A neat Indonesian white-and-red school uniform with a clean red skirt and a white hijab." 
             }
         }
 
@@ -1740,33 +1748,35 @@ def tampilkan_ai_lab():
         # --- 3. MASTER AUDIO & PERFORMANCE (HUMAN-LIKE ACTING) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
-                "Bahasa Indonesia Desa (Unpolished, slightly broken grammar, rustic and sincere)",
-                "Jawa Medok (Thick accent, heavy 'd' and 't', very slow, low-pitched and humble)",
-                "Sunda Alus (High-pitched but gentle, melodic rising tones at the end of sentences)",
-                "Melayu Pesisir Tua (Raspy, rhythmic, like a traditional storyteller, slightly shaky)",
-                "Betawi Klasik (Deep, husky voice, blunt but sincere, uses old Jakarta pauses)"
+                "Bahasa Indonesia Desa (Sederhana, tulus, agak medok kampungan)",
+                "Jawa Medok (Logat tebal 'd' and 't', bicara pelan dan halus)",
+                "Sunda Alus (Nada bicara naik-turun lembut khas Jawa Barat)",
+                "Melayu Pesisir (Suara serak-serak basah, nada berirama)",
+                "Betawi Klasik (Suara berat, ceplas-ceplos tapi sopan)"
             ],
             "Mood": [
-                "Suara Serak Bergetar (Raspy and shaky, showing age and suppressed sadness, very human)",
-                "Bicara Terbata-bata (Hesitant speech with natural 'um' and 'ah' micro-pauses, looking for words)",
-                "Napas Berat & Lelah (Long pauses for heavy breathing/sighs between phrases, weary tone)",
-                "Whispered & Humble (Soft, almost a whisper, showing deep respect and shyness)",
-                "Tersenyum Getir (Bittersweet voice, trying to stay brave but the voice cracks slightly)",
-                "Terengah-engah Bangga (Slightly breathless and excited, like someone who just finished hard work)",
-                "Bergumam Syukur (Low-volume humming and whispering 'Alhamdulillah' between sentences)",
-                "Suara Serak Kaget (Raspy gasp, showing genuine surprise when seeing the light/neon turn on)"
+                "Sedih & Bergetar (Suara orang tua mau nangis tapi ditahan)",
+                "Bicara Terbata-bata (Bicara pelan, banyak jeda 'hmm' dan 'anu')",
+                "Napas Lelah (Bicara sambil ambil napas panjang karena capek)",
+                "Berbisik Malu (Suara kecil banget, sangat rendah hati)",
+                "Tersenyum Getir (Suara tegar tapi kedengeran sedih)",
+                "Bangga & Semangat (Suara sedikit napas cepat karena senang)",
+                "Gumam Syukur (Bicara sambil bisik-bisik 'Alhamdulillah')",
+                "Kaget & Kagum (Suara serak kaget pas liat lampu nyala)"
             ],
             "Physical Action": [
-                "Tangan bergetar pelan saat menyentuh objek (Shaky hands touching the object gently)",
-                "Menyeka keringat di dahi dengan ujung baju (Wiping sweat with the hem of the shirt)",
-                "Merapikan tikar yang terlipat (Adjusting the edge of the tattered mat while sitting)",
-                "Menatap kejauhan dengan mata berkaca-kaca (Looking into the distance with teary eyes)",
-                "Mengusap debu dari meja kayu (Wiping dust off the wooden table with a small cloth)",
-                "Berdiri tegak sambil mengagumi robot (Standing tall while admiring the giant robot)",
-                "Duduk bersila dengan tenang (Sitting cross-legged peacefully on the floor)",
-                "Memijat bahu yang kaku karena lelah (Massaging stiff shoulders from exhaustion)",
-                "Menunduk malu sambil memainkan ujung baju (Looking down shyly while playing with the shirt hem)",
-                "Mengusap perut yang lapar dengan telapak tangan (Gently rubbing a hungry stomach with the palm)"
+                "Tangan gemetar pas pegang objek (Shaky hands touching the object)",
+                "Ngusap keringat pake ujung baju (Wiping sweat with the hem)",
+                "Benerin pinggiran tikar pas duduk (Adjusting the mat edge)",
+                "Bengong sedih liat ke depan (Staring sadly into distance)",
+                "Ngusap debu di meja pake kain (Wiping dust off the table)",
+                "Berdiri tegap mandangin robot (Standing tall admiring the robot)",
+                "Duduk bersila dengan tenang (Sitting cross-legged on the floor)",
+                "Pijat bahu karena pegel (Massaging stiff shoulders)",
+                "Nunduk malu mainin ujung baju (Looking down playing with shirt hem)",
+                "Ngusap perut karena laper (Gently rubbing a hungry stomach)",
+                "Menelan ludah dengan tenggorokan bergetar (Swallowing nervously with visible throat movement)",
+                "Mata berkedip pelan dan berat (Slow and heavy natural eye blinking)"
             ]
         }
 
@@ -1878,8 +1888,10 @@ def tampilkan_ai_lab():
                     f"PERFORMANCE & ATMOSPHERE:\n"
                     f"- PHYSICAL ACTION: {pilih_aksi}\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'\n"
+                    f"- SPEECH DELIVERY: NATURAL INDONESIAN SPEECH PACING. CLEAR ENUNCIATION. "
+                    f"Include realistic micro-pauses for breathing. Voice must be perfectly synced with lip movement.\n"
                     f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone.\n"
-                    f"- VIBE: {living_details}\n\n"
+                    f"- VIBE: {living_details} Capturing micro-expressions like subtle lip quivers and heavy natural blinking.\n\n"
                     
                     f"TECHNICAL SPEC:\n"
                     f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. NO PAN. NO TILT. "
@@ -5490,6 +5502,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
