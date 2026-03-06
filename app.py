@@ -1916,108 +1916,123 @@ def tampilkan_ai_lab():
                 st.code(video_prompt, language="text")
                 
     # ============================================================
-    # --- TAB: ⚡ TRANSFORMATION ENGINE (PRO EDITION) ---
+    # --- TAB: ⚡ TRANSFORMATION ENGINE (SULTAN EDITION) ---
     # ============================================================
     with t_transform:
         st.markdown("### ⚡ SULTAN TRANSFORMATION ENGINE")
         
-        # --- 1. AREA SETTING (DIBUNGKUS EXPANDER) ---
-        with st.expander("🛠️ KONFIGURASI METAMORFOSIS & KOMPOSISI", expanded=True):
-            st.info("💡 Mode ini dioptimalkan untuk Image-to-Video. Gunakan foto tokoh (Messi, Ronaldo, dll) sebagai referensi di platform AI Video lo.")
+        # --- 1. CONFIGURATION BOX (INPUT MANUAL) ---
+        with st.expander("🛠️ DIRECTOR'S SCRIPT & TRANSFORMATION", expanded=True):
+            st.info("💡 Tips: Deskripsikan adegan secara nyata. AI akan merakitnya menjadi visual photorealistic kelas dunia.")
 
-            # ROW 1: KOMPOSISI FRAME
-            st.markdown('<p class="small-label">🖼️ KOMPOSISI FRAME</p>', unsafe_allow_html=True)
-            frame_mode = st.radio("JUMLAH SUBJEK DI GAMBAR REFERENSI", ["1 Karakter (Single)", "2 Karakter (Double/Kolase)"], horizontal=True)
-            
-            # Logika Identitas berdasarkan Mode
-            if frame_mode == "1 Karakter (Single)":
-                target_subject = "The main subject in the center of the image"
-                multi_char_p = ""
-            else:
-                target_subject = "The character on the LEFT side of the image"
-                reaksi_b = st.selectbox("REAKSI KARAKTER KANAN (DIAM)", ["Shocked & Scared", "Kneeling in Respect", "Running Away"])
-                multi_char_p = f"SIDE CHARACTER LOGIC: The person on the RIGHT MUST remain strictly human and static. No transformation for the person on the right. They are {reaksi_b} while watching the metamorphosis."
-
-            st.divider()
-
-            # ROW 2: PEMICU (TRIGGER)
+            # ROW 1: SETUP DASAR (LATAR & TOKOH)
             c1, c2 = st.columns(2)
             with c1:
-                trigger_act = st.selectbox("AKSI PEMICU", ["Minum", "Makan", "Berteriak", "Meditasi"])
+                st.markdown('<p class="small-label">🌍 SETTING LATAR (MANUAL)</p>', unsafe_allow_html=True)
+                user_scene = st.text_area("Lokasi & Suasana...", 
+                                         placeholder="Contoh: Di teras rumah kayu tua malam hari, lampu bohlam redup bergoyang, kabut tipis di sawah.", height=100)
             with c2:
-                obj_name = st.text_input("NAMA OBJEK", value="Susu Glowing")
+                st.markdown('<p class="small-label">👤 DESKRIPSI TOKOH</p>', unsafe_allow_html=True)
+                user_subject = st.text_area("Tokoh & Pakaian...", 
+                                           placeholder="Contoh: Lionel Messi mengenakan baju koko putih bersih dan peci hitam, ekspresi tenang.", height=100)
 
-            # ROW 3: JENIS TRANSFORMASI & LATAR
-            t1, t2 = st.columns(2)
-            with t1:
-                trans_type = st.selectbox("LEVEL PERUBAHAN", [
-                    "Super Saiyan (Golden Aura)",
-                    "Anatomical Titan (Muscle & Bone)",
-                    "The Hulk (Green Rage)",
-                    "Cyborg/Transformer (Metal)",
-                    "God Mode (Nebula/Cosmic)"
-                ])
-            with t2:
-                env_setup = st.selectbox("SETTING LATAR (SCENE)", [
-                    "Original (Ikuti Gambar)",
-                    "Traditional Wooden House",
-                    "Epic Mountain Peak",
-                    "Grand Mosque Entrance",
-                    "Modern Cinematic Gym"
-                ])
+            st.divider()
 
-            # ROW 4: EFEK & CATATAN
-            e1, e2 = st.columns([2, 3])
-            with e1:
-                env_impact = st.multiselect("EFEK SEKITAR", 
-                    ["Lantai Retak", "Benda Melayang", "Lampu Pecah", "Getaran Kamera"],
-                    default=["Getaran Kamera"])
-            with e2:
-                extra_notes = st.text_input("CATATAN TAMBAHAN", placeholder="Contoh: Peci terbang ke langit, mata menyala biru...")
+            # ROW 2: DRAMA & AKSI (DIALOG)
+            st.markdown('<p class="small-label">🎭 SCENE ACTION & DIALOG</p>', unsafe_allow_html=True)
+            ca1, ca2 = st.columns(2)
+            with ca1:
+                user_action = st.text_input("Aksi Awal (Jalan/Lari/Duduk)", placeholder="Contoh: Sedang berlari cepat menembus kabut...")
+            with ca2:
+                user_dialog = st.text_input("Dialog (Gerakan Mulut)", placeholder="Contoh: 'Ini belum berakhir!'")
 
-            # TOMBOL GENERATE (Masih di dalam Expander)
-            btn_generate = st.button("🔥 GENERATE VIRAL TRANSFORMATION", type="primary", use_container_width=True)
+            st.divider()
 
-        # --- 2. AREA OUTPUT (DI LUAR EXPANDER) ---
-        if btn_generate:
-            # 1. Logika Pemicu
-            trigger_p = f"As {target_subject} {trigger_act.lower()} the {obj_name}, " if trigger_act != "Berteriak" else f"As {target_subject} screams in pure rage, "
+            # ROW 3: MODUL METAMORFOSIS (TOGGLE)
+            is_transform = st.toggle("🚀 AKTIFKAN MODE TRANSFORMASI", value=False)
             
-            # 2. Logika Efek Lingkungan
-            env_p = ""
-            if "Lantai Retak" in env_impact: env_p += "The ground beneath cracks violently. "
-            if "Benda Melayang" in env_impact: env_p += "Small stones and dust start floating upwards. "
-            if "Lampu Pecah" in env_impact: env_p += "Surrounding lights shatter and explode. "
-            if "Getaran Kamera" in env_impact: env_p += "Intense screen shakes and handheld micro-jitter for high-tension cinematic feel. "
+            if is_transform:
+                t1, t2 = st.columns(2)
+                with t1:
+                    trans_type = st.selectbox("Jenis Perubahan", [
+                        "Anatomical Titan (Real Muscle & Bone)", 
+                        "Super Saiyan (God Aura & Electric)", 
+                        "Mecha-Hybrid (Liquid Metal/Robot)", 
+                        "Ethereal God (Cosmic/Nebula)"
+                    ])
+                    trans_speed = st.select_slider("Transisi Gerakan", options=["Slow & Smooth", "Steady", "Explosive"])
+                with t2:
+                    st.markdown('<p class="small-label">🔥 AKSI PEMICU (DETIL)</p>', unsafe_allow_html=True)
+                    trans_trigger = st.text_input("Pemicu (Contoh: Menatap langit, Menggigit tangan, Minum Susu)", value="Meminum Susu Glowing")
+                    
+                st.markdown('<p class="small-label">🌪️ EFEK SEKITAR SULTAN (ULTRA REALISTIC)</p>', unsafe_allow_html=True)
+                env_fx = st.multiselect("Pilih Efek Kehancuran:", 
+                                       ["Lantai Retak & Hancur", "Gravitasi Terbalik (Melayang)", 
+                                        "Shockwave Udara", "Ledakan Lampu & Listrik", "Kabut & Debu Sinematik"],
+                                       default=["Kabut & Debu Sinematik"])
+            
+            # TOMBOL GENERATE
+            btn_generate = st.button("🔥 GENERATE SULTAN PROMPT", type="primary", use_container_width=True)
 
-            # 3. Logika Suntikan Latar
-            scene_p = f"SCENE TRANSITION: Completely transform the background into a {env_setup}. " if env_setup != "Original" else ""
-
-            # 4. Mantra Visual
-            visual_mantra = {
-                "Super Saiyan (Golden Aura)": "Golden electric aura erupts from the body. Hair stands up, turns golden and spiky. High-voltage sparks.",
-                "Anatomical Titan (Muscle & Bone)": "Hyper-realistic rapid muscle growth. Bone thickening visible. Transparent gel-skin reveals glowing internal organs with subsurface scattering.",
-                "The Hulk (Green Rage)": "Skin turns deep emerald green. Body mass triples instantly. Thick veins popping with intense rage.",
-                "Cyborg/Transformer (Metal)": "Flesh turns into metallic gears and hydraulic pistons. Transparent liquid metal skin covers internal circuitry.",
-                "God Mode (Nebula/Cosmic)": "Body turns into a swirling celestial nebula. Skeleton glows like white starlight through cosmic skin."
-            }
-
-            # 5. Final Assembly
-            final_viral_prompt = (
-                f"STRICT CHARACTER FIDELITY: Maintain 100% facial features of {target_subject} from the reference image. No face distortion.\n\n"
-                f"{scene_p}\n"
-                f"{multi_char_p}\n\n"
-                f"TRANSFORMATION SEQUENCE:\n{trigger_p} initiate {trans_type} metamorphosis. {visual_mantra[trans_type]} "
-                f"Clothing Physics: High-tension fabric simulation, shirt ripping and buttons popping toward the lens. {extra_notes}.\n\n"
-                f"ENVIRONMENTAL REACTION: {env_p}\n\n"
-                f"TECHNICAL: 24fps, ARRI Alexa 65 style, realistic biological morphing, cinematic HDR."
+        # --- 2. OUTPUT AREA (DI LUAR EXPANDER) ---
+        if btn_generate:
+            # DNA ANTI-KARTUN (Mantra Kualitas Global)
+            quality_dna = (
+                "Hyper-realistic, photorealistic cinema, shot on ARRI Alexa 65, IMAX 70mm, Panavision Anamorphic lenses. "
+                "Ray-traced global illumination, realistic skin pores, sweat, subsurface scattering, cinematic color grading. "
+                "No animation style, no cartoon, 8k resolution movie quality."
             )
 
-            # TAMPILAN OUTPUT (Di Luar Expander)
+            # VISUAL MANTRA (Detail Tekstur Tiap Perubahan)
+            mantra_dict = {
+                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding, visible pulsating veins, bone structure thickening under transparent skin, intense steam evaporating from the body.",
+                "Super Saiyan (God Aura & Electric)": "Golden translucent energy aura erupting, high-voltage electric sparks flickering, hair turning golden and spiky with realistic strand physics.",
+                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium and liquid metal, hydraulic pistons moving under the flesh, glowing internal circuitry and blue LED light leaks.",
+                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside the chest, eyes glowing with pure white starlight, ethereal energy flow."
+            }
+
+            # A. RAKIT PROMPT GAMBAR (THE ORIGIN)
+            image_prompt = (
+                f"MASTER IMAGE: {user_subject}. Standing in {user_scene}. {quality_dna} "
+                "Composition: Medium shot, character is looking at the camera. Extremely detailed textures, cinematic lighting."
+            )
+
+            # B. RAKIT PROMPT VIDEO (THE STORY)
+            action_p = f"Starting from the reference image, {user_action}. "
+            dialog_p = f"The character says '{user_dialog}' with realistic mouth movement and lip-sync. " if user_dialog else ""
+            
+            if is_transform:
+                selected_mantra = mantra_dict[trans_type]
+                smooth_logic = "smoothly and gradually morphing while maintaining movement" if trans_speed == "Slow & Smooth" else "violently exploding into a transformation"
+                
+                fx_p = ""
+                if "Lantai Retak & Hancur" in env_fx: fx_p += "The ground beneath cracks violently with flying debris. "
+                if "Gravitasi Terbalik (Melayang)" in env_fx: fx_p += "Rocks and dust float upwards. "
+                if "Shockwave Udara" in env_fx: fx_p += "Intense air shockwave distorts the surrounding space. "
+                if "Ledakan Lampu & Listrik" in env_fx: fx_p += "Surrounding lights flicker and explode with electric sparks. "
+                if "Kabut & Debu Sinematik" in env_fx: fx_p += "Volumetric dust and fog particles in the air. "
+
+                video_prompt = (
+                    f"STORY SEQUENCE: {action_p} {dialog_p} THEN, while {trans_trigger.lower()}, initiate {trans_type} metamorphosis. "
+                    f"The character is {smooth_logic}. {selected_mantra} "
+                    f"Clothing Physics: High-tension fabric tearing, shirt ripping and buttons popping toward the camera lens realistically. {fx_p} "
+                    f"Maintain realistic human anatomy. {quality_dna} Intense camera shake at the climax."
+                )
+            else:
+                video_prompt = f"CINEMATIC SEQUENCE: {action_p} {dialog_p} Slow cinematic zoom-in. {quality_dna}"
+
+            # TAMPILAN HASIL (Di Luar Expander)
             st.divider()
-            st.success("✅ VIRAL TRANSFORMATION PROMPT READY!")
-            st.code(final_viral_prompt, language="text")
-            st.caption("Copy prompt ini ke Kling AI / Runway Gen-3 / Luma AI (Mode Image-to-Video).")
+            st.success("✅ SULTAN PROMPT READY!")
+            
+            st.markdown("### 🎨 1. Prompt Gambar Master")
+            st.caption("Gunakan ini di Midjourney/DALL-E untuk membuat foto referensi awal.")
+            st.code(image_prompt, language="text")
+
+            st.markdown("### 🎬 2. Prompt Video Story")
+            st.caption("Gunakan ini di Kling AI / Runway (Image-to-Video) bersama foto hasil prompt di atas.")
+            st.code(video_prompt, language="text")
+            st.info("💡 Pastikan Mode 'Image-to-Video' aktif dan upload foto referensi agar wajah tokoh tetap konsisten.")
                 
     with t_random: st.info("🎲 Random Mode Standby.")
                 
@@ -5615,6 +5630,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
