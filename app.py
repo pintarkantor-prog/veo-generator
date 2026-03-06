@@ -6,6 +6,7 @@ import time
 import pytz
 import json
 import re
+import random
 import plotly.express as px
 from datetime import datetime, timedelta
 from google.oauth2.service_account import Credentials
@@ -1345,17 +1346,29 @@ def tampilkan_ai_lab():
                 "covered in subtle dry dust and sweat. Stooped posture, hollow cheeks, and a weary, sad facial expression. "
                 "Looks like a tired village laborer. Strictly no crying."
             ),
-            "Gadis Cantik (The Maiden)": (
+            "Ibu (The Mother)": (
+                "Full body wide shot, middle-aged Indonesian woman (40s). Natural sawo matang skin, dull and unpolished. "
+                "Face shows early aging, subtle crow's feet, and tired dark circles under her eyes. "
+                "Her hair is messy, tied up in a simple loose bun with stray strands. Exhausted but resilient expression. "
+                "Hands look rough from daily manual chores. Strictly no makeup, no tears."
+            ),
+            "Bapak (The Father)": (
+                "Full body wide shot, middle-aged Indonesian man (40s). Dark sun-drenched skin, rugged facial features. "
+                "Thin mustache and subtle stubble. Forehead covered in sweat and light dust from hard labor. "
+                "Shoulders look heavy and tired. Melancholic, stoic, and quiet expression. "
+                "A true representation of a weary village worker. Strictly no crying."
+            ),
+            "Gadis Cantik": (
                 "Full body wide shot, beautiful young Indonesian woman. Natural sawo matang skin looking dull and unpolished. "
                 "Slightly messy hair, dark circles under the eyes (mata panda), no makeup. "
                 "Her expression is somber, quiet, and deeply sad. Authentic village girl aesthetic."
             ),
-            "Anak Laki-laki (The Boy)": (
+            "Anak Laki-laki": (
                 "Full body wide shot, young Indonesian village boy. Sun-tanned, dusty skin. Messy, uncombed hair. "
                 "Face and hands are slightly dirty with dry earth/dust. His eyes are bright but look quiet and humble, "
                 "reflecting a simple, poor upbringing. No tears."
             ),
-            "Anak Perempuan (The Girl)": (
+            "Anak Perempuan": (
                 "Full body wide shot, cute young Indonesian girl. Natural black messy hair, dusty cheeks, and dry lips. "
                 "Simple and humble appearance. Her expression is shy and melancholic, looking slightly downcast and tired."
             )
@@ -1364,42 +1377,42 @@ def tampilkan_ai_lab():
         # --- 2. MASTER WARDROBE (SULTAN LUSUH EDITION) ---
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Lusuh": "Faded, over-washed cotton daster with holes, frayed collar, and visible stains. Thin fabric showing years of wear.",
-                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth.",
-                "Mukena Bordir": "White silk mukena with lace, heavy fabric drapes covering the whole body."
+                "Daster Batik Lusuh": "Faded, over-washed cotton daster with holes, frayed collar, and yellow sweat stains. Thin fabric showing years of wear.",
+                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth with visible patches and rough stitching.",
+                "Mukena Bordir": "Old yellowish white silk mukena with fraying lace, heavy fabric drapes covering the whole body."
             },
             "Kakek": {
-                "Kaos Lusuh & Peci": "Yellowish thin white singlet (kaos oblong) with a dusty, faded black peci and a worn-out sarung.",
-                "Kaos Sobek & Sarung Lusuh": "A torn white undershirt with visible holes, paired with a very faded, frayed plaid sarung.",
-                "Baju Koko & Peci": "Standard white koko shirt and black peci.",
-                "Batik Lengan Panjang": "Formal long-sleeved batik shirt."
+                "Kaos Singlet & Peci": "Yellowish, thin white singlet (kaos oblong) with bacon-neck collar, a dusty faded black peci, and a worn-out sarung.",
+                "Kaos Sobek & Sarung": "A torn white undershirt with visible holes and sweat-drenched back, paired with a very faded, frayed plaid sarung.",
+                "Baju Koko & Peci": "Simple white koko shirt with a missing top button and a black peci.",
+                "Batik Lengan Panjang": "Vintage long-sleeved batik shirt with faded patterns and worn-out cuffs."
             },
             "Ibu": {
-                "Daster Lusuh & Kerudung": "Old faded daster with a simple, worn-out daily hijab (bergo), looking very humble and tired.",
-                "Kaos Lusuh & Kerudung": "Thin, oversized faded t-shirt with a simple dark hijab, showing signs of hard work.",
-                "Kebaya Sederhana": "Simple daily kebaya with a plain hijab."
+                "Daster Lusuh & Hijab": "Old faded daster with visible grease stains and a simple, worn-out bergo hijab, looking very humble and tired.",
+                "Kaos Lusuh & Hijab": "Thin, oversized faded t-shirt with sweat marks on the neck, paired with a simple dark hijab, showing signs of hard work.",
+                "Kebaya Sederhana": "Simple daily cotton kebaya with a plain hijab and a cheap safety pin visible."
             },
             "Bapak": {
-                "Kaos Lusuh & Sarung": "Thin faded t-shirt with a worn-out plaid sarung tied loosely at the waist.",
-                "Kaos Lusuh, Peci & Sarung": "Yellowish white singlet, a dusty black peci, and a faded sarung.",
-                "Kaos Lusuh & Kolor Lusuh": "Very thin old t-shirt with faded, loose cotton boxer shorts (kolor), looking extremely poor.",
-                "Baju Koko & Sarung": "Simple white koko and sarung for prayer."
+                "Kaos Lusuh & Sarung": "Thin faded t-shirt with bacon-neck collar and a worn-out plaid sarung tied loosely at the waist with a visible knot.",
+                "Kaos Singlet & Peci": "Yellowish white singlet with sweat stains under the arms, a dusty black peci, and a faded sarung.",
+                "Kaos & Kolor Lusuh": "Very thin old t-shirt with holes and faded, loose cotton boxer shorts (kolor), looking extremely poor.",
+                "Baju Koko & Sarung": "Simple white koko with wrinkled sleeves and a faded plaid sarung for prayer."
             },
             "Gadis Cantik": { 
-                "Daster Lusuh": "Faded, oversized cotton daster, looking unpolished and humble on a village girl.",
-                "Kaos Lusuh": "Thin, faded t-shirt with several stains and frayed hem.",
-                "Kebaya Modern": "Lace kebaya, long batik skirt.", 
-                "Hijab & Tunik": "Simple pashmina and linen tunik." 
+                "Daster Lusuh": "Faded, oversized cotton daster, looking unpolished and humble with a slightly torn hem on a village girl.",
+                "Kaos Lusuh": "Thin, faded t-shirt with several oil stains and frayed hem, showing her natural unpolished beauty.",
+                "Kebaya Modern": "Simple lace kebaya with a few loose threads and a long batik skirt.", 
+                "Hijab & Tunik": "Simple pashmina and a linen tunik that looks over-washed and slightly shrunken." 
             },
             "Anak Laki-laki": { 
-                "Kaos Lusuh": "Dirty, faded t-shirt with cracked graphic print and visible dust stains.",
-                "Setelan Lusuh": "Tattered t-shirt and worn-out short pants, looking like a poor village child.",
-                "Seragam SD": "Indonesian white-and-red school uniform." 
+                "Kaos Lusuh": "Dirty, faded t-shirt with cracked graphic print, missing stitching on the sleeves, and visible dust stains.",
+                "Setelan Lusuh": "Tattered oversized t-shirt and worn-out short pants with a broken elastic waist, looking like a poor village child.",
+                "Seragam SD": "Indonesian white-and-red school uniform, the white shirt is yellowish and the red pants are faded to pinkish-red." 
             },
             "Anak Perempuan": { 
-                "Dress Lusuh": "Old, faded hand-me-down dress with fraying lace and thin fabric.",
-                "Setelan Lusuh": "Faded t-shirt and simple cotton skirt, looking dusty and humble.",
-                "Seragam SD": "Indonesian white-and-red school uniform." 
+                "Dress Lusuh": "Old, faded hand-me-down dress with fraying lace, missing buttons, and very thin fabric.",
+                "Setelan Lusuh": "Faded t-shirt and simple cotton skirt with visible dirt smudges, looking dusty and humble.",
+                "Seragam SD": "Indonesian white-and-red school uniform, slightly oversized with a wrinkled collar." 
             }
         }
 
@@ -1465,120 +1478,130 @@ def tampilkan_ai_lab():
                 )
             },
             "🤖 Robot Rongsok (Life-Sized Mecha)": {
-                "Neon-Core Scrap (Cyber-Glow)": (
+                "Robot Rongsok Cyber-Glow": (
                     "A GIANT 175CM TALL CYBERNETIC ROBOT standing right next to the character. "
                     "Built from rusted metal sheets and translucent plastic. Features a GLOWING NEON BLUE CORE "
                     "in the chest that pulses with light. The blue light leaks through metal gaps, casting "
                     "sharp futuristic shadows on the character's face. The robot towers over the table."
                 ),
-                "Fire-Red Heavy (LED Eyes)": (
+                "Robot Mata LED": (
                     "A HUGE 2-METER TALL AGGRESSIVE ROBOT built from heavy industrial car scrap. "
                     "It features INTENSE GLOWING RED LED EYES and internal orange lighting like molten metal. "
                     "The robot is so large its head almost touches the hut's ceiling. The red light illuminates "
                     "the character's shaky hands in a dramatic cinematic style."
                 ),
-                "Rainbow-Tech (RGB Bottle Mech)": (
+                "Robot Botol Bekas Pelangi": (
                     "A GIANT LIFE-SIZED MECHA (170cm) built from hundreds of recycled plastic bottles. "
                     "INTERNAL RGB LIGHTING cycles through Purple, Cyan, and Green, refracting through the plastic "
                     "like a giant prism. The entire robot glows like a futuristic diamond, towering majestically "
                     "beside the character in the humble bamboo hut."
                 ),
-                "Toxic-Green (Bio-Bot Glow)": (
+                "Robot Limbah": (
                     "A HEAVY 180CM HAZARD-STYLE ROBOT made from yellow jerrycans and rusted pipes. "
                     "Features a TOXIC BRIGHT GREEN GLOW emanating from the joints and eyes. The green light "
                     "creates a radioactive-style aura, casting an eerie lime-green light onto the environment."
                 ),
-                "Kaleng Karatan (The Giant Beast)": (
+                "Kaleng Karatan": (
                     "A GIANT HEAVY MECHA ROBOT standing 160cm tall. Made from hundreds of rusted tin cans. "
                     "Massive shoulders, hydraulic-looking arms, and glowing red LED eyes. Visible rust textures "
                     "and complex DIY joints. It stands as a silent iron guardian next to the character."
                 ),
-                "Kabel & Komponen (The Giant Cyborg)": (
+                "Kabel & Komponen": (
                     "A COMPLEX LIFE-SIZED (170cm) CYBER-ROBOT made from thousands of discarded electrical wires. "
                     "The body features exposed circuitry, vacuum tubes, and copper 'muscles' wrapping around "
                     "a large metal skeleton. One hand is glowing with a sharp blue LED light."
                 ),
-                "Kardus Mecha (Giant Gundam Style)": (
+                "Kardus Gundam Style)": (
                     "A TALL 190CM AGGRESSIVE ROBOT built from multi-layered old corrugated cardboard. "
                     "Features sharp armor plates, a massive 'V-fin' head, and back-mounted wings that reach the ceiling. "
                     "Detailed with visible brand markings and glowing yellow LED eyes behind the cardboard mask."
                 ),
-                "Busi & Sparepart (Heavy Metal)": (
+                "Busi & Sparepart": (
                     "A MASSIVE 1.5-METER HEAVY-METAL ROBOT built from hundreds of used spark plugs (busi) and gears. "
                     "The head is a large vintage piston with glowing blue LED eyes. Extremely heavy-looking, "
                     "with oily metallic textures and intricate mechanical joints that tower over the character."
                 ),
-                "Sendok & Garpu (Silver Knight)": (
+                "Sendok & Garpu": (
                     "A MAJESTIC 170CM SILVER ROBOT crafted from hundreds of bent stainless steel spoons and forks. "
                     "The cutlery forms knight-like armor plating. Features a long sword of metal scrap "
                     "and a glowing white visor that reflects brilliantly in the dim room."
                 ),
-                "Ban Bekas (The Rubber Titan)": (
+                "Ban Bekas": (
                     "A DARK RUGGED 2-METER GIANT ROBOT crafted from cut-up black rubber tires. "
                     "Features heavy tread textures as armor and glowing yellow eyes. Looks extremely tough, "
                     "muscular, and intimidating, standing tall and filling the corner of the hut."
                 ),
-                "Pipa PVC & Baut (Giant Industrial)": (
+                "Pipa PVC & Baut": (
                     "A HEAVY INDUSTRIAL 180CM ROBOT made from weathered PVC pipes and rusted bolts. "
                     "Features oversized mechanical claws and a bulky tank-like torso. Small orange warning "
                     "lights flicker on its shoulders, casting a moody industrial glow from above."
                 ),
-                "Mainan Plastik (Giant Toy-Basher)": (
+                "Mainan Plastik": (
                     "A COLORFUL BUT CREEPY 160CM ROBOT built from a collage of broken plastic toys. "
                     "Features mismatched limbs and multiple glowing RGB eyes. A chaotic, high-detail "
                     "nightmare aesthetic that stands majestically beside the character."
                 ),
-                "Kayu Palet & Rantai (Giant Golem)": (
+                "Kayu Palet & Rantai": (
                     "A RUSTIC 2-METER GIANT ROBOT made from weathered wood slabs and heavy rusted chains. "
                     "The joints are large iron bolts. It has a bulky, ancient golem-like silhouette "
                     "with small glowing amber eyes that tower over the sitting character."
                 ),
-                "Botol Oli & Jerigen (Giant Neon-Mech)": (
+                "Botol Oli & Jerigen": (
                     "A VIBRANT 170CM NEON ROBOT built from recycled yellow jerrycans and oil bottles. "
                     "Features internal green glow through the translucent plastic. The design is boxy "
                     "and heavy, looking like a giant futuristic hazard-handling machine."
                 )
             },
             "🥣 Buka Puasa Haru (Menu Sederhana)": {
-                "Nasi & Garam (Paling Nyesek)": (
+                "Nasi & Garam": (
                     "A HEART-BREAKING IFTHAR. A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
-                    "A glass of plain tap water in a plastic cup. The table is bare, reflecting extreme poverty and deep gratitude."
+                    "A glass of plain tap water in a plastic cup. The character is carefully picking up every single grain of rice with their fingers. "
+                    "The table is bare, reflecting extreme poverty and deep gratitude."
                 ),
                 "Singkong Rebus & Sambal": (
                     "A POOR MAN'S MEAL. Two pieces of boiled cassava on a small plastic plate with a dab of red chili paste (sambal). "
-                    "A glass of warm plain water. The character looks at the food with a bittersweet smile."
+                    "A glass of warm plain water. The character looks at the food with a bittersweet smile, "
+                    "slowly blowing on the hot cassava. Steam rises, blurring their tired eyes."
                 ),
                 "Teh & Biskuit Lempem": (
                     "A VERY SIMPLE BREAKING OF FAST. A glass of dark, unsweetened tea and one single dry biscuit. "
-                    "The biscuit is being dipped into the tea to make it soft. Minimalist yet deeply emotional."
+                    "The biscuit is being dipped into the tea for a long time until it becomes soft and mushy. "
+                    "The character's shaky hands reflect the physical weakness from fasting all day."
                 ),
                 "Nasi Kerupuk & Air Putih": (
                     "A HUMBLE MEAL. A small bowl of white rice and one white flour cracker (kerupuk). "
-                    "The character is breaking the cracker over the rice. Very quiet and somber atmosphere."
+                    "The character is breaking the cracker into tiny pieces over the rice to make it last longer. "
+                    "Very quiet and somber atmosphere, only the sound of the crunching cracker is heard."
                 ),
-                "Ubi Bakar (The Survivor)": (
+                "Ubi Bakar": (
                     "A SIMPLE IFTHAR consisting of one roasted sweet potato (ubi bakar) on a piece of old newspaper. "
-                    "Steam is rising from the potato. A very traditional and humble village scene."
+                    "Steam is rising from the potato. The character peels the charred skin with soot-stained fingers. "
+                    "A very traditional and humble village scene with dim lighting."
                 ),
                 "Bubur Polos & Kecap": (
                     "A MODEST MEAL. A small bowl of watery white porridge (bubur) with a thin swirl of sweet soy sauce. "
-                    "The character eats slowly with a wooden spoon, the steam lightly fogging their old glasses."
+                    "The character eats slowly with a wooden spoon, the steam lightly fogging their old glasses. "
+                    "A single fly is being waved away gently from the bowl."
                 ),
                 "Pisang Rebus & Air Hangat": (
                     "A VERY MODEST IFTHAR. Two pieces of boiled banana on a small tin plate. "
-                    "A glass of plain hot water. No sugar, no luxury. The character's shaky hands carefully peel the skin."
+                    "A glass of plain hot water. No sugar, no luxury. The character's shaky hands carefully peel the skin, "
+                    "placing the skin neatly on the side of the plate."
                 ),
                 "Nasi Putih & Satu Tempe": (
                     "A SIMPLE VILLAGE MEAL. A small mound of white rice and one single piece of fried tempeh. "
-                    "Served on a piece of banana leaf instead of a plate. Authentic and deeply humble setting."
+                    "Served on a piece of banana leaf instead of a plate. The character is splitting the one tempeh "
+                    "into smaller bits to eat with the rice. Authentic and deeply humble."
                 ),
                 "Gorengan Dingin & Teh Tawar": (
                     "A POOR MAN'S IFTHAR. One cold fried bakwan on a small saucer and a glass of plain unsweetened tea. "
-                    "The lighting is dim, only a single lightbulb illuminating the simple wooden table."
+                    "The oil has hardened on the cold fritter. The character bites into it with a look of pure patience. "
+                    "A single lightbulb flickers above the wooden table."
                 ),
                 "Lontong Polos & Air Putih": (
                     "A HUMBLE BREAK. One single rice cake (lontong) wrapped in a wilted banana leaf. "
-                    "A plastic cup of plain water. The scene shows the character sitting alone in deep silence."
+                    "A plastic cup of plain water. The character is slowly unwrapping the leaf as if it's a precious gift. "
+                    "The scene shows the character sitting alone in deep, prayerful silence."
                 )
             }
         }
@@ -1662,6 +1685,21 @@ def tampilkan_ai_lab():
                 "Sitting in a corner of a small room. A single small wooden window with no glass, only wooden slats. "
                 "Faint moonlight or twilight filters through, casting long shadows on the bamboo walls. "
                 "A simple wooden bed with a thin sarong is visible in the background."
+            ),
+            "Teras Mushola Tua": (
+                "On the humble wooden porch of an old village prayer room (mushola). "
+                "Weathered green paint, a stack of worn-out sarongs, and a wooden drum (bedug) in the background. "
+                "Peaceful and spiritual atmosphere during twilight."
+            ),
+            "Kolong Jembatan Beton": (
+                "Under a massive, weathered concrete bridge. Dark, damp, and gritty atmosphere. "
+                "Graffiti on the pillars, flickering fire in a barrel, and the character sitting on cardboard. "
+                "Strong cinematic shadows and industrial lighting."
+            ),
+            "Pinggir Rel Kereta": (
+                "Beside an active railway track in a slum area. Gravel ground, makeshift shacks made of plywood, "
+                "and tangled electric wires. The sound of a distant train is implied by the vibration. "
+                "Harsh, raw, and very marginal urban-village vibe."
             )
         }
         # --- 3. MASTER AUDIO & PERFORMANCE (HUMAN-LIKE ACTING) ---
@@ -1690,11 +1728,14 @@ def tampilkan_ai_lab():
                 "Menatap kejauhan dengan mata berkaca-kaca (Looking into the distance with teary eyes)",
                 "Mengusap debu dari meja kayu (Wiping dust off the wooden table with a small cloth)",
                 "Berdiri tegak sambil mengagumi robot (Standing tall while admiring the giant robot)",
-                "Duduk bersila dengan tenang (Sitting cross-legged peacefully on the floor)"
+                "Duduk bersila dengan tenang (Sitting cross-legged peacefully on the floor)",
+                "Memijat bahu yang kaku karena lelah (Massaging stiff shoulders from exhaustion)",
+                "Menunduk malu sambil memainkan ujung baju (Looking down shyly while playing with the shirt hem)",
+                "Mengusap perut yang lapar dengan telapak tangan (Gently rubbing a hungry stomach with the palm)"
             ]
         }
 
-        # --- UI LAYOUT ---        
+# --- UI LAYOUT ---        
         with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
             # --- BARIS 1: MODUS KONTEN (OTAK UTAMA) ---
             st.markdown('<p class="small-label">PILIH MODUS KONTEN</p>', unsafe_allow_html=True)
@@ -1734,9 +1775,9 @@ def tampilkan_ai_lab():
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
-                # Tambahan Aksi Fisik Random agar video hidup
-                import random
+                # Kocok aksi fisik di sini (pake random yang ada di baris paling atas app)
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
+                st.info(f"Gerakan: {pilih_aksi}")
 
             st.write("")
             btn_gen = st.button(
@@ -1749,7 +1790,7 @@ def tampilkan_ai_lab():
         # --- LOGIC GENERATOR ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu, Bos!")
+                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
             else:
                 # --- 4. DYNAMIC SCENE LOGIC (AUTOMATIC POSING & CAMERA) ---
                 scene_context = ""
@@ -1773,9 +1814,6 @@ def tampilkan_ai_lab():
                     )
 
                 # --- 5. NUANSA HIDUP (LIVING ATMOSPHERE) ---
-                import random
-                pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
-                
                 living_details = (
                     "Atmospheric cinematic lighting. Tiny dust motes dancing in the light rays. "
                     "Subtle background sounds of distant crickets and a soft evening breeze. "
@@ -1804,9 +1842,10 @@ def tampilkan_ai_lab():
                     f"Deep depth of field. High-dynamic range (HDR) with realistic lighting and shadows."
                 )
 
+                # --- TAMPILAN OUTPUT ---
                 st.divider()
-                st.success(f"🎬 MASTER NATURAL PROMPT READY")
-                st.code(video_prompt, language="text")
+                st.success(f"🎬 MASTER PROMPT READY (Mode: {modus_konten})")
+                st.code(video_prompt, language="text")        
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5405,6 +5444,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
