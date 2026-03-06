@@ -1915,7 +1915,81 @@ def tampilkan_ai_lab():
                 st.success(f"🎬 MASTER PROMPT READY (Mode: {modus_konten})")
                 st.code(video_prompt, language="text")
                 
-    with t_transform: st.info("⚡ TRANSFORMATION.")
+    # --- TAB BARU: TRANSFORMATION ---
+    with t_transform:
+        st.markdown("### ⚡ TRANSFORMATION ENGINE")
+        
+        # Membungkus semua fitur ke dalam Expander
+        with st.expander("🛠️ KONFIGURASI METAMORFOSIS VIRAL", expanded=True):
+            st.info("💡 Mode ini dioptimalkan untuk Image-to-Video. Gunakan foto tokoh (Messi, Ronaldo, dll) sebagai referensi di platform AI Video lo.")
+
+            # --- ROW 1: IDENTITAS & PEMICU ---
+            c1, c2, c3 = st.columns([2, 2, 2])
+            with c1:
+                target_subject = st.selectbox("IDENTITAS SUBJEK", [
+                    "The character from the reference image",
+                    "The specific athlete in the image",
+                    "The person in the foreground"
+                ])
+            with c2:
+                trigger_act = st.selectbox("AKSI PEMICU", ["Minum", "Makan", "Berteriak", "Meditasi"])
+            with c3:
+                obj_name = st.text_input("NAMA OBJEK", value="Susu Glowing")
+
+            # --- ROW 2: JENIS TRANSFORMASI ---
+            t1, t2 = st.columns(2)
+            with t1:
+                trans_type = st.selectbox("LEVEL PERUBAHAN", [
+                    "Super Saiyan (Golden Aura)",
+                    "Anatomical Titan (Muscle & Bone)",
+                    "The Hulk (Green Rage)",
+                    "Cyborg/Transformer (Metal)",
+                    "God Mode (Nebula/Cosmic)"
+                ])
+            with t2:
+                env_impact = st.multiselect("EFEK SEKITAR", 
+                    ["Lantai Retak", "Benda Melayang", "Lampu Pecah", "Getaran Kamera"],
+                    default=["Getaran Kamera"])
+
+            # --- ROW 3: ADDITIONAL NOTES ---
+            extra_notes = st.text_input("CATATAN TAMBAHAN", placeholder="Contoh: Peci terbang ke langit, mata menyala biru...")
+
+            # --- RAKIT MASTER PROMPT ---
+            if st.button("🔥 GENERATE VIRAL TRANSFORMATION", type="primary", use_container_width=True):
+                # 1. Logika Pemicu
+                trigger_p = f"As {target_subject} {trigger_act.lower()} the {obj_name}, " if trigger_act != "Berteriak" else f"As {target_subject} screams in pure rage, "
+                
+                # 2. Logika Efek Lingkungan
+                env_p = ""
+                if "Lantai Retak" in env_impact: env_p += "The ground beneath cracks violently. "
+                if "Benda Melayang" in env_impact: env_p += "Small stones and dust start floating upwards. "
+                if "Lampu Pecah" in env_impact: env_p += "Surrounding lights shatter and explode. "
+                if "Getaran Kamera" in env_impact: env_p += "Intense screen shakes and handheld micro-jitter for high-tension cinematic feel. "
+
+                # 3. Mantra Visual Spesifik
+                visual_mantra = {
+                    "Super Saiyan (Golden Aura)": "Golden electric aura erupts from the body. Hair stands up, turns golden and spiky. High-voltage sparks flickering around muscles.",
+                    "Anatomical Titan (Muscle & Bone)": "Hyper-realistic rapid muscle growth. Bone thickening visible. Transparent gel-skin reveals glowing internal organs with realistic subsurface scattering.",
+                    "The Hulk (Green Rage)": "Skin turns deep emerald green. Body mass triples instantly. Thick veins popping on the neck and forehead with intense rage.",
+                    "Cyborg/Transformer (Metal)": "The organic flesh starts to petrify and turn into metallic gears and hydraulic pistons. Transparent liquid metal skin covers internal circuitry.",
+                    "God Mode (Nebula/Cosmic)": "Body substance turns into a swirling celestial nebula. The skeleton glows like pure white starlight through the translucent cosmic skin."
+                }
+
+                # 4. Final Prompt Assembly
+                final_viral_prompt = (
+                    f"STRICT CHARACTER FIDELITY: Maintain 100% facial features and identity of {target_subject} from the reference image. No face distortion.\n\n"
+                    f"TRANSFORMATION SEQUENCE:\n{trigger_p} initiate {trans_type} metamorphosis. {visual_mantra[trans_type]} "
+                    f"Clothing Physics: High-tension fabric simulation, shirt ripping and buttons popping toward the camera lens realistically. {extra_notes}.\n\n"
+                    f"ENVIRONMENTAL REACTION: {env_p}\n\n"
+                    f"TECHNICAL SPEC: 24fps real-time motion, shot on ARRI Alexa 65, 35mm Master Prime Lens. Realistic biological morphing, cinematic HDR, professional movie VFX quality."
+                )
+
+                # Output Tampilan
+                st.divider()
+                st.success("✅ VIRAL TRANSFORMATION PROMPT READY!")
+                st.code(final_viral_prompt, language="text")
+                st.caption("Salin prompt di atas ke Kling AI, Runway Gen-3, atau Luma Dream Machine (Mode Image-to-Video).")
+                
     with t_random: st.info("🎲 Random Mode Standby.")
                 
 def tampilkan_gudang_ide():
@@ -5512,6 +5586,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
