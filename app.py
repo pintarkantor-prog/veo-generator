@@ -2036,7 +2036,7 @@ def tampilkan_ai_lab():
                 f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
                 f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
                 f"LOCATION: {user_scene}. {sultan_quality_logic} "
-                "Gritty texture, realistic rain droplets, cinematic atmosphere, 16:9 aspect ratio."
+                "Gritty texture, realistic rain droplets, cinematic atmosphere, 9:16 aspect ratio."
             )
 
             # B. RAKIT PROMPT VIDEO (IDENTITAS BARU: sultan_video_story)
@@ -5675,6 +5675,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
