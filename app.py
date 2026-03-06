@@ -2023,13 +2023,16 @@ def tampilkan_ai_lab():
 
         # --- 2. OUTPUT AREA (IDENTITAS EKSKLUSIF SULTAN) ---
         if btn_generate:
-            # DNA KUALITAS TINGGI (ANTI-AI & RAW STYLE)
+            # DNA KUALITAS TINGGI (UPGRADED: THE GRITTY REALITY & NO TEXT)
             sultan_quality_logic = (
-                "ULTRA-REALISTIC CINEMA. Muted natural colors, desaturated tones. "
-                "Kodak Portra 400 film stock style, heavy film grain, high ISO noise. "
-                "Visible skin imperfections, real pores, sweat, wet mud textures. "
-                "Shallow depth of field: sharp focus on characters, soft natural blur background. "
-                "NO NEON COLORS, NO OVERSATURATION, NO ARTIFICIAL SHARPENING, NO PLASTIC TEXTURES."
+                "ULTRA-REALISTIC RAW FOOTAGE. Shot on dirty 35mm film stock with heavy organic grain. "
+                "Muted and desaturated cinematic colors, NO vibrant greens, NO neon tones. "
+                "Environment Detail: Gritty textures on buildings, cracked concrete, overgrown dry grass, "
+                "volumetric dust particles in the air, realistic puddles with muddy reflections. "
+                "Character Detail: Visible skin pores, sweat, oily skin, messy hair, realistic fabric wrinkles. "
+                "Camera: Handheld camera shake, slight motion blur, soft bokeh background. "
+                "STRICTLY NO TEXT, NO CAPTIONS, NO SUBTITLES, NO WATERMARKS, NO CREDITS. "
+                "STRICTLY NO PLASTIC LOOK, NO SMOOTHING, NO UNREAL ENGINE STYLE, NO VIBRANT SATURATION."
             )
 
             # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
@@ -2047,11 +2050,14 @@ def tampilkan_ai_lab():
 
             # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
             sultan_image_dna = (
-                f"MASTER IMAGE (Spatial Split): Two distinct characters standing apart. "
-                f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
-                f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
-                f"LOCATION: {user_scene}. {sultan_quality_logic} "
-                f"Handheld camera photography, raw footage, cinematic depth, --ar 9:16 --stylize 50 --v 6.0"
+                f"A raw, unedited wide-angle photograph. Vertical 9:16 frame. "
+                f"Two distinct characters in a tense standoff. "
+                f"ON THE LEFT: {c_l_name} wearing {c_l_outfit}. "
+                f"ON THE RIGHT: {c_r_name} wearing {c_r_outfit}. "
+                f"SCENE: {user_scene}. "
+                f"{sultan_quality_logic} " # Ini bakal manggil DNA "Gritty" kita tadi
+                "The lighting is natural and moody, captured on a high-end DSLR with a 35mm lens. "
+                "Candid photography style, slightly blurred background, extreme detail on skin textures and fabric."
             )
 
             # B. RAKIT PROMPT VIDEO (sultan_video_story)
@@ -2066,6 +2072,16 @@ def tampilkan_ai_lab():
                 if "Ledakan Lampu & Listrik" in env_fx: s_fx += "Lights explode with electric sparks. "
                 if "Kabut & Debu Sinematik" in env_fx: s_fx += "Volumetric fog and dust. "
 
+            # --- LOGIKA DIALOG SULTAN (ANTI BEREBUT) ---
+            if c_l_speech and not c_r_speech:
+                s_dialog = f"{c_l_name} (Left) is speaking clearly: '{c_l_speech}', while {c_r_name} (Right) remains SILENT, listening with NO mouth movement."
+            elif c_r_speech and not c_l_speech:
+                s_dialog = f"{c_r_name} (Right) is speaking clearly: '{c_r_speech}', while {c_l_name} (Left) remains SILENT, listening with NO mouth movement."
+            elif c_l_speech and c_r_speech:
+                s_dialog = f"Both characters are talking. {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'."
+            else:
+                s_dialog = "Both characters are silent, maintaining natural facial expressions."
+
             facing_logic = (
                 "The characters are positioned in a profile view, facing each other directly. "
                 "Intense eye contact between the two characters."
@@ -2077,12 +2093,12 @@ def tampilkan_ai_lab():
                 f"CAMERA: {cam_angle} with {cam_movement} movement. \n\n"
                 f"1. POSITIONING: {facing_logic} \n"
                 f"2. PHYSICAL MOTION: {user_action}. \n"
-                f"3. DUAL DIALOG: {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'. "
-                "Ensure realistic mouth movements and lip-sync matching the dialogue. \n"
+                f"3. DIALOGUE PERFORMANCE: {s_dialog} "
+                "Ensure realistic mouth movements and lip-sync ONLY for the speaking character. \n"
             )
             
             if is_trans_l or is_trans_r:
-                # FIX: Nama variabel di bawah ini sekarang sama dengan di atas (sultan_mantra_box)
+                # FIX: Menggunakan sultan_mantra_box yang sudah lo buat di atas
                 sultan_video_story += (
                     f"4. CLIMAX: While {trans_trigger.lower()}, {s_target} initiates {trans_type}. "
                     f"The character is {s_smooth}. {sultan_mantra_box[trans_type]} "
@@ -5698,6 +5714,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
