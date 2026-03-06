@@ -1365,17 +1365,17 @@ def tampilkan_ai_lab():
                 "She has a poised and motherly aura, looking like a respected village elder. "
                 "Clean skin, natural look, strictly no makeup."
             ),
-            "Kakek (The Grandpa)": (
-                "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
-                "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
-                "His eyes are calm and wise, showing a life of honest work. Stooped but dignified posture. "
-                "He looks like a retired village teacher or farmer. Clean appearance, no dirt, no crying."
-            ),
             "Nenek Sumi": (
                 "A hardworking elderly Indonesian woman (60s) with a deeply weathered and tanned face. "
                 "Visible deep wrinkles and realistic sun spots from years of labor. "
                 "Her eyes look tired but resilient. She has a thin, humble frame that shows her tough life. "
                 "Authentic village grandmother look, clean but rugged skin."
+            ),
+            "Kakek (The Grandpa)": (
+                "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
+                "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
+                "His eyes are calm and wise, showing a life of honest work. Stooped but dignified posture. "
+                "He looks like a retired village teacher or farmer. Clean appearance, no dirt, no crying."
             ),
             "Ibu (The Mother)": (
                 "A beautiful middle-aged Indonesian woman (40s) with a natural and unpolished face. "
@@ -5707,6 +5707,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
