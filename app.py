@@ -1739,7 +1739,7 @@ def tampilkan_ai_lab():
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
 
             st.write("")
-            btn_gen = st.button("🚀 GENERATE VIDEO PROMPT", use_container_width=True)
+            btn_gen = st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True)
 
         # --- LOGIC GENERATOR ---
         if btn_gen:
@@ -5397,6 +5397,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
