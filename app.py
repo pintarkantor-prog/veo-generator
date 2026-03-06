@@ -1565,7 +1565,7 @@ def tampilkan_ai_lab():
                     
                     f"TIMELINE & OBJECT TRANSFORMATION:\n"
                     f"- 0-6 SECONDS (CRAFTING PHASE): The {char_key} is sitting behind a rustic wooden table, "
-                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 80% FINISHED; "
+                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 85% FINISHED; "
                     f"the central dome is visible but one minaret is still being hand-assembled. "
                     f"Scraps of {pilihan_bahan} and glue are visible on the table.\n"
                     f"- 6-10 SECONDS (MIRACLE REVEAL): While the camera stays FIXED and the {char_key} continues speaking, "
@@ -5190,6 +5190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
