@@ -897,56 +897,47 @@ def tampilkan_ai_lab():
             "BALUNG": {
                 "fisik": (
                     "National Geographic forensic photography style, macro extreme close-up of a human skeleton encased in a thick, dense, transparent gel-like layer of human dermal tissue. "
-                    "This skin layer is substantially thick, not a thin film, appearing like a substantial, soft, fleshy organic casing. "
-                    "The transparent skin exhibits incredibly hyper-realistic dermal texture, featuring defined pores, fine micro-hairs, and natural skin imperfections. "
-                    "Strong Subsurface Scattering (SSS) is critical; natural daylight filters through the thick gel, making the dense fleshy material appear soft, semi-opaque, and luminous. "
-                    "Inside the central cavity, intricately detailed human internal organs are clearly visible, suspended within the clear, thick gel. "
-                    "Crucially, the organs possess no artificial lighting effects; instead, they display a very subtle, deep, natural bioluminescence, "
-                    "appearing as a soft, organic, warm glow emanating from deep within the living tissue, reminiscent of the deep, muted bioluminescence of deep-sea creatures."
+                    "The transparent skin exhibits hyper-realistic dermal texture with natural subsurface scattering (SSS). "
+                    "Inside, internal organs show a subtle, deep bioluminescence. "
+                    "Movement Physics: The gel-skin has organic elasticity and reacts to gravity and motion with realistic inertia."
                 ),
                 "pakaian": {
                     "Original": (
-                        "Pure anatomical look, no clothes. Focus on the raw contrast between hard white bone, "
-                        "thick translucent fleshy gel, and the wet texture of internal organs. "
-                        "Natural film grain, shot on 100mm macro lens, visible dust motes, realistic skin imperfections, organic feel."
+                        "Pure anatomical look, no clothes. Focus on the raw contrast between hard white bone and "
+                        "thick translucent fleshy gel. Natural 24fps motion blur, realistic skin imperfections, organic fluid feel."
                     ),
                     "Jas Lab Putih": (
-                        "Wearing a professional heavy-duty white cotton lab coat. The fabric shows realistic weave texture, "
-                        "subtle wrinkles, and reinforced stitching. The coat is slightly translucent where it presses against the gel-skin. "
-                        "A stainless steel stethoscope hangs around the neck, showing realistic metallic cold-reflections."
+                        "Wearing a professional heavy-duty white cotton lab coat with realistic weave texture. "
+                        "The fabric moves naturally, showing realistic folds and wrinkles during action."
                     ),
                     "Jubah Kerajaan": (
                         "Wearing a royal crimson velvet tunic with heavy gold-threaded embroidery. "
-                        "The velvet has a deep, light-absorbing pile texture, while the gold threads show micro-reflections. "
-                        "The heavy fabric presses against the thick transparent skin casing, creating realistic organic displacement."
+                        "The heavy fabric shows realistic weight and dynamic sway as the character moves."
                     ),
                     "Baju Kantoran": (
-                        "Wearing a crisp white poplin button-up shirt with visible fabric grain and a matte black silk tie. "
-                        "Charcoal wool trousers with fine pinstripe texture. The shirt collar fits snugly against the thick, gel-like neck tissue."
+                        "Wearing a crisp white poplin button-up shirt and charcoal wool trousers. "
+                        "Sharp fabric textures that react to the character's natural skeletal movements."
                     ),
                     "Hoodie Hitam": (
-                        "Wearing an oversized premium heavyweight fleece black hoodie. The fabric has a soft, matte, "
-                        "high-quality textile feel with visible lint and fiber details. Deep shadows in the hood area contrast with the luminous gel-skin face."
+                        "Wearing an oversized premium heavyweight fleece black hoodie. "
+                        "Soft matte textile texture that gathers and folds realistically around the transparent neck."
                     ),
                     "Versi Sultan": (
-                        "Wearing a charcoal three-piece suit with intricate metallic gold brocade patterns. "
-                        "Black silk shirt with a subtle sheen. A heavy solid gold link chain and a diamond-encrusted watch "
-                        "showing realistic caustic light refractions. The luxury materials contrast with the raw, forensic internal anatomy."
+                        "Wearing a charcoal three-piece suit with intricate metallic gold brocade. "
+                        "Luxury materials with realistic caustic light refractions that shimmer during movement."
                     )
                 }
-            },
-            "Custom": {"fisik": "", "pakaian": {"Manual": ""}}
+            }
         }
 
-        # --- MASTER DATA AUDIO (DOKUMENTER & CINEMATIC PROFILE) ---
         MASTER_AUDIO_LAB = {
             "Tipe": [
                 "Pria (40th) - Deep Baritone, Tekstur Serak Berwibawa (Dokumenter Alam)",
                 "Pria (30th) - Tenor Tajam, Artikulasi Sempurna (Narator Investigasi)",
                 "Wanita (35th) - Suara Serak Lembut, Elegan, Misterius (Sultry & Dark)",
                 "Pria (55th) - Deep Husky, Berat, Bijak (Old Master Style)",
-                "Wanita (28th) - Suara Tenang, Statis, Tanpa Emosi (Clinical/Lab Computer)",
-                "Pria (30th) - Suara Sinis, Rendah, Provokatif (Thriller Narrator)"
+                "Wanita (28th) - Tenang, Berwibawa, Tegas (Professional Science Narrator)",
+                "Pria (30th) - Sinis, Rendah, Provokatif (Thriller Narrator)"
             ],
             "Aksen": [
                 "Indonesia Formal Baku (Standar Dubbing National Geographic)",
@@ -956,11 +947,11 @@ def tampilkan_ai_lab():
                 "Deep English Accented Indonesian (Gaya Narasi Internasional)"
             ],
             "Mood": [
-                "Sinematik (Penuh Penekanan, Jeda Dramatis, Intonasi Berat)",
-                "Mencekam (Rendah, Nyaris Berbisik, Atmosfer Horor)",
-                "Klinis & Informatif (Datar, Dingin, Fokus pada Data)",
-                "Melankolis & Puitis (Lembut, Penuh Perasaan, Menghanyutkan)",
-                "Urgent & Tense (Cepat, Napas Pendek, Memberi Tekanan)"
+                "Sinematik (Penuh Penekanan, Dinamis, Intonasi Berenergi)",
+                "Mencekam (Rendah, Intens, Atmosfer Thriller)",
+                "Klinis & Informatif (Lugas, Cepat, Fokus pada Fakta)",
+                "Melankolis & Puitis (Lembut tapi Mengalir, Bukan Statis)",
+                "Urgent & Tense (Cepat, Memberi Tekanan, Pace Tinggi)"
             ]
         }
 
@@ -1204,9 +1195,10 @@ def tampilkan_ai_lab():
                             "- Biarkan narasi mengalir bercerita tentang penderitaan organ yang kehilangan dayanya."
                         ),
                         "focus": (
-                            "Extreme anatomical detail, vibrating nerves (saraf bergetar merah), "
-                            "organ decay texture (organ menghitam/kusam), bioluminescence fluid, "
-                            "dan macro close-up pada kerusakan jaringan."
+                            "Extreme anatomical forensic detail, macro extreme close-up on vibrating nerves, "
+                            "visceral organ decay texture (organ menghitam/kusam), active pulsating organs, "
+                            "viscous bioluminescent fluid movement, micro-vibrations of the bone, "
+                            "and realistic subsurface scattering on thick gel-skin."
                         ),
                     },
                     "🏛️ Forbidden History (Konspirasi & Zaman)": {
@@ -1219,9 +1211,9 @@ def tampilkan_ai_lab():
                             "- Gunakan kata-kata sensori: debu zaman, cahaya neon terlarang, bata retak, dinginnya batu kuno."
                         ),
                         "focus": (
-                            "Cinematic Golden Hour, dust motes (debu terbang), "
-                            "ancient stone texture (batu candi berlumut), "
-                            "glowing circuit technology (sirkuit neon), ray-traced shadows."
+                            "Cinematic Golden Hour, dynamic dust motes (debu bergerak), ancient stone texture (batu candi berlumut), "
+                            "glowing circuit technology (sirkuit neon), ray-traced shadows, "
+                            "and Balung's fingers interacting with rough historical surfaces."
                         ),
                     },
                     "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
@@ -1234,10 +1226,9 @@ def tampilkan_ai_lab():
                             "- Fokus pada perubahan tekstur: dari kenyal menjadi rapuh, dari bening menjadi keruh cokelat."
                         ),
                         "focus": (
-                            "Side-by-side split screen (Kiri vs Kanan), "
-                            "Texture contrast (Kusam vs Glowing), "
-                            "Bone density transformation (Tulang keropos vs Padat), "
-                            "Clean studio lighting vs Dark grim lighting on the failing side."
+                            "Side-by-side split screen active interaction, texture contrast (Kusam vs Glowing), "
+                            "real-time bone density transformation (tulang keropos vs padat), "
+                            "liquid transparency turning murky, transition from organic elasticity to brittle fragility."
                         ),
                     },
                     "🌀 Absurd What-If (Fisika & Kiamat)": {
@@ -1250,10 +1241,9 @@ def tampilkan_ai_lab():
                             "- Jelaskan 'Efek Domino' kiamat ini dengan nada yang dingin namun mencekam."
                         ),
                         "focus": (
-                            "Anti-gravity debris (puing melayang), "
-                            "Chromatic aberration (distorsi warna di pinggir frame), "
-                            "Volumetric fog and dust, floating water physics (lautan melayang), "
-                            "dan Motion blur pada objek yang terlempar."
+                            "Anti-gravity debris (puing melayang), floating water physics interacting with Balung, "
+                            "chromatic aberration, volumetric fog, floating ocean particles, "
+                            "and motion blur on high-speed flying objects."
                         ),
                     },
                     "🧬 Genetic Glitch (Mutasi & Kelainan Langka)": {
@@ -1266,10 +1256,9 @@ def tampilkan_ai_lab():
                             "- Buat penonton merinding dengan kengerian biologis yang terasa sangat dekat dan nyata."
                         ),
                         "focus": (
-                            "Macro close-up on bone spikes (tulang menusuk keluar), "
-                            "Skin tension and tearing textures (kulit menegang/robek), "
-                            "Subcutaneous micro-movements (gerakan di bawah kulit), "
-                            "Cold medical neon lighting, and visceral sound-driven visuals."
+                            "Macro close-up on active bone spikes (tulang menusuk keluar), "
+                            "skin tension and tearing textures (kulit menegang/robek), subcutaneous writhing movements, "
+                            "cold medical neon lighting, and visceral sound-driven visuals."
                         ),
                     },
                     "🧠 Psychological Loop (Otak & Mental)": {
@@ -1282,11 +1271,9 @@ def tampilkan_ai_lab():
                             "- Gunakan diksi: badai listrik, kesepian yang membakar, sirkuit yang putus, kehampaan yang mencekam."
                         ),
                         "focus": (
-                            "Neural firing explosion (ledakan listrik saraf), "
-                            "Brain wave color shifts (Biru kelabu ke Merah api), "
-                            "Volumetric fog inside the skull, "
-                            "Micro-gestures of despair (tangan gemetar hebat, kepala tertunduk), "
-                            "dan Motion blur pada aliran listrik saraf."
+                            "Neural firing explosion, brain wave color shifts (Blue to Fire Red), "
+                            "volumetric fog inside the skull, micro-gestures of despair (tangan gemetar hebat), "
+                            "and motion blur on neural sparks spreading to the environment."
                         ),
                     },
                     "🔥 Survival Instinct (Uji Ketahanan Ekstrem)": {
@@ -1299,11 +1286,9 @@ def tampilkan_ai_lab():
                             "- Buat penonton merasakan kengerian saat tubuh kehilangan daya lawan terhadap alam yang kejam."
                         ),
                         "focus": (
-                            "Dynamic frost spreading (es merambat), "
-                            "Bone cracking textures (retakan pada tulang), "
-                            "Heat haze and boiling fluid effects, "
-                            "Crystalline ice growth on transparent skin, "
-                            "Slow-motion tracking on the last heartbeat."
+                            "Dynamic frost spreading (es merambat), active bone cracking textures, "
+                            "heat haze and boiling gel-skin effects, crystalline ice growth on transparent skin, "
+                            "and struggling movements (merangkak/menahan) against extreme nature."
                         ),
                     }
                 }
@@ -4943,6 +4928,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
