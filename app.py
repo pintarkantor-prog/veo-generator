@@ -887,7 +887,7 @@ def tampilkan_ai_lab():
     st.title("🧠 PINTAR AI LAB")
     st.divider()
 
-    t_anatomi, t_grandma, t_minecraft, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⛏️ MINECRAFT", "🎲 RANDOM"])
+    t_anatomi, t_grandma, t_transform, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⚡ TRANSFORMATION", "🎲 RANDOM"])
 
     # ==========================================================================
     # TAB: ANATOMY (SULTAN AUTO-PILOT)
@@ -1915,7 +1915,7 @@ def tampilkan_ai_lab():
                 st.success(f"🎬 MASTER PROMPT READY (Mode: {modus_konten})")
                 st.code(video_prompt, language="text")
                 
-    with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
+    with t_transform: st.info("⚡ TRANSFORMATION.")
     with t_random: st.info("🎲 Random Mode Standby.")
                 
 def tampilkan_gudang_ide():
@@ -5512,6 +5512,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
