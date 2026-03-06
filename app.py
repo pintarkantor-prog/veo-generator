@@ -1330,119 +1330,113 @@ def tampilkan_ai_lab():
                 st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # ==========================================================================
-    # TAB: GRANDMA (SULTAN INDONESIAN HERITAGE)
+    # TAB: THE FAMILY REALISM (REAL INDONESIAN HUMANS)
     # ==========================================================================
     with t_grandma:
-        # --- 1. MASTER DNA GRANDMA ENGINE ---
-        MASTER_GRANDMA_SOUL = {
+        # --- 1. MASTER DNA SOUL (REAL HUMAN - INDONESIAN PRIBUMI) ---
+        MASTER_FAMILY_SOUL = {
             "Nenek (The Grandma)": (
-                "Elderly female Javanese skeletal structure, hunched posture (kyphosis). "
-                "Indonesian ancestral skull: prominent malar bones, softer mandibular curve. "
-                "Weathered yellowish ivory bone texture. Deeply wrinkled tropical transparent gel-skin "
-                "with visible age spots (lentigines) suspended in the tissue. "
-                "Warm, dim amber heart bioluminescence. Shaky, trembling micro-movements."
+                "A real elderly Indonesian woman with deeply weathered skin. "
+                "Authentic facial wrinkles (crow's feet and deep smile lines), "
+                "thin gray hair tied in a traditional bun (sanggul). "
+                "Tired but kind eyes with realistic tear film. Hyper-realistic skin texture, "
+                "visible pores, and age spots (lentigines)."
             ),
             "Kakek (The Grandpa)": (
-                "Elderly male Indonesian skeletal structure, broad but stooped shoulders. "
-                "Distinctive Pribumi jawline (mandible), weathered and porous aged bone texture. "
-                "Thick, leathery transparent gel-skin with micro-scars. "
-                "Calm, deep golden bioluminescence from the lungs. Slow, heavy, deliberate movements."
+                "A real elderly Indonesian man with sun-kissed, leathery skin. "
+                "Deep forehead wrinkles, white stubble, and thinning gray hair. "
+                "Stooped posture, veins visible on his weathered hands. "
+                "Authentic rustic facial features of a village elder."
+            ),
+            "Gadis Cantik (The Maiden)": (
+                "A beautiful young Indonesian woman with natural tan skin (sawo matang). "
+                "Elegant facial features, deep brown eyes, long glossy black hair. "
+                "Natural skin texture without heavy makeup, soft facial fuzz, and realistic lip texture."
+            ),
+            "Anak Laki-laki (The Boy)": (
+                "A young Indonesian village boy, sun-tanned skin, messy black hair. "
+                "Bright, innocent eyes, a bit of sweat on the forehead. "
+                "Natural, playful, and raw facial expressions."
+            ),
+            "Anak Perempuan (The Girl)": (
+                "A cute young Indonesian girl with natural black hair and pigtails. "
+                "Soft chubby cheeks, innocent sparkling eyes, natural tan skin. "
+                "Tender and fragile appearance."
             )
         }
 
-        MASTER_GRANDMA_WARDROBE = {
+        # --- 2. MASTER WARDROBE (REAL FABRIC PHYSICS) ---
+        # (Tetap pake wardrobe yang tadi, tapi gue ilangin kata-kata "gel-skin" nya)
+        MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Kencana": "Faded cotton Javanese Batik daster, soft light-absorbing texture, loose fit, traditional Parang motifs.",
-                "Kebaya Kutubaru & Jarik": "Thin flowery cotton kebaya, dark brown Jarik Sogan batik, visible red stagen wrap around the ribcage.",
-                "Mukena Bordir Putih": "White silk mukena, delicate lace embroidery, heavy drapes, bright white contrast with amber glow.",
-                "Kebaya Encim & Selendang": "White Kebaya Encim with colorful floral embroidery, sheer silk selendang draped on skeletal shoulder."
+                "Daster Batik Kencana": "Old, faded cotton daster with traditional batik patterns. Soft, worn-out fabric texture.",
+                "Kebaya Kutubaru": "Classic flowery cotton kebaya with a rustic brown batik jarik (skirt).",
+                "Mukena Bordir": "White silk prayer robe with delicate lace. Drapes realistically over the head."
             },
             "Kakek": {
-                "Sarung Wadimor & Singlet": "Green plaid sarung tied at waist (Wadimor style), worn-out white cotton singlet, ribcage visible.",
-                "Baju Koko & Peci Hitam": "White baju koko with subtle embroidery, black velvet peci (songkok) with micro-fibers and dust.",
-                "Batik Lengan Panjang": "Formal silk-cotton batik, Mega Mendung pattern, slight luster, long sleeves, fits stooped shoulders.",
-                "Pangsi Hitam (Silat)": "Loose black rugged cotton shirt and trousers, red sarung folded on neck, high contrast."
+                "Sarung Wadimor & Singlet": "Green plaid sarung and a thin, worn-out white cotton undershirt (kaos oblong).",
+                "Baju Koko & Peci": "White koko shirt and a dusty black velvet peci (songkok).",
+                "Batik Lengan Panjang": "Formal long-sleeved batik shirt with traditional patterns."
+            },
+            "Gadis Cantik": {
+                "Kebaya Modern": "Elegant lace kebaya with a silk selendang, showing realistic fabric weave.",
+                "Dress Floral": "Simple, flowery summer dress made of light rayon fabric.",
+                "Hijab & Tunik": "Soft pashmina hijab and a loose-fitting linen tunik."
+            },
+            "Anak Laki-laki": {
+                "Kaos & Celana Pendek": "Simple cotton t-shirt and denim shorts with realistic dust stains.",
+                "Seragam SD": "White-and-red Indonesian elementary school uniform with a small tie."
+            },
+            "Anak Perempuan": {
+                "Dress Renda": "Cute lace dress with puffy sleeves and soft cotton texture.",
+                "Seragam SD": "White-and-red school uniform with a pleated skirt."
             }
         }
 
-        MASTER_GRANDMA_CRAFT = {
-            "Buah-buahan": "Handcrafted mosque miniature made from carved watermelon and citrus peels, wet pulpy textures, glistening juice.",
-            "Kardus Bekas": "Detailed mosque miniature made from recycled brown cardboard, torn edges, visible paper fibers, rustic handmade look.",
-            "Botol Plastik": "Mosque miniature built from cut recycled PET bottles, sharp plastic reflections, subtle scratches, DIY upcycled feel.",
-            "Ranting Kayu": "Rustic mosque built from dried twigs and bark, tied with fraying organic twine, earthy and primitive."
-        }
-
-        MASTER_GRANDMA_SETTING = {
-            "Gubuk Tua": "Inside a dim Indonesian wooden shack, volumetric dust motes in sunbeams, old woven bamboo mats (tikar), rustic timber walls.",
-            "Pinggir Sungai": "Muddy riverbank at twilight, reeds swaying, misty trees, humid atmosphere, soft water reflections on gel-skin.",
-            "Teras Desa": "Weathered concrete terrace, cracked floor tiles, mossy clay pots, cinematic Golden Hour with long amber shadows."
-        }
-
-        MASTER_GRANDMA_AUDIO = {
-            "Logat": ["Jawa Kromo Inggil", "Melayu Tua", "Indonesia Logat Desa", "Sunda Lembut"],
-            "Mood": ["Menangis Menahan Haru", "Bijak & Tenang", "Rendah Hati & Meminta Maaf", "Lelah tapi Ikhlas"]
-        }
-
-        # --- 2. UI GENERATOR ---
-        st.subheader("👵 THE GRANDPARENTS LEGACY")
+        # --- UI LAYOUT (SAMA SEPERTI TADI TAPI LEBIH CLEAN) ---
+        st.subheader("👨‍👩‍👧‍👦 REAL FAMILY STORYTELLING")
         
-        with st.container(border=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                tokoh = st.radio("Pilih Tokoh:", ["Nenek", "Kakek"], horizontal=True)
-                pakaian_list = list(MASTER_GRANDMA_WARDROBE[tokoh].keys())
-                baju_key = st.selectbox(f"Pakaian {tokoh}:", pakaian_list)
-            with col2:
-                set_key = st.selectbox("Latar Lokasi:", list(MASTER_GRANDMA_SETTING.keys()))
-                bahan_key = st.selectbox("Bahan Karya:", list(MASTER_GRANDMA_CRAFT.keys()))
+        with st.expander("👤 1. PILIH MANUSIA & PAKAIAN", expanded=True):
+            col_char, col_cloth = st.columns(2)
+            with col_char:
+                pilihan_user = st.selectbox("Pilih Tokoh Real:", list(MASTER_FAMILY_SOUL.keys()))
+                char_key = pilihan_user.split(" (")[0]
+            with col_cloth:
+                baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
+                baju_pilihan = st.selectbox(f"Pakaian {char_key}:", baju_options)
 
-        with st.container(border=True):
-            st.write("🎙️ **AUDIO ENGINE SETTING**")
-            ca1, ca2 = st.columns(2)
-            with ca1:
-                pilih_logat = st.selectbox("Logat Suara:", MASTER_GRANDMA_AUDIO["Logat"])
-            with ca2:
-                pilih_mood = st.selectbox("Mood Suara:", MASTER_GRANDMA_AUDIO["Mood"])
-            
-            narasi_input = st.text_area("Teks Ucapan (Narasi):", 
-                                        placeholder=f"Contoh: Maaf ya cuk, {tokoh} cuma bisa buat dari {bahan_key}...")
+        with st.expander("🎨 2. BAHAN KARYA & SETTING", expanded=False):
+            col_mat, col_loc = st.columns(2)
+            with col_mat:
+                # Ambil dari master craft yang tadi (buah, kardus, dll)
+                pilihan_bahan = st.selectbox("Karya yang Dibuat:", ["Buah-buahan", "Kardus Bekas", "Botol Plastik", "Ranting Kayu"])
+            with col_loc:
+                pilihan_set = st.selectbox("Lokasi:", ["Gubuk Tua", "Pinggir Sungai", "Teras Desa"])
 
-        if st.button("👵 RAKIT KONTEN GRANDMA"):
-            if not narasi_input:
-                st.error("Waduh, isi narasinya dulu Bos biar penonton mewek!")
+        with st.expander("🎙️ 3. NARASI SEDIH (MAAF YA CUK...)", expanded=True):
+            user_text = st.text_area("Tulis Ucapan Tokoh:", 
+                                     placeholder=f"Contoh: Maaf ya Cuk, Nenek cuma bisa kasih masjid dari {pilihan_bahan}...")
+
+        if st.button("🚀 GENERATE REAL HUMAN PROMPT", use_container_width=True):
+            if not user_text:
+                st.error("Isi narasinya dulu!")
             else:
-                # 3. RAKIT FINAL PROMPT
-                dna_soul = MASTER_GRANDMA_SOUL["Nenek (The Grandma)" if tokoh == "Nenek" else "Kakek (The Grandpa)"]
-                dna_baju = MASTER_GRANDMA_WARDROBE[tokoh][baju_key]
-                dna_bahan = MASTER_GRANDMA_CRAFT[bahan_key]
-                dna_set = MASTER_GRANDMA_SETTING[set_key]
-
-                video_final = (
-                    f"CORE SUBJECT: {dna_soul}\n"
-                    f"WARDROBE: {dna_baju}\n"
-                    f"ACTION: The skeletal {tokoh} is sitting, trembling hands delicately touching a {dna_bahan}. "
-                    f"Realistic tears dripping down the wrinkled transparent skin. Looking at the camera with humble, sad eyes. "
-                    f"Movement is natural, organic, and shaky. \n"
-                    f"ENVIRONMENT: {dna_set}\n"
-                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Natural 24fps motion blur, "
-                    f"hyper-realistic forensic textures, 35mm film grain. NO slow-motion."
-                )
-
-                audio_final = (
-                    f"VOICE: {'Female 65yo' if tokoh == 'Nenek' else 'Male 70yo'}, "
-                    f"Accent: {pilih_logat}, Mood: {pilih_mood}.\n"
-                    f"TEXT: '{narasi_input}'\n"
-                    f"PERFORMANCE: Natural micro-pauses, trembling breath, emotional breaks, "
-                    f"intimate ASMR-like quality."
-                )
-
-                st.divider()
-                st.success(f"🎬 VIDEO PROMPT ({tokoh} - {bahan_key})")
-                st.code(video_final, language="text")
+                final_soul = MASTER_FAMILY_SOUL[pilihan_user]
+                final_baju = MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]
                 
-                st.success(f"🎙️ AUDIO INSTRUCTION")
-                st.code(audio_final, language="text")
-                st.info("💡 **TIPS:** Gunakan suara yang serak dan parau untuk hasil maksimal.")
+                # RAKIT PROMPT VIDEO (MANUSIA ASLI)
+                video_prompt = (
+                    f"CINEMATIC PHOTO-REALISM: {final_soul}\n"
+                    f"WARDROBE: {final_baju}\n"
+                    f"SCENE: {char_key} is sitting, hands trembling with emotion, holding a handmade miniature made from {pilihan_bahan}. "
+                    f"Real tears are welling up in their eyes and rolling down their cheeks. "
+                    f"Their facial expression is a mix of sadness and deep love. \n"
+                    f"ENVIRONMENT: Setting {pilihan_set}. Cinematic lighting, dust motes, 35mm film look.\n"
+                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Hyper-realistic skin, macro detail on hands, natural 24fps motion."
+                )
+
+                st.success("🎥 PROMPT VIDEO (MANUSIA ASLI)")
+                st.code(video_prompt, language="text")
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5041,6 +5035,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
