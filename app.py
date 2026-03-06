@@ -1982,52 +1982,64 @@ def tampilkan_ai_lab():
             # --- ROW 4: DETAIL TRANSFORMASI ---
             if is_trans_l or is_trans_r:
                 st.divider()
-                # Judul dibikin margin negatif biar rapet
+                # Judul rapet tanpa spasi hantu
                 st.markdown('<p class="small-label" style="margin-bottom: -15px;">⚡ METAMORFOSIS SETTINGS</p>', unsafe_allow_html=True)
                 
                 t1, t2, t3 = st.columns(3)
                 with t1:
-                    st.caption("Jenis Perubahan")
                     trans_type = st.selectbox("trans_type_box", [
                         "Anatomical Titan (Real Muscle & Bone)", 
                         "Super Saiyan (God Aura & Electric)", 
                         "Mecha-Hybrid (Liquid Metal/Robot)", 
-                        "Ethereal God (Cosmic/Nebula)"
+                        "Ethereal God (Cosmic/Nebula)",
+                        "Instant Obesity (Jiggling Fat)",
+                        "Ultra-Skinny (Malnourished Bone)",
+                        "Squashed & Short (Hobbit Style)",
+                        "Extreme Tall & Lanky (Slender Style)"
                     ], label_visibility="collapsed")
                     
-                    st.caption("Transisi")
+                    st.caption("Kecepatan Transisi")
                     trans_speed = st.select_slider("speed_slider", options=["Slow & Smooth", "Steady", "Explosive"], label_visibility="collapsed")
                 
                 with t2:
-                    st.caption("Aksi Pemicu")
-                    trans_trigger = st.text_input("trigger_input", placeholder="Contoh: Menggigit ibu jari / Minum Susu", label_visibility="collapsed")
+                    st.caption("Aksi Pemicu (Trigger)")
+                    trans_trigger = st.text_input("trigger_input", placeholder="Contoh: Terkejut / Bersin / Marah", label_visibility="collapsed")
+                    
+                    st.info("💡 Pilih 'Slow & Smooth' untuk perubahan berat badan agar lemak/tulang terlihat bergeser realistis.")
                 
                 with t3:
-                    st.caption("Efek Sekitar Sultan")
+                    st.caption("Efek Lingkungan")
                     env_fx = st.multiselect("env_fx_box", 
                                            ["Lantai Retak & Hancur", "Gravitasi Terbalik (Melayang)", 
                                             "Shockwave Udara", "Ledakan Lampu & Listrik", "Kabut & Debu Sinematik"],
                                            default=["Kabut & Debu Sinematik"], label_visibility="collapsed")
             
-            btn_generate = st.button("🚀 GENERATE ULTIMATE SULTAN PROMPT", type="primary", use_container_width=True)
+            btn_generate = st.button("🚀 GENERATE ALL PROMPT", type="primary", use_container_width=True)
 
         # --- 2. OUTPUT AREA (IDENTITAS EKSKLUSIF SULTAN) ---
         if btn_generate:
             # DNA KUALITAS TINGGI (ANTI-AI & RAW STYLE)
-            # Kita pake nama variabel unik: sultan_quality_logic
             sultan_quality_logic = (
-                "Cinematic RAW photography, shot on ARRI Alexa 65, 8k resolution, 70mm IMAX lenses. "
-                "Extreme high-fidelity skin textures, visible pores, sweat drops, wet fabric physics. "
-                "Natural cinematic lighting, ray-traced reflections on wet surfaces. "
-                "STRICTLY NO CARTOON, NO PLASTIC SKIN, NO GENERIC AI FACE, NO SMOOTHING."
+                "ULTRA-REALISTIC CINEMA. Muted natural colors, desaturated tones. "
+                "Kodak Portra 400 film stock style, heavy film grain, high ISO noise. "
+                "Visible skin imperfections, real pores, sweat, wet mud textures. "
+                "Shallow depth of field: sharp focus on characters, soft natural blur on background grass and objects. "
+                "NO NEON COLORS, NO OVERSATURATION, NO ARTIFICIAL SHARPENING, NO PLASTIC TEXTURES, NO DIGITAL ART."
             )
 
-            # MANTRA VISUAL SULTAN
+            # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
             sultan_mantra_box = {
-                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic raw muscle fibers, pulsating veins, steam evaporating, gritty anatomical detail.",
-                "Super Saiyan (God Aura & Electric)": "Realistic translucent energy aura, electric sparks, hair turning golden with realistic strand physics.",
-                "Mecha-Hybrid (Liquid Metal/Robot)": "Brushed titanium textures, hydraulic pistons, oil leaks, glowing internal circuitry.",
-                "Ethereal God (Cosmic/Nebula)": "Translucent cosmic nebula body, swirling galaxies, starlight eyes, ethereal depth."
+                # --- EPIC (TETEP ADA) ---
+                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding, pulsating veins, bone structure thickening, intense steam evaporating.",
+                "Super Saiyan (God Aura & Electric)": "Golden translucent energy aura erupting, high-voltage electric sparks, hair turning golden and spiky.",
+                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium, hydraulic pistons moving, glowing internal circuitry.",
+                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside, starlight glowing in eyes.",
+
+                # --- TAMBAHAN KOCAK & REALISTIS (BODY DEFORMATION) ---
+                "Instant Obesity (Jiggling Fat)": "The character instantly inflates into extreme obesity. Massive belly and double chin expanding, realistic fat jiggling and wobbling physics with every movement, clothes stretching and bursting at the seams.",
+                "Ultra-Skinny (Malnourished Bone)": "The character rapidly shrinks into an extremely skinny, skeletal frame. Ribcage becomes highly visible, sunken cheeks, skin tightens over bones, clothes becoming way too oversized and baggy.",
+                "Squashed & Short (Hobbit Style)": "The character's height is violently compressed down to 3 feet tall. Limbs become short and stubby, head remains large, torso becomes wide and round, maintaining realistic skin and fabric textures in a miniature scale.",
+                "Extreme Tall & Lanky (Slender Style)": "The character's limbs stretch uncontrollably to 10 feet tall. Arms and legs become thin like noodles, neck elongates, movement becomes wobbly and awkward like a giant stick-man."
             }
 
             # A. RAKIT PROMPT GAMBAR (IDENTITAS BARU: sultan_image_dna)
@@ -2036,38 +2048,44 @@ def tampilkan_ai_lab():
                 f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
                 f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
                 f"LOCATION: {user_scene}. {sultan_quality_logic} "
-                "Gritty texture, realistic rain droplets, cinematic atmosphere, 9:16 aspect ratio."
+                f"Handheld camera, raw footage, cinematic depth, --ar 9:16 --stylize 50 --v 6.0"
             )
 
             # B. RAKIT PROMPT VIDEO (IDENTITAS BARU: sultan_video_story)
             s_target = f"LEFT ({c_l_name})" if is_trans_l else f"RIGHT ({c_r_name})" if is_trans_r else "Both Characters"
-            s_smooth = "smoothly and gradually morphing while maintaining movement" if (is_trans_l or is_trans_r) and trans_speed == "Slow & Smooth" else "violently exploding into a transformation"
+            s_smooth = "smoothly and gradually morphing" if (is_trans_l or is_trans_r) and trans_speed == "Slow & Smooth" else "violently exploding"
             
             s_fx = ""
             if (is_trans_l or is_trans_r):
-                if "Lantai Retak & Hancur" in env_fx: s_fx += "The ground beneath cracks violently. "
-                if "Gravitasi Terbalik (Melayang)" in env_fx: s_fx += "Rocks and dust float upwards. "
-                if "Shockwave Udara" in env_fx: s_fx += "Air shockwave distorts the space. "
-                if "Ledakan Lampu & Listrik" in env_fx: s_fx += "Lights flicker and explode with electric sparks. "
-                if "Kabut & Dust Sinematik" in env_fx: s_fx += "Volumetric fog and dust particles. "
+                if "Lantai Retak & Hancur" in env_fx: s_fx += "The ground beneath cracks. "
+                if "Gravitasi Terbalik (Melayang)" in env_fx: s_fx += "Objects float upwards. "
+                if "Shockwave Udara" in env_fx: s_fx += "Air shockwave distorts space. "
+                if "Ledakan Lampu & Listrik" in env_fx: s_fx += "Lights explode with electric sparks. "
+                if "Kabut & Debu Sinematik" in env_fx: s_fx += "Volumetric fog and dust. "
+
+            facing_logic = (
+                "The characters are positioned in a profile view, facing each other directly. "
+                "Intense eye contact between the two characters. "
+            )
 
             sultan_video_story = (
                 f"STORY SEQUENCE: Starting from the reference image. "
                 f"CAMERA: {cam_angle} with {cam_movement} movement. \n\n"
-                f"1. PHYSICAL MOTION: {user_action}. \n"
-                f"2. DUAL DIALOG: {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'. "
-                "Ensure highly detailed mouth movements, realistic teeth, and complex lip-sync. \n"
+                f"1. POSITIONING: {facing_logic} \n" # KUNCI BERHADAPAN
+                f"2. PHYSICAL MOTION: {user_action}. \n"
+                f"3. DUAL DIALOG: {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'. "
+                "Ensure realistic mouth movements, visible teeth, and lip-sync matching the dialogue while they face each other. \n"
             )
             
             if is_trans_l or is_trans_r:
                 sultan_video_story += (
                     f"3. CLIMAX: While {trans_trigger.lower()}, {s_target} initiates {trans_type}. "
-                    f"The character is {s_smooth}. {sultan_mantra_box[trans_type]} "
-                    f"Clothing Physics: Realistic fabric tearing with high-tension fibers. {s_fx} "
-                    f"{sultan_quality_logic} Intense camera shake at the transformation peak."
+                    f"The character is {s_smooth}. {s_mantra_box[trans_type]} "
+                    f"Clothing Physics: Realistic fabric tearing. {s_fx} "
+                    f"{sultan_quality_logic} High tension cinematic climax."
                 )
             else:
-                sultan_video_story += f"3. FINAL: Slow cinematic camera movement. {sultan_quality_logic}"
+                sultan_video_story += f"3. FINAL: Cinematic camera movement. {sultan_quality_logic}"
 
             # TAMPILAN HASIL (Ganti variabel yang dipanggil di st.code)
             st.divider()
@@ -5675,6 +5693,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
