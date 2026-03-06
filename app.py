@@ -1939,9 +1939,9 @@ def tampilkan_ai_lab():
             col_l, col_r = st.columns(2)
             with col_l:
                 st.markdown('<p class="small-label">⬅️ KARAKTER SISI KIRI (POSITION: LEFT)</p>', unsafe_allow_html=True)
-                c_l_name = st.text_input("Nama Tokoh Kiri", placeholder="Contoh: Lionel Messi")
-                c_l_outfit = st.text_input("Pakaian Kiri", placeholder="Contoh: Jas hitam formal, rapi.")
-                c_l_speech = st.text_area("Dialog Tokoh Kiri", placeholder="Apa yang diucapkan tokoh kiri?", height=60)
+                c_l_name = st.text_input("", placeholder="Contoh: Lionel Messi")
+                c_l_outfit = st.text_input("", placeholder="Contoh: Jas hitam formal, rapi.")
+                c_l_speech = st.text_area("", placeholder="Apa yang diucapkan tokoh kiri?", height=60)
                 is_trans_l = st.checkbox("🔥 Karakter Kiri Berubah")
 
             with col_r:
@@ -5652,6 +5652,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
