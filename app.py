@@ -1403,65 +1403,61 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER BAHAN (FULL EDITION: BUAH, KARDUS LAMPU, ANYAMAN, DAUN, DLL) ---
+        # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: GRAND DOME & 4 MINARETS) ---
         MASTER_GRANDMA_CRAFT = {
             "Anyaman Bambu (Intricate Bamboo)": (
-                "A LARGE, MAJESTIC mosque miniature made from fine bamboo splints. "
-                "The main dome features a complex 'gedek' weaving pattern, while the minarets are tightly braided bamboo. "
-                "Visible tiny bamboo nodes and natural fibers. A high-end traditional Indonesian craft masterpiece."
+                "A LARGE, MAJESTIC ARCHITECTURAL MOSQUE. Features a massive central bulbous dome made of fine 'gedek' weaving. "
+                "Surrounded by 4 tall, slender minarets at each corner with pointed tips. "
+                "Intricate arched entrance and tiny bamboo windows. A masterpiece of Javanese-Islamic architecture."
             ),
             "Daun Pisang & Lontar": (
-                "A GRAND mosque built from folded and pinned green banana leaves and dried lontar leaves. "
-                "The roof is tiered (tumpang) like a traditional mosque, made from layered leaf textures. "
-                "Small wooden sticks (lidi) are used to pin the leaves together. Organic and incredibly detailed."
+                "A GRAND MOSQUE with a large tiered central dome (tumpang style) made of layered green banana leaves. "
+                "Features 4 distinct tall minarets at the corners made of rolled lontar leaves. "
+                "Detailed pillars and an arched doorway pinned with tiny wooden sticks (lidi)."
             ),
             "Kardus Lampu (Blinking LED)": (
-                "A GRAND, COMPLEX mosque made from recycled brown cardboard. It features multiple high minarets and a huge central dome. "
-                "The windows are cut into intricate Islamic geometric patterns. INSIDE: Small colorful LED lights (Blinking Red, Green, Blue) "
-                "glow through the windows and arches, creating a festive, magical light effect on the character's tired face."
+                "A MAGNIFICENT MOSQUE built from recycled cardboard. It has one giant central dome and 4 symmetrical tall minarets. "
+                "Islamic geometric patterns are cut into the walls. Colorful LED lights (Red, Green, Blue) "
+                "glow from inside the dome and the 4 towers, illuminating the character's face."
             ),
             "Buah Naga (Exotic Pink)": (
-                "A LARGE, MAJESTIC mosque. The main dome is carved from a vibrant pink Dragon Fruit, showing black seeds like natural mosaic art. "
-                "The pillars are made from white dragon fruit flesh, and the minarets are crafted from the scaly pink skin. "
-                "The structure has intricate arched windows and a tiered roof. Wet, glistening, and beautifully organic."
+                "A STUNNING ORGANIC MOSQUE. The main large dome is carved from a whole pink dragon fruit. "
+                "At each corner, there are 4 tall minarets crafted from the scaly pink skin. "
+                "White dragon fruit flesh forms the pillars and the 4-sided base. Wet and glistening."
             ),
             "Kacang Ijo (Seed Mosaic)": (
-                "A STUNNING mosque structure where every surface is meticulously covered in thousands of green mung beans (kacang ijo). "
-                "The seeds create a textured, green-tiled mosaic effect on the domes and walls. "
-                "The architecture includes tall, slender minarets and a wide prayer hall base. Looks incredibly patient and detailed."
+                "A HIGH-DETAIL MOSQUE where every inch is covered in green mung beans. "
+                "Features a huge, perfectly rounded central dome and 4 sharp, tall minarets at the corners. "
+                "The green seeds create a beautiful mosaic tile effect across the entire structure."
             ),
             "Buah Apel & Jeruk": (
-                "A MULTI-COLOR mosque built from polished red apples and bright orange peels. "
-                "The domes are half-cut apples showing white interiors, while the walls are intricate orange peel carvings. "
-                "Tiny cloves (cengkeh) are used as decorative studs along the arches. Fresh and highly detailed."
+                "A VIBRANT FRUIT MOSQUE. The grand central dome is a large red apple carving. "
+                "4 tall minarets made of stacked orange peels stand at the corners. "
+                "Tiny cloves decorate the arches. It clearly shows the classic mosque silhouette with 4 towers."
             ),
             "Kardus Bekas (Classic)": (
-                "A LARGE, architectural masterpiece made of corrugated cardboard. Features five distinct domes and four tall minarets. "
-                "Visible glue marks (lem aibon) and layered cardboard textures. It looks like a professional architectural model."
+                "A LARGE ARCHITECTURAL MODEL OF A MOSQUE. Massive central corrugated dome and 4 symmetrical minarets. "
+                "Double-layered cardboard walls with arched windows and a grand entrance gate. Professional scale model look."
             ),
             "Botol Plastik (Crystal Look)": (
-                "A MAJESTIC, transparent mosque built from meticulously cut recycled PET bottles. "
-                "The plastic is heat-warped to form graceful, crystal-like domes and towers. "
-                "It features intricate 'plastic lace' balconies and catching the light naturally."
+                "A CRYSTAL-LIKE MOSQUE built from PET bottles. Features a huge transparent central dome made from bottle bases "
+                "and 4 tall, glowing minarets at each corner. Intricate plastic-cut balconies on the towers."
             ),
             "Ranting Kayu (Rustic Art)": (
-                "A HUGE, COMPLEX mosque built from hundreds of tiny dried twigs and bark. "
-                "Features a grand middle dome and interlocking stick walls forming 'mashrabiya' screens. "
-                "Tied with visible hemp twine, looking like a high-end rustic folk-art masterpiece."
+                "A HUGE FOLK-ART MOSQUE. Built from hundreds of twigs, featuring a grand domed center and 4 tall corner minarets. "
+                "The interlocking twigs form a cage-like 'mashrabiya' pattern. Tied with hemp twine at the towers."
             ),
             "Pelepah Pisang (Dried Fiber)": (
-                "A HUGE, RUSTIC mosque made from dried banana trunk fibers (pelepah pisang). "
-                "The natural brown and beige textures create a beautiful earthy marble effect. "
-                "Features tall minarets and intricate arched doors made from carved dried fiber."
+                "A RUSTIC EARTHY MOSQUE. Large central dome made of curved dried banana bark. "
+                "4 tall, sturdy minarets stand at the corners. The natural fiber creates beautiful brown marble patterns on the walls."
             ),
             "Cangkang Telur (Mosaic)": (
-                "A STUNNING, white-textured mosque where the entire surface is covered in a mosaic of crushed eggshells. "
-                "The cracks between the shells create a sophisticated marble-like finish. "
-                "Gold-painted accents on the dome tip add a touch of humble majesty."
+                "A PURE WHITE MOSQUE. The structure is covered in crushed eggshell mosaic. "
+                "Features one giant white dome and 4 tall minarets. Looks like a luxury marble mosque miniature."
             ),
             "Kapur & Batu Bata": (
-                "A HEAVY, DETAILED mosque carved from white chalk and red brick fragments. "
-                "The contrast between white and red creates a beautiful pattern. Intricate carvings on the walls showing Arabic calligraphy style patterns."
+                "A SOLID CARVED MOSQUE. Grand central white chalk dome and 4 red brick minarets at the corners. "
+                "Detailed Arabic calligraphy patterns carved into the 4 main walls. Very strong architectural silhouette."
             )
         }
 
@@ -1566,28 +1562,27 @@ def tampilkan_ai_lab():
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"ACTION & COMPOSITION (FIXED CAMERA):\n"
+                    f"ACTION & COMPOSITION (SITTING AT A TABLE):\n"
+                    f"- POSITION: The {char_key} is sitting behind a weathered, rustic OLD WOODEN TABLE. "
+                    f"The LARGE {pilihan_bahan} mosque miniature is placed ON THE TABLE, sejajar dada (chest-level) of the {char_key}.\n"
+                    f"- HANDS: The LEFT HAND is stabilizing the base of the mosque on the table, "
+                    f"while the RIGHT HAND is actively finishing the intricate dome/minaret details at a NATURAL HUMAN PACE.\n"
                     f"- CAMERA: EXTREME WIDE SHOT. FIXED FOCAL LENGTH. STRICTLY NO ZOOM. "
-                    f"Constant far distance. NO SLOW MOTION. Natural real-time camera speed.\n"
-                    f"- HANDS: The {char_key} is HOLDING the LARGE {pilihan_bahan} mosque in their LEFT HAND, "
-                    f"while the RIGHT HAND is actively finishing the craft details at a NATURAL HUMAN PACE.\n"
-                    f"- MOVEMENT: Standard handheld micro-movements only. 100% stable but organic real-time motion.\n\n"
+                    f"The camera is far enough to show the {char_key} from waist up, the entire table with the mosque, and the background.\n"
+                    f"- MOVEMENT: Standard real-time motion only. NO SLOW MOTION.\n\n"
                     
                     f"LIP-SYNC & HUMAN PERFORMANCE (NATURAL PACE):\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'.\n"
-                    f"- VOCAL STYLE: Character speaks in {pilih_logat} with a {pilih_mood} tone. "
-                    f"Natural real-time speech rhythm, NO SLOW-MO DIALOG. Include natural hesitations and unpolished delivery.\n"
-                    f"- EXPRESSION: Sad and weary face, STRICTLY NO TEARS. Deeply humble eyes.\n"
-                    f"- ARTICULATION: Natural mouth movements at normal conversational speed. Lips and jaw follow the rhythm of a real person.\n"
-                    f"- REVEAL: Mid-action, the {char_key} turns their head at a NORMAL SPEED to look DIRECTLY into the lens.\n\n"
+                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. STRICTLY AVOID ROBOTIC TONE. Include natural hesitations.\n"
+                    f"- EXPRESSION: Sad and weary face, but humble. NO TEARS. Eyes look tired.\n"
+                    f"- REVEAL: Mid-action, the {char_key} stops working, looks up at a NORMAL SPEED to speak DIRECTLY into the lens.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
                     f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
                     f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE/SUNSET FILTERS. Natural contrast.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. NORMAL SPEED playback. "
-                    f"Deep depth of field. Fixed camera position."
+                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. NORMAL SPEED. Deep depth of field. Fixed camera position."
                 )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
@@ -5190,6 +5185,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
