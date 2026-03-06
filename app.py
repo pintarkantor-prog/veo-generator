@@ -3633,7 +3633,7 @@ def tampilkan_database_channel():
             if hc2.button("➕ TAMBAH AKUN", use_container_width=True, type="primary"):
                 st.session_state.form_baru = not st.session_state.get('form_baru', False)
 
-            # --- 4. FORM INPUT AKUN BARU ---
+            # --- 4. FORM INPUT AKUN BARU (INDENTASI FIXED & CLEAN) ---
             if st.session_state.get('form_baru', False):
                 with st.container(border=True):
                     with st.form("input_v6_icon", clear_on_submit=True):
@@ -3641,21 +3641,38 @@ def tampilkan_database_channel():
                         v_mail = f1.text_input("📧 Email Login")
                         v_pass = f2.text_input("🔑 Password")
                         v_nama = f3.text_input("📺 Nama Channel")
+                        
                         f4, f5 = st.columns([1, 2])
                         v_subs = f4.text_input("📊 Jumlah Subs")
                         v_link = f5.text_input("🔗 Link Channel")
+                        
                         if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
                             if v_nama and v_mail:
                                 tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
-                                # --- A. SIMPAN KE GSHEET (Backup) ---
-                                ws.append_row([tgl_now, v_mail, v_pass, v_nama, v_subs, v_link, "STANDBY", "", "", "", user_aktif, f"New: {user_aktif} ({tgl_now})"])
+                                # --- LANGSUNG CUCI DI SINI (Variabel tetep v_mail) ---
+                                v_mail = v_mail.strip().lower() 
                                 
-                                # --- B. SIMPAN KE SUPABASE (WAJIB ADA INI BIAR MUNCUL DI WEB) ---
                                 try:
+                                    # --- A. SIMPAN KE GSHEET (Backup) ---
+                                    # Sekarang v_mail di sini udah bersih tanpa spasi
+                                    ws.append_row([
+                                        tgl_now, 
+                                        v_mail, 
+                                        v_pass, 
+                                        v_nama, 
+                                        v_subs, 
+                                        v_link, 
+                                        "STANDBY", 
+                                        "", "", "", 
+                                        user_aktif, 
+                                        f"New: {user_aktif} ({tgl_now})"
+                                    ])
+                                    
+                                    # --- B. SIMPAN KE SUPABASE ---
                                     supabase.table("Channel_Pintar").insert({
                                         "TANGGAL": tgl_now, 
-                                        "EMAIL": v_mail.strip().lower(),
+                                        "EMAIL": v_mail,
                                         "PASSWORD": v_pass,
                                         "NAMA_CHANNEL": v_nama,
                                         "SUBSCRIBE": v_subs,
@@ -3666,17 +3683,18 @@ def tampilkan_database_channel():
                                     }).execute()
                                     
                                     st.cache_data.clear()
-                                    st.success("✅ MANTAP! Akun baru berhasil didaftarkan ke Radar.")
+                                    st.success(f"✅ MANTAP! Akun {v_mail} berhasil didaftarkan.")
                                     time.sleep(1)
                                     st.rerun()
 
                                 except Exception as e:
-                                    # CEK APAKAH ERRORNYA KARENA DUPLIKAT (KODE 23505)
                                     if "23505" in str(e):
                                         st.warning(f"⚠️ WADUH! Email **{v_mail}** udah ada di sistem!")
                                     else:
-                                        # Kalau error lain (misal internet mati), tetep tampilin error aslinya
                                         st.error(f"❌ Ada masalah teknis: {e}")
+                            else:
+                                st.error("⚠️ Email dan Nama Channel wajib diisi!")
+                                
             # --- 5. GRID EDITOR STANDBY ---
             df_st = df[df['STATUS'] == 'STANDBY'].copy()
             if df_st.empty:
@@ -4771,6 +4789,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
