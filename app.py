@@ -982,13 +982,28 @@ def tampilkan_ai_lab():
             
             # --- VIEW MASTER SCRIPT ---
             st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
+            
             full_script = ""
             if current_row:
                 try:
                     res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
-                    full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
-                except: pass
-            st.text_area("MASTER_VO", value=full_script, height=80, label_visibility="collapsed")
+                    if res_vo.data:
+                        full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
+                except: 
+                    pass
+            
+            # --- TEXT AREA DENGAN PLACEHOLDER SULTAN ---
+            placeholder_text = (
+                "Gunakan naskah ini untuk pengisian Voice Over secara utuh (Storytelling Mode)."
+            )
+            
+            st.text_area(
+                "MASTER_VO", 
+                value=full_script, 
+                height=100, 
+                placeholder=placeholder_text,
+                label_visibility="collapsed"
+            )
 
             st.divider()
 
@@ -1254,11 +1269,13 @@ def tampilkan_ai_lab():
                 
                 mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
                 mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
-                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 2 kalimat per adegan). Kalimat harus HIDUP: ceritakan sensasi fisik dan kehancuran yang terjadi saat itu juga. JANGAN KAKU.\n"
-                mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita. Contoh: 'Sebelum paru-parumu menghitam total, tekan subscribe untuk menyelamatkan dirimu.' atau 'Klik subscribe agar rahasia ini tidak terkubur selamanya.'\n"
-                mantra_footer += "- **VISUAL SENSORY**: " + l_data["focus"] + ". Deskripsikan tekstur (debu terbang, saraf bergetar, organ menghitam) secara ultra-detail.\n"
-                mantra_footer += "- **BALUNG GESTURE**: Masukkan mikro-gestur manusiawi di setiap cut (tangan gemetar, menyeka debu, menatap sayu, jari bergerak gelisah).\n"
-                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail)."
+                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 2 kalimat per adegan). Kalimat harus HIDUP: ceritakan sensasi fisik dan kehancuran saat itu juga. JANGAN KAKU.\n"
+                mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita.\n"
+                mantra_footer += "- **VISUAL SENSORY & CINEMATIC**: " + l_data["focus"] + ". Tambahkan efek kamera (Macro shots, Shaky cam pada adegan tegang) dan detail tekstur material (karat besi, retakan tembok, lumut kuno, atau serat kain).\n"
+                mantra_footer += "- **BALUNG GESTURE**: Masukkan mikro-gestur manusiawi (tangan gemetar, menyeka debu, menatap sayu, jari bergerak gelisah).\n"
+                mantra_footer += "- **ENVIRONMENT ADAPTIF (ULTRA DETAIL)**: JANGAN terpaku pada Lab! Deskripsikan tekstur material secara nyata. Tampilkan dinding retak, kayu lapuk, debu (dust motes) yang berdansa di cahaya, hingga uap dingin. Gunakan lighting dramatis (Cinematic Lighting, Ray-traced shadows, atau pendaran neon).\n"
+                mantra_footer += "  * Jika harian: Kamar berantakan (bantal kusut, cahaya HP biru). Jika sejarah: Candi kuno (batu berlumut, obor redup). Jika kiamat: Kota hancur (aspal pecah, besi berkarat).\n"
+                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail (Wajib Deskripsi Tekstur, Material, & Lighting))."
 
                 mantra_final = mantra_header + mantra_body + mantra_footer
 
@@ -4865,6 +4882,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
