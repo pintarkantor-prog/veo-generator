@@ -1589,7 +1589,6 @@ def tampilkan_ai_lab():
                     f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. NORMAL SPEED playback. "
                     f"Deep depth of field. Fixed camera position."
                 )
-                )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
                 st.code(video_prompt, language="text")
@@ -5191,6 +5190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
