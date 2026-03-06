@@ -1903,11 +1903,12 @@ def tampilkan_ai_lab():
                     
                     f"PERFORMANCE & ATMOSPHERE:\n"
                     f"- PHYSICAL ACTION: {pilih_aksi}\n"
-                    f"- DIALOG SCRIPT: '{user_dialog}'\n"
-                    f"- SPEECH DELIVERY: NATURAL INDONESIAN SPEECH PACING. CLEAR ENUNCIATION. "
-                    f"Include realistic micro-pauses for breathing. Voice must be perfectly synced with lip movement.\n"
-                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone.\n"
-                    f"- VIBE: {living_details} Capturing micro-expressions like subtle lip quivers and heavy natural blinking.\n\n"
+                    f"- DIALOG SCRIPT: \"{user_dialog}\"\n" # Gunakan kutip dua (double quotes) di dalam string
+                    f"- SPEECH DELIVERY: HIGH-FIDELITY LIP-SYNC. The character must speak the dialogue script accurately in Indonesian. "
+                    f"Ensure every mouth shape matches the Indonesian vowels and consonants (A-I-U-E-O). "
+                    f"Natural real-time vocal delivery with realistic mouth opening and jaw movement.\n"
+                    f"- VOCAL STYLE: {pilih_logat}, {pilih_mood} tone, clear Indonesian enunciation with realistic emotional breath pauses.\n"
+                    f"- VIBE: {living_details} Focus on micro-expressions: subtle lip quivers, cheek movement while speaking, and natural blinking.\n\n"
                     
                     f"TECHNICAL SPEC:\n"
                     f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. NO PAN. NO TILT. "
@@ -5715,6 +5716,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
