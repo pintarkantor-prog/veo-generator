@@ -1555,36 +1555,34 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu, Bos!")
             else:
-                # --- RAKIT FINAL PROMPT (NATURAL COLOR & WIDE COMPOSITION) ---
+            # --- RAKIT FINAL PROMPT (STRICTLY REALISTIC - 95% PROGRESS) ---
                 video_prompt = (
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"TIMELINE & OBJECT TRANSFORMATION:\n"
-                    f"- 0-6 SECONDS (CRAFTING PHASE): The {char_key} is sitting behind a rustic wooden table, "
-                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 80% FINISHED; "
-                    f"the central dome is visible but one minaret is still being hand-assembled. "
-                    f"Scraps of {pilihan_bahan} and glue are visible on the table.\n"
-                    f"- 6-10 SECONDS (MIRACLE REVEAL): While the camera stays FIXED and the {char_key} continues speaking, "
-                    f"the mosque SEAMLESSLY TRANSFORMS into a 100% COMPLETE MAJESTIC MASTERPIECE. "
-                    f"It now has a grand central dome and 4 tall, perfect minarets at the corners.\n\n"
+                    f"ACTION & COMPOSITION (95% FINISHED PROGRESS):\n"
+                    f"- POSITION: The {char_key} is sitting behind a weathered, rustic OLD WOODEN TABLE. "
+                    f"The LARGE {pilihan_bahan} mosque is placed ON THE TABLE at chest-level.\n"
+                    f"- CRAFTING STATUS: The mosque is 95% COMPLETE. The grand central dome and all 4 minarets are standing, "
+                    f"but the {char_key} is still meticulously fixing the final tiny details on the entrance or a tower. "
+                    f"Scraps of {pilihan_bahan} and glue marks are visible on the table, showing the hard work process.\n"
+                    f"- HANDS: The LEFT HAND stabilizes the structure, while the RIGHT HAND is actively touching and "
+                    f"perfecting the craft at a NATURAL HUMAN PACE. No jerky movements.\n\n"
                     
-                    f"LIP-SYNC & CONTINUOUS PERFORMANCE:\n"
+                    f"LIP-SYNC & HUMAN PERFORMANCE (ANTI-ROBOT):\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'.\n"
-                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. NO ROBOTIC SOUND.\n"
-                    f"- AUDIO-VISUAL SYNC: The dialog remains continuous and UNBROKEN from 0 to 10 seconds. "
-                    f"Only the mosque object changes appearance. The {char_key} maintains eye contact or focused work throughout.\n\n"
-                    
-                    f"ACTION & COMPOSITION:\n"
-                    f"- CAMERA: EXTREME WIDE SHOT. FIXED POSITION. NO ZOOM. The table and environment are always in frame.\n"
-                    f"- REVEAL: At exactly 6 seconds, the {char_key} stops working and looks DIRECTLY into the lens while the mosque 'magically' becomes finished.\n\n"
+                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. STRICTLY AVOID ROBOTIC TONE. "
+                    f"Include natural micro-pauses, heavy sighs, and unpolished delivery.\n"
+                    f"- REVEAL: While working, the {char_key} stops their hands, looks up at a NORMAL SPEED, "
+                    f"and speaks DIRECTLY into the lens with a tired, humble face.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
-                    f"{MASTER_GRANDMA_SETTING[pilihan_set]}. LIGHTING: Neutral daylight.\n\n"
+                    f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
+                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE FILTERS. Natural contrast.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65. 24fps. Normal speed. Smooth visual morphing of the mosque object "
-                    f"without affecting the character's movement or audio continuity."
+                    f"Shot on ARRI Alexa 65. 24fps. NORMAL SPEED (REAL-TIME). NO SLOW MOTION. NO TRANSITIONS. "
+                    f"Deep depth of field to keep the {char_key}, the mosque, and the background sharp."
                 )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY")
@@ -5187,6 +5185,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
