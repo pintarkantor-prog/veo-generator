@@ -1563,32 +1563,32 @@ def tampilkan_ai_lab():
             else:
                 # --- RAKIT FINAL PROMPT (NATURAL COLOR & WIDE COMPOSITION) ---
                 video_prompt = (
-                    f"MASTER VIDEO PROMPT (FIXED EXTREME WIDE - NATURAL LOOK):\n"
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
                     f"ACTION & COMPOSITION (FIXED CAMERA):\n"
                     f"- CAMERA: EXTREME WIDE SHOT. FIXED FOCAL LENGTH. STRICTLY NO ZOOM. "
-                    f"Constant far distance capturing the full body, the craft, and the background without cropping.\n"
+                    f"Constant far distance. NO SLOW MOTION. Natural real-time camera speed.\n"
                     f"- HANDS: The {char_key} is HOLDING the LARGE {pilihan_bahan} mosque in their LEFT HAND, "
-                    f"while the RIGHT HAND is actively touching and finishing the craft details.\n"
-                    f"- MOVEMENT: Ultra-slow handheld micro-movements only. 100% stable composition.\n\n"
+                    f"while the RIGHT HAND is actively finishing the craft details at a NATURAL HUMAN PACE.\n"
+                    f"- MOVEMENT: Standard handheld micro-movements only. 100% stable but organic real-time motion.\n\n"
                     
-                    f"LIP-SYNC & HUMAN PERFORMANCE (ANTI-ROBOT):\n"
+                    f"LIP-SYNC & HUMAN PERFORMANCE (NATURAL PACE):\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'.\n"
                     f"- VOCAL STYLE: Character speaks in {pilih_logat} with a {pilih_mood} tone. "
-                    f"STRICTLY AVOID ROBOTIC TONE. Include natural hesitations, heavy sighs, and unpolished delivery.\n"
-                    f"- EXPRESSION: Sad and weary face, but STRICTLY NO TEARS, NO CRYING. Deeply humble and melancholic eyes.\n"
-                    f"- ARTICULATION: Slow, hesitant mouth movements. Lips and jaw must follow the rhythm of a real person thinking while speaking.\n"
-                    f"- REVEAL: Mid-action, the {char_key} slowly turns their head to look DIRECTLY into the lens with a tired expression.\n\n"
+                    f"Natural real-time speech rhythm, NO SLOW-MO DIALOG. Include natural hesitations and unpolished delivery.\n"
+                    f"- EXPRESSION: Sad and weary face, STRICTLY NO TEARS. Deeply humble eyes.\n"
+                    f"- ARTICULATION: Natural mouth movements at normal conversational speed. Lips and jaw follow the rhythm of a real person.\n"
+                    f"- REVEAL: Mid-action, the {char_key} turns their head at a NORMAL SPEED to look DIRECTLY into the lens.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
                     f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
-                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE/SUNSET FILTERS. Natural contrast.\n"
-                    f"Note: If the craft is 'Kardus Lampu', visible colored LED lights should glow from within the mosque windows.\n\n"
+                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE/SUNSET FILTERS. Natural contrast.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. Deep depth of field to keep the {char_key}, the craft, and the background sharp."
+                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. NORMAL SPEED playback. "
+                    f"Deep depth of field. Fixed camera position."
+                )
                 )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
@@ -5191,6 +5191,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
