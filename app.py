@@ -1830,28 +1830,38 @@ def tampilkan_ai_lab():
                 
                 if "🤖 Robot" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS SHOT. The character MUST BE STANDING UPRIGHT on the dirt floor, "
-                        "not on a table. FULL BODY SHOT. The 100cm robot is standing right beside them. "
-                        "The character is actively working on the robot's core. STATIC CAMERA, NO CUTS, NO TRANSITIONS."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
+                        "MEDIUM SHOT capturing the character and the 100cm robot from the waist up. "
+                        "The character MUST BE STANDING UPRIGHT on the dirt floor, leaning slightly "
+                        "forward over the robot. The robot is positioned DIRECTLY IN FRONT of the character. "
+                        "The character's hands are physically engaged with the robot's core. "
+                        "STRICTLY STATIC FRAME. NO ZOOM. NO CAMERA MOVEMENT."
                     )
                 elif "🕌 Miniatur Masjid" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS SHOT. EYE-LEVEL CLOSE-UP. The grand mosque is in the foreground "
-                        "on a small table between the camera and the character. The character is sitting "
-                        "and working on the dome. STATIC CAMERA, NO CUTS, NO TRANSITIONS."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT focusing on the character's "
+                        "upper body and the object. The character is sitting cross-legged ON THE FLOOR. "
+                        "The grand mosque is placed on a VERY LOW rustic wooden table (meja lesehan) "
+                        "directly in front of them, positioned between the character and the camera. "
+                        "NO CAMERA MOVEMENT. NO ZOOM. NO CUTS. Everything stays in one fixed frame."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS SHOT. SOMBRE EYE-LEVEL SHOT. The character is sitting on the floor "
-                        "facing their meal. The camera stays fixed on the character's emotional expression. "
-                        "STATIC CAMERA, NO CUTS, NO TRANSITIONS."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
+                        "SOMBRE MEDIUM SHOT focusing on the character sitting on the floor (tikar). "
+                        "A very low, simple wooden table is DIRECTLY IN FRONT of the character, "
+                        "placed between the camera and the character's body. "
+                        "The meal is clearly visible on the table. The camera remains FIXED "
+                        "on the character's weary and emotional face as they prepare to break their fast. "
+                        "STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
                     )
 
-                # --- 5. NUANSA HIDUP ---
+                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC) ---
                 living_details = (
-                    "Atmospheric cinematic lighting. Tiny dust motes dancing in light rays. "
-                    "Subtle background sounds. The air looks thick with humidity. "
-                    "Hyper-realistic skin textures and authentic weathered details."
+                    "Atmospheric cinematic lighting with high contrast. Tiny dust motes dancing in dramatic light rays. "
+                    "Subtle ambient background sounds of distant village life. The air looks thick with humidity and dust. "
+                    "Extreme hyper-realistic skin textures, visible sweat, and authentic deep weathered wrinkles. "
+                    "The scene is focused and somber, capturing every micro-expression and hand movement."
                 )
 
                 # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL) ---
@@ -1871,9 +1881,9 @@ def tampilkan_ai_lab():
                     f"- VIBE: {living_details}\n\n"
                     
                     f"TECHNICAL SPEC:\n"
-                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. "
+                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. "
                     f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. STATIC CAMERA MOVEMENT. "
-                    f"Deep depth of field. High-dynamic range (HDR) with realistic lighting."
+                    f"Deep depth of field (f/8). High-dynamic range (HDR) with realistic natural lighting."
                 )
 
                 # --- TAMPILAN OUTPUT ---
@@ -5478,6 +5488,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
