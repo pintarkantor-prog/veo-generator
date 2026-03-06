@@ -1954,22 +1954,25 @@ def tampilkan_ai_lab():
 
             # --- ROW 3: AKSI & KAMERA ---
             st.markdown('<p class="small-label" style="margin-bottom: -15px;">🏃 PHYSICAL ACTION (PERGERAKAN TUBUH)</p>', unsafe_allow_html=True)
+            st.caption("Deskripsikan pergerakan fisik karakter secara detail.")
             user_action = st.text_area(
                 "action_input", 
                 placeholder="Contoh: Messi berjalan mendekat ke arah Ronaldo dengan langkah berat, tangan mengepal kuat.", 
                 height=70, 
                 label_visibility="collapsed"
             )
+
             st.markdown('<p class="small-label" style="margin-bottom: -15px;">🎥 CAMERA CONTROL (SINEMATOGRAFI)</p>', unsafe_allow_html=True)
-            
             cc1, cc2 = st.columns(2)
             with cc1:
+                st.caption("Gerakan Kamera (Movement)")
                 cam_movement = st.selectbox(
                     "cam_move", 
                     ["Static (Diam)", "Slow Zoom In", "Slow Zoom Out", "Pan Left to Right", "Pan Right to Left", "Dynamic Tracking Shot", "Handheld Shake (High Tension)"],
                     label_visibility="collapsed"
                 )
             with cc2:
+                st.caption("Sudut Pandang (Angle)")
                 cam_angle = st.selectbox(
                     "cam_ang", 
                     ["Eye Level", "Low Angle (Heroic)", "High Angle", "Cinematic Close-up", "Wide Establishing Shot"],
@@ -1979,87 +1982,102 @@ def tampilkan_ai_lab():
             # --- ROW 4: DETAIL TRANSFORMASI ---
             if is_trans_l or is_trans_r:
                 st.divider()
-                st.markdown('<p class="small-label">⚡ METAMORFOSIS SETTINGS</p>', unsafe_allow_html=True)
+                # Judul dibikin margin negatif biar rapet
+                st.markdown('<p class="small-label" style="margin-bottom: -15px;">⚡ METAMORFOSIS SETTINGS</p>', unsafe_allow_html=True)
+                
                 t1, t2, t3 = st.columns(3)
                 with t1:
-                    trans_type = st.selectbox("Jenis Perubahan", [
+                    st.caption("Jenis Perubahan")
+                    trans_type = st.selectbox("trans_type_box", [
                         "Anatomical Titan (Real Muscle & Bone)", 
                         "Super Saiyan (God Aura & Electric)", 
                         "Mecha-Hybrid (Liquid Metal/Robot)", 
                         "Ethereal God (Cosmic/Nebula)"
-                    ])
-                    trans_speed = st.select_slider("Transisi Gerakan", options=["Slow & Smooth", "Steady", "Explosive"])
+                    ], label_visibility="collapsed")
+                    
+                    st.caption("Transisi")
+                    trans_speed = st.select_slider("speed_slider", options=["Slow & Smooth", "Steady", "Explosive"], label_visibility="collapsed")
+                
                 with t2:
-                    trans_trigger = st.text_input("Aksi Pemicu", placeholder="Contoh: Menggigit ibu jari / Minum Susu")
+                    st.caption("Aksi Pemicu")
+                    trans_trigger = st.text_input("trigger_input", placeholder="Contoh: Menggigit ibu jari / Minum Susu", label_visibility="collapsed")
+                
                 with t3:
-                    env_fx = st.multiselect("Efek Sekitar Sultan", 
+                    st.caption("Efek Sekitar Sultan")
+                    env_fx = st.multiselect("env_fx_box", 
                                            ["Lantai Retak & Hancur", "Gravitasi Terbalik (Melayang)", 
                                             "Shockwave Udara", "Ledakan Lampu & Listrik", "Kabut & Debu Sinematik"],
-                                           default=["Kabut & Debu Sinematik"])
+                                           default=["Kabut & Debu Sinematik"], label_visibility="collapsed")
             
             btn_generate = st.button("🚀 GENERATE ULTIMATE SULTAN PROMPT", type="primary", use_container_width=True)
 
-        # --- 2. OUTPUT AREA (DI LUAR EXPANDER) ---
+        # --- 2. OUTPUT AREA (IDENTITAS EKSKLUSIF SULTAN) ---
         if btn_generate:
-            # DNA KUALITAS TINGGI (ANTI-KARTUN)
-            quality_dna = (
-                "Photorealistic cinema, 8k resolution, shot on ARRI Alexa 65, IMAX 70mm lenses. "
-                "Realistic skin pores, sweat, subsurface scattering, cinematic grading. No cartoon, no animation style."
+            # DNA KUALITAS TINGGI (ANTI-AI & RAW STYLE)
+            # Kita pake nama variabel unik: sultan_quality_logic
+            sultan_quality_logic = (
+                "Cinematic RAW photography, shot on ARRI Alexa 65, 8k resolution, 70mm IMAX lenses. "
+                "Extreme high-fidelity skin textures, visible pores, sweat drops, wet fabric physics. "
+                "Natural cinematic lighting, ray-traced reflections on wet surfaces. "
+                "STRICTLY NO CARTOON, NO PLASTIC SKIN, NO GENERIC AI FACE, NO SMOOTHING."
             )
 
-            # MANTRA VISUAL (Detail Tekstur)
-            mantra_dict = {
-                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding, visible pulsating veins, bone structure thickening, intense steam evaporating from the body.",
-                "Super Saiyan (God Aura & Electric)": "Golden energy aura erupting, high-voltage electric sparks flickering, hair turning golden and spiky with realistic physics.",
-                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium, hydraulic pistons moving under the flesh, glowing internal circuitry.",
-                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside the chest, white starlight eyes."
+            # MANTRA VISUAL SULTAN
+            sultan_mantra_box = {
+                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic raw muscle fibers, pulsating veins, steam evaporating, gritty anatomical detail.",
+                "Super Saiyan (God Aura & Electric)": "Realistic translucent energy aura, electric sparks, hair turning golden with realistic strand physics.",
+                "Mecha-Hybrid (Liquid Metal/Robot)": "Brushed titanium textures, hydraulic pistons, oil leaks, glowing internal circuitry.",
+                "Ethereal God (Cosmic/Nebula)": "Translucent cosmic nebula body, swirling galaxies, starlight eyes, ethereal depth."
             }
 
-            # A. PROMPT GAMBAR (Setup Awal)
-            image_prompt = (
-                f"MASTER IMAGE: Two distinct characters. LEFT: {c_l_name} wearing {c_l_outfit}. "
-                f"RIGHT: {c_r_name} wearing {c_r_outfit}. "
-                f"Location: {user_scene}. {quality_dna} Highly detailed textures, cinematic lighting."
+            # A. RAKIT PROMPT GAMBAR (IDENTITAS BARU: sultan_image_dna)
+            sultan_image_dna = (
+                f"MASTER IMAGE (Spatial Split): Two distinct characters standing apart. "
+                f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
+                f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
+                f"LOCATION: {user_scene}. {sultan_quality_logic} "
+                "Gritty texture, realistic rain droplets, cinematic atmosphere, 16:9 aspect ratio."
             )
 
-            # B. PROMPT VIDEO (Alur Cerita & Transisi)
-            target_char = f"LEFT ({c_l_name})" if is_trans_l else f"RIGHT ({c_r_name})" if is_trans_r else "Both Characters"
-            smooth_logic = "smoothly and gradually morphing while maintaining movement" if (is_trans_l or is_trans_r) and trans_speed == "Slow & Smooth" else "violently exploding into a transformation"
+            # B. RAKIT PROMPT VIDEO (IDENTITAS BARU: sultan_video_story)
+            s_target = f"LEFT ({c_l_name})" if is_trans_l else f"RIGHT ({c_r_name})" if is_trans_r else "Both Characters"
+            s_smooth = "smoothly and gradually morphing while maintaining movement" if (is_trans_l or is_trans_r) and trans_speed == "Slow & Smooth" else "violently exploding into a transformation"
             
-            # Rakit Efek Lingkungan
-            fx_p = ""
+            s_fx = ""
             if (is_trans_l or is_trans_r):
-                if "Lantai Retak & Hancur" in env_fx: fx_p += "The ground beneath cracks violently. "
-                if "Gravitasi Terbalik (Melayang)" in env_fx: fx_p += "Rocks and dust float upwards. "
-                if "Shockwave Udara" in env_fx: fx_p += "Air shockwave distorts the space. "
-                if "Ledakan Lampu & Listrik" in env_fx: fx_p += "Lights flicker and explode with electric sparks. "
-                if "Kabut & Debu Sinematik" in env_fx: fx_p += "Volumetric fog and dust particles. "
+                if "Lantai Retak & Hancur" in env_fx: s_fx += "The ground beneath cracks violently. "
+                if "Gravitasi Terbalik (Melayang)" in env_fx: s_fx += "Rocks and dust float upwards. "
+                if "Shockwave Udara" in env_fx: s_fx += "Air shockwave distorts the space. "
+                if "Ledakan Lampu & Listrik" in env_fx: s_fx += "Lights flicker and explode with electric sparks. "
+                if "Kabut & Dust Sinematik" in env_fx: s_fx += "Volumetric fog and dust particles. "
 
-            video_prompt = (
+            sultan_video_story = (
                 f"STORY SEQUENCE: Starting from the reference image. "
                 f"CAMERA: {cam_angle} with {cam_movement} movement. \n\n"
                 f"1. PHYSICAL MOTION: {user_action}. \n"
-                f"2. DUAL DIALOG & EXPRESSION: {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'. "
-                "Ensure highly detailed mouth movements and complex lip synchronization for both characters. \n"
+                f"2. DUAL DIALOG: {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'. "
+                "Ensure highly detailed mouth movements, realistic teeth, and complex lip-sync. \n"
             )
             
             if is_trans_l or is_trans_r:
-                video_prompt += (
-                    f"3. CLIMAX: While {trans_trigger.lower()}, {target_char} initiates {trans_type}. "
-                    f"The character is {smooth_logic}. {mantra_dict[trans_type]} "
-                    f"Clothing Physics: Realistic fabric tearing. {fx_p} "
-                    f"{quality_dna} Intense camera shake at the transformation peak."
+                sultan_video_story += (
+                    f"3. CLIMAX: While {trans_trigger.lower()}, {s_target} initiates {trans_type}. "
+                    f"The character is {s_smooth}. {sultan_mantra_box[trans_type]} "
+                    f"Clothing Physics: Realistic fabric tearing with high-tension fibers. {s_fx} "
+                    f"{sultan_quality_logic} Intense camera shake at the transformation peak."
                 )
             else:
-                video_prompt += f"3. FINAL: Slow cinematic camera movement. {quality_dna}"
+                sultan_video_story += f"3. FINAL: Slow cinematic camera movement. {sultan_quality_logic}"
 
-            # TAMPILAN HASIL
+            # TAMPILAN HASIL (Ganti variabel yang dipanggil di st.code)
             st.divider()
-            st.success("✅ ULTIMATE PROMPT READY!")
-            st.markdown("#### 🎨 1. Prompt Gambar Master")
-            st.code(image_prompt, language="text")
-            st.markdown("#### 🎬 2. Prompt Video Story")
-            st.code(video_prompt, language="text")
+            st.success("✅ ULTIMATE SULTAN PROMPT READY!")
+            
+            st.markdown("#### 🎨 1. Sultan Image DNA (Master)")
+            st.code(sultan_image_dna, language="text")
+            
+            st.markdown("#### 🎬 2. Sultan Video Story (Animation)")
+            st.code(sultan_video_story, language="text")
                 
     with t_random: st.info("🎲 Random Mode Standby.")
                 
@@ -5657,6 +5675,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
