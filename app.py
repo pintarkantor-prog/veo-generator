@@ -1416,86 +1416,87 @@ def tampilkan_ai_lab():
             }
         }
 
-# --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
+        # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
                 "Anyaman Bambu": (
-                    "A GIANT MAJESTIC ARCHITECTURAL MOSQUE. Massive central bulbous dome and 4 tall minarets at each corner made of fine 'gedek' weaving. "
-                    "Features double-layered bamboo walls, tiny arched windows with bamboo lattices, and a grand entrance. "
-                    "The structure stands 60cm tall on the table, looking like a real architectural masterpiece. "
-                    "STATUS: 90% COMPLETE. The character's aged fingers are actively weaving the final bamboo strip onto the last minaret. "
-                    "Small bamboo scraps and a rustic knife are visible on the table next to their busy hands."
+                    "A MAJESTIC ARCHITECTURAL MOSQUE. Features a HUGE ROUNDED CENTRAL DOME and 4 SYMMETRICAL TALL MINARETS at each corner. "
+                    "The structure is built with fine 'gedek' bamboo weaving, showing clear Islamic architectural geometry. "
+                    "Details include tiny pointed arched windows with intricate bamboo lattices and a grand arched entrance. "
+                    "The structure stands 60cm tall on a wooden table, looking like a real sacred building scaled down. "
+                    "STATUS: 90% COMPLETE. The character's aged fingers are actively weaving the final bamboo strip onto the dome's crest. "
+                    "Small bamboo scraps and a rustic knife are visible next to their focused hands."
                 ),
                 "Botol Plastik RGB": (
-                    "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic bottles. "
-                    "Features one massive central dome and 4 tall minarets. INSIDE: Multi-colored RGB LED lights "
-                    "glow through the plastic, creating vibrant Red, Green, and Blue reflections. "
-                    "The light refracts through the bottle textures, casting colorful patterns onto the character's face "
-                    "and the surrounding wooden table. It looks like a glowing diamond masterpiece. "
-                    "STATUS: 90% COMPLETE. The character is carefully soldering the final wire to the LED core, "
+                    "A CRYSTAL-LIKE ARCHITECTURAL MOSQUE. It has a MASSIVE BULBOUS CENTRAL DOME made from bottle bases and 4 CLEARLY DEFINED MINARETS. "
+                    "The architecture follows a traditional mosque layout with a prominent central prayer hall structure. "
+                    "INSIDE: Multi-colored RGB LED lights glow through the plastic, creating vibrant Red, Green, and Blue reflections. "
+                    "The light refracts through the bottle textures, casting colorful patterns onto the character's face. "
+                    "STATUS: 90% COMPLETE. The character is carefully soldering the final wire to the LED core at the base of the dome, "
                     "their face illuminated by the pulsing RGB glow as they work."
                 ),
                 "Kardus Lampu LED": (
-                    "A MAGNIFICENT MOSQUE built from recycled gold-painted cardboard. One giant central dome and 4 symmetrical tall minarets. "
-                    "Intricate Islamic geometric patterns are hand-cut into the walls. Multi-colored LED lights glow intensely from inside "
-                    "the windows and towers, creating a professional lighting effect on the character's face. "
+                    "A MAGNIFICENT GOLDEN MOSQUE built from recycled cardboard. It features a LARGE CENTRAL DOME and 4 SYMMETRICAL SQUARE MINARETS. "
+                    "Intricate Islamic geometric patterns (Arabesque) are hand-cut into the walls, forming pointed arches. "
+                    "Multi-colored LED lights glow intensely from inside the windows and towers, creating a professional lighting effect. "
+                    "The mosque has a grand, solid architectural silhouette. "
                     "STATUS: 90% COMPLETE. The character is meticulously gluing the final gold cardboard arch onto the entrance. "
                     "Glue stains and cardboard cutouts are scattered around their focused hands."
                 ),
                 "Buah Naga": (
-                    "A STUNNING GIANT ORGANIC MOSQUE. The massive central dome is carved from a whole vibrant pink dragon fruit. "
-                    "The 4 tall minarets are also crafted from the scaly pink dragon fruit skin. "
-                    "White dragon fruit flesh with black seeds forms the intricate pillars. Glistening, wet, and incredibly detailed. "
+                    "A STUNNING ORGANIC ARCHITECTURAL MOSQUE. The massive central dome is a PERFECTLY CARVED SPHERE from a whole pink dragon fruit. "
+                    "The 4 tall minarets are crafted from the scaly pink skin, standing tall and sharp at the corners. "
+                    "White dragon fruit flesh forms the intricate arched pillars. It has a clear mosque silhouette: dome, minarets, and courtyard. "
                     "STATUS: 90% COMPLETE. The character is using a small wooden pick to carve the final texture into the main dome. "
                     "Pink juice stains their shaky fingers, showing the intense organic labor."
                 ),
                 "Botol Plastik Aqua": (
-                    "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic water bottles (Aqua style). "
-                    "Features one massive transparent central dome made of bottle bases and 4 tall, glowing minarets. "
-                    "The plastic is heat-warped and cut to look like sparkling crystal glass. Catching natural daylight beautifully. "
-                    "STATUS: 90% COMPLETE. The character is heat-sealing the last plastic joint with a small candle flame, "
+                    "A GIANT CRYSTAL-LIKE MOSQUE with a CLEAR ARCHITECTURAL OUTLINE. Features one MASSIVE TRANSPARENT CENTRAL DOME "
+                    "and 4 TALL GLOWING MINARETS standing symmetrically. The plastic is heat-warped to form elegant Islamic arches. "
+                    "The structure captures natural daylight, looking like sparkling crystal glass. "
+                    "STATUS: 90% COMPLETE. The character is heat-sealing the last plastic joint near the dome's peak with a small candle flame, "
                     "their eyes squinting as they stabilize the fragile crystalline structure with both hands."
                 ),
                 "Cangkang Telur & Kapur": (
-                    "A PURE WHITE LUXURY MOSQUE. The entire surface is covered in thousands of crushed white eggshell mosaics. "
-                    "Features a massive rounded dome and 4 sharp, tall minarets at the corners. "
-                    "Detailed Arabic calligraphy is carved into the white chalk walls. Looks like a solid marble palace. "
-                    "STATUS: 90% COMPLETE. The character is carefully placing the last tiny white eggshell fragment with a small brush. "
+                    "A PURE WHITE LUXURY MOSQUE with a SOLID ARCHITECTURAL FORM. Covered in thousands of crushed white eggshell mosaics. "
+                    "Features a LARGE ROUNDED DOME and 4 SHARP, TALL MINARETS. Detailed Arabic calligraphy is carved into the white chalk walls. "
+                    "The building features classic pointed arches and a grand recessed entrance. "
+                    "STATUS: 90% COMPLETE. The character is carefully placing the last tiny white eggshell fragment onto the dome with a small brush. "
                     "White dust covers the character's wrinkled hands and the wooden worktable."
                 ),
                 "Sedotan Plastik": (
-                    "A GRAND MODERN MOSQUE built from thousands of white and gold plastic straws. "
-                    "The massive central dome is a complex geodesic weave of straws. "
-                    "4 tall, slender minarets stand at the corners. It looks incredibly lightweight yet architecturally complex. "
-                    "STATUS: 90% COMPLETE. The character is weaving the final golden straw into the dome's peak. "
+                    "A GRAND MODERN MOSQUE. The architecture is defined by a COMPLEX GEODESIC CENTRAL DOME and 4 SLENDER TALL MINARETS. "
+                    "The white and gold straws are woven to form intricate Islamic lace patterns on the walls. "
+                    "It has a clear sacred silhouette with a large prayer hall base. "
+                    "STATUS: 90% COMPLETE. The character is weaving the final golden straw into the dome's crescent peak. "
                     "Their hands are steady but tired, fully immersed in the complex plastic geometry."
                 ),
                 "Koran & Majalah Bekas": (
-                    "A GIANT LITERARY MOSQUE crafted from tightly rolled recycled newspapers and magazines. "
-                    "The dome and 4 minarets show beautiful grey and colorful paper textures. "
-                    "The architecture features multiple layers of paper-mache arches. A unique sustainable masterpiece. "
-                    "STATUS: 90% COMPLETE. The character is applying the final layer of wet paper-mache to the minaret base. "
+                    "A GIANT LITERARY MOSQUE. Features a LARGE ROUND DOME and 4 SYMMETRICAL MINARETS crafted from tightly rolled paper. "
+                    "The architecture includes multiple layers of paper-mache pointed arches and a grand doorway. "
+                    "The silhouette is unmistakably a mosque, with grey and colorful paper textures. "
+                    "STATUS: 90% COMPLETE. The character is applying the final layer of wet paper-mache to the minaret's balcony. "
                     "Ink stains and wet paper scraps cover their hands and the table."
                 ),
                 "Stik Es Krim": (
-                    "A HUGE ARCHITECTURAL MOSQUE built from over 5,000 wooden popsicle sticks. "
-                    "Features a massive multi-layered dome and 4 towering square minarets. "
-                    "The wood is stained to a rustic brown, showing incredible structural detail and precision. "
+                    "A HUGE ARCHITECTURAL MOSQUE built from over 5,000 sticks. It features a MASSIVE MULTI-LAYERED CENTRAL DOME "
+                    "and 4 TOWERING SQUARE MINARETS. The sticks are layered to create deep structural arches and balconies. "
+                    "The wood is stained to a rustic brown, looking like a solid, realistic sacred building. "
                     "STATUS: 90% COMPLETE. The character is placing the final wooden stick onto the minaret balcony. "
                     "Visible glue marks and a pile of sticks show the massive scale of the work."
                 ),
                 "Beras & Biji-bijian": (
-                    "A HIGH-DETAIL MOSQUE where every inch is covered in white rice and green mung beans. "
-                    "A huge central dome and 4 symmetrical minarets. The seeds create a beautiful, high-contrast mosaic tile effect "
-                    "across the entire structure. A symbol of extreme patience. "
-                    "STATUS: 90% COMPLETE. The character is using a small tweezer to place the very last mung beans onto the dome's pattern. "
+                    "A HIGH-DETAIL MOSQUE where every inch follows a SACRED ARCHITECTURAL MAP. Features a HUGE CENTRAL DOME and 4 MINARETS. "
+                    "The white rice and green mung beans form beautiful mosaic tile patterns across the arches and walls. "
+                    "The silhouette is sharp and clearly defined as a place of worship. "
+                    "STATUS: 90% COMPLETE. The character is using a small tweezer to place the very last mung beans onto the dome's floral pattern. "
                     "A bowl of rice and spilled seeds are visible around their focused hands."
                 ),
                 "Kaleng Biskuit": (
-                    "A MAJESTIC METALLIC MOSQUE made from shiny gold-colored recycled biscuit tins. "
-                    "Features a giant reflective dome and 4 tall, sturdy metal minarets. "
-                    "The metal surface is embossed with patterns, reflecting light like a real golden mosque. "
-                    "STATUS: 90% COMPLETE. The character is hammering the last metal rivet into the golden dome. "
+                    "A MAJESTIC METALLIC MOSQUE. Features a LARGE REFLECTIVE GOLDEN DOME and 4 TALL STURDY MINARETS. "
+                    "The architecture is rugged, built from gold-colored recycled tins with embossed patterns. "
+                    "It features clear metal arches and a grand vaulted entrance. "
+                    "STATUS: 90% COMPLETE. The character is hammering the last metal rivet into the golden dome's peak. "
                     "Metallic scraps and a small rusted hammer are in their rough, hardworking hands."
                 )
             },
@@ -5488,6 +5489,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
