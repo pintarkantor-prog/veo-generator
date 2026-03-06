@@ -1562,27 +1562,28 @@ def tampilkan_ai_lab():
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"ACTION & COMPOSITION (SITTING AT A TABLE):\n"
-                    f"- POSITION: The {char_key} is sitting behind a weathered, rustic OLD WOODEN TABLE. "
-                    f"The LARGE {pilihan_bahan} mosque miniature is placed ON THE TABLE, sejajar dada (chest-level) of the {char_key}.\n"
-                    f"- HANDS: The LEFT HAND is stabilizing the base of the mosque on the table, "
-                    f"while the RIGHT HAND is actively finishing the intricate dome/minaret details at a NATURAL HUMAN PACE.\n"
-                    f"- CAMERA: EXTREME WIDE SHOT. FIXED FOCAL LENGTH. STRICTLY NO ZOOM. "
-                    f"The camera is far enough to show the {char_key} from waist up, the entire table with the mosque, and the background.\n"
-                    f"- MOVEMENT: Standard real-time motion only. NO SLOW MOTION.\n\n"
+                    f"STORYBOARD SEQUENCE (MONTAGE):\n"
+                    f"1. OPENING SCENE (THE MAKING): The {char_key} is sitting behind a rustic wooden table, "
+                    f"actively BUILDING the {pilihan_bahan} mosque. Hands are busy pinning fibers and gluing pieces. "
+                    f"The mosque structure is 70% finished, showing the raw construction process.\n"
+                    f"2. CLOSING SCENE (THE REVEAL): Seamlessly transitions to the FINISHED {pilihan_bahan} mosque. "
+                    f"It is now a LARGE, COMPLETE MAJESTIC MOSQUE with a grand central dome and 4 tall minarets.\n\n"
                     
-                    f"LIP-SYNC & HUMAN PERFORMANCE (NATURAL PACE):\n"
+                    f"ACTION & COMPOSITION:\n"
+                    f"- POSITION: Sitting behind the table, mosque sejajar dada (chest-level).\n"
+                    f"- HANDS: Right hand is finishing the final touch on the dome at a NATURAL HUMAN PACE.\n"
+                    f"- CAMERA: EXTREME WIDE SHOT. FIXED. NO ZOOM. The camera stays back to see the whole process and environment.\n\n"
+                    
+                    f"LIP-SYNC & HUMAN PERFORMANCE:\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'.\n"
-                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. STRICTLY AVOID ROBOTIC TONE. Include natural hesitations.\n"
-                    f"- EXPRESSION: Sad and weary face, but humble. NO TEARS. Eyes look tired.\n"
-                    f"- REVEAL: Mid-action, the {char_key} stops working, looks up at a NORMAL SPEED to speak DIRECTLY into the lens.\n\n"
+                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. NO ROBOTIC SOUND.\n"
+                    f"- MOMENT: The {char_key} speaks while working, then stops and looks DIRECTLY into the lens during the final reveal.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
-                    f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
-                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE/SUNSET FILTERS. Natural contrast.\n\n"
+                    f"{MASTER_GRANDMA_SETTING[pilihan_set]}. LIGHTING: Neutral daylight.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. NORMAL SPEED. Deep depth of field. Fixed camera position."
+                    f"Shot on ARRI Alexa 65. 24fps. Normal speed. Smooth transition from 'work-in-progress' to 'completed masterpiece'."
                 )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
@@ -5185,6 +5186,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
