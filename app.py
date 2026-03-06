@@ -1795,10 +1795,21 @@ def tampilkan_ai_lab():
             with c1:
                 st.markdown('<p class="small-label">PILIH KARAKTER</p>', unsafe_allow_html=True)
                 pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
-                char_key = pilihan_user.split(" (")[0]
+                if " (" in pilihan_user:
+                    char_key = pilihan_user.split(" (")[0]
+                else:
+                    char_key = pilihan_user
+
             with c2:
                 st.markdown(f'<p class="small-label">PAKAIAN {char_key.upper()}</p>', unsafe_allow_html=True)
-                baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
+                
+                # FIX DISINI: Biar aman kalau char_key nggak ketemu di Wardrobe
+                if char_key in MASTER_FAMILY_WARDROBE:
+                    baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
+                else:
+                    # Fallback ke baju Nenek standar kalau lupa nambahin buat karakter baru
+                    baju_options = list(MASTER_FAMILY_WARDROBE["Nenek"].keys())
+                
                 baju_pilihan = st.selectbox("Select Wardrobe", baju_options, label_visibility="collapsed")
             
             c3, c4 = st.columns(2)
@@ -1884,23 +1895,33 @@ def tampilkan_ai_lab():
                     "The wide frame captures a vast, lonely, and somber atmosphere, focusing on the character's humble presence. "
                     "Focus on micro-expressions: subtle lip quivers, natural blinking, and realistic skin pores."
                 )
+                
+                # 1. Ambil deskripsi jiwa pake nama lengkap (pilihan_user)
+                soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
+                
+                # 2. Ambil deskripsi baju pake char_key (yang udah dipotong)
+                # Biar aman, kalau char_key ga ada di wardrobe, kita arahin ke 'Nenek'
+                wardrobe_lookup = char_key if char_key in MASTER_FAMILY_WARDROBE else "Nenek"
+                wardrobe_dict = MASTER_FAMILY_WARDROBE.get(wardrobe_lookup, {})
+                
+                # 3. Ambil deskripsi baju yang dipilih
+                baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes")
 
-                # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL WIDE SHOT) ---
                 video_prompt = (
-                    f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
-                    f"WARDROBE: {MASTER_FAMILY_WARDROBE[pilihan_user][baju_pilihan]}. Bare feet.\n\n"
+                    f"CORE SUBJECT: {soul_desc}\n"
+                    f"WARDROBE: {baju_desc}. Bare feet.\n\n"
                     
                     f"SCENE & COMPOSITION:\n"
                     f"- {scene_context}\n"
-                    f"- ENVIRONMENT: {MASTER_GRANDMA_SETTING[pilihan_set]}\n"
-                    f"- OBJECTS: {deskripsi_teknis}\n\n" 
+                    f"- ENVIRONMENT: {MASTER_GRANDMA_SETTING.get(pilihan_set, '')}\n"
+                    f"- OBJECTS: {deskripsi_teknis}\n\n"
                     
                     f"PERFORMANCE:\n"
                     f"- ACTION: {pilih_aksi}\n"
                     f"- DIALOG SCRIPT: \"{user_dialog}\"\n"
                     f"- SPEECH DELIVERY: HIGH-FIDELITY LIP-SYNC. Accurate Indonesian mouth shapes (A-I-U-E-O). Realistic jaw movement.\n"
                     f"- VOCAL STYLE: {pilih_logat}, {pilih_mood} tone, realistic emotional breath pauses.\n"
-                    f"- VIBE: {living_details} Focus on micro-expressions: lip quivers and natural blinking.\n\n"
+                    f"- VIBE: {living_details}\n\n"
                     
                     f"TECHNICAL SPEC: STATIC WIDE ANGLE 24mm. ARRI Alexa 65. 24fps. SINGLE CONTINUOUS TAKE. NO ZOOM. NO CUTS. Deep DoF (f/11). HDR."
                 )
@@ -5704,6 +5725,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
