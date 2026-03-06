@@ -2055,7 +2055,7 @@ def tampilkan_ai_lab():
                 f"ON THE LEFT: {c_l_name} is wearing {c_l_outfit}. "
                 f"ON THE RIGHT: {c_r_name} is wearing {c_r_outfit}. "
                 f"SCENE: {user_scene}. "
-                f"{s_quality_dna} "
+                f"LOCATION: {sultan_quality_logic} "
                 "Candid handheld photography, 35mm lens, f/2.8, accidental motion blur, "
                 "gritty documentary style, deep shadows, natural skin imperfections."
             )
@@ -5714,6 +5714,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
