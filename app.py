@@ -1335,47 +1335,188 @@ def tampilkan_ai_lab():
     with t_grandma:
         # --- 1. MASTER DNA MANUSIA ASLI (FULL BODY & NATURAL SKIN) ---
         MASTER_FAMILY_SOUL = {
-            "Nenek (The Grandma)": "Full body wide shot of a real elderly Indonesian woman, sitting on the floor. Natural weathered skin texture, authentic wrinkles, thin gray hair. Kind eyes with real tear film.",
-            "Kakek (The Grandpa)": "Full body wide shot of a real elderly Indonesian man sitting on a wooden bench. Sun-kissed leathery skin, white stubble, stooped posture, weathered hands.",
-            "Gadis Cantik (The Maiden)": "Full body wide shot of a beautiful young Indonesian woman sitting gracefully. Natural sawo matang skin, elegant features, deep brown eyes.",
-            "Anak Laki-laki (The Boy)": "Full body wide shot of a young Indonesian village boy squatting. Sun-tanned skin, messy black hair, bright innocent eyes.",
-            "Anak Perempuan (The Girl)": "Full body wide shot of a cute young Indonesian girl sitting on the floor. Natural black hair, chubby cheeks, innocent sparkling eyes."
+            "Nenek (The Grandma)": (
+                "Full body wide shot, real elderly Indonesian woman. Deeply weathered, dusty skin with visible age spots. "
+                "Authentic deep wrinkles, messy gray hair with stray strands. Tired, sunken, and melancholic eyes. "
+                "Her face looks exhausted and humble, showing a life of hard work. Strictly no crying, no tears."
+            ),
+            "Kakek (The Grandpa)": (
+                "Full body wide shot, real elderly Indonesian man. Sun-burnt leathery skin, white stubble, face and forehead "
+                "covered in subtle dry dust and sweat. Stooped posture, hollow cheeks, and a weary, sad facial expression. "
+                "Looks like a tired village laborer. Strictly no crying."
+            ),
+            "Gadis Cantik (The Maiden)": (
+                "Full body wide shot, beautiful young Indonesian woman. Natural sawo matang skin looking dull and unpolished. "
+                "Slightly messy hair, dark circles under the eyes (mata panda), no makeup. "
+                "Her expression is somber, quiet, and deeply sad. Authentic village girl aesthetic."
+            ),
+            "Anak Laki-laki (The Boy)": (
+                "Full body wide shot, young Indonesian village boy. Sun-tanned, dusty skin. Messy, uncombed hair. "
+                "Face and hands are slightly dirty with dry earth/dust. His eyes are bright but look quiet and humble, "
+                "reflecting a simple, poor upbringing. No tears."
+            ),
+            "Anak Perempuan (The Girl)": (
+                "Full body wide shot, cute young Indonesian girl. Natural black messy hair, dusty cheeks, and dry lips. "
+                "Simple and humble appearance. Her expression is shy and melancholic, looking slightly downcast and tired."
+            )
         }
 
-        # --- 2. MASTER WARDROBE (NATURAL TEXTURE) ---
+        # --- 2. MASTER WARDROBE (SULTAN LUSUH EDITION) ---
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Kencana": "Faded cotton daster, traditional Javanese batik. Fabric drapes naturally covering her whole sitting posture.",
-                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth covering her legs completely.",
-                "Mukena Bordir": "White silk mukena with lace, heavy fabric drapes covering the whole body from head to floor."
+                "Daster Batik Lusuh": "Faded, over-washed cotton daster with holes, frayed collar, and visible stains. Thin fabric showing years of wear.",
+                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth.",
+                "Mukena Bordir": "White silk mukena with lace, heavy fabric drapes covering the whole body."
             },
             "Kakek": {
-                "Sarung Wadimor & Singlet": "Green plaid sarung covering legs, thin white cotton singlet (kaos oblong).",
-                "Baju Koko & Peci": "White koko shirt, black velvet peci, and a wrapped sarung.",
-                "Batik Lengan Panjang": "Formal long-sleeved batik shirt with dark trousers."
+                "Kaos Lusuh & Peci": "Yellowish thin white singlet (kaos oblong) with a dusty, faded black peci and a worn-out sarung.",
+                "Kaos Sobek & Sarung Lusuh": "A torn white undershirt with visible holes, paired with a very faded, frayed plaid sarung.",
+                "Baju Koko & Peci": "Standard white koko shirt and black peci.",
+                "Batik Lengan Panjang": "Formal long-sleeved batik shirt."
             },
-            "Gadis Cantik": { "Kebaya Modern": "Lace kebaya, long batik skirt.", "Dress Floral": "Rayon floral dress.", "Hijab & Tunik": "Pashmina hijab, long tunik." },
-            "Anak Laki-laki": { "Kaos & Celana Pendek": "Simple cotton t-shirt, denim shorts.", "Seragam SD": "White-and-red school uniform." },
-            "Anak Perempuan": { "Dress Renda": "White lace dress.", "Seragam SD": "White-and-red school uniform." }
+            "Ibu": {
+                "Daster Lusuh & Kerudung": "Old faded daster with a simple, worn-out daily hijab (bergo), looking very humble and tired.",
+                "Kaos Lusuh & Kerudung": "Thin, oversized faded t-shirt with a simple dark hijab, showing signs of hard work.",
+                "Kebaya Sederhana": "Simple daily kebaya with a plain hijab."
+            },
+            "Bapak": {
+                "Kaos Lusuh & Sarung": "Thin faded t-shirt with a worn-out plaid sarung tied loosely at the waist.",
+                "Kaos Lusuh, Peci & Sarung": "Yellowish white singlet, a dusty black peci, and a faded sarung.",
+                "Kaos Lusuh & Kolor Lusuh": "Very thin old t-shirt with faded, loose cotton boxer shorts (kolor), looking extremely poor.",
+                "Baju Koko & Sarung": "Simple white koko and sarung for prayer."
+            },
+            "Gadis Cantik": { 
+                "Daster Lusuh": "Faded, oversized cotton daster, looking unpolished and humble on a village girl.",
+                "Kaos Lusuh": "Thin, faded t-shirt with several stains and frayed hem.",
+                "Kebaya Modern": "Lace kebaya, long batik skirt.", 
+                "Hijab & Tunik": "Simple pashmina and linen tunik." 
+            },
+            "Anak Laki-laki": { 
+                "Kaos Lusuh": "Dirty, faded t-shirt with cracked graphic print and visible dust stains.",
+                "Setelan Lusuh": "Tattered t-shirt and worn-out short pants, looking like a poor village child.",
+                "Seragam SD": "Indonesian white-and-red school uniform." 
+            },
+            "Anak Perempuan": { 
+                "Dress Lusuh": "Old, faded hand-me-down dress with fraying lace and thin fabric.",
+                "Setelan Lusuh": "Faded t-shirt and simple cotton skirt, looking dusty and humble.",
+                "Seragam SD": "Indonesian white-and-red school uniform." 
+            }
         }
 
-        # --- 3. MASTER LOKASI & BAHAN (NATURAL & MAJESTIC) ---
+        # --- 3. MASTER BAHAN (FULL EDITION: BUAH, KARDUS LAMPU, ANYAMAN, DAUN, DLL) ---
         MASTER_GRANDMA_CRAFT = {
-            "Buah-buahan": "A LARGE, MAJESTIC mosque miniature. Dome from carved watermelon, walls from orange peels. Wet fruit fibers and realistic seeds are visible.",
-            "Kardus Bekas": "A GRAND mosque made from layers of recycled brown cardboard. Visible rough-cut edges, glue marks, and complex towers.",
-            "Botol Plastik": "A BREATHTAKING mosque built from hand-cut PET bottles. Heat-warped domes, catching light naturally like crystal.",
-            "Ranting Kayu": "A HUGE mosque built from hundreds of tiny sticks and bark, tied with visible hemp twine. Earthy and detailed."
+            "Anyaman Bambu (Intricate Bamboo)": (
+                "A LARGE, MAJESTIC mosque miniature made from fine bamboo splints. "
+                "The main dome features a complex 'gedek' weaving pattern, while the minarets are tightly braided bamboo. "
+                "Visible tiny bamboo nodes and natural fibers. A high-end traditional Indonesian craft masterpiece."
+            ),
+            "Daun Pisang & Lontar": (
+                "A GRAND mosque built from folded and pinned green banana leaves and dried lontar leaves. "
+                "The roof is tiered (tumpang) like a traditional mosque, made from layered leaf textures. "
+                "Small wooden sticks (lidi) are used to pin the leaves together. Organic and incredibly detailed."
+            ),
+            "Kardus Lampu (Blinking LED)": (
+                "A GRAND, COMPLEX mosque made from recycled brown cardboard. It features multiple high minarets and a huge central dome. "
+                "The windows are cut into intricate Islamic geometric patterns. INSIDE: Small colorful LED lights (Blinking Red, Green, Blue) "
+                "glow through the windows and arches, creating a festive, magical light effect on the character's tired face."
+            ),
+            "Buah Naga (Exotic Pink)": (
+                "A LARGE, MAJESTIC mosque. The main dome is carved from a vibrant pink Dragon Fruit, showing black seeds like natural mosaic art. "
+                "The pillars are made from white dragon fruit flesh, and the minarets are crafted from the scaly pink skin. "
+                "The structure has intricate arched windows and a tiered roof. Wet, glistening, and beautifully organic."
+            ),
+            "Kacang Ijo (Seed Mosaic)": (
+                "A STUNNING mosque structure where every surface is meticulously covered in thousands of green mung beans (kacang ijo). "
+                "The seeds create a textured, green-tiled mosaic effect on the domes and walls. "
+                "The architecture includes tall, slender minarets and a wide prayer hall base. Looks incredibly patient and detailed."
+            ),
+            "Buah Apel & Jeruk": (
+                "A MULTI-COLOR mosque built from polished red apples and bright orange peels. "
+                "The domes are half-cut apples showing white interiors, while the walls are intricate orange peel carvings. "
+                "Tiny cloves (cengkeh) are used as decorative studs along the arches. Fresh and highly detailed."
+            ),
+            "Kardus Bekas (Classic)": (
+                "A LARGE, architectural masterpiece made of corrugated cardboard. Features five distinct domes and four tall minarets. "
+                "Visible glue marks (lem aibon) and layered cardboard textures. It looks like a professional architectural model."
+            ),
+            "Botol Plastik (Crystal Look)": (
+                "A MAJESTIC, transparent mosque built from meticulously cut recycled PET bottles. "
+                "The plastic is heat-warped to form graceful, crystal-like domes and towers. "
+                "It features intricate 'plastic lace' balconies and catching the light naturally."
+            ),
+            "Ranting Kayu (Rustic Art)": (
+                "A HUGE, COMPLEX mosque built from hundreds of tiny dried twigs and bark. "
+                "Features a grand middle dome and interlocking stick walls forming 'mashrabiya' screens. "
+                "Tied with visible hemp twine, looking like a high-end rustic folk-art masterpiece."
+            ),
+            "Pelepah Pisang (Dried Fiber)": (
+                "A HUGE, RUSTIC mosque made from dried banana trunk fibers (pelepah pisang). "
+                "The natural brown and beige textures create a beautiful earthy marble effect. "
+                "Features tall minarets and intricate arched doors made from carved dried fiber."
+            ),
+            "Cangkang Telur (Mosaic)": (
+                "A STUNNING, white-textured mosque where the entire surface is covered in a mosaic of crushed eggshells. "
+                "The cracks between the shells create a sophisticated marble-like finish. "
+                "Gold-painted accents on the dome tip add a touch of humble majesty."
+            ),
+            "Kapur & Batu Bata": (
+                "A HEAVY, DETAILED mosque carved from white chalk and red brick fragments. "
+                "The contrast between white and red creates a beautiful pattern. Intricate carvings on the walls showing Arabic calligraphy style patterns."
+            )
         }
 
+        # --- 3. MASTER LOKASI (MARGINAL & REAL VILLAGE REVISION) ---
         MASTER_GRANDMA_SETTING = {
-            "Gubuk Tua": "Inside a humble Indonesian wooden shack. Natural daylight coming through open door. Woven mats (tikar), rustic wooden walls, and a glass of tea on the side.",
-            "Pinggir Sungai": "Rural riverbank at morning. Natural overcast daylight, green tropical trees, muddy ground, clear water reflections.",
-            "Teras Desa": "Weathered concrete terrace. Cracked tiles, potted plants, natural outdoor lighting with no artificial filters."
+            "Dinding Anyaman Bambu (Bilik)": (
+                "Sitting in front of a traditional Indonesian 'Gubuk' with weathered bamboo weave walls (bilik bambu). "
+                "The bamboo is old, graying, and has visible holes with light leaking through. "
+                "A dusty clay floor (lantai tanah) and a simple wooden bench (lincak). "
+                "The atmosphere is quiet, humble, and deeply authentic to rural poverty."
+            ),
+            "Teras Rumah Kayu Reot": (
+                "On a fragile, decaying wooden porch of an old shack. Broken floorboards, peeling wood paint, "
+                "and rusty nails visible. Natural daylight leaks through the holes in the zinc roof. "
+                "A worn-out broom and old sandals are in the blurred background."
+            ),
+            "Depan Rumah Gubuk": (
+                "In front of a very humble bamboo hut. The ground is dry cracked earth with sparse weeds. "
+                "A tattered bamboo mat (tikar) is placed on the dirt. "
+                "Worn-out laundry hangs on a makeshift wire line in the distance."
+            ),
+            "Di Sawah": (
+                "Sitting on the edge of a muddy rice field (pematang sawah). Vast green paddy fields. "
+                "Natural overcast daylight. A small wooden irrigation gate and a conical farmer's hat (caping) sit nearby."
+            ),
+            "Di Pinggir Gang": (
+                "In a narrow, cramped village alleyway (gang sempit). Weathered brick walls with moss and damp stains. "
+                "Puddles of water on uneven ground, old bicycles, and plastic buckets in the background."
+            ),
+            "Di TPA (Tempat Sampah)": (
+                "In a corner of a local waste disposal site (TPA). Piles of colorful discarded plastic, "
+                "rusted metal scraps, and old tires. Flies are subtly visible in the air. "
+                "Despite the filth, the character looks peaceful and focused on the craft."
+            ),
+            "Di Kebun": (
+                "Under a dense canopy of tropical trees (banana and papaya). Sunlight filters through large green leaves. "
+                "Damp earth, fallen dry leaves, and a rustic wooden fence. Very natural and forest-like atmosphere."
+            )
         }
-
+        # --- 3. MASTER AUDIO & PERFORMANCE (HUMAN-LIKE ACTING) ---
         MASTER_AUDIO_STYLE = {
-            "Logat": ["Indonesia Desa", "Jawa Kromo Inggil", "Sunda Lembut", "Melayu Pesisir", "Indonesia Tulus"],
-            "Mood": ["Menangis Sesenggukan", "Gemetar Rendah Hati", "Pasrah & Ikhlas"]
+            "Logat": [
+                "Bahasa Indonesia Desa (Unpolished, slightly broken grammar, rustic and sincere)",
+                "Jawa Medok (Thick accent, heavy 'd' and 't', very slow, low-pitched and humble)",
+                "Sunda Alus (High-pitched but gentle, melodic rising tones at the end of sentences)",
+                "Melayu Pesisir Tua (Raspy, rhythmic, like a traditional storyteller, slightly shaky)",
+                "Betawi Klasik (Deep, husky voice, blunt but sincere, uses old Jakarta pauses)"
+            ],
+            "Mood": [
+                "Suara Serak Bergetar (Raspy and shaky, showing age and suppressed sadness, very human)",
+                "Bicara Terbata-bata (Hesitant speech with natural 'um' and 'ah' micro-pauses, looking for words)",
+                "Napas Berat & Lelah (Long pauses for heavy breathing/sighs between phrases, weary tone)",
+                "Whispered & Humble (Soft, almost a whisper, showing deep respect and shyness)",
+                "Tersenyum Getir (Bittersweet voice, trying to stay brave but the voice cracks slightly)"
+            ]
         }
 
         # --- UI LAYOUT ---
@@ -1394,10 +1535,10 @@ def tampilkan_ai_lab():
             
             c3, c4 = st.columns(2)
             with c3:
-                st.markdown('<p class="small-label">KARYA TANGAN (DI PEGANG TANGAN KIRI)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">KARYA TANGAN </p>', unsafe_allow_html=True)
                 pilihan_bahan = st.selectbox("Select Material", list(MASTER_GRANDMA_CRAFT.keys()), label_visibility="collapsed")
             with c4:
-                st.markdown('<p class="small-label">SETTING LOKASI (NATURAL LIGHTING)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">SETTING LOKASI</p>', unsafe_allow_html=True)
                 pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
             
             st.divider()
@@ -1422,27 +1563,33 @@ def tampilkan_ai_lab():
             else:
                 # --- RAKIT FINAL PROMPT (NATURAL COLOR & WIDE COMPOSITION) ---
                 video_prompt = (
-                    f"MASTER VIDEO PROMPT (EXTREME WIDE SHOT - NATURAL LOOK):\n"
+                    f"MASTER VIDEO PROMPT (FIXED EXTREME WIDE - NATURAL LOOK):\n"
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"ACTION & COMPOSITION:\n"
-                    f"The camera is placed at a distance to capture the FULL BODY of the {char_key} and the entire environment. "
-                    f"The {char_key} is HOLDING the LARGE mosque craft in their LEFT HAND, while the RIGHT HAND is actively adding small details (finishing the craft). "
-                    f"The mosque made of {pilihan_bahan} is fully visible and not cropped. "
-                    f"The camera moves in an ULTRA-SLOW, steady handheld motion, ensuring the {char_key} and the craft remain perfectly in frame.\n"
-                    f"REVEAL: Mid-action, the {char_key} slowly turns their head to look into the lens and speaks NATURALLY: '{user_dialog}'. "
-                    f"Lips move with perfect phonetic synchronization. Voice is {pilih_logat} with {pilih_mood} emotion.\n\n"
+                    f"ACTION & COMPOSITION (FIXED CAMERA):\n"
+                    f"- CAMERA: EXTREME WIDE SHOT. FIXED FOCAL LENGTH. STRICTLY NO ZOOM. "
+                    f"Constant far distance capturing the full body, the craft, and the background without cropping.\n"
+                    f"- HANDS: The {char_key} is HOLDING the LARGE {pilihan_bahan} mosque in their LEFT HAND, "
+                    f"while the RIGHT HAND is actively touching and finishing the craft details.\n"
+                    f"- MOVEMENT: Ultra-slow handheld micro-movements only. 100% stable composition.\n\n"
+                    
+                    f"LIP-SYNC & HUMAN PERFORMANCE (ANTI-ROBOT):\n"
+                    f"- DIALOG SCRIPT: '{user_dialog}'.\n"
+                    f"- VOCAL STYLE: Character speaks in {pilih_logat} with a {pilih_mood} tone. "
+                    f"STRICTLY AVOID ROBOTIC TONE. Include natural hesitations, heavy sighs, and unpolished delivery.\n"
+                    f"- EXPRESSION: Sad and weary face, but STRICTLY NO TEARS, NO CRYING. Deeply humble and melancholic eyes.\n"
+                    f"- ARTICULATION: Slow, hesitant mouth movements. Lips and jaw must follow the rhythm of a real person thinking while speaking.\n"
+                    f"- REVEAL: Mid-action, the {char_key} slowly turns their head to look DIRECTLY into the lens with a tired expression.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
                     f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
-                    f"LIGHTING: Neutral, natural daylight. NO ORANGE/SUNSET FILTERS. Realistic colors, clear visibility, natural contrast.\n\n"
+                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE/SUNSET FILTERS. Natural contrast.\n"
+                    f"Note: If the craft is 'Kardus Lampu', visible colored LED lights should glow from within the mosque windows.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65, Wide-angle lens. Deep depth of field to keep the background, {char_key}, and craft sharp. "
-                    f"Natural 24fps motion, hyper-realistic skin textures, 35mm film grain, 100% authentic human features."
+                    f"Shot on ARRI Alexa 65, Wide-angle prime lens. 24fps. Deep depth of field to keep the {char_key}, the craft, and the background sharp."
                 )
-
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
                 st.code(video_prompt, language="text")
@@ -5044,6 +5191,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
