@@ -1121,7 +1121,7 @@ def tampilkan_ai_lab():
             
             if ide_singkat:
                 # OUTFIT LOCK DARI MASTER
-                baju_list = ", ".join(list(MASTER_CHAR_LAB["SKELETON TRANSPARAN"]["pakaian"].keys()))
+                baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
 
                 if "Medis" in tipe_cerita:
                     v_guide = "Fokus pada anatomi: saraf bergetar, aliran darah, detak jantung, dan reaksi organ transparan."
@@ -4736,6 +4736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
