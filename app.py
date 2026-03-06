@@ -2094,12 +2094,12 @@ def tampilkan_ai_lab():
 
             # --- TAMPILAN HASIL ---
             st.divider()
-            st.success("✅ ULTIMATE SULTAN PROMPT READY!")
+            st.success("✅ ULTIMATE PROMPT READY!")
             
-            st.markdown("#### 🎨 1. Sultan Image DNA (Master)")
+            st.markdown("#### 🎨 1. PROMPT GAMBAR")
             st.code(sultan_image_dna, language="text")
             
-            st.markdown("#### 🎬 2. Sultan Video Story (Animation)")
+            st.markdown("#### 🎬 2. PROMPT VIDEO")
             st.code(sultan_video_story, language="text")
                 
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5698,6 +5698,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
