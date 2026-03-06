@@ -2025,14 +2025,14 @@ def tampilkan_ai_lab():
         if btn_generate:
             # DNA KUALITAS TINGGI (UPGRADED: THE GRITTY REALITY & NO TEXT)
             sultan_quality_logic = (
-                "Candid handheld photography, 35mm film grain, high ISO noise. "
-                "Dirty lens effect, natural muted earth tones, desaturated colors. "
-                "Harsh natural lighting, deep grainy shadows. "
-                "Environment: Cracked concrete, weathered buildings, dry overgrown weeds, "
-                "floating dust, muddy water reflections. "
-                "Characters: Raw skin textures, visible pores, sweat, oily forehead, messy hair strands, "
-                "wrinkled stained fabric. "
-                "STRICTLY NO TEXT, NO CAPTIONS, NO WATERMARKS, NO DIGITAL SMOOTHING, NO PLASTIC SKIN."
+                "Candid handheld photography style, 35mm film grain, high ISO noise. "
+                "Dirty lens, natural muted earth tones, desaturated colors. "
+                "Environment Detail: Cracked concrete, weathered structures, dry overgrown weeds, "
+                "floating dust particles, muddy water reflections. "
+                "Material Detail: Realistic fabric wrinkles on clothes, wet textures, "
+                "gritty surface details, cinematic shadows, natural lighting. "
+                "STRICTLY NO TEXT, NO CAPTIONS, NO WATERMARKS, NO DIGITAL SMOOTHING. "
+                "Maintain original character facial features and proportions, DO NOT change to generic humans."
             )
 
             # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
@@ -2050,14 +2050,11 @@ def tampilkan_ai_lab():
 
             # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
             sultan_image_dna = (
-                f"A raw, unedited wide-angle photograph, vertical 9:16 frame. "
-                f"A tense cinematic standoff between {c_l_name} and {c_r_name}. " # Langsung sebut nama
-                f"ON THE LEFT: {c_l_name} is wearing {c_l_outfit}. "
-                f"ON THE RIGHT: {c_r_name} is wearing {c_r_outfit}. "
-                f"SCENE: {user_scene}. "
-                f"LOCATION: {sultan_quality_logic} "
-                "Candid handheld photography, 35mm lens, f/2.8, accidental motion blur, "
-                "gritty documentary style, deep shadows, natural skin imperfections."
+                f"MASTER IMAGE (Spatial Split): Two distinct characters. "
+                f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
+                f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
+                f"LOCATION: {user_scene}. {sultan_quality_logic} "
+                f"9:16 vertical frame, handheld camera, raw footage style."
             )
 
             # B. RAKIT PROMPT VIDEO (sultan_video_story)
@@ -5714,6 +5711,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
