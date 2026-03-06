@@ -1936,7 +1936,7 @@ def tampilkan_ai_lab():
             with c3:
                 obj_name = st.text_input("NAMA OBJEK", value="Susu Glowing")
 
-            # --- ROW 2: JENIS TRANSFORMASI ---
+            # --- ROW 2: JENIS TRANSFORMASI & LATAR ---
             t1, t2 = st.columns(2)
             with t1:
                 trans_type = st.selectbox("LEVEL PERUBAHAN", [
@@ -1947,12 +1947,24 @@ def tampilkan_ai_lab():
                     "God Mode (Nebula/Cosmic)"
                 ])
             with t2:
+                # FITUR BARU: Biar latar belakang gak polos meski foto referensinya polos
+                env_setup = st.selectbox("SETTING LATAR (SCENE)", [
+                    "Original (Ikuti Gambar)",
+                    "Traditional Wooden House (Rumah Kayu)",
+                    "Epic Mountain Peak (Puncak Gunung)",
+                    "Grand Mosque Entrance (Teras Masjid)",
+                    "Ancient Dark Temple (Kuil Tua)",
+                    "Modern Cinematic Gym (Gudang Gelap)"
+                ])
+
+            # --- ROW 3: EFEK & CATATAN ---
+            e1, e2 = st.columns([2, 3])
+            with e1:
                 env_impact = st.multiselect("EFEK SEKITAR", 
                     ["Lantai Retak", "Benda Melayang", "Lampu Pecah", "Getaran Kamera"],
                     default=["Getaran Kamera"])
-
-            # --- ROW 3: ADDITIONAL NOTES ---
-            extra_notes = st.text_input("CATATAN TAMBAHAN", placeholder="Contoh: Peci terbang ke langit, mata menyala biru...")
+            with e2:
+                extra_notes = st.text_input("CATATAN TAMBAHAN", placeholder="Contoh: Peci terbang ke langit, mata menyala biru...")
 
             # --- RAKIT MASTER PROMPT ---
             if st.button("🔥 GENERATE VIRAL TRANSFORMATION", type="primary", use_container_width=True):
@@ -1966,7 +1978,10 @@ def tampilkan_ai_lab():
                 if "Lampu Pecah" in env_impact: env_p += "Surrounding lights shatter and explode. "
                 if "Getaran Kamera" in env_impact: env_p += "Intense screen shakes and handheld micro-jitter for high-tension cinematic feel. "
 
-                # 3. Mantra Visual Spesifik
+                # 3. Logika Suntikan Latar (Scene Injection)
+                scene_p = f"SETTING: Transform the environment into a {env_setup}. " if env_setup != "Original" else ""
+
+                # 4. Mantra Visual Spesifik
                 visual_mantra = {
                     "Super Saiyan (Golden Aura)": "Golden electric aura erupts from the body. Hair stands up, turns golden and spiky. High-voltage sparks flickering around muscles.",
                     "Anatomical Titan (Muscle & Bone)": "Hyper-realistic rapid muscle growth. Bone thickening visible. Transparent gel-skin reveals glowing internal organs with realistic subsurface scattering.",
@@ -1975,12 +1990,13 @@ def tampilkan_ai_lab():
                     "God Mode (Nebula/Cosmic)": "Body substance turns into a swirling celestial nebula. The skeleton glows like pure white starlight through the translucent cosmic skin."
                 }
 
-                # 4. Final Prompt Assembly
+                # 5. Final Prompt Assembly
                 final_viral_prompt = (
                     f"STRICT CHARACTER FIDELITY: Maintain 100% facial features and identity of {target_subject} from the reference image. No face distortion.\n\n"
+                    f"{scene_p}\n"
                     f"TRANSFORMATION SEQUENCE:\n{trigger_p} initiate {trans_type} metamorphosis. {visual_mantra[trans_type]} "
                     f"Clothing Physics: High-tension fabric simulation, shirt ripping and buttons popping toward the camera lens realistically. {extra_notes}.\n\n"
-                    f"ENVIRONMENTAL REACTION: {env_p}\n\n"
+                    f"ENVIRONMENTAL REACTION: {env_p} The surroundings react dynamically to the energy release.\n\n"
                     f"TECHNICAL SPEC: 24fps real-time motion, shot on ARRI Alexa 65, 35mm Master Prime Lens. Realistic biological morphing, cinematic HDR, professional movie VFX quality."
                 )
 
@@ -5586,6 +5602,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
