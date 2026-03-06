@@ -1559,31 +1559,35 @@ def tampilkan_ai_lab():
             else:
                 # --- RAKIT FINAL PROMPT (NATURAL COLOR & WIDE COMPOSITION) ---
                 video_prompt = (
+                    f"MASTER VIDEO PROMPT (10-SECOND CONTINUOUS SHOT - OBJECT TRANSFORMATION):\n"
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"STORYBOARD SEQUENCE (MONTAGE):\n"
-                    f"1. OPENING SCENE (THE MAKING): The {char_key} is sitting behind a rustic wooden table, "
-                    f"actively BUILDING the {pilihan_bahan} mosque. Hands are busy pinning fibers and gluing pieces. "
-                    f"The mosque structure is 70% finished, showing the raw construction process.\n"
-                    f"2. CLOSING SCENE (THE REVEAL): Seamlessly transitions to the FINISHED {pilihan_bahan} mosque. "
-                    f"It is now a LARGE, COMPLETE MAJESTIC MOSQUE with a grand central dome and 4 tall minarets.\n\n"
+                    f"TIMELINE & OBJECT TRANSFORMATION:\n"
+                    f"- 0-6 SECONDS (CRAFTING PHASE): The {char_key} is sitting behind a rustic wooden table, "
+                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 80% FINISHED; "
+                    f"the central dome is visible but one minaret is still being hand-assembled. "
+                    f"Scraps of {pilihan_bahan} and glue are visible on the table.\n"
+                    f"- 6-10 SECONDS (MIRACLE REVEAL): While the camera stays FIXED and the {char_key} continues speaking, "
+                    f"the mosque SEAMLESSLY TRANSFORMS into a 100% COMPLETE MAJESTIC MASTERPIECE. "
+                    f"It now has a grand central dome and 4 tall, perfect minarets at the corners.\n\n"
                     
-                    f"ACTION & COMPOSITION:\n"
-                    f"- POSITION: Sitting behind the table, mosque sejajar dada (chest-level).\n"
-                    f"- HANDS: Right hand is finishing the final touch on the dome at a NATURAL HUMAN PACE.\n"
-                    f"- CAMERA: EXTREME WIDE SHOT. FIXED. NO ZOOM. The camera stays back to see the whole process and environment.\n\n"
-                    
-                    f"LIP-SYNC & HUMAN PERFORMANCE:\n"
+                    f"LIP-SYNC & CONTINUOUS PERFORMANCE:\n"
                     f"- DIALOG SCRIPT: '{user_dialog}'.\n"
                     f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. NO ROBOTIC SOUND.\n"
-                    f"- MOMENT: The {char_key} speaks while working, then stops and looks DIRECTLY into the lens during the final reveal.\n\n"
+                    f"- AUDIO-VISUAL SYNC: The dialog remains continuous and UNBROKEN from 0 to 10 seconds. "
+                    f"Only the mosque object changes appearance. The {char_key} maintains eye contact or focused work throughout.\n\n"
+                    
+                    f"ACTION & COMPOSITION:\n"
+                    f"- CAMERA: EXTREME WIDE SHOT. FIXED POSITION. NO ZOOM. The table and environment are always in frame.\n"
+                    f"- REVEAL: At exactly 6 seconds, the {char_key} stops working and looks DIRECTLY into the lens while the mosque 'magically' becomes finished.\n\n"
                     
                     f"ENVIRONMENT & LIGHTING:\n"
                     f"{MASTER_GRANDMA_SETTING[pilihan_set]}. LIGHTING: Neutral daylight.\n\n"
                     
                     f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65. 24fps. Normal speed. Smooth transition from 'work-in-progress' to 'completed masterpiece'."
+                    f"Shot on ARRI Alexa 65. 24fps. Normal speed. Smooth visual morphing of the mosque object "
+                    f"without affecting the character's movement or audio continuity."
                 )
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
@@ -5186,6 +5190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
