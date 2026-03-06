@@ -1100,7 +1100,7 @@ def tampilkan_ai_lab():
             f_auto, m_auto = auto_visual_mapping(aksi_in)
 
             # --- BUTTON GENERATE: SULTAN VIDEO ENGINE (FOR VEO & GROK) ---
-            if st.button("🚀 GENERATE SULTAN VIDEO PROMPT", type="primary", use_container_width=True):
+            if st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
                 # 1. LOGIKA OTOMATIS MOOD CAHAYA (SMART LIGHTING)
@@ -1127,7 +1127,7 @@ def tampilkan_ai_lab():
                 )
                 
                 # --- TAMPILKAN HASIL SINGLE BOX (VEO/GROK READY - NATURAL MOTION) ---
-                st.warning("🎥 MASTER VIDEO ENGINE PROMPT (OPTIMIZED)")
+                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED)")
                 
                 sultan_video_prompt = (
                     f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
@@ -1162,7 +1162,7 @@ def tampilkan_ai_lab():
                     except:
                         st.error("Koneksi bermasalah saat update status.")
 
-        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (7 PILAR VIRAL 2026)", expanded=False):
+        with st.expander("💡 ASISTEN IDE GURU GEMINI", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
                 st.markdown('<p class="small-label">1. PILIH PILAR VIRAL</p>', unsafe_allow_html=True)
@@ -1176,7 +1176,7 @@ def tampilkan_ai_lab():
                     "🔥 Survival Instinct (Uji Ketahanan)"
                 ], label_visibility="collapsed")
             with col_t2:
-                st.markdown('<p class="small-label">2. JUMLAH CUT (ADENGAN)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">2. JUMLAH ADENGAN</p>', unsafe_allow_html=True)
                 jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
 
             st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
@@ -1519,7 +1519,7 @@ def tampilkan_ai_lab():
         with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown('<p class="small-label">PILIH TOKOH (EXTREME WIDE SHOT)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">PILIH KARAKTER</p>', unsafe_allow_html=True)
                 pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
                 char_key = pilihan_user.split(" (")[0]
             with c2:
@@ -1549,7 +1549,7 @@ def tampilkan_ai_lab():
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
 
             st.write("")
-            btn_gen = st.button("🔥 GENERATE MASTER NATURAL PROMPT", use_container_width=True)
+            btn_gen = st.button("🚀 GENERATE VIDEO PROMPT", use_container_width=True)
 
         if btn_gen:
             if not user_dialog:
@@ -1557,7 +1557,6 @@ def tampilkan_ai_lab():
             else:
                 # --- RAKIT FINAL PROMPT (NATURAL COLOR & WIDE COMPOSITION) ---
                 video_prompt = (
-                    f"MASTER VIDEO PROMPT (10-SECOND CONTINUOUS SHOT - OBJECT TRANSFORMATION):\n"
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
@@ -1588,7 +1587,7 @@ def tampilkan_ai_lab():
                     f"without affecting the character's movement or audio continuity."
                 )
                 st.divider()
-                st.success(f"🎬 MASTER NATURAL PROMPT READY (WIDE & STEADY)")
+                st.success(f"🎬 MASTER NATURAL PROMPT READY")
                 st.code(video_prompt, language="text")
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
@@ -5188,6 +5187,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
