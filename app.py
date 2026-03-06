@@ -2025,14 +2025,14 @@ def tampilkan_ai_lab():
         if btn_generate:
             # DNA KUALITAS TINGGI (UPGRADED: THE GRITTY REALITY & NO TEXT)
             sultan_quality_logic = (
-                "ULTRA-REALISTIC RAW FOOTAGE. Shot on dirty 35mm film stock with heavy organic grain. "
-                "Muted and desaturated cinematic colors, NO vibrant greens, NO neon tones. "
-                "Environment Detail: Gritty textures on buildings, cracked concrete, overgrown dry grass, "
-                "volumetric dust particles in the air, realistic puddles with muddy reflections. "
-                "Character Detail: Visible skin pores, sweat, oily skin, messy hair, realistic fabric wrinkles. "
-                "Camera: Handheld camera shake, slight motion blur, soft bokeh background. "
-                "STRICTLY NO TEXT, NO CAPTIONS, NO SUBTITLES, NO WATERMARKS, NO CREDITS. "
-                "STRICTLY NO PLASTIC LOOK, NO SMOOTHING, NO UNREAL ENGINE STYLE, NO VIBRANT SATURATION."
+                "Candid handheld photography, 35mm film grain, high ISO noise. "
+                "Dirty lens effect, natural muted earth tones, desaturated colors. "
+                "Harsh natural lighting, deep grainy shadows. "
+                "Environment: Cracked concrete, weathered buildings, dry overgrown weeds, "
+                "floating dust, muddy water reflections. "
+                "Characters: Raw skin textures, visible pores, sweat, oily forehead, messy hair strands, "
+                "wrinkled stained fabric. "
+                "STRICTLY NO TEXT, NO CAPTIONS, NO WATERMARKS, NO DIGITAL SMOOTHING, NO PLASTIC SKIN."
             )
 
             # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
@@ -2051,13 +2051,12 @@ def tampilkan_ai_lab():
             # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
             sultan_image_dna = (
                 f"A raw, unedited wide-angle photograph. Vertical 9:16 frame. "
-                f"Two distinct characters in a tense standoff. "
+                f"Two men in a tense standoff. "
                 f"ON THE LEFT: {c_l_name} wearing {c_l_outfit}. "
                 f"ON THE RIGHT: {c_r_name} wearing {c_r_outfit}. "
                 f"SCENE: {user_scene}. "
-                f"{sultan_quality_logic} " # Ini bakal manggil DNA "Gritty" kita tadi
-                "The lighting is natural and moody, captured on a high-end DSLR with a 35mm lens. "
-                "Candid photography style, slightly blurred background, extreme detail on skin textures and fabric."
+                f"{sultan_quality_logic} " # Manggil DNA baru di atas
+                "Shot on a Sony A7RIV, 35mm lens, f/2.8, accidental motion blur, gritty documentary style."
             )
 
             # B. RAKIT PROMPT VIDEO (sultan_video_story)
@@ -5714,6 +5713,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
