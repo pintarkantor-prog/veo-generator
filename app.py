@@ -1019,9 +1019,24 @@ def tampilkan_ai_lab():
                 wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
             
             with col_dna:
-                st.markdown('<p class="small-label">🧬 DNA MANTRA (AUTO-INJECTOR READY)</p>', unsafe_allow_html=True)
-                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Wearing {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
-                dna_final = st.text_area("DNA_F", value=dna_text, height=100, label_visibility="collapsed")
+                st.markdown('<p class="small-label">🧬 DATA FISIK KARAKTER (AUTO-SYCH)</p>', unsafe_allow_html=True)
+                
+                # Mengambil data fisik dan pakaian
+                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Outfit: {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
+                
+                # Placeholder Sultan untuk DNA
+                dna_placeholder = (
+                    "DNA karakter (anatomi, material, pakaian) akan terisi otomatis... "
+                    "Data ini akan digabung dengan aksi untuk hasil visual yang konsisten."
+                )
+                
+                dna_final = st.text_area(
+                    "DNA_F", 
+                    value=dna_text, 
+                    height=100, 
+                    placeholder=dna_placeholder,
+                    label_visibility="collapsed"
+                )
 
             # --- ROW 2: SETTING AUDIO (MASTER KONSISTEN) ---
             st.markdown('<p class="small-label">🔊 SETTING AUDIO (NARASI VO)</p>', unsafe_allow_html=True)
@@ -1049,10 +1064,22 @@ def tampilkan_ai_lab():
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                env_in = st.text_area("E_I", value=current_row.get('environment', ''), height=68, label_visibility="collapsed")
+                env_in = st.text_area(
+                    "E_I", 
+                    value=current_row.get('environment', ''), 
+                    height=68, 
+                    label_visibility="collapsed",
+                    placeholder="Contoh: Kamar gelap, cahaya HP biru, debu beterbangan..."
+                )
             with c2:
                 st.markdown('<p class="small-label">🎙️ TEKS NARASI VO</p>', unsafe_allow_html=True)
-                vo_ref = st.text_area("V_R", value=current_row.get('narasi_vo', ''), height=68, label_visibility="collapsed")
+                vo_ref = st.text_area(
+                    "V_R", 
+                    value=current_row.get('narasi_vo', ''), 
+                    height=68, 
+                    label_visibility="collapsed",
+                    placeholder="Tulis narasi di sini (Maksimal 2 kalimat padat & bercerita)..."
+                )
 
             # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
             f_auto, m_auto = auto_visual_mapping(aksi_in)
@@ -4876,6 +4903,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
