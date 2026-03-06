@@ -1613,64 +1613,45 @@ def tampilkan_ai_lab():
             },
             "🥣 Buka Puasa Menu Sederhana": {
                 "Nasi & Garam": (
-                    "AUTHENTIC MAGRIB EVENING. Dim moody lighting. The character sits on a rustic wooden chair at a standard wooden table. "
                     "A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
                     "A weathered tin cup of warm water and one small date on the side. "
-                    "Character picking up every grain with fingers in deep gratitude. Somber atmosphere."
+                    "The character is picking up every grain with their fingers."
                 ),
                 "Singkong Rebus & Sambal": (
-                    "AUTHENTIC MAGRIB EVENING. Low-key cinematic lighting. The character sits on a rustic wooden chair at a wooden table. "
                     "Two pieces of boiled cassava on a small plastic plate with a dab of red sambal. "
-                    "A glass of warm plain water. Steam rises from the cassava, blurring their tired eyes. "
-                    "Bittersweet smile, a quiet lonely breaking of fast."
+                    "A glass of warm plain water. Steam rises from the cassava."
                 ),
                 "Teh & Biskuit Lempem": (
-                    "AUTHENTIC MAGRIB EVENING. Flickering warm light. The character sits on a rustic wooden chair at a standard table. "
                     "A glass of dark, unsweetened tea and one single dry biscuit. "
-                    "The biscuit is being dipped into the tea slowly until soft. "
-                    "Shaky hands reflect physical weakness. Atmospheric deep shadows."
+                    "The biscuit is being dipped into the tea slowly until it becomes soft."
                 ),
                 "Nasi Kerupuk & Air Putih": (
-                    "AUTHENTIC MAGRIB EVENING. Blue hour light from the window. Character sits on a wooden chair at a standard table. "
-                    "A small bowl of white rice and one white flour cracker (kerupuk). A plastic cup of plain water. "
-                    "Breaking the cracker into tiny pieces over the rice to make it last. "
-                    "Very quiet, only the sound of crunching is heard."
+                    "A small bowl of white rice and one white flour cracker (kerupuk). "
+                    "A plastic cup of plain water. The character breaks the cracker over the rice."
                 ),
                 "Ubi Bakar": (
-                    "AUTHENTIC MAGRIB EVENING. Dim warm lighting. The character sits on a rustic wooden chair at a standard table. "
-                    "One roasted sweet potato on a piece of old newspaper. A small glass of hot unsweetened tea. "
-                    "Steam rises as soot-stained fingers peel the charred skin. "
-                    "Deeply authentic rural village vibe with heavy shadows."
+                    "One roasted sweet potato on a piece of old newspaper. "
+                    "A small glass of hot unsweetened tea. Steam rises as fingers peel the charred skin."
                 ),
                 "Bubur Polos & Kecap": (
-                    "AUTHENTIC MAGRIB EVENING. Moody interior light. The character sits on a rustic wooden chair at a wooden table. "
                     "A small bowl of watery white porridge with a thin swirl of sweet soy sauce. "
-                    "A glass of plain warm water. Eating slowly with a wooden spoon. "
-                    "Atmosphere of pure patience and deep prayerful silence."
+                    "A glass of plain warm water. A wooden spoon rests in the bowl."
                 ),
                 "Pisang Rebus & Air Hangat": (
-                    "AUTHENTIC MAGRIB EVENING. Cinematic low light. The character sits on a rustic wooden chair at a standard table. "
-                    "Two pieces of boiled banana on a tin plate. A glass of plain hot water. "
-                    "Shaky hands carefully peel the skin, placing it neatly on the side. "
-                    "Focus on the humble, hardworking hands."
+                    "Two pieces of boiled banana on a small tin plate. "
+                    "A large glass of hot water. The character is carefully peeling the banana skin."
                 ),
                 "Nasi Putih & Satu Tempe": (
-                    "AUTHENTIC MAGRIB EVENING. Warm dim lighting. The character sits on a rustic wooden chair at a standard table. "
-                    "Small mound of white rice and one fried tempeh on a piece of banana leaf. "
-                    "A weathered glass of warm water. Splitting the one tempeh into tiny bits. "
-                    "Extreme poverty reflected in the high-contrast shadows."
+                    "A small mound of white rice and one single fried tempeh on a piece of banana leaf. "
+                    "A weathered glass of warm water. The tempeh is split into tiny pieces."
                 ),
                 "Gorengan Dingin & Teh Tawar": (
-                    "AUTHENTIC MAGRIB EVENING. A single flickering lightbulb above. Character sits on a wooden chair at a standard table. "
-                    "One cold fried bakwan on a saucer and a glass of plain tea. "
-                    "Hardened oil on the fritter. Biting with look of pure resilience. "
-                    "The room is filled with dramatic, gritty shadows."
+                    "One cold fried bakwan on a small saucer and a glass of plain tea. "
+                    "The oil has hardened on the fritter. A small chili pepper on the side."
                 ),
                 "Lontong Polos & Air Putih": (
-                    "AUTHENTIC MAGRIB EVENING. Soft twilight glow. The character sits on a rustic wooden chair at a standard table. "
-                    "One rice cake (lontong) in a wilted banana leaf. A plastic cup of water. "
-                    "Unwrapping the leaf slowly like a precious gift. "
-                    "Sitting alone in deep, somber silence."
+                    "One single rice cake (lontong) wrapped in a wilted banana leaf. "
+                    "A plastic cup of plain water. The leaf is being unwrapped slowly."
                 )
             }
         }
@@ -1883,14 +1864,21 @@ def tampilkan_ai_lab():
                         "NO CAMERA MOVEMENT. NO ZOOM. NO CUTS. Everything stays in one fixed frame."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
+                    # Logika otomatis: Cek apakah menu yang dipilih mengandung kata kunci lesehan
+                    is_lesehan = any(x in deskripsi_teknis.lower() for x in ["floor", "tikar", "lesehan"])
+                    
+                    if is_lesehan:
+                        posisi_duduk = "sitting cross-legged on a traditional tikar (woven mat) on the floor at a large rustic low-profile wooden table."
+                    else:
+                        posisi_duduk = "sitting on a rustic wooden chair at a standard-height wooden table."
+
                     scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
-                        "AUTHENTIC MAGRIB EVENING ATMOSPHERE. SOMBRE MEDIUM SHOT. " # Tambah Magrib
-                        "The character is sitting on a rustic wooden chair at a standard-height wooden table. " # Ganti ke Kursi & Meja
-                        "The table is positioned directly in front of the character, between the camera and the character. "
-                        "The meal and the weathered tin cup are clearly visible on the table. "
-                        "The camera remains FIXED on the character's weary and emotional face as they speak. "
-                        "STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
+                        f"SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
+                        f"AUTHENTIC MAGRIB EVENING ATMOSPHERE. SOMBRE MEDIUM SHOT. "
+                        f"The character is {posisi_duduk} " # Masukin posisi hasil deteksi otomatis
+                        f"The table is positioned directly in front of the character, between the camera and the character. "
+                        f"The camera remains FIXED on the character's weary and emotional face as they speak. "
+                        f"STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
                     )
 
                 # --- 5. NUANSA HIDUP (ULTRA-REALISTIC WIDE FOCUS) ---
@@ -1903,28 +1891,22 @@ def tampilkan_ai_lab():
 
                 # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL WIDE SHOT) ---
                 video_prompt = (
-                    f"CORE SUBJECT: FULL BODY WIDE SHOT. {MASTER_FAMILY_SOUL[pilihan_user]}\n"
-                    f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}. Bare feet on the dusty floor.\n\n"
+                    f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
+                    f"WARDROBE: {MASTER_FAMILY_WARDROBE[pilihan_user][baju_pilihan]}. Bare feet.\n\n"
                     
                     f"SCENE & COMPOSITION:\n"
                     f"- {scene_context}\n"
                     f"- ENVIRONMENT: {MASTER_GRANDMA_SETTING[pilihan_set]}\n"
-                    f"- OBJECT DETAIL: {deskripsi_teknis}\n\n"
+                    f"- OBJECTS: {deskripsi_teknis}\n\n" 
                     
-                    f"PERFORMANCE & ATMOSPHERE:\n"
-                    f"- PHYSICAL ACTION: {pilih_aksi}\n"
-                    f"- DIALOG SCRIPT: \"{user_dialog}\"\n" # Gunakan kutip dua (double quotes) di dalam string
-                    f"- SPEECH DELIVERY: HIGH-FIDELITY LIP-SYNC. The character must speak the dialogue script accurately in Indonesian. "
-                    f"Ensure every mouth shape matches the Indonesian vowels and consonants (A-I-U-E-O). "
-                    f"Natural real-time vocal delivery with realistic mouth opening and jaw movement.\n"
-                    f"- VOCAL STYLE: {pilih_logat}, {pilih_mood} tone, clear Indonesian enunciation with realistic emotional breath pauses.\n"
-                    f"- VIBE: {living_details} Focus on micro-expressions: subtle lip quivers, cheek movement while speaking, and natural blinking.\n\n"
+                    f"PERFORMANCE:\n"
+                    f"- ACTION: {pilih_aksi}\n"
+                    f"- DIALOG SCRIPT: \"{user_dialog}\"\n"
+                    f"- SPEECH DELIVERY: HIGH-FIDELITY LIP-SYNC. Accurate Indonesian mouth shapes (A-I-U-E-O). Realistic jaw movement.\n"
+                    f"- VOCAL STYLE: {pilih_logat}, {pilih_mood} tone, realistic emotional breath pauses.\n"
+                    f"- VIBE: {living_details} Focus on micro-expressions: lip quivers and natural blinking.\n\n"
                     
-                    f"TECHNICAL SPEC:\n"
-                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. NO PAN. NO TILT. "
-                    f"STATIC WIDE ANGLE LENS (24mm). Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. "
-                    f"Extreme Deep depth of field (f/11) to keep BOTH the foreground object and background character in SHARP FOCUS. "
-                    f"High-dynamic range (HDR) with realistic natural lighting."
+                    f"TECHNICAL SPEC: STATIC WIDE ANGLE 24mm. ARRI Alexa 65. 24fps. SINGLE CONTINUOUS TAKE. NO ZOOM. NO CUTS. Deep DoF (f/11). HDR."
                 )
 
                 # --- TAMPILAN OUTPUT ---
@@ -5726,6 +5708,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
