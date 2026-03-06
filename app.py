@@ -1735,7 +1735,7 @@ def tampilkan_ai_lab():
             ]
         }
 
-# --- UI LAYOUT ---        
+        # --- UI LAYOUT ---        
         with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
             # --- BARIS 1: MODUS KONTEN (OTAK UTAMA) ---
             st.markdown('<p class="small-label">PILIH MODUS KONTEN</p>', unsafe_allow_html=True)
@@ -1770,14 +1770,13 @@ def tampilkan_ai_lab():
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 user_dialog = st.text_area("Input Dialog", 
                                           placeholder=f"Tulis dialog {char_key} di sini...",
-                                          height=110, label_visibility="collapsed")
+                                          height=150, label_visibility="collapsed")
             with c6:
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
-                # Kocok aksi fisik di sini (pake random yang ada di baris paling atas app)
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
-                st.info(f"Gerakan: {pilih_aksi}")
+
 
             st.write("")
             btn_gen = st.button(
@@ -1790,7 +1789,7 @@ def tampilkan_ai_lab():
         # --- LOGIC GENERATOR ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
+                st.error("Isi dialognya dulu, Biar Nenek tau mau ngomong apa.")
             else:
                 # --- 4. DYNAMIC SCENE LOGIC (AUTOMATIC POSING & CAMERA) ---
                 scene_context = ""
@@ -5444,6 +5443,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
