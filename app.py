@@ -1099,18 +1099,19 @@ def tampilkan_ai_lab():
                         st.rerun()
                     except:
                         st.error("Koneksi bermasalah saat update status.")
-                        
-        # --- 7. BLOK BRAINSTORMING (VERSI SULTAN: HUMANIS & CAIR) ---
-        st.write("") 
-        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
+                    
+        with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (7 PILAR VIRAL 2026)", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
-                st.markdown('<p class="small-label">1. TIPE KONTEN</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">1. PILIH PILAR VIRAL</p>', unsafe_allow_html=True)
                 tipe_cerita = st.selectbox("TIPE_C", [
-                    "🔬 Simulasi Bahaya Tubuh (Medis)",
-                    "📈 Evolusi & Transformasi (Kronologis)",
-                    "🏛️ Sejarah & Mitologi (Storyteller)",
-                    "🌀 Skenario Absurd (What If?)"
+                    "🩸 Biological Horror (Anatomi & Siksaan)",
+                    "🏛️ Forbidden History (Konspirasi & Zaman)",
+                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)",
+                    "🌀 Absurd What-If (Fisika & Kiamat)",
+                    "🧬 Genetic Glitch (Mutasi & Kelainan)",
+                    "🧠 Psychological Loop (Otak & Mental)",
+                    "🔥 Survival Instinct (Uji Ketahanan)"
                 ], label_visibility="collapsed")
             with col_t2:
                 st.markdown('<p class="small-label">2. JUMLAH CUT (ADENGAN)</p>', unsafe_allow_html=True)
@@ -1120,77 +1121,124 @@ def tampilkan_ai_lab():
             ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Jika jantung berhenti sedetik saja...", label_visibility="collapsed")
             
             if ide_singkat:
-                # --- MASTER LOGIKA & RULES KHUSUS PER TOPIK (DYNAMIC RULES) ---
+                # --- MASTER LOGIKA 7 PILAR (DIREKSI ULTRA DETAIL) ---
                 logika_map = {
-                    "🔬 Simulasi Bahaya Tubuh (Medis)": {
-                        "prompt_rules": f"""
-KONSEP: Simulasi Anatomi Progresif (Gaya Mr. Tulang).
-STRUKTUR CERITA (WAJIB):
-1. **TIME-LAPSE PROGRESSION**: Bagi adegan menjadi fase waktu (Hari 1, Minggu 1, Bulan 1, 1 Tahun).
-2. **ANATOMICAL GROWTH**: Jelaskan detail bagaimana lapisan OTOT MERAH tumbuh & menebal di atas tulang BALUNG di tiap fase.
-3. **ORGAN ACTION**: Deskripsikan kerja organ (Jantung memompa darah, Paru mengembang) secara visual X-ray yang sinkron.
-4. **VOICE OVER**: Gaya bercerita progresif, informatif, dan bikin penasaran (Hook: 'Apa yang terjadi jika...').
-5. **ENVIRONMENT DETAIL**: Ruangan fungsional (Gym/Lab/Kamar) yang ultra-realistis, detail perabotan tajam, pencahayaan natural jendela, dan ada partikel debu melayang.""",
-                        "visual_focus": "Muscle contraction, Bone density, Fluid blood flow, dan Rim Lighting."
+                    "🩸 Biological Horror (Anatomi & Siksaan)": {
+                        "rules": (
+                            "KONSEP: Simulasi Anatomi Progresif & Siksaan Tubuh.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **TIME-LAPSE PROGRESSION**: Bagi adegan menjadi fase waktu (Hari 1, Minggu 1, Bulan 1).\n"
+                            "2. **ANATOMICAL DECAY**: Jelaskan detail bagaimana organ menghitam, saraf bergetar merah (vibrating), dan otot mulai lemas.\n"
+                            "3. **ORGAN ACTION**: Deskripsikan kerja jantung yang memompa tidak stabil secara visual X-ray yang sinkron.\n"
+                            "4. **VOICE OVER**: Gaya mencekam, informatif, dan bikin penasaran (Hook: 'Hati-hati, ini yang terjadi...').\n"
+                            "5. **ENVIRONMENT DETAIL**: Ruangan fungsional (Gym/Lab/Kamar) yang ultra-realistis, detail perabotan tajam, pencahayaan natural jendela, dan ada partikel debu melayang (dust motes)."
+                        ),
+                        "focus": "Muscle contraction, Nerve vibration, Fluid decay, dan Dark Medical Lighting.",
+                        "cta": "Klik subscribe jika kamu sayang dengan organ tubuhmu ini, dan bagikan ke temanmu yang masih melakukan hal ini."
                     },
-                    "📈 Evolusi & Transformasi (Kronologis)": {
-                        "prompt_rules": f"""
-KONSEP: Perjalanan Epik Lintas Zaman.
-STRUKTUR CERITA (WAJIB):
-1. **ERA TRANSITION**: Bagi adegan berdasarkan evolusi (Zaman Purba, Masa Kini, Masa Depan).
-2. **PHYSICAL EVOLUTION**: Jelaskan perubahan tekstur BALUNG dari tulang rapuh/kuno menjadi baja atau kristal futuristik.
-3. **VOICE OVER**: Gunakan gaya 'Wise Elder', puitis, berat, dan penuh kebijaksanaan tentang waktu.
-4. **ENVIRONMENT DETAIL**: Lanskap alam dramatis, batuan kuno berlumut detail, cuaca ekstrem yang terlihat nyata, hingga kota masa depan yang berdebu.""",
-                        "visual_focus": "Timelapse effects, cinematic weather, volumetric fog, dan aura cahaya transformasi."
+                    "🏛️ Forbidden History (Konspirasi & Zaman)": {
+                        "rules": (
+                            "KONSEP: High-Concept History & Anakronisme.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **ANACHRONISM CONTRAST**: Masukkan benda modern ke setting kuno. BALUNG adalah saksi sejarah dari masa depan.\n"
+                            "2. **THE FORBIDDEN HOOK**: Mulai dengan kalimat 'Ada alasan kenapa sejarah tidak mencatat rahasia ini...'.\n"
+                            "3. **VOICE OVER**: Gaya 'Epic Poet', sangat puitis, misterius, gunakan sapaan 'Kamu'.\n"
+                            "4. **ENVIRONMENT DETAIL**: Arsitektur batu detail, bata retak kasar, bunga liar pucat, dan debu terbang (dust motes) yang tertembus cahaya matahari sore (Golden Hour)."
+                        ),
+                        "focus": "Golden Hour lighting, ray-traced shadows, dan arsitektur bertekstur kasar.",
+                        "cta": "Tulis di kolom komentar, rahasia sejarah apa lagi yang harus BALUNG bongkar? Subscribe untuk teori gila lainnya."
                     },
-                    "🏛️ Sejarah & Mitologi (Storyteller)": {
-                        "prompt_rules": f"""
-KONSEP: High-Concept History (Anakronisme/Benturan Zaman).
-STRUKTUR CERITA (WAJIB):
-1. **ANACHRONISM CONTRAST**: Masukkan benda atau logika modern ke setting kuno (Contoh: BALUNG bawa kompas/gadget di era Majapahit).
-2. **THE HOOK**: Mulai dengan pertanyaan filosofis yang provokatif tentang takdir atau rahasia sejarah.
-3. **VOICE OVER**: Gaya 'Epic Poet', sangat puitis, misterius, gunakan sapaan 'Kamu'.
-4. **ENVIRONMENT DETAIL**: Halaman kerajaan kuno yang luas, arsitektur batu dengan ukiran detail, bata retak yang kasar, bunga liar pucat, dan debu terbang (dust motes) yang tertembus cahaya matahari sore.""",
-                        "visual_focus": "Golden Hour lighting, ray-traced shadows, dan arsitektur bertekstur detail."
+                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
+                        "rules": (
+                            "KONSEP: Side-by-Side Contrast (Sultan vs Rakyat).\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **KONTRAST TRANSFORMASI**: Bandingkan dua kondisi fisik ekstrem secara kontras (Contoh: Tulang sehat vs Tulang rusak).\n"
+                            "2. **CHRONOLOGICAL EFFECT**: Tunjukkan perubahan tekstur dari kusam menjadi glowing atau sebaliknya di tiap fase.\n"
+                            "3. **VOICE OVER**: Gaya provokatif, membandingkan, dan cepat.\n"
+                            "4. **ENVIRONMENT DETAIL**: Dua setting berbeda yang dipisah garis frame (Gym vs Kamar Berantakan) dengan detail tekstur yang tajam."
+                        ),
+                        "focus": "Side-by-side transformation, bone density color change, dan clean studio lighting.",
+                        "cta": "Kamu tim yang mana? Komen di bawah dan subscribe agar kondisimu tetap prima seperti BALUNG versi Sultan!"
                     },
-                    "🌀 Skenario Absurd (What If?)": {
-                        "prompt_rules": f"""
-KONSEP: Distorsi Realitas (Grim & Dark).
-STRUKTUR CERITA (WAJIB):
-1. **BEYOND LOGIC**: Tanyakan skenario gila (Contoh: Gravitasi hilang) dan narasikan dengan sangat serius dan dingin.
-2. **THE UNCANNY**: Deskripsikan hal-hal yang tidak mungkin secara fisik (Objek melayang, distorsi ruang).
-3. **VOICE OVER**: Dingin, dalam, sedikit menyeramkan, membuat penonton mempertanyakan kenyataan.
-4. **ENVIRONMENT DETAIL**: Dunia paralel yang ganjil, arsitektur yang mustahil, atmosfir neon redup yang berkabut tebal, dengan tekstur lingkungan yang tajam namun aneh.""",
-                        "visual_focus": "Anti-gravity physics, sharp weird textures, chromatic aberration, dan ultra-dark ambiance."
+                    "🌀 Absurd What-If (Fisika & Kiamat)": {
+                        "rules": (
+                            "KONSEP: Distorsi Realitas & Skenario Kiamat.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **BEYOND LOGIC**: Narasikan skenario gila (Gravitasi hilang/Oksigen hilang) dengan sangat dingin dan serius.\n"
+                            "2. **THE UNCANNY**: Deskripsikan objek melayang dan distorsi ruang di sekitar BALUNG secara sinematik.\n"
+                            "3. **VOICE OVER**: Dingin, dalam, membuat penonton mempertanyakan kenyataan.\n"
+                            "4. **ENVIRONMENT DETAIL**: Dunia paralel yang ganjil, arsitektur mustahil, kabut tebal volumetric, dengan tekstur lingkungan yang tajam."
+                        ),
+                        "focus": "Anti-gravity physics, sharp weird textures, dan chromatic aberration.",
+                        "cta": "Jika ini terjadi besok, siapa orang pertama yang akan kamu selamatkan? Subscribe untuk skenario gila lainnya!"
+                    },
+                    "🧬 Genetic Glitch (Mutasi & Kelainan)": {
+                        "rules": (
+                            "KONSEP: Simulasi Kelainan Medis & Mutasi Langka.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **ABNORMAL GROWTH**: Fokus pada pertumbuhan tulang atau organ yang tidak lazim (bone spikes/mutasi) yang menembus kulit transparan.\n"
+                            "2. **MEDICAL SIMULATION**: Tampilkan proses sel membelah atau bermutasi secara cepat dengan visual mikroskopis.\n"
+                            "3. **VOICE OVER**: Edukatif tapi sedikit 'creepy', gaya dokumenter rahasia laboratorium.\n"
+                            "4. **ENVIRONMENT DETAIL**: Laboratorium dingin, pencahayaan biru neon, tekstur stainless steel detail, dan uap dingin yang keluar dari tabung."
+                        ),
+                        "focus": "Bone spike growth, cellular mutation, Cold Medical ambiance.",
+                        "cta": "Dunia ini penuh keajaiban yang mengerikan. Klik like jika kamu bersyukur memiliki tubuh yang normal hari ini."
+                    },
+                    "🧠 Psychological Loop (Otak & Mental)": {
+                        "rules": (
+                            "KONSEP: Visualisasi Saraf & Emosi Ekstrem.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **NEURAL FIRING**: Tampilkan aliran listrik di otak dan saraf yang berubah warna sesuai emosi yang meledak-ledak.\n"
+                            "2. **PHYSICAL REACTION**: Mikro-gestur seperti tangan gemetar hebat, kepala tertunduk, atau jari yang bergerak gelisah.\n"
+                            "3. **VOICE OVER**: Deep, puitis, sangat emosional, menyentuh sisi psikologis terdalam.\n"
+                            "4. **ENVIRONMENT DETAIL**: Ruang gelap abstrak dengan partikel cahaya melayang dan volumetric fog tebal."
+                        ),
+                        "focus": "Electric nerve firing, glowing brain waves, dan volumetric fog.",
+                        "cta": "Pernah merasakan hal yang sama? Tekan like dan subscribe untuk memahami cara kerja pikiranmu lebih dalam."
+                    },
+                    "🔥 Survival Instinct (Uji Ketahanan)": {
+                        "rules": (
+                            "KONSEP: Uji Ketahanan Fisik Ekstrem.\n"
+                            "STRUKTUR CERITA (WAJIB):\n"
+                            "1. **EXTREME ENDURANCE**: Tampilkan BALUNG dalam kondisi suhu ekstrem (Beku/Panas Membara) secara teatrikal.\n"
+                            "2. **TEXTURE REACTION**: Munculkan kristal es yang tumbuh atau retakan membara (cracking) pada permukaan tulang.\n"
+                            "3. **VOICE OVER**: Tegang, puitis, gaya survival dokumenter yang memacu adrenalin.\n"
+                            "4. **ENVIRONMENT DETAIL**: Padang es kutub atau gurun pasir dengan distorsi panas (heat haze) dan tekstur tanah retak."
+                        ),
+                        "focus": "Texture cracking, frost effect, heat haze, dan dynamic slow tracking.",
+                        "cta": "Mampukah kamu bertahan lebih lama dari BALUNG? Buktikan dengan cara subscribe dan tonton tantangan berikutnya!"
                     }
                 }
 
-                # Ambil Rule & Visual Focus sesuai pilihan dropdown
-                aktif_rules = logika_map[tipe_cerita]["prompt_rules"]
-                aktif_focus = logika_map[tipe_cerita]["visual_focus"]
-
-                # Ambil daftar baju dari Master BALUNG
+                # Sinkronisasi Data Aktif
+                l_data = logika_map[tipe_cerita]
                 try:
                     baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
                 except:
                     baju_list = "Original, Jas Lab Putih, Versi Sultan"
 
-                # --- RAKIT MANTRA FINAL (SULTAN DYNAMIC RULES) ---
-                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).
-Tugas kamu: Buatkan naskah video cinematic ({jml_adegan}) tentang: {ide_singkat}.
+                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - NO SHORTCUTS) ---
+                # Menggunakan operator + untuk menghindari error """ di dalam f-string
+                mantra_header = "Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).\n"
+                mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") tentang: " + ide_singkat + ".\n\n"
+                
+                mantra_body = l_data["rules"] + "\n\n"
+                
+                mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
+                mantra_footer += "- **SMOOTH NARRATION**: Gunakan kalimat pendek (max 10-12 kata). Jangan kaku! Gunakan analogi modern agar terasa nyata.\n"
+                mantra_footer += "- **BALUNG GESTURE**: Berikan mikro-gestur manusiawi (menyeka debu, tangan gemetar, menatap sayu, jari bergerak pelan).\n"
+                mantra_footer += "- **CINEMATIC CAMERA**: Gunakan 'Slow-motion tracking', 'Orbiting shot', atau 'Macro Close-up' untuk detail tekstur.\n"
+                mantra_footer += "- **VISUAL PRIORITY**: " + l_data["focus"] + "\n"
+                mantra_footer += "- **MANDATORY CTA**: Masukkan narasi ini di akhir video: \"" + l_data["cta"] + "\"\n"
+                mantra_footer += "- **FORMAT OUTPUT (WAJIB TABEL 5 KOLOM)**: No Adegan, Narasi VO Puitis, Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment (Sangat Detail, Bertekstur, dan Hidup)."
 
-{aktif_rules}
-
-ATURAN WAJIB (DIRECTOR'S GUIDELINE):
-- **BALUNG GESTURE**: Berikan mikro-gestur manusiawi (menyeka debu, tangan gemetar, menatap sayu, jari yang bergerak pelan). Jangan biarkan dia diam.
-- **CINEMATIC CAMERA**: Gunakan 'Slow-motion tracking', 'Orbiting shot', atau 'Macro Close-up' untuk detail tekstur.
-- **VISUAL PRIORITY**: {aktif_focus}
-- **FORMAT OUTPUT (WAJIB TABEL 5 KOLOM)**: No Adegan, Narasi VO Puitis, Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: {baju_list}), Environment (Sangat Detail, Bertekstur, dan Hidup)."""
+                mantra_final = mantra_header + mantra_body + mantra_footer
 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info(f"🚀 **MODE AKTIF:** {tipe_cerita}. Perintah Gemini sudah disesuaikan secara otomatis.")
-    # --- TAB LAIN ---
+                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}.")
+
+    # --- TAB LAIN (WAJIB SEJAJAR DENGAN with t_anatomi) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -4789,6 +4837,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
