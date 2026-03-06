@@ -1359,16 +1359,16 @@ def tampilkan_ai_lab():
                 "Her expression is humble, shy, and peaceful. A classic representation of a wise village grandmother. "
                 "Clean skin, no dirt, no makeup, strictly no tears."
             ),
-            "Nenek Arum": {
-                "Daster Floral & Bergo": "A modest long-sleeved floral daster in soft pastel colors. Paired with a clean white jersey bergo hijab. The look is warm, humble, and peaceful.",
-                "Daster Batik & Hijab": "A traditional long-sleeved batik daster with brown and cream patterns. Paired with a simple instant hijab. Very neat and typical of a kind village grandmother.",
-                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
-            },
-            "Nenek Sumi": {
-                "Daster Kencana Ungu & Bergo": "A classic long-sleeved daster with traditional red or purple patterns. Paired with a dark-colored simple bergo hijab. Humble, clean, and authentic.",
-                "Daster Kaos & Jilbab Instan": "A comfortable long-sleeved cotton daster in a soft earthy tone. Paired with a simple daily instant jilbab. A hardworking but gentle grandmother look.",
-                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
-            },
+            "Nenek Arum": (
+                "A graceful and serene elderly Indonesian woman (50s) with a soft, motherly face. "
+                "Natural sawo matang skin with subtle, realistic aging lines. Her eyes are warm and kind. "
+                "She has a peaceful and comforting aura. Pure and gentle village grandmother look."
+            ),
+            "Nenek Sumi": (
+                "A humble elderly Indonesian woman (60s) with a weathered but friendly face. "
+                "Her skin is sun-kissed with soft realistic wrinkles that show wisdom. "
+                "She has tired but very gentle eyes. A thin but healthy frame. Warm and soulful expression."
+            ),
             "Kakek (The Grandpa)": (
                 "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
                 "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
@@ -1404,14 +1404,14 @@ def tampilkan_ai_lab():
                 "Mukena Putih Bersih": "A simple, clean white cotton mukena with minimal lace. The fabric drapes gracefully, looking peaceful and serene."
             },
             "Nenek Arum": {
-                "Gamis Syari & Jilbab": "A clean, elegant dark-colored gamis made of simple cotton, paired with a matching large syari jilbab that covers the chest. Very modest and dignified.",
-                "Tunik & Hijab Segiempat": "A long, neat tunik with soft patterns, paired with a simple square hijab (segiempat) neatly pinned under the chin. Clean and graceful village look.",
-                "Mukena Katun": "A simple white cotton mukena with tiny embroidered flowers, looking peaceful and ready for Magrib prayer."
+                "Daster Floral & Bergo": "A modest long-sleeved floral daster in soft pastel colors. Paired with a clean white jersey bergo hijab. The look is warm, humble, and peaceful.",
+                "Daster Batik & Hijab": "A traditional long-sleeved batik daster with brown and cream patterns. Paired with a simple instant hijab. Very neat and typical of a kind village grandmother.",
+                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
             },
             "Nenek Sumi": {
-                "Daster Lengan Panjang & Bergo": "A long-sleeved floral cotton daster, paired with a simple jersey bergo hijab for daily work. The fabric is slightly faded but very clean.",
-                "Kaos Panjang & Jilbab Instan": "A modest long-sleeved t-shirt paired with a dark-colored instant jilbab. A practical and humble look for a hardworking grandmother.",
-                "Kebaya Hijab & Jarik": "A simple daily cotton kebaya worn with a long-sleeved inner undershirt and a neat hijab, paired with a traditional batik jarik cloth."
+                "Daster Kencana Ungu & Bergo": "A classic long-sleeved daster with traditional red or purple patterns. Paired with a dark-colored simple bergo hijab. Humble, clean, and authentic.",
+                "Daster Kaos & Jilbab Instan": "A comfortable long-sleeved cotton daster in a soft earthy tone. Paired with a simple daily instant jilbab. A hardworking but gentle grandmother look.",
+                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
             },
             "Kakek": {
                 "Kaos Oblong & Peci": "A clean white short-sleeved undershirt (kaos oblong) paired with a neat black peci and a well-folded traditional sarung.",
@@ -1896,19 +1896,25 @@ def tampilkan_ai_lab():
                     "Focus on micro-expressions: subtle lip quivers, natural blinking, and realistic skin pores."
                 )
                 
-                # 1. Ambil deskripsi jiwa pake nama lengkap (pilihan_user)
-                soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
+                # --- 6. RAKIT FINAL PROMPT (ANTI-MUNTAH KODE REVISION) ---
                 
-                # 2. Ambil deskripsi baju pake char_key (yang udah dipotong)
-                # Biar aman, kalau char_key ga ada di wardrobe, kita arahin ke 'Nenek'
+                # Cek Soul: Pastikan ngambil Teks, bukan Dictionary
+                raw_soul = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
+                if isinstance(raw_soul, dict):
+                    # Kalau ternyata isinya dictionary, ambil nilai pertamanya (string)
+                    soul_desc = list(raw_soul.values())[0]
+                else:
+                    soul_desc = raw_soul
+
+                # Cek Baju: Pastikan pake char_key yang udah di-split buat lookup kamus
                 wardrobe_lookup = char_key if char_key in MASTER_FAMILY_WARDROBE else "Nenek"
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(wardrobe_lookup, {})
                 
-                # 3. Ambil deskripsi baju yang dipilih
+                # Ambil teks bajunya
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes")
 
                 video_prompt = (
-                    f"CORE SUBJECT: {soul_desc}\n"
+                    f"CORE SUBJECT: {soul_desc}\n" # Sekarang fix jadi teks
                     f"WARDROBE: {baju_desc}. Bare feet.\n\n"
                     
                     f"SCENE & COMPOSITION:\n"
@@ -5725,6 +5731,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
