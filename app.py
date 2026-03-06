@@ -1312,7 +1312,7 @@ def tampilkan_ai_lab():
                 except:
                     baju_list = "Original, Jas Lab Putih, Versi Sultan"
 
-                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - NARRATIVE TIME-LAPSE) ---
+                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - DYNAMIC SPATIAL VERSION) ---
                 mantra_header = "Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).\n"
                 mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") yang HIDUP, BERNYAWA, dan NYATA.\n"
                 mantra_header += "TRIGGER IDE: " + ide_singkat + ".\n\n"
@@ -1322,24 +1322,24 @@ def tampilkan_ai_lab():
                 
                 mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
                 mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
-                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 3-4 kalimat per adegan). Gunakan kata-kata yang memicu sensasi fisik (dingin, tajam, sesak, hancur). JANGAN KAKU.\n"
+                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 3-4 kalimat per adegan). Gunakan kata-kata sensori (dingin, tajam, sesak). JANGAN KAKU.\n"
                 mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita.\n"
                 
-                # SUNTIKAN ANTI-PATUNG & GERAKAN ORGANIK
-                mantra_footer += "- **VISUAL SENSORY & DYNAMIC MOTION**: " + l_data["focus"] + ". JANGAN ADA ADEGAN DIAM SEPERTI PATUNG. Setiap adegan harus mengandung gerakan mikro: uap mengalir lewat sela tulang, gel skin yang bergetar (jiggle) saat melangkah, atau debu yang berputar tertiup napas Balung.\n"
-                mantra_footer += "- **PHYSICS INTERACTION**: Balung harus berinteraksi fisik dengan lingkungan. Gunakan efek kamera dinamis: Slow Push-in, Handheld micro-shake, atau Rack Focus.\n"
-                mantra_footer += "- **BALUNG MICRO-GESTURE**: Masukkan gerakan manusiawi: rahang gemetar, jemari meraba tekstur material, menoleh perlahan, atau tubuh terhuyung mengikuti gravitasi.\n"
+                # SUNTIKAN ANTI-PATUNG & INTERAKSI LOKASI (SPATIAL INTERACTION)
+                mantra_footer += "- **VISUAL SENSORY & DYNAMIC INTERACTION**: " + l_data["focus"] + ". JANGAN HANYA DESKRIPSIKAN BALUNG SENDIRIAN. Balung WAJIB berinteraksi dengan setting lokasi. (Contoh: Balung berjalan menyisir pinggiran gerbang istana, jemari tulangnya gemetar meraba ukiran relief batu).\n"
+                mantra_footer += "- **MOTION & PHYSICS**: Deskripsikan gerakan subjek terhadap objek sekitar. Gunakan gerakan mikro: uap mengalir melewati pilar, gel skin yang bergetar saat bersenggolan dengan material, atau debu yang berputar tertiup napas Balung. Gunakan kamera dinamis: Slow Push-in, Handheld micro-shake, atau Rack Focus.\n"
+                mantra_footer += "- **BALUNG MICRO-GESTURE**: Masukkan gerakan manusiawi: rahang gemetar, jemari meraba tekstur material secara nyata, menoleh perlahan mengikuti arah cahaya, atau tubuh terhuyung mengikuti gravitasi.\n"
                 
                 # PERBAIKAN LOKASI (SPATIAL IDENTITY):
-                mantra_footer += "- **ENVIRONMENT ADAPTIF (SPATIAL DETAIL)**: Di kolom Environment Detail, WAJIB sebutkan NAMA LOKASI NYATA di awal kalimat. JANGAN cuma tekstur! Contoh: 'Setting: Pasar Rakyat Madinah. Detail: Dinding batu pasir kasar, sisa pembakaran obor, Cinematic Golden Hour.'\n"
-                mantra_footer += "  * Jika harian: Kamar kos sempit, Dapur kotor, Halte bus tua. Jika sejarah: Gerbang Istana, Terowongan rahasia, Kuil kuno berlumut. Jika kiamat: Reruntuhan Mall, Aspal pecah, Jembatan berkarat.\n"
-                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Gerakan Aksi + Dinamika Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail (Wajib: NAMA LOKASI NYATA + Deskripsi Tekstur, Material, & Lighting Engine))."
+                mantra_footer += "- **ENVIRONMENT ADAPTIF (SPATIAL DETAIL)**: Di kolom Environment Detail, WAJIB sebutkan NAMA LOKASI NYATA di awal kalimat. JANGAN cuma tekstur! Contoh: 'Setting: Lorong Istana Persepolis. Detail: Dinding batu pasir kasar, sisa pembakaran obor, Cinematic Golden Hour.'\n"
+                mantra_footer += "  * Jika harian: Kamar kos sempit, Dapur kotor, Halte bus tua. Jika sejarah: Gerbang Istana, Terowongan rahasia, Kuil kuno. Jika kiamat: Reruntuhan Mall, Aspal pecah.\n"
+                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Gerakan Aksi Karakter + Interaksi Lingkungan + Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail (Wajib: NAMA LOKASI NYATA + Tekstur, Material, & Lighting Engine))."
 
                 mantra_final = mantra_header + mantra_body + mantra_footer
 
                 st.markdown('<p class="small-label">4. SALIN MANTRA STORYTELLING INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Lokasi sekarang dipaksa spesifik dan nyata!")
+                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # --- TAB LAIN (WAJIB SEJAJAR DENGAN with t_anatomi) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4940,6 +4940,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
