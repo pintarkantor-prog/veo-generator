@@ -1820,45 +1820,41 @@ def tampilkan_ai_lab():
                 key="btn_generate_video"
             )
 
-        # --- LOGIC GENERATOR ---
+        # --- LOGIC GENERATOR (FIXED IDENTASI & GROUNDING) ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
+                st.error("Isi dialognya dulu...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (KAMERA GALAK & INTERAKTIF) ---
+                # --- 4. DYNAMIC SCENE LOGIC (KAMERA GALAK & GROUNDING) ---
                 scene_context = ""
                 
                 if "🤖 Robot" in modus_konten:
-                    # LOGIKA ROBOT: WAJIB BERDIRI, TANGAN NEMPEL
+                    # LOGIKA ROBOT: WAJIB BERDIRI, KAKI DI LANTAI
                     scene_context = (
                         "HIGH-TECH INTERACTIVE SCENE. The character MUST BE STANDING UPRIGHT, "
-                        "not sitting on the floor. FULL BODY SHOT from head to toe. "
-                        "The 100cm robot is standing DIRECTLY IN FRONT of the character. "
-                        "The character's body is fully extended vertically, leaning slightly "
-                        "over the robot to actively work on its core with both hands. "
-                        "Strictly enforce standing posture for the character."
+                        "not sitting and not standing on any table. Their feet are firmly PLACED ON THE DIRT FLOOR. "
+                        "FULL BODY SHOT from head to toe capturing the entire 100cm tall robot standing on the ground "
+                        "right beside the character's vertically extended body. strictly enforce standing posture on the ground."
                     )
                 elif "🕌 Miniatur Masjid" in modus_konten:
-                    # LOGIKA MASJID: WAJIB DI DEPAN, TANGAN NEMPEL
+                    # LOGIKA MASJID: WAJIB DI DEPAN, NEMPEL
                     scene_context = (
-                        "CLOSE-UP INTERACTIVE SHOT. The grand miniature mosque is positioned "
-                        "DIRECTLY IN THE FOREGROUND, between the camera and the character. "
-                        "The character is sitting on a tikar, leaning forward with their aged hands "
-                        "physically touching and adding final 90% details to the dome. "
-                        "The mosque MUST be in front of the character, not behind them."
+                        "CLOSE-UP INTERACTIVE SHOT focusing on character-object connection. "
+                        "The grand mosque is positioned DIRECTLY IN THE FOREGROUND, placed on a small rustic table "
+                        "situated between the camera and the character. The character is sitting on a tikar, leaning forward "
+                        "with their aged hands physically touching the 90% finished details. The mosque MUST be in front."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
                     # LOGIKA MENU: HARU & SEPI
                     scene_context = (
-                        "SOMBRE EYE-LEVEL SHOT. The character is sitting humbly on the floor (tikar) "
-                        "facing their very simple meal. The character looks at the food with "
-                        "hunger and deep gratitude, hands resting patiently near the plate."
+                        "SOMBRE EYE-LEVEL SHOT. The character is sitting humbly on the floor (tikar) facing their very simple meal. "
+                        "The character looks at the food with hunger and deep gratitude, hands resting patiently near the plate."
                     )
 
                 # --- 5. NUANSA HIDUP ---
                 living_details = (
                     "Atmospheric cinematic lighting. Tiny dust motes dancing in light rays. "
-                    "Subtle background sounds of crickets. The air looks thick with humidity. "
+                    "Subtle background sounds of distant crickets. The air looks humid with nostalgic atmosphere. "
                     "Hyper-realistic skin textures, visible sweat, and authentic weathered details."
                 )
 
@@ -5485,6 +5481,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
