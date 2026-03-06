@@ -1330,37 +1330,37 @@ def tampilkan_ai_lab():
                 st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # ==========================================================================
-    # TAB: THE FAMILY LEGACY (REAL HUMAN - CLEAN ALL-IN-ONE)
+    # TAB: THE FAMILY LEGACY (REAL HUMAN - SULTAN CINEMATIC VERSION)
     # ==========================================================================
     with t_grandma:
-        # --- 1. MASTER DNA MANUSIA ASLI ---
+        # --- 1. MASTER DNA MANUSIA ASLI (WIDE SHOT & PRIBUMI) ---
         MASTER_FAMILY_SOUL = {
-            "Nenek (The Grandma)": "Real elderly Indonesian woman, weathered skin, authentic wrinkles, thin gray hair in a bun, kind tired eyes with real tear film.",
-            "Kakek (The Grandpa)": "Real elderly Indonesian man, sun-kissed leathery skin, deep forehead wrinkles, white stubble, stooped posture, weathered hands.",
-            "Gadis Cantik (The Maiden)": "Beautiful young Indonesian woman, natural sawo matang skin, elegant features, deep brown eyes, long glossy black hair.",
-            "Anak Laki-laki (The Boy)": "Young Indonesian village boy, sun-tanned skin, messy black hair, bright innocent eyes, slight sweat on forehead.",
-            "Anak Perempuan (The Girl)": "Cute young Indonesian girl, natural black hair with pigtails, soft chubby cheeks, innocent sparkling eyes."
+            "Nenek (The Grandma)": "Full body shot of a real elderly Indonesian woman, sitting cross-legged (bersila) on a mat. Deeply weathered skin, authentic facial wrinkles, thin gray hair in a bun (sanggul), kind eyes with real tear film.",
+            "Kakek (The Grandpa)": "Full body shot of a real elderly Indonesian man sitting on a wooden bench. Sun-kissed leathery skin, white stubble, stooped posture, weathered hands with visible veins.",
+            "Gadis Cantik (The Maiden)": "Full body shot of a beautiful young Indonesian woman sitting gracefully. Natural sawo matang skin, elegant features, deep brown eyes, long glossy black hair.",
+            "Anak Laki-laki (The Boy)": "Full body shot of a young Indonesian village boy squatting (jongkok). Sun-tanned skin, messy black hair, bright innocent eyes.",
+            "Anak Perempuan (The Girl)": "Full body shot of a cute young Indonesian girl sitting on the floor. Natural black hair with pigtails, soft chubby cheeks, innocent sparkling eyes."
         }
 
-        # --- 2. MASTER WARDROBE ---
+        # --- 2. MASTER WARDROBE (FABRIC PHYSICS) ---
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Kencana": "Faded cotton daster, traditional Javanese batik, soft worn-out texture.",
-                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth.",
-                "Mukena Bordir": "White silk mukena with lace embroidery, heavy realistic fabric drapes."
+                "Daster Batik Kencana": "Faded cotton daster, traditional Javanese batik. Fabric drapes naturally over her sitting posture.",
+                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth covering her legs.",
+                "Mukena Bordir": "White silk mukena with lace embroidery, heavy fabric drapes covering the whole body."
             },
             "Kakek": {
-                "Sarung Wadimor & Singlet": "Green plaid sarung and thin worn-out white cotton singlet (kaos oblong).",
-                "Baju Koko & Peci": "White koko shirt, dusty black velvet peci (songkok) with micro-fibers.",
-                "Batik Lengan Panjang": "Formal long-sleeved batik, traditional Mega Mendung pattern."
+                "Sarung Wadimor & Singlet": "Green plaid sarung covering the legs, thin worn-out white cotton singlet (kaos oblong).",
+                "Baju Koko & Peci": "White koko shirt, dusty black velvet peci (songkok), and a neat sarung.",
+                "Batik Lengan Panjang": "Formal long-sleeved batik, traditional patterns, worn with dark trousers."
             },
             "Gadis Cantik": {
-                "Kebaya Modern": "Elegant lace kebaya, silk selendang, realistic fabric weave.",
+                "Kebaya Modern": "Elegant lace kebaya, silk selendang, long batik skirt.",
                 "Dress Floral": "Simple flowery summer dress, light rayon fabric flow.",
-                "Hijab & Tunik": "Soft pashmina hijab, loose-fitting linen tunik."
+                "Hijab & Tunik": "Soft pashmina hijab, long tunik."
             },
             "Anak Laki-laki": {
-                "Kaos & Celana Pendek": "Simple cotton t-shirt with graphic print, denim shorts, dust stains.",
+                "Kaos & Celana Pendek": "Simple cotton t-shirt with graphic print, denim shorts with dust stains.",
                 "Seragam SD": "Indonesian white-and-red school uniform, small red tie."
             },
             "Anak Perempuan": {
@@ -1369,69 +1369,67 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER LOKASI, BAHAN & AUDIO STYLE (SULTAN REVISION) ---
+        # --- 3. MASTER LOKASI, BAHAN & AUDIO STYLE (MAJESTIC CRAFT & NATURAL VOICE) ---
         MASTER_GRANDMA_CRAFT = {
             "Buah-buahan": (
-                "An incredibly intricate but clearly handmade mosque miniature. The main dome is carved from a whole watermelon with visible pulp textures. "
-                "The minarets are crafted from dried orange peels and pineapple skin, fastened with small wooden toothpicks. "
-                "Glistening juice droplets and wet fruit fibers are visible under cinematic lighting. It looks organic, fragile, and masterfully hand-carved."
+                "A LARGE, STUNNINGly intricate mosque miniature. The main dome is carved from a whole watermelon with visible pulp. "
+                "The minarets are crafted from dried orange peels, fastened with visible wooden toothpicks and small glue marks. "
+                "Glistening juice droplets and wet fruit fibers are visible. It looks organic, majestic, and masterfully hand-carved."
             ),
             "Kardus Bekas": (
-                "A stunningly detailed mosque made from layers of old, brown corrugated cardboard. "
-                "Visible rough-cut edges, subtle glue stains (lem aibon/tembak), and frayed paper fibers. "
-                "The windows are meticulously cut out, showing the hollow interior. It looks like a dedicated DIY masterpiece made with love and patience."
+                "A GRAND, STUNNINGLY DETAILED mosque made from layers of recycled brown corrugated cardboard. "
+                "Visible rough-cut edges, subtle glue stains (lem tembak), and frayed paper fibers. "
+                "The windows are meticulously cut, showing complex architecture. A dedicated DIY masterpiece."
             ),
             "Botol Plastik": (
-                "A breathtaking mosque built from recycled PET bottles (Aqua/Le Minerale style). "
-                "The plastic is hand-cut, warped by candle heat to form domes, with visible scratches and realistic plastic reflections. "
-                "Some parts are joined with thin wire or melted plastic. It catches the light like humble crystal art."
+                "A BREATHTAKING MAJESTIC mosque built from recycled PET bottles. The plastic is hand-cut and warped by candle heat "
+                "to form complex domes. Visible scratches, wire joints, catching the light like humble crystal art."
             ),
             "Ranting Kayu": (
-                "A rustic, majestic mosque built from hundreds of tiny dried twigs and barks. "
-                "Bound together with fraying organic hemp twine and patches of dried moss. "
-                "Extremely complex geometric patterns created from interlocking sticks. It looks like ancient folk art, earthy and deeply textured."
+                "A HUGE, MAJESTIC mosque built from hundreds of tiny dried twigs and barks. "
+                "Bound with fraying organic hemp twine and patches of dried moss. "
+                "Extremely complex geometric patterns, looking like ancient, detailed folk art."
             )
         }
 
         MASTER_GRANDMA_SETTING = {
             "Gubuk Tua": (
-                "Inside a dim, humble Indonesian wooden shack (rumah panggung). Walls made of weathered bamboo slats (gedek) with light leaking through the cracks. "
-                "Volumetric dust motes dancing in the heavy afternoon sunbeams. An old radio and a half-filled glass of tea sit in the blurred background. Warm, humid, and nostalgic atmosphere."
+                "Inside a dim, humble Indonesian wooden shack (rumah panggung). Light leaking through bamboo walls (gedek). "
+                "Volumetric dust motes in sunbeams. An old radio and a half-filled glass of hot tea sit in the background. "
+                "Warm, humid, and nostalgic atmosphere."
             ),
             "Pinggir Sungai": (
-                "A muddy, authentic riverbank in a rural village at twilight. Reeds and wild grass swaying in the breeze. "
-                "The ground is damp with visible puddles reflecting the sky. In the background, a silhouette of a small wooden bridge and misty tropical trees. The air looks thick and hazy."
+                "A muddy, authentic riverbank in a rural village at twilight. Reeds and wild grass swaying. "
+                "The ground is damp with visible puddles reflecting the sky. Silhouette of a wooden bridge and misty trees."
             ),
             "Teras Desa": (
-                "A weathered concrete terrace of an old 'Joglo' house. Cracked floor tiles with moss growing in between. "
-                "Potted plants in recycled tin cans line the edge. Dramatic Golden Hour lighting with long, soft shadows. "
-                "The sound of distant crickets is implied by the moody, amber atmosphere."
+                "A weathered concrete terrace of an old 'Joglo' house. Cracked floor tiles with moss. "
+                "Potted plants in recycled tin cans line the edge. Dramatic Golden Hour lighting with long, amber shadows."
             )
         }
 
         MASTER_AUDIO_STYLE = {
             "Logat": [
-                "Medok Jawa Desa (Natural, slow-paced, heavy 'd' and 't' sounds, very humble)",
-                "Melayu Pesisir Tua (Rhythmic, poetic, slightly raspy, traditional storytelling style)",
-                "Sunda Alus (High-pitched but gentle, flowing, emotional rising intonation at the end)",
-                "Betawi Pinggiran (Deep, husky, blunt but sincere, using old Jakarta slang)",
-                "Indonesia Tulus (Simple, unpolished, shaky voice, sounds like a real person, not an actor)"
+                "Natural Village Indonesian (Unpolished, shaky, real person voice)",
+                "Medok Jawa Desa (Heavy 'd' and 't', very humble, slow-paced)",
+                "Sunda Alus (Gentle, flowing, emotional rising intonation)",
+                "Melayu Pesisir Tua (Rhythmic, slightly raspy, storytelling style)",
+                "Indonesia Tulus (Simple, shaky voice, sounds like an authentic person)"
             ],
             "Mood": [
-                "Menangis Sesenggukan (Breathing through the nose, voice cracking, long emotional pauses)",
-                "Gemetar Ketakutan/Malu (Stuttering slightly, soft whispers, breathless delivery)",
-                "Pasrah & Ikhlas (Deep heavy sighs, slow articulation, resonant and calm)",
-                "Bangga tapi Rendah Hati (Soft chuckle in between tears, warm but shaky tone)"
+                "Menangis Sesenggukan (Voice cracking, natural pauses for breath, real sobbing)",
+                "Gemetar Rendah Hati (Soft whispers, breathless delivery, trembling lips)",
+                "Pasrah & Ikhlas (Deep heavy sighs, slow articulation, resonant and calm)"
             ]
         }
 
         # --- UI LAYOUT (SINGLE EXPANDER) ---
         st.subheader("👨‍👩‍👧‍👦 REAL HUMAN STORYTELLING ENGINE")
         
-        with st.expander("🎬 KONFIGURASI KONTEN VIRAL", expanded=True):
+        with st.expander("🎬 KONFIGURASI KONTEN VIRAL (FULL BODY & NATURAL)", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown('<p class="small-label">PILIH TOKOH UTAMA (REAL HUMAN)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">PILIH TOKOH UTAMA (WIDE SHOT)</p>', unsafe_allow_html=True)
                 pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
                 char_key = pilihan_user.split(" (")[0]
             with c2:
@@ -1441,29 +1439,29 @@ def tampilkan_ai_lab():
             
             c3, c4 = st.columns(2)
             with c3:
-                st.markdown('<p class="small-label">KARYA TANGAN (CRAFT MATERIAL)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">KARYA TANGAN (BESAR & DETAIL)</p>', unsafe_allow_html=True)
                 pilihan_bahan = st.selectbox("Select Material", list(MASTER_GRANDMA_CRAFT.keys()), label_visibility="collapsed")
             with c4:
-                st.markdown('<p class="small-label">SETTING LOKASI (ENVIRONMENT)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">SETTING LOKASI (DETAIL ENVIRONMENT)</p>', unsafe_allow_html=True)
                 pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
             
             st.divider()
             
             c5, c6 = st.columns([2, 1])
             with c5:
-                st.markdown('<p class="small-label">DIALOG / UCAPAN TOKOH</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">DIALOG / UCAPAN TOKOH (NATURAL)</p>', unsafe_allow_html=True)
                 user_dialog = st.text_area("Input Dialog", 
                                           placeholder=f"Maaf ya Cuk, {char_key} cuma bisa buat masjid dari {pilihan_bahan}...",
                                           height=110, label_visibility="collapsed")
             with c6:
-                st.markdown('<p class="small-label">VOICE & MOOD STYLE</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">VOICE MOOD & LOGAT</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
 
             st.write("")
-            btn_gen = st.button("🔥 GENERATE MASTER VIDEO PROMPT", use_container_width=True)
+            btn_gen = st.button("🔥 GENERATE MASTER SULTAN PROMPT", use_container_width=True)
 
-        # --- OUTPUT LOGIC (ALL-IN-ONE PROMPT) ---
+        # --- OUTPUT LOGIC ---
         if btn_gen:
             if not user_dialog:
                 st.error("Waduh, isi dulu dialognya Bos!")
@@ -1473,24 +1471,24 @@ def tampilkan_ai_lab():
                 final_bahan = MASTER_GRANDMA_CRAFT[pilihan_bahan]
                 final_set = MASTER_GRANDMA_SETTING[pilihan_set]
 
-                # RAKIT PROMPT VIDEO + AUDIO IN SATU KOTAK
+                # RAKIT PROMPT VIDEO (WIDE SHOT, LIP-SYNC, DYNAMIC CAMERA)
                 video_prompt = (
-                    f"MASTER VIDEO PROMPT (CINEMATIC STORYTELLING):\n"
+                    f"MASTER VIDEO PROMPT (FULL BODY CINEMATIC):\n"
                     f"CORE SUBJECT: {final_soul}\n"
                     f"WARDROBE: {final_baju}\n\n"
                     
                     f"ACTION & CAMERA SEQUENCE:\n"
-                    f"1. START: The camera is positioned at a 45-degree side angle (candid profile). "
-                    f"The {char_key} is deeply focused, using trembling fingers to meticulously add a final spire to a BEAUTIFUL, INTRICATE mosque made of {final_bahan}. "
-                    f"The camera moves in a SLOW, SUBTLE HANDHELD ORBIT (gerakan kecil dinamis).\n"
-                    f"2. THE REVEAL: As the {char_key} starts speaking, they slowly turn their head to LOOK DIRECTLY INTO THE LENS. "
-                    f"They say: '{user_dialog}'. Their eyes are glistening with real tears, full of humble emotion. "
-                    f"The lip-sync is perfect, matching the {pilih_logat} accent and {pilih_mood} tone.\n\n"
+                    f"1. START: WIDE ANGLE SHOT. The camera is at a side angle, showing the {char_key}'s FULL BODY. "
+                    f"The {char_key} is deeply focused, using trembling fingers to add final intricate details to a LARGE, MAJESTIC mosque made of {final_bahan}. "
+                    f"The camera moves in a SLOW, SUBTLE HANDHELD ORBIT around the character.\n"
+                    f"2. THE REVEAL: As the {char_key} starts speaking, they SLOWLY TURN THEIR HEAD to look directly into the camera. "
+                    f"The character SPEAKS NATURALLY (NOT ROBOTIC) in a {pilih_logat} style, saying: '{user_dialog}'. "
+                    f"Their lips move in perfect phonetic lip-sync. The voice is {pilih_mood} with natural breathing and emotional breaks. "
+                    f"Real tears roll down the cheeks during speech.\n\n"
                     
-                    f"ENVIRONMENT: {final_set}. Cinematic lighting with warm sunset rays, volumetric dust motes, 35mm film grain.\n"
-                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime (shallow depth of field). "
-                    f"Focus shifts from the trembling hands/craft to the {char_key}'s face during the reveal. "
-                    f"Natural 24fps, hyper-realistic skin pores, forensic craft detail. NO STATIC SHOTS."
+                    f"ENVIRONMENT: {final_set}. Cinematic lighting, sunset glow, 35mm film grain.\n"
+                    f"TECHNICAL: Shot on ARRI Alexa 65, Wide Lens. Shallow depth of field focusing from hands to face during the reveal. "
+                    f"Natural 24fps motion blur, forensic skin textures. NO STATIC CLOSE-UPS, ensure full craft is visible."
                 )
 
                 st.divider()
@@ -5094,6 +5092,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
