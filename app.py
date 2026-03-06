@@ -1125,8 +1125,15 @@ def tampilkan_ai_lab():
                 else:
                     auto_lighting = "Overcast Daylight, diffused soft lighting, no harsh reflections."
 
-                # 2. RAKIT INSTRUKSI AUDIO
-                audio_instr = f"Narrator: {voice_type}. Delivery: {accent_type}, {mood_audio}. Text: '{vo_ref}'"
+                # 2. RAKIT INSTRUKSI AUDIO (ANTI-ROBOT PERFORMANCE)
+                audio_instr = (
+                    f"Narrator: {voice_type}. "
+                    f"Delivery Style: {accent_type}, {mood_audio}. "
+                    f"Performance Guide: Must sound like a real human with natural micro-pauses, deep breathing, and organic intonation. "
+                    f"STRICTLY AVOID robotic, synthetic, or monotonous cadence. "
+                    f"Emphasize the weight of each word as if telling a dark secret. "
+                    f"Text: '{vo_ref}'"
+                )
                 
                 # --- TAMPILKAN HASIL SINGLE BOX (VEO/GROK READY) ---
                 st.warning("🎥 MASTER VIDEO ENGINE PROMPT (VEO & GROK OPTIMIZED)")
@@ -4928,6 +4935,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
