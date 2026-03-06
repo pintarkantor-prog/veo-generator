@@ -1369,21 +1369,60 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER LOKASI, BAHAN & AUDIO STYLE ---
+        # --- 3. MASTER LOKASI, BAHAN & AUDIO STYLE (SULTAN REVISION) ---
         MASTER_GRANDMA_CRAFT = {
-            "Buah-buahan": "Mosque miniature from carved watermelon and citrus peels, wet pulpy textures.",
-            "Kardus Bekas": "Detailed mosque miniature from recycled brown cardboard, torn edges, fibers.",
-            "Botol Plastik": "Mosque built from cut recycled PET bottles, plastic reflections, scratches.",
-            "Ranting Kayu": "Rustic mosque from dried twigs and bark, tied with organic twine."
+            "Buah-buahan": (
+                "An incredibly intricate but clearly handmade mosque miniature. The main dome is carved from a whole watermelon with visible pulp textures. "
+                "The minarets are crafted from dried orange peels and pineapple skin, fastened with small wooden toothpicks. "
+                "Glistening juice droplets and wet fruit fibers are visible under cinematic lighting. It looks organic, fragile, and masterfully hand-carved."
+            ),
+            "Kardus Bekas": (
+                "A stunningly detailed mosque made from layers of old, brown corrugated cardboard. "
+                "Visible rough-cut edges, subtle glue stains (lem aibon/tembak), and frayed paper fibers. "
+                "The windows are meticulously cut out, showing the hollow interior. It looks like a dedicated DIY masterpiece made with love and patience."
+            ),
+            "Botol Plastik": (
+                "A breathtaking mosque built from recycled PET bottles (Aqua/Le Minerale style). "
+                "The plastic is hand-cut, warped by candle heat to form domes, with visible scratches and realistic plastic reflections. "
+                "Some parts are joined with thin wire or melted plastic. It catches the light like humble crystal art."
+            ),
+            "Ranting Kayu": (
+                "A rustic, majestic mosque built from hundreds of tiny dried twigs and barks. "
+                "Bound together with fraying organic hemp twine and patches of dried moss. "
+                "Extremely complex geometric patterns created from interlocking sticks. It looks like ancient folk art, earthy and deeply textured."
+            )
         }
+
         MASTER_GRANDMA_SETTING = {
-            "Gubuk Tua": "Inside a dim Indonesian wooden shack, dust motes in sunbeams, bamboo mats.",
-            "Pinggir Sungai": "Muddy riverbank at twilight, reeds swaying, misty trees.",
-            "Teras Desa": "Weathered concrete terrace, cracked floor tiles, cinematic Golden Hour."
+            "Gubuk Tua": (
+                "Inside a dim, humble Indonesian wooden shack (rumah panggung). Walls made of weathered bamboo slats (gedek) with light leaking through the cracks. "
+                "Volumetric dust motes dancing in the heavy afternoon sunbeams. An old radio and a half-filled glass of tea sit in the blurred background. Warm, humid, and nostalgic atmosphere."
+            ),
+            "Pinggir Sungai": (
+                "A muddy, authentic riverbank in a rural village at twilight. Reeds and wild grass swaying in the breeze. "
+                "The ground is damp with visible puddles reflecting the sky. In the background, a silhouette of a small wooden bridge and misty tropical trees. The air looks thick and hazy."
+            ),
+            "Teras Desa": (
+                "A weathered concrete terrace of an old 'Joglo' house. Cracked floor tiles with moss growing in between. "
+                "Potted plants in recycled tin cans line the edge. Dramatic Golden Hour lighting with long, soft shadows. "
+                "The sound of distant crickets is implied by the moody, amber atmosphere."
+            )
         }
+
         MASTER_AUDIO_STYLE = {
-            "Logat": ["Indonesia Desa", "Jawa Kromo Inggil", "Sunda Lembut", "Melayu Tua", "Betawi Klasik"],
-            "Mood": ["Menangis/Haru", "Bijak/Tenang", "Meminta Maaf", "Bahagia Tulus"]
+            "Logat": [
+                "Medok Jawa Desa (Natural, slow-paced, heavy 'd' and 't' sounds, very humble)",
+                "Melayu Pesisir Tua (Rhythmic, poetic, slightly raspy, traditional storytelling style)",
+                "Sunda Alus (High-pitched but gentle, flowing, emotional rising intonation at the end)",
+                "Betawi Pinggiran (Deep, husky, blunt but sincere, using old Jakarta slang)",
+                "Indonesia Tulus (Simple, unpolished, shaky voice, sounds like a real person, not an actor)"
+            ],
+            "Mood": [
+                "Menangis Sesenggukan (Breathing through the nose, voice cracking, long emotional pauses)",
+                "Gemetar Ketakutan/Malu (Stuttering slightly, soft whispers, breathless delivery)",
+                "Pasrah & Ikhlas (Deep heavy sighs, slow articulation, resonant and calm)",
+                "Bangga tapi Rendah Hati (Soft chuckle in between tears, warm but shaky tone)"
+            ]
         }
 
         # --- UI LAYOUT (SINGLE EXPANDER) ---
@@ -1436,18 +1475,22 @@ def tampilkan_ai_lab():
 
                 # RAKIT PROMPT VIDEO + AUDIO IN SATU KOTAK
                 video_prompt = (
-                    f"MASTER VIDEO & AUDIO PROMPT:\n"
+                    f"MASTER VIDEO PROMPT (CINEMATIC STORYTELLING):\n"
                     f"CORE SUBJECT: {final_soul}\n"
-                    f"WARDROBE: {final_baju}\n"
-                    f"SCENE & DIALOG: The {char_key} is sitting while holding a handcrafted {pilihan_bahan}. "
-                    f"The character is SPEAKING DIRECTLY TO THE CAMERA, saying: '{user_dialog}'. "
-                    f"Their lips move in perfect synchronization with the words. "
-                    f"The voice profile is {'Elderly Female' if 'Nenek' in char_key else 'Elderly Male' if 'Kakek' in char_key else 'Young Female' if 'Gadis' in char_key else 'Young Child'} "
-                    f"with a {pilih_logat} accent and a {pilih_mood} emotional tone. "
-                    f"Natural breathing, trembling voice, and emotional pauses included. "
-                    f"Real tears well up and roll down the cheeks during speech. \n"
-                    f"ENVIRONMENT: {final_set}. Cinematic lighting, dust motes, 35mm film grain.\n"
-                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Natural 24fps motion, realistic lip-sync, 100% real human features."
+                    f"WARDROBE: {final_baju}\n\n"
+                    
+                    f"ACTION & CAMERA SEQUENCE:\n"
+                    f"1. START: The camera is positioned at a 45-degree side angle (candid profile). "
+                    f"The {char_key} is deeply focused, using trembling fingers to meticulously add a final spire to a BEAUTIFUL, INTRICATE mosque made of {final_bahan}. "
+                    f"The camera moves in a SLOW, SUBTLE HANDHELD ORBIT (gerakan kecil dinamis).\n"
+                    f"2. THE REVEAL: As the {char_key} starts speaking, they slowly turn their head to LOOK DIRECTLY INTO THE LENS. "
+                    f"They say: '{user_dialog}'. Their eyes are glistening with real tears, full of humble emotion. "
+                    f"The lip-sync is perfect, matching the {pilih_logat} accent and {pilih_mood} tone.\n\n"
+                    
+                    f"ENVIRONMENT: {final_set}. Cinematic lighting with warm sunset rays, volumetric dust motes, 35mm film grain.\n"
+                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime (shallow depth of field). "
+                    f"Focus shifts from the trembling hands/craft to the {char_key}'s face during the reveal. "
+                    f"Natural 24fps, hyper-realistic skin pores, forensic craft detail. NO STATIC SHOTS."
                 )
 
                 st.divider()
@@ -5051,6 +5094,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
