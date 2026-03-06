@@ -2050,13 +2050,14 @@ def tampilkan_ai_lab():
 
             # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
             sultan_image_dna = (
-                f"A raw, unedited wide-angle photograph. Vertical 9:16 frame. "
-                f"Two men in a tense standoff. "
-                f"ON THE LEFT: {c_l_name} wearing {c_l_outfit}. "
-                f"ON THE RIGHT: {c_r_name} wearing {c_r_outfit}. "
+                f"A raw, unedited wide-angle photograph, vertical 9:16 frame. "
+                f"A tense cinematic standoff between {c_l_name} and {c_r_name}. " # Langsung sebut nama
+                f"ON THE LEFT: {c_l_name} is wearing {c_l_outfit}. "
+                f"ON THE RIGHT: {c_r_name} is wearing {c_r_outfit}. "
                 f"SCENE: {user_scene}. "
-                f"{sultan_quality_logic} " # Manggil DNA baru di atas
-                "Shot on a Sony A7RIV, 35mm lens, f/2.8, accidental motion blur, gritty documentary style."
+                f"{s_quality_dna} "
+                "Candid handheld photography, 35mm lens, f/2.8, accidental motion blur, "
+                "gritty documentary style, deep shadows, natural skin imperfections."
             )
 
             # B. RAKIT PROMPT VIDEO (sultan_video_story)
@@ -5713,6 +5714,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
