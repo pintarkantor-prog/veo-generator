@@ -993,7 +993,7 @@ def tampilkan_ai_lab():
                     supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
 
         # --- 5. PRODUCTION BOARD (MULTI-CHARACTER & SULTAN AUDIO) ---
-        with st.expander("🛠️ PRODUCTION BOARD: SULTAN CINEMATIC", expanded=True):
+        with st.expander("🛠️ PINTAR BALUNG ENGINE", expanded=True):
             
             # --- VIEW MASTER SCRIPT ---
             st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
@@ -5190,6 +5190,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
