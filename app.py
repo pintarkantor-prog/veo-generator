@@ -1416,143 +1416,177 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: GRAND DOME & 4 MINARETS) ---
+# --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
                 "Anyaman Bambu": (
                     "A GIANT MAJESTIC ARCHITECTURAL MOSQUE. Massive central bulbous dome and 4 tall minarets at each corner made of fine 'gedek' weaving. "
                     "Features double-layered bamboo walls, tiny arched windows with bamboo lattices, and a grand entrance. "
-                    "The structure stands 60cm tall on the table, looking like a real architectural masterpiece."
+                    "The structure stands 60cm tall on the table, looking like a real architectural masterpiece. "
+                    "STATUS: 90% COMPLETE. The character's aged fingers are actively weaving the final bamboo strip onto the last minaret. "
+                    "Small bamboo scraps and a rustic knife are visible on the table next to their busy hands."
                 ),
                 "Botol Plastik RGB": (
                     "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic bottles. "
                     "Features one massive central dome and 4 tall minarets. INSIDE: Multi-colored RGB LED lights "
                     "glow through the plastic, creating vibrant Red, Green, and Blue reflections. "
                     "The light refracts through the bottle textures, casting colorful patterns onto the character's face "
-                    "and the surrounding wooden table. It looks like a glowing diamond masterpiece."
+                    "and the surrounding wooden table. It looks like a glowing diamond masterpiece. "
+                    "STATUS: 90% COMPLETE. The character is carefully soldering the final wire to the LED core, "
+                    "their face illuminated by the pulsing RGB glow as they work."
                 ),
                 "Kardus Lampu LED": (
                     "A MAGNIFICENT MOSQUE built from recycled gold-painted cardboard. One giant central dome and 4 symmetrical tall minarets. "
                     "Intricate Islamic geometric patterns are hand-cut into the walls. Multi-colored LED lights glow intensely from inside "
-                    "the windows and towers, creating a professional lighting effect on the character's face."
+                    "the windows and towers, creating a professional lighting effect on the character's face. "
+                    "STATUS: 90% COMPLETE. The character is meticulously gluing the final gold cardboard arch onto the entrance. "
+                    "Glue stains and cardboard cutouts are scattered around their focused hands."
                 ),
                 "Buah Naga": (
                     "A STUNNING GIANT ORGANIC MOSQUE. The massive central dome is carved from a whole vibrant pink dragon fruit. "
                     "The 4 tall minarets are also crafted from the scaly pink dragon fruit skin. "
-                    "White dragon fruit flesh with black seeds forms the intricate pillars. Glistening, wet, and incredibly detailed."
+                    "White dragon fruit flesh with black seeds forms the intricate pillars. Glistening, wet, and incredibly detailed. "
+                    "STATUS: 90% COMPLETE. The character is using a small wooden pick to carve the final texture into the main dome. "
+                    "Pink juice stains their shaky fingers, showing the intense organic labor."
                 ),
                 "Botol Plastik Aqua": (
                     "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic water bottles (Aqua style). "
                     "Features one massive transparent central dome made of bottle bases and 4 tall, glowing minarets. "
-                    "The plastic is heat-warped and cut to look like sparkling crystal glass. Catching natural daylight beautifully."
+                    "The plastic is heat-warped and cut to look like sparkling crystal glass. Catching natural daylight beautifully. "
+                    "STATUS: 90% COMPLETE. The character is heat-sealing the last plastic joint with a small candle flame, "
+                    "their eyes squinting as they stabilize the fragile crystalline structure with both hands."
                 ),
                 "Cangkang Telur & Kapur": (
                     "A PURE WHITE LUXURY MOSQUE. The entire surface is covered in thousands of crushed white eggshell mosaics. "
                     "Features a massive rounded dome and 4 sharp, tall minarets at the corners. "
-                    "Detailed Arabic calligraphy is carved into the white chalk walls. Looks like a solid marble palace."
+                    "Detailed Arabic calligraphy is carved into the white chalk walls. Looks like a solid marble palace. "
+                    "STATUS: 90% COMPLETE. The character is carefully placing the last tiny white eggshell fragment with a small brush. "
+                    "White dust covers the character's wrinkled hands and the wooden worktable."
                 ),
                 "Sedotan Plastik": (
                     "A GRAND MODERN MOSQUE built from thousands of white and gold plastic straws. "
                     "The massive central dome is a complex geodesic weave of straws. "
-                    "4 tall, slender minarets stand at the corners. It looks incredibly lightweight yet architecturally complex."
+                    "4 tall, slender minarets stand at the corners. It looks incredibly lightweight yet architecturally complex. "
+                    "STATUS: 90% COMPLETE. The character is weaving the final golden straw into the dome's peak. "
+                    "Their hands are steady but tired, fully immersed in the complex plastic geometry."
                 ),
                 "Koran & Majalah Bekas": (
                     "A GIANT LITERARY MOSQUE crafted from tightly rolled recycled newspapers and magazines. "
                     "The dome and 4 minarets show beautiful grey and colorful paper textures. "
-                    "The architecture features multiple layers of paper-mache arches. A unique sustainable masterpiece."
+                    "The architecture features multiple layers of paper-mache arches. A unique sustainable masterpiece. "
+                    "STATUS: 90% COMPLETE. The character is applying the final layer of wet paper-mache to the minaret base. "
+                    "Ink stains and wet paper scraps cover their hands and the table."
                 ),
                 "Stik Es Krim": (
                     "A HUGE ARCHITECTURAL MOSQUE built from over 5,000 wooden popsicle sticks. "
                     "Features a massive multi-layered dome and 4 towering square minarets. "
-                    "The wood is stained to a rustic brown, showing incredible structural detail and precision."
+                    "The wood is stained to a rustic brown, showing incredible structural detail and precision. "
+                    "STATUS: 90% COMPLETE. The character is placing the final wooden stick onto the minaret balcony. "
+                    "Visible glue marks and a pile of sticks show the massive scale of the work."
                 ),
                 "Beras & Biji-bijian": (
                     "A HIGH-DETAIL MOSQUE where every inch is covered in white rice and green mung beans. "
                     "A huge central dome and 4 symmetrical minarets. The seeds create a beautiful, high-contrast mosaic tile effect "
-                    "across the entire structure. A symbol of extreme patience."
+                    "across the entire structure. A symbol of extreme patience. "
+                    "STATUS: 90% COMPLETE. The character is using a small tweezer to place the very last mung beans onto the dome's pattern. "
+                    "A bowl of rice and spilled seeds are visible around their focused hands."
                 ),
                 "Kaleng Biskuit": (
                     "A MAJESTIC METALLIC MOSQUE made from shiny gold-colored recycled biscuit tins. "
                     "Features a giant reflective dome and 4 tall, sturdy metal minarets. "
-                    "The metal surface is embossed with patterns, reflecting light like a real golden mosque."
+                    "The metal surface is embossed with patterns, reflecting light like a real golden mosque. "
+                    "STATUS: 90% COMPLETE. The character is hammering the last metal rivet into the golden dome. "
+                    "Metallic scraps and a small rusted hammer are in their rough, hardworking hands."
                 )
             },
             "🤖 Robot Rongsok (Life-Sized Mecha)": {
                 "Robot Rongsok Cyber-Glow": (
-                    "A GIANT 175CM TALL CYBERNETIC ROBOT standing right next to the character. "
+                    "A 100CM TALL CYBERNETIC ROBOT standing right next to the character. "
                     "Built from rusted metal sheets and translucent plastic. Features a GLOWING NEON BLUE CORE "
-                    "in the chest that pulses with light. The blue light leaks through metal gaps, casting "
-                    "sharp futuristic shadows on the character's face. The robot towers over the table."
+                    "in the chest that pulses with light. STATUS: 90% COMPLETE. The character's oily hands are "
+                    "actively connecting a glowing blue wire into the robot's neck. The blue light casts "
+                    "sharp futuristic shadows on the character's focused face."
                 ),
                 "Robot Mata LED": (
-                    "A HUGE 2-METER TALL AGGRESSIVE ROBOT built from heavy industrial car scrap. "
+                    "A 1-METER TALL AGGRESSIVE ROBOT built from heavy industrial car scrap. "
                     "It features INTENSE GLOWING RED LED EYES and internal orange lighting like molten metal. "
-                    "The robot is so large its head almost touches the hut's ceiling. The red light illuminates "
-                    "the character's shaky hands in a dramatic cinematic style."
+                    "STATUS: 90% COMPLETE. The character is using a rusted wrench to tighten a bolt on the robot's shoulder. "
+                    "The intense red light illuminates the character's shaky hands in a dramatic cinematic style."
                 ),
                 "Robot Botol Bekas Pelangi": (
-                    "A GIANT LIFE-SIZED MECHA (170cm) built from hundreds of recycled plastic bottles. "
+                    "A 100CM TALL MECHA built from hundreds of recycled plastic bottles. "
                     "INTERNAL RGB LIGHTING cycles through Purple, Cyan, and Green, refracting through the plastic "
-                    "like a giant prism. The entire robot glows like a futuristic diamond, towering majestically "
-                    "beside the character in the humble bamboo hut."
+                    "like a prism. STATUS: 90% COMPLETE. The character is carefully hot-gluing the final bottle-cap "
+                    "onto the robot's chest. The rainbow glow reflects beautifully on their weathered skin."
                 ),
                 "Robot Limbah": (
-                    "A HEAVY 180CM HAZARD-STYLE ROBOT made from yellow jerrycans and rusted pipes. "
-                    "Features a TOXIC BRIGHT GREEN GLOW emanating from the joints and eyes. The green light "
-                    "creates a radioactive-style aura, casting an eerie lime-green light onto the environment."
+                    "A HEAVY 1-METER HAZARD-STYLE ROBOT made from yellow jerrycans and rusted pipes. "
+                    "Features a TOXIC BRIGHT GREEN GLOW emanating from the joints and eyes. "
+                    "STATUS: 90% COMPLETE. The character is stabilizing the robot's heavy arm with one hand while "
+                    "wiping a green liquid stain with a rag. casting an eerie lime-green light onto the character."
                 ),
                 "Kaleng Karatan": (
-                    "A GIANT HEAVY MECHA ROBOT standing 160cm tall. Made from hundreds of rusted tin cans. "
-                    "Massive shoulders, hydraulic-looking arms, and glowing red LED eyes. Visible rust textures "
-                    "and complex DIY joints. It stands as a silent iron guardian next to the character."
+                    "A HEAVY MECHA ROBOT standing 100cm tall. Made from hundreds of rusted tin cans. "
+                    "Massive shoulders and glowing red LED eyes. STATUS: 90% COMPLETE. The character is "
+                    "meticulously hammering a small tin plate onto the robot's torso. Their dirty fingers "
+                    "are fully engaged with the sharp, rusted metal textures."
                 ),
                 "Kabel & Komponen": (
-                    "A COMPLEX LIFE-SIZED (170cm) CYBER-ROBOT made from thousands of discarded electrical wires. "
-                    "The body features exposed circuitry, vacuum tubes, and copper 'muscles' wrapping around "
-                    "a large metal skeleton. One hand is glowing with a sharp blue LED light."
+                    "A COMPLEX 100CM CYBER-ROBOT made from thousands of discarded electrical wires. "
+                    "Body features exposed circuitry and copper 'muscles'. STATUS: 90% COMPLETE. The character "
+                    "is braiding the final thick copper wires around the robot's arm. Their hands are tangled "
+                    "within the wires, showing a deep human-machine interaction."
                 ),
-                "Kardus Gundam Style)": (
-                    "A TALL 190CM AGGRESSIVE ROBOT built from multi-layered old corrugated cardboard. "
-                    "Features sharp armor plates, a massive 'V-fin' head, and back-mounted wings that reach the ceiling. "
-                    "Detailed with visible brand markings and glowing yellow LED eyes behind the cardboard mask."
+                "Kardus Gundam Style": (
+                    "A 1-METER TALL AGGRESSIVE ROBOT built from multi-layered old corrugated cardboard. "
+                    "Features sharp armor plates and glowing yellow LED eyes. STATUS: 90% COMPLETE. The character "
+                    "is carefully cutting a final wing-tip with a small cutter. Scraps of cardboard cover the "
+                    "table and the character's lap as they work."
                 ),
                 "Busi & Sparepart": (
-                    "A MASSIVE 1.5-METER HEAVY-METAL ROBOT built from hundreds of used spark plugs (busi) and gears. "
-                    "The head is a large vintage piston with glowing blue LED eyes. Extremely heavy-looking, "
-                    "with oily metallic textures and intricate mechanical joints that tower over the character."
+                    "A MASSIVE 100CM HEAVY-METAL ROBOT built from hundreds of used spark plugs (busi) and gears. "
+                    "The head is a large vintage piston with glowing blue LED eyes. STATUS: 90% COMPLETE. The character "
+                    "is using a small brush to clean grease off the robot's mechanical joints. Their hands look "
+                    "heavy and tired from handling the solid metal."
                 ),
                 "Sendok & Garpu": (
-                    "A MAJESTIC 170CM SILVER ROBOT crafted from hundreds of bent stainless steel spoons and forks. "
-                    "The cutlery forms knight-like armor plating. Features a long sword of metal scrap "
-                    "and a glowing white visor that reflects brilliantly in the dim room."
+                    "A MAJESTIC 100CM SILVER ROBOT crafted from hundreds of bent stainless steel spoons and forks. "
+                    "Features knight-like armor and a glowing white visor. STATUS: 90% COMPLETE. The character "
+                    "is bending the final silver fork to form the robot's finger. The shiny metal reflects "
+                    "brilliantly against the character's dull, dusty clothing."
                 ),
                 "Ban Bekas": (
-                    "A DARK RUGGED 2-METER GIANT ROBOT crafted from cut-up black rubber tires. "
-                    "Features heavy tread textures as armor and glowing yellow eyes. Looks extremely tough, "
-                    "muscular, and intimidating, standing tall and filling the corner of the hut."
+                    "A DARK RUGGED 1-METER ROBOT crafted from cut-up black rubber tires. "
+                    "Features heavy tread textures and glowing yellow eyes. STATUS: 90% COMPLETE. The character "
+                    "is stitching two rubber plates together with a thick needle and wire. Their hands are "
+                    "strained from pulling the heavy, tough rubber material."
                 ),
                 "Pipa PVC & Baut": (
-                    "A HEAVY INDUSTRIAL 180CM ROBOT made from weathered PVC pipes and rusted bolts. "
-                    "Features oversized mechanical claws and a bulky tank-like torso. Small orange warning "
-                    "lights flicker on its shoulders, casting a moody industrial glow from above."
+                    "A HEAVY INDUSTRIAL 100CM ROBOT made from weathered PVC pipes and rusted bolts. "
+                    "Features mechanical claws and flickering orange lights. STATUS: 90% COMPLETE. The character "
+                    "is painting a warning stripe on the robot's bulky torso. Small paint stains and bolts "
+                    "are visible on their hardworking, wrinkled hands."
                 ),
                 "Mainan Plastik": (
-                    "A COLORFUL BUT CREEPY 160CM ROBOT built from a collage of broken plastic toys. "
-                    "Features mismatched limbs and multiple glowing RGB eyes. A chaotic, high-detail "
-                    "nightmare aesthetic that stands majestically beside the character."
+                    "A COLORFUL 100CM ROBOT built from a collage of broken plastic toys. "
+                    "Features mismatched limbs and glowing RGB eyes. STATUS: 90% COMPLETE. The character "
+                    "is snapping the last plastic limb into place. Their hands are surrounded by a chaotic "
+                    "pile of colorful toy parts, creating a high-contrast visual."
                 ),
                 "Kayu Palet & Rantai": (
-                    "A RUSTIC 2-METER GIANT ROBOT made from weathered wood slabs and heavy rusted chains. "
-                    "The joints are large iron bolts. It has a bulky, ancient golem-like silhouette "
-                    "with small glowing amber eyes that tower over the sitting character."
+                    "A RUSTIC 1-METER ROBOT made from weathered wood slabs and heavy rusted chains. "
+                    "Features glowing amber eyes. STATUS: 90% COMPLETE. The character is wrapping a heavy "
+                    "rusted chain around the robot's waist. The character's stooped posture shows the "
+                    "intense physical effort of handling the wood and iron."
                 ),
                 "Botol Oli & Jerigen": (
-                    "A VIBRANT 170CM NEON ROBOT built from recycled yellow jerrycans and oil bottles. "
-                    "Features internal green glow through the translucent plastic. The design is boxy "
-                    "and heavy, looking like a giant futuristic hazard-handling machine."
+                    "A VIBRANT 100CM NEON ROBOT built from recycled yellow jerrycans and oil bottles. "
+                    "Internal green glow through plastic. STATUS: 90% COMPLETE. The character is connecting "
+                    "a translucent tube between two jerrycans. Their hands are wet with oil, reflecting "
+                    "the green neon glow in the dim environment."
                 )
             },
-            "🥣 Buka Puasa Haru (Menu Sederhana)": {
+            "🥣 Buka Puasa (Menu Sederhana)": {
                 "Nasi & Garam": (
                     "A HEART-BREAKING IFTHAR. A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
                     "A glass of plain tap water in a plastic cup. The character is carefully picking up every single grain of rice with their fingers. "
@@ -1775,8 +1809,8 @@ def tampilkan_ai_lab():
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
+                # Kocok aksi fisik (hanya sekali di sini)
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
-
 
             st.write("")
             btn_gen = st.button(
@@ -1789,35 +1823,35 @@ def tampilkan_ai_lab():
         # --- LOGIC GENERATOR ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu, Biar Nenek tau mau ngomong apa.")
+                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (AUTOMATIC POSING & CAMERA) ---
+                # --- 4. DYNAMIC SCENE LOGIC (INTERACTIVE & PROPORTIONAL) ---
                 scene_context = ""
                 if "🤖 Robot" in modus_konten:
                     scene_context = (
-                        "The character is STANDING UPRIGHT next to the massive robot. FULL BODY SHOT from head to toe. "
-                        "The camera is EXTRA WIDE ANGLE to capture the entire 2-meter tall robot and the character's full posture. "
-                        "No parts of the robot or the character are cropped. Cinematic low-angle shot to show the scale."
+                        "The character is standing or sitting very close to the 1-meter tall robot. "
+                        "FULL BODY WIDE SHOT. The character is actively working on the robot, "
+                        "their hands are physically touching the mechanical joints or wires. "
+                        "The robot is 100cm tall, positioned right in front of the character as a 90% finished project."
                     )
                 elif "🕌 Miniatur Masjid" in modus_konten:
                     scene_context = (
-                        "The character is SITTING ON A TATTERED MAT (TIKAR) on the dirt floor, with no chair. "
-                        "A small, worn-out wooden table is in front of them, supporting the majestic mosque. "
-                        "The camera is at eye-level, focusing on the character's hands and the mosque's detail."
+                        "The character is sitting on a tattered mat (tikar) with the grand mosque on a small table in front of them. "
+                        "EYE-LEVEL CLOSE-UP. The character's hands are meticulously adding final details to the mosque's dome. "
+                        "The scene shows a deep connection between the creator and the 90% finished masterpiece."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
                     scene_context = (
-                        "The character is SITTING HUMBLY ON THE FLOOR (TIKAR). A very low, small wooden table (meja lesehan) "
-                        "is placed in front of them with the simple meal. The camera is slightly tilted down, "
-                        "capturing a somber and intimate breaking-of-fast moment."
+                        "The character is sitting humbly on the floor (tikar) facing their very simple meal. "
+                        "SOMBRE EYE-LEVEL SHOT. The character looks at the food with a mix of hunger and deep gratitude, "
+                        "their hands resting near the plate in a prayerful or patient manner."
                     )
 
                 # --- 5. NUANSA HIDUP (LIVING ATMOSPHERE) ---
                 living_details = (
-                    "Atmospheric cinematic lighting. Tiny dust motes dancing in the light rays. "
-                    "Subtle background sounds of distant crickets and a soft evening breeze. "
-                    "The air looks humid and thick with the smell of old wood and rain-dampened earth. "
-                    "Hyper-realistic skin textures with visible sweat and fine wrinkles on the character."
+                    "Atmospheric cinematic lighting with realistic shadows. Tiny dust motes dancing in light rays. "
+                    "Subtle background ambient sounds. The air looks thick with humidity and nostalgic atmosphere. "
+                    "Hyper-realistic skin textures, visible sweat, and authentic weathered details on the character."
                 )
 
                 # --- 6. RAKIT FINAL PROMPT ---
@@ -1844,7 +1878,7 @@ def tampilkan_ai_lab():
                 # --- TAMPILAN OUTPUT ---
                 st.divider()
                 st.success(f"🎬 MASTER PROMPT READY (Mode: {modus_konten})")
-                st.code(video_prompt, language="text")        
+                st.code(video_prompt, language="text")
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5443,6 +5477,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
