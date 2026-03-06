@@ -1179,7 +1179,7 @@ def tampilkan_ai_lab():
                     except:
                         st.error("Koneksi bermasalah saat update status.")
 
-        with st.expander("💡 ASISTEN IDE GURU GEMINI", expanded=False):
+        with st.expander("💡 ASISTEN IDE GURU GEM", expanded=False):
             col_t1, col_t2 = st.columns(2)
             with col_t1:
                 st.markdown('<p class="small-label">1. PILIH PILAR VIRAL</p>', unsafe_allow_html=True)
@@ -5716,6 +5716,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
