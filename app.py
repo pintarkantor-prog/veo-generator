@@ -897,62 +897,65 @@ def tampilkan_ai_lab():
         MASTER_CHAR_LAB = {
             "BALUNG": {
                 "fisik": (
-                    "National Geographic forensic photography style, macro extreme close-up of a human skeleton encased in a thick, dense, transparent gel-like layer of human dermal tissue. "
-                    "The transparent skin exhibits hyper-realistic dermal texture with natural subsurface scattering (SSS). "
-                    "Inside, internal organs show a subtle, deep bioluminescence. "
-                    "Movement Physics: The gel-skin has organic elasticity and reacts to gravity and motion with realistic inertia."
+                    "FORENSIC PHOTOGRAPHY STYLE. A human skeleton deeply encased inside a VERY THICK, DENSE, "
+                    "and transparent gel-like layer of human dermal tissue. The transparent flesh has a heavy, "
+                    "viscous volume, exhibiting hyper-realistic dermal texture with deep subsurface scattering (SSS). "
+                    "The interior is PURELY SKELETAL, clean white anatomical bones WITH NO INTERNAL ORGANS. "
+                    "Movement Physics: The thick gel-skin has organic elasticity and wobbles realistically with motion."
                 ),
                 "pakaian": {
-                    "Original": (
-                        "Pure anatomical look, no clothes. Focus on the raw contrast between hard white bone and "
-                        "thick translucent fleshy gel. Natural 24fps motion blur, realistic skin imperfections, organic fluid feel."
-                    ),
-                    "Jas Lab Putih": (
-                        "Wearing a professional heavy-duty white cotton lab coat with realistic weave texture. "
-                        "The fabric moves naturally, showing realistic folds and wrinkles during action."
-                    ),
-                    "Jubah Kerajaan": (
-                        "Wearing a royal crimson velvet tunic with heavy gold-threaded embroidery. "
-                        "The heavy fabric shows realistic weight and dynamic sway as the character moves."
-                    ),
-                    "Baju Kantoran": (
-                        "Wearing a crisp white poplin button-up shirt and charcoal wool trousers. "
-                        "Sharp fabric textures that react to the character's natural skeletal movements."
-                    ),
-                    "Hoodie Hitam": (
-                        "Wearing an oversized premium heavyweight fleece black hoodie. "
-                        "Soft matte textile texture that gathers and folds realistically around the transparent neck."
-                    ),
-                    "Versi Sultan": (
-                        "Wearing a charcoal three-piece suit with intricate metallic gold brocade. "
-                        "Luxury materials with realistic caustic light refractions that shimmer during movement."
-                    )
+                    "Original": "Pure anatomical look, no clothes. Clear deep view of the white skeleton through thick transparent flesh.",
+                    "Jas Lab Putih": "Professional white cotton lab coat. The fabric moves naturally over the thick transparent skeletal frame.",
+                    "Baju Koko + Peci": "Wearing a clean white embroidered Baju Koko, a black velvet Peci (songkok) on the transparent skull, and a neat plaid Sarung. The clothes drape realistically over the gel-skin.",
+                    "Jubah Kerajaan": "Royal crimson velvet tunic with gold embroidery. Heavy fabric showing realistic weight.",
+                    "Baju Kantoran": "Crisp white button-up shirt and charcoal trousers. Sharp fabric textures reacting to skeletal motion.",
+                    "Hoodie Hitam": "Oversized heavyweight black fleece hoodie. Soft matte texture folds around the thick transparent neck.",
+                    "Versi Sultan": "Charcoal three-piece suit with gold brocade. Luxury materials with realistic light refractions."
+                }
+            },
+            "BALUNG ORGAN": {
+                "fisik": (
+                    "NATIONAL GEOGRAPHIC FORENSIC STYLE. A human skeleton encased in a VERY THICK and transparent "
+                    "dermal gel tissue, FEATURING FULL INTERNAL ORGANS visible deep inside the torso. "
+                    "The organs (heart, lungs, liver) show a subtle, deep BIOLUMINESCENCE, glowing softly through "
+                    "the thick volume of the flesh. The transparent skin has organic elasticity and realistic depth. "
+                    "The glowing organs cast faint colored light onto the thick internal gel and white bones."
+                ),
+                "pakaian": {
+                    "Original": "Pure anatomical look, no clothes. The glowing internal organs are visible through the thick clear volume.",
+                    "Jas Lab Putih": "Professional white lab coat. The subtle bioluminescent glow of the organs is visible through the fabric.",
+                    "Baju Koko + Peci": "Wearing a modest white Baju Koko, a black Peci on the glowing head, and a traditional Sarung. The internal bioluminescence subtly lights up the white shirt from within.",
+                    "Jubah Kerajaan": "Royal crimson velvet. The glow from the chest organs creates a faint atmospheric light on the collar.",
+                    "Baju Kantoran": "Sharp white shirt. The internal organ glow is subtly visible through the thin white fabric.",
+                    "Hoodie Hitam": "Premium black hoodie. The glow is hidden except for the neck and face area.",
+                    "Versi Sultan": "Luxury gold-brocade suit. Light refractions from the suit interact with the internal organ glow."
                 }
             }
         }
 
+        # --- 3. MASTER AUDIO LAB (NARRATOR: HUMAN-LIKE PRECISION) ---
         MASTER_AUDIO_LAB = {
             "Tipe": [
-                "Pria (40th) - Deep Baritone, Tekstur Serak Berwibawa (Dokumenter Alam)",
-                "Pria (30th) - Tenor Tajam, Artikulasi Sempurna (Narator Investigasi)",
-                "Wanita (35th) - Suara Serak Lembut, Elegan, Misterius (Sultry & Dark)",
-                "Pria (55th) - Deep Husky, Berat, Bijak (Old Master Style)",
-                "Wanita (28th) - Tenang, Berwibawa, Tegas (Professional Science Narrator)",
-                "Pria (30th) - Sinis, Rendah, Provokatif (Thriller Narrator)"
+                "Pria (40th) - Deep Baritone, Serak Berwibawa (Gravely texture, cinematic Nat-Geo style)",
+                "Pria (30th) - Tenor Tajam, Artikulasi Sempurna (Sharp, forensic investigation narrator)",
+                "Wanita (35th) - Serak Lembut, Misterius (Sultry, dark, elegant smoky voice)",
+                "Pria (55th) - Deep Husky, Berat, Bijak (Wisdom-heavy, weathered old master)",
+                "Wanita (28th) - Tenang, Berwibawa, Tegas (Professional Science & Clinical narrator)",
+                "Pria (30th) - Sinis, Rendah, Provokatif (Gritty, raspy, thriller-style narrator)"
             ],
             "Aksen": [
-                "Indonesia Formal Baku (Standar Dubbing National Geographic)",
-                "Indonesia Naratif (Gaya Storytelling Film Dokumenter)",
-                "Aksen Melayu Klasik (Sastrawi & Formal)",
-                "Diksi Medis/Teknis (Tanpa Logat Daerah, Netral & Presisi)",
-                "Deep English Accented Indonesian (Gaya Narasi Internasional)"
+                "Indonesia Formal Baku (Standard National Geographic dubbing style)",
+                "Indonesia Naratif (Storytelling documentary style with natural flow)",
+                "Melayu Klasik Sastrawi (Formal, poetic, and rhythmic Malaysian/Indonesian)",
+                "Diksi Medis/Teknis (Neutral, precise, and professional clinical tone)",
+                "English Accented Indonesian (International narrator style with subtle Western lilt)"
             ],
             "Mood": [
-                "Sinematik (Penuh Penekanan, Dinamis, Intonasi Berenergi)",
-                "Mencekam (Rendah, Intens, Atmosfer Thriller)",
-                "Klinis & Informatif (Lugas, Cepat, Fokus pada Fakta)",
-                "Melankolis & Puitis (Lembut tapi Mengalir, Bukan Statis)",
-                "Urgent & Tense (Cepat, Memberi Tekanan, Pace Tinggi)"
+                "Sinematik & Dinamis (Full of emphasis, dramatic pauses, energetic intonation)",
+                "Mencekam & Intens (Low-pitched, atmospheric, heavy-breathing tension)",
+                "Klinis & Informatif (Fast-paced, factual focus, clear and direct)",
+                "Melankolis & Puitis (Soft, flowing, emotional but steady delivery)",
+                "Urgent & Tense (High pressure, rapid delivery, breathy intensity)"
             ]
         }
 
@@ -1104,48 +1107,55 @@ def tampilkan_ai_lab():
             if st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
-                # 1. LOGIKA OTOMATIS MOOD CAHAYA (SMART LIGHTING)
+                # 1. LOGIKA OTOMATIS MOOD CAHAYA (SMART LIGHTING & BIOLUMINESCENCE)
                 env_lower = env_in.lower()
-                if any(x in env_lower for x in ["malam", "night", "gelap"]):
-                    auto_lighting = "Cinematic Night, moody cool tones, subtle organic bioluminescence (no artificial neon)."
-                elif any(x in env_lower for x in ["sore", "senja", "sunset", "jingga"]):
-                    auto_lighting = "Golden Hour, warm amber sunlight, long dramatic shadows."
-                elif any(x in env_lower for x in ["siang", "daylight", "matahari"]):
-                    auto_lighting = "Neutral Daylight, natural sun position, clear forensic visibility."
-                elif any(x in env_lower for x in ["hujan", "rain", "badai"]):
-                    auto_lighting = "Rainy atmosphere, wet reflective surfaces, realistic water droplets on the transparent skin."
+                char_lower = char_pilih.lower()
+                
+                # Cek apakah karakter punya organ untuk efek cahaya internal
+                if "organ" in char_lower:
+                    biolum_effect = "INTERNAL BIOLUMINESCENCE: Glowing internal organs (heart, lungs) casting soft red and blue light onto the inner white ribs."
                 else:
-                    auto_lighting = "Overcast Daylight, diffused soft lighting, no harsh reflections."
+                    biolum_effect = "CLEAN SKELETAL REFLECTIONS: Focus on the sharp white bone contrast against the thick transparent gel-skin."
 
-                # 2. RAKIT INSTRUKSI AUDIO (ANTI-ROBOT PERFORMANCE)
+                if any(x in env_lower for x in ["malam", "night", "gelap"]):
+                    auto_lighting = f"Cinematic Night, moody cool tones, {biolum_effect}. Deep light refraction through the thick transparent flesh."
+                elif any(x in env_lower for x in ["sore", "senja", "sunset", "jingga"]):
+                    auto_lighting = f"Golden Hour, warm amber sunlight, long dramatic shadows interacting with the {biolum_effect}."
+                elif any(x in env_lower for x in ["siang", "daylight", "matahari"]):
+                    auto_lighting = f"Neutral Daylight, natural sun position, high forensic clarity, {biolum_effect} is subtle but visible."
+                elif any(x in env_lower for x in ["hujan", "rain", "badai"]):
+                    auto_lighting = f"Rainy atmosphere, wet reflective surfaces, realistic water droplets on the transparent gel-skin, {biolum_effect} creates blurry refractions."
+                else:
+                    auto_lighting = f"Overcast Daylight, diffused soft lighting, natural subsurface scattering (SSS) for the transparent tissue, {biolum_effect}."
+
+                # 2. RAKIT INSTRUKSI AUDIO (HUMAN VOICE - NO ROBOT)
                 audio_instr = (
                     f"Narrator: {voice_type}. "
                     f"Delivery Style: {accent_type}, {mood_audio}. "
-                    f"Performance Guide: Must sound like a real human with natural micro-pauses, deep breathing, and organic intonation. "
-                    f"STRICTLY AVOID robotic, synthetic, or monotonous cadence. "
-                    f"Emphasize the weight of each word as if telling a dark secret. "
+                    "Performance Guide: MUST sound like a real human with natural VOCAL FRY and AUDIBLE INHALES between sentences. "
+                    "Incorporate realistic micro-pauses and a rhythmic, deep-seated natural cadence. "
+                    "STRICTLY AVOID robotic, synthetic, or monotonous speech. Emphasize the weight of each word. "
                     f"Text: '{vo_ref}'"
                 )
                 
-                # --- TAMPILKAN HASIL SINGLE BOX (VEO/GROK READY - NATURAL MOTION) ---
-                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED)")
+                # --- TAMPILAN HASIL SINGLE BOX (VEO/GROK READY - NATURAL MOTION) ---
+                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED FOR BALUNG ANATOMY)")
                 
                 sultan_video_prompt = (
                     f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
                     
                     f"ACTION & MOTION PHYSICS:\n{aksi_in.replace('BALUNG', 'the skeletal character')}. "
-                    f"The movement is natural, fluid, and follows real-world momentum with physical weight. "
-                    f"Maintain organic muscle-mimicry of the thick transparent gel. "
+                    f"Movement follows real-world momentum. The THICK GEL-SKIN wobbles and reacts to gravity with realistic inertia. "
                     f"Natural 24fps motion cadence, NO artificial slow-motion, NO flickering, NO morphing. \n\n"
                     
                     f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting Engine: {auto_lighting}. "
-                    f"Ray-traced reflections on the wet gel surface and realistic light refraction through the thick skin. "
+                    f"Ray-traced light refraction through the thick transparent dermal layer and realistic subsurface scattering (SSS). "
                     f"Dynamic environment interaction: dust and particles react naturally to the character's movement. \n\n"
                     
                     f"TECHNICAL SPECIFICATIONS (STRICT ANTI-AI LOOK):\n"
                     f"Shot on ARRI Alexa 65, 80mm Master Prime Lens. Framing: {f_auto}. Motion: {m_auto}. "
-                    f"Real-time shutter speed, natural motion blur, handheld micro-jitter for authentic human cinematography. "
-                    f"ABSOLUTELY NO cartoon, NO anime, NO 3D-render look, NO plastic textures, NO glossy skin, and NO artificial glowing. "
+                    f"Extreme forensic detail. ABSOLUTELY NO glossy plastic textures. "
+                    f"Realistic caustic light refractions through the transparent body. Handheld micro-jitter for authentic human cinematography. "
                     f"Maintain hyper-realistic forensic photography style with natural 35mm film grain and cinematic color science. \n\n"
                     
                     f"AUDIO & SOUND DESIGN:\n{audio_instr}. "
@@ -5502,6 +5512,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
