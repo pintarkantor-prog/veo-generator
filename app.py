@@ -1861,29 +1861,28 @@ def tampilkan_ai_lab():
                         "NO CAMERA MOVEMENT. NO ZOOM. NO CUTS. Everything stays in one fixed frame."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
-                    # Logika otomatis: Cek apakah menu yang dipilih mengandung kata kunci lesehan
                     is_lesehan = any(x in deskripsi_teknis.lower() for x in ["floor", "tikar", "lesehan"])
                     
                     if is_lesehan:
-                        posisi_duduk = "sitting cross-legged on a traditional tikar (woven mat) on the floor at a large rustic low-profile wooden table."
+                        posisi_duduk = "sitting cross-legged on a traditional tikar (woven mat) on the floor at a low wooden table."
                     else:
                         posisi_duduk = "sitting on a rustic wooden chair at a standard-height wooden table."
 
                     scene_context = (
-                        f"SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
-                        f"AUTHENTIC MAGRIB EVENING ATMOSPHERE. SOMBRE MEDIUM SHOT. "
-                        f"The character is {posisi_duduk} " # Masukin posisi hasil deteksi otomatis
-                        f"The table is positioned directly in front of the character, between the camera and the character. "
-                        f"The camera remains FIXED on the character's weary and emotional face as they speak. "
-                        f"STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
+                        f"SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. PITCH BLACK NIGHT. " # Kunci Malam di sini
+                        f"The ONLY light source is a single flickering warm oil lamp (lampu templok) on the table, "
+                        f"casting long dramatic shadows on the walls. The character is {posisi_duduk} "
+                        f"Everything outside the lamp's glow is swallowed by darkness. "
+                        f"STRICTLY DARK INTERIOR. NO DAYLIGHT."
                     )
 
-                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC WIDE FOCUS) ---
+                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC NEUTRAL) ---
                 living_details = (
-                    "Atmospheric cinematic lighting with high contrast. Tiny dust motes dancing in dramatic light rays. "
-                    "Subtle ambient background sounds of distant village life. The air looks thick with humidity and dust. "
+                    "Tiny dust motes dancing in the existing light rays. "
+                    "Subtle ambient background sounds of distant life. The air looks thick with humidity and dust. "
                     "Extreme hyper-realistic skin textures, visible sweat, and authentic deep weathered wrinkles. "
-                    "The wide frame captures a vast, lonely, and somber atmosphere, focusing on the character's humble presence."
+                    "The wide frame captures a vast, lonely, and somber atmosphere, focusing on the character's humble presence. "
+                    "Focus on micro-expressions: subtle lip quivers, natural blinking, and realistic skin pores."
                 )
 
                 # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL WIDE SHOT) ---
@@ -5705,6 +5704,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
