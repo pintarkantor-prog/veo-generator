@@ -1857,18 +1857,18 @@ def tampilkan_ai_lab():
                         "STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
                     )
 
-                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC) ---
+                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC WIDE FOCUS) ---
                 living_details = (
                     "Atmospheric cinematic lighting with high contrast. Tiny dust motes dancing in dramatic light rays. "
                     "Subtle ambient background sounds of distant village life. The air looks thick with humidity and dust. "
                     "Extreme hyper-realistic skin textures, visible sweat, and authentic deep weathered wrinkles. "
-                    "The scene is focused and somber, capturing every micro-expression and hand movement."
+                    "The wide frame captures a vast, lonely, and somber atmosphere, focusing on the character's humble presence."
                 )
 
-                # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL) ---
+                # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL WIDE SHOT) ---
                 video_prompt = (
-                    f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
-                    f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
+                    f"CORE SUBJECT: FULL BODY WIDE SHOT. {MASTER_FAMILY_SOUL[pilihan_user]}\n"
+                    f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}. Bare feet on the dusty floor.\n\n"
                     
                     f"SCENE & COMPOSITION:\n"
                     f"- {scene_context}\n"
@@ -1882,9 +1882,10 @@ def tampilkan_ai_lab():
                     f"- VIBE: {living_details}\n\n"
                     
                     f"TECHNICAL SPEC:\n"
-                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. "
-                    f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. STATIC CAMERA MOVEMENT. "
-                    f"Deep depth of field (f/8). High-dynamic range (HDR) with realistic natural lighting."
+                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. NO ZOOM. NO PAN. NO TILT. "
+                    f"STATIC WIDE ANGLE LENS (24mm). Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. "
+                    f"Extreme Deep depth of field (f/11) to keep BOTH the foreground object and background character in SHARP FOCUS. "
+                    f"High-dynamic range (HDR) with realistic natural lighting."
                 )
 
                 # --- TAMPILAN OUTPUT ---
@@ -5489,6 +5490,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
