@@ -1137,7 +1137,6 @@ def tampilkan_ai_lab():
                             "organ decay texture (organ menghitam/kusam), bioluminescence fluid, "
                             "dan macro close-up pada kerusakan jaringan."
                         ),
-                        "cta": "Klik subscribe jika kamu sayang dengan tubuhmu ini, dan bagikan ke temanmu yang masih melakukan hal ini."
                     },
                     "🏛️ Forbidden History (Konspirasi & Zaman)": {
                         "rules": (
@@ -1153,7 +1152,6 @@ def tampilkan_ai_lab():
                             "ancient stone texture (batu candi berlumut), "
                             "glowing circuit technology (sirkuit neon), ray-traced shadows."
                         ),
-                        "cta": "Tulis di kolom komentar, rahasia sejarah apa lagi yang harus BALUNG bongkar? Subscribe untuk teori gila lainnya."
                     },
                     "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
                         "rules": (
@@ -1170,7 +1168,6 @@ def tampilkan_ai_lab():
                             "Bone density transformation (Tulang keropos vs Padat), "
                             "Clean studio lighting vs Dark grim lighting on the failing side."
                         ),
-                        "cta": "Kamu tim yang mana? Komen di bawah dan subscribe agar kondisimu tetap prima seperti BALUNG versi Sultan!"
                     },
                     "🌀 Absurd What-If (Fisika & Kiamat)": {
                         "rules": (
@@ -1187,7 +1184,6 @@ def tampilkan_ai_lab():
                             "Volumetric fog and dust, floating water physics (lautan melayang), "
                             "dan Motion blur pada objek yang terlempar."
                         ),
-                        "cta": "Jika ini terjadi besok, siapa orang pertama yang akan kamu peluk? Subscribe untuk skenario gila lainnya!"
                     },
                     "🧬 Genetic Glitch (Mutasi & Kelainan Langka)": {
                         "rules": (
@@ -1204,7 +1200,6 @@ def tampilkan_ai_lab():
                             "Subcutaneous micro-movements (gerakan di bawah kulit), "
                             "Cold medical neon lighting, and visceral sound-driven visuals."
                         ),
-                        "cta": "Dunia ini penuh keajaiban yang mengerikan. Klik like jika kamu bersyukur memiliki tubuh yang normal hari ini."
                     },
                     "🧠 Psychological Loop (Otak & Mental)": {
                         "rules": (
@@ -1222,7 +1217,6 @@ def tampilkan_ai_lab():
                             "Micro-gestures of despair (tangan gemetar hebat, kepala tertunduk), "
                             "dan Motion blur pada aliran listrik saraf."
                         ),
-                        "cta": "Pernah merasakan hal yang sama? Tekan like dan subscribe untuk memahami cara kerja pikiranmu lebih dalam."
                     },
                     "🔥 Survival Instinct (Uji Ketahanan Ekstrem)": {
                         "rules": (
@@ -1240,7 +1234,6 @@ def tampilkan_ai_lab():
                             "Crystalline ice growth on transparent skin, "
                             "Slow-motion tracking on the last heartbeat."
                         ),
-                        "cta": "Mampukah kamu bertahan lebih lama dari BALUNG? Buktikan dengan cara subscribe dan tonton tantangan berikutnya!"
                     }
                 }
 
@@ -1261,11 +1254,11 @@ def tampilkan_ai_lab():
                 
                 mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
                 mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
-                mantra_footer += "- **LIVING NARRATION**: Wajib buat Narasi VO yang PANJANG (minimal 3-4 kalimat per adegan). Jangan cuma satu baris! Gunakan gaya bercerita 'kamu' (POV 2). Ceritakan sensasi organ yang tercekik, rasa panas yang merambat, atau suara retakan yang memilukan. Biarkan narasi ini mendominasi suasana.\n"
+                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 2 kalimat per adegan). Kalimat harus HIDUP: ceritakan sensasi fisik dan kehancuran yang terjadi saat itu juga. JANGAN KAKU.\n"
+                mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita. Contoh: 'Sebelum paru-parumu menghitam total, tekan subscribe untuk menyelamatkan dirimu.' atau 'Klik subscribe agar rahasia ini tidak terkubur selamanya.'\n"
                 mantra_footer += "- **VISUAL SENSORY**: " + l_data["focus"] + ". Deskripsikan tekstur (debu terbang, saraf bergetar, organ menghitam) secara ultra-detail.\n"
                 mantra_footer += "- **BALUNG GESTURE**: Masukkan mikro-gestur manusiawi di setiap cut (tangan gemetar, menyeka debu, menatap sayu, jari bergerak gelisah).\n"
-                mantra_footer += "- **MANDATORY CTA**: Masukkan narasi ini di akhir video: \"" + l_data["cta"] + "\"\n"
-                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Panjang), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail)."
+                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail)."
 
                 mantra_final = mantra_header + mantra_body + mantra_footer
 
@@ -4872,6 +4865,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
