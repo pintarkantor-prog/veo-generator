@@ -1024,7 +1024,7 @@ def tampilkan_ai_lab():
                 dna_final = st.text_area("DNA_F", value=dna_text, height=100, label_visibility="collapsed")
 
             # --- ROW 2: SETTING AUDIO (MASTER KONSISTEN) ---
-            st.markdown('<p class="small-label">🔊 SETTING AUDIO (PROFESSIONAL PROFILE)</p>', unsafe_allow_html=True)
+            st.markdown('<p class="small-label">🔊 SETTING AUDIO (NARASI VO)</p>', unsafe_allow_html=True)
             ac1, ac2, ac3 = st.columns(3)
             with ac1:
                 voice_type = st.selectbox("TIPE SUARA", MASTER_AUDIO_LAB["Tipe"])
@@ -1033,23 +1033,17 @@ def tampilkan_ai_lab():
             with ac3:
                 mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
 
-            # --- ROW 3: INPUT AKSI & DROPDOWN KARAKTER (SULTAN VERSION) ---
-            st.markdown('<p class="small-label">🎥 PRODUKSI VISUAL & SELEKSI KARAKTER</p>', unsafe_allow_html=True)
-            
-            # 1. Dropdown Karakter Pendukung (Multiselect)
-            # Staff tinggal pilih siapa aja yang ada di frame ini
-            pilihan_pendukung = st.multiselect(
-                "PILIH KARAKTER TAMBAHAN (DNA OTOMATIS DI-INJECT):",
-                list(MASTER_PENDUKUNG.keys()),
-                placeholder="Pilih karakter pendukung..."
-            )
+            st.divider()
 
-            # 2. Kotak Aksi
+            # --- ROW 3: KOTAK AKSI (LANGSUNG TANPA LABEL JUDUL BESAR) ---
+            st.markdown('<p class="small-label">🎬 DESKRIPSI AKSI & VISUAL PROMPT</p>', unsafe_allow_html=True)
+            
+            # 1. Kotak Aksi (A_I) - Karakter Pendukung Dibuang
             aksi_in = st.text_area("A_I", 
                 value=current_row.get('visual_prompt', ''), 
                 height=150, 
                 label_visibility="collapsed", 
-                placeholder="Deskripsikan apa yang terjadi di adegan ini...")
+                placeholder="Deskripsikan apa yang terjadi di adegan ini secara cinematic...")
 
             # --- LANJUT KE ENV & VO ---
             c1, c2 = st.columns(2)
@@ -4882,6 +4876,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
