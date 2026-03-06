@@ -1829,16 +1829,22 @@ def tampilkan_ai_lab():
                 scene_context = ""
                 if "🤖 Robot" in modus_konten:
                     scene_context = (
-                        "The character is standing or sitting very close to the 1-meter tall robot. "
-                        "FULL BODY WIDE SHOT. The character is actively working on the robot, "
-                        "their hands are physically touching the mechanical joints or wires. "
-                        "The robot is 100cm tall, positioned right in front of the character as a 90% finished project."
+                        "HIGH-TECH INTERACTIVE SCENE. The character MUST BE STANDING UPRIGHT, "
+                        "not sitting on the floor. FULL BODY SHOT capturing the entire character "
+                        "from head to toe and the 100cm robot standing right beside them. "
+                        "The character's body is fully extended vertically. They are leaning "
+                        "slightly over the robot to actively work on its core with both hands. "
+                        "The camera is EXTRA WIDE ANGLE to capture the scale of both. "
+                        "Strictly enforce standing posture for the character."
                     )
-                elif "🕌 Miniatur Masjid" in modus_konten:
+                    elif "🕌 Miniatur Masjid" in modus_konten:
                     scene_context = (
-                        "The character is sitting on a tattered mat (tikar) with the grand mosque on a small table in front of them. "
-                        "EYE-LEVEL CLOSE-UP. The character's hands are meticulously adding final details to the mosque's dome. "
-                        "The scene shows a deep connection between the creator and the 90% finished masterpiece."
+                        "CLOSE-UP SHOT focusing on the character and the object. "
+                        "The grand miniature mosque is positioned DIRECTLY IN THE FOREGROUND, "
+                        "placed on a small wooden table situated between the camera and the character. "
+                        "The character is leaning forward, their aged hands are physically touching and "
+                        "actively working on the mosque's lower dome. The mosque MUST be in front of the character, "
+                        "not behind them. Deep depth of field ensures both the character and the craft are in sharp focus."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
                     scene_context = (
@@ -5477,6 +5483,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
