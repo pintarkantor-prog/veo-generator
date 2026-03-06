@@ -1404,61 +1404,183 @@ def tampilkan_ai_lab():
         }
 
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: GRAND DOME & 4 MINARETS) ---
-        MASTER_GRANDMA_CRAFT = {
-            "Anyaman Bambu (Intricate Bamboo)": (
-                "A LARGE, MAJESTIC ARCHITECTURAL MOSQUE. Features a massive central bulbous dome made of fine 'gedek' weaving. "
-                "Surrounded by 4 tall, slender minarets at each corner with pointed tips. "
-                "Intricate arched entrance and tiny bamboo windows. A masterpiece of Javanese-Islamic architecture."
-            ),
-            "Daun Pisang & Lontar": (
-                "A GRAND MOSQUE with a large tiered central dome (tumpang style) made of layered green banana leaves. "
-                "Features 4 distinct tall minarets at the corners made of rolled lontar leaves. "
-                "Detailed pillars and an arched doorway pinned with tiny wooden sticks (lidi)."
-            ),
-            "Kardus Lampu (Blinking LED)": (
-                "A MAGNIFICENT MOSQUE built from recycled cardboard. It has one giant central dome and 4 symmetrical tall minarets. "
-                "Islamic geometric patterns are cut into the walls. Colorful LED lights (Red, Green, Blue) "
-                "glow from inside the dome and the 4 towers, illuminating the character's face."
-            ),
-            "Buah Naga (Exotic Pink)": (
-                "A STUNNING ORGANIC MOSQUE. The main large dome is carved from a whole pink dragon fruit. "
-                "At each corner, there are 4 tall minarets crafted from the scaly pink skin. "
-                "White dragon fruit flesh forms the pillars and the 4-sided base. Wet and glistening."
-            ),
-            "Kacang Ijo (Seed Mosaic)": (
-                "A HIGH-DETAIL MOSQUE where every inch is covered in green mung beans. "
-                "Features a huge, perfectly rounded central dome and 4 sharp, tall minarets at the corners. "
-                "The green seeds create a beautiful mosaic tile effect across the entire structure."
-            ),
-            "Buah Apel & Jeruk": (
-                "A VIBRANT FRUIT MOSQUE. The grand central dome is a large red apple carving. "
-                "4 tall minarets made of stacked orange peels stand at the corners. "
-                "Tiny cloves decorate the arches. It clearly shows the classic mosque silhouette with 4 towers."
-            ),
-            "Kardus Bekas (Classic)": (
-                "A LARGE ARCHITECTURAL MODEL OF A MOSQUE. Massive central corrugated dome and 4 symmetrical minarets. "
-                "Double-layered cardboard walls with arched windows and a grand entrance gate. Professional scale model look."
-            ),
-            "Botol Plastik (Crystal Look)": (
-                "A CRYSTAL-LIKE MOSQUE built from PET bottles. Features a huge transparent central dome made from bottle bases "
-                "and 4 tall, glowing minarets at each corner. Intricate plastic-cut balconies on the towers."
-            ),
-            "Ranting Kayu (Rustic Art)": (
-                "A HUGE FOLK-ART MOSQUE. Built from hundreds of twigs, featuring a grand domed center and 4 tall corner minarets. "
-                "The interlocking twigs form a cage-like 'mashrabiya' pattern. Tied with hemp twine at the towers."
-            ),
-            "Pelepah Pisang (Dried Fiber)": (
-                "A RUSTIC EARTHY MOSQUE. Large central dome made of curved dried banana bark. "
-                "4 tall, sturdy minarets stand at the corners. The natural fiber creates beautiful brown marble patterns on the walls."
-            ),
-            "Cangkang Telur (Mosaic)": (
-                "A PURE WHITE MOSQUE. The structure is covered in crushed eggshell mosaic. "
-                "Features one giant white dome and 4 tall minarets. Looks like a luxury marble mosque miniature."
-            ),
-            "Kapur & Batu Bata": (
-                "A SOLID CARVED MOSQUE. Grand central white chalk dome and 4 red brick minarets at the corners. "
-                "Detailed Arabic calligraphy patterns carved into the 4 main walls. Very strong architectural silhouette."
-            )
+        MASTER_KONTEN_ALL = {
+            "🕌 Miniatur Masjid": {
+                "Anyaman Bambu": (
+                    "A GIANT MAJESTIC ARCHITECTURAL MOSQUE. Massive central bulbous dome and 4 tall minarets at each corner made of fine 'gedek' weaving. "
+                    "Features double-layered bamboo walls, tiny arched windows with bamboo lattices, and a grand entrance. "
+                    "The structure stands 60cm tall on the table, looking like a real architectural masterpiece."
+                ),
+                "Botol Plastik RGB": (
+                    "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic bottles. "
+                    "Features one massive central dome and 4 tall minarets. INSIDE: Multi-colored RGB LED lights "
+                    "glow through the plastic, creating vibrant Red, Green, and Blue reflections. "
+                    "The light refracts through the bottle textures, casting colorful patterns onto the character's face "
+                    "and the surrounding wooden table. It looks like a glowing diamond masterpiece."
+                ),
+                "Kardus Lampu LED": (
+                    "A MAGNIFICENT MOSQUE built from recycled gold-painted cardboard. One giant central dome and 4 symmetrical tall minarets. "
+                    "Intricate Islamic geometric patterns are hand-cut into the walls. Multi-colored LED lights glow intensely from inside "
+                    "the windows and towers, creating a professional lighting effect on the character's face."
+                ),
+                "Buah Naga": (
+                    "A STUNNING GIANT ORGANIC MOSQUE. The massive central dome is carved from a whole vibrant pink dragon fruit. "
+                    "The 4 tall minarets are also crafted from the scaly pink dragon fruit skin. "
+                    "White dragon fruit flesh with black seeds forms the intricate pillars. Glistening, wet, and incredibly detailed."
+                ),
+                "Botol Plastik Aqua": (
+                    "A GIANT CRYSTAL-LIKE MOSQUE built from hundreds of recycled clear plastic water bottles (Aqua style). "
+                    "Features one massive transparent central dome made of bottle bases and 4 tall, glowing minarets. "
+                    "The plastic is heat-warped and cut to look like sparkling crystal glass. Catching natural daylight beautifully."
+                ),
+                "Cangkang Telur & Kapur": (
+                    "A PURE WHITE LUXURY MOSQUE. The entire surface is covered in thousands of crushed white eggshell mosaics. "
+                    "Features a massive rounded dome and 4 sharp, tall minarets at the corners. "
+                    "Detailed Arabic calligraphy is carved into the white chalk walls. Looks like a solid marble palace."
+                ),
+                "Sedotan Plastik": (
+                    "A GRAND MODERN MOSQUE built from thousands of white and gold plastic straws. "
+                    "The massive central dome is a complex geodesic weave of straws. "
+                    "4 tall, slender minarets stand at the corners. It looks incredibly lightweight yet architecturally complex."
+                ),
+                "Koran & Majalah Bekas": (
+                    "A GIANT LITERARY MOSQUE crafted from tightly rolled recycled newspapers and magazines. "
+                    "The dome and 4 minarets show beautiful grey and colorful paper textures. "
+                    "The architecture features multiple layers of paper-mache arches. A unique sustainable masterpiece."
+                ),
+                "Stik Es Krim": (
+                    "A HUGE ARCHITECTURAL MOSQUE built from over 5,000 wooden popsicle sticks. "
+                    "Features a massive multi-layered dome and 4 towering square minarets. "
+                    "The wood is stained to a rustic brown, showing incredible structural detail and precision."
+                ),
+                "Beras & Biji-bijian": (
+                    "A HIGH-DETAIL MOSQUE where every inch is covered in white rice and green mung beans. "
+                    "A huge central dome and 4 symmetrical minarets. The seeds create a beautiful, high-contrast mosaic tile effect "
+                    "across the entire structure. A symbol of extreme patience."
+                ),
+                "Kaleng Biskuit": (
+                    "A MAJESTIC METALLIC MOSQUE made from shiny gold-colored recycled biscuit tins. "
+                    "Features a giant reflective dome and 4 tall, sturdy metal minarets. "
+                    "The metal surface is embossed with patterns, reflecting light like a real golden mosque."
+                )
+            },
+            "🤖 Robot Rongsok (Life-Sized Mecha)": {
+                "Neon-Core Scrap (Cyber-Glow)": (
+                    "A GIANT 175CM TALL CYBERNETIC ROBOT standing right next to the character. "
+                    "Built from rusted metal sheets and translucent plastic. Features a GLOWING NEON BLUE CORE "
+                    "in the chest that pulses with light. The blue light leaks through metal gaps, casting "
+                    "sharp futuristic shadows on the character's face. The robot towers over the table."
+                ),
+                "Fire-Red Heavy (LED Eyes)": (
+                    "A HUGE 2-METER TALL AGGRESSIVE ROBOT built from heavy industrial car scrap. "
+                    "It features INTENSE GLOWING RED LED EYES and internal orange lighting like molten metal. "
+                    "The robot is so large its head almost touches the hut's ceiling. The red light illuminates "
+                    "the character's shaky hands in a dramatic cinematic style."
+                ),
+                "Rainbow-Tech (RGB Bottle Mech)": (
+                    "A GIANT LIFE-SIZED MECHA (170cm) built from hundreds of recycled plastic bottles. "
+                    "INTERNAL RGB LIGHTING cycles through Purple, Cyan, and Green, refracting through the plastic "
+                    "like a giant prism. The entire robot glows like a futuristic diamond, towering majestically "
+                    "beside the character in the humble bamboo hut."
+                ),
+                "Toxic-Green (Bio-Bot Glow)": (
+                    "A HEAVY 180CM HAZARD-STYLE ROBOT made from yellow jerrycans and rusted pipes. "
+                    "Features a TOXIC BRIGHT GREEN GLOW emanating from the joints and eyes. The green light "
+                    "creates a radioactive-style aura, casting an eerie lime-green light onto the environment."
+                ),
+                "Kaleng Karatan (The Giant Beast)": (
+                    "A GIANT HEAVY MECHA ROBOT standing 160cm tall. Made from hundreds of rusted tin cans. "
+                    "Massive shoulders, hydraulic-looking arms, and glowing red LED eyes. Visible rust textures "
+                    "and complex DIY joints. It stands as a silent iron guardian next to the character."
+                ),
+                "Kabel & Komponen (The Giant Cyborg)": (
+                    "A COMPLEX LIFE-SIZED (170cm) CYBER-ROBOT made from thousands of discarded electrical wires. "
+                    "The body features exposed circuitry, vacuum tubes, and copper 'muscles' wrapping around "
+                    "a large metal skeleton. One hand is glowing with a sharp blue LED light."
+                ),
+                "Kardus Mecha (Giant Gundam Style)": (
+                    "A TALL 190CM AGGRESSIVE ROBOT built from multi-layered old corrugated cardboard. "
+                    "Features sharp armor plates, a massive 'V-fin' head, and back-mounted wings that reach the ceiling. "
+                    "Detailed with visible brand markings and glowing yellow LED eyes behind the cardboard mask."
+                ),
+                "Busi & Sparepart (Heavy Metal)": (
+                    "A MASSIVE 1.5-METER HEAVY-METAL ROBOT built from hundreds of used spark plugs (busi) and gears. "
+                    "The head is a large vintage piston with glowing blue LED eyes. Extremely heavy-looking, "
+                    "with oily metallic textures and intricate mechanical joints that tower over the character."
+                ),
+                "Sendok & Garpu (Silver Knight)": (
+                    "A MAJESTIC 170CM SILVER ROBOT crafted from hundreds of bent stainless steel spoons and forks. "
+                    "The cutlery forms knight-like armor plating. Features a long sword of metal scrap "
+                    "and a glowing white visor that reflects brilliantly in the dim room."
+                ),
+                "Ban Bekas (The Rubber Titan)": (
+                    "A DARK RUGGED 2-METER GIANT ROBOT crafted from cut-up black rubber tires. "
+                    "Features heavy tread textures as armor and glowing yellow eyes. Looks extremely tough, "
+                    "muscular, and intimidating, standing tall and filling the corner of the hut."
+                ),
+                "Pipa PVC & Baut (Giant Industrial)": (
+                    "A HEAVY INDUSTRIAL 180CM ROBOT made from weathered PVC pipes and rusted bolts. "
+                    "Features oversized mechanical claws and a bulky tank-like torso. Small orange warning "
+                    "lights flicker on its shoulders, casting a moody industrial glow from above."
+                ),
+                "Mainan Plastik (Giant Toy-Basher)": (
+                    "A COLORFUL BUT CREEPY 160CM ROBOT built from a collage of broken plastic toys. "
+                    "Features mismatched limbs and multiple glowing RGB eyes. A chaotic, high-detail "
+                    "nightmare aesthetic that stands majestically beside the character."
+                ),
+                "Kayu Palet & Rantai (Giant Golem)": (
+                    "A RUSTIC 2-METER GIANT ROBOT made from weathered wood slabs and heavy rusted chains. "
+                    "The joints are large iron bolts. It has a bulky, ancient golem-like silhouette "
+                    "with small glowing amber eyes that tower over the sitting character."
+                ),
+                "Botol Oli & Jerigen (Giant Neon-Mech)": (
+                    "A VIBRANT 170CM NEON ROBOT built from recycled yellow jerrycans and oil bottles. "
+                    "Features internal green glow through the translucent plastic. The design is boxy "
+                    "and heavy, looking like a giant futuristic hazard-handling machine."
+                )
+            },
+            "🥣 Buka Puasa Haru (Menu Sederhana)": {
+                "Nasi & Garam (Paling Nyesek)": (
+                    "A HEART-BREAKING IFTHAR. A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
+                    "A glass of plain tap water in a plastic cup. The table is bare, reflecting extreme poverty and deep gratitude."
+                ),
+                "Singkong Rebus & Sambal": (
+                    "A POOR MAN'S MEAL. Two pieces of boiled cassava on a small plastic plate with a dab of red chili paste (sambal). "
+                    "A glass of warm plain water. The character looks at the food with a bittersweet smile."
+                ),
+                "Teh & Biskuit Lempem": (
+                    "A VERY SIMPLE BREAKING OF FAST. A glass of dark, unsweetened tea and one single dry biscuit. "
+                    "The biscuit is being dipped into the tea to make it soft. Minimalist yet deeply emotional."
+                ),
+                "Nasi Kerupuk & Air Putih": (
+                    "A HUMBLE MEAL. A small bowl of white rice and one white flour cracker (kerupuk). "
+                    "The character is breaking the cracker over the rice. Very quiet and somber atmosphere."
+                ),
+                "Ubi Bakar (The Survivor)": (
+                    "A SIMPLE IFTHAR consisting of one roasted sweet potato (ubi bakar) on a piece of old newspaper. "
+                    "Steam is rising from the potato. A very traditional and humble village scene."
+                ),
+                "Bubur Polos & Kecap": (
+                    "A MODEST MEAL. A small bowl of watery white porridge (bubur) with a thin swirl of sweet soy sauce. "
+                    "The character eats slowly with a wooden spoon, the steam lightly fogging their old glasses."
+                ),
+                "Pisang Rebus & Air Hangat": (
+                    "A VERY MODEST IFTHAR. Two pieces of boiled banana on a small tin plate. "
+                    "A glass of plain hot water. No sugar, no luxury. The character's shaky hands carefully peel the skin."
+                ),
+                "Nasi Putih & Satu Tempe": (
+                    "A SIMPLE VILLAGE MEAL. A small mound of white rice and one single piece of fried tempeh. "
+                    "Served on a piece of banana leaf instead of a plate. Authentic and deeply humble setting."
+                ),
+                "Gorengan Dingin & Teh Tawar": (
+                    "A POOR MAN'S IFTHAR. One cold fried bakwan on a small saucer and a glass of plain unsweetened tea. "
+                    "The lighting is dim, only a single lightbulb illuminating the simple wooden table."
+                ),
+                "Lontong Polos & Air Putih": (
+                    "A HUMBLE BREAK. One single rice cake (lontong) wrapped in a wilted banana leaf. "
+                    "A plastic cup of plain water. The scene shows the character sitting alone in deep silence."
+                )
+            }
         }
 
         # --- 3. MASTER LOKASI (MARGINAL & REAL VILLAGE REVISION) ---
@@ -1479,6 +1601,31 @@ def tampilkan_ai_lab():
                 "A tattered bamboo mat (tikar) is placed on the dirt. "
                 "Worn-out laundry hangs on a makeshift wire line in the distance."
             ),
+            "Halaman Rumah Tanah": (
+                "In a wide, open yard of a humble village house. The ground is dry, cracked packed-earth. "
+                "A large mango tree provides scattered shade. In the background, there are stacks of "
+                "old firewood and a weathered bamboo fence. Space is large enough for a massive structure."
+            ),
+            "Gudang Rongsok Terbuka": (
+                "In an open-air scrap collection yard (pengepul rongsok). Piles of rusted iron, old car doors, "
+                "and stacks of used tires are visible in the background. The ground is messy with oil stains "
+                "and metal scraps. A perfect industrial-marginal setting for a giant robot."
+            ),
+            "Bawah Pohon Beringin": (
+                "Under a massive, ancient banyan tree (pohon beringin) with long hanging roots. "
+                "The atmosphere is mystical and cool. Natural sunlight filters through thick leaves in 'god-rays'. "
+                "The giant object stands majestically on the damp ground covered in fallen leaves."
+            ),
+            "Samping Kandang Sapi": (
+                "Next to a rustic, weathered wooden cattle shed (kandang sapi). Straw and hay are scattered "
+                "on the ground. The background shows old wooden pillars and a simple tiled roof. "
+                "A very authentic and raw rural backyard atmosphere."
+            ),
+            "Pinggir Sungai Desa": (
+                "On a flat rocky bank of a small village river. Large river stones and flowing water "
+                "are visible in the background. Green bushes and wild bamboo groves line the water. "
+                "Bright, natural open-air lighting for a grand-scale masterpiece."
+            ),
             "Di Sawah": (
                 "Sitting on the edge of a muddy rice field (pematang sawah). Vast green paddy fields. "
                 "Natural overcast daylight. A small wooden irrigation gate and a conical farmer's hat (caping) sit nearby."
@@ -1495,6 +1642,26 @@ def tampilkan_ai_lab():
             "Di Kebun": (
                 "Under a dense canopy of tropical trees (banana and papaya). Sunlight filters through large green leaves. "
                 "Damp earth, fallen dry leaves, and a rustic wooden fence. Very natural and forest-like atmosphere."
+            ),
+            "Dalam Rumah (Remang-remang)": (
+                "Inside a dim, cramped bamboo hut. Minimal lighting from a single flickering yellow lightbulb hanging from the ceiling. "
+                "Walls of dark weathered bamboo (bilik). Dust motes dancing in the faint light. "
+                "A stack of old newspapers and a rusty kerosene lamp sit in the corner."
+            ),
+            "Dapur Tradisional (Anglo)": (
+                "Inside a rustic village kitchen (dapur). A traditional charcoal clay stove (anglo) with faint glowing embers. "
+                "Soot-covered walls (jelaga) and floor made of packed earth. "
+                "Old blackened kettles and wooden ladles hang on the bamboo wall. Very warm and nostalgic atmosphere."
+            ),
+            "Ruang Tengah (Lantai Tanah)": (
+                "In the center of a very poor house. Packed dirt floor (lantai tanah) with a worn-out tattered mat. "
+                "A wooden cupboard with peeling paint and a small cracked mirror in the background. "
+                "The air looks thick with history and poverty, but very peaceful."
+            ),
+            "Pojok Kamar (Jendela Kayu)": (
+                "Sitting in a corner of a small room. A single small wooden window with no glass, only wooden slats. "
+                "Faint moonlight or twilight filters through, casting long shadows on the bamboo walls. "
+                "A simple wooden bed with a thin sarong is visible in the background."
             )
         }
         # --- 3. MASTER AUDIO & PERFORMANCE (HUMAN-LIKE ACTING) ---
@@ -1511,12 +1678,29 @@ def tampilkan_ai_lab():
                 "Bicara Terbata-bata (Hesitant speech with natural 'um' and 'ah' micro-pauses, looking for words)",
                 "Napas Berat & Lelah (Long pauses for heavy breathing/sighs between phrases, weary tone)",
                 "Whispered & Humble (Soft, almost a whisper, showing deep respect and shyness)",
-                "Tersenyum Getir (Bittersweet voice, trying to stay brave but the voice cracks slightly)"
+                "Tersenyum Getir (Bittersweet voice, trying to stay brave but the voice cracks slightly)",
+                "Terengah-engah Bangga (Slightly breathless and excited, like someone who just finished hard work)",
+                "Bergumam Syukur (Low-volume humming and whispering 'Alhamdulillah' between sentences)",
+                "Suara Serak Kaget (Raspy gasp, showing genuine surprise when seeing the light/neon turn on)"
+            ],
+            "Physical Action": [
+                "Tangan bergetar pelan saat menyentuh objek (Shaky hands touching the object gently)",
+                "Menyeka keringat di dahi dengan ujung baju (Wiping sweat with the hem of the shirt)",
+                "Merapikan tikar yang terlipat (Adjusting the edge of the tattered mat while sitting)",
+                "Menatap kejauhan dengan mata berkaca-kaca (Looking into the distance with teary eyes)",
+                "Mengusap debu dari meja kayu (Wiping dust off the wooden table with a small cloth)",
+                "Berdiri tegak sambil mengagumi robot (Standing tall while admiring the giant robot)",
+                "Duduk bersila dengan tenang (Sitting cross-legged peacefully on the floor)"
             ]
         }
 
         # --- UI LAYOUT ---        
         with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
+            # --- BARIS 1: MODUS KONTEN (OTAK UTAMA) ---
+            st.markdown('<p class="small-label">PILIH MODUS KONTEN</p>', unsafe_allow_html=True)
+            modus_konten = st.selectbox("Select Mode", list(MASTER_KONTEN_ALL.keys()), label_visibility="collapsed")
+            st.divider()
+
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">PILIH KARAKTER</p>', unsafe_allow_html=True)
@@ -1529,8 +1713,11 @@ def tampilkan_ai_lab():
             
             c3, c4 = st.columns(2)
             with c3:
-                st.markdown('<p class="small-label">KARYA TANGAN </p>', unsafe_allow_html=True)
-                pilihan_bahan = st.selectbox("Select Material", list(MASTER_GRANDMA_CRAFT.keys()), label_visibility="collapsed")
+                # Label dinamis sesuai modus
+                label_obj = "MENU MAKANAN" if "Buka Puasa" in modus_konten else "DETAIL OBJEK / KARYA"
+                st.markdown(f'<p class="small-label">{label_obj}</p>', unsafe_allow_html=True)
+                pilihan_objek = st.selectbox("Select Detail", list(MASTER_KONTEN_ALL[modus_konten].keys()), label_visibility="collapsed")
+                deskripsi_teknis = MASTER_KONTEN_ALL[modus_konten][pilihan_objek]
             with c4:
                 st.markdown('<p class="small-label">SETTING LOKASI</p>', unsafe_allow_html=True)
                 pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
@@ -1541,49 +1728,74 @@ def tampilkan_ai_lab():
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 user_dialog = st.text_area("Input Dialog", 
-                                          placeholder=f"Maaf ya Cuk, {char_key} cuma bisa buat masjid dari {pilihan_bahan}...",
+                                          placeholder=f"Tulis dialog {char_key} di sini...",
                                           height=110, label_visibility="collapsed")
             with c6:
-                st.markdown('<p class="small-label">ACTING & MOOD STYLE</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
+                # Tambahan Aksi Fisik Random agar video hidup
+                import random
+                pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
 
             st.write("")
             btn_gen = st.button("🚀 GENERATE VIDEO PROMPT", use_container_width=True)
 
+        # --- LOGIC GENERATOR ---
         if btn_gen:
             if not user_dialog:
                 st.error("Isi dialognya dulu, Bos!")
             else:
-            # --- RAKIT FINAL PROMPT (STRICTLY REALISTIC - 95% PROGRESS) ---
+                # --- 4. DYNAMIC SCENE LOGIC (AUTOMATIC POSING & CAMERA) ---
+                scene_context = ""
+                if "🤖 Robot" in modus_konten:
+                    scene_context = (
+                        "The character is STANDING UPRIGHT next to the massive robot. FULL BODY SHOT from head to toe. "
+                        "The camera is EXTRA WIDE ANGLE to capture the entire 2-meter tall robot and the character's full posture. "
+                        "No parts of the robot or the character are cropped. Cinematic low-angle shot to show the scale."
+                    )
+                elif "🕌 Miniatur Masjid" in modus_konten:
+                    scene_context = (
+                        "The character is SITTING ON A TATTERED MAT (TIKAR) on the dirt floor, with no chair. "
+                        "A small, worn-out wooden table is in front of them, supporting the majestic mosque. "
+                        "The camera is at eye-level, focusing on the character's hands and the mosque's detail."
+                    )
+                elif "🥣 Buka Puasa" in modus_konten:
+                    scene_context = (
+                        "The character is SITTING HUMBLY ON THE FLOOR (TIKAR). A very low, small wooden table (meja lesehan) "
+                        "is placed in front of them with the simple meal. The camera is slightly tilted down, "
+                        "capturing a somber and intimate breaking-of-fast moment."
+                    )
+
+                # --- 5. NUANSA HIDUP (LIVING ATMOSPHERE) ---
+                living_details = (
+                    "Atmospheric cinematic lighting. Tiny dust motes dancing in the light rays. "
+                    "Subtle background sounds of distant crickets and a soft evening breeze. "
+                    "The air looks humid and thick with the smell of old wood and rain-dampened earth. "
+                    "Hyper-realistic skin textures with visible sweat and fine wrinkles on the character."
+                )
+
+                # --- 6. RAKIT FINAL PROMPT (STRICTLY REALISTIC) ---
                 video_prompt = (
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
-                    f"ACTION & COMPOSITION (95% FINISHED PROGRESS):\n"
-                    f"- POSITION: The {char_key} is sitting behind a weathered, rustic OLD WOODEN TABLE. "
-                    f"The LARGE {pilihan_bahan} mosque is placed ON THE TABLE at chest-level.\n"
-                    f"- CRAFTING STATUS: The mosque is 95% COMPLETE. The grand central dome and all 4 minarets are standing, "
-                    f"but the {char_key} is still meticulously fixing the final tiny details on the entrance or a tower. "
-                    f"Scraps of {pilihan_bahan} and glue marks are visible on the table, showing the hard work process.\n"
-                    f"- HANDS: The LEFT HAND stabilizes the structure, while the RIGHT HAND is actively touching and "
-                    f"perfecting the craft at a NATURAL HUMAN PACE. No jerky movements.\n\n"
+                    f"SCENE & COMPOSITION:\n"
+                    f"- {scene_context}\n"
+                    f"- ENVIRONMENT: {MASTER_GRANDMA_SETTING[pilihan_set]}\n"
+                    f"- OBJECT DETAIL: {deskripsi_teknis}\n\n"
                     
-                    f"LIP-SYNC & HUMAN PERFORMANCE (ANTI-ROBOT):\n"
-                    f"- DIALOG SCRIPT: '{user_dialog}'.\n"
-                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone. STRICTLY AVOID ROBOTIC TONE. "
-                    f"Include natural micro-pauses, heavy sighs, and unpolished delivery.\n"
-                    f"- REVEAL: While working, the {char_key} stops their hands, looks up at a NORMAL SPEED, "
-                    f"and speaks DIRECTLY into the lens with a tired, humble face.\n\n"
+                    f"PERFORMANCE & ATMOSPHERE:\n"
+                    f"- PHYSICAL ACTION: {pilih_aksi}\n"
+                    f"- DIALOG SCRIPT: '{user_dialog}'\n"
+                    f"- VOCAL STYLE: {pilih_logat} with a {pilih_mood} tone.\n"
+                    f"- VIBE: {living_details}\n\n"
                     
-                    f"ENVIRONMENT & LIGHTING:\n"
-                    f"{MASTER_GRANDMA_SETTING[pilihan_set]}. "
-                    f"LIGHTING: Neutral daylight, realistic colors. NO ORANGE FILTERS. Natural contrast.\n\n"
-                    
-                    f"TECHNICAL:\n"
-                    f"Shot on ARRI Alexa 65. 24fps. NORMAL SPEED (REAL-TIME). NO SLOW MOTION. NO TRANSITIONS. "
-                    f"Deep depth of field to keep the {char_key}, the mosque, and the background sharp."
+                    f"TECHNICAL SPEC:\n"
+                    f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. NO SLOW MOTION. "
+                    f"Deep depth of field. High-dynamic range (HDR) with realistic lighting and shadows."
                 )
+
                 st.divider()
                 st.success(f"🎬 MASTER NATURAL PROMPT READY")
                 st.code(video_prompt, language="text")
@@ -5185,6 +5397,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
