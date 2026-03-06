@@ -1359,11 +1359,23 @@ def tampilkan_ai_lab():
                 "Her expression is humble, shy, and peaceful. A classic representation of a wise village grandmother. "
                 "Clean skin, no dirt, no makeup, strictly no tears."
             ),
+            "Nenek Arum": (
+                "A graceful elderly Indonesian woman (50s) with a calm and dignified face. "
+                "Clear sawo matang skin with minimal, natural aging lines. Her eyes are kind and soulful. "
+                "She has a poised and motherly aura, looking like a respected village elder. "
+                "Clean skin, natural look, strictly no makeup."
+            ),
             "Kakek (The Grandpa)": (
                 "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
                 "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
                 "His eyes are calm and wise, showing a life of honest work. Stooped but dignified posture. "
                 "He looks like a retired village teacher or farmer. Clean appearance, no dirt, no crying."
+            ),
+            "Nenek Sumi": (
+                "A hardworking elderly Indonesian woman (60s) with a deeply weathered and tanned face. "
+                "Visible deep wrinkles and realistic sun spots from years of labor. "
+                "Her eyes look tired but resilient. She has a thin, humble frame that shows her tough life. "
+                "Authentic village grandmother look, clean but rugged skin."
             ),
             "Ibu (The Mother)": (
                 "A beautiful middle-aged Indonesian woman (40s) with a natural and unpolished face. "
@@ -1383,18 +1395,6 @@ def tampilkan_ai_lab():
                 "Long, straight black hair neatly falling over her shoulders. Large, expressive brown eyes "
                 "with a shy and melancholic look. She has a sweet but sad smile. "
                 "Pure, modest, and naturally stunning. No makeup, no tears."
-            ),
-            "Anak Laki-laki": (
-                "A cheerful young Indonesian village boy with a bright, clean face. "
-                "Sun-tanned skin and messy but clean black hair. His eyes are full of wonder and humility. "
-                "A warm, innocent smile that shows his simple and happy upbringing. "
-                "Looking like a smart and active village child. Clean appearance, no tears."
-            ),
-            "Anak Perempuan": (
-                "A cute young Indonesian girl with a round, innocent face. "
-                "Smooth tan skin and shiny black hair with simple bangs. Her eyes are large and shy. "
-                "She has a gentle and sweet expression, looking modest and well-behaved. "
-                "A pure and humble representation of a village child. Clean skin, no tears."
             )
         }
 
@@ -1404,6 +1404,16 @@ def tampilkan_ai_lab():
                 "Daster Batik Klasik": "A clean, modest cotton daster with traditional floral batik patterns. The colors are slightly faded from many washes, but the fabric is neat and well-maintained.",
                 "Kebaya Kutubaru": "Traditional flowery cotton kebaya, paired with a neat brown batik jarik cloth. The look is humble, classic, and very dignified for an elderly woman.",
                 "Mukena Putih Bersih": "A simple, clean white cotton mukena with minimal lace. The fabric drapes gracefully, looking peaceful and serene."
+            },
+            "Nenek Arum": {
+                "Gamis Syari & Jilbab": "A clean, elegant dark-colored gamis made of simple cotton, paired with a matching large syari jilbab that covers the chest. Very modest and dignified.",
+                "Tunik & Hijab Segiempat": "A long, neat tunik with soft patterns, paired with a simple square hijab (segiempat) neatly pinned under the chin. Clean and graceful village look.",
+                "Mukena Katun": "A simple white cotton mukena with tiny embroidered flowers, looking peaceful and ready for Magrib prayer."
+            },
+            "Nenek Sumi": {
+                "Daster Lengan Panjang & Bergo": "A long-sleeved floral cotton daster, paired with a simple jersey bergo hijab for daily work. The fabric is slightly faded but very clean.",
+                "Kaos Panjang & Jilbab Instan": "A modest long-sleeved t-shirt paired with a dark-colored instant jilbab. A practical and humble look for a hardworking grandmother.",
+                "Kebaya Hijab & Jarik": "A simple daily cotton kebaya worn with a long-sleeved inner undershirt and a neat hijab, paired with a traditional batik jarik cloth."
             },
             "Kakek": {
                 "Kaos Oblong & Peci": "A clean white short-sleeved undershirt (kaos oblong) paired with a neat black peci and a well-folded traditional sarung.",
@@ -1427,16 +1437,6 @@ def tampilkan_ai_lab():
                 "Tunik & Legging": "A long, simple linen tunik in a soft pastel color, looking modest and youthful. Neatly maintained.",
                 "Kebaya Modern": "A simple lace kebaya with a long batik skirt, looking elegant and traditional for a young woman.", 
                 "Hijab & Gamis": "A simple, flowy gamis dress with a matching pashmina, looking pure and graceful." 
-            },
-            "Anak Laki-laki": { 
-                "Kaos Bersih": "A simple, clean t-shirt with a modest graphic or plain color, paired with neat short pants. Looking like a well-behaved village boy.",
-                "Kemeja Cilik & Celana": "A small button-up checkered shirt, tucked into cotton shorts. Simple, clean, and humble.",
-                "Seragam SD": "A neat Indonesian white-and-red school uniform. The white shirt is bright and the red pants are well-pressed." 
-            },
-            "Anak Perempuan": { 
-                "Dress Bunga": "A simple cotton dress with small floral prints and a little ribbon. Clean, cute, and modest.",
-                "Setelan Kaos & Rok": "A clean t-shirt with a simple cotton skirt. Looking fresh and humble like a village child after a bath.",
-                "Seragam SD": "A neat Indonesian white-and-red school uniform with a clean red skirt and a white hijab." 
             }
         }
 
@@ -5726,6 +5726,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
