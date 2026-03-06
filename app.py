@@ -1330,113 +1330,139 @@ def tampilkan_ai_lab():
                 st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # ==========================================================================
-    # TAB: THE FAMILY REALISM (REAL INDONESIAN HUMANS)
+    # TAB: THE FAMILY LEGACY (REAL HUMAN - FULL SULTAN EDITION)
     # ==========================================================================
     with t_grandma:
-        # --- 1. MASTER DNA SOUL (REAL HUMAN - INDONESIAN PRIBUMI) ---
+        # --- 1. MASTER DNA MANUSIA ASLI (REAL INDONESIAN PRIBUMI) ---
         MASTER_FAMILY_SOUL = {
-            "Nenek (The Grandma)": (
-                "A real elderly Indonesian woman with deeply weathered skin. "
-                "Authentic facial wrinkles (crow's feet and deep smile lines), "
-                "thin gray hair tied in a traditional bun (sanggul). "
-                "Tired but kind eyes with realistic tear film. Hyper-realistic skin texture, "
-                "visible pores, and age spots (lentigines)."
-            ),
-            "Kakek (The Grandpa)": (
-                "A real elderly Indonesian man with sun-kissed, leathery skin. "
-                "Deep forehead wrinkles, white stubble, and thinning gray hair. "
-                "Stooped posture, veins visible on his weathered hands. "
-                "Authentic rustic facial features of a village elder."
-            ),
-            "Gadis Cantik (The Maiden)": (
-                "A beautiful young Indonesian woman with natural tan skin (sawo matang). "
-                "Elegant facial features, deep brown eyes, long glossy black hair. "
-                "Natural skin texture without heavy makeup, soft facial fuzz, and realistic lip texture."
-            ),
-            "Anak Laki-laki (The Boy)": (
-                "A young Indonesian village boy, sun-tanned skin, messy black hair. "
-                "Bright, innocent eyes, a bit of sweat on the forehead. "
-                "Natural, playful, and raw facial expressions."
-            ),
-            "Anak Perempuan (The Girl)": (
-                "A cute young Indonesian girl with natural black hair and pigtails. "
-                "Soft chubby cheeks, innocent sparkling eyes, natural tan skin. "
-                "Tender and fragile appearance."
-            )
+            "Nenek (The Grandma)": "Real elderly Indonesian woman, deeply weathered skin, authentic facial wrinkles, thin gray hair in a bun (sanggul), kind but tired eyes with realistic tear film.",
+            "Kakek (The Grandpa)": "Real elderly Indonesian man, sun-kissed leathery skin, deep forehead wrinkles, white stubble, stooped posture, weathered hands with visible veins.",
+            "Gadis Cantik (The Maiden)": "Beautiful young Indonesian woman, natural sawo matang skin, elegant features, deep brown eyes, long glossy black hair, no-makeup natural look.",
+            "Anak Laki-laki (The Boy)": "Young Indonesian village boy, sun-tanned skin, messy black hair, bright innocent eyes, slight sweat on forehead.",
+            "Anak Perempuan (The Girl)": "Cute young Indonesian girl, natural black hair with pigtails, soft chubby cheeks, innocent sparkling eyes."
         }
 
         # --- 2. MASTER WARDROBE (REAL FABRIC PHYSICS) ---
-        # (Tetap pake wardrobe yang tadi, tapi gue ilangin kata-kata "gel-skin" nya)
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
-                "Daster Batik Kencana": "Old, faded cotton daster with traditional batik patterns. Soft, worn-out fabric texture.",
-                "Kebaya Kutubaru": "Classic flowery cotton kebaya with a rustic brown batik jarik (skirt).",
-                "Mukena Bordir": "White silk prayer robe with delicate lace. Drapes realistically over the head."
+                "Daster Batik Kencana": "Faded cotton daster, traditional Javanese batik, soft worn-out texture.",
+                "Kebaya Kutubaru": "Classic flowery cotton kebaya, rustic brown batik jarik cloth.",
+                "Mukena Bordir": "White silk mukena with lace embroidery, heavy realistic fabric drapes."
             },
             "Kakek": {
-                "Sarung Wadimor & Singlet": "Green plaid sarung and a thin, worn-out white cotton undershirt (kaos oblong).",
-                "Baju Koko & Peci": "White koko shirt and a dusty black velvet peci (songkok).",
-                "Batik Lengan Panjang": "Formal long-sleeved batik shirt with traditional patterns."
+                "Sarung Wadimor & Singlet": "Green plaid sarung and thin worn-out white cotton singlet (kaos oblong).",
+                "Baju Koko & Peci": "White koko shirt, dusty black velvet peci (songkok) with micro-fibers.",
+                "Batik Lengan Panjang": "Formal long-sleeved batik, traditional Mega Mendung pattern."
             },
             "Gadis Cantik": {
-                "Kebaya Modern": "Elegant lace kebaya with a silk selendang, showing realistic fabric weave.",
-                "Dress Floral": "Simple, flowery summer dress made of light rayon fabric.",
-                "Hijab & Tunik": "Soft pashmina hijab and a loose-fitting linen tunik."
+                "Kebaya Modern": "Elegant lace kebaya, silk selendang, realistic fabric weave.",
+                "Dress Floral": "Simple flowery summer dress, light rayon fabric flow.",
+                "Hijab & Tunik": "Soft pashmina hijab, loose-fitting linen tunik."
             },
             "Anak Laki-laki": {
-                "Kaos & Celana Pendek": "Simple cotton t-shirt and denim shorts with realistic dust stains.",
-                "Seragam SD": "White-and-red Indonesian elementary school uniform with a small tie."
+                "Kaos & Celana Pendek": "Simple cotton t-shirt with graphic print, denim shorts, dust stains.",
+                "Seragam SD": "Indonesian white-and-red school uniform, small red tie."
             },
             "Anak Perempuan": {
-                "Dress Renda": "Cute lace dress with puffy sleeves and soft cotton texture.",
-                "Seragam SD": "White-and-red school uniform with a pleated skirt."
+                "Dress Renda": "Cute white lace dress, puffy sleeves, soft cotton texture.",
+                "Seragam SD": "Indonesian white-and-red school uniform, pleated skirt."
             }
         }
 
-        # --- UI LAYOUT (SAMA SEPERTI TADI TAPI LEBIH CLEAN) ---
-        st.subheader("👨‍👩‍👧‍👦 REAL FAMILY STORYTELLING")
+        # --- 3. MASTER LOKASI, BAHAN & AUDIO ---
+        MASTER_GRANDMA_CRAFT = {
+            "Buah-buahan": "Mosque miniature from carved watermelon and citrus peels, wet pulpy textures.",
+            "Kardus Bekas": "Detailed mosque miniature from recycled brown cardboard, torn edges, fibers.",
+            "Botol Plastik": "Mosque built from cut recycled PET bottles, plastic reflections, scratches.",
+            "Ranting Kayu": "Rustic mosque from dried twigs and bark, tied with organic twine."
+        }
+        MASTER_GRANDMA_SETTING = {
+            "Gubuk Tua": "Inside a dim Indonesian wooden shack, dust motes in sunbeams, bamboo mats.",
+            "Pinggir Sungai": "Muddy riverbank at twilight, reeds swaying, misty trees.",
+            "Teras Desa": "Weathered concrete terrace, cracked floor tiles, cinematic Golden Hour."
+        }
+        MASTER_AUDIO_ENGINE = {
+            "Logat": ["Indonesia Desa", "Jawa Kromo Inggil", "Sunda Lembut", "Melayu Tua", "Betawi Klasik"],
+            "Mood": ["Menangis/Haru", "Bijak/Tenang", "Meminta Maaf", "Bahagia Tulus"]
+        }
+
+        # --- UI LAYOUT (SINGLE EXPANDER) ---
+        st.subheader("👨‍👩‍👧‍👦 REAL HUMAN STORYTELLING ENGINE")
         
-        with st.expander("👤 1. PILIH MANUSIA & PAKAIAN", expanded=True):
-            col_char, col_cloth = st.columns(2)
-            with col_char:
-                pilihan_user = st.selectbox("Pilih Tokoh Real:", list(MASTER_FAMILY_SOUL.keys()))
+        with st.expander("🎬 KONFIGURASI KONTEN VIRAL", expanded=True):
+            # Row 1: Tokoh & Pakaian
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown('<p class="small-label">PILIH TOKOH UTAMA (REAL HUMAN)</p>', unsafe_allow_html=True)
+                pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
                 char_key = pilihan_user.split(" (")[0]
-            with col_cloth:
+            with c2:
+                st.markdown(f'<p class="small-label">PAKAIAN {char_key.upper()}</p>', unsafe_allow_html=True)
                 baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
-                baju_pilihan = st.selectbox(f"Pakaian {char_key}:", baju_options)
+                baju_pilihan = st.selectbox("Select Wardrobe", baju_options, label_visibility="collapsed")
+            
+            # Row 2: Bahan & Lokasi
+            c3, c4 = st.columns(2)
+            with c3:
+                st.markdown('<p class="small-label">KARYA TANGAN (CRAFT MATERIAL)</p>', unsafe_allow_html=True)
+                pilihan_bahan = st.selectbox("Select Material", list(MASTER_GRANDMA_CRAFT.keys()), label_visibility="collapsed")
+            with c4:
+                st.markdown('<p class="small-label">SETTING LOKASI (ENVIRONMENT)</p>', unsafe_allow_html=True)
+                pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
+            
+            st.divider()
+            
+            # Row 3: Dialog & Logat
+            c5, c6 = st.columns([2, 1])
+            with c5:
+                st.markdown('<p class="small-label">DIALOG / UCAPAN TOKOH</p>', unsafe_allow_html=True)
+                user_dialog = st.text_area("Input Dialog", 
+                                          placeholder=f"Contoh: Maaf ya Cuk, {char_key} cuma bisa buat masjid dari {pilihan_bahan}... pantes gak ada yang like...",
+                                          height=110, label_visibility="collapsed")
+            with c6:
+                st.markdown('<p class="small-label">VOICE & MOOD ENGINE</p>', unsafe_allow_html=True)
+                pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_ENGINE["Logat"])
+                pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_ENGINE["Mood"])
 
-        with st.expander("🎨 2. BAHAN KARYA & SETTING", expanded=False):
-            col_mat, col_loc = st.columns(2)
-            with col_mat:
-                # Ambil dari master craft yang tadi (buah, kardus, dll)
-                pilihan_bahan = st.selectbox("Karya yang Dibuat:", ["Buah-buahan", "Kardus Bekas", "Botol Plastik", "Ranting Kayu"])
-            with col_loc:
-                pilihan_set = st.selectbox("Lokasi:", ["Gubuk Tua", "Pinggir Sungai", "Teras Desa"])
+            st.write("")
+            btn_gen = st.button("🔥 GENERATE REAL STORY PROMPT", use_container_width=True)
 
-        with st.expander("🎙️ 3. NARASI SEDIH (MAAF YA CUK...)", expanded=True):
-            user_text = st.text_area("Tulis Ucapan Tokoh:", 
-                                     placeholder=f"Contoh: Maaf ya Cuk, Nenek cuma bisa kasih masjid dari {pilihan_bahan}...")
-
-        if st.button("🚀 GENERATE REAL HUMAN PROMPT", use_container_width=True):
-            if not user_text:
-                st.error("Isi narasinya dulu!")
+        # --- OUTPUT LOGIC ---
+        if btn_gen:
+            if not user_dialog:
+                st.error("Waduh, isi dulu dialognya Bos agar emosinya dapet!")
             else:
                 final_soul = MASTER_FAMILY_SOUL[pilihan_user]
                 final_baju = MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]
-                
-                # RAKIT PROMPT VIDEO (MANUSIA ASLI)
+                final_bahan = MASTER_GRANDMA_CRAFT[pilihan_bahan]
+                final_set = MASTER_GRANDMA_SETTING[pilihan_set]
+
+                # RAKIT PROMPT VIDEO (LIP-SYNC & DIALOG READY)
                 video_prompt = (
                     f"CINEMATIC PHOTO-REALISM: {final_soul}\n"
                     f"WARDROBE: {final_baju}\n"
-                    f"SCENE: {char_key} is sitting, hands trembling with emotion, holding a handmade miniature made from {pilihan_bahan}. "
-                    f"Real tears are welling up in their eyes and rolling down their cheeks. "
-                    f"Their facial expression is a mix of sadness and deep love. \n"
-                    f"ENVIRONMENT: Setting {pilihan_set}. Cinematic lighting, dust motes, 35mm film look.\n"
-                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Hyper-realistic skin, macro detail on hands, natural 24fps motion."
+                    f"SCENE & DIALOG ACTION: The {char_key} is sitting while holding a handcrafted {final_bahan}. "
+                    f"The character is SPEAKING DIRECTLY TO THE CAMERA, saying: '{user_dialog}'. "
+                    f"Their lips move in perfect synchronization with the emotional weight of the words. "
+                    f"As they speak in a {pilih_logat} accent, real tears well up and roll down their cheeks. "
+                    f"The facial muscles react to the speech with trembling lips and heavy emotional breaks. \n"
+                    f"ENVIRONMENT: {final_set}. Cinematic lighting, dust motes dancing in sunlight, 35mm film grain.\n"
+                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Natural 24fps motion, realistic lip-sync movements, 100% real human features."
                 )
 
-                st.success("🎥 PROMPT VIDEO (MANUSIA ASLI)")
+                # RAKIT PROMPT AUDIO (UNTUK GENERATOR SUARA)
+                audio_prompt = (
+                    f"VOICE PROFILE: {pilihan_user}, Accent: {pilih_logat}, Mood: {pilih_mood}.\n"
+                    f"DIALOG SCRIPT: '{user_dialog}'\n"
+                    f"PERFORMANCE: Authentic Indonesian delivery, breathless micro-pauses, trembling voice, natural emotional breaks, intimate and raw."
+                )
+
+                st.divider()
+                st.markdown('<p class="small-label">HASIL GENERATE: VIDEO ENGINE PROMPT (SPEAKING READY)</p>', unsafe_allow_html=True)
                 st.code(video_prompt, language="text")
+                
+                st.markdown('<p class="small-label">HASIL GENERATE: AUDIO & DIALOG PROMPT</p>', unsafe_allow_html=True)
+                st.code(audio_prompt, language="text")
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5035,6 +5061,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
