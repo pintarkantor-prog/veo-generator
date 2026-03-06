@@ -1515,10 +1515,8 @@ def tampilkan_ai_lab():
             ]
         }
 
-        # --- UI LAYOUT ---
-        st.subheader("👨‍👩‍👧‍👦 REAL HUMAN STORYTELLING ENGINE")
-        
-        with st.expander("🎬 KONFIGURASI KONTEN (ULTRA WIDE & NATURAL)", expanded=True):
+        # --- UI LAYOUT ---        
+        with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">PILIH TOKOH (EXTREME WIDE SHOT)</p>', unsafe_allow_html=True)
@@ -1564,11 +1562,11 @@ def tampilkan_ai_lab():
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
                     
                     f"TIMELINE & OBJECT TRANSFORMATION:\n"
-                    f"- 0-7 SECONDS (CRAFTING PHASE): The {char_key} is sitting behind a rustic wooden table, "
-                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 85% FINISHED; "
+                    f"- 0-6 SECONDS (CRAFTING PHASE): The {char_key} is sitting behind a rustic wooden table, "
+                    f"actively BUILDING the {pilihan_bahan} mosque. The mosque is 80% FINISHED; "
                     f"the central dome is visible but one minaret is still being hand-assembled. "
                     f"Scraps of {pilihan_bahan} and glue are visible on the table.\n"
-                    f"- 7-10 SECONDS (MIRACLE REVEAL): While the camera stays FIXED and the {char_key} continues speaking, "
+                    f"- 6-10 SECONDS (MIRACLE REVEAL): While the camera stays FIXED and the {char_key} continues speaking, "
                     f"the mosque SEAMLESSLY TRANSFORMS into a 100% COMPLETE MAJESTIC MASTERPIECE. "
                     f"It now has a grand central dome and 4 tall, perfect minarets at the corners.\n\n"
                     
@@ -5190,6 +5188,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
