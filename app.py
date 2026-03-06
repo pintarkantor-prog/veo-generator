@@ -1125,73 +1125,121 @@ def tampilkan_ai_lab():
                 logika_map = {
                     "🩸 Biological Horror (Anatomi & Siksaan)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Jangan terlalu puitis, gunakan gaya bahasa semi-formal yang informatif.\n"
-                            "- Setiap adegan harus menjelaskan proses kerusakan anatomi secara detail (misal: 'Asam mulai mengikis dinding lambung, memicu peradangan hebat').\n"
-                            "- Jelaskan sensasi fisik yang dirasakan karakter BALUNG (misal: 'Saraf mengirim sinyal nyeri akut ke otak').\n"
-                            "- Gunakan alur waktu: Hari ke-1, Minggu ke-1, hingga dampak permanen."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan trigger: 'Apa yang terjadi...' atau 'Bagaimana jika...'.\n"
+                            "- Gunakan pola progresif: 'Satu hari pertama kamu akan...' dan '7 hari kemudian...'.\n"
+                            "- JANGAN KAKU. Ceritakan proses kerusakan seolah penonton sedang mengalaminya sendiri.\n"
+                            "- Deskripsikan sensasi fisik secara brutal: tercekik, terbakar, saraf yang gemetar ketakutan, hingga jaringan yang mengkerut hitam.\n"
+                            "- Biarkan narasi mengalir bercerita tentang penderitaan organ yang kehilangan dayanya."
                         ),
-                        "focus": "Muscle contraction, Nerve vibration, Fluid decay, dan Dark Medical Lighting.",
-                        "cta": "Klik subscribe jika kamu sayang dengan organ tubuhmu ini, dan bagikan ke temanmu yang masih melakukan hal ini."
+                        "focus": (
+                            "Extreme anatomical detail, vibrating nerves (saraf bergetar merah), "
+                            "organ decay texture (organ menghitam/kusam), bioluminescence fluid, "
+                            "dan macro close-up pada kerusakan jaringan."
+                        ),
+                        "cta": "Klik subscribe jika kamu sayang dengan tubuhmu ini, dan bagikan ke temanmu yang masih melakukan hal ini."
                     },
                     "🏛️ Forbidden History (Konspirasi & Zaman)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Gunakan gaya 'Storyteller' yang serius dan berat.\n"
-                            "- Jelaskan sejarah objek " + ide_singkat + " dan kenapa kehadirannya di setting kuno itu mustahil.\n"
-                            "- Fokus pada detail mekanis atau teknologi yang berbenturan dengan lingkungan tradisional."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika...' atau 'Pernahkah kamu membayangkan...'.\n"
+                            "- Gunakan alur: 'Satu hari pertama kamu nemuin benda ini...' dan '7 hari kemudian kamu sadar...'.\n"
+                            "- Ceritakan kontras tekstur: batu candi yang kasar vs logam masa depan yang halus.\n"
+                            "- Narasi harus megah, puitis, dan misterius. Seolah kamu lagi ngebongkar rahasia paling gelap di bumi.\n"
+                            "- Gunakan kata-kata sensori: debu zaman, cahaya neon terlarang, bata retak, dinginnya batu kuno."
                         ),
-                        "focus": "Golden Hour lighting, ray-traced shadows, dan arsitektur bertekstur kasar.",
+                        "focus": (
+                            "Cinematic Golden Hour, dust motes (debu terbang), "
+                            "ancient stone texture (batu candi berlumut), "
+                            "glowing circuit technology (sirkuit neon), ray-traced shadows."
+                        ),
                         "cta": "Tulis di kolom komentar, rahasia sejarah apa lagi yang harus BALUNG bongkar? Subscribe untuk teori gila lainnya."
                     },
                     "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Gunakan gaya bahasa perbandingan yang objektif tapi tajam.\n"
-                            "- Jelaskan perbedaan struktur sel atau kepadatan tulang antara dua kondisi secara mendalam.\n"
-                            "- Berikan kesimpulan logis di tiap cut tentang pilihan gaya hidup yang diambil."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Pernahkah kamu membayangkan pertempuran di bawah kulitmu?' atau 'Lihat dua dunia yang berbeda ini...'.\n"
+                            "- Gunakan alur kontras: 'Satu hari pertama, tim kiri masih terlihat kuat, tapi tim kanan mulai menyerah...'.\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran total di satu sisi (retak, kusam, busuk) vs keajaiban di sisi lain (glowing, kokoh, jernih).\n"
+                            "- Gunakan diksi yang memprovokasi pilihan penonton: 'Pilihanmu hari ini adalah kerapuhanmu esok'.\n"
+                            "- Fokus pada perubahan tekstur: dari kenyal menjadi rapuh, dari bening menjadi keruh cokelat."
                         ),
-                        "focus": "Side-by-side transformation, bone density color change, dan clean studio lighting.",
+                        "focus": (
+                            "Side-by-side split screen (Kiri vs Kanan), "
+                            "Texture contrast (Kusam vs Glowing), "
+                            "Bone density transformation (Tulang keropos vs Padat), "
+                            "Clean studio lighting vs Dark grim lighting on the failing side."
+                        ),
                         "cta": "Kamu tim yang mana? Komen di bawah dan subscribe agar kondisimu tetap prima seperti BALUNG versi Sultan!"
                     },
                     "🌀 Absurd What-If (Fisika & Kiamat)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Gunakan gaya bahasa 'Scientific Speculation'.\n"
-                            "- Jelaskan hukum fisika yang dilanggar dan bagaimana tubuh BALUNG beradaptasi secara tragis.\n"
-                            "- Narasi harus panjang dan menjelaskan rentetan kejadian berantai (domino effect)."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Apa yang terjadi jika tiba-tiba...' atau 'Bagaimana jika duniamu mendadak...'.\n"
+                            "- Satu hari pertama: Ceritakan keanehan kecil yang awalnya terasa lucu (misal: air di gelas mulai melayang pelan).\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran total (lautan terangkat ke langit, bangunan beton pecah jadi debu, oksigen kabur ke angkasa).\n"
+                            "- Gunakan diksi vertigo: dunia terbalik, kehampaan sunyi, raksasa yang bangun, melayang tanpa arah.\n"
+                            "- Jelaskan 'Efek Domino' kiamat ini dengan nada yang dingin namun mencekam."
                         ),
-                        "focus": "Anti-gravity physics, sharp weird textures, dan chromatic aberration.",
-                        "cta": "Jika ini terjadi besok, siapa orang pertama yang akan kamu selamatkan? Subscribe untuk skenario gila lainnya!"
+                        "focus": (
+                            "Anti-gravity debris (puing melayang), "
+                            "Chromatic aberration (distorsi warna di pinggir frame), "
+                            "Volumetric fog and dust, floating water physics (lautan melayang), "
+                            "dan Motion blur pada objek yang terlempar."
+                        ),
+                        "cta": "Jika ini terjadi besok, siapa orang pertama yang akan kamu peluk? Subscribe untuk skenario gila lainnya!"
                     },
-                    "🧬 Genetic Glitch (Mutasi & Kelainan)": {
+                    "🧬 Genetic Glitch (Mutasi & Kelainan Langka)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Gunakan istilah medis yang akurat tapi mudah dimengerti.\n"
-                            "- Jelaskan mutasi genetik secara spesifik: apa yang tumbuh, di mana, dan bagaimana itu merubah bentuk tulang BALUNG.\n"
-                            "- Fokus pada kengerian biologis yang logis."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika tubuhmu memutuskan untuk mengkhianatimu?' atau 'Pernahkah kamu merasakan sesuatu yang salah di dalam tulangmu?'.\n"
+                            "- Satu hari pertama: Ceritakan benjolan kecil yang keras, sepele, tapi mulai berdenyut aneh di tulang rusuk atau sendimu.\n"
+                            "- 7 hari kemudian: Ceritakan mutasi liar. Benjolan itu meledak jadi duri kalsium tajam (bone spikes) yang merobek jaringan daging dan menembus kulit transparan.\n"
+                            "- Gunakan diksi sensori: suara 'kretek' tulang yang berderit, rasa tajam yang menusuk dari dalam, kulit yang menegang maksimal, dan pertumbuhan yang tak terkendali.\n"
+                            "- Buat penonton merinding dengan kengerian biologis yang terasa sangat dekat dan nyata."
                         ),
-                        "focus": "Bone spike growth, cellular mutation, Cold Medical ambiance.",
+                        "focus": (
+                            "Macro close-up on bone spikes (tulang menusuk keluar), "
+                            "Skin tension and tearing textures (kulit menegang/robek), "
+                            "Subcutaneous micro-movements (gerakan di bawah kulit), "
+                            "Cold medical neon lighting, and visceral sound-driven visuals."
+                        ),
                         "cta": "Dunia ini penuh keajaiban yang mengerikan. Klik like jika kamu bersyukur memiliki tubuh yang normal hari ini."
                     },
                     "🧠 Psychological Loop (Otak & Mental)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Jelaskan reaksi kimia di otak (Dopamin, Kortisol, dll) saat kejadian berlangsung.\n"
-                            "- Hubungkan reaksi otak dengan gerakan fisik BALUNG (misal: 'Otak melepaskan adrenalin, memaksa tangan bergetar tanpa kendali').\n"
-                            "- Gunakan gaya bahasa psikologi populer yang berbobot."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Apa yang terjadi di dalam kepalamu saat duniamu mendadak sunyi?' atau 'Pernahkah kamu merasakan badai yang tak terlihat?'.\n"
+                            "- Satu hari pertama: Ceritakan jalur dopamin yang meredup, warnanya berubah jadi biru kelabu yang dingin dan hampa.\n"
+                            "- 7 hari kemudian: Jalur itu putus total. Ceritakan kilat merah api dari kortisol yang membakar saraf emosimu, menciptakan ledakan listrik yang tak terkendali.\n"
+                            "- Hubungkan ke fisik: Jelaskan dadamu yang sesak bukan karena jantung rusak, tapi karena sarafmu sedang 'konslet' hebat akibat luka mental.\n"
+                            "- Gunakan diksi: badai listrik, kesepian yang membakar, sirkuit yang putus, kehampaan yang mencekam."
                         ),
-                        "focus": "Electric nerve firing, glowing brain waves, dan volumetric fog.",
+                        "focus": (
+                            "Neural firing explosion (ledakan listrik saraf), "
+                            "Brain wave color shifts (Biru kelabu ke Merah api), "
+                            "Volumetric fog inside the skull, "
+                            "Micro-gestures of despair (tangan gemetar hebat, kepala tertunduk), "
+                            "dan Motion blur pada aliran listrik saraf."
+                        ),
                         "cta": "Pernah merasakan hal yang sama? Tekan like dan subscribe untuk memahami cara kerja pikiranmu lebih dalam."
                     },
-                    "🔥 Survival Instinct (Uji Ketahanan)": {
+                    "🔥 Survival Instinct (Uji Ketahanan Ekstrem)": {
                         "rules": (
-                            "STRUKTUR NARASI (WAJIB):\n"
-                            "- Gunakan gaya narasi 'Documentary Survival'.\n"
-                            "- Jelaskan batas ketahanan material tulang terhadap suhu atau tekanan ekstrem.\n"
-                            "- Narasi harus menjelaskan perjuangan fisik karakter untuk bertahan hidup detik demi detik."
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika dunia mendadak membeku dan napasmu berubah jadi belati es?' atau 'Berapa lama kamu bisa bertahan saat oksigenmu mulai mendidih?'.\n"
+                            "- Satu hari pertama: Ceritakan sensasi mati rasa yang perlahan merambat, ujung jari yang mulai membeku atau kulit yang mulai melepuh.\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran material tubuh. Darah membeku di dalam pembuluh transparan, tulang mulai retak (cracking) seperti kaca yang dipukul pelan.\n"
+                            "- Gunakan diksi: kristal frost yang haus, retakan membara, napas yang membatu, perjuangan detik demi detik dalam kehampaan.\n"
+                            "- Buat penonton merasakan kengerian saat tubuh kehilangan daya lawan terhadap alam yang kejam."
                         ),
-                        "focus": "Texture cracking, frost effect, heat haze, dan dynamic slow tracking.",
+                        "focus": (
+                            "Dynamic frost spreading (es merambat), "
+                            "Bone cracking textures (retakan pada tulang), "
+                            "Heat haze and boiling fluid effects, "
+                            "Crystalline ice growth on transparent skin, "
+                            "Slow-motion tracking on the last heartbeat."
+                        ),
                         "cta": "Mampukah kamu bertahan lebih lama dari BALUNG? Buktikan dengan cara subscribe dan tonton tantangan berikutnya!"
                     }
                 }
@@ -1203,25 +1251,28 @@ def tampilkan_ai_lab():
                 except:
                     baju_list = "Original, Jas Lab Putih, Versi Sultan"
 
-                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - NARASI LAYAK & PANJANG) ---
+                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - NARRATIVE TIME-LAPSE) ---
                 mantra_header = "Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).\n"
-                mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") tentang: " + ide_singkat + ".\n\n"
+                mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") yang HIDUP dan NYATA.\n"
+                mantra_header += "TRIGGER IDE: " + ide_singkat + ".\n\n"
                 
-                mantra_body = "KONSEP UTAMA: " + tipe_cerita + "\n" + l_data["rules"] + "\n\n"
+                mantra_body = "KONSEP UTAMA: " + tipe_cerita + "\n"
+                mantra_body += l_data["rules"] + "\n\n"
                 
                 mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
-                mantra_footer += "- **DEEP NARRATION**: Buatlah Narasi VO yang panjang, layak, dan informatif di setiap adegan. Jangan hanya 1 kalimat pendek. Jelaskan proses, alasan, dan dampaknya secara mendalam.\n"
-                mantra_footer += "- **BALUNG GESTURE**: Berikan mikro-gestur manusiawi (menyeka debu, tangan gemetar, menatap sayu, jari bergerak pelan).\n"
-                mantra_footer += "- **VISUAL PRIORITY**: " + l_data["focus"] + "\n"
+                mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
+                mantra_footer += "- **LIVING NARRATION**: Wajib buat Narasi VO yang PANJANG (minimal 3-4 kalimat per adegan). Jangan cuma satu baris! Gunakan gaya bercerita 'kamu' (POV 2). Ceritakan sensasi organ yang tercekik, rasa panas yang merambat, atau suara retakan yang memilukan. Biarkan narasi ini mendominasi suasana.\n"
+                mantra_footer += "- **VISUAL SENSORY**: " + l_data["focus"] + ". Deskripsikan tekstur (debu terbang, saraf bergetar, organ menghitam) secara ultra-detail.\n"
+                mantra_footer += "- **BALUNG GESTURE**: Masukkan mikro-gestur manusiawi di setiap cut (tangan gemetar, menyeka debu, menatap sayu, jari bergerak gelisah).\n"
                 mantra_footer += "- **MANDATORY CTA**: Masukkan narasi ini di akhir video: \"" + l_data["cta"] + "\"\n"
-                mantra_footer += "- **FORMAT OUTPUT (WAJIB TABEL 5 KOLOM)**: No Adegan, Narasi VO (Padat & Berisi), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment (Sangat Detail & Hidup)."
+                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Panjang), Deskripsi Visual Detail (Aksi+Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail)."
 
                 mantra_final = mantra_header + mantra_body + mantra_footer
 
-                st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">4. SALIN MANTRA STORYTELLING INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}.")
-
+                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Tarik penonton ke dalam ceritanya!")
+                
     # --- TAB LAIN (WAJIB SEJAJAR DENGAN with t_anatomi) ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
@@ -4821,6 +4872,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
