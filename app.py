@@ -1850,7 +1850,7 @@ def tampilkan_ai_lab():
         # --- LOGIC GENERATOR (FIXED: NO TRANSITION & NO CUTS) ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
+                st.error("Isi dialognya dulu...")
             else:
                 # --- 4. DYNAMIC SCENE LOGIC (SINGLE SHOT FOCUS) ---
                 scene_context = ""
@@ -5715,6 +5715,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
