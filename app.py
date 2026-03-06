@@ -1100,7 +1100,7 @@ def tampilkan_ai_lab():
                     except:
                         st.error("Koneksi bermasalah saat update status.")
                         
-        # --- 7. BLOK BRAINSTORMING (VERSI ADAPTIF SULTAN) ---
+        # --- 7. BLOK BRAINSTORMING (VERSI SULTAN: HUMANIS & CAIR) ---
         st.write("") 
         with st.expander("💡 BRAINSTORMING: ASISTEN IDE GEMINI (STORYTELLING PRO)", expanded=False):
             col_t1, col_t2 = st.columns(2)
@@ -1117,43 +1117,43 @@ def tampilkan_ai_lab():
                 jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
 
             st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya makan mi instan 100 hari...", label_visibility="collapsed")
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Bahaya begadang 7 hari...", label_visibility="collapsed")
             
             if ide_singkat:
-                # OUTFIT LOCK DARI MASTER
-                baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
+                # OUTFIT LOCK DARI MASTER (PASTIKAN KEY 'BALUNG' ADA)
+                try:
+                    baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
+                except:
+                    baju_list = "Original, Jas Lab Putih, Versi Sultan"
 
+                # VISUAL GUIDE ADAPTIF (INSTRUKSI GERAKAN CAIR)
                 if "Medis" in tipe_cerita:
-                    v_guide = "Fokus pada anatomi: saraf bergetar, aliran darah, detak jantung, dan reaksi organ transparan."
+                    v_guide = "Fokus pada detak kehidupan: pembuluh darah berdenyut, paru-paru mengembang, dan reaksi organ transparan."
                 elif "Evolusi" in tipe_cerita:
-                    v_guide = "Fokus pada transformasi: tulang mengeras, massa otot tumbuh, dan pancaran aura."
+                    v_guide = "Fokus pada transformasi: tekstur tulang mengeras, pertumbuhan massa, dan aura energi natural."
                 elif "Sejarah" in tipe_cerita:
-                    v_guide = "Fokus pada kemegahan: detail emas, jubah, benda kuno, dan cahaya matahari."
+                    v_guide = "Fokus pada kemegahan: interaksi dengan benda kuno, tekstur debu di udara, dan pencahayaan matahari klasik."
                 else:
-                    v_guide = "Fokus pada anomali: teknologi masa depan, efek visual gila, dan kontras warna neon."
+                    v_guide = "Fokus pada anomali: distorsi ruang, teknologi futuristik, dan kontras warna yang tajam."
 
-                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: SKELETON TRANSPARAN.
+                # MANTRA SAKTI: HUMANIS & CAIR
+                mantra_final = f"""Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).
 Tugas kamu: Buatkan naskah video cinematic ({jml_adegan}) tentang: {ide_singkat}.
 
 KONSEP: {tipe_cerita}.
 
 ATURAN WAJIB (MANDATORY):
-1. Karakter SKELETON TRANSPARAN HARUS MUNCUL DI SETIAP ADEGAN. Tidak boleh ada adegan tanpa dia.
-2. HOOK: Mulai dengan narasi pembukaan yang puitis dan bikin penasaran. Gunakan jeda (elipsis '...') agar narasi enak didengar.
-3. NARASI VO: Bahasa Indonesia luwes, asyik, informatif. Jangan kaku. Gunakan sapaan 'Kamu'. 
-4. CTA ORGANIK: Selipkan di tengah video, ajakan Subscribe harus nyambung dengan alur cerita.
-5. CLOSING: Berikan kesimpulan yang 'Deep' atau pertanyaan untuk penonton.
+1. KARAKTER: Karakter BALUNG HARUS MUNCUL DI SETIAP ADEGAN.
+2. NARASI VO (THE SOUL): Gunakan gaya 'Philosophical Storytelling'. Bahasa Indonesia luwes, puitis, dan menyentuh sisi kemanusiaan. Gunakan sapaan 'Kamu'. Gunakan jeda (...) untuk dramatisasi. Jangan kaku seperti ensiklopedia!
+3. VISUAL (FLUID MOTION): Deskripsikan aksi BALUNG secara 'Cair' dan manusiawi. Berikan gerakan mikro-gestur (contoh: menyeka debu, tangan gemetar, menoleh perlahan, atau menatap sayu). {v_guide}
+4. ATMOSFER: Detailkan lingkungan dengan partikel udara (debu, kabut) dan pencahayaan alami (golden hour, deep shadows) agar tidak terlihat seperti AI generik.
+5. FORMAT OUTPUT: TABEL 5 KOLOM (No Adegan, Narasi VO, Deskripsi Visual Detail, Wardrobe, Environment).
 
-FORMAT OUTPUT (WAJIB TABEL 5 KOLOM): 
-1. No Adegan
-2. Narasi VO (Gunakan jeda napas '...' agar puitis).
-3. Deskripsi Visual (INDONESIA DETAIL: {v_guide} + jelaskan posisi karakter dan gerakan kamera).
-4. Wardrobe (PILIH DARI MASTER: {baju_list}).
-5. Environment (Lokasi adegan dramatis)."""
+WARDROBE PILIHAN (PASTIKAN HANYA PAKAI INI): {baju_list}."""
                 
                 st.markdown('<p class="small-label">4. SALIN MANTRA INI KE GEMINI</p>', unsafe_allow_html=True)
                 st.code(mantra_final, language="text")
-                st.info("💡 **INFO STAFF:** Copy mantra ini. Masukkan hasil tabel Gemini ke database satu per satu!")
+                st.info("💡 **INFO STAFF:** Pakai naskah ini biar Gemini nggak kaku. Pastikan narasi puitis dan visualnya ada gerakan manusiawi!")
 
     # --- TAB LAIN ---
     with t_grandma: st.info("👵 Grandma Mode Standby.")
@@ -4736,6 +4736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
