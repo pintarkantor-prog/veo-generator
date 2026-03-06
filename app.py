@@ -2009,7 +2009,10 @@ def tampilkan_ai_lab():
                 
                 with t2:
                     st.caption("Aksi Pemicu (Trigger)")
-                    trans_trigger = st.text_input("trigger_input", placeholder="Contoh: Terkejut / Bersin / Marah", label_visibility="collapsed")
+                    # Gue tambahin placeholder yang ngingetin buat jaga identitas muka
+                    trans_trigger = st.text_input("trigger_input", 
+                        placeholder="Contoh: Bersin (Tetap wajah Udin) / Marah", 
+                        label_visibility="collapsed")
                                     
                 with t3:
                     st.caption("Efek Lingkungan")
@@ -2036,16 +2039,15 @@ def tampilkan_ai_lab():
             )
 
             # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
-            # Pastikan nama variabel ini digunakan konsisten di bawah
             sultan_mantra_box = {
-                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding, pulsating veins, bone structure thickening, intense steam evaporating.",
-                "Super Saiyan (God Aura & Electric)": "Golden translucent energy aura erupting, high-voltage electric sparks, hair turning golden and spiky.",
-                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium, hydraulic pistons moving, glowing internal circuitry.",
-                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside, starlight glowing in eyes.",
-                "Instant Obesity (Jiggling Fat)": "The character instantly inflates into extreme obesity. Massive belly and double chin expanding, realistic fat jiggling and wobbling physics, clothes stretching and bursting.",
-                "Ultra-Skinny (Malnourished Bone)": "The character rapidly shrinks into an extremely skinny, skeletal frame. Ribcage becomes highly visible, sunken cheeks, skin tightens over bones.",
-                "Squashed & Short (Hobbit Style)": "The character's height is violently compressed down to 3 feet tall. Limbs become short and stubby, head remains large, torso becomes wide.",
-                "Extreme Tall & Lanky (Slender Style)": "The character's limbs stretch uncontrollably to 10 feet tall. Arms and legs become thin like noodles, neck elongates, movement becomes wobbly."
+                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding from the body, pulsating veins, gritty anatomical detail, intense steam evaporating. Maintain original facial features and identity.",
+                "Super Saiyan (God Aura & Electric)": "Golden translucent energy aura erupting, high-voltage electric sparks, hair turns spiky golden. The face must remain identical to the original character.",
+                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium plates, hydraulic pistons moving under the skin. Facial identity must be strictly preserved without changing facial structure.",
+                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside. The core facial features and eyes must remain recognizable as the original character.",
+                "Instant Obesity (Jiggling Fat)": "Extreme rapid inflation of body fat from the neck down. Massive belly and double chin expanding, realistic fat jiggling physics. DO NOT alter the core facial structure, keep the original face and identity.",
+                "Ultra-Skinny (Malnourished Bone)": "Body rapidly shrinks to a skeletal frame from the neck down. Ribcage highly visible, skin tightens over bones. Face maintains core identity with sunken cheeks but same features.",
+                "Squashed & Short (Hobbit Style)": "Violent vertical compression of the entire body. Limbs become short and stubby, torso becomes wide. Maintain accurate facial proportions and original character face on a miniature scale.",
+                "Extreme Tall & Lanky (Slender Style)": "Limbs and neck stretch uncontrollably. Body becomes thin and elongated. Face identity must be locked and remain unchanged while movement becomes awkward."
             }
 
             # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
@@ -5725,6 +5727,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
