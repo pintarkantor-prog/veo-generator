@@ -1359,18 +1359,16 @@ def tampilkan_ai_lab():
                 "Her expression is humble, shy, and peaceful. A classic representation of a wise village grandmother. "
                 "Clean skin, no dirt, no makeup, strictly no tears."
             ),
-            "Nenek Arum": (
-                "A graceful elderly Indonesian woman (50s) with a calm and dignified face. "
-                "Clear sawo matang skin with minimal, natural aging lines. Her eyes are kind and soulful. "
-                "She has a poised and motherly aura, looking like a respected village elder. "
-                "Clean skin, natural look, strictly no makeup."
-            ),
-            "Nenek Sumi": (
-                "A hardworking elderly Indonesian woman (60s) with a deeply weathered and tanned face. "
-                "Visible deep wrinkles and realistic sun spots from years of labor. "
-                "Her eyes look tired but resilient. She has a thin, humble frame that shows her tough life. "
-                "Authentic village grandmother look, clean but rugged skin."
-            ),
+            "Nenek Arum": {
+                "Daster Floral & Bergo": "A modest long-sleeved floral daster in soft pastel colors. Paired with a clean white jersey bergo hijab. The look is warm, humble, and peaceful.",
+                "Daster Batik & Hijab": "A traditional long-sleeved batik daster with brown and cream patterns. Paired with a simple instant hijab. Very neat and typical of a kind village grandmother.",
+                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
+            },
+            "Nenek Sumi": {
+                "Daster Kencana Ungu & Bergo": "A classic long-sleeved daster with traditional red or purple patterns. Paired with a dark-colored simple bergo hijab. Humble, clean, and authentic.",
+                "Daster Kaos & Jilbab Instan": "A comfortable long-sleeved cotton daster in a soft earthy tone. Paired with a simple daily instant jilbab. A hardworking but gentle grandmother look.",
+                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
+            },
             "Kakek (The Grandpa)": (
                 "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
                 "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
@@ -5707,6 +5705,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
