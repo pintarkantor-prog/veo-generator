@@ -1820,45 +1820,41 @@ def tampilkan_ai_lab():
                 key="btn_generate_video"
             )
 
-        # --- LOGIC GENERATOR (FIXED IDENTASI & GROUNDING) ---
+        # --- LOGIC GENERATOR (FIXED: NO TRANSITION & NO CUTS) ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu...")
+                st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (KAMERA GALAK & GROUNDING) ---
+                # --- 4. DYNAMIC SCENE LOGIC (SINGLE SHOT FOCUS) ---
                 scene_context = ""
                 
                 if "🤖 Robot" in modus_konten:
-                    # LOGIKA ROBOT: WAJIB BERDIRI, KAKI DI LANTAI
                     scene_context = (
-                        "HIGH-TECH INTERACTIVE SCENE. The character MUST BE STANDING UPRIGHT, "
-                        "not sitting and not standing on any table. Their feet are firmly PLACED ON THE DIRT FLOOR. "
-                        "FULL BODY SHOT from head to toe capturing the entire 100cm tall robot standing on the ground "
-                        "right beside the character's vertically extended body. strictly enforce standing posture on the ground."
+                        "SINGLE CONTINUOUS SHOT. The character MUST BE STANDING UPRIGHT on the dirt floor, "
+                        "not on a table. FULL BODY SHOT. The 100cm robot is standing right beside them. "
+                        "The character is actively working on the robot's core. STATIC CAMERA, NO CUTS, NO TRANSITIONS."
                     )
                 elif "🕌 Miniatur Masjid" in modus_konten:
-                    # LOGIKA MASJID: WAJIB DI DEPAN, NEMPEL
                     scene_context = (
-                        "CLOSE-UP INTERACTIVE SHOT focusing on character-object connection. "
-                        "The grand mosque is positioned DIRECTLY IN THE FOREGROUND, placed on a small rustic table "
-                        "situated between the camera and the character. The character is sitting on a tikar, leaning forward "
-                        "with their aged hands physically touching the 90% finished details. The mosque MUST be in front."
+                        "SINGLE CONTINUOUS SHOT. EYE-LEVEL CLOSE-UP. The grand mosque is in the foreground "
+                        "on a small table between the camera and the character. The character is sitting "
+                        "and working on the dome. STATIC CAMERA, NO CUTS, NO TRANSITIONS."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
-                    # LOGIKA MENU: HARU & SEPI
                     scene_context = (
-                        "SOMBRE EYE-LEVEL SHOT. The character is sitting humbly on the floor (tikar) facing their very simple meal. "
-                        "The character looks at the food with hunger and deep gratitude, hands resting patiently near the plate."
+                        "SINGLE CONTINUOUS SHOT. SOMBRE EYE-LEVEL SHOT. The character is sitting on the floor "
+                        "facing their meal. The camera stays fixed on the character's emotional expression. "
+                        "STATIC CAMERA, NO CUTS, NO TRANSITIONS."
                     )
 
                 # --- 5. NUANSA HIDUP ---
                 living_details = (
                     "Atmospheric cinematic lighting. Tiny dust motes dancing in light rays. "
-                    "Subtle background sounds of distant crickets. The air looks humid with nostalgic atmosphere. "
-                    "Hyper-realistic skin textures, visible sweat, and authentic weathered details."
+                    "Subtle background sounds. The air looks thick with humidity. "
+                    "Hyper-realistic skin textures and authentic weathered details."
                 )
 
-                # --- 6. RAKIT FINAL PROMPT ---
+                # --- 6. RAKIT FINAL PROMPT (STRICT TECHNICAL) ---
                 video_prompt = (
                     f"CORE SUBJECT: {MASTER_FAMILY_SOUL[pilihan_user]}\n"
                     f"WARDROBE: {MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]}\n\n"
@@ -1875,7 +1871,8 @@ def tampilkan_ai_lab():
                     f"- VIBE: {living_details}\n\n"
                     
                     f"TECHNICAL SPEC:\n"
-                    f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. NO SLOW MOTION. "
+                    f"SINGLE CONTINUOUS TAKE. NO CAMERA CUTS. NO TRANSITIONS. NO TIME-LAPSE. "
+                    f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. STATIC CAMERA MOVEMENT. "
                     f"Deep depth of field. High-dynamic range (HDR) with realistic lighting."
                 )
 
@@ -5481,6 +5478,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
