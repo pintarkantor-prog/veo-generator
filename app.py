@@ -1937,39 +1937,44 @@ def tampilkan_ai_lab():
 
             # --- ROW 2: KARAKTER & DUAL DIALOG ---
             col_l, col_r = st.columns(2)
+            
             with col_l:
-                st.markdown('<p class="small-label">⬅️ KARAKTER SISI KIRI (POSITION: LEFT)</p>', unsafe_allow_html=True)
-                c_l_name = st.text_input("", placeholder="Contoh: Lionel Messi")
-                c_l_outfit = st.text_input("", placeholder="Contoh: Jas hitam formal, rapi.")
-                c_l_speech = st.text_area("", placeholder="Apa yang diucapkan tokoh kiri?", height=60)
-                is_trans_l = st.checkbox("🔥 Karakter Kiri Berubah")
+                st.markdown('<p class="small-label" style="margin-bottom: -15px;">⬅️ KARAKTER SISI KIRI (LEFT)</p>', unsafe_allow_html=True)
+                c_l_name = st.text_input("l_name", placeholder="Contoh: Lionel Messi", label_visibility="collapsed")
+                c_l_outfit = st.text_input("l_outfit", placeholder="Contoh: Jas hitam formal, rapi.", label_visibility="collapsed")
+                c_l_speech = st.text_area("l_speech", placeholder="Apa yang diucapkan tokoh kiri?", height=60, label_visibility="collapsed")
+                is_trans_l = st.checkbox("🔥 Karakter Kiri Berubah", key="trans_l")
 
             with col_r:
-                st.markdown('<p class="small-label">➡️ KARAKTER SISI KANAN (POSITION: RIGHT)</p>', unsafe_allow_html=True)
-                c_r_name = st.text_input("Nama Tokoh Kanan", placeholder="Contoh: Cristiano Ronaldo")
-                c_r_outfit = st.text_input("Pakaian Kanan", placeholder="Contoh: Baju koko putih, peci hitam.")
-                c_r_speech = st.text_area("Dialog Tokoh Kanan", placeholder="Apa yang diucapkan tokoh kanan?", height=60)
-                is_trans_r = st.checkbox("🔥 Karakter Kanan Berubah")
-
-            st.divider()
+                st.markdown('<p class="small-label" style="margin-bottom: -15px;">➡️ KARAKTER SISI KANAN (RIGHT)</p>', unsafe_allow_html=True)
+                c_r_name = st.text_input("r_name", placeholder="Contoh: Cristiano Ronaldo", label_visibility="collapsed")
+                c_r_outfit = st.text_input("r_outfit", placeholder="Contoh: Baju koko putih, peci hitam.", label_visibility="collapsed")
+                c_r_speech = st.text_area("r_speech", placeholder="Apa yang diucapkan tokoh kanan?", height=60, label_visibility="collapsed")
+                is_trans_r = st.checkbox("🔥 Karakter Kanan Berubah", key="trans_r")
 
             # --- ROW 3: AKSI & KAMERA ---
-            st.markdown('<p class="small-label">🏃 PHYSICAL ACTION (PERGERAKAN TUBUH)</p>', unsafe_allow_html=True)
-            user_action = st.text_area("Aksi Fisik", placeholder="Contoh: Messi berjalan mendekat ke arah Ronaldo, tangan mengepal kuat.", height=70)
+            st.markdown('<p class="small-label" style="margin-bottom: -15px;">🏃 PHYSICAL ACTION (PERGERAKAN TUBUH)</p>', unsafe_allow_html=True)
+            user_action = st.text_area(
+                "action_input", 
+                placeholder="Contoh: Messi berjalan mendekat ke arah Ronaldo dengan langkah berat, tangan mengepal kuat.", 
+                height=70, 
+                label_visibility="collapsed"
+            )
+            st.markdown('<p class="small-label" style="margin-bottom: -15px;">🎥 CAMERA CONTROL (SINEMATOGRAFI)</p>', unsafe_allow_html=True)
             
-            st.markdown('<p class="small-label">🎥 CAMERA CONTROL</p>', unsafe_allow_html=True)
             cc1, cc2 = st.columns(2)
             with cc1:
-                cam_movement = st.selectbox("Gerakan Kamera (Movement)", [
-                    "Static (Diam)", "Slow Zoom In", "Slow Zoom Out", 
-                    "Pan Left to Right", "Pan Right to Left", "Dynamic Tracking Shot", 
-                    "Handheld Shake (High Tension)"
-                ])
+                cam_movement = st.selectbox(
+                    "cam_move", 
+                    ["Static (Diam)", "Slow Zoom In", "Slow Zoom Out", "Pan Left to Right", "Pan Right to Left", "Dynamic Tracking Shot", "Handheld Shake (High Tension)"],
+                    label_visibility="collapsed"
+                )
             with cc2:
-                cam_angle = st.selectbox("Sudut Pandang (Angle)", [
-                    "Eye Level", "Low Angle (Heroic)", "High Angle", 
-                    "Cinematic Close-up", "Wide Establishing Shot"
-                ])
+                cam_angle = st.selectbox(
+                    "cam_ang", 
+                    ["Eye Level", "Low Angle (Heroic)", "High Angle", "Cinematic Close-up", "Wide Establishing Shot"],
+                    label_visibility="collapsed"
+                )
 
             # --- ROW 4: DETAIL TRANSFORMASI ---
             if is_trans_l or is_trans_r:
@@ -5652,6 +5657,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
