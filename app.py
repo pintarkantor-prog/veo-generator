@@ -1825,39 +1825,41 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu, Bos! Biar Nenek tau mau ngomong apa.")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (INTERACTIVE & PROPORTIONAL) ---
+                # --- 4. DYNAMIC SCENE LOGIC (KAMERA GALAK & INTERAKTIF) ---
                 scene_context = ""
+                
                 if "🤖 Robot" in modus_konten:
+                    # LOGIKA ROBOT: WAJIB BERDIRI, TANGAN NEMPEL
                     scene_context = (
                         "HIGH-TECH INTERACTIVE SCENE. The character MUST BE STANDING UPRIGHT, "
-                        "not sitting on the floor. FULL BODY SHOT capturing the entire character "
-                        "from head to toe and the 100cm robot standing right beside them. "
-                        "The character's body is fully extended vertically. They are leaning "
-                        "slightly over the robot to actively work on its core with both hands. "
-                        "The camera is EXTRA WIDE ANGLE to capture the scale of both. "
+                        "not sitting on the floor. FULL BODY SHOT from head to toe. "
+                        "The 100cm robot is standing DIRECTLY IN FRONT of the character. "
+                        "The character's body is fully extended vertically, leaning slightly "
+                        "over the robot to actively work on its core with both hands. "
                         "Strictly enforce standing posture for the character."
                     )
-                    elif "🕌 Miniatur Masjid" in modus_konten:
+                elif "🕌 Miniatur Masjid" in modus_konten:
+                    # LOGIKA MASJID: WAJIB DI DEPAN, TANGAN NEMPEL
                     scene_context = (
-                        "CLOSE-UP SHOT focusing on the character and the object. "
-                        "The grand miniature mosque is positioned DIRECTLY IN THE FOREGROUND, "
-                        "placed on a small wooden table situated between the camera and the character. "
-                        "The character is leaning forward, their aged hands are physically touching and "
-                        "actively working on the mosque's lower dome. The mosque MUST be in front of the character, "
-                        "not behind them. Deep depth of field ensures both the character and the craft are in sharp focus."
+                        "CLOSE-UP INTERACTIVE SHOT. The grand miniature mosque is positioned "
+                        "DIRECTLY IN THE FOREGROUND, between the camera and the character. "
+                        "The character is sitting on a tikar, leaning forward with their aged hands "
+                        "physically touching and adding final 90% details to the dome. "
+                        "The mosque MUST be in front of the character, not behind them."
                     )
                 elif "🥣 Buka Puasa" in modus_konten:
+                    # LOGIKA MENU: HARU & SEPI
                     scene_context = (
-                        "The character is sitting humbly on the floor (tikar) facing their very simple meal. "
-                        "SOMBRE EYE-LEVEL SHOT. The character looks at the food with a mix of hunger and deep gratitude, "
-                        "their hands resting near the plate in a prayerful or patient manner."
+                        "SOMBRE EYE-LEVEL SHOT. The character is sitting humbly on the floor (tikar) "
+                        "facing their very simple meal. The character looks at the food with "
+                        "hunger and deep gratitude, hands resting patiently near the plate."
                     )
 
-                # --- 5. NUANSA HIDUP (LIVING ATMOSPHERE) ---
+                # --- 5. NUANSA HIDUP ---
                 living_details = (
-                    "Atmospheric cinematic lighting with realistic shadows. Tiny dust motes dancing in light rays. "
-                    "Subtle background ambient sounds. The air looks thick with humidity and nostalgic atmosphere. "
-                    "Hyper-realistic skin textures, visible sweat, and authentic weathered details on the character."
+                    "Atmospheric cinematic lighting. Tiny dust motes dancing in light rays. "
+                    "Subtle background sounds of crickets. The air looks thick with humidity. "
+                    "Hyper-realistic skin textures, visible sweat, and authentic weathered details."
                 )
 
                 # --- 6. RAKIT FINAL PROMPT ---
@@ -1878,7 +1880,7 @@ def tampilkan_ai_lab():
                     
                     f"TECHNICAL SPEC:\n"
                     f"Shot on ARRI Alexa 65. 24fps. REAL-TIME SPEED. NO SLOW MOTION. "
-                    f"Deep depth of field. High-dynamic range (HDR) with realistic lighting and shadows."
+                    f"Deep depth of field. High-dynamic range (HDR) with realistic lighting."
                 )
 
                 # --- TAMPILAN OUTPUT ---
@@ -5483,6 +5485,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
