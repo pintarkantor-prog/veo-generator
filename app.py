@@ -1135,21 +1135,24 @@ def tampilkan_ai_lab():
                     f"Text: '{vo_ref}'"
                 )
                 
-                # --- TAMPILKAN HASIL SINGLE BOX (VEO/GROK READY) ---
-                st.warning("🎥 MASTER VIDEO ENGINE PROMPT (VEO & GROK OPTIMIZED)")
+                # --- TAMPILKAN HASIL SINGLE BOX (VEO/GROK READY - NATURAL MOTION) ---
+                st.warning("🎥 MASTER VIDEO ENGINE PROMPT (OPTIMIZED)")
                 
                 sultan_video_prompt = (
                     f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
                     
-                    f"ACTION & MOTION PHYSICS:\n{aksi_in.replace('BALUNG', 'the skeletal character')}. The movement is slow, organic, and deliberate. "
-                    f"Focus on physical weight and muscle-mimicry of the thick transparent gel. "
-                    f"No flickering, no morphing, no sudden AI artifacts. \n\n"
+                    f"ACTION & MOTION PHYSICS:\n{aksi_in.replace('BALUNG', 'the skeletal character')}. "
+                    f"The movement is natural, fluid, and follows real-world momentum with physical weight. "
+                    f"Maintain organic muscle-mimicry of the thick transparent gel. "
+                    f"Natural 24fps motion cadence, NO artificial slow-motion, NO flickering, NO morphing. \n\n"
                     
                     f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting Engine: {auto_lighting}. "
-                    f"Ray-traced reflections on the wet gel surface and realistic light refraction through the thick skin. \n\n"
+                    f"Ray-traced reflections on the wet gel surface and realistic light refraction through the thick skin. "
+                    f"Dynamic environment interaction: dust and particles react naturally to the character's movement. \n\n"
                     
                     f"TECHNICAL SPECIFICATIONS (STRICT ANTI-AI LOOK):\n"
                     f"Shot on ARRI Alexa 65, 80mm Master Prime Lens. Framing: {f_auto}. Motion: {m_auto}. "
+                    f"Real-time shutter speed, natural motion blur, handheld micro-jitter for authentic human cinematography. "
                     f"ABSOLUTELY NO cartoon, NO anime, NO 3D-render look, NO plastic textures, NO glossy skin, and NO artificial glowing. "
                     f"Maintain hyper-realistic forensic photography style with natural 35mm film grain and cinematic color science. \n\n"
                     
@@ -4940,6 +4943,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
