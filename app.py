@@ -1330,19 +1330,19 @@ def tampilkan_ai_lab():
                 st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # ==========================================================================
-    # TAB: THE FAMILY LEGACY (REAL HUMAN - FULL SULTAN EDITION)
+    # TAB: THE FAMILY LEGACY (REAL HUMAN - CLEAN ALL-IN-ONE)
     # ==========================================================================
     with t_grandma:
-        # --- 1. MASTER DNA MANUSIA ASLI (REAL INDONESIAN PRIBUMI) ---
+        # --- 1. MASTER DNA MANUSIA ASLI ---
         MASTER_FAMILY_SOUL = {
-            "Nenek (The Grandma)": "Real elderly Indonesian woman, deeply weathered skin, authentic facial wrinkles, thin gray hair in a bun (sanggul), kind but tired eyes with realistic tear film.",
-            "Kakek (The Grandpa)": "Real elderly Indonesian man, sun-kissed leathery skin, deep forehead wrinkles, white stubble, stooped posture, weathered hands with visible veins.",
-            "Gadis Cantik (The Maiden)": "Beautiful young Indonesian woman, natural sawo matang skin, elegant features, deep brown eyes, long glossy black hair, no-makeup natural look.",
+            "Nenek (The Grandma)": "Real elderly Indonesian woman, weathered skin, authentic wrinkles, thin gray hair in a bun, kind tired eyes with real tear film.",
+            "Kakek (The Grandpa)": "Real elderly Indonesian man, sun-kissed leathery skin, deep forehead wrinkles, white stubble, stooped posture, weathered hands.",
+            "Gadis Cantik (The Maiden)": "Beautiful young Indonesian woman, natural sawo matang skin, elegant features, deep brown eyes, long glossy black hair.",
             "Anak Laki-laki (The Boy)": "Young Indonesian village boy, sun-tanned skin, messy black hair, bright innocent eyes, slight sweat on forehead.",
             "Anak Perempuan (The Girl)": "Cute young Indonesian girl, natural black hair with pigtails, soft chubby cheeks, innocent sparkling eyes."
         }
 
-        # --- 2. MASTER WARDROBE (REAL FABRIC PHYSICS) ---
+        # --- 2. MASTER WARDROBE ---
         MASTER_FAMILY_WARDROBE = {
             "Nenek": {
                 "Daster Batik Kencana": "Faded cotton daster, traditional Javanese batik, soft worn-out texture.",
@@ -1369,7 +1369,7 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER LOKASI, BAHAN & AUDIO ---
+        # --- 3. MASTER LOKASI, BAHAN & AUDIO STYLE ---
         MASTER_GRANDMA_CRAFT = {
             "Buah-buahan": "Mosque miniature from carved watermelon and citrus peels, wet pulpy textures.",
             "Kardus Bekas": "Detailed mosque miniature from recycled brown cardboard, torn edges, fibers.",
@@ -1381,7 +1381,7 @@ def tampilkan_ai_lab():
             "Pinggir Sungai": "Muddy riverbank at twilight, reeds swaying, misty trees.",
             "Teras Desa": "Weathered concrete terrace, cracked floor tiles, cinematic Golden Hour."
         }
-        MASTER_AUDIO_ENGINE = {
+        MASTER_AUDIO_STYLE = {
             "Logat": ["Indonesia Desa", "Jawa Kromo Inggil", "Sunda Lembut", "Melayu Tua", "Betawi Klasik"],
             "Mood": ["Menangis/Haru", "Bijak/Tenang", "Meminta Maaf", "Bahagia Tulus"]
         }
@@ -1390,7 +1390,6 @@ def tampilkan_ai_lab():
         st.subheader("👨‍👩‍👧‍👦 REAL HUMAN STORYTELLING ENGINE")
         
         with st.expander("🎬 KONFIGURASI KONTEN VIRAL", expanded=True):
-            # Row 1: Tokoh & Pakaian
             c1, c2 = st.columns(2)
             with c1:
                 st.markdown('<p class="small-label">PILIH TOKOH UTAMA (REAL HUMAN)</p>', unsafe_allow_html=True)
@@ -1401,7 +1400,6 @@ def tampilkan_ai_lab():
                 baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
                 baju_pilihan = st.selectbox("Select Wardrobe", baju_options, label_visibility="collapsed")
             
-            # Row 2: Bahan & Lokasi
             c3, c4 = st.columns(2)
             with c3:
                 st.markdown('<p class="small-label">KARYA TANGAN (CRAFT MATERIAL)</p>', unsafe_allow_html=True)
@@ -1412,57 +1410,49 @@ def tampilkan_ai_lab():
             
             st.divider()
             
-            # Row 3: Dialog & Logat
             c5, c6 = st.columns([2, 1])
             with c5:
                 st.markdown('<p class="small-label">DIALOG / UCAPAN TOKOH</p>', unsafe_allow_html=True)
                 user_dialog = st.text_area("Input Dialog", 
-                                          placeholder=f"Contoh: Maaf ya Cuk, {char_key} cuma bisa buat masjid dari {pilihan_bahan}... pantes gak ada yang like...",
+                                          placeholder=f"Maaf ya Cuk, {char_key} cuma bisa buat masjid dari {pilihan_bahan}...",
                                           height=110, label_visibility="collapsed")
             with c6:
-                st.markdown('<p class="small-label">VOICE & MOOD ENGINE</p>', unsafe_allow_html=True)
-                pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_ENGINE["Logat"])
-                pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_ENGINE["Mood"])
+                st.markdown('<p class="small-label">VOICE & MOOD STYLE</p>', unsafe_allow_html=True)
+                pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
+                pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
 
             st.write("")
-            btn_gen = st.button("🔥 GENERATE REAL STORY PROMPT", use_container_width=True)
+            btn_gen = st.button("🔥 GENERATE MASTER VIDEO PROMPT", use_container_width=True)
 
-        # --- OUTPUT LOGIC ---
+        # --- OUTPUT LOGIC (ALL-IN-ONE PROMPT) ---
         if btn_gen:
             if not user_dialog:
-                st.error("Waduh, isi dulu dialognya Bos agar emosinya dapet!")
+                st.error("Waduh, isi dulu dialognya Bos!")
             else:
                 final_soul = MASTER_FAMILY_SOUL[pilihan_user]
                 final_baju = MASTER_FAMILY_WARDROBE[char_key][baju_pilihan]
                 final_bahan = MASTER_GRANDMA_CRAFT[pilihan_bahan]
                 final_set = MASTER_GRANDMA_SETTING[pilihan_set]
 
-                # RAKIT PROMPT VIDEO (LIP-SYNC & DIALOG READY)
+                # RAKIT PROMPT VIDEO + AUDIO IN SATU KOTAK
                 video_prompt = (
-                    f"CINEMATIC PHOTO-REALISM: {final_soul}\n"
+                    f"MASTER VIDEO & AUDIO PROMPT:\n"
+                    f"CORE SUBJECT: {final_soul}\n"
                     f"WARDROBE: {final_baju}\n"
-                    f"SCENE & DIALOG ACTION: The {char_key} is sitting while holding a handcrafted {final_bahan}. "
+                    f"SCENE & DIALOG: The {char_key} is sitting while holding a handcrafted {pilihan_bahan}. "
                     f"The character is SPEAKING DIRECTLY TO THE CAMERA, saying: '{user_dialog}'. "
-                    f"Their lips move in perfect synchronization with the emotional weight of the words. "
-                    f"As they speak in a {pilih_logat} accent, real tears well up and roll down their cheeks. "
-                    f"The facial muscles react to the speech with trembling lips and heavy emotional breaks. \n"
-                    f"ENVIRONMENT: {final_set}. Cinematic lighting, dust motes dancing in sunlight, 35mm film grain.\n"
-                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Natural 24fps motion, realistic lip-sync movements, 100% real human features."
-                )
-
-                # RAKIT PROMPT AUDIO (UNTUK GENERATOR SUARA)
-                audio_prompt = (
-                    f"VOICE PROFILE: {pilihan_user}, Accent: {pilih_logat}, Mood: {pilih_mood}.\n"
-                    f"DIALOG SCRIPT: '{user_dialog}'\n"
-                    f"PERFORMANCE: Authentic Indonesian delivery, breathless micro-pauses, trembling voice, natural emotional breaks, intimate and raw."
+                    f"Their lips move in perfect synchronization with the words. "
+                    f"The voice profile is {'Elderly Female' if 'Nenek' in char_key else 'Elderly Male' if 'Kakek' in char_key else 'Young Female' if 'Gadis' in char_key else 'Young Child'} "
+                    f"with a {pilih_logat} accent and a {pilih_mood} emotional tone. "
+                    f"Natural breathing, trembling voice, and emotional pauses included. "
+                    f"Real tears well up and roll down the cheeks during speech. \n"
+                    f"ENVIRONMENT: {final_set}. Cinematic lighting, dust motes, 35mm film grain.\n"
+                    f"TECHNICAL: Shot on ARRI Alexa 65, 80mm Master Prime. Natural 24fps motion, realistic lip-sync, 100% real human features."
                 )
 
                 st.divider()
-                st.markdown('<p class="small-label">HASIL GENERATE: VIDEO ENGINE PROMPT (SPEAKING READY)</p>', unsafe_allow_html=True)
+                st.success(f"🎬 MASTER PROMPT READY (COPY TO VEO/GROK)")
                 st.code(video_prompt, language="text")
-                
-                st.markdown('<p class="small-label">HASIL GENERATE: AUDIO & DIALOG PROMPT</p>', unsafe_allow_html=True)
-                st.code(audio_prompt, language="text")
                 
     with t_minecraft: st.info("⛏️ Minecraft Mode Standby.")
     with t_random: st.info("🎲 Random Mode Standby.")
@@ -5061,6 +5051,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
