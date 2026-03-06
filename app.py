@@ -1611,56 +1611,66 @@ def tampilkan_ai_lab():
                     "the green neon glow in the dim environment."
                 )
             },
-            "🥣 Buka Puasa (Menu Sederhana)": {
+            "🥣 Buka Puasa Menu Sederhana": {
                 "Nasi & Garam": (
-                    "A HEART-BREAKING IFTHAR. A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
-                    "A glass of plain tap water in a plastic cup. The character is carefully picking up every single grain of rice with their fingers. "
-                    "The table is bare, reflecting extreme poverty and deep gratitude."
+                    "AUTHENTIC MAGRIB EVENING. Dim moody lighting. The character sits on a rustic wooden chair at a standard wooden table. "
+                    "A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
+                    "A weathered tin cup of warm water and one small date on the side. "
+                    "Character picking up every grain with fingers in deep gratitude. Somber atmosphere."
                 ),
                 "Singkong Rebus & Sambal": (
-                    "A POOR MAN'S MEAL. Two pieces of boiled cassava on a small plastic plate with a dab of red chili paste (sambal). "
-                    "A glass of warm plain water. The character looks at the food with a bittersweet smile, "
-                    "slowly blowing on the hot cassava. Steam rises, blurring their tired eyes."
+                    "AUTHENTIC MAGRIB EVENING. Low-key cinematic lighting. The character sits on a rustic wooden chair at a wooden table. "
+                    "Two pieces of boiled cassava on a small plastic plate with a dab of red sambal. "
+                    "A glass of warm plain water. Steam rises from the cassava, blurring their tired eyes. "
+                    "Bittersweet smile, a quiet lonely breaking of fast."
                 ),
                 "Teh & Biskuit Lempem": (
-                    "A VERY SIMPLE BREAKING OF FAST. A glass of dark, unsweetened tea and one single dry biscuit. "
-                    "The biscuit is being dipped into the tea for a long time until it becomes soft and mushy. "
-                    "The character's shaky hands reflect the physical weakness from fasting all day."
+                    "AUTHENTIC MAGRIB EVENING. Flickering warm light. The character sits on a rustic wooden chair at a standard table. "
+                    "A glass of dark, unsweetened tea and one single dry biscuit. "
+                    "The biscuit is being dipped into the tea slowly until soft. "
+                    "Shaky hands reflect physical weakness. Atmospheric deep shadows."
                 ),
                 "Nasi Kerupuk & Air Putih": (
-                    "A HUMBLE MEAL. A small bowl of white rice and one white flour cracker (kerupuk). "
-                    "The character is breaking the cracker into tiny pieces over the rice to make it last longer. "
-                    "Very quiet and somber atmosphere, only the sound of the crunching cracker is heard."
+                    "AUTHENTIC MAGRIB EVENING. Blue hour light from the window. Character sits on a wooden chair at a standard table. "
+                    "A small bowl of white rice and one white flour cracker (kerupuk). A plastic cup of plain water. "
+                    "Breaking the cracker into tiny pieces over the rice to make it last. "
+                    "Very quiet, only the sound of crunching is heard."
                 ),
                 "Ubi Bakar": (
-                    "A SIMPLE IFTHAR consisting of one roasted sweet potato (ubi bakar) on a piece of old newspaper. "
-                    "Steam is rising from the potato. The character peels the charred skin with soot-stained fingers. "
-                    "A very traditional and humble village scene with dim lighting."
+                    "AUTHENTIC MAGRIB EVENING. Dim warm lighting. The character sits on a rustic wooden chair at a standard table. "
+                    "One roasted sweet potato on a piece of old newspaper. A small glass of hot unsweetened tea. "
+                    "Steam rises as soot-stained fingers peel the charred skin. "
+                    "Deeply authentic rural village vibe with heavy shadows."
                 ),
                 "Bubur Polos & Kecap": (
-                    "A MODEST MEAL. A small bowl of watery white porridge (bubur) with a thin swirl of sweet soy sauce. "
-                    "The character eats slowly with a wooden spoon, the steam lightly fogging their old glasses. "
-                    "A single fly is being waved away gently from the bowl."
+                    "AUTHENTIC MAGRIB EVENING. Moody interior light. The character sits on a rustic wooden chair at a wooden table. "
+                    "A small bowl of watery white porridge with a thin swirl of sweet soy sauce. "
+                    "A glass of plain warm water. Eating slowly with a wooden spoon. "
+                    "Atmosphere of pure patience and deep prayerful silence."
                 ),
                 "Pisang Rebus & Air Hangat": (
-                    "A VERY MODEST IFTHAR. Two pieces of boiled banana on a small tin plate. "
-                    "A glass of plain hot water. No sugar, no luxury. The character's shaky hands carefully peel the skin, "
-                    "placing the skin neatly on the side of the plate."
+                    "AUTHENTIC MAGRIB EVENING. Cinematic low light. The character sits on a rustic wooden chair at a standard table. "
+                    "Two pieces of boiled banana on a tin plate. A glass of plain hot water. "
+                    "Shaky hands carefully peel the skin, placing it neatly on the side. "
+                    "Focus on the humble, hardworking hands."
                 ),
                 "Nasi Putih & Satu Tempe": (
-                    "A SIMPLE VILLAGE MEAL. A small mound of white rice and one single piece of fried tempeh. "
-                    "Served on a piece of banana leaf instead of a plate. The character is splitting the one tempeh "
-                    "into smaller bits to eat with the rice. Authentic and deeply humble."
+                    "AUTHENTIC MAGRIB EVENING. Warm dim lighting. The character sits on a rustic wooden chair at a standard table. "
+                    "Small mound of white rice and one fried tempeh on a piece of banana leaf. "
+                    "A weathered glass of warm water. Splitting the one tempeh into tiny bits. "
+                    "Extreme poverty reflected in the high-contrast shadows."
                 ),
                 "Gorengan Dingin & Teh Tawar": (
-                    "A POOR MAN'S IFTHAR. One cold fried bakwan on a small saucer and a glass of plain unsweetened tea. "
-                    "The oil has hardened on the cold fritter. The character bites into it with a look of pure patience. "
-                    "A single lightbulb flickers above the wooden table."
+                    "AUTHENTIC MAGRIB EVENING. A single flickering lightbulb above. Character sits on a wooden chair at a standard table. "
+                    "One cold fried bakwan on a saucer and a glass of plain tea. "
+                    "Hardened oil on the fritter. Biting with look of pure resilience. "
+                    "The room is filled with dramatic, gritty shadows."
                 ),
                 "Lontong Polos & Air Putih": (
-                    "A HUMBLE BREAK. One single rice cake (lontong) wrapped in a wilted banana leaf. "
-                    "A plastic cup of plain water. The character is slowly unwrapping the leaf as if it's a precious gift. "
-                    "The scene shows the character sitting alone in deep, prayerful silence."
+                    "AUTHENTIC MAGRIB EVENING. Soft twilight glow. The character sits on a rustic wooden chair at a standard table. "
+                    "One rice cake (lontong) in a wilted banana leaf. A plastic cup of water. "
+                    "Unwrapping the leaf slowly like a precious gift. "
+                    "Sitting alone in deep, somber silence."
                 )
             }
         }
@@ -1875,11 +1885,11 @@ def tampilkan_ai_lab():
                 elif "🥣 Buka Puasa" in modus_konten:
                     scene_context = (
                         "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
-                        "SOMBRE MEDIUM SHOT focusing on the character sitting on the floor (tikar). "
-                        "A very low, simple wooden table is DIRECTLY IN FRONT of the character, "
-                        "placed between the camera and the character's body. "
-                        "The meal is clearly visible on the table. The camera remains FIXED "
-                        "on the character's weary and emotional face as they prepare to break their fast. "
+                        "AUTHENTIC MAGRIB EVENING ATMOSPHERE. SOMBRE MEDIUM SHOT. " # Tambah Magrib
+                        "The character is sitting on a rustic wooden chair at a standard-height wooden table. " # Ganti ke Kursi & Meja
+                        "The table is positioned directly in front of the character, between the camera and the character. "
+                        "The meal and the weathered tin cup are clearly visible on the table. "
+                        "The camera remains FIXED on the character's weary and emotional face as they speak. "
                         "STRICTLY STATIC FRAME. NO CAMERA MOVEMENT. NO ZOOM."
                     )
 
@@ -5716,6 +5726,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
