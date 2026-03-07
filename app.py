@@ -5667,10 +5667,6 @@ def tampilkan_ruang_produksi():
 
                 st.markdown('<div style="margin-bottom: -15px;"></div>', unsafe_allow_html=True)
 
-            # --- SUNTIKAN LOG AKTIVITAS (CCTV) ---
-            # Dicatat hanya saat tombol Generate ditekan
-            tambah_log(user_aktif, f"GENERATE PROMPT: {len(adegan_terisi)} Adegan")
-
     # --- 5. FOOTER & PENGAMAN SESSION ---
     st.write("")
     st.divider()
@@ -5734,6 +5730,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
