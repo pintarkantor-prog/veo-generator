@@ -5434,10 +5434,10 @@ def tampilkan_ruang_produksi():
         "subtle film grain, smooth motion interpolation, high-fidelity physical interaction"
     )
 
-    # --- INI DIA YANG KURANG: NEGATIVE BASE (VERSI PENJAGA KETAJAMAN) ---
+    # --- KONFIGURASI NEGATIVE PROMPT (PENJAGA KETAJAMAN & KONSISTENSI) ---
     negative_base = (
-        "blur, blurry, bokeh, out of focus, soft focus, depth of field, " # <--- KUNCI MATI BLUR
-        "shallow depth of field, blurred background, hazy, foggy, " # <--- BLOKIR SEMUA JENIS BLUR
+        "blur, blurry, bokeh, out of focus, soft focus, depth of field, "
+        "shallow depth of field, blurred background, hazy, foggy, "
         "plastic skin, doll-like, fake face, cartoonish, low quality, "
         "oversaturated colors, high-contrast bloom, blown-out highlights, "
         "distorted surface, double head, messy facial features, "
@@ -5445,16 +5445,25 @@ def tampilkan_ruang_produksi():
     )
     
     no_text_strict = (
-        "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
-        "NO captions, NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
+        "STRICTLY NO English text, NO 'Crafts for Sale' text, NO 'Bottle Mosque' labels, "
+        "STRICTLY NO typography, NO watermark, NO letters, NO subtitles, NO captions, "
+        "NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
         "NO burned-in text, NO characters speaking with visible words, "
-        "the image must be a CLEAN cinematic shot without any written characters."
+        "the image must be a CLEAN cinematic shot without any written characters "
+        "except the Indonesian text specifically requested in the prompt."
     )
     
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
         "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
-        "NO motion blur, NO motion trails." # <--- TAMBAHAN UNTUK VIDEO TAJAM
+        "NO motion blur, NO motion trails."
+    )
+
+    # --- TAMBAHAN UNTUK MENGHILANGKAN BACKSOUND/MUSIK (PENTING!) ---
+    no_audio_strict = (
+        "STRICTLY NO background music, NO BGM, NO soundtrack, NO ambient noise, "
+        "NO Foley sounds, NO voice over, NO audio, MUTE video, "
+        "total silence, silent film style, no sound effects, zero volume."
     )
 
     # 1. INTEGRASI REFERENSI NASKAH
@@ -5693,7 +5702,7 @@ def tampilkan_ruang_produksi():
                         f"FORMAT: 9:16 Vertical Framing"
                     )
 
-                    # RAKIT PROMPT VIDEO (VERSI TAJAM TOTAL / ANTI-MODIFIED DEPTH)
+                    # RAKIT PROMPT VIDEO (VERSI TAJAM TOTAL / ANTI-MODIFIED DEPTH / ANTI-AUDIO)
                     vid_p = (
                         f"IMAGE REFERENCE RULE: Refer to PHOTO #1 for ACTOR_1, PHOTO #2 for ACTOR_2, etc.\n"
                         f"{final_identity}\n"
@@ -5701,8 +5710,9 @@ def tampilkan_ruang_produksi():
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
                         f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n"
-                        f"FOCUS RULE: Deep focus photography, f/11 constant sharpness, edge-to-edge clarity.\n" # <--- SUNTIKAN TAJAM
-                        f"NEGATIVE: {negative_base} bokeh, blurry background, soft focus, {no_text_strict} {negative_motion_strict}\n" # <--- BLOKIR BLUR
+                        f"FOCUS RULE: Deep focus photography, f/11 constant sharpness, edge-to-edge clarity.\n"
+                        f"AUDIO RULE: Strictly silent, no sound, no music, mute output.\n" # <--- BARIS TAMBAHAN UNTUK INSTRUKSI POSITIF
+                        f"NEGATIVE: {negative_base} bokeh, blurry background, soft focus, {no_text_strict} {negative_motion_strict} {no_audio_strict}\n" # <--- MASUKKAN no_audio_strict DI SINI
                         f"FORMAT: 9:16 Vertical Video"
                     )
 
@@ -5779,6 +5789,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
