@@ -889,7 +889,6 @@ def tampilkan_ai_lab():
         st.stop()
 
     st.title("🧠 PINTAR AI LAB")
-    st.divider()
 
     t_anatomi, t_grandma, t_transform, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⚡ TRANSFORMATION", "🎲 RANDOM"])
 
@@ -5735,6 +5734,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
