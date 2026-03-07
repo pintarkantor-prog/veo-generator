@@ -146,25 +146,33 @@ except Exception as e:
 def load_data_channel():
     """Narik data dari Supabase (Utama), GSheet cuma Backup."""
     try:
-        # 1. Coba ambil dari Supabase dulu biar kenceng (Anti API Error)
+        # 1. TEMBAK SUPABASE (Prioritas Utama)
         res = supabase.table("Channel_Pintar").select("*").execute()
-        df = pd.DataFrame(res.data)
         
-        if not df.empty:
+        # CEK: Apakah res sukses dan ADA datanya?
+        # Ini perbaikan paling krusial. Lo cek datanya dulu, baru bikin DataFrame.
+        if res.data and len(res.data) > 0:
+            df = pd.DataFrame(res.data)
             return bersihkan_data(df)
         
-        # 2. Kalau Supabase kosong/baru setup, lari ke GSheet
-        return bersihkan_data(pd.DataFrame(ws.get_all_records()))
+        # 2. Jika Supabase beneran kosong, baru ke GSheet
+        # Pakai st.info/warning cuma buat lo (owner) tahu kalau sistem lagi switch
+        data_gs = ws.get_all_records()
+        return bersihkan_data(pd.DataFrame(data_gs))
+
     except Exception as e:
-        print(f"⚠️ Supabase Error, lari ke GSheet: {e}")
-        # 3. Emergency Backup: Langsung ke GSheet
+        # 3. EMERGENCY (Supabase Error/Limit)
+        # Langsung lari ke GSheet sebagai pertahanan terakhir
         try:
-            return bersihkan_data(pd.DataFrame(ws.get_all_records()))
+            data_gs = ws.get_all_records()
+            return bersihkan_data(pd.DataFrame(data_gs))
         except:
+            # FALLBACK TOTAL: Tetep 4 Kolom sesuai kode awal lo
             return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
 
+@st.cache_data(ttl=600) # <--- TAMBAHIN INI DI ATAS FUNGSI
 def load_data_hp():
-    """Load data unit HP (Bisa lo pindahin Supabase juga nanti kalau udah ribuan)."""
+    """Load data unit HP (Hemat API dengan Cache 10 Menit)."""
     try:
         # Untuk data HP yang dikit, GSheet masih oke banget cok
         return bersihkan_data(pd.DataFrame(ws_unit_hp.get_all_records()))
@@ -172,40 +180,56 @@ def load_data_hp():
         return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
 
 def simpan_perubahan_channel(df_edited, user_aktif):
-    """Fungsi sakti: Prioritas Supabase, GSheet Update Smart."""
+    """VERSI SAFE & KENCANG: Prioritas Supabase, GSheet Gak Bakal Bikin Error."""
     try:
         tz = pytz.timezone('Asia/Jakarta')
         tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
         
-        # --- A. UPDATE SUPABASE (CEPAT & UNLIMITED) ---
-        # Kita konversi dataframe ke list of dict buat upsert massal
+        # --- A. UPDATE SUPABASE (CEPAT & MASAL) ---
+        # Upsert di Supabase itu super kencang, 1 request beres semua baris.
         data_to_supabase = df_edited.to_dict(orient='records')
         supabase.table("Channel_Pintar").upsert(data_to_supabase, on_conflict="EMAIL").execute()
         
-        # --- B. UPDATE GSHEET (BACKUP PASIF) ---
-        # Ambil data GSheet buat mapping index
-        df_gs_full = pd.DataFrame(ws.get_all_records())
-        
-        for i, row in df_edited.iterrows():
-            match = df_gs_full[df_gs_full['EMAIL'] == row['EMAIL']]
-            if not match.empty:
-                r_gs = match.index[0] + 2
+        # --- B. UPDATE GSHEET (BACKUP SILENT) ---
+        try:
+            # Pake col_values(2) jauh lebih ringan daripada get_all_records()
+            # Ini cuma narik kolom EMAIL buat nyari alamat baris
+            emails_gs = ws.col_values(2) # Asumsi Email di kolom B (2)
+            
+            for i, row in df_edited.iterrows():
+                email_target = str(row['EMAIL']).strip().lower()
                 
-                # Gunakan try-except di dalam loop biar kalau 1 gagal, yang lain lanjut
-                try:
-                    ws.update(f"G{r_gs}:L{r_gs}", [[
-                        row['STATUS'], row['HP'], str(row['PAGI']), 
-                        str(row['SIANG']), str(row['SORE']), f"Up: {user_aktif} ({tgl_now})"
-                    ]])
-                    # Kasih jeda tipis 0.2 detik biar API Google gak kaget
-                    time.sleep(0.2) 
-                except:
-                    continue # Kalau limit, skip GSheet-nya (Toh Supabase udah masuk)
-        
+                if email_target in emails_gs:
+                    # Cari baris: index list + 1
+                    r_gs = emails_gs.index(email_target) + 1
+                    
+                    # Update baris G sampai L
+                    try:
+                        ws.update(f"G{r_gs}:L{r_gs}", [[
+                            row['STATUS'], 
+                            row['HP'], 
+                            str(row.get('PAGI', '')), 
+                            str(row.get('SIANG', '')), 
+                            str(row.get('SORE', '')), 
+                            f"Up: {user_aktif} ({tgl_now})"
+                        ]])
+                        # Kasih jeda dikit biar API Google gak marah
+                        time.sleep(0.4) 
+                    except:
+                        # Kalau per baris kena limit, skip aja, lanjut baris berikutnya
+                        continue
+        except Exception as e_gs:
+            # Kalau GSheet mati total/limit parah, abaikan saja. 
+            # Jangan pake st.error supaya user gak panik, data udah aman di Supabase.
+            print(f"GSheet Backup Delay: {e_gs}")
+
+        # Bersihkan cache agar tampilan radar langsung update
         st.cache_data.clear()
-        return True
+        return True 
+
     except Exception as e:
-        st.error(f"Gagal Simpan: {e}")
+        # Hanya error kalau Supabase-nya yang gagal (ini baru bahaya)
+        st.error(f"❌ Gagal Simpan Utama (Supabase): {e}")
         return False
         
 # ==============================================================================
@@ -4669,21 +4693,24 @@ def tampilkan_database_channel():
                 # --- 6. LOGIKA UPDATE MODERN (SISTEM ANTI-NGACAK / CARI EMAIL) ---
                 kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
                 if not edited_st.equals(df_st[kolom_cek]):
-                    if st.button("💾 KONFIRMASI PERUBAHAN STANDBY", use_container_width=True, type="primary"):
+                    if st.button("💾 KONFIRMASI PERUBAHAN", use_container_width=True, type="primary"):
                         try:
                             with st.spinner("Sinkronisasi Radar & Supabase..."):
+                                # --- TRICK SAKTI: Ambil daftar email GSheet SEKALI SAJA (Hemat API) ---
+                                emails_gs = ws.col_values(2) # Ambil Kolom B (Email)
+                                
                                 for i, row in edited_st.iterrows():
-                                    # --- A. CARI BARIS ASLI DI GSHEET (GPS SYSTEM) ---
                                     target_email = row['EMAIL'].strip().lower()
-                                    cell = ws.find(target_email)
                                     
-                                    if cell:
-                                        r_gs = cell.row # DAPET BARIS YANG BENER!
+                                    # Ganti ws.find dengan pencarian di list (PROSES LOKAL - 0ms)
+                                    if target_email in emails_gs:
+                                        r_gs = emails_gs.index(target_email) + 1
+                                        
                                         idx_asli = int(row['REAL_IDX'])
                                         old_val = df.iloc[idx_asli]
                                         tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                         
-                                        # --- B. LOGIKA TARGET HP (SLOT PROTECTION) ---
+                                        # --- B. LOGIKA TARGET HP (Tetap Aman) ---
                                         target_hp = str(old_val['HP'])
                                         if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
                                             df_p_now = df[df['STATUS'] == 'PROSES'].copy()
@@ -4713,18 +4740,18 @@ def tampilkan_database_channel():
                                         except Exception as e_supa:
                                             st.error(f"Gagal Supabase ({target_email}): {e_supa}")
 
-                                        # --- D. UPDATE GSHEET (BATCH UPDATE - TEPAT SASARAN) ---
-                                        # Pakai r_gs hasil temuan ws.find tadi
-                                        ws.update(f"G{r_gs}:L{r_gs}", [[
-                                            row['STATUS'], 
-                                            target_hp, 
-                                            str(old_val['PAGI']), 
-                                            str(old_val['SIANG']), 
-                                            str(old_val['SORE']), 
-                                            f"Up: {user_aktif} ({tgl_now})"
-                                        ]])
+                                        # --- D. UPDATE GSHEET (Anti-Asem dengan Try & Delay) ---
+                                        try:
+                                            ws.update(f"G{r_gs}:L{r_gs}", [[
+                                                row['STATUS'], target_hp, str(old_val.get('PAGI','')), 
+                                                str(old_val.get('SIANG','')), str(old_val.get('SORE','')), 
+                                                f"Up: {user_aktif} ({tgl_now})"
+                                            ]])
+                                            time.sleep(0.4) # Kasih napas buat Google
+                                        except:
+                                            continue # Kalau GSheet limit, biarkan saja, Supabase udah aman
                                     else:
-                                        st.error(f"Email {target_email} tidak ditemukan di GSheet!")
+                                        st.error(f"Email {target_email} tidak ada di GSheet!")
 
                                 st.cache_data.clear()
                                 st.success("✅ Database & Radar Sinkron!")
@@ -4732,7 +4759,7 @@ def tampilkan_database_channel():
                                 st.rerun()
                         except Exception as e:
                             st.error(f"❌ Error Global: {e}")
-                        
+                            
     # ==============================================================================
     # TAB 2: MONITORING PROSES (RADAR SYNC & SLOT HP PROTECTION)
     # ==============================================================================
@@ -4797,14 +4824,16 @@ def tampilkan_database_channel():
                 if is_pro and not edited_p.equals(df_display):
                     if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
                         try:
-                            with st.spinner("Sinkronisasi Radar & GSheet..."):
+                            with st.spinner("Sinkronisasi Radar & Supabase..."):
+                                # 1. AMBIL DAFTAR EMAIL GSHEET SEKALI SAJA (HEMAT API)
+                                emails_gs = ws.col_values(2) # Kolom B
+                                
                                 for i, row in edited_p.iterrows():
-                                    # 1. CARI BARIS ASLI DI GSHEET BERDASARKAN EMAIL (ANTI MELESET)
                                     target_email = row['EMAIL'].strip().lower()
-                                    cell = ws.find(target_email)
                                     
-                                    if cell:
-                                        r_gs = cell.row # DAPET BARIS YANG BENER!
+                                    # 2. CARI BARIS SECARA LOKAL (Gak pake ws.find)
+                                    if target_email in emails_gs:
+                                        r_gs = emails_gs.index(target_email) + 1
                                         idx_asli = int(row['REAL_IDX'])
                                         old_val = df.iloc[idx_asli]
                                         tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
@@ -4812,12 +4841,12 @@ def tampilkan_database_channel():
                                         # Cek apakah ada perubahan status atau subscribe
                                         if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
                                             
-                                            # TENTUKAN STATUS HP (Kalau keluar dari PROSES, HP jadi kosong)
+                                            # TENTUKAN STATUS HP (Keluar PROSES = Kosongkan Slot)
                                             target_hp = str(old_val['HP'])
                                             if row['STATUS'] != 'PROSES':
                                                 target_hp = "" 
 
-                                            # 2. UPDATE SUPABASE
+                                            # 3. UPDATE SUPABASE (CEPAT)
                                             supabase.table("Channel_Pintar").upsert({
                                                 "EMAIL": target_email,
                                                 "STATUS": row['STATUS'],
@@ -4826,18 +4855,21 @@ def tampilkan_database_channel():
                                                 "EDITED": f"Up: {user_aktif} ({tgl_now})"
                                             }, on_conflict="EMAIL").execute()
 
-                                            # 3. UPDATE GSHEET (TEPAT SASARAN KE BARIS r_gs)
-                                            # Update Status (G) sampai Keterangan (L)
-                                            ws.update(f"G{r_gs}:L{r_gs}", [[
-                                                row['STATUS'], 
-                                                target_hp, 
-                                                str(old_val['PAGI']), 
-                                                str(old_val['SIANG']), 
-                                                str(old_val['SORE']), 
-                                                f"Up: {user_aktif} ({tgl_now})"
-                                            ]])
+                                            # 4. UPDATE GSHEET (SILENT & AMAN)
+                                            try:
+                                                ws.update(f"G{r_gs}:L{r_gs}", [[
+                                                    row['STATUS'], 
+                                                    target_hp, 
+                                                    str(old_val.get('PAGI','')), 
+                                                    str(old_val.get('SIANG','')), 
+                                                    str(old_val.get('SORE','')), 
+                                                    f"Up: {user_aktif} ({tgl_now})"
+                                                ]])
+                                                time.sleep(0.4) # Jeda tipis biar API gak limit
+                                            except:
+                                                continue # Jika GSheet limit, abaikan, Supabase sudah masuk
                                     else:
-                                        st.error(f"Email {target_email} tidak ditemukan di GSheet!")
+                                        st.error(f"Email {target_email} tidak ditemukan!")
 
                                 st.cache_data.clear()
                                 st.success("✅ Status Diperbarui! Data Sinkron Tepat Sasaran.")
@@ -4894,31 +4926,34 @@ def tampilkan_database_channel():
                     if st.button("💾 SIMPAN SEMUA JADWAL", use_container_width=True, type="primary"):
                         try:
                             with st.spinner("Sinkronisasi Massal (Anti-Limit)..."):
-                                # 1. AMBIL SEMUA DATA GSHEET SEKALIGUS (HANYA 1 PANGGILAN API)
-                                all_values = ws.get_all_values()
-                                # Buat peta: email -> nomor baris (biar nyarinya kilat di memori)
-                                email_to_row = {r[1].strip().lower(): i + 1 for i, r in enumerate(all_values) if len(r) > 1}
+                                # 1. CARI BARIS SECARA IRIT (Hanya kolom Email)
+                                # Gak perlu get_all_values (berat), cukup ambil kolom B
+                                emails_gs = ws.col_values(2) 
+                                email_to_row = {email.strip().lower(): i + 1 for i, email in enumerate(emails_gs)}
                                 
                                 updates_gsheet = []
                                 jam_log = now_indo.strftime('%H:%M')
                                 
+                                # List untuk batch upload Supabase (biar sekali tembak)
+                                data_supabase = []
+
                                 for _, row in edited_j.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
                                     
                                     if target_email in email_to_row:
                                         r_gs = email_to_row[target_email]
                                         
-                                        # --- A. UPDATE SUPABASE (SUPABASE BIASANYA GAK ADA LIMIT) ---
-                                        supabase.table("Channel_Pintar").upsert({
+                                        # --- A. TAMPUNG DATA SUPABASE ---
+                                        data_supabase.append({
                                             "EMAIL": target_email,
                                             "PAGI": str(row['PAGI']) if row['PAGI'] else "",
                                             "SIANG": str(row['SIANG']) if row['SIANG'] else "",
                                             "SORE": str(row['SORE']) if row['SORE'] else "",
                                             "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
-                                        }, on_conflict="EMAIL").execute()
+                                        })
 
-                                        # --- B. TAMPUNG DATA UPDATE UNTUK GSHEET ---
-                                        # Kita siapkan batch update untuk kolom L, M, N, O
+                                        # --- B. TAMPUNG DATA GSHEET ---
+                                        # Pakai kolom L, M, N, O sesuai struktur lo
                                         updates_gsheet.append({
                                             'range': f'L{r_gs}:O{r_gs}',
                                             'values': [[
@@ -4928,23 +4963,26 @@ def tampilkan_database_channel():
                                                 str(row['SORE']) if row['SORE'] else ""
                                             ]]
                                         })
-                                    else:
-                                        st.warning(f"⚠️ Email {target_email} tidak ditemukan di GSheet.")
 
-                                # 2. TEMBAK SEMUA UPDATE GSHEET SEKALIGUS (HANYA 1 PANGGILAN API)
+                                # 2. EKSEKUSI SUPABASE (MASSAL)
+                                if data_supabase:
+                                    supabase.table("Channel_Pintar").upsert(data_supabase, on_conflict="EMAIL").execute()
+
+                                # 3. EKSEKUSI GSHEET (BATCH UPDATE - HANYA 1 REQUEST API)
                                 if updates_gsheet:
-                                    ws.batch_update(updates_gsheet)
+                                    # Kita bungkus try-except biar kalau GSheet limit, Supabase tetep aman
+                                    try:
+                                        ws.batch_update(updates_gsheet)
+                                    except:
+                                        st.warning("⚠️ Backup GSheet tertunda (Limit), tapi data Supabase sudah AMAN.")
 
                                 st.cache_data.clear()
-                                st.success(f"✅ Berhasil! {len(updates_gsheet)} Jadwal sinkron massal.")
+                                st.success(f"✅ Mantap! {len(data_supabase)} Jadwal Berhasil Sinkron.")
                                 time.sleep(1)
                                 st.rerun()
                                 
                         except Exception as e:
-                            if "429" in str(e):
-                                st.error("❌ Google Sheets Limit! Tunggu 1 menit lalu coba lagi.")
-                            else:
-                                st.error(f"❌ Terjadi Kesalahan: {e}")
+                            st.error(f"❌ Terjadi Kesalahan: {e}")
 
             st.divider()
 
@@ -5157,41 +5195,41 @@ def tampilkan_database_channel():
                         if is_boss:
                             with st.popover("✏️ Edit", use_container_width=True):
                                 st.markdown(f"#### 🛠️ EDIT: {r['NAMA_HP']}")
-                                e_nama = st.text_input("📱 Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}")
-                                e_no = st.text_input("📞 Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}")
+                                e_nama = st.text_input("📱 Nama Unit", value=str(r['NAMA_HP']), key=f"en_{idx}").strip()
+                                e_no = st.text_input("📞 Nomor HP", value=str(r['NOMOR_HP']), key=f"eno_{idx}").strip()
                                 
                                 provider_list = ["TELKOMSEL", "XL", "AXIS", "INDOSAT", "TRI", "SMARTFREN"]
                                 curr_prov = r['PROVIDER'] if r['PROVIDER'] in provider_list else "TELKOMSEL"
                                 e_prov = st.selectbox("📡 Provider", provider_list, index=provider_list.index(curr_prov), key=f"ep_{idx}")
-                                e_tgl = st.text_input("📅 Exp (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}")
+                                e_tgl = st.text_input("📅 Exp (DD/MM/YYYY)", value=str(r['MASA_AKTIF']), key=f"et_{idx}").strip()
                                 
                                 if st.button("💾 SIMPAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
                                     if e_nama and e_no:
                                         try:
-                                            # 1. Cari baris asli berdasarkan Nama HP awal
-                                            target_cell = ws_unit_hp.find(str(r['NAMA_HP']))
+                                            # 1. Cari baris di GSheet (Hanya narik kolom Nama HP biar irit)
+                                            nama_hps = ws_unit_hp.col_values(1)
                                             
-                                            if target_cell:
-                                                r_idx = target_cell.row # Dapet baris yang bener
+                                            if str(r['NAMA_HP']) in nama_hps:
+                                                r_idx = nama_hps.index(str(r['NAMA_HP'])) + 1
                                                 
-                                                # 2. Update satu per satu ke kolom yang tepat
-                                                ws_unit_hp.update_cell(r_idx, 1, e_nama.upper())
-                                                ws_unit_hp.update_cell(r_idx, 2, f"'{e_no}")
-                                                ws_unit_hp.update_cell(r_idx, 3, e_prov)
-                                                ws_unit_hp.update_cell(r_idx, 4, e_tgl)
+                                                # 2. UPDATE MASSAL (Cuma 1 request API untuk 4 kolom)
+                                                ws_unit_hp.update(f"A{r_idx}:D{r_idx}", [[
+                                                    e_nama.upper(), 
+                                                    f"'{e_no}", 
+                                                    e_prov, 
+                                                    e_tgl
+                                                ]])
                                                 
-                                                # 3. Bersihkan cache dan refresh tampilan
                                                 st.cache_data.clear()
                                                 st.success(f"✅ {e_nama} Berhasil Diupdate!")
                                                 time.sleep(0.5)
                                                 st.rerun()
                                             else:
-                                                st.error("❌ Nama HP ini sudah terdaftar!")
-                                                
+                                                st.error("❌ Nama HP lama tidak ditemukan di GSheet!")
                                         except Exception as e:
-                                            st.error(f"Gagal Update: {e}")
+                                            st.error(f"❌ Gagal Update: {e}")
                                     else:
-                                        st.error("Nama & Nomor HP wajib diisi!")
+                                        st.error("⚠️ Nama & Nomor HP wajib diisi!")
                         
     # ==============================================================================
     # TAB 5: SOLD CHANNEL (SINKRON SUPABASE - ORIGINAL UI)
@@ -5200,7 +5238,7 @@ def tampilkan_database_channel():
         if not is_ceo: 
             st.error("🔒 Akses Khusus Owner.")
         else:
-            # --- 1. SETUP FILTER PERIODE (Tetap Sama) ---
+            # --- 1. SETUP FILTER PERIODE ---
             tz = pytz.timezone('Asia/Jakarta')
             now_indo = datetime.now(tz)
             
@@ -5210,49 +5248,52 @@ def tampilkan_database_channel():
                 sel_bln_nama = st.selectbox("📅 Pilih Bulan Audit", list(list_bulan.values()), index=now_indo.month - 1, key="tab_sold_bln")
                 sel_bln_code = [k for k, v in list_bulan.items() if v == sel_bln_nama][0]
             with col_f2:
+                # Tambahin 2026 karena sekarang udah 2026, Bos!
                 sel_thn = st.selectbox("📆 Pilih Tahun", ["2024", "2025", "2026"], index=2, key="tab_sold_thn")
 
             filter_periode = f"{sel_bln_code}/{sel_thn}"
             
-            # --- 2. LOGIKA HITUNG DATA ---
+            # --- 2. LOGIKA HITUNG DATA (SUPABASE DATA) ---
             df_sold_all = df[df['STATUS'] == 'SOLD'].copy()
             total_ever = len(df_sold_all)
             
-            # Filter pake kolom KETERANGAN (isinya MM/YYYY) tapi ntar kita tampilin sebagai TGL_LAST
-            regex_periode = f".*{sel_bln_code}/{sel_thn}.*"
-            df_selected = df_sold_all[df_sold_all['EDITED'].astype(str).str.match(regex_periode, na=False)].copy()
+            # Filter periode berdasarkan kolom EDITED (format: DD/MM/YYYY HH:MM)
+            # Kita pake .str.contains biar lebih fleksibel dibanding match
+            mask_periode = df_sold_all['EDITED'].astype(str).str.contains(filter_periode, na=False)
+            df_selected = df_sold_all[mask_periode].copy()
             
             total_selected = len(df_selected)
             
-            # --- TAMBAHKAN INI BIAR TABEL GAK ERROR ---
-            if not df_selected.empty:
-                df_selected['TGL_LAST'] = df_selected['EDITED']
-            
             # Hitung data bulan lalu buat Delta Metric
-            date_selected = datetime.strptime(f"01/{filter_periode}", "%d/%m/%Y")
-            date_prev = (date_selected - timedelta(days=1))
-            filter_prev = date_prev.strftime("%m/%Y")
-            total_prev = len(df_sold_all[df_sold_all['EDITED'].astype(str).str.contains(filter_prev, na=False)])
+            try:
+                date_selected = datetime.strptime(f"01/{filter_periode}", "%d/%m/%Y")
+                date_prev = (date_selected - timedelta(days=1))
+                filter_prev = date_prev.strftime("%m/%Y")
+                total_prev = len(df_sold_all[df_sold_all['EDITED'].astype(str).str.contains(filter_prev, na=False)])
+            except:
+                total_prev = 0
+                filter_prev = "N/A"
 
-            # --- 3. RENDER 3 METRIK UTAMA (Original lo) ---
+            # --- 3. RENDER 3 METRIK UTAMA ---
             with st.container(border=True):
                 m1, m2, m3 = st.columns(3)
-                m1.metric("💰 TOTAL SOLD", f"{total_ever}", delta="Keseluruhan")
-                m2.metric(f"📅 {sel_bln_nama.upper()} {sel_thn}", f"{total_selected}", delta=f"Periode Terpilih")
-                m3.metric(f"🕒 BULAN SEBELUMNYA", f"{total_prev}", delta=f"Data {filter_prev}", delta_color="off")
+                m1.metric("💰 TOTAL SOLD", f"{total_ever}", delta="Unit Laku")
+                m2.metric(f"📅 {sel_bln_nama.upper()} {sel_thn}", f"{total_selected}", delta=f"Bulan Ini")
+                m3.metric(f"🕒 BULAN LALU", f"{total_prev}", delta=f"Perbandingan {filter_prev}", delta_color="off")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            # --- 4. DATABASE TABEL (STYLE ORIGINAL LO) ---
+            # --- 4. DATABASE TABEL ---
             st.markdown(f"##### 📊 DAFTAR PENJUALAN PERIODE {sel_bln_nama.upper()} {sel_thn}")
             if df_selected.empty:
-                st.info(f"Tidak ada data penjualan untuk periode {filter_periode}")
+                st.info(f"Belum ada data penjualan tercatat untuk periode {filter_periode}")
             else:
-                # INI KUNCI BIAR TABEL TETEP KAYAK KODE LO:
-                # Kita aliaskan kolom KETERANGAN jadi TGL_LAST biar config lo ga error
+                # Aliaskan EDITED ke TGL_LAST (Sesuai gaya lo)
                 df_selected['TGL_LAST'] = df_selected['EDITED']
                 
-                # Susunan kolom PERSIS punya lo
+                # Sort terbaru di atas biar Owner gampang liat
+                df_selected = df_selected.sort_values('TGL_LAST', ascending=False)
+                
                 cols_view = ["TGL_LAST", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
                 
                 st.dataframe(
@@ -5261,12 +5302,12 @@ def tampilkan_database_channel():
                     hide_index=True,
                     column_config={
                         "TGL_LAST": st.column_config.TextColumn("⏰ TGL SOLD", width=180),
-                        "EMAIL": st.column_config.TextColumn("📧 EMAIL"),
-                        "PASSWORD": st.column_config.TextColumn("🔑 PASS"),
-                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
-                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
-                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
-                        "STATUS": st.column_config.TextColumn("⚙️ STATUS") 
+                        "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
+                        "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=150),
+                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80),
+                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK", width=100),
+                        "STATUS": st.column_config.TextColumn("⚙️ STATUS", width=80) 
                     }
                 )
                 
@@ -5278,28 +5319,31 @@ def tampilkan_database_channel():
             st.error("🔒 Akses Khusus Owner & Admin.")
         else:
             # --- 1. LOGIKA DASHBOARD ARSIP ---
-            # df ini udah hasil load dari Supabase di awal aplikasi
+            # df ini udah hasil load dari Supabase di awal aplikasi (load_data_channel)
             df_a = df[df['STATUS'].isin(['BUSUK', 'SUSPEND'])].copy()
+            
             total_arsip = len(df_a)
             total_busuk = len(df_a[df_a['STATUS'] == 'BUSUK'])
             total_suspend = len(df_a[df_a['STATUS'] == 'SUSPEND'])
 
-            # --- 2. RENDER 3 METRIK UTAMA (Original Style lo) ---
+            # --- 2. RENDER 3 METRIK UTAMA ---
             with st.container(border=True):
                 ca1, ca2, ca3 = st.columns(3)
-                ca1.metric("💀 TOTAL ARSIP", f"{total_arsip}", delta="Busuk + Suspend", delta_color="inverse")
-                ca2.metric("📉 TOTAL BUSUK", f"{total_busuk}", delta="Loss", delta_color="inverse")
-                ca3.metric("🚫 TOTAL SUSPEND", f"{total_suspend}", delta="Check Again", delta_color="off")
+                # Pake delta_color="inverse" karena kenaikan angka di sini artinya hal buruk (Loss)
+                ca1.metric("💀 TOTAL ARSIP", f"{total_arsip}", delta="Akun Rusak", delta_color="inverse")
+                ca2.metric("📉 TOTAL BUSUK", f"{total_busuk}", delta="Teknis/Kartu", delta_color="inverse")
+                ca3.metric("🚫 TOTAL SUSPEND", f"{total_suspend}", delta="Banned YT", delta_color="inverse")
 
             st.markdown("<br>", unsafe_allow_html=True)
 
             # --- 3. DATABASE ARSIP (SINKRON SUPABASE) ---
             st.markdown("##### 📂 DAFTAR AKUN ARSIP (HISTORY AUDIT)")
             if df_a.empty:
-                st.info("Arsip masih bersih. Performa tim mantap!")
+                st.success("✨ Arsip masih kosong. Belum ada akun yang bermasalah!")
             else:
-                df_a = df_a.sort_values(by=['EDITED'], ascending=False)
+                # Aliaskan EDITED ke TGL_KEJADIAN & Sort terbaru di atas
                 df_a['TGL_KEJADIAN'] = df_a['EDITED']
+                df_a = df_a.sort_values(by=['TGL_KEJADIAN'], ascending=False)
                 
                 # Susunan Kolom PERSIS punya lo
                 cols_arsip = ["TGL_KEJADIAN", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "STATUS"]
@@ -5310,13 +5354,14 @@ def tampilkan_database_channel():
                     hide_index=True,
                     column_config={
                         "TGL_KEJADIAN": st.column_config.TextColumn("⏰ TGL KEJADIAN", width=180),
-                        "EMAIL": st.column_config.TextColumn("📧 EMAIL"),
-                        "PASSWORD": st.column_config.TextColumn("🔑 PASS"),
-                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL"),
-                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS"),
-                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK"),
+                        "EMAIL": st.column_config.TextColumn("📧 EMAIL", width=200),
+                        "PASSWORD": st.column_config.TextColumn("🔑 PASS", width=120),
+                        "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=150),
+                        "SUBSCRIBE": st.column_config.TextColumn("📊 SUBS", width=80),
+                        "LINK_CHANNEL": st.column_config.LinkColumn("🔗 LINK", width=100),
                         "STATUS": st.column_config.TextColumn(
                             "⚠️ STATUS", 
+                            width=100,
                             help="BUSUK = Masalah Teknis/Kartu, SUSPEND = Banned YouTube"
                         )
                     }
@@ -5374,27 +5419,29 @@ def tampilkan_ruang_produksi():
 
     # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM SINEMATIK) ---
     QB_IMG = (
-        "8k RAW optical clarity, cinematic depth of field, f/4.0 aperture, " # Diubah dari 1.8 ke 4.0
-        "razor-sharp focus on subject, controlled exposure, " # Tambah controlled exposure
-        "high-index lens glass look, CPL filter, sub-surface scattering, "
-        "physically-based rendering, hyper-detailed surface micro-textures, "
-        "non-blooming highlights, ray-traced ambient occlusion" # Tambah non-blooming
+        "8k RAW optical clarity, deep focus photography, f/16 aperture, " # Pake f/16 Bos!
+        "razor-sharp focus on subject, razor-sharp focus on background, " # Kunci tajam dua-duanya
+        "hyper-detailed surface micro-textures, zero bokeh, no blur, " # Buang blur
+        "controlled exposure, high-index lens glass look, CPL filter, sub-surface scattering, "
+        "physically-based rendering, non-blooming highlights, ray-traced ambient occlusion"
     )
 
     QB_VID = (
-        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, " # Ganti UE 5.4 ke film stock
-        "high dynamic range, professional color grading, ray-traced reflections, "
-        "hyper-detailed textures, temporal anti-aliasing, "
-        "subtle film grain, smooth motion interpolation, " # Ganti zero noise ke subtle grain
-        "high-fidelity physical interaction"
+        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, "
+        "deep focus depth of field, f/11 constant sharpness, " # Kunci tajam dua-duanya
+        "hyper-detailed textures on subject and background, temporally stable textures, " # Kunci tekstur kayu jeruk
+        "professional color grading, high dynamic range, ray-traced reflections, "
+        "subtle film grain, smooth motion interpolation, high-fidelity physical interaction"
     )
 
-    # --- INI DIA YANG KURANG: NEGATIVE BASE ---
+    # --- INI DIA YANG KURANG: NEGATIVE BASE (VERSI PENJAGA KETAJAMAN) ---
     negative_base = (
+        "blur, blurry, bokeh, out of focus, soft focus, depth of field, " # <--- KUNCI MATI BLUR
+        "shallow depth of field, blurred background, hazy, foggy, " # <--- BLOKIR SEMUA JENIS BLUR
         "plastic skin, doll-like, fake face, cartoonish, low quality, "
-        "oversaturated colors, high-contrast bloom, blown-out highlights, " # Buang silau
-        "blurry, distorted surface, double head, messy facial features, "
-        "extra fingers, deformed limbs." # Hapus larangan anatomi manusia
+        "oversaturated colors, high-contrast bloom, blown-out highlights, "
+        "distorted surface, double head, messy facial features, "
+        "extra fingers, deformed limbs."
     )
     
     no_text_strict = (
@@ -5406,7 +5453,8 @@ def tampilkan_ruang_produksi():
     
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
+        "NO motion blur, NO motion trails." # <--- TAMBAHAN UNTUK VIDEO TAJAM
     )
 
     # 1. INTEGRASI REFERENSI NASKAH
@@ -5612,12 +5660,12 @@ def tampilkan_ruang_produksi():
                     
                     # 2. Mantra IMAGE (Infinte Depth of Field)
                     style_map_img = {
-                        "Sangat Nyata": "Cinematic RAW format, hyper-defined skin textures, 8k resolution, f/4.0 lens for optical depth, controlled exposure, sharp subject isolation.",
-                        "Animasi 3D Pixar": "Disney-style 3D render, Octane engine, ray-traced global illumination, high-end subsurface scattering, vibrant clay-like textures.",
-                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric smog, sharp ray-traced reflections, high contrast noir lighting.",
-                        "Anime Jepang": "Studio Ghibli aesthetic, hand-painted watercolor textures, master-level cel shading, lush environmental details."
+                        "Sangat Nyata": "Cinematic RAW format, hyper-defined skin textures, 8k resolution, deep focus depth of field, f/11 aperture, controlled exposure, razor-sharp subject and background.",
+                        "Animasi 3D Pixar": "Disney-style 3D render, Octane engine, ray-traced global illumination, deep focus visual, high-end subsurface scattering, vibrant clay-like textures.",
+                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric smog, sharp ray-traced reflections, deep focus composition, high contrast noir lighting.",
+                        "Anime Jepang": "Studio Ghibli aesthetic, hand-painted watercolor textures, master-level cel shading, deep focus environmental details."
                     }
-                    s_img = style_map_img.get(sc['style'], "Cinematic optical clarity.")
+                    s_img = style_map_img.get(sc['style'], "Cinematic deep focus optical clarity.")
                     mantra_statis = f"{s_img} {sc['shot']} framing, {sc['arah']} angle, razor-sharp optical focus, {sc['light']}."
 
                     # Logika Acting Cue Gaya Baru (ANTI-DIALOG DOBEL & LEBIH EKSPRESIF)
@@ -5639,21 +5687,22 @@ def tampilkan_ruang_produksi():
                         f"SCENE: {sc['aksi']}\n"
                         f"LOCATION: {sc['loc']}\n"
                         f"VISUAL: {mantra_statis} Optical clarity, high-definition micro-detail, zero-bloom.\n"
+                        f"FOCUS RULE: Infinite depth of field, f/16 aperture, pan-focus effect, no background blur.\n" # <--- SUNTIKAN TAJAM
                         f"QUALITY: {QB_IMG}\n"
-                        f"NEGATIVE: {negative_base} {no_text_strict}\n"
+                        f"NEGATIVE: {negative_base} blur, bokeh, depth of field, out of focus, {no_text_strict}\n" # <--- BLOKIR BLUR
                         f"FORMAT: 9:16 Vertical Framing"
                     )
 
-
-                    # RAKIT PROMPT VIDEO (DIBERSIHKAN DARI DIALOG DOBEL)
+                    # RAKIT PROMPT VIDEO (VERSI TAJAM TOTAL / ANTI-MODIFIED DEPTH)
                     vid_p = (
                         f"IMAGE REFERENCE RULE: Refer to PHOTO #1 for ACTOR_1, PHOTO #2 for ACTOR_2, etc.\n"
                         f"{final_identity}\n"
                         f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n" # Tekstur kayu jeruk aman!
-                        f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
+                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n"
+                        f"FOCUS RULE: Deep focus photography, f/11 constant sharpness, edge-to-edge clarity.\n" # <--- SUNTIKAN TAJAM
+                        f"NEGATIVE: {negative_base} bokeh, blurry background, soft focus, {no_text_strict} {negative_motion_strict}\n" # <--- BLOKIR BLUR
                         f"FORMAT: 9:16 Vertical Video"
                     )
 
@@ -5730,6 +5779,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
