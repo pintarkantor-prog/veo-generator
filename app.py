@@ -5706,13 +5706,13 @@ def tampilkan_ruang_produksi():
                     vid_p = (
                         f"IMAGE REFERENCE RULE: Refer to PHOTO #1 for ACTOR_1, PHOTO #2 for ACTOR_2, etc.\n"
                         f"{final_identity}\n"
-                        f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
-                        f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
+                        f"SCENE: {sc['aksi']} in {sc['loc']}. All characters must maintain a 1-meter safety distance from any furniture or tables unless specifically touching them. Motion: {sc['cam']}.\n"
+                        f"PHYSICS: High-fidelity clothing simulation, natural hair physics, strictly no clipping, solid body physics, character-environment separation.\n" 
                         f"ACTING: {acting_cue_custom}\n"            
                         f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n"
                         f"FOCUS RULE: Deep focus photography, f/11 constant sharpness, edge-to-edge clarity.\n"
-                        f"AUDIO RULE: Strictly silent, no sound, no music, mute output.\n" # <--- BARIS TAMBAHAN UNTUK INSTRUKSI POSITIF
-                        f"NEGATIVE: {negative_base} bokeh, blurry background, soft focus, {no_text_strict} {negative_motion_strict} {no_audio_strict}\n" # <--- MASUKKAN no_audio_strict DI SINI
+                        f"AUDIO RULE: Strictly silent, no sound, no music, mute output.\n"
+                        f"NEGATIVE: {negative_base} body merging with objects, torso clipping through furniture, overlapping mesh, characters melting into background, {no_text_strict} {negative_motion_strict} {no_audio_strict}\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
 
@@ -5789,6 +5789,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
