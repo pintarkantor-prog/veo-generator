@@ -879,12 +879,17 @@ def tampilkan_navigasi_sidebar():
     return pilihan
 
 def tampilkan_ai_lab():
-    # --- 1. PINTU UTAMA: OWNER ONLY ---
-    if st.session_state.get("user_level", "").upper() != "OWNER":
-        st.error("🚫 Akses Terbatas.")
+    # --- 1. PINTU UTAMA: MANAJEMEN & STAFF ---
+    user_sekarang = st.session_state.get("user_aktif", "tamu").lower()
+    user_level = st.session_state.get("user_level", "STAFF").upper()
+
+    # Tambahin "STAFF" ke dalam list izin
+    if user_level not in ["OWNER", "STAFF"]:
+        st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen dan Staff.")
         st.stop()
 
     st.title("🧠 PINTAR AI LAB")
+    st.info(f"Login sebagai: {user_sekarang.upper()} ({user_level})") # Opsional: buat monitor
     st.divider()
 
     t_anatomi, t_grandma, t_transform, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⚡ TRANSFORMATION", "🎲 RANDOM"])
@@ -5731,6 +5736,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
