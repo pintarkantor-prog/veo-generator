@@ -244,7 +244,7 @@ OPTS_RATIO = ["9:16", "16:9", "1:1"]
 
 def rakit_prompt_sakral(aksi, style, light, arah, shot, cam):
     style_map = {
-        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, macro-detail fidelity, f/1.8 lens focus, depth map rendering.",
+        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, macro-detail fidelity, f/8.0 lens focus (deep focus), pan-focal rendering, crystal clear background.",
         "Animasi 3D Pixar": "Disney style 3D, Octane render, ray-traced global illumination, premium subsurface scattering.",
         "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric fog, sharp reflections, high contrast.",
         "Anime Jepang": "Studio Ghibli style, hand-painted watercolor textures, soft cel shading, lush aesthetic."
@@ -5430,20 +5430,21 @@ def tampilkan_ruang_produksi():
             # Status jika login lewat jam 10 malam
             st.markdown("<p style='color: #ff4b4b; font-size: 13px; margin-top:-15px; margin-bottom: 20px;'>🚫 <b>Access Denied:</b> Operational Window Closed</p>", unsafe_allow_html=True)
 
-    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI FINAL KLIMIS) ---
+    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM - NO BLUR) ---
     QB_IMG = (
-        "8k RAW optical clarity, cinematic depth of field, f/1.8 aperture, "
-        "bokeh background, razor-sharp focus on subject detail, "
+        "8k RAW optical clarity, deep depth of field, f/8.0 aperture, "
+        "pan-focal sharp background, razor-sharp focus on entire scene, "
         "high-index lens glass look, CPL filter, sub-surface scattering, "
         "physically-based rendering, hyper-detailed surface micro-textures, "
         "anisotropic filtering, ray-traced ambient occlusion"
     )
 
     QB_VID = (
-        "Unreal Engine 5.4, 24fps cinematic motion, ultra-clear, 8k UHD, high dynamic range, "
+        "Unreal Engine 5.4, 30fps real-time motion, high-shutter speed, ultra-clear, 8k UHD, "
+        "deep focus rendering (no background blur), pan-focal clarity, "
         "professional color grading, ray-traced reflections, hyper-detailed textures, "
         "temporal anti-aliasing, zero digital noise, clean pixels, "
-        "smooth motion interpolation, high-fidelity physical interaction"
+        "natural movement physics, high-fidelity physical interaction"
     )
 
     # --- INI DIA YANG KURANG: NEGATIVE BASE ---
@@ -5707,7 +5708,7 @@ def tampilkan_ruang_produksi():
                         f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, clean textures.\n"
+                        f"VISUAL: {mantra_video} 8k UHD, clean textures, NO MOTION BLUR, pin-sharp every frame.\n"
                         f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
@@ -5789,6 +5790,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
