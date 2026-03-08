@@ -1171,25 +1171,27 @@ def tampilkan_ai_lab():
                     f"Text: '{vo_ref}'"
                 )
                 
-                # --- TAMPILAN HASIL SINGLE BOX (VEO/GROK READY - NATURAL MOTION) ---
-                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED FOR BALUNG ANATOMY)")
+                # --- TAMPILAN HASIL SINGLE BOX (DEEP FOCUS & NORMAL SPEED) ---
+                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED FOR PINTAR AI LAB)")
                 
                 sultan_video_prompt = (
                     f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
                     
-                    f"ACTION & MOTION PHYSICS:\n{aksi_in.replace('BALUNG', 'the skeletal character')}. "
-                    f"Movement follows real-world momentum. The THICK GEL-SKIN wobbles and reacts to gravity with realistic inertia. "
-                    f"Natural 24fps motion cadence, NO artificial slow-motion, NO flickering, NO morphing. \n\n"
+                    f"ACTION & MOTION PHYSICS:\n{aksi_in}. "
+                    f"**NORMAL SPEED MOTION.** 1x playback speed, NO slow-motion, NO time-ramp. " # KUNCI SPEED NORMAL
+                    f"Movement follows real-world momentum with natural 24fps motion cadence. "
+                    f"The THICK GEL-SKIN wobbles and reacts to gravity with realistic inertia. \n\n"
                     
                     f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting Engine: {auto_lighting}. "
-                    f"Ray-traced light refraction through the thick transparent dermal layer and realistic subsurface scattering (SSS). "
-                    f"Dynamic environment interaction: dust and particles react naturally to the character's movement. \n\n"
+                    f"**EVERYTHING IN FOCUS. DEEP FOCUS PHOTOGRAPHY.** "
+                    f"Ray-traced light refraction through the thick transparent dermal layer. \n\n"
                     
                     f"TECHNICAL SPECIFICATIONS (STRICT ANTI-AI LOOK):\n"
-                    f"Shot on ARRI Alexa 65, 80mm Master Prime Lens. Framing: {f_auto}. Motion: {m_auto}. "
-                    f"Extreme forensic detail. ABSOLUTELY NO glossy plastic textures. "
-                    f"Realistic caustic light refractions through the transparent body. Handheld micro-jitter for authentic human cinematography. "
-                    f"Maintain hyper-realistic forensic photography style with natural 35mm film grain and cinematic color science. \n\n"
+                    f"Shot on Nikon D850, 24mm Wide Angle Lens, f/22 aperture for MAXIMUM DEPTH OF FIELD. "
+                    f"Framing: {f_auto}. Motion: {m_auto}. "
+                    f"**ULTRA-SHARP 8K DETAIL.** ABSOLUTELY NO MOTION BLUR. NO BOKEH. NO BACKGROUND BLUR. "
+                    f"Extreme forensic detail. Every texture of the background and character is razor-sharp. "
+                    f"Zero film grain, pure digital clarity, realistic caustic light refractions. \n\n"
                     
                     f"AUDIO & SOUND DESIGN:\n{audio_instr}. "
                     f"Ambient Sound: Immersive 3D soundscape of {env_in} with hyper-detailed foley."
@@ -5789,6 +5791,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
