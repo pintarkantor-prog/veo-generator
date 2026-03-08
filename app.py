@@ -251,11 +251,11 @@ def rakit_prompt_sakral(aksi, style, light, arah, shot, cam):
     }
     
     light_map = {
-        "Senja Cerah (Golden)": "4 PM golden hour, warm amber highlights, dramatic long shadows, high local contrast.",
+        "Senja Cerah (Golden)": "Late afternoon sun, soft amber glow, natural warm white balance, long soft shadows, reduced orange saturation.",
         "Studio Bersih": "Professional studio setup, rim lighting, clean shadows, commercial photography look.",
         "Neon Cyberpunk": "Vibrant pink and blue rim light, deep noir shadows, cinematic volumetric lighting.",
         "Malam Indigo": "Cinematic night, moonlight shading, deep indigo tones, clean silhouettes.",
-        "Siang Alami": "Daylight balanced exposure, neutral color temperature, crystal clear atmosphere."
+        "Siang Alami": "Soft diffused daylight, overcast sky lighting, no harsh shadows, neutral color temperature, gentle ambient illumination."
     }
 
     s_cmd = style_map.get(style, "Cinematic optical clarity.")
@@ -5794,6 +5794,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
