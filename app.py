@@ -4784,10 +4784,9 @@ def tampilkan_database_channel():
             # --- TAMBAHAN: ST INFO UNTUK INSTRUKSI STAFF ---
             st.info("""
                 💡 **PENGINGAT SEMENTARA: khusus HP 15-18 stock masih terbatas, mohon koordinasi di WA**
-                1. HP 1 - 14 ( Konten Sakura ).
-                2. HP 15 - 16 ( KONTEN AI UDIN TUNG ).
-                3. HP 17 ( KONTEN AI TUNG DIAN ).
-                4. HP 18 ( KONTEN AI MASJID DIAN ).
+                1. HP 1 - 14 (Konten Sakura)
+                2. HP 15 - 16 (Konten AI Udin Tung)
+                3. HP 17 - 18 (Konten AI Masjid Dian)
             """)
 
             df_p = df[df['STATUS'] == 'PROSES'].copy()
@@ -5803,6 +5802,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
