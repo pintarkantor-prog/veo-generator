@@ -5433,51 +5433,39 @@ def tampilkan_ruang_produksi():
 
     # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM SINEMATIK) ---
     QB_IMG = (
-        "8k RAW optical clarity, deep focus photography, f/16 aperture, " # Pake f/16 Bos!
-        "razor-sharp focus on subject, razor-sharp focus on background, " # Kunci tajam dua-duanya
-        "hyper-detailed surface micro-textures, zero bokeh, no blur, " # Buang blur
-        "controlled exposure, high-index lens glass look, CPL filter, sub-surface scattering, "
-        "physically-based rendering, non-blooming highlights, ray-traced ambient occlusion"
+        "8k RAW optical clarity, cinematic depth of field, f/4.0 aperture, " # Diubah dari 1.8 ke 4.0
+        "razor-sharp focus on subject, controlled exposure, " # Tambah controlled exposure
+        "high-index lens glass look, CPL filter, sub-surface scattering, "
+        "physically-based rendering, hyper-detailed surface micro-textures, "
+        "non-blooming highlights, ray-traced ambient occlusion" # Tambah non-blooming
     )
 
     QB_VID = (
-        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, "
-        "deep focus depth of field, f/11 constant sharpness, " # Kunci tajam dua-duanya
-        "hyper-detailed textures on subject and background, temporally stable textures, " # Kunci tekstur kayu jeruk
-        "professional color grading, high dynamic range, ray-traced reflections, "
-        "subtle film grain, smooth motion interpolation, high-fidelity physical interaction"
+        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, " # Ganti UE 5.4 ke film stock
+        "high dynamic range, professional color grading, ray-traced reflections, "
+        "hyper-detailed textures, temporal anti-aliasing, "
+        "subtle film grain, smooth motion interpolation, " # Ganti zero noise ke subtle grain
+        "high-fidelity physical interaction"
     )
 
-    # --- KONFIGURASI NEGATIVE PROMPT (PENJAGA KETAJAMAN & KONSISTENSI) ---
+    # --- INI DIA YANG KURANG: NEGATIVE BASE ---
     negative_base = (
-        "blur, blurry, bokeh, out of focus, soft focus, depth of field, "
-        "shallow depth of field, blurred background, hazy, foggy, "
         "plastic skin, doll-like, fake face, cartoonish, low quality, "
-        "oversaturated colors, high-contrast bloom, blown-out highlights, "
-        "distorted surface, double head, messy facial features, "
-        "extra fingers, deformed limbs."
+        "oversaturated colors, high-contrast bloom, blown-out highlights, " # Buang silau
+        "blurry, distorted surface, double head, messy facial features, "
+        "extra fingers, deformed limbs." # Hapus larangan anatomi manusia
     )
     
     no_text_strict = (
-        "STRICTLY NO English text, NO 'Crafts for Sale' text, NO 'Bottle Mosque' labels, "
-        "STRICTLY NO typography, NO watermark, NO letters, NO subtitles, NO captions, "
-        "NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
+        "STRICTLY NO text, NO typography, NO watermark, NO letters, NO subtitles, "
+        "NO captions, NO speech bubbles, NO dialogue boxes, NO labels, NO black bars, "
         "NO burned-in text, NO characters speaking with visible words, "
-        "the image must be a CLEAN cinematic shot without any written characters "
-        "except the Indonesian text specifically requested in the prompt."
+        "the image must be a CLEAN cinematic shot without any written characters."
     )
     
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
-        "NO motion blur, NO motion trails."
-    )
-
-    # --- TAMBAHAN UNTUK MENGHILANGKAN BACKSOUND/MUSIK (PENTING!) ---
-    no_audio_strict = (
-        "STRICTLY NO background music, NO BGM, NO soundtrack, NO ambient noise, "
-        "NO Foley sounds, NO voice over, NO audio, MUTE video, "
-        "total silence, silent film style, no sound effects, zero volume."
+        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
     )
 
     # 1. INTEGRASI REFERENSI NASKAH
@@ -5683,12 +5671,12 @@ def tampilkan_ruang_produksi():
                     
                     # 2. Mantra IMAGE (Infinte Depth of Field)
                     style_map_img = {
-                        "Sangat Nyata": "Cinematic RAW format, hyper-defined skin textures, 8k resolution, deep focus depth of field, f/11 aperture, controlled exposure, razor-sharp subject and background.",
-                        "Animasi 3D Pixar": "Disney-style 3D render, Octane engine, ray-traced global illumination, deep focus visual, high-end subsurface scattering, vibrant clay-like textures.",
-                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric smog, sharp ray-traced reflections, deep focus composition, high contrast noir lighting.",
-                        "Anime Jepang": "Studio Ghibli aesthetic, hand-painted watercolor textures, master-level cel shading, deep focus environmental details."
+                        "Sangat Nyata": "Cinematic RAW format, hyper-defined skin textures, 8k resolution, f/4.0 lens for optical depth, controlled exposure, sharp subject isolation.",
+                        "Animasi 3D Pixar": "Disney-style 3D render, Octane engine, ray-traced global illumination, high-end subsurface scattering, vibrant clay-like textures.",
+                        "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric smog, sharp ray-traced reflections, high contrast noir lighting.",
+                        "Anime Jepang": "Studio Ghibli aesthetic, hand-painted watercolor textures, master-level cel shading, lush environmental details."
                     }
-                    s_img = style_map_img.get(sc['style'], "Cinematic deep focus optical clarity.")
+                    s_img = style_map_img.get(sc['style'], "Cinematic optical clarity.")
                     mantra_statis = f"{s_img} {sc['shot']} framing, {sc['arah']} angle, razor-sharp optical focus, {sc['light']}."
 
                     # Logika Acting Cue Gaya Baru (ANTI-DIALOG DOBEL & LEBIH EKSPRESIF)
@@ -5710,23 +5698,21 @@ def tampilkan_ruang_produksi():
                         f"SCENE: {sc['aksi']}\n"
                         f"LOCATION: {sc['loc']}\n"
                         f"VISUAL: {mantra_statis} Optical clarity, high-definition micro-detail, zero-bloom.\n"
-                        f"FOCUS RULE: Infinite depth of field, f/16 aperture, pan-focus effect, no background blur.\n" # <--- SUNTIKAN TAJAM
                         f"QUALITY: {QB_IMG}\n"
-                        f"NEGATIVE: {negative_base} blur, bokeh, depth of field, out of focus, {no_text_strict}\n" # <--- BLOKIR BLUR
+                        f"NEGATIVE: {negative_base} {no_text_strict}\n"
                         f"FORMAT: 9:16 Vertical Framing"
                     )
 
-                    # RAKIT PROMPT VIDEO (VERSI TAJAM TOTAL / ANTI-MODIFIED DEPTH / ANTI-AUDIO)
+
+                    # RAKIT PROMPT VIDEO (DIBERSIHKAN DARI DIALOG DOBEL)
                     vid_p = (
                         f"IMAGE REFERENCE RULE: Refer to PHOTO #1 for ACTOR_1, PHOTO #2 for ACTOR_2, etc.\n"
                         f"{final_identity}\n"
-                        f"SCENE: {sc['aksi']} in {sc['loc']}. All characters must maintain a 1-meter safety distance from any furniture or tables unless specifically touching them. Motion: {sc['cam']}.\n"
-                        f"PHYSICS: High-fidelity clothing simulation, natural hair physics, strictly no clipping, solid body physics, character-environment separation.\n" 
+                        f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
+                        f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n"
-                        f"FOCUS RULE: Deep focus photography, f/11 constant sharpness, edge-to-edge clarity.\n"
-                        f"AUDIO RULE: Strictly silent, no sound, no music, mute output.\n"
-                        f"NEGATIVE: {negative_base} body merging with objects, torso clipping through furniture, overlapping mesh, characters melting into background, {no_text_strict} {negative_motion_strict} {no_audio_strict}\n"
+                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n" # Tekstur kayu jeruk aman!
+                        f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
 
@@ -5739,6 +5725,10 @@ def tampilkan_ruang_produksi():
                         st.code(vid_p, language="text")
 
                 st.markdown('<div style="margin-bottom: -15px;"></div>', unsafe_allow_html=True)
+
+            # --- SUNTIKAN LOG AKTIVITAS (CCTV) ---
+            # Dicatat hanya saat tombol Generate ditekan
+            tambah_log(user_aktif, f"GENERATE PROMPT: {len(adegan_terisi)} Adegan")
 
     # --- 5. FOOTER & PENGAMAN SESSION ---
     st.write("")
@@ -5803,6 +5793,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
