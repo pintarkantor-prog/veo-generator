@@ -5431,29 +5431,32 @@ def tampilkan_ruang_produksi():
             # Status jika login lewat jam 10 malam
             st.markdown("<p style='color: #ff4b4b; font-size: 13px; margin-top:-15px; margin-bottom: 20px;'>🚫 <b>Access Denied:</b> Operational Window Closed</p>", unsafe_allow_html=True)
 
-    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM SINEMATIK) ---
+# --- QUALITY BOOSTER (VERSI ANTI-LUMER / ANTI-BLUR) ---
     QB_IMG = (
-        "8k RAW optical clarity, cinematic depth of field, f/4.0 aperture, " # Diubah dari 1.8 ke 4.0
-        "razor-sharp focus on subject, controlled exposure, " # Tambah controlled exposure
+        "8k RAW optical clarity, DEEP FOCUS PHOTOGRAPHY, f/22 aperture, " # Gembok f/22!
+        "razor-sharp focus on subject and background, controlled exposure, "
         "high-index lens glass look, CPL filter, sub-surface scattering, "
         "physically-based rendering, hyper-detailed surface micro-textures, "
-        "non-blooming highlights, ray-traced ambient occlusion" # Tambah non-blooming
+        "non-blooming highlights, ray-traced ambient occlusion"
     )
 
     QB_VID = (
-        "Cinematic film stock appearance, 24fps cinematic motion, ultra-clear, 8k UHD, " # Ganti UE 5.4 ke film stock
+        "RAW 4K cinematic footage, 24fps native motion, ultra-clear digital sensor, "
         "high dynamic range, professional color grading, ray-traced reflections, "
-        "hyper-detailed textures, temporal anti-aliasing, "
-        "subtle film grain, smooth motion interpolation, " # Ganti zero noise ke subtle grain
-        "high-fidelity physical interaction"
+        "hyper-detailed textures, NO MOTION BLUR, NO GHOSTING, " # Buang bayangan
+        "ZERO SHUTTER BLUR, shutter speed 1/1000, " # Bekukan gerakan
+        "high-fidelity physical interaction, temporally stable sharp textures"
     )
 
-    # --- INI DIA YANG KURANG: NEGATIVE BASE ---
+    # --- NEGATIVE BASE (VERSI GEMBOK ANATOMI & KETAJAMAN) ---
     negative_base = (
         "plastic skin, doll-like, fake face, cartoonish, low quality, "
-        "oversaturated colors, high-contrast bloom, blown-out highlights, " # Buang silau
-        "blurry, distorted surface, double head, messy facial features, "
-        "extra fingers, deformed limbs." # Hapus larangan anatomi manusia
+        "oversaturated colors, high-contrast bloom, blown-out highlights, "
+        "blurry, out of focus, bokeh, soft focus, depth of field, " # Gembok anti-blur
+        "distorted surface, double head, messy facial features, "
+        "fused fingers, melted hands, webbed fingers, mutated hands, " # Kunci tangan sosis
+        "extra fingers, deformed limbs, claw hands, amorphous shapes, "
+        "low resolution, grainy background, compression artifacts."
     )
     
     no_text_strict = (
@@ -5465,7 +5468,8 @@ def tampilkan_ruang_produksi():
     
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
+        "NO motion blur, NO motion trails, NO ghosting, NO blurring during movement." # Tambahin ini!
     )
 
     # 1. INTEGRASI REFERENSI NASKAH
@@ -5711,9 +5715,14 @@ def tampilkan_ruang_produksi():
                         f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, micro-surface texture retention.\n" # Tekstur kayu jeruk aman!
+                        
+                        f"VISUAL & TEXTURE: {mantra_video} 8k UHD, micro-surface texture retention.\n"
+                        f"FOCUS RULE: Deep focus photography, f/22 aperture constant sharpness, edge-to-edge clarity.\n"
+                        f"SHUTTER RULE: Shutter speed 1/1000 to freeze motion and eliminate blur.\n" 
+                        
                         f"AUDIO RULE: Strictly silent video output, no background music, no AI-generated sound effects.\n"
-                        f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
+                        
+                        f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict} ghosting, motion trails, blurring during movement.\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
 
@@ -5794,6 +5803,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
