@@ -4786,7 +4786,8 @@ def tampilkan_database_channel():
                 💡 **PENGINGAT SEMENTARA: khusus HP 15-18 stock masih terbatas, mohon koordinasi di WA**
                 1. HP 1 - 14 (Konten Sakura)
                 2. HP 15 - 16 (Konten AI Udin Tung)
-                3. HP 17 - 18 (Konten AI Masjid Dian)
+                3. HP 17 (Konten AI Dian)
+                4. HP 18 (Konten Masjid Dian)
             """)
 
             df_p = df[df['STATUS'] == 'PROSES'].copy()
@@ -5802,6 +5803,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
