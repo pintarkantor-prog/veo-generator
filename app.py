@@ -233,7 +233,7 @@ def simpan_perubahan_channel(df_edited, user_aktif):
         return False
         
 # ==============================================================================
-# BAGIAN 1: PUSAT KENDALI OPSI (VERSI KLIMIS - NO REDUNDANCY)
+# BAGIAN 1: PUSAT KENDALI OPSI (VERSI TAJAM f/16 & GERAKAN NATURAL)
 # ==============================================================================
 OPTS_STYLE = ["Sangat Nyata", "Animasi 3D Pixar", "Gaya Cyberpunk", "Anime Jepang"]
 OPTS_LIGHT = ["Senja Cerah (Golden)", "Studio Bersih", "Neon Cyberpunk", "Malam Indigo", "Siang Alami"]
@@ -244,7 +244,7 @@ OPTS_RATIO = ["9:16", "16:9", "1:1"]
 
 def rakit_prompt_sakral(aksi, style, light, arah, shot, cam):
     style_map = {
-        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, macro-detail fidelity, f/8.0 lens focus (deep focus), pan-focal rendering, crystal clear background.",
+        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, tactile micro-textures, f/16 aperture, infinite depth of field, pan-focal clarity, zero background blur.",
         "Animasi 3D Pixar": "Disney style 3D, Octane render, ray-traced global illumination, premium subsurface scattering.",
         "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric fog, sharp reflections, high contrast.",
         "Anime Jepang": "Studio Ghibli style, hand-painted watercolor textures, soft cel shading, lush aesthetic."
@@ -261,8 +261,8 @@ def rakit_prompt_sakral(aksi, style, light, arah, shot, cam):
     s_cmd = style_map.get(style, "Cinematic optical clarity.")
     l_cmd = light_map.get(light, "Balanced exposure.")
     
-    # --- PERBAIKAN: Hapus label "Technical:" agar lebih clean ---
-    tech_logic = f"{shot} framing, {arah} angle, {cam} motion, cinematic optical rendering."
+    # --- UPDATE: Ganti "cinematic optical" jadi "high-fidelity natural" biar gerakan ga kaku/slowmo ---
+    tech_logic = f"{shot} framing, {arah} angle, {cam} motion, high-fidelity natural movement, zero motion blur."
 
     return f"{s_cmd} {tech_logic} {l_cmd}"
     
@@ -5430,27 +5430,28 @@ def tampilkan_ruang_produksi():
             # Status jika login lewat jam 10 malam
             st.markdown("<p style='color: #ff4b4b; font-size: 13px; margin-top:-15px; margin-bottom: 20px;'>🚫 <b>Access Denied:</b> Operational Window Closed</p>", unsafe_allow_html=True)
 
-    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM - NO BLUR) ---
+    # --- QUALITY BOOSTER & NEGATIVE CONFIG (VERSI TAJAM f/16 & REAL-TIME SPEED) ---
     QB_IMG = (
-        "8k RAW optical clarity, deep depth of field, f/8.0 aperture, "
-        "pan-focal sharp background, razor-sharp focus on entire scene, "
+        "8k RAW optical clarity, infinite depth of field, f/16 aperture, "
+        "pan-focal razor-sharp background, zero bokeh, edge-to-edge clarity, "
         "high-index lens glass look, CPL filter, sub-surface scattering, "
         "physically-based rendering, hyper-detailed surface micro-textures, "
         "anisotropic filtering, ray-traced ambient occlusion"
     )
 
     QB_VID = (
-        "Unreal Engine 5.4, 30fps real-time motion, high-shutter speed, ultra-clear, 8k UHD, "
-        "deep focus rendering (no background blur), pan-focal clarity, "
+        "Unreal Engine 5.4, 30fps real-time speed, high-shutter performance, ultra-clear, 8k UHD, "
+        "pan-focal rendering, zero background blur, pin-sharp every frame, "
         "professional color grading, ray-traced reflections, hyper-detailed textures, "
         "temporal anti-aliasing, zero digital noise, clean pixels, "
-        "natural movement physics, high-fidelity physical interaction"
+        "natural human-like physics, high-fidelity physical interaction, NO SLOW MOTION"
     )
 
-    # --- INI DIA YANG KURANG: NEGATIVE BASE ---
+    # --- UPDATE: Tambahkan larangan SLOW MO & BLUR di Negative ---
     negative_base = (
         "muscular, bodybuilder, shredded, male anatomy, human skin, human anatomy, "
-        "realistic flesh, skin pores, blurry, distorted surface, "
+        "realistic flesh, skin pores, blurry, out of focus, bokeh, depth of field, "
+        "blurry background, slow motion, time-lapse, motion blur, distorted surface, "
     )
     
     no_text_strict = (
@@ -5462,7 +5463,8 @@ def tampilkan_ruang_produksi():
     
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
-        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts."
+        "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
+        "NO unnatural slow motion, NO frame skipping, NO ghosting effects."
     )
 
     # 1. INTEGRASI REFERENSI NASKAH
@@ -5666,9 +5668,10 @@ def tampilkan_ruang_produksi():
                     # 1. Mantra VIDEO (Suntikan Brutal Sharpness f/11)
                     mantra_video = rakit_prompt_sakral(sc['aksi'], sc['style'], sc['light'], sc['arah'], sc['shot'], sc['cam'])
                     
-                    # 2. Mantra IMAGE (Infinte Depth of Field)
+                    # 2. Mantra IMAGE (Infinte Depth of Field - f/16 VERSION)
                     style_map_img = {
-                        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, tactile micro-textures, f/11 aperture, infinite depth of field.",
+                        # --- UPDATE: Kunci di f/16 & No Softening agar Sawah/Rumah Bening Silet ---
+                        "Sangat Nyata": "Cinematic RAW shot, PBR surfaces, 8k textures, tactile micro-textures, f/16 aperture, infinite depth of field, zero bokeh, no softening, edge-to-edge sharpness.",
                         "Animasi 3D Pixar": "Disney style 3D, Octane render, ray-traced global illumination, premium subsurface scattering.",
                         "Gaya Cyberpunk": "Futuristic neon aesthetic, volumetric fog, sharp reflections, high contrast.",
                         "Anime Jepang": "Studio Ghibli style, hand-painted watercolor textures, soft cel shading, lush aesthetic."
@@ -5681,34 +5684,35 @@ def tampilkan_ruang_produksi():
                     
                     emotional_ref = " | ".join(raw_dialogs) if raw_dialogs else "No dialogue, focus on cinematic body language."
                     
+                    # --- UPDATE: Biar Akting Tung Realistis (Nggak Kaku) ---
                     acting_cue_custom = (
                         f"ACTING RULE: {emotional_ref}. "
-                        "Identify the speaker by name and sync lip movement perfectly. "
-                        "Non-speaking characters must maintain natural idle facial expressions (blinking, slight head tilts)."
+                        "Sync lip movement perfectly. "
+                        "Characters must exhibit subtle, natural micro-expressions: "
+                        "breathing, shifting weight, natural blinking, and realistic eye focus. "
+                        "NO robotic or stiff movements. Smooth human-like articulation."
                     )
 
-
-                    # RAKIT PROMPT GAMBAR
+                    # --- RAKIT PROMPT GAMBAR (TAJAM SILET f/16) ---
                     img_p = (
                         f"IMAGE REFERENCE RULE: Use uploaded photos for each character. Interaction required.\n"
                         f"{final_identity}\n"
                         f"SCENE: {sc['aksi']}\n"
                         f"LOCATION: {sc['loc']}\n"
-                        f"VISUAL: {mantra_statis} NO SOFTENING, extreme edge-enhancement.\n"
+                        f"VISUAL: {mantra_statis} NO SOFTENING, extreme edge-enhancement, f/16 deep focus.\n"
                         f"QUALITY: {QB_IMG}\n"
                         f"NEGATIVE: {negative_base} {no_text_strict}\n"
                         f"FORMAT: 9:16 Vertical Framing"
                     )
 
-
-                    # RAKIT PROMPT VIDEO (DIBERSIHKAN DARI DIALOG DOBEL)
+                    # --- RAKIT PROMPT VIDEO (REAL-TIME SPEED & NO BLUR) ---
                     vid_p = (
                         f"IMAGE REFERENCE RULE: Refer to PHOTO #1 for ACTOR_1, PHOTO #2 for ACTOR_2, etc.\n"
                         f"{final_identity}\n"
                         f"SCENE: {sc['aksi']} in {sc['loc']}. Motion: {sc['cam']}.\n"
                         f"PHYSICS: High-fidelity clothing simulation, natural hair physics, no clipping.\n"
                         f"ACTING: {acting_cue_custom}\n"            
-                        f"VISUAL: {mantra_video} 8k UHD, clean textures, NO MOTION BLUR, pin-sharp every frame.\n"
+                        f"VISUAL: {mantra_video} 8k UHD, clean textures, 30fps real-time, NO MOTION BLUR, pin-sharp every frame.\n"
                         f"NEGATIVE: {negative_base} {no_text_strict} {negative_motion_strict}\n"
                         f"FORMAT: 9:16 Vertical Video"
                     )
@@ -5790,6 +5794,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
