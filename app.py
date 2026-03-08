@@ -969,39 +969,44 @@ def tampilkan_ai_lab():
         # --- 3. MASTER AUDIO LAB (NARRATOR: HUMAN-LIKE PRECISION) ---
         MASTER_AUDIO_LAB = {
             "Tipe": [
-                "Pria (40th) - Deep Baritone, Serak Berwibawa (Gravely texture, cinematic Nat-Geo style)",
-                "Pria (30th) - Tenor Tajam, Artikulasi Sempurna (Sharp, forensic investigation narrator)",
-                "Wanita (35th) - Serak Lembut, Misterius (Sultry, dark, elegant smoky voice)",
-                "Pria (55th) - Deep Husky, Berat, Bijak (Wisdom-heavy, weathered old master)",
-                "Wanita (28th) - Tenang, Berwibawa, Tegas (Professional Science & Clinical narrator)",
-                "Pria (30th) - Sinis, Rendah, Provokatif (Gritty, raspy, thriller-style narrator)"
+                "Pria (40th) - Gravely Baritone, Cinematic Raw (Gravely texture, audible inhales, Nat-Geo style)",
+                "Pria (30th) - Sharp Tenor, Forensic Edge (Sharp articulation, subtle vocal fry, cold narrator)",
+                "Wanita (35th) - Smoky & Mysterious (Smoky voice, slow cadence, heavy breathing tension)",
+                "Pria (55th) - Weathered Old Master (Wisdom-heavy, husky, raspy texture, natural micro-pauses)",
+                "Wanita (28th) - Clinical Precision (Professional, breathy, rhythmic clinical tone)",
+                "Pria (30th) - Gritty Thriller (Sinis, low-pitched, raspy, provocative human tone)"
             ],
             "Aksen": [
-                "Indonesia Formal Baku (Standard National Geographic dubbing style)",
-                "Indonesia Naratif (Storytelling documentary style with natural flow)",
-                "Melayu Klasik Sastrawi (Formal, poetic, and rhythmic Malaysian/Indonesian)",
-                "Diksi Medis/Teknis (Neutral, precise, and professional clinical tone)",
-                "English Accented Indonesian (International narrator style with subtle Western lilt)"
+                "Indonesia Formal (Standard Nat-Geo style with natural human inflections)",
+                "Indonesia Narrative (Storytelling style, rhythmic flow, realistic dental sibilance)",
+                "Melayu Klasik (Poetic, rhythmic, authentic human pauses)",
+                "Technical/Medical (Precise, neutral but audible exhales between terms)",
+                "Western-Lilt Indonesian (International style, realistic mouth clicks, subtle lilt)"
             ],
             "Mood": [
-                "Sinematik & Dinamis (Full of emphasis, dramatic pauses, energetic intonation)",
-                "Mencekam & Intens (Low-pitched, atmospheric, heavy-breathing tension)",
-                "Klinis & Informatif (Fast-paced, factual focus, clear and direct)",
-                "Melankolis & Puitis (Soft, flowing, emotional but steady delivery)",
-                "Urgent & Tense (High pressure, rapid delivery, breathy intensity)"
+                "Cinematic & Dynamic (High emphasis, dramatic pauses, energetic human delivery)",
+                "Dark & Intense (Low-pitched, atmospheric, heavy-breathing tension, 1x speed)",
+                "Factual & Direct (Fast-paced, high clarity, audible micro-inhales)",
+                "Emotional & Poetic (Soft, melodic flow, shaky breath, steady but raw delivery)",
+                "High Pressure (Urgent, rapid delivery, breathy intensity, panicky human tone)"
             ]
         }
 
-        # --- 3. AUTO-MAPPING LOGIC ---
+        # --- 3. AUTO-MAPPING LOGIC (ULTRA-WIDE DEFAULT) ---
         def auto_visual_mapping(prompt_teks):
             p = prompt_teks.lower()
-            frame = "Medium Shot" 
+            
+            # --- DEFAULT: PEMANDANGAN LUAS + KAKI UTUH ---
+            # Menggunakan 'Extreme Wide Shot' untuk background luas
+            # Menggunakan 'Full Body' agar kaki tidak kepotong
+            frame = "Wide Shot, Full Body standing figure, head to toe visible" 
             gerak = "Static camera" 
             
-            if any(x in p for x in ["close up", "sangat dekat", "extreme", "detail", "macro"]):
+            # LOGIKA KATA KUNCI
+            if any(x in p for x in ["medium", "setengah badan", "dada", "perut", "waist up"]):
+                frame = "Medium Shot (Waist Up)"
+            elif any(x in p for x in ["close up", "sangat dekat", "extreme", "detail", "macro", "wajah"]):
                 frame = "Extreme Close-up"
-            elif any(x in p for x in ["wide", "seluruh badan", "jauh", "landscape"]):
-                frame = "Wide Shot"
                 
             if any(x in p for x in ["zoom", "muter", "orbit", "dolly", "maju", "mundur", "pull-back", "camera moves"]):
                 gerak = "Dynamic Motion (Orbit/Dolly)"
@@ -1136,65 +1141,72 @@ def tampilkan_ai_lab():
             # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
             f_auto, m_auto = auto_visual_mapping(aksi_in)
 
-            # --- BUTTON GENERATE: SULTAN VIDEO ENGINE (FOR VEO & GROK) ---
+            # --- BUTTON GENERATE: SULTAN VIDEO ENGINE (ULTRA-REALISM EDITION) ---
             if st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True):
                 st.divider()
                 
-                # 1. LOGIKA OTOMATIS MOOD CAHAYA (SMART LIGHTING & BIOLUMINESCENCE)
+                # 1. LOGIKA OTOMATIS MOOD CAHAYA (FORENSIC & RAW LIGHTING)
                 env_lower = env_in.lower()
                 char_lower = char_pilih.lower()
                 
-                # Cek apakah karakter punya organ untuk efek cahaya internal
+                # Menghilangkan efek 'glow' plastik, fokus ke tekstur kalsium dan jaringan nyata
                 if "organ" in char_lower:
-                    biolum_effect = "INTERNAL BIOLUMINESCENCE: Glowing internal organs (heart, lungs) casting soft red and blue light onto the inner white ribs."
+                    biolum_effect = "INTERNAL BIOLUMINESCENCE: Visceral organic glow from internal tissues, casting uneven red/blue light with realistic light-leaks through the rib cage."
                 else:
-                    biolum_effect = "CLEAN SKELETAL REFLECTIONS: Focus on the sharp white bone contrast against the thick transparent gel-skin."
+                    biolum_effect = "RAW SKELETAL CONTRAST: Hard white bone surface showing calcium textures, non-glossy, realistic shadows inside the marrow cavities."
 
                 if any(x in env_lower for x in ["malam", "night", "gelap"]):
-                    auto_lighting = f"Cinematic Night, moody cool tones, {biolum_effect}. Deep light refraction through the thick transparent flesh."
+                    auto_lighting = f"Low-light forensic photography, high-ISO noise texture, {biolum_effect}. Hard shadows, light hitting the gel-skin with realistic specular highlights."
                 elif any(x in env_lower for x in ["sore", "senja", "sunset", "jingga"]):
-                    auto_lighting = f"Golden Hour, warm amber sunlight, long dramatic shadows interacting with the {biolum_effect}."
+                    auto_lighting = f"Natural late-afternoon sun, 5600K color temperature, long harsh shadows, {biolum_effect} competing with directional sunlight."
                 elif any(x in env_lower for x in ["siang", "daylight", "matahari"]):
-                    auto_lighting = f"Neutral Daylight, natural sun position, high forensic clarity, {biolum_effect} is subtle but visible."
+                    auto_lighting = f"Harsh midday sun, unedited RAW lighting, high contrast, {biol_effect} is barely visible under intense white light."
                 elif any(x in env_lower for x in ["hujan", "rain", "badai"]):
-                    auto_lighting = f"Rainy atmosphere, wet reflective surfaces, realistic water droplets on the transparent gel-skin, {biolum_effect} creates blurry refractions."
+                    auto_lighting = f"Dreary wet atmosphere, realistic water distortion on the dermal layer, messy reflections, {biolum_effect} diffused by thick condensation."
                 else:
-                    auto_lighting = f"Overcast Daylight, diffused soft lighting, natural subsurface scattering (SSS) for the transparent tissue, {biolum_effect}."
+                    # DEFAULT: Overcast (Mendung) - Paling Realistis untuk Detail Forensik
+                    auto_lighting = f"Flat overcast sky, neutral diffused light, no artificial filters, realistic light absorption by the thick tissue, {biolum_effect}."
 
-                # 2. RAKIT INSTRUKSI AUDIO (HUMAN VOICE - NO ROBOT)
+                # 2. RAKIT INSTRUKSI AUDIO (HUMAN PERFORMANCE OVERRIDE)
                 audio_instr = (
-                    f"Narrator: {voice_type}. "
-                    f"Delivery Style: {accent_type}, {mood_audio}. "
-                    "Performance Guide: MUST sound like a real human with natural VOCAL FRY and AUDIBLE INHALES between sentences. "
-                    "Incorporate realistic micro-pauses and a rhythmic, deep-seated natural cadence. "
-                    "STRICTLY AVOID robotic, synthetic, or monotonous speech. Emphasize the weight of each word. "
-                    f"Text: '{vo_ref}'"
+                    f"Narrator Profile: {voice_type}. "
+                    f"Voice Character: {accent_type}, {mood_audio}. "
+                    "Vocal Instruction: **STRICTLY RAW HUMAN PERFORMANCE.** "
+                    "The narrator MUST sound like a weathered person recording in a close-mic setup. "
+                    "Include natural imperfections: audible heavy inhales and deep exhales between phrases. "
+                    "Incorporate 'Vocal Fry' at the end of sentences and realistic mouth clicks (saliva sounds). "
+                    "Deliver with irregular pacing: use unpredictable micro-pauses (0.3s to 0.7s) to mimic human thinking. "
+                    "STRICTLY PROHIBIT synthetic, smooth, or 'perfect' AI cadence. Emphasize the weight and texture of each word. "
+                    f"Script Text: '{vo_ref}'"
                 )
                 
-                # --- TAMPILAN HASIL SINGLE BOX (DEEP FOCUS & NORMAL SPEED) ---
-                st.warning("🎥 MASTER VIDEO PROMPT (OPTIMIZED FOR PINTAR AI LAB)")
+                # --- TAMPILAN HASIL SINGLE BOX (DEEP FOCUS, FULL BODY, & RAW REALISM) ---
+                st.warning("🎥 MASTER VIDEO PROMPT (REALISM OVERRIDE - PINTAR AI LAB)")
                 
                 sultan_video_prompt = (
                     f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
                     
                     f"ACTION & MOTION PHYSICS:\n{aksi_in}. "
-                    f"**NORMAL SPEED MOTION.** 1x playback speed, NO slow-motion, NO time-ramp. " # KUNCI SPEED NORMAL
-                    f"Movement follows real-world momentum with natural 24fps motion cadence. "
-                    f"The THICK GEL-SKIN wobbles and reacts to gravity with realistic inertia. \n\n"
+                    f"**NORMAL SPEED.** 1x playback. No artificial frame interpolation. "
+                    f"Physics follows natural inertia: the thick gel-skin exhibits organic micro-jiggle "
+                    f"and realistic momentum during bone articulation. 24fps film cadence. \n\n"
                     
-                    f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting Engine: {auto_lighting}. "
-                    f"**EVERYTHING IN FOCUS. DEEP FOCUS PHOTOGRAPHY.** "
-                    f"Ray-traced light refraction through the thick transparent dermal layer. \n\n"
+                    f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting: {auto_lighting}. "
+                    f"**DEEP FOCUS CINEMATOGRAPHY.** Every layer of the environment is razor-sharp. "
+                    f"Natural ray-traced light interacting with airborne dust motes. "
+                    f"Background environment is perfectly focused and as detailed as the subject. \n\n"
                     
-                    f"TECHNICAL SPECIFICATIONS (STRICT ANTI-AI LOOK):\n"
-                    f"Shot on Nikon D850, 24mm Wide Angle Lens, f/22 aperture for MAXIMUM DEPTH OF FIELD. "
-                    f"Framing: {f_auto}. Motion: {m_auto}. "
-                    f"**ULTRA-SHARP 8K DETAIL.** ABSOLUTELY NO MOTION BLUR. NO BOKEH. NO BACKGROUND BLUR. "
-                    f"Extreme forensic detail. Every texture of the background and character is razor-sharp. "
-                    f"Zero film grain, pure digital clarity, realistic caustic light refractions. \n\n"
+                    f"TECHNICAL SPECS (STRICT ANTI-AI OVERRIDE):\n"
+                    f"**RAW 4K DOCUMENTARY FOOTAGE.** Shot on Nikon D850, 24mm Prime, f/22. "
+                    f"**ULTRA-WIDE ANGLE.** Framing: {f_auto}. Motion: {m_auto}. "
+                    f"**HEAD-TO-TOE FULL BODY VISIBLE STANDING ON THE GROUND.** "
+                    f"**FORENSIC TEXTURE DETAIL.** NO SMOOTH PLASTIC. NO ARTIFICIAL GLOSS. "
+                    f"Visible organic imperfections: tiny surface scratches, realistic skin pores, and bone calcium textures. "
+                    f"**ABSOLUTELY NO MOTION BLUR. NO BOKEH. NO DEPTH OF FIELD BLUR.** "
+                    f"Subtle chromatic aberration on frame edges. Natural raw film grain texture. \n\n"
                     
                     f"AUDIO & SOUND DESIGN:\n{audio_instr}. "
-                    f"Ambient Sound: Immersive 3D soundscape of {env_in} with hyper-detailed foley."
+                    f"Ambient Audio: Immersive 3D soundscape of {env_in} with hyper-detailed foley and realistic spatial reverb."
                 )
                 
                 st.code(sultan_video_prompt, language="text")
@@ -5791,6 +5803,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
