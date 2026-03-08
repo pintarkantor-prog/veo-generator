@@ -5436,7 +5436,7 @@ def tampilkan_ruang_produksi():
         "pan-focal razor-sharp background, zero bokeh, edge-to-edge clarity, "
         "high-index lens glass look, CPL filter, sub-surface scattering, "
         "physically-based rendering, hyper-detailed surface micro-textures, "
-        "anisotropic filtering, ray-traced ambient occlusion"
+        "anisotropic filtering, ray-traced ambient occlusion, NO DEPTH BLUR"
     )
 
     QB_VID = (
@@ -5444,7 +5444,7 @@ def tampilkan_ruang_produksi():
         "pan-focal rendering, zero background blur, pin-sharp every frame, "
         "professional color grading, ray-traced reflections, hyper-detailed textures, "
         "temporal anti-aliasing, zero digital noise, clean pixels, "
-        "natural human-like physics, high-fidelity physical interaction, NO SLOW MOTION"
+        "natural human-like physics, high-fidelity physical interaction, NO SLOW MOTION, NO MOTION BLUR"
     )
 
     # --- UPDATE: Tambahkan larangan SLOW MO & BLUR di Negative ---
@@ -5452,6 +5452,7 @@ def tampilkan_ruang_produksi():
         "muscular, bodybuilder, shredded, male anatomy, human skin, human anatomy, "
         "realistic flesh, skin pores, blurry, out of focus, bokeh, depth of field, "
         "blurry background, slow motion, time-lapse, motion blur, distorted surface, "
+        "soft focus, Gaussian blur, tilt-shift, hazy background"
     )
     
     no_text_strict = (
@@ -5464,9 +5465,9 @@ def tampilkan_ruang_produksi():
     negative_motion_strict = (
         "STRICTLY NO morphing, NO extra limbs, NO distorted faces, NO teleporting objects, "
         "NO flickering textures, NO sudden lighting jumps, NO floating hair artifacts, "
-        "NO unnatural slow motion, NO frame skipping, NO ghosting effects."
+        "NO unnatural slow motion, NO frame skipping, NO ghosting effects, NO cinematic slow-mo."
     )
-
+    
     # 1. INTEGRASI REFERENSI NASKAH
     if 'naskah_siap_produksi' in st.session_state and st.session_state.naskah_siap_produksi:
         with st.expander("📖 NASKAH REFERENSI PINTAR AI LAB", expanded=True):
@@ -5794,6 +5795,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
