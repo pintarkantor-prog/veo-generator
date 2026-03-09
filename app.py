@@ -4750,39 +4750,42 @@ def tampilkan_database_channel():
                     disabled=not is_pro 
                 )
 
-                # --- LOGIKA SAVE (FULL SUPABASE - INSTAN f/16) ---
+                # --- LOGIKA SAVE (FULL SUPABASE - MODE BATCH f/16) ---
                 if is_pro and not edited_p.equals(df_display):
                     if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
                         try:
                             with st.spinner("Sinkronisasi Radar ke Supabase..."):
                                 tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
+                                # 1. Bikin list kosong buat nampung data
+                                data_batch = []
+                                
                                 for i, row in edited_p.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
                                     idx_asli = int(row['REAL_IDX'])
                                     old_val = df.iloc[idx_asli]
                                     
-                                    # Cek apakah ada perubahan status atau subscribe
+                                    # Cek perubahan
                                     if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
-                                        
-                                        # TENTUKAN STATUS HP (Keluar PROSES = Kosongkan Slot)
                                         target_hp = str(old_val['HP'])
                                         if row['STATUS'] != 'PROSES':
                                             target_hp = "" 
 
-                                        # --- UPDATE SUPABASE ONLY (INSTAN) ---
-                                        supabase.table("Channel_Pintar").upsert({
+                                        # CUMA DISIMPAN KE LIST (Belum kirim ke internet)
+                                        data_batch.append({
                                             "EMAIL": target_email,
                                             "STATUS": row['STATUS'],
                                             "SUBSCRIBE": str(row['SUBSCRIBE']),
                                             "HP": target_hp,
                                             "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                        }, on_conflict="EMAIL").execute()
+                                        })
 
-                                # Gak perlu lagi loop GSheet & time.sleep(0.4) cok!
+                                # 2. EKSEKUSI DI LUAR LOOP (Cuma 1x kirim, ini yang bikin instan!)
+                                if data_batch:
+                                    supabase.table("Channel_Pintar").upsert(data_batch, on_conflict="EMAIL").execute()
                                 
                                 st.cache_data.clear()
-                                st.success("✅ Status Diperbarui! Data Sinkron Tepat Sasaran.")
+                                st.success(f"✅ {len(data_batch)} Akun Berhasil Diperbarui secara Instan!")
                                 time.sleep(1)
                                 st.rerun()
                                 
@@ -5664,6 +5667,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
