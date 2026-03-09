@@ -4575,34 +4575,34 @@ def tampilkan_database_channel():
                         if st.form_submit_button("🚀 SIMPAN KE DATABASE", use_container_width=True):
                             if v_nama and v_mail:
                                 tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                                
-                                # --- LANGSUNG CUCI DATA ---
                                 v_mail = v_mail.strip().lower() 
                                 
                                 try:
-                                    # --- GAS KE SUPABASE SAJA (BYE BYE GSHEET) ---
-                                    supabase.table("Channel_Pintar").insert({
-                                        "TANGGAL": tgl_now, 
-                                        "EMAIL": v_mail,
-                                        "PASSWORD": v_pass,
-                                        "NAMA_CHANNEL": v_nama,
-                                        "SUBSCRIBE": v_subs,
-                                        "LINK_CHANNEL": v_link,
-                                        "STATUS": "STANDBY",
-                                        "PENCATAT": user_aktif,
-                                        "EDITED": f"New: {user_aktif} ({tgl_now})"
-                                    }).execute()
+                                    # Pake spinner biar kelihatan lagi kerja
+                                    with st.spinner("Mendaftarkan akun..."):
+                                        supabase.table("Channel_Pintar").insert({
+                                            "TANGGAL": tgl_now, 
+                                            "EMAIL": v_mail,
+                                            "PASSWORD": v_pass,
+                                            "NAMA_CHANNEL": v_nama,
+                                            "SUBSCRIBE": v_subs,
+                                            "LINK_CHANNEL": v_link,
+                                            "STATUS": "STANDBY",
+                                            "PENCATAT": user_aktif,
+                                            "EDITED": f"New: {user_aktif} ({tgl_now})"
+                                        }).execute()
                                     
+                                    # Hapus cache biar data langsung muncul di tabel bawah
                                     st.cache_data.clear()
-                                    st.success(f"✅ MANTAP! Akun {v_mail} berhasil masuk Supabase.")
-                                    time.sleep(1)
+                                    st.success(f"✅ MANTAP! Akun {v_mail} masuk Supabase.")
+                                    time.sleep(0.5)
                                     st.rerun()
 
                                 except Exception as e:
                                     if "23505" in str(e):
-                                        st.warning(f"⚠️ WADUH! Email **{v_mail}** udah ada di sistem!")
+                                        st.warning(f"⚠️ Email **{v_mail}** sudah terdaftar!")
                                     else:
-                                        st.error(f"❌ Ada masalah teknis: {e}")
+                                        st.error(f"❌ Masalah: {e}")
                             else:
                                 st.error("⚠️ Email dan Nama Channel wajib diisi!")
                                 
@@ -4632,7 +4632,7 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-                # --- 6. LOGIKA UPDATE MODERN (FULL SUPABASE) ---
+                # --- 6. LOGIKA UPDATE MODERN (BATCH VERSION f/16) ---
                 kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
                 if not edited_st.equals(df_st[kolom_cek]):
                     if st.button("💾 KONFIRMASI PERUBAHAN", use_container_width=True, type="primary"):
@@ -4640,12 +4640,15 @@ def tampilkan_database_channel():
                             with st.spinner("Sinkronisasi Radar ke Supabase..."):
                                 tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
+                                # 1. SIAPIN KERANJANG (List Kosong)
+                                data_batch = []
+                                
                                 for i, row in edited_st.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
                                     idx_asli = int(row['REAL_IDX'])
                                     old_val = df.iloc[idx_asli]
                                     
-                                    # --- B. LOGIKA TARGET HP (Tetap Aman secara Lokal) ---
+                                    # Logika Target HP
                                     target_hp = str(old_val['HP'])
                                     if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
                                         df_p_now = df[df['STATUS'] == 'PROSES'].copy()
@@ -4658,8 +4661,8 @@ def tampilkan_database_channel():
                                     elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
                                         target_hp = ""
 
-                                    # --- C. UPDATE SUPABASE (INSTAN!) ---
-                                    supabase.table("Channel_Pintar").upsert({
+                                    # 2. MASUKIN DATA KE KERANJANG (GAK PAKE .execute() DI SINI!)
+                                    data_batch.append({
                                         "TANGGAL": tgl_now,
                                         "EMAIL": target_email,
                                         "PASSWORD": row['PASSWORD'],
@@ -4670,12 +4673,15 @@ def tampilkan_database_channel():
                                         "HP": target_hp,
                                         "PENCATAT": row['PENCATAT'],
                                         "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                    }, on_conflict="EMAIL").execute()
+                                    })
 
-                                # Gak perlu lagi loop ws.update GSheet yang bikin muntah, Cok!
-                                
+                                # 3. TEMBAK SUPABASE (SEKALIGUS DI LUAR LOOP)
+                                # Inilah yang bikin instan milidetik, Cok!
+                                if data_batch:
+                                    supabase.table("Channel_Pintar").upsert(data_batch, on_conflict="EMAIL").execute()
+
                                 st.cache_data.clear()
-                                st.success("✅ Radar Berhasil Disinkron!")
+                                st.success(f"✅ Mantap! {len(data_batch)} Akun Berhasil Diupdate!")
                                 time.sleep(1)
                                 st.rerun()
                                 
@@ -5667,6 +5673,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
