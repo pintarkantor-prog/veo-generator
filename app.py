@@ -136,99 +136,43 @@ def tambah_log(user, aksi):
 # ==============================================================================
 # 6. SETUP DATABASE HYBRID (SUPABASE + GSHEET BACKUP)
 # ==============================================================================
-try:
-    sh_master = get_gspread_sh()
-    ws = sh_master.worksheet("Channel_Pintar")
-    ws_unit_hp = sh_master.worksheet("Data_HP") 
-except Exception as e:
-    print(f"❌ Koneksi GSheet Gagal: {e}")
 
 def load_data_channel():
-    """Narik data dari Supabase (Utama), GSheet cuma Backup."""
+    """Narik data murni dari Supabase (Instan & Tajam)."""
     try:
-        # 1. TEMBAK SUPABASE (Prioritas Utama)
         res = supabase.table("Channel_Pintar").select("*").execute()
-        
-        # CEK: Apakah res sukses dan ADA datanya?
-        # Ini perbaikan paling krusial. Lo cek datanya dulu, baru bikin DataFrame.
-        if res.data and len(res.data) > 0:
+        if res.data:
             df = pd.DataFrame(res.data)
             return bersihkan_data(df)
-        
-        # 2. Jika Supabase beneran kosong, baru ke GSheet
-        # Pakai st.info/warning cuma buat lo (owner) tahu kalau sistem lagi switch
-        data_gs = ws.get_all_records()
-        return bersihkan_data(pd.DataFrame(data_gs))
-
+        return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
     except Exception as e:
-        # 3. EMERGENCY (Supabase Error/Limit)
-        # Langsung lari ke GSheet sebagai pertahanan terakhir
-        try:
-            data_gs = ws.get_all_records()
-            return bersihkan_data(pd.DataFrame(data_gs))
-        except:
-            # FALLBACK TOTAL: Tetep 4 Kolom sesuai kode awal lo
-            return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
+        st.error(f"❌ Emergency: Supabase Error! {e}")
+        return pd.DataFrame(columns=["TANGGAL", "EMAIL", "STATUS", "HP"])
 
-@st.cache_data(ttl=600) # <--- TAMBAHIN INI DI ATAS FUNGSI
+@st.cache_data(ttl=600)
 def load_data_hp():
-    """Load data unit HP (Hemat API dengan Cache 10 Menit)."""
+    """Load data unit HP dari Supabase."""
     try:
-        # Untuk data HP yang dikit, GSheet masih oke banget cok
-        return bersihkan_data(pd.DataFrame(ws_unit_hp.get_all_records()))
+        res = supabase.table("Data_HP").select("*").execute()
+        return pd.DataFrame(res.data)
     except:
         return pd.DataFrame(columns=["NAMA_HP", "NOMOR_HP", "PROVIDER", "MASA_AKTIF"])
 
 def simpan_perubahan_channel(df_edited, user_aktif):
-    """VERSI SAFE & KENCANG: Prioritas Supabase, GSheet Gak Bakal Bikin Error."""
+    """VERSI FULL SUPABASE: Sekali klik langsung masuk, gak pake lama."""
     try:
         tz = pytz.timezone('Asia/Jakarta')
         tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
         
-        # --- A. UPDATE SUPABASE (CEPAT & MASAL) ---
-        # Upsert di Supabase itu super kencang, 1 request beres semua baris.
+        # --- UPDATE SUPABASE (MASAL) ---
+        # Satu request beres buat semua baris!
         data_to_supabase = df_edited.to_dict(orient='records')
         supabase.table("Channel_Pintar").upsert(data_to_supabase, on_conflict="EMAIL").execute()
         
-        # --- B. UPDATE GSHEET (BACKUP SILENT) ---
-        try:
-            # Pake col_values(2) jauh lebih ringan daripada get_all_records()
-            # Ini cuma narik kolom EMAIL buat nyari alamat baris
-            emails_gs = ws.col_values(2) # Asumsi Email di kolom B (2)
-            
-            for i, row in df_edited.iterrows():
-                email_target = str(row['EMAIL']).strip().lower()
-                
-                if email_target in emails_gs:
-                    # Cari baris: index list + 1
-                    r_gs = emails_gs.index(email_target) + 1
-                    
-                    # Update baris G sampai L
-                    try:
-                        ws.update(f"G{r_gs}:L{r_gs}", [[
-                            row['STATUS'], 
-                            row['HP'], 
-                            str(row.get('PAGI', '')), 
-                            str(row.get('SIANG', '')), 
-                            str(row.get('SORE', '')), 
-                            f"Up: {user_aktif} ({tgl_now})"
-                        ]])
-                        # Kasih jeda dikit biar API Google gak marah
-                        time.sleep(0.4) 
-                    except:
-                        # Kalau per baris kena limit, skip aja, lanjut baris berikutnya
-                        continue
-        except Exception as e_gs:
-            # Kalau GSheet mati total/limit parah, abaikan saja. 
-            # Jangan pake st.error supaya user gak panik, data udah aman di Supabase.
-            print(f"GSheet Backup Delay: {e_gs}")
-
-        # Bersihkan cache agar tampilan radar langsung update
         st.cache_data.clear()
         return True 
 
     except Exception as e:
-        # Hanya error kalau Supabase-nya yang gagal (ini baru bahaya)
         st.error(f"❌ Gagal Simpan Utama (Supabase): {e}")
         return False
         
@@ -4632,26 +4576,11 @@ def tampilkan_database_channel():
                             if v_nama and v_mail:
                                 tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
-                                # --- LANGSUNG CUCI DI SINI (Variabel tetep v_mail) ---
+                                # --- LANGSUNG CUCI DATA ---
                                 v_mail = v_mail.strip().lower() 
                                 
                                 try:
-                                    # --- A. SIMPAN KE GSHEET (Backup) ---
-                                    # Sekarang v_mail di sini udah bersih tanpa spasi
-                                    ws.append_row([
-                                        tgl_now, 
-                                        v_mail, 
-                                        v_pass, 
-                                        v_nama, 
-                                        v_subs, 
-                                        v_link, 
-                                        "STANDBY", 
-                                        "", "", "", 
-                                        user_aktif, 
-                                        f"New: {user_aktif} ({tgl_now})"
-                                    ])
-                                    
-                                    # --- B. SIMPAN KE SUPABASE ---
+                                    # --- GAS KE SUPABASE SAJA (BYE BYE GSHEET) ---
                                     supabase.table("Channel_Pintar").insert({
                                         "TANGGAL": tgl_now, 
                                         "EMAIL": v_mail,
@@ -4665,7 +4594,7 @@ def tampilkan_database_channel():
                                     }).execute()
                                     
                                     st.cache_data.clear()
-                                    st.success(f"✅ MANTAP! Akun {v_mail} berhasil didaftarkan.")
+                                    st.success(f"✅ MANTAP! Akun {v_mail} berhasil masuk Supabase.")
                                     time.sleep(1)
                                     st.rerun()
 
@@ -4703,73 +4632,53 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-                # --- 6. LOGIKA UPDATE MODERN (SISTEM ANTI-NGACAK / CARI EMAIL) ---
+# --- 6. LOGIKA UPDATE MODERN (FULL SUPABASE) ---
                 kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
                 if not edited_st.equals(df_st[kolom_cek]):
                     if st.button("💾 KONFIRMASI PERUBAHAN", use_container_width=True, type="primary"):
                         try:
-                            with st.spinner("Sinkronisasi Radar & Supabase..."):
-                                # --- TRICK SAKTI: Ambil daftar email GSheet SEKALI SAJA (Hemat API) ---
-                                emails_gs = ws.col_values(2) # Ambil Kolom B (Email)
+                            with st.spinner("Sinkronisasi Radar ke Supabase..."):
+                                tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
                                 for i, row in edited_st.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
+                                    idx_asli = int(row['REAL_IDX'])
+                                    old_val = df.iloc[idx_asli]
                                     
-                                    # Ganti ws.find dengan pencarian di list (PROSES LOKAL - 0ms)
-                                    if target_email in emails_gs:
-                                        r_gs = emails_gs.index(target_email) + 1
-                                        
-                                        idx_asli = int(row['REAL_IDX'])
-                                        old_val = df.iloc[idx_asli]
-                                        tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
-                                        
-                                        # --- B. LOGIKA TARGET HP (Tetap Aman) ---
-                                        target_hp = str(old_val['HP'])
-                                        if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
-                                            df_p_now = df[df['STATUS'] == 'PROSES'].copy()
-                                            hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
-                                            target_hp = "1"
-                                            for h in range(1, 101):
-                                                if hp_counts.get(str(h), 0) < 2:
-                                                    target_hp = str(h)
-                                                    break
-                                        elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
-                                            target_hp = ""
+                                    # --- B. LOGIKA TARGET HP (Tetap Aman secara Lokal) ---
+                                    target_hp = str(old_val['HP'])
+                                    if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
+                                        df_p_now = df[df['STATUS'] == 'PROSES'].copy()
+                                        hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+                                        target_hp = "1"
+                                        for h in range(1, 101):
+                                            if hp_counts.get(str(h), 0) < 2:
+                                                target_hp = str(h)
+                                                break
+                                    elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
+                                        target_hp = ""
 
-                                        # --- C. UPDATE SUPABASE ---
-                                        try:
-                                            supabase.table("Channel_Pintar").upsert({
-                                                "TANGGAL": tgl_now,
-                                                "EMAIL": target_email,
-                                                "PASSWORD": row['PASSWORD'],
-                                                "NAMA_CHANNEL": row['NAMA_CHANNEL'],
-                                                "SUBSCRIBE": str(row['SUBSCRIBE']),
-                                                "LINK_CHANNEL": row['LINK_CHANNEL'],
-                                                "STATUS": row['STATUS'],
-                                                "HP": target_hp,
-                                                "PENCATAT": row['PENCATAT'],
-                                                "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                            }, on_conflict="EMAIL").execute()
-                                        except Exception as e_supa:
-                                            st.error(f"Gagal Supabase ({target_email}): {e_supa}")
+                                    # --- C. UPDATE SUPABASE (INSTAN!) ---
+                                    supabase.table("Channel_Pintar").upsert({
+                                        "TANGGAL": tgl_now,
+                                        "EMAIL": target_email,
+                                        "PASSWORD": row['PASSWORD'],
+                                        "NAMA_CHANNEL": row['NAMA_CHANNEL'],
+                                        "SUBSCRIBE": str(row['SUBSCRIBE']),
+                                        "LINK_CHANNEL": row['LINK_CHANNEL'],
+                                        "STATUS": row['STATUS'],
+                                        "HP": target_hp,
+                                        "PENCATAT": row['PENCATAT'],
+                                        "EDITED": f"Up: {user_aktif} ({tgl_now})"
+                                    }, on_conflict="EMAIL").execute()
 
-                                        # --- D. UPDATE GSHEET (Anti-Asem dengan Try & Delay) ---
-                                        try:
-                                            ws.update(f"G{r_gs}:L{r_gs}", [[
-                                                row['STATUS'], target_hp, str(old_val.get('PAGI','')), 
-                                                str(old_val.get('SIANG','')), str(old_val.get('SORE','')), 
-                                                f"Up: {user_aktif} ({tgl_now})"
-                                            ]])
-                                            time.sleep(0.4) # Kasih napas buat Google
-                                        except:
-                                            continue # Kalau GSheet limit, biarkan saja, Supabase udah aman
-                                    else:
-                                        st.error(f"Email {target_email} tidak ada di GSheet!")
-
+                                # Gak perlu lagi loop ws.update GSheet yang bikin muntah, Cok!
+                                
                                 st.cache_data.clear()
-                                st.success("✅ Database & Radar Sinkron!")
+                                st.success("✅ Radar Sinkron Milidetik!")
                                 time.sleep(1)
                                 st.rerun()
+                                
                         except Exception as e:
                             st.error(f"❌ Error Global: {e}")
                             
@@ -4841,61 +4750,42 @@ def tampilkan_database_channel():
                     disabled=not is_pro 
                 )
 
-                # --- LOGIKA SAVE (SINKRON DENGAN RADAR & GPS SYSTEM) ---
+                # --- LOGIKA SAVE (FULL SUPABASE - INSTAN f/16) ---
                 if is_pro and not edited_p.equals(df_display):
                     if st.button("💾 UPDATE STATUS MONITORING", use_container_width=True, type="primary"):
                         try:
-                            with st.spinner("Sinkronisasi Radar & Supabase..."):
-                                # 1. AMBIL DAFTAR EMAIL GSHEET SEKALI SAJA (HEMAT API)
-                                emails_gs = ws.col_values(2) # Kolom B
+                            with st.spinner("Sinkronisasi Radar ke Supabase..."):
+                                tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
                                 
                                 for i, row in edited_p.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
+                                    idx_asli = int(row['REAL_IDX'])
+                                    old_val = df.iloc[idx_asli]
                                     
-                                    # 2. CARI BARIS SECARA LOKAL (Gak pake ws.find)
-                                    if target_email in emails_gs:
-                                        r_gs = emails_gs.index(target_email) + 1
-                                        idx_asli = int(row['REAL_IDX'])
-                                        old_val = df.iloc[idx_asli]
-                                        tgl_now = datetime.now(tz).strftime("%d/%m/%Y %H:%M")
+                                    # Cek apakah ada perubahan status atau subscribe
+                                    if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
                                         
-                                        # Cek apakah ada perubahan status atau subscribe
-                                        if (row['STATUS'] != old_val['STATUS'] or str(row['SUBSCRIBE']) != str(old_val['SUBSCRIBE'])):
-                                            
-                                            # TENTUKAN STATUS HP (Keluar PROSES = Kosongkan Slot)
-                                            target_hp = str(old_val['HP'])
-                                            if row['STATUS'] != 'PROSES':
-                                                target_hp = "" 
+                                        # TENTUKAN STATUS HP (Keluar PROSES = Kosongkan Slot)
+                                        target_hp = str(old_val['HP'])
+                                        if row['STATUS'] != 'PROSES':
+                                            target_hp = "" 
 
-                                            # 3. UPDATE SUPABASE (CEPAT)
-                                            supabase.table("Channel_Pintar").upsert({
-                                                "EMAIL": target_email,
-                                                "STATUS": row['STATUS'],
-                                                "SUBSCRIBE": str(row['SUBSCRIBE']),
-                                                "HP": target_hp,
-                                                "EDITED": f"Up: {user_aktif} ({tgl_now})"
-                                            }, on_conflict="EMAIL").execute()
+                                        # --- UPDATE SUPABASE ONLY (INSTAN) ---
+                                        supabase.table("Channel_Pintar").upsert({
+                                            "EMAIL": target_email,
+                                            "STATUS": row['STATUS'],
+                                            "SUBSCRIBE": str(row['SUBSCRIBE']),
+                                            "HP": target_hp,
+                                            "EDITED": f"Up: {user_aktif} ({tgl_now})"
+                                        }, on_conflict="EMAIL").execute()
 
-                                            # 4. UPDATE GSHEET (SILENT & AMAN)
-                                            try:
-                                                ws.update(f"G{r_gs}:L{r_gs}", [[
-                                                    row['STATUS'], 
-                                                    target_hp, 
-                                                    str(old_val.get('PAGI','')), 
-                                                    str(old_val.get('SIANG','')), 
-                                                    str(old_val.get('SORE','')), 
-                                                    f"Up: {user_aktif} ({tgl_now})"
-                                                ]])
-                                                time.sleep(0.4) # Jeda tipis biar API gak limit
-                                            except:
-                                                continue # Jika GSheet limit, abaikan, Supabase sudah masuk
-                                    else:
-                                        st.error(f"Email {target_email} tidak ditemukan!")
-
+                                # Gak perlu lagi loop GSheet & time.sleep(0.4) cok!
+                                
                                 st.cache_data.clear()
                                 st.success("✅ Status Diperbarui! Data Sinkron Tepat Sasaran.")
                                 time.sleep(1)
                                 st.rerun()
+                                
                         except Exception as e:
                             st.error(f"❌ Gagal update: {e}")
                     
@@ -4918,14 +4808,13 @@ def tampilkan_database_channel():
             }
             tgl_str = f"{now_indo.day} {nama_bulan[now_indo.month]} {now_indo.year}"
 
-            # --- 1. FITUR EDIT JAM (VERSI HYBRID: SUPABASE + GSHEET BATCH) ---
+            # --- 1. FITUR EDIT JAM (FULL SUPABASE - KENCENG SILET) ---
             if is_pro:
                 with st.expander("🛠️ EDIT JAM UPLOAD (SLOT HP)", expanded=False):
                     df_j['REAL_IDX'] = df_j.index
                     df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
                     
-                    # KUNCI: Editor sekarang diurutkan berdasarkan No HP DAN Jam Pagi.
-                    # Jadi pas lo buka expander, urutannya udah selang-seling rapi.
+                    # Sort biar rapi per HP dan waktu
                     df_j_sorted = df_j.sort_values(['HP_N', 'PAGI'])
 
                     kolom_edit = ["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE", "EMAIL", "REAL_IDX"]
@@ -4946,57 +4835,30 @@ def tampilkan_database_channel():
 
                     if st.button("💾 SIMPAN SEMUA JADWAL", use_container_width=True, type="primary"):
                         try:
-                            with st.spinner("Sinkronisasi Massal (Anti-Limit)..."):
-                                # 1. CARI BARIS SECARA IRIT (Hanya kolom Email)
-                                # Gak perlu get_all_values (berat), cukup ambil kolom B
-                                emails_gs = ws.col_values(2) 
-                                email_to_row = {email.strip().lower(): i + 1 for i, email in enumerate(emails_gs)}
-                                
-                                updates_gsheet = []
+                            with st.spinner("Sinkronisasi Jadwal ke Supabase..."):
                                 jam_log = now_indo.strftime('%H:%M')
-                                
-                                # List untuk batch upload Supabase (biar sekali tembak)
                                 data_supabase = []
 
                                 for _, row in edited_j.iterrows():
                                     target_email = row['EMAIL'].strip().lower()
                                     
-                                    if target_email in email_to_row:
-                                        r_gs = email_to_row[target_email]
-                                        
-                                        # --- A. TAMPUNG DATA SUPABASE ---
-                                        data_supabase.append({
-                                            "EMAIL": target_email,
-                                            "PAGI": str(row['PAGI']) if row['PAGI'] else "",
-                                            "SIANG": str(row['SIANG']) if row['SIANG'] else "",
-                                            "SORE": str(row['SORE']) if row['SORE'] else "",
-                                            "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
-                                        })
+                                    # --- TAMPUNG DATA KE LIST UNTUK SEKALI TEMBAK ---
+                                    data_supabase.append({
+                                        "EMAIL": target_email,
+                                        "PAGI": str(row['PAGI']) if row['PAGI'] else "",
+                                        "SIANG": str(row['SIANG']) if row['SIANG'] else "",
+                                        "SORE": str(row['SORE']) if row['SORE'] else "",
+                                        "EDITED": f"Up: {user_aktif} (Jadwal {jam_log})"
+                                    })
 
-                                        # --- B. TAMPUNG DATA GSHEET ---
-                                        # Pakai kolom L, M, N, O sesuai struktur lo
-                                        updates_gsheet.append({
-                                            'range': f'L{r_gs}:O{r_gs}',
-                                            'values': [[
-                                                f"Up: {user_aktif} (Jadwal {jam_log})",
-                                                str(row['PAGI']) if row['PAGI'] else "",
-                                                str(row['SIANG']) if row['SIANG'] else "",
-                                                str(row['SORE']) if row['SORE'] else ""
-                                            ]]
-                                        })
-
-                                # 2. EKSEKUSI SUPABASE (MASSAL)
+                                # --- EKSEKUSI SUPABASE (MASSAL & INSTAN) ---
                                 if data_supabase:
-                                    supabase.table("Channel_Pintar").upsert(data_supabase, on_conflict="EMAIL").execute()
+                                    supabase.table("Channel_Pintar").upsert(
+                                        data_supabase, on_conflict="EMAIL"
+                                    ).execute()
 
-                                # 3. EKSEKUSI GSHEET (BATCH UPDATE - HANYA 1 REQUEST API)
-                                if updates_gsheet:
-                                    # Kita bungkus try-except biar kalau GSheet limit, Supabase tetep aman
-                                    try:
-                                        ws.batch_update(updates_gsheet)
-                                    except:
-                                        st.warning("⚠️ Backup GSheet tertunda (Limit), tapi data Supabase sudah AMAN.")
-
+                                # Gak perlu lagi batch_update GSheet yang bikin pusing cok!
+                                
                                 st.cache_data.clear()
                                 st.success(f"✅ Mantap! {len(data_supabase)} Jadwal Berhasil Sinkron.")
                                 time.sleep(1)
@@ -5150,16 +5012,22 @@ def tampilkan_database_channel():
                         if v_nama and v_no:
                             try:
                                 tgl_fix = v_tgl.strftime("%d/%m/%Y")
-                                ws_unit_hp.append_row(
-                                    [str(v_nama).upper(), f"'{v_no}", v_prov, tgl_fix], 
-                                    value_input_option='USER_ENTERED'
-                                )
+                                
+                                # --- GANTI KE SUPABASE (INSTAN f/16) ---
+                                # Asumsi nama tabel di Supabase lo: Data_HP
+                                supabase.table("Data_HP").insert({
+                                    "NAMA_HP": str(v_nama).upper(),
+                                    "NOMOR_HP": str(v_no),
+                                    "PROVIDER": v_prov,
+                                    "MASA_AKTIF": tgl_fix
+                                }).execute()
+
                                 st.cache_data.clear() 
-                                st.success(f"✅ {v_nama} Berhasil Didaftarkan!")
+                                st.success(f"✅ {v_nama} Berhasil Didaftarkan ke Supabase!")
                                 time.sleep(0.5)
                                 st.rerun() 
                             except Exception as e:
-                                st.error(f"Error: {e}")
+                                st.error(f"Error Supabase: {e}")
                         else:
                             st.error("Nama & Nomor wajib diisi!")
 
@@ -5227,28 +5095,21 @@ def tampilkan_database_channel():
                                 if st.button("💾 SIMPAN", key=f"btn_e_{idx}", use_container_width=True, type="primary"):
                                     if e_nama and e_no:
                                         try:
-                                            # 1. Cari baris di GSheet (Hanya narik kolom Nama HP biar irit)
-                                            nama_hps = ws_unit_hp.col_values(1)
+                                            # --- GANTI KE SUPABASE (INSTAN f/16) ---
+                                            # Kita update berdasarkan NAMA_HP lama sebagai kunci
+                                            supabase.table("Data_HP").update({
+                                                "NAMA_HP": e_nama.upper(), 
+                                                "NOMOR_HP": str(e_no), 
+                                                "PROVIDER": e_prov, 
+                                                "MASA_AKTIF": e_tgl
+                                            }).eq("NAMA_HP", r['NAMA_HP']).execute()
                                             
-                                            if str(r['NAMA_HP']) in nama_hps:
-                                                r_idx = nama_hps.index(str(r['NAMA_HP'])) + 1
-                                                
-                                                # 2. UPDATE MASSAL (Cuma 1 request API untuk 4 kolom)
-                                                ws_unit_hp.update(f"A{r_idx}:D{r_idx}", [[
-                                                    e_nama.upper(), 
-                                                    f"'{e_no}", 
-                                                    e_prov, 
-                                                    e_tgl
-                                                ]])
-                                                
-                                                st.cache_data.clear()
-                                                st.success(f"✅ {e_nama} Berhasil Diupdate!")
-                                                time.sleep(0.5)
-                                                st.rerun()
-                                            else:
-                                                st.error("❌ Nama HP lama tidak ditemukan di GSheet!")
+                                            st.cache_data.clear()
+                                            st.success(f"✅ {e_nama} Berhasil Diupdate di Supabase!")
+                                            time.sleep(0.5)
+                                            st.rerun()
                                         except Exception as e:
-                                            st.error(f"❌ Gagal Update: {e}")
+                                            st.error(f"❌ Gagal Update Supabase: {e}")
                                     else:
                                         st.error("⚠️ Nama & Nomor HP wajib diisi!")
                         
@@ -5803,6 +5664,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
