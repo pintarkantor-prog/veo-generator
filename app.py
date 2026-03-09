@@ -4521,7 +4521,7 @@ def tampilkan_database_channel():
             hp_aktif = len(df[df['HP'].notna() & (df['HP'].astype(str).str.strip() != "")]['HP'].unique())
             
             # --- LOGIKA STATUS VITAL ---
-            selisih_vital = total_st - (total_pr + 20)
+            selisih_vital = total_st - (total_pr + 10)
             status_stok = f"AMAN (+{selisih_vital})" if selisih_vital >= 0 else f"KRITIS ({selisih_vital})"
             warna_stok = "normal" if selisih_vital >= 0 else "inverse"
             
@@ -5685,6 +5685,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
