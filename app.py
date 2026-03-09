@@ -4632,7 +4632,7 @@ def tampilkan_database_channel():
                     column_config=config_st, use_container_width=True, hide_index=True, key="grid_st_pro_locked"
                 )
 
-# --- 6. LOGIKA UPDATE MODERN (FULL SUPABASE) ---
+                # --- 6. LOGIKA UPDATE MODERN (FULL SUPABASE) ---
                 kolom_cek = ["NO", "EMAIL", "PASSWORD", "NAMA_CHANNEL", "SUBSCRIBE", "LINK_CHANNEL", "PENCATAT", "STATUS", "REAL_IDX"]
                 if not edited_st.equals(df_st[kolom_cek]):
                     if st.button("💾 KONFIRMASI PERUBAHAN", use_container_width=True, type="primary"):
@@ -4675,7 +4675,7 @@ def tampilkan_database_channel():
                                 # Gak perlu lagi loop ws.update GSheet yang bikin muntah, Cok!
                                 
                                 st.cache_data.clear()
-                                st.success("✅ Radar Sinkron Milidetik!")
+                                st.success("✅ Radar Berhasil Disinkron!")
                                 time.sleep(1)
                                 st.rerun()
                                 
@@ -5667,6 +5667,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
