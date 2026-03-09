@@ -4648,16 +4648,28 @@ def tampilkan_database_channel():
                                     idx_asli = int(row['REAL_IDX'])
                                     old_val = df.iloc[idx_asli]
                                     
-                                    # Logika Target HP
+                                    # --- LOGIKA TARGET HP (SLOT DINAMIS 2 & 3) ---
                                     target_hp = str(old_val['HP'])
                                     if row['STATUS'] == 'PROSES' and old_val['STATUS'] == 'STANDBY':
                                         df_p_now = df[df['STATUS'] == 'PROSES'].copy()
                                         hp_counts = df_p_now['HP'].astype(str).value_counts().to_dict()
+                                        
                                         target_hp = "1"
                                         for h in range(1, 101):
-                                            if hp_counts.get(str(h), 0) < 2:
+                                            count_sekarang = hp_counts.get(str(h), 0)
+                                            
+                                            # TENTUKAN MAKSIMAL SLOT:
+                                            # Masukin nomor HP yang mau lo jatah 3 di dalam kurung [ ]
+                                            # Kalau mau balikin 2 semua, kosongin aja isinya jadi: if h in []:
+                                            if h in [1, 4, 9, 15, 16, 17, 18]:
+                                                max_slot = 3
+                                            else:
+                                                max_slot = 2
+                                            
+                                            if count_sekarang < max_slot:
                                                 target_hp = str(h)
                                                 break
+
                                     elif row['STATUS'] in ['SOLD', 'BUSUK', 'SUSPEND'] and old_val['STATUS'] == 'PROSES':
                                         target_hp = ""
 
@@ -4883,13 +4895,13 @@ def tampilkan_database_channel():
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
             list_hp_unik = df_display['HP'].unique()
-            total_hal = (len(list_hp_unik) + 11) // 12
+            total_hal = (len(list_hp_unik) + 10) // 11
             html_all_pages = "" 
 
-            for start_idx in range(0, len(list_hp_unik), 12):
-                hp_halaman_ini = list_hp_unik[start_idx : start_idx + 12]
+            for start_idx in range(0, len(list_hp_unik), 11):
+                hp_halaman_ini = list_hp_unik[start_idx : start_idx + 11]
                 df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
-                hal_ke = (start_idx // 12) + 1
+                hal_ke = (start_idx // 11) + 1
                 
                 html_all_pages += f"""
                 <div class="print-container {'page-break' if hal_ke < total_hal else ''}">
@@ -5673,6 +5685,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
