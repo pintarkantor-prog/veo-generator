@@ -4661,7 +4661,7 @@ def tampilkan_database_channel():
                                             # TENTUKAN MAKSIMAL SLOT:
                                             # Masukin nomor HP yang mau lo jatah 3 di dalam kurung [ ]
                                             # Kalau mau balikin 2 semua, kosongin aja isinya jadi: if h in []:
-                                            if h in [10, 11, 12, 13, 14, 15, 16, 17, 18]:
+                                            if h in [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]:
                                                 max_slot = 3
                                             else:
                                                 max_slot = 2
@@ -5684,6 +5684,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
