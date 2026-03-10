@@ -2285,11 +2285,18 @@ def tampilkan_ai_lab():
                     "High-fidelity textures on the mosque's surface and the artisan's skin."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (THE YOUTUBE VIRAL WIDE-LOOK) ---
+                # --- 6. RAKIT FINAL PROMPT (FIXED: TWO HANDS ONLY) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
                 
+                # Kunci anatomi biar nggak jadi kepiting
+                ANATOMY_LOCK = (
+                    "STRICTLY ONLY TWO HANDS VISIBLE. NO EXTRA LIMBS. NO GHOST HANDS. "
+                    "The two human hands are physically touching the mosque model to perform the action. "
+                    "Five fingers on each hand, anatomically correct. Real skin texture on hands."
+                )
+
                 MANDATORY_LOCK = (
                     "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. "
                     "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
@@ -2297,16 +2304,15 @@ def tampilkan_ai_lab():
                 
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
+                    f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n" # KUNCI DISINI
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi} while INTERACTING with the mosque model. {pilih_mood}. \n"
+                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
                     f"THE MASTERPIECE: {deskripsi_teknis}. "
-                    f"The structure is grand, wide, and incredibly intricate with multiple domes and minarets. \n"
+                    f"The structure is a separate physical object on the table. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, deep depth of field, "
-                    f"sharp focus on both the diorama and the character's hands, "
-                    f"realistic body scaling, consistent lighting, no distortion, masterpiece quality."
+                    f"TECHNICAL SPECS: ARRI Alexa 65, sharp focus on the TWO HANDS and the diorama, "
+                    f"no double-limbs, realistic anatomical body scaling, masterpiece quality."
                 )
                 # --- 7. TAMPILKAN HASIL ---
                 st.success("🔥 PROMPT BERHASIL DIRAKIT!")
@@ -6079,6 +6085,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
