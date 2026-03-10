@@ -2244,57 +2244,54 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-        # --- LOGIC GENERATOR (FIXED: REALISTIC WORKSHOP & MEGA STRUCTURE) ---
+        # --- LOGIC GENERATOR (FIXED: SEPARATION, FRONT VIEW, SLOW ZOOM) ---
         if btn_gen:
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (FIXED: LESEHAN NO KOLONG) ---
+                # --- 4. DYNAMIC SCENE LOGIC (ANTI-MUTAN & ZOOM FOCUS) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
                 meja_type = "a low traditional wooden floor-table (meja lesehan)" if is_lesehan else "a heavy professional wooden workbench"
                 posisi_duduk = "sitting cross-legged on the floor (lesehan style) in front of" if is_lesehan else "standing behind"
 
                 scene_context = (
-                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. CINEMATIC WIDE SHOT. "
-                    f"A clear physical separation between the human artisan and the architectural model. "
-                    f"The camera is at eye-level, 3/4 side view. "
+                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. FRONT-FACING STRAIGHT ANGLE. "
+                    f"A slow cinematic zoom-in focusing on the intricate details of the mosque object. "
+                    f"There is a CLEAR PHYSICAL SEPARATION between the human and the model. "
                     f"The character is a NORMAL HUMAN {posisi_duduk} {meja_type}. "
-                    f"On top of the table sits a GARGANTUAN PHYSICAL MOSQUE DIORAMA. "
-                    f"The mosque is a separate object, NOT attached to the character's body. " # KUNCI BIAR GAK JADI ARMOR
-                    f"The artisan's hands are physically touching the model to work on it. "
-                    f"The scale is massive (torso-sized), but it remains a tabletop model. "
-                    f"NO double bodies, NO fused textures, NO glass clothing. Pure reality."
+                    f"The GARGANTUAN MOSQUE DIORAMA is a separate, distinct physical object on top of the table. "
+                    f"THE CHARACTER IS NOT ATTACHED TO THE MOSQUE. THE MOSQUE IS NOT WEARABLE ARMOR. "
+                    f"The mosque sits in the middle ground, filling the frame as the central focus. "
+                    f"The artisan's hands are the only part of their body touching the model. "
+                    f"Pure reality, no body-fusion, no ghost textures."
                 )
 
-                # --- 5. NUANSA HIDUP (THE MASTER ARTISAN FOCUS) ---
+                # --- 5. NUANSA HIDUP (EYE CONTACT LOCK) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
-                # Logic Mata: Ngomong = Lihat Kamera, Kerja = Lihat Bawah
                 eye_lock = (
-                    "The character maintains direct, soulful EYE CONTACT with the camera lens while delivering the dialogue. "
-                    "Their eyes look straight into the camera as if speaking to the audience with deep intention. "
-                    "When not speaking, they look DOWNWARD at the mosque structure to maintain focus on the craft. "
-                    "No blank staring—eyes are focused, human, and alive."
+                    "The character maintains direct, soulful EYE CONTACT with the camera lens throughout the dialogue. "
+                    "Their gaze is fixed on the viewer, eyes alive with emotion and dedication. "
+                    "Their two hands are busy working on the mosque structure while they look straight ahead. "
+                    "Natural blinking, human expressions, no blank stares."
                 )
 
                 living_details = (
                     f"ENVIRONMENT: {env_detail}. {eye_lock} "
-                    "Natural workshop lighting with soft shadows casting on the workbench surface. "
-                    "Real craft tools like glue bottles, tweezers, and scraps are scattered around the base. "
-                    "High-fidelity textures on the mosque's surface and the artisan's skin."
+                    "Natural workshop lighting with soft shadows casting on the table surface. "
+                    "High-fidelity skin textures and detailed architectural surfaces."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (FIXED: TWO HANDS ONLY) ---
+                # --- 6. RAKIT FINAL PROMPT (STRICT TWO HANDS & FRONT LOOK) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
                 
-                # Kunci anatomi biar nggak jadi kepiting
                 ANATOMY_LOCK = (
-                    "STRICTLY ONLY TWO HANDS VISIBLE. NO EXTRA LIMBS. NO GHOST HANDS. "
-                    "The two human hands are physically touching the mosque model to perform the action. "
-                    "Five fingers on each hand, anatomically correct. Real skin texture on hands."
+                    "STRICTLY ONLY TWO HUMAN HANDS VISIBLE. NO GHOST HANDS. NO EXTRA LIMBS. "
+                    "The artisan has exactly two hands with five fingers each, physically touching the model. "
+                    "Hands are separate from the mosque walls. Human skin vs craft material."
                 )
 
                 MANDATORY_LOCK = (
@@ -2304,15 +2301,15 @@ def tampilkan_ai_lab():
                 
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n" # KUNCI DISINI
+                    f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
+                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS while looking at the camera. {pilih_mood}. \n"
                     f"THE MASTERPIECE: {deskripsi_teknis}. "
-                    f"The structure is a separate physical object on the table. \n"
+                    f"The mosque is a massive, separate tabletop model. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, sharp focus on the TWO HANDS and the diorama, "
-                    f"no double-limbs, realistic anatomical body scaling, masterpiece quality."
+                    f"TECHNICAL SPECS: ARRI Alexa 65, Frontal Eye-Level shot, SLOW ZOOM-IN TO OBJECT, "
+                    f"sharp focus on mosque details and hands, no double-limbs, masterpiece quality."
                 )
                 # --- 7. TAMPILKAN HASIL ---
                 st.success("🔥 PROMPT BERHASIL DIRAKIT!")
@@ -6085,6 +6082,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
