@@ -1739,217 +1739,276 @@ def tampilkan_ai_lab():
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
             "🌍 Diorama Masjid": {
                 "Mega Diorama: Al-Aqsa Complex": (
-                    "A MEGA-SCALE 3D DIORAMA that fills the entire workshop table and 90% of the frame. "
-                    "A sprawling, intricate city reconstruction of the Al-Aqsa complex with thousands of microscopic stone houses. "
-                    "The Golden Dome is a massive architectural focal point, glowing brilliantly. "
-                    "Thousands of tiny warm streetlights illuminate the complex. The human character next to it looks "
-                    "very small, emphasizing the diorama's grand and majestic scale. Hyper-detailed textures."
+                    "A MASSIVE ARCHITECTURAL WORKSHOP DIORAMA. A sprawling, raw reconstruction of the Al-Aqsa complex "
+                    "filling a large wooden workbench. Thousands of microscopic houses made of textured cardstock. "
+                    "The Golden Dome is a large physical focal point with a realistic metallic finish (not glowing). "
+                    "Natural indoor workshop lighting. Real craft tools like tweezers, glue bottles, and rulers "
+                    "are visible around the edges. The character is hunched over the table, adjusting a tiny gate. "
+                    "Pure handmade aesthetic, high-fidelity physical textures, realistic room shadows."
                 ),
                 "Mega Diorama: Masjidil Haram": (
-                    "A VAST AND IMMENSE 3D DIORAMA of the entire Holy Mosque of Mecca. "
-                    "The scale is enormous, showing the Kaaba surrounded by a sea of glowing white marble Mataf. "
-                    "Features thousands of tiny pillars, arched windows, and glowing minarets. "
-                    "The diorama spreads wide across the frame, looking like a real city captured from a macro-drone view. "
-                    "Supreme luxury, microscopic precision, and breathtaking scale."
+                    "A VAST PHYSICAL RECONSTRUCTION of the Holy Mosque. The scale is immense, stretching across "
+                    "the entire workshop table. The Kaaba and Mataf area are made of polished white acrylic/stone "
+                    "materials with natural matte reflections. Features thousands of tiny physical pillars and "
+                    "minarets. The scene is lit by standard overhead workshop lights, highlighting the real depth "
+                    "and shadows of the architectural model. Crafting debris and small brushes are scattered nearby. "
+                    "Macro-drone perspective, microscopic precision, grounded in reality."
                 ),
                 "Mega Diorama: Nabawi Cityscape": (
-                    "A SPRAWLING URBAN DIORAMA of the Prophet's Mosque and the surrounding Medina city. "
-                    "Features hundreds of detailed green umbrellas and the iconic Green Dome. "
-                    "The complex is illuminated by a galaxy of tiny warm lights from every window and street. "
-                    "The structure looks TOWERING and MASSIVE compared to the artist's hands. "
-                    "A masterpiece of world-building with high-fidelity architectural details."
+                    "A SPRAWLING URBAN CRAFT DIORAMA of Medina. Features hundreds of tiny green umbrellas "
+                    "and the Green Dome with a realistic matte paint finish. The complex is detailed with "
+                    "physical window cutouts. NO fake glowing effects—only realistic ambient room light. "
+                    "The structure looks TOWERING and MASSIVE next to the artist's hands. Small piles of "
+                    "scrapped materials are visible on the workbench, emphasizing the 'work-in-progress' vibe. "
+                    "A masterpiece of world-building with honest architectural details."
                 ),
                 "Mega Diorama: Blue Mosque Plaza": (
-                    "A GRAND SCALE DIORAMA of Istanbul's Blue Mosque. "
-                    "The architecture features massive cascading domes and 6 towering minarets that dominate the frame. "
-                    "The surrounding historic plaza includes tiny trees, fountains, and glowing lamps. "
-                    "The atmosphere is majestic, with the mosque glowing like a royal jewel in a vast nocturnal city. "
-                    "Incredibly sharp details, 8k resolution, and grand perspective."
+                    "A GRAND SCALE PHYSICAL MODEL of the Blue Mosque. Featuring massive cascading domes "
+                    "and 6 towering minarets made of fine plaster or wood. The surrounding plaza has tiny "
+                    "hand-painted trees and realistic fountain models. The lighting is bright and natural "
+                    "from a nearby window, casting long, realistic shadows on the table. The mosque is "
+                    "the centerpiece of a vast handmade city reconstruction. Sharp physical details, "
+                    "8k resolution, captured at a realistic eye-level perspective."
                 ),
                 "Mega Diorama: Sheikh Zayed Grandeur": (
-                    "A LUXURIOUS MEGA DIORAMA featuring 82 white marble domes and reflective resin pools. "
-                    "The diorama is so wide and detailed it feels like a real aerial shot. "
-                    "Thousands of glowing lights reflect off the polished marble floors. "
-                    "Every floral inlay and golden crescent is visible in microscopic detail. "
-                    "The scale is overwhelming, exuding an aura of supreme wealth and holiness."
+                    "A COLOSSAL WHITE MARBLE RECONSTRUCTION on a massive workshop table. Features 82 physical "
+                    "white domes and reflective resin pools that look like real water. The diorama is so vast "
+                    "it dominates the entire foreground. Every floral inlay on the floor is hand-painted with "
+                    "microscopic precision. NO fake glowing effects—just natural room light reflecting off "
+                    "the polished white surfaces. Scraps of white material and precision tools are visible "
+                    "on the table's edge. An aura of supreme architectural wealth and handcrafted holiness."
                 ),
                 "Mega Diorama: Hassan II Coastal": (
-                    "A MASSIVE DIORAMA of the mosque by the sea. The towering minaret dominates the vertical space. "
-                    "The mosque sits on a vast platform over a realistic resin ocean with waves crashing against the base. "
-                    "Thousands of tiny lights illuminate the Moroccan zellij patterns. "
-                    "The diorama creates a grand, breathtaking coastal landscape that feels incredibly wide and deep."
+                    "A MASSIVE PHYSICAL DIORAMA of the coastal mosque. The towering minaret dominates the "
+                    "vertical frame, made of textured stone-look material. The mosque sits on a vast "
+                    "architectural platform over a realistic clear resin ocean with sculpted waves. "
+                    "Microscopic Moroccan zellij patterns are etched into the walls. Standard indoor "
+                    "lighting highlights the physical depth and shadows of the structure. The workbench "
+                    "surface and a few small paint jars are visible, emphasizing the handmade masterpiece "
+                    "vibe. Grand, breathtaking, and grounded in reality."
                 ),
                 "The Grand Mataf: Kaaba Center": (
-                    "A COLOSSAL 3D DIORAMA of the Kaaba at the center of a vast, glowing white marble Mataf. "
-                    "The Kaaba is textured with ultra-high-definition black silk and 3D embossed golden calligraphy. "
-                    "Surrounded by thousands of microscopic white pillars and tiny glowing green lights from the Zamzam area. "
-                    "The Mataf fills 90% of the frame, looking like a massive, infinite sea of white marble. Breathtaking scale."
+                    "A COLOSSAL 3D WORKBENCH DIORAMA of the Mataf. The Kaaba at the center is a physical cube "
+                    "wrapped in real textured black silk with 3D embossed golden embroidery. The surrounding "
+                    "Mataf floor is made of polished white matte acrylic that reflects the overhead workshop light. "
+                    "Features thousands of microscopic physical white pillars. NO fake glowing effects—only "
+                    "realistic shadows cast by the mosque structure onto the table. Standard indoor lighting. "
+                    "The character's hands are visible at the edge, adjusting a tiny pillar. Breathtaking physical scale."
                 ),
                 "The Clock Tower: Bird's Eye": (
-                    "A STUNNING BIRD'S-EYE VIEW DIORAMA of the entire Masjidil Haram complex. "
-                    "The Abraj Al-Bait towers loom high with a brilliant glowing green clock face. "
-                    "Below, the mosque expands into a giant sprawling architectural landscape with millions of tiny details. "
-                    "The surrounding desert mountains are illuminated by a soft moonlight, creating an immense sense of scale."
+                    "A STUNNING ARCHITECTURAL MODEL of the entire complex from a top-down workbench view. "
+                    "The Abraj Al-Bait towers are tall physical models made of resin and plastic, featuring a "
+                    "detailed green clock face with a realistic matte finish. Below, the mosque complex "
+                    "sprawls across the entire wooden table, filled with thousands of hand-placed tiny details. "
+                    "The surrounding mountains are sculpted from painted plaster. Captured with a macro-lens, "
+                    "showing the real depth and physical layers of the diorama. Grounded in a workshop environment."
                 ),
                 "Mina: The City of Tents": (
-                    "A UNIQUE MEGA DIORAMA of the vast Valley of Mina. "
-                    "Features tens of thousands of microscopic white fireproof tents stretching to the horizon. "
-                    "Intricate highway bridges and tiny streetlights create a massive glowing urban grid at night. "
-                    "The Jamarat Bridge towers in the distance as a grand architectural focal point. Extremely detailed and sprawling."
+                    "A UNIQUE MEGA DIORAMA of the Valley of Mina. Features tens of thousands of microscopic "
+                    "white tents made of folded paper or thin plastic, stretching across a 2-meter long workbench. "
+                    "Intricate highway bridges are physical structures made of grey cardstock. NO glowing neon— "
+                    "only natural ambient light highlighting the repetitive textures of the tents. Real tools like "
+                    "a precision cutter and a glue bottle are scattered on the table, emphasizing the handmade "
+                    "work-in-progress vibe. Extremely detailed and sprawling."
                 ),
                 "Jabal Nur & Hira: Moonlight Path": (
-                    "A DRAMATIC 3D DIORAMA of the rugged Jabal Nur mountain. "
-                    "Features a winding path illuminated by thousands of tiny amber lanterns. "
-                    "At the base of the mountain, a sprawling miniature of the modern Mecca city glows brilliantly. "
-                    "The contrast between the sharp mountain rocks and the glowing city below is hyper-realistic and majestic."
+                    "A DRAMATIC 3D PHYSICAL DIORAMA of Jabal Nur. The mountain is sculpted from rugged, "
+                    "hand-painted grey plaster and rock-like materials. A winding path features tiny "
+                    "physical amber beads acting as lanterns. At the base, a sprawling city reconstruction "
+                    "made of tiny plastic blocks sits on the workshop table. The contrast is created by "
+                    "realistic shadows from a single desk lamp, not fake AI glows. Hyper-realistic textures "
+                    "of rock vs. smooth city models. Majestic, physical, and authentic."
                 ),
                 "Safa & Marwa: The Marble Gallery": (
-                    "An intricate, long-shot diorama of the Mas'a corridor. "
-                    "Thousands of white marble arches stretch deep into the background, creating an infinite perspective. "
-                    "The green glowing signals and tiny golden chandeliers illuminate the entire gallery. "
-                    "The texture of the Safa and Marwa mountains at each end is hyper-detailed with realistic stone grain."
+                    "A LONG-SCALE PHYSICAL DIORAMA of the Mas'a corridor stretching across the workbench. "
+                    "Features thousands of physical white marble arches made of textured cardstock or 3D-prints. "
+                    "Natural room lighting highlights the deep architectural perspective. NO fake glowing signals— "
+                    "only realistic shadows within the corridors. The mountains at each end are sculpted from "
+                    "hand-painted plaster with visible stone grain. Crafting tools like a ruler and glue "
+                    "are visible nearby. Grounded, authentic, and massive in scale."
                 ),
                 "The Gate of King Abdulaziz": (
-                    "A FOCUS DIORAMA on the massive main gate of the mosque. "
-                    "The towering twin minarets of the gate fill the vertical frame, decorated with intricate gold-leaf motifs. "
-                    "Thousands of tiny LED lights shine from the arched entrances, showing the inner courtyards. "
-                    "The human artist's hand looks like a tiny speck next to the towering architectural gate."
+                    "A FOCUS DIORAMA on the massive main gate. The towering twin minarets are tall physical "
+                    "models made of wood or resin, dominating the vertical frame with hand-painted gold motifs. "
+                    "The scene is lit by standard indoor workshop lighting. On the table, the human artist's "
+                    "hand is actively working on the arched entrance with a small brush. No fake LED glows— "
+                    "just the real physical depth of the inner courtyards. Breathtaking handmade scale."
                 ),
                 "Mount Arafat: The Sea of Mercy": (
-                    "A VAST LANDSCAPE DIORAMA of Jabal al-Rahmah during sunset. "
-                    "The mountain is covered in thousands of tiny, glowing white figures representing pilgrims. "
-                    "The surrounding plain of Arafat stretches to the bokeh background with millions of tiny lights. "
-                    "The lighting is a warm, spiritual golden hour glow, highlighting the massive scale of the desert."
+                    "A VAST LANDSCAPE CRAFT DIORAMA of Jabal al-Rahmah. The mountain is a physical sculpture "
+                    "of rugged grey plaster. Covered in thousands of tiny, hand-painted white dots representing "
+                    "pilgrims. NO fake glowing figures. The surrounding plains are textured sand and gravel "
+                    "on the workshop table. Lit by a single desk lamp, creating realistic long shadows and "
+                    "a deep sense of scale. A work-in-progress atmosphere with tools scattered around."
                 ),
                 "The Expansion Area: Modern Marvel": (
-                    "A MEGA DIORAMA focusing on the King Abdullah expansion. "
-                    "Features a futuristic sprawling architecture with thousands of glowing domes and intricate marble facades. "
-                    "The scale is immense, showing the vast courtyard with microscopic patterns and glowing floor lights. "
-                    "Everything is crisp, clean, and incredibly luxurious, looking like a multi-billion dollar model."
+                    "A MEGA PHYSICAL DIORAMA of the King Abdullah expansion. Features a sprawling complex "
+                    "of domes and marble facades made of polished white acrylic. The scale is immense, "
+                    "filling the entire workbench. Microscopic architectural patterns are etched into the walls. "
+                    "The lighting is honest and bright, reflecting off the smooth matte surfaces of the model. "
+                    "NO neon effects. It looks like a high-end, multi-million dollar architectural model "
+                    "being built in a professional studio."
                 ),
                 "Mecca Old City: Historical Vibes": (
-                    "A NOSTALGIC MEGA DIORAMA of the historical Mecca city surrounding the mosque. "
-                    "Features tiny traditional stone houses with wooden windows (roshan) and narrow alleyways. "
-                    "Every house has a tiny warm light inside, creating a cozy but vast urban atmosphere. "
-                    "In the center, the Holy Mosque glows like a celestial jewel surrounded by the ancient city."
+                    "A NOSTALGIC MEGA DIORAMA of historical Mecca houses. Features thousands of tiny physical "
+                    "stone houses with wooden window frames (roshan) and narrow alleys. Every house is a small "
+                    "physical block with a matte paint finish. In the center, the Holy Mosque is a detailed "
+                    "physical model, not a glowing jewel. Standard workshop environment with natural "
+                    "shadows and real textures. The character is carefully placing a tiny house into the "
+                    "urban grid. Sharp, physical, and authentic."
                 ),
                 "Diorama Al-Aqsa: Complete Complex": (
-                    "A MEGA-SCALE 3D DIORAMA of the entire Al-Aqsa compound. "
-                    "The Golden Dome is a radiant masterpiece of gold-leaf texture. "
-                    "The surrounding courtyard is detailed with tiny olive trees and stone pathways. "
-                    "Thousands of glowing lights from the old city of Jerusalem create a breathtaking nighttime scene."
+                    "A COLOSSAL PHYSICAL WORKBENCH DIORAMA of the entire Al-Aqsa compound. "
+                    "The Golden Dome is a large architectural focal point with a realistic matte gold-leaf "
+                    "texture (not glowing). The compound is sprawling across a 2-meter wooden table, "
+                    "detailed with tiny physical olive trees and textured stone pathways. Standard indoor "
+                    "workshop lighting. Real tools like glue bottles and tweezers are visible on the table. "
+                    "The character's hands are seen adjusting a microscopic gate. Pure handmade aesthetic."
                 ),
                 "Diorama Blue Mosque: Istanbul Night": (
-                    "A GRAND 3D DIORAMA with 6 towering minarets and cascading domes. "
-                    "Thousands of microscopic blue and amber lights reflect off the surrounding stone plazas. "
-                    "Features tiny fountains and a glowing Bosporus strait in the background made of glossy resin."
+                    "A GRAND SCALE PHYSICAL MODEL of the Blue Mosque on a workshop table. Features 6 "
+                    "towering minarets and cascading domes made of grey plaster or wood. The surrounding "
+                    "plaza features hand-painted tiny fountains. The Bosporus strait is made of dark, "
+                    "glossy blue resin that reflects the natural overhead room light. NO fake glowing lights. "
+                    "The scale is immense, filling the frame. Captured at a realistic eye-level view "
+                    "to show the depth of the handmade architectural city."
                 ),
                 "Diorama Hassan II: The Ocean Giant": (
-                    "A MASSIVE DIORAMA of the mosque over the Atlantic Ocean. "
-                    "The world's tallest minaret features a glowing laser point. "
-                    "The resin waves crash against the high-definition zellij tilework of the mosque's foundation."
+                    "A MASSIVE PHYSICAL DIORAMA of the mosque by the sea. The towering minaret is a tall "
+                    "vertical structure dominating the frame, made of textured stone-material. The mosque "
+                    "foundation features high-definition etched zellij tilework. It sits over a vast, "
+                    "clear resin ocean with realistic sculpted waves. Lit by a single desk lamp, creating "
+                    "natural shadows on the workbench. The artisan's hand is visible, meticulously polishing "
+                    "the resin water. Grounded, authentic, and breathtakingly grand."
                 )
             }
         }
 
-        # --- 3. MASTER LOKASI (MARGINAL & REAL VILLAGE REVISION) ---
+        # --- 3. MASTER LOKASI (FIXED: REALISTIC WORKSHOP NO GLOW) ---
         MASTER_GRANDMA_SETTING = {
             "Atelier Maestro (Living Studio)": (
-                "Inside a high-end, living art studio. The workbench is cluttered with professional micro-tools: "
-                "fine-tip tweezers, golden paint jars, and a half-filled cup of steaming black coffee. "
-                "In the background, architectural sketches of the mosque are pinned to a corkboard. "
-                "A pair of reading glasses lies next to a magnifying lamp. Cinematic warm lighting, "
-                "with soft dust motes visible in the golden light beams. Pure creative soul."
+                "Inside a professional architectural workshop. The wooden workbench is realistically "
+                "cluttered with functional micro-tools: fine-tip tweezers, small jars of matte paint, "
+                "precision cutters, and a used cup of coffee. In the background, technical sketches "
+                "of the mosque are pinned to a wooden board. A desk magnifying lamp is positioned over "
+                "the table. The lighting is bright and practical, coming from overhead workshop bulbs, "
+                "casting natural, honest shadows. Focus on the raw, creative atmosphere of a master artisan."
             ),
             "Galeri Antik (The Collector's Vault)": (
-                "A prestigious private vault with dark oak shelves. Between the shelves, ancient scrolls "
-                "and small brass telescopes are displayed as decor. The background features other finished "
-                "miniatures under glass domes, glowing softly. The floor is covered in a rich Persian rug. "
-                "Soft spotlighting on the main diorama, creating a high-contrast, mysterious, and expensive aura."
+                "A sophisticated private gallery with dark oak shelves. The background features other "
+                "finished architectural models under clear glass covers with natural matte reflections. "
+                "No fake glows. The workbench is clean but shows signs of active work with small "
+                "polishing cloths and jars of wax nearby. Lighting is a focused warm spotlight on the "
+                "main diorama, creating high-contrast but realistic depth and shadows. "
+                "Exudes a prestigious, museum-quality workshop vibe."
             ),
             "Workshop Loteng (The Dreamer's Attic)": (
-                "A cozy attic with exposed wooden beams. A large telescope sits by a circular window, "
-                "with a view of a starry night sky. Dried lavender bunches hang from the ceiling, "
-                "adding a rustic touch. The table is covered in wood shavings and tiny sandpaper strips. "
-                "Soft moonlight mixes with a warm desk lamp, creating a magical, peaceful workshop vibe."
+                "A rustic attic workshop with exposed wooden beams and a large window showing a "
+                "neutral evening sky. The workbench is covered in realistic wood shavings, tiny sandpaper strips, "
+                "and scraps of raw materials. A single vintage desk lamp provides the primary light source, "
+                "casting long, sharp, realistic shadows across the diorama and the artisan's hands. "
+                "No magical effects—just a peaceful, authentic, and hardworking workshop environment."
             ),
             "Ruang Kerja Kerajaan (Royal Library)": (
-                "A majestic room inside a palace. Tall mahogany bookshelves filled with gold-leaf books. "
-                "The table features an antique inkwell with a feather quill and a silver tray of dates. "
-                "Intricate Islamic geometric carvings decorate the window frames. "
-                "Dramatic side-lighting (Chiaroscuro) that makes the room feel sacred, historical, and deeply intellectual."
+                "A sophisticated study room with tall mahogany bookshelves filled with antique books. "
+                "The large wooden desk is an active workspace, featuring a silver tray of dates and "
+                "realistic architectural drafting tools. The window frames have deep Islamic geometric carvings. "
+                "Lighting is natural and grounded, coming from a single direction to create realistic "
+                "physical depth and shadows on the mosque diorama. No magical glows—just the rich, "
+                "matte textures of wood, paper, and stone. High-end, historical, and authentic."
             ),
             "Studio Kaca (The Modern Sanctuary)": (
-                "A sleek glass-walled studio overlooking a quiet Zen garden at night. "
-                "On the desk, a small bonsai tree and a glowing digital tablet showing 3D mosque blueprints. "
-                "Clean, white aesthetic with subtle blue ambient floor lights. "
-                "The background features a soft-focus waterfall wall. High-tech meets high-art. Minimalist luxury."
+                "A sleek, minimalist professional studio with large glass windows overlooking a garden. "
+                "The white desk is clean but functional, holding a small bonsai and various architectural "
+                "modeling tools like precision calipers and cutters. Background features a soft-focus "
+                "textured wall. Lighting is bright, clean, and even, coming from modern ceiling panels, "
+                "highlighting the flawless surfaces of the diorama without any fake blue neon or glowing tablets. "
+                "Minimalist architectural luxury."
             ),
             "Bengkel Klasik (The Clockmaker's Style)": (
-                "A rustic workshop filled with ticking antique clocks and brass gears on the walls. "
-                "A small vintage radio plays soft music (visualized by glowing tubes). "
-                "The table is made of thick, scarred reclaimed wood, holding jars of colored sand and crushed minerals. "
-                "Atmospheric lighting with deep shadows, looking like a scene from a high-budget period movie."
+                "A rustic, authentic workshop with antique brass tools and gears displayed on the walls. "
+                "The workbench is made of thick, scarred reclaimed wood, cluttered with jars of "
+                "colored sand, crushed minerals, and small bottles of wood stain. Standard workshop "
+                "lighting with a single adjustable desk lamp that focuses on the diorama, "
+                "casting sharp, realistic shadows. No glowing tubes or cinematic filters— "
+                "just the raw, honest atmosphere of a high-end traditional craft studio."
             ),
-            "Pendopo宁 (The Zen Pavilion)": (
-                "An elegant open-air Javanese pavilion. The background shows a calm koi pond with floating lilies. "
-                "Traditional 'Wayang' puppets are displayed subtly on the wooden pillars. "
-                "A small incense burner releases a thin, graceful wisp of smoke into the air. "
-                "Everything is silent, spiritual, and perfectly composed. The diorama is the heart of this sanctuary."
+            "Pendopo (The Zen Pavilion)": (
+                "An elegant open-air Javanese pavilion with polished teak pillars. The background shows "
+                "a calm koi pond with floating lilies. The workbench is a low wooden table where the "
+                "character works on the diorama. Traditional 'Wayang' puppets are subtly visible on "
+                "the pillars. Natural daylight provides a clear, honest view of the mosque's intricate "
+                "surfaces and real shadows. No magical smoke or glows—just a peaceful, authentic "
+                "outdoor workshop atmosphere."
             ),
             "Bilik Rahasia (The Hidden Archive)": (
-                "A hidden room behind a secret door. The walls are covered in floor-to-ceiling maps "
-                "and old photographs of historical mosques. Small glowing lanterns hang at different heights. "
-                "The desk is a chaotic but beautiful mess of gold leaf sheets and vials of pigment. "
-                "Mystical and intense atmosphere, focusing on the obsessive detail of the craftsman."
+                "A dedicated workspace in a room filled with floor-to-ceiling historical maps and "
+                "old mosque photographs. The desk is an active, messy workstation with real gold leaf "
+                "sheets, pigment vials, and precision tweezers. Lighting is practical, from a single "
+                "vintage hanging lamp that casts sharp, realistic shadows. No glowing lanterns— "
+                "just the intense, focused environment of a master craftsman at work."
             ),
             "Teras Rumah Asri (The Zen Veranda)": (
-                "On a clean wooden veranda of a beautiful, lush village house. In the background, "
-                "a small koi pond with a gentle stone waterfall creates soft water ripples. "
-                "Tropical green plants and blooming orchids frame the scene. The morning sun "
-                "glints off the water, casting dancing reflections on the diorama. Pure, fresh, and serene."
+                "On a clean wooden veranda of a lush village house. In the background, a small koi pond "
+                "with a stone waterfall is visible. The workbench is an outdoor wooden table cluttered "
+                "with craft tools. Bright, natural morning sunlight illuminates the scene, highlighting "
+                "the real physical textures of the mosque diorama. No fake reflections—only the "
+                "natural highlights from the sun. Pure, fresh, and grounded in reality."
             ),
             "Pondok Tepi Sawah (Rice Field Sanctuary)": (
-                "Inside an elegant open-air bamboo gazebo (saung) overlooking vast, emerald-green rice terraces. "
-                "The background features a soft-focus view of a farmer in the distance and a clear blue sky. "
-                "A light breeze is suggested by the soft movement of nearby coconut leaves. "
-                "The lighting is bright and natural, making the golden diorama 'pop' against the green landscape."
+                "Inside a rustic bamboo gazebo (saung) overlooking vast emerald-green rice terraces. "
+                "The character sits on the bamboo floor (lesehan) at a low wooden workbench. "
+                "Standard daylight from the open sky provides bright, high-contrast lighting. "
+                "The diorama looks massive and detailed against the soft-focus rural background. "
+                "Realistic textures of bamboo, wood, and the craft materials. High-fidelity "
+                "physical presence, exactly like a real-life artisan video."
             ),
             "Kebun Bunga (The Floral Garden)": (
-                "In the middle of a vibrant, well-kept flower garden. Surroundings are filled with "
-                "blooming jasmine, colorful bougainvillea, and butterflies. A stone path and a "
-                "white garden bench are visible in the bokeh background. The atmosphere is fragrant "
-                "and magical, with soft sunlight filtering through the flower petals."
+                "In the middle of a vibrant, well-kept flower garden. The character is working at "
+                "a rustic wooden workbench placed on a stone path. Surroundings are filled with "
+                "blooming jasmine and colorful bougainvillea in soft focus. Natural, bright daylight "
+                "illuminates the diorama, showing real physical shadows and textures. No magical "
+                "filters—just the honest, fresh atmosphere of an outdoor garden workshop. "
+                "Real crafting tools are visible next to the mosque model."
             ),
             "Kebun Buah (The Orchard Atelier)": (
-                "Under the shade of a heavy-fruiting mango and orange tree orchard. Hanging fruits are "
-                "visible in the soft-focus background. The workbench is a rustic wooden slab. "
-                "Golden hour sunlight pokes through the leaves, creating 'bokeh' circles of light. "
-                "Very earthy, rich, and fruitful atmosphere."
+                "Under the shade of a heavy-fruiting mango and orange tree orchard. The workbench is "
+                "a heavy, rustic wooden slab stained with age and glue. Natural sunlight filters "
+                "through the leaves, creating realistic dappled shadows on the table surface. "
+                "Hanging fruits are visible in the soft-focus background. The atmosphere is earthy "
+                "and authentic, focused on the physical labor of the artisan in a rural setting. "
+                "Sharp architectural details on the diorama."
             ),
             "Taman Air Terjun (The Secret Waterfall)": (
-                "A private garden sanctuary featuring a large natural stone waterfall. "
-                "Mist from the waterfall creates a soft, mystical haze in the background. "
-                "Lush ferns and mossy rocks surround the diorama. The sound of water is felt "
-                "through the high-definition visual of splashing droplets. Deeply spiritual and refreshing."
+                "A private garden sanctuary featuring a natural stone waterfall in the background. "
+                "The workbench is positioned near the water, with realistic moisture and mossy rocks "
+                "nearby. Standard daylight provides clear visibility of the mosque's materials. "
+                "No 'mystical haze'—only the natural, high-definition visual of a hardworking "
+                "artisan's space. High-fidelity textures of stone, water, and the diorama materials. "
+                "Grounded and refreshing workshop vibe."
             ),
             "Halaman Belakang (Garden Glow)": (
-                "A tidy backyard garden with a green lawn and a small wooden bridge over a stream. "
-                "In the background, a warm glow from the house's windows mixes with the twilight sky. "
-                "Fireflies (kunang-kunang) are subtly visible, adding a touch of magic to the "
-                "already glowing diorama. Incredibly peaceful and homey."
+                "A tidy backyard garden with a green lawn. The character works at a simple wooden table "
+                "on the terrace. In the background, a small wooden bridge over a stream is visible. "
+                "The lighting is clear, natural afternoon sun, casting realistic long shadows. "
+                "NO fireflies or magical glows—just the homey, peaceful reality of a backyard "
+                "hobbyist working on a masterpiece. Crafting debris and tools are scattered on the table."
             ),
             "Tepi Danau (Lakeside Workshop)": (
-                "A wooden deck overlooking a calm, mirror-like lake at sunset. "
-                "The background features distant purple mountains and a golden sky. "
-                "A small fishing boat is visible far away. The lighting is dramatic and warm, "
-                "creating a world-class cinematic masterpiece look."
+                "A wooden deck overlooking a calm lake during a clear afternoon. The workbench is "
+                "a heavy timber table placed outdoors. The background features a soft-focus lake "
+                "and distant hills under natural, bright daylight. No dramatic purple skies— "
+                "just the honest, high-contrast light of the sun hitting the mosque's intricate surfaces. "
+                "Real craft tools like precision cutters, rulers, and glue bottles are scattered "
+                "on the deck, creating a grounded, authentic workshop atmosphere."
             ),
             "Gubuk Estetik (The Luxury Rustic)": (
-                "A high-end 'rustic' wooden cabin with a large open window facing a misty pine forest. "
-                "The interior is filled with wildflowers in clay vases and tidy woodcraft tools. "
-                "The cool blue mist of the forest contrasts with the warm amber light inside the cabin. "
-                "Mysterious, cozy, and very high-definition."
+                "A high-end rustic wooden cabin with a large open window facing a green pine forest. "
+                "The interior workbench is made of thick, scarred wood, cluttered with clay vases "
+                "and tidy woodcraft tools. Lighting is practical, coming from the large window, "
+                "casting natural and deep shadows on the mosque diorama. No mysterious blue mist— "
+                "just the clean, high-definition reality of a professional artisan's cabin. "
+                "Microscopic textures of wood grain and craft materials are visible."
             )
         }
 
@@ -1977,7 +2036,7 @@ def tampilkan_ai_lab():
                 "Mungkin karyaku nggak sempurna, tapi aku buat ini sambil jagain kakek yang sudah sepuh. Satu subscribe kalian berarti banget buat semangat kami berdua..."
             ]
         }
-        # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (HIGH-END EMOTIONAL VERSION) ---
+        # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
                 "Authentic Rural Indonesian (Simple, honest, with a slight 'kampungan' lilt)",
@@ -1997,18 +2056,18 @@ def tampilkan_ai_lab():
                 "Prayer-like Reverence (Shaky, devoted tone, like speaking directly to the Creator)"
             ],
             "Physical Action": [
-                "Micro-shaking fingers delicately adjusting a tiny miniature ornament",
-                "Subtle jaw trembling while trying to maintain a peaceful expression",
-                "Eyes glistening with unshed tears, blinking slowly and heavily with deep weight",
-                "Deep, slow swallowing with visible movement in the aged, wrinkled throat",
-                "Gently stroking the miniature structure as if it were a living soul",
-                "Head tilting slightly with a faint, bittersweet smile while staring at the work",
-                "A long, shaky exhale that makes the shoulders drop in a sigh of relief",
-                "Softly licking dry, chapped lips with slow, deliberate movement",
-                "Trembling hands hovering over the dome, afraid to touch its perfection",
-                "Closing eyes for a second, inhaling the scent of wood and paint with devotion",
-                "Fingertips tracing the texture of the miniature with extreme reverence",
-                "Looking up at the sky with eyes filled with hope and silent prayer"
+                "Micro-shaking fingers delicately adjusting a tiny ornament on the massive mosque entrance",
+                "Subtle jaw trembling while focusing deeply on the intricate architectural details",
+                "Eyes glistening with unshed tears, looking down at the workbench with deep devotion",
+                "Deep, slow swallowing with visible movement in the aged throat while working on the dome",
+                "Gently stroking the textured surface of the large diorama as if it were a living soul",
+                "Head tilting slightly with a faint, bittersweet smile while staring at the complex work",
+                "A long, shaky exhale that makes the shoulders drop while leaning over the workbench",
+                "Softly licking dry, chapped lips while meticulously placing a small fragment with tweezers",
+                "Trembling hands hovering over the towering minarets, afraid to touch their perfection",
+                "Closing eyes for a second, inhaling the scent of materials and glue with silent devotion",
+                "Fingertips tracing the stone-like texture of the diorama with extreme reverence",
+                "Briefly glancing up with hope, then immediately returning focus to the craftsmanship on the table"
             ]
         }
         # --- UI LAYOUT ---        
@@ -2097,60 +2156,49 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-        # --- LOGIC GENERATOR (FIXED: RELIGIOUS MASTERPIECE ONLY) ---
+        # --- LOGIC GENERATOR (FIXED: REALISTIC WORKSHOP & MEGA STRUCTURE) ---
         if btn_gen:
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-            # --- 4. DYNAMIC SCENE LOGIC (ANTI-DISTORSI & MEGA SCALE) ---
-                scene_context = ""
-                
-                # Cek lokasi: kalau di Saung/Teras biasanya lesehan, kalau di Atelier biasanya meja tinggi
+                # --- 4. DYNAMIC SCENE LOGIC (WIDE SHOT & SCALE LOCK) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok"])
                 
-                if "🌍 Diorama Masjid" in modus_konten:
-                    scene_context = (
-                        "PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. EXTREME WIDE SHOT. "
-                        "The camera is at eye-level to maintain realistic body proportions. "
-                        "The character is STANDING UPRIGHT next to a gargantuan architectural complex. "
-                        "The diorama mosque is colossal, appearing as a massive city-sized model "
-                        "that fills 90% of the frame. High-contrast cinematic lighting."
-                    )
-                
-                elif "🕌 Miniatur Masjid" in modus_konten:
-                    posisi = "sitting cross-legged ON THE FLOOR (Lesehan style) at a very low wooden table." if is_lesehan else "standing at a high rustic workbench."
-                    camera_angle = "Chest-level camera angle" if is_lesehan else "Eye-level camera angle"
-                    
-                    scene_context = (
-                        f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. MEDIUM SHOT. {camera_angle}. "
-                        f"The character is {posisi} The model is a MEGA-SCALE ARCHITECTURAL MASTERPIECE, "
-                        f"appearing as large as a human torso, placed directly between the camera and character. "
-                        f"Focus on the staggering scale and intricate architectural details of the mosque. "
-                        f"Proper anatomy, no distortion."
-                    )
+                # Kita pakai WIDE SHOT tapi kunci di EYE-LEVEL biar proporsinya normal
+                scene_context = (
+                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. CINEMATIC WIDE SHOT. "
+                    f"The camera is positioned at eye-level, capturing the vastness of the workspace. "
+                    f"The character is {'sitting cross-legged on the floor (lesehan style)' if is_lesehan else 'standing upright'} "
+                    f"behind a long, heavy wooden workbench that stretches horizontally across the entire frame. "
+                    f"The GARGANTUAN ARCHITECTURAL DIORAMA of a mosque is the centerpiece, "
+                    f"placed directly on the bench and filling the middle ground. "
+                    f"The mosque is massive, roughly the size of a human torso, showing a clear "
+                    f"physical connection between the artisan and the object. "
+                    f"NO DISTORTION. NO STICKER LOOK. A single, unified 3D physical space."
+                )
 
-                # --- 5. NUANSA HIDUP (FOCUS & SOUL LOCK) ---
+                # --- 5. NUANSA HIDUP (THE MASTER ARTISAN FOCUS) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
-                # Kunci biar mata nggak dongak terus (Eye-Focus)
+                # Kunci mata biar nggak dongak ke langit mulu
                 eye_lock = (
-                    "The character's gaze is primarily FOCUSED DOWNWARDS at the mosque model. "
-                    "Occasionally, they look up with a bittersweet expression, then immediately "
-                    "return their focus to the intricate craftsmanship. Natural blinking."
+                    "The character is deeply focused, their eyes looking DOWNWARD at the mosque structure. "
+                    "Occasionally, they glance at their hands as they meticulously apply a tiny detail. "
+                    "Subtle micro-expressions of dedication and physical exhaustion are visible."
                 )
 
                 living_details = (
                     f"ENVIRONMENT: {env_detail}. {eye_lock} "
-                    "Extreme hyper-realistic skin textures, authentic weathered wrinkles. "
-                    "Cinematic lighting with volumetric light rays highlighting the mosque's grandeur."
+                    "Natural workshop lighting with soft shadows casting on the workbench surface. "
+                    "Real craft tools like glue bottles, tweezers, and scraps are scattered around the base. "
+                    "High-fidelity textures on the mosque's surface and the artisan's skin."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (THE SULTAN & ANTI-BLUNDER EDITION) ---
+                # --- 6. RAKIT FINAL PROMPT (THE YOUTUBE VIRAL WIDE-LOOK) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
                 
-                # PAGAR BETON HIJAB
                 MANDATORY_LOCK = (
                     "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. "
                     "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
@@ -2158,17 +2206,17 @@ def tampilkan_ai_lab():
                 
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
-                    # GABUNGKAN DNA DAN HIJAB BIAR PATEN
-                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n" 
+                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. \n"
-                    f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
+                    # Gue tambahin 'INTERACTING' biar tangan dan masjid nyatu beneran
+                    f"PERFORMANCE: {pilih_aksi} while INTERACTING with the mosque model. {pilih_mood}. \n"
+                    f"THE MASTERPIECE: {deskripsi_teknis}. "
+                    f"The structure is grand, wide, and incredibly intricate with multiple domes and minarets. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
-                    f"LIVING ATMOSPHERE: {living_details} \n\n"
-                    # TAMBAHKAN NO DISTORTION & NO STICKER EFFECT
-                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural lighting, "
-                    f"consistent anatomy, proper scaling, no fisheye, no distortion, "
-                    f"no collage effect, no sticker effect, masterpiece quality."
+                    f"ATMOSPHERE: {living_details} \n\n"
+                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, deep depth of field, "
+                    f"sharp focus on both the diorama and the character's hands, "
+                    f"realistic body scaling, consistent lighting, no distortion, masterpiece quality."
                 )
 
                 # --- 7. TAMPILKAN HASIL ---
@@ -5942,6 +5990,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
