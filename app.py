@@ -2249,22 +2249,23 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (ANTI-MUTAN & ZOOM FOCUS) ---
+                # --- 4. DYNAMIC SCENE LOGIC (STRICT LAYERING: NO FUSION) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
-                meja_type = "a low traditional wooden floor-table (meja lesehan)" if is_lesehan else "a heavy professional wooden workbench"
-                posisi_duduk = "sitting cross-legged on the floor (lesehan style) in front of" if is_lesehan else "standing behind"
-
+                # Kita kunci posisi Nenek DI BELAKANG meja
+                posisi_nenek = "sitting on the floor (lesehan) BEHIND the low table" if is_lesehan else "standing BEHIND the workbench"
+                
                 scene_context = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL. FRONT-FACING STRAIGHT ANGLE. "
-                    f"A slow cinematic zoom-in focusing on the intricate details of the mosque object. "
-                    f"There is a CLEAR PHYSICAL SEPARATION between the human and the model. "
-                    f"The character is a NORMAL HUMAN {posisi_duduk} {meja_type}. "
-                    f"The GARGANTUAN MOSQUE DIORAMA is a separate, distinct physical object on top of the table. "
-                    f"THE CHARACTER IS NOT ATTACHED TO THE MOSQUE. THE MOSQUE IS NOT WEARABLE ARMOR. "
-                    f"The mosque sits in the middle ground, filling the frame as the central focus. "
-                    f"The artisan's hands are the only part of their body touching the model. "
-                    f"Pure reality, no body-fusion, no ghost textures."
+                    f"CINEMATIC SLOW ZOOM-IN towards the mosque diorama. "
+                    f"STRICT DEPTH LAYERING: The large mosque diorama is in the FOREGROUND, " # Masjid di depan
+                    f"sitting on top of a low wooden table. "
+                    f"The character (Indonesian grandma) is {posisi_nenek}. " # Nenek di belakang
+                    f"There is a CLEAR EMPTY SPACE between the mosque and the grandma's body. " # Kunci jarak
+                    f"The grandma is looking over the top of the mosque towards the camera. "
+                    f"The mosque is a COMPLETELY SEPARATE physical object, NOT WEARABLE, NOT ATTACHED. "
+                    f"The grandma's torso is visible BEHIND the table, while the mosque is ON the table. "
+                    f"NO body-fusion, NO ghost limbs, NO wearable architecture. Pure physical reality."
                 )
 
                 # --- 5. NUANSA HIDUP (EYE CONTACT LOCK) ---
@@ -6082,6 +6083,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
