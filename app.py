@@ -2101,13 +2101,13 @@ def tampilkan_ai_lab():
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
                 MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. FULLY COVERED MODEST ISLAMIC CLOTHING."
-
-                # GABUNGKAN (Sekarang scene_context sudah include Header)
+                eye_focus = "The character occasionally glances up to the sky with teary eyes, then looks back down at the miniature with deep focus."
+                
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
                     f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. \n"
+                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. {eye_focus} \n" # Tambah eye_focus di sini
                     f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"LIVING ATMOSPHERE: {living_details} \n\n"
@@ -5886,6 +5886,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
