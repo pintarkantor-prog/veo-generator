@@ -1747,12 +1747,16 @@ def tampilkan_ai_lab():
                     "Pure handmade aesthetic, high-fidelity physical textures, realistic room shadows."
                 ),
                 "Mega Diorama: Masjidil Haram": (
-                    "A VAST PHYSICAL RECONSTRUCTION of the Holy Mosque. The scale is immense, stretching across "
-                    "the entire workshop table. The Kaaba and Mataf area are made of polished white acrylic/stone "
-                    "materials with natural matte reflections. Features thousands of tiny physical pillars and "
-                    "minarets. The scene is lit by standard overhead workshop lights, highlighting the real depth "
-                    "and shadows of the architectural model. Crafting debris and small brushes are scattered nearby. "
-                    "Macro-drone perspective, microscopic precision, grounded in reality."
+                    "A SUPREME PHYSICAL RECONSTRUCTION of the entire Holy Mosque. The scale is immense, "
+                    "stretching across a 2-meter workshop table. The Kaaba is the focal point, "
+                    "wrapped in realistic black textured silk with gold calligraphy. "
+                    "It sits at the center of a VAST, OPEN WHITE MARBLE MATAF area (circular open courtyard) "
+                    "made of polished matte acrylic. Surrounding the Mataf are the grand multi-story "
+                    "arched galleries and towering white minarets at the edges. "
+                    "The lighting is standard overhead workshop white light, casting realistic shadows "
+                    "on the thousands of microscopic pilgrims (tiny white dots) on the Mataf. "
+                    "Real craft tools like glue, tweezers, and sandpaper are visible on the table's edge. "
+                    "Authentic, grounded in reality, and architecturally accurate."
                 ),
                 "Mega Diorama: Nabawi Cityscape": (
                     "A SPRAWLING URBAN CRAFT DIORAMA of Medina. Features hundreds of tiny green umbrellas "
@@ -5990,6 +5994,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
