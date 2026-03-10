@@ -1336,438 +1336,620 @@ def tampilkan_ai_lab():
     with t_grandma:
         # --- 1. MASTER DNA MANUSIA ASLI (FULL BODY & NATURAL SKIN) ---
         MASTER_FAMILY_SOUL = {
-            "Nenek (The Grandma)": (
-                "A kind-hearted, elderly Indonesian woman (Nenek) with a gentle and motherly face. "
-                "Warm brown skin (sawo matang) with realistic fine wrinkles and natural age spots. "
-                "Soft, calm, and weary eyes. Her gray hair is neatly tied back in a traditional low bun (sanggul sederhana). "
-                "Her expression is humble, shy, and peaceful. A classic representation of a wise village grandmother. "
-                "Clean skin, no dirt, no makeup, strictly no tears."
+            # ========================== KELOMPOK NENEK (Teduh & Berwibawa) ==========================
+            "Nenek (The Matriarch)": (
+                "Cinematic portrait of a graceful elderly Indonesian woman. Her face exudes a warm, motherly aura. "
+                "Soft aesthetic wrinkles, healthy sawo matang skin with a gentle glow. Soulful, kind eyes. "
+                "Detailed skin texture but with soft-focus lighting to maintain a peaceful, dignified beauty. Strictly no horror vibe."
             ),
-            "Nenek Arum": (
-                "A graceful and serene elderly Indonesian woman (50s) with a soft, motherly face. "
-                "Natural sawo matang skin with subtle, realistic aging lines. Her eyes are warm and kind. "
-                "She has a peaceful and comforting aura. Pure and gentle village grandmother look."
+            "Nenek Arum (The Grace)": (
+                "A serene and elegant elderly Indonesian woman. Her aged skin is clean and glows under soft golden light. "
+                "Fine, realistic wrinkles that look like a map of a happy life. Peaceful expression, calm smile. "
+                "Anatomy is detailed but refined. She looks like a beloved royal grandmother from a village."
             ),
-            "Nenek Sumi": (
-                "A humble elderly Indonesian woman (60s) with a weathered but friendly face. "
-                "Her skin is sun-kissed with soft realistic wrinkles that show wisdom. "
-                "She has tired but very gentle eyes. A thin but healthy frame. Warm and soulful expression."
+            "Nenek Sumi (The Wise)": (
+                "A humble but beautiful elderly Indonesian woman. Weathered skin that looks healthy and sun-kissed. "
+                "Her eyes sparkle with wisdom. Hands are detailed with realistic textures but look soft and caring. "
+                "Atmospheric lighting that highlights her noble and hardworking spirit. Pure aesthetic."
             ),
-            "Kakek (The Grandpa)": (
-                "A respected, elderly Indonesian man (Kakek) with a lean and sturdy build. "
-                "Sun-kissed brown skin with a friendly, wrinkled face. Thin white mustache and neat short white hair. "
-                "His eyes are calm and wise, showing a life of honest work. Stooped but dignified posture. "
-                "He looks like a retired village teacher or farmer. Clean appearance, no dirt, no crying."
+            "Nenek Lastri (The Devotion)": (
+                "Elderly Indonesian woman with a soft, glowing complexion. Her white hair looks like silk. "
+                "The wrinkles are subtle and graceful. Soft-focus background, warm 'God-rays' lighting. "
+                "She has a very comforting and 'adem' aura. High-fidelity skin detail with a polished cinematic finish."
             ),
-            "Ibu (The Mother)": (
-                "A beautiful middle-aged Indonesian woman (40s) with a natural and unpolished face. "
-                "Smooth sawo matang skin, healthy and clean. Her hair is neatly tied in a ponytail with a few stray strands. "
-                "Kind, resilient eyes with subtle laugh lines. Her expression is warm and hardworking. "
-                "A typical devoted village mother. No makeup, no jewelry, strictly no tears."
+
+            # ========================== KELOMPOK GADIS (Natural & Fresh) ==========================
+            "Gadis Desa (The Natural)": (
+                "Stunning young Indonesian woman with an authentic 'Gadis Desa' beauty. Radiant, flawless sawo matang skin. "
+                "Soft natural lighting highlighting her high cheekbones and large, expressive brown eyes. "
+                "Pure and fresh aura, long healthy black hair. Realistic skin texture but looks incredibly charming and modest."
             ),
-            "Bapak (The Father)": (
-                "A strong, middle-aged Indonesian man (40s) with rugged but clean facial features. "
-                "Deep tan skin from working outdoors. Short, neat black hair and a thin, well-kept mustache. "
-                "His expression is stoic, calm, and protective. Broad shoulders, looking like a reliable "
-                "village head or laborer. Clean skin, no dirt, strictly no crying."
+            "Gadis Rumi (The Dreamer)": (
+                "A young Indonesian woman with a poetic and elegant face. Matte skin texture with a soft pearlescent glow. "
+                "Deep, beautiful eyes with realistic reflections. Her beauty is quiet and captivating. "
+                "Highly detailed features, clean and unpolished, looking like a protagonist in a high-end cinematic movie."
             ),
-            "Gadis Cantik": (
-                "A beautiful young Indonesian woman with an authentic 'Gadis Desa' look. "
-                "Radiant sawo matang skin, clean and natural without any makeup. "
-                "Long, straight black hair neatly falling over her shoulders. Large, expressive brown eyes "
-                "with a shy and melancholic look. She has a sweet but sad smile. "
-                "Pure, modest, and naturally stunning. No makeup, no tears."
+            "Gadis Melati (The Fresh)": (
+                "Young Indonesian girl with a bright, luminous face. Natural rosy tint on her cheeks and lips. "
+                "Healthy tan skin that looks smooth and supple. Energetic and pure aura. "
+                "The lighting is bright and airy, making her look like a ray of sunshine. Extremely aesthetic."
+            ),
+            "Gadis Anisa (The Modest)": (
+                "A young Indonesian woman with a shy, angelic beauty. Soft facial contours and almond-shaped eyes. "
+                "Smooth sawo matang skin with high-fidelity detail. Her presence is calm and soul-soothing. "
+                "Cinematic soft-lighting, emphasizing her pure and modest village girl aesthetic."
+            ),
+
+            # ========================== KELOMPOK KAKEK (Gagah & Bijak) ==========================
+            "Kakek (The Wise)": (
+                "A handsome, elderly Indonesian man with a dignified and respected look. Leathery but clean skin. "
+                "Thick white eyebrows and a neat mustache. His eyes are sharp but kind. "
+                "Gagah (sturdy) posture, looking like a wise leader. Dramatic but warm lighting that emphasizes his noble aura."
+            ),
+            "Kakek Wiryo (The Artisan)": (
+                "A strong, charismatic elderly Indonesian man. Rugged facial features that look artistic and bold. "
+                "Tanned skin with a healthy texture. His hands look powerful and skilled. "
+                "Cinematic side-lighting (Chiaroscuro) that makes him look like a legendary master craftsman. No scary elements."
+            ),
+            "Kakek Joyo (The Farmer)": (
+                "An elderly Indonesian man with a warm, friendly face and a joyful aura. "
+                "Beautifully aged skin with realistic 'laugh lines' around the eyes. "
+                "Aura of contentment and gratitude. The light is warm and golden, making his presence feel very welcoming and grounded."
+            ),
+            "Kakek Usman (The Silent)": (
+                "Tall, boney, but very elegant elderly Indonesian man. Sharp, intellectual facial structure. "
+                "Peaceful and meditative aura. Long, slender fingers that look graceful. "
+                "Cinematic twilight lighting, giving him a mystical but very holy and calm appearance."
             )
         }
 
-        # --- 2. MASTER WARDROBE (KELUARGA DESA BERSAHAJA - CLEAN & HUMBLE) ---
+        # --- 2. MASTER WARDROBE (6 VARIAN PER KARAKTER - DAILY & NEAT HIJAB) ---
         MASTER_FAMILY_WARDROBE = {
-            "Nenek": {
-                "Daster Batik Klasik": "A clean, modest cotton daster with traditional floral batik patterns. The colors are slightly faded from many washes, but the fabric is neat and well-maintained.",
-                "Kebaya Kutubaru": "Traditional flowery cotton kebaya, paired with a neat brown batik jarik cloth. The look is humble, classic, and very dignified for an elderly woman.",
-                "Mukena Putih Bersih": "A simple, clean white cotton mukena with minimal lace. The fabric drapes gracefully, looking peaceful and serene."
+            # --- KELOMPOK NENEK ---
+            "Nenek (The Matriarch)": {
+                "Daster Batik & Bergo": "Daily long-sleeved batik daster, clean and well-ironed, paired with a fresh white bergo hijab. Neat and motherly.",
+                "Gamis Harian Polos": "Simple wrinkle-free daily gamis made of smooth rayon, paired with a matching square hijab tucked in. Very 'adem' and clean.",
+                "Setelan Tunik & Celana": "Long-sleeved cotton tunik paired with tidy loose trousers and a neat hijab. A respectable village grandmother look.",
+                "Daster Kaos & Jilbab": "Comfortable cotton daster, fresh from laundry, paired with a tidy daily instant jilbab. No wrinkles, looking honest.",
+                "Gamis Jersey & Bergo": "High-quality jersey gamis with perfect drape, paired with a fresh white instant bergo. Clean and very orderly.",
+                "Blouse Batik & Hijab": "Simple daily batik blouse, well-pressed, paired with a clean black square hijab. Dignified and neat appearance."
             },
-            "Nenek Arum": {
-                "Daster Floral & Bergo": "A modest long-sleeved floral daster in soft pastel colors. Paired with a clean white jersey bergo hijab. The look is warm, humble, and peaceful.",
-                "Daster Batik & Hijab": "A traditional long-sleeved batik daster with brown and cream patterns. Paired with a simple instant hijab. Very neat and typical of a kind village grandmother.",
-                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
+            "Nenek Arum (The Grace)": {
+                "Daster Floral & Hijab": "Modest long-sleeved floral daster in soft pastel, paired with a clean jersey hijab. Serene and beautifully aged.",
+                "Gamis Motif & Khimar": "Daily gamis with subtle geometric motifs, paired with a wide, clean khimar hijab. Well-presented and respected elder.",
+                "Tunik Linen & Pashmina": "High-quality linen tunik with visible weave, paired with a neatly wrapped pashmina. Elegant, clean, and graceful.",
+                "Daster Rayon & Bergo": "Cool rayon daster with modern print, paired with a fresh white bergo. Looking fresh and very tidy at home.",
+                "Gamis Pastel & Hijab": "Soft-colored daily gamis, perfectly ironed, paired with a matching square hijab. Luminous and peaceful aura.",
+                "Setelan Syar'i Harian": "Complete neat daily syar'i set, wrinkle-free, soft fabric texture. Looking very 'adem' and pure."
             },
-            "Nenek Sumi": {
-                "Daster Kencana Ungu & Bergo": "A classic long-sleeved daster with traditional red or purple patterns. Paired with a dark-colored simple bergo hijab. Humble, clean, and authentic.",
-                "Daster Kaos & Jilbab Instan": "A comfortable long-sleeved cotton daster in a soft earthy tone. Paired with a simple daily instant jilbab. A hardworking but gentle grandmother look.",
-                "Daster Motif Lawasan": "An old-style long-sleeved daster with vintage geometric patterns. Paired with a simple hijab. The fabric looks soft and well-worn but very clean."
+            "Nenek Sumi (The Wise)": {
+                "Daster Kaos & Jilbab": "Crisp cotton daster in earthy tones, paired with a tidy daily instant jilbab. No wrinkles, looking hardworking and orderly.",
+                "Gamis Jersey & Bergo": "Smooth jersey gamis, perfectly maintained, paired with a fresh instant bergo. Clean, fresh, and soulful.",
+                "Blouse Batik & Hijab": "Simple daily batik blouse, well-pressed, paired with a clean black hijab. A very neat and respectable daily appearance.",
+                "Daster Batik Klasik": "Traditional brown batik daster, clean lines, paired with a neat white hijab. Authentic village grandmother aesthetic.",
+                "Gamis Polos & Khimar": "Deep-colored daily gamis, paired with a clean wide khimar. Looking very orderly and well-groomed.",
+                "Tunik Katun & Hijab": "Long-sleeved cotton tunik with tiny patterns, paired with a tidy hijab. Practical but very clean and decent."
             },
-            "Kakek": {
-                "Kaos Oblong & Peci": "A clean white short-sleeved undershirt (kaos oblong) paired with a neat black peci and a well-folded traditional sarung.",
-                "Kemeja Pendek & Sarung": "A simple, short-sleeved button-up shirt in a neutral color, worn with a classic plaid sarung (sarung kotak-kotak). Clean and respectable.",
-                "Baju Koko & Peci": "A modest white koko shirt, neatly pressed, paired with a black peci and a dark sarung for prayer.",
-                "Batik Lengan Panjang": "A vintage long-sleeved batik shirt with traditional patterns. The fabric looks soft and aged but very neat."
+            "Nenek Lastri (The Devotion)": {
+                "Gamis Putih & Bergo": "Crisp, bright white daily gamis paired with a fresh white bergo hijab. Luminous, holy, and perfectly clean.",
+                "Daster Soft & Khimar": "Soft-toned long-sleeved daster, paired with a clean wide khimar. Very peaceful, tidy, and spiritually beautiful.",
+                "Setelan Syar'i Harian": "Complete neat daily syar'i set, no wrinkles, soft fabric. Looking very 'adem' and pure for daily prayer vibe.",
+                "Gamis Abu-abu & Hijab": "Elegant grey daily gamis, perfectly ironed, paired with a matching square hijab. Calm and dignified beauty.",
+                "Daster Bordir & Bergo": "Soft cotton daster with subtle embroidery, paired with a fresh white bergo. Very clean and gracefully aged.",
+                "Tunik Putih & Hijab": "Clean white tunik paired with tidy trousers and a neat hijab. Looking fresh, honest, and very respectable."
             },
-            "Ibu": {
-                "Daster Motif & Hijab": "A clean cotton daster with bright floral motifs, paired with a simple, neatly pinned bergo hijab. A typical look of a hardworking but tidy village mother.",
-                "Kaos Polos & Hijab": "A simple, long-sleeved modest t-shirt in a soft color, paired with a neat dark-colored hijab. Clean and practical.",
-                "Kebaya Harian": "A simple daily cotton kebaya with a plain matching hijab, looking modest and elegant in its simplicity."
+
+            # --- KELOMPOK GADIS ---
+            "Gadis Desa (The Natural)": {
+                "Daster Cantik & Pashmina": "Modest floral daster, paired with a trendy pashmina wrapped neatly. Fresh, youthful, and naturally charming village girl.",
+                "Gamis Modern & Segiempat": "Modern gamis with a clean silhouette, no wrinkles, paired with a matching square hijab. Radiant and pure village look.",
+                "Tunik Aesthetic & Hijab": "Aesthetic long linen tunik in soft cream, paired with tidy trousers and a neat hijab. Smart and well-presented.",
+                "Daster Rayon & Pashmina": "Fresh rayon daster with colorful print, paired with a trendy pashmina. Youthful, clean, and naturally beautiful.",
+                "Gamis Pastel & Bergo": "Soft-toned daily gamis, perfectly ironed, paired with a fresh white bergo hijab. Radiant and very adem aura.",
+                "Blouse Floral & Hijab": "Fresh floral cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic natural beauty."
             },
-            "Bapak": {
-                "Kaos Berkerah & Sarung": "A simple polo shirt or collared t-shirt, tucked neatly or worn casually with a well-tied plaid sarung. Clean and masculine.",
-                "Baju Koko & Peci": "A clean, ironed white koko shirt with a black peci and a neat sarung, ready for the mosque.",
-                "Kemeja Flanel & Celana": "An old but clean flannel shirt worn over a simple t-shirt, with modest cotton trousers. A rugged, hardworking village man look.",
-                "Batik Sederhana": "A short-sleeved batik shirt with simple patterns, looking formal enough for village gatherings."
+            "Gadis Rumi (The Dreamer)": {
+                "Daster Rayon & Hijab": "Clean soft rayon daster with modern print, paired with a tidy square hijab. Fresh, artistic, and very neat aesthetic.",
+                "Gamis Pastel & Pashmina": "Soft pastel daily gamis, perfectly ironed, paired with a neatly styled pashmina. Elegant and quiet beauty.",
+                "Blouse Floral & Hijab": "Fresh floral cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic 'Gadis Desa' look.",
+                "Daster Long-dress & Bergo": "Stylish long-sleeve daster dress, paired with a clean instant bergo. Looking neat, modest, and naturally vibrant.",
+                "Tunik Linen & Hijab": "Modest daily tunik made of premium linen, paired with a fresh square hijab. Pure, artistic, and luminous aura.",
+                "Kemeja Oversized & Hijab": "Simple but tidy oversized modest shirt, paired with loose pants and a neat hijab. Fresh from the laundry look."
             },
-            "Gadis Cantik": { 
-                "Daster Cantik": "A modest, colorful floral daster that fits well, showing a natural and fresh village girl aesthetic. Clean and charming.",
-                "Tunik & Legging": "A long, simple linen tunik in a soft pastel color, looking modest and youthful. Neatly maintained.",
-                "Kebaya Modern": "A simple lace kebaya with a long batik skirt, looking elegant and traditional for a young woman.", 
-                "Hijab & Gamis": "A simple, flowy gamis dress with a matching pashmina, looking pure and graceful." 
+            "Gadis Melati (The Fresh)": {
+                "Daster Long-dress & Bergo": "Stylish long-sleeve daster dress, paired with a clean instant bergo. Looking very neat, modest, and naturally vibrant.",
+                "Gamis Linen & Segiempat": "Modest daily gamis made of premium linen, paired with a fresh square hijab. Pure, healthy, and luminous aura.",
+                "Kemeja Oversized & Hijab": "Simple but tidy oversized modest shirt, paired with loose pants and a neat hijab. Fresh from the laundry look.",
+                "Daster Cantik & Pashmina": "Colorful floral daster, well-ironed, paired with a trendy pashmina. Fresh and cheerful 'Gadis Desa' aesthetic.",
+                "Gamis Modern & Bergo": "Simple modern gamis, clean lines, paired with a fresh white bergo. Looking energetic, pure, and very tidy.",
+                "Tunik Pastel & Hijab": "Long-sleeved pastel tunik, perfectly pressed, paired with a neat matching hijab. Radiant and charming appearance."
+            },
+            "Gadis Anisa (The Modest)": {
+                "Gamis Syar'i & Khimar": "Simple elegant daily gamis with a wide modest hijab (syar'i), soft and neat. Angelic and polite beauty.",
+                "Daster Adem & Pashmina": "Very soft and clean daster, paired with a neatly wrapped pashmina. Modest, tidy, and aesthetically pleasing.",
+                "Setelan Tunik Pastel": "Long-sleeved pastel tunik with clean lines, paired with tidy trousers and matching hijab. Very 'adem' and graceful.",
+                "Gamis Polos & Segiempat": "Clean daily gamis in soft earth tones, paired with a neat square hijab. Radiant and pure village girl look.",
+                "Daster Long-sleeve & Bergo": "Modest long-sleeve daster, paired with a fresh white bergo. Fresh, youthful, and naturally charming.",
+                "Blouse Katun & Hijab": "Fresh cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic modest beauty."
+            },
+
+            # --- KELOMPOK KAKEK ---
+            "Kakek (The Wise)": {
+                "Baju Koko & Peci": "Crisp white long-sleeved koko shirt with sharp ironed lines, paired with a neat black peci and folded sarong.",
+                "Kemeja Putih & Sarung": "Simple clean white button-up shirt, well-pressed, paired with a premium plaid sarong and black peci.",
+                "Batik Lengan Panjang": "High-quality long-sleeved batik shirt with sharp traditional patterns. Dignified and respected look.",
+                "Koko Harian & Peci": "Simple daily koko shirt, clean and well-maintained, paired with a neat sarung. Respectable village teacher vibe.",
+                "Kemeja Flanel & Sarung": "Tidy buttoned-up flannel shirt, worn with a clean peci and neat sarung. Rugged but very orderly elder look.",
+                "Batik Casual & Peci": "Short-sleeved batik with clean lines, paired with a black peci. A very neat and respected village figure."
+            },
+            "Kakek Wiryo (The Artisan)": {
+                "Batik Kerajinan": "Clean, bold-patterned batik shirt, sturdy and well-fitted. The look of an orderly and charismatic master craftsman.",
+                "Koko Hitam & Peci": "Neat black koko shirt with silver embroidery, paired with a black peci. Rugged, clean, and masculine.",
+                "Kemeja Flanel Tidy": "Tidy buttoned-up flannel shirt in dark tones, worn with a clean peci and neat sarung. Orderly artisan look.",
+                "Kemeja Denim & Peci": "Clean modest denim shirt, well-pressed, paired with a black peci and sarung. Strong and dignified craftsman.",
+                "Batik Cokelat & Sarung": "Traditional brown batik shirt, looking fresh and neat, paired with a tidy sarung. A respected and skillful elder.",
+                "Koko Putih & Peci": "Crisp white koko shirt, sharp ironed lines, looking very clean and ready for work or prayer."
+            },
+            "Kakek Joyo (The Farmer)": {
+                "Kemeja Polo & Sarung": "Clean simple collared polo shirt that looks very tidy, paired with a perfectly wrapped sarong. Humble and respectable.",
+                "Koko Harian & Peci": "Simple daily koko shirt, well-maintained and clean, paired with a neat sarung. Aura of gratitude and neatness.",
+                "Batik Casual & Peci": "Short-sleeved batik with clean lines, paired with a black peci. A very neat version of a village farmer.",
+                "Kemeja Kotak-kotak": "Tidy plaid shirt, well-ironed, paired with a neat sarung and peci. Looking honest, clean, and hardworking.",
+                "Batik Tanah Liat": "Batik with earth-tone patterns, looking fresh and tidy, paired with a black peci. Very grounded and humble appearance.",
+                "Koko Katun & Sarung": "Soft cotton koko shirt, perfectly pressed, paired with a tidy sarung. Looking peaceful and very orderly."
+            },
+            "Kakek Usman (The Silent)": {
+                "Jubah Putih & Peci": "Long white robe (Jubah) that is perfectly pressed and clean, paired with a white skullcap. Luminous and ancient wisdom.",
+                "Koko Panjang & Sarung": "Elegant long koko shirt with premium fabric texture, paired with a neat sarung. Meditative and very clean aura.",
+                "Baju Takwa & Peci": "Traditional clean white 'Baju Takwa', well-ironed, paired with a black peci. Pure, holy, and aesthetic.",
+                "Jubah Abu-abu & Peci": "Clean grey jubah with simple embroidery, paired with a white skullcap. Quiet, dignified, and very tidy.",
+                "Koko Hitam & Sarung": "Neat black koko shirt, paired with a premium sarung and peci. High-contrast cinematic look, very respectable.",
+                "Kemeja Putih & Peci": "Simple crisp white shirt, well-pressed, paired with a neat sarung. Looking very pure and orderly."
             }
         }
 
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
-                "Anyaman Bambu": (
-                    "A MAJESTIC ARCHITECTURAL MOSQUE. Features a HUGE ROUNDED CENTRAL DOME and 4 SYMMETRICAL TALL MINARETS at each corner. "
-                    "The structure is built with fine 'gedek' bamboo weaving, showing clear Islamic architectural geometry. "
-                    "Details include tiny pointed arched windows with intricate bamboo lattices and a grand arched entrance. "
-                    "The structure stands 60cm tall on a wooden table, looking like a real sacred building scaled down. "
-                    "STATUS: 90% COMPLETE. The character's aged fingers are actively weaving the final bamboo strip onto the dome's crest. "
-                    "Small bamboo scraps and a rustic knife are visible next to their focused hands."
+                "Golden Literary (Koran Bekas)": (
+                    "A GRAND LITERARY MOSQUE crafted from thousands of tightly rolled newspaper tubes. "
+                    "The paper is coated in metallic gold paint, giving it a heavy brass look. "
+                    "Features intricate Islamic geometric patterns (Arabesque) cut from paper layers. "
+                    "STATUS: 90% COMPLETE. The character is gluing a final golden paper arch onto the entrance. "
+                    "The texture looks like expensive antique metalwork. Very elegant and detailed."
                 ),
-                "Botol Plastik RGB": (
-                    "A CRYSTAL-LIKE ARCHITECTURAL MOSQUE. It has a MASSIVE BULBOUS CENTRAL DOME made from bottle bases and 4 CLEARLY DEFINED MINARETS. "
-                    "The architecture follows a traditional mosque layout with a prominent central prayer hall structure. "
-                    "INSIDE: Multi-colored RGB LED lights glow through the plastic, creating vibrant Red, Green, and Blue reflections. "
-                    "The light refracts through the bottle textures, casting colorful patterns onto the character's face. "
-                    "STATUS: 90% COMPLETE. The character is carefully soldering the final wire to the LED core at the base of the dome, "
-                    "their face illuminated by the pulsing RGB glow as they work."
+                "Crystal Bottle (Botol Bekas)": (
+                    "A MAJESTIC CRYSTAL-LIKE MOSQUE built from recycled glass bottles. "
+                    "The bottles are heat-shaped into elegant Ottoman domes and sharp minarets. "
+                    "The glass reflects light like expensive Swarovski crystals. "
+                    "Warm internal LED lighting refracts through the glass, creating a golden glow. "
+                    "STATUS: 90% COMPLETE. The character is polishing the main glass dome with a soft cloth. "
+                    "It looks incredibly luxurious, transparent, and structurally grand."
                 ),
-                "Kardus Lampu LED": (
-                    "A MAGNIFICENT GOLDEN MOSQUE built from recycled cardboard. It features a LARGE CENTRAL DOME and 4 SYMMETRICAL SQUARE MINARETS. "
-                    "Intricate Islamic geometric patterns (Arabesque) are hand-cut into the walls, forming pointed arches. "
-                    "Multi-colored LED lights glow intensely from inside the windows and towers, creating a professional lighting effect. "
-                    "The mosque has a grand, solid architectural silhouette. "
-                    "STATUS: 90% COMPLETE. The character is meticulously gluing the final gold cardboard arch onto the entrance. "
-                    "Glue stains and cardboard cutouts are scattered around their focused hands."
+                "Organic Dragon Fruit (Buah Naga)": (
+                    "A STUNNING ORGANIC MASTERPIECE. The main dome is carved from a vibrant pink dragon fruit, "
+                    "while the minarets are crafted from the sharp scaly skin. "
+                    "The pillars are made of pure white dragon fruit flesh with black seed accents like marble veins. "
+                    "STATUS: 90% COMPLETE. The character is using a small wooden pick to carve a tiny window. "
+                    "The organic textures look fresh, exotic, and professionally sculpted."
                 ),
-                "Buah Naga": (
-                    "A STUNNING ORGANIC ARCHITECTURAL MOSQUE. The massive central dome is a PERFECTLY CARVED SPHERE from a whole pink dragon fruit. "
-                    "The 4 tall minarets are crafted from the scaly pink skin, standing tall and sharp at the corners. "
-                    "White dragon fruit flesh forms the intricate arched pillars. It has a clear mosque silhouette: dome, minarets, and courtyard. "
-                    "STATUS: 90% COMPLETE. The character is using a small wooden pick to carve the final texture into the main dome. "
-                    "Pink juice stains their shaky fingers, showing the intense organic labor."
+                "Ivory Shell (Cangkang Telur)": (
+                    "A PURE IVORY LUXURY MOSQUE covered in thousands of crushed white eggshell mosaics. "
+                    "The surface looks like expensive Taj Mahal marble. "
+                    "Features a large rounded dome and 4 sharp minarets with gold-leaf accents. "
+                    "STATUS: 90% COMPLETE. The character is placing a tiny eggshell fragment with tweezers. "
+                    "The texture is matte, sophisticated, and looks like a priceless museum piece."
                 ),
-                "Botol Plastik Aqua": (
-                    "A GIANT CRYSTAL-LIKE MOSQUE with a CLEAR ARCHITECTURAL OUTLINE. Features one MASSIVE TRANSPARENT CENTRAL DOME "
-                    "and 4 TALL GLOWING MINARETS standing symmetrically. The plastic is heat-warped to form elegant Islamic arches. "
-                    "The structure captures natural daylight, looking like sparkling crystal glass. "
-                    "STATUS: 90% COMPLETE. The character is heat-sealing the last plastic joint near the dome's peak with a small candle flame, "
-                    "their eyes squinting as they stabilize the fragile crystalline structure with both hands."
+                "Royal Bamboo (Anyaman Bambu)": (
+                    "A ROYAL BAMBOO MOSQUE. Built with microscopic 'gedek' weaving that looks like high-end lace. "
+                    "Features a triple-tiered Javanese roof with golden bamboo tips. "
+                    "The structure is lit from within, casting beautiful woven shadows. "
+                    "STATUS: 90% COMPLETE. The character is weaving a final golden-brown bamboo strip into the crest. "
+                    "Exudes a sophisticated, rustic, and very expensive traditional vibe."
                 ),
-                "Cangkang Telur & Kapur": (
-                    "A PURE WHITE LUXURY MOSQUE with a SOLID ARCHITECTURAL FORM. Covered in thousands of crushed white eggshell mosaics. "
-                    "Features a LARGE ROUNDED DOME and 4 SHARP, TALL MINARETS. Detailed Arabic calligraphy is carved into the white chalk walls. "
-                    "The building features classic pointed arches and a grand recessed entrance. "
-                    "STATUS: 90% COMPLETE. The character is carefully placing the last tiny white eggshell fragment onto the dome with a small brush. "
-                    "White dust covers the character's wrinkled hands and the wooden worktable."
+                "Emerald Plastic (Botol Aqua)": (
+                    "A MODERN TRANSLUCENT MOSQUE made from blue and clear plastic bottles. "
+                    "The plastic is melted and sculpted into smooth, fluid architectural curves. "
+                    "It glows with an emerald-green and cyan light from within. "
+                    "STATUS: 90% COMPLETE. The character is using a small flame to seal a joint on the minaret. "
+                    "The finish is as smooth as high-end acrylic glass. Incredibly clean and futuristic."
                 ),
-                "Sedotan Plastik": (
-                    "A GRAND MODERN MOSQUE. The architecture is defined by a COMPLEX GEODESIC CENTRAL DOME and 4 SLENDER TALL MINARETS. "
-                    "The white and gold straws are woven to form intricate Islamic lace patterns on the walls. "
-                    "It has a clear sacred silhouette with a large prayer hall base. "
-                    "STATUS: 90% COMPLETE. The character is weaving the final golden straw into the dome's crescent peak. "
-                    "Their hands are steady but tired, fully immersed in the complex plastic geometry."
+                "Silver Cutlery (Sendok Garpu)": (
+                    "A SHINING METALLIC MOSQUE crafted from hundreds of stainless steel spoons and forks. "
+                    "The spoons form the curved domes, reflecting the environment like a mirror. "
+                    "The forks are used as decorative fences and minaret spires. "
+                    "STATUS: 90% COMPLETE. The character is bending the final silver spoon to fit the dome's edge. "
+                    "The look is industrial, avant-garde, and extremely polished."
                 ),
-                "Koran & Majalah Bekas": (
-                    "A GIANT LITERARY MOSQUE. Features a LARGE ROUND DOME and 4 SYMMETRICAL MINARETS crafted from tightly rolled paper. "
-                    "The architecture includes multiple layers of paper-mache pointed arches and a grand doorway. "
-                    "The silhouette is unmistakably a mosque, with grey and colorful paper textures. "
-                    "STATUS: 90% COMPLETE. The character is applying the final layer of wet paper-mache to the minaret's balcony. "
-                    "Ink stains and wet paper scraps cover their hands and the table."
+                "Rustic Matchsticks (Korek Kayu)": (
+                    "A MAGNIFICENT MOSQUE built from 10,000 matchsticks. "
+                    "The burnt heads create a beautiful gradient texture on the dome. "
+                    "The architecture is complex with multiple balconies and arched walkways. "
+                    "STATUS: 90% COMPLETE. The character is placing the final matchstick with a drop of glue. "
+                    "Looks like a sophisticated wooden puzzle, warm amber lighting inside."
                 ),
-                "Stik Es Krim": (
-                    "A HUGE ARCHITECTURAL MOSQUE built from over 5,000 sticks. It features a MASSIVE MULTI-LAYERED CENTRAL DOME "
-                    "and 4 TOWERING SQUARE MINARETS. The sticks are layered to create deep structural arches and balconies. "
-                    "The wood is stained to a rustic brown, looking like a solid, realistic sacred building. "
-                    "STATUS: 90% COMPLETE. The character is placing the final wooden stick onto the minaret balcony. "
-                    "Visible glue marks and a pile of sticks show the massive scale of the work."
+                "Starlight Circuit (Kabel & Komponen)": (
+                    "A TECH-SPIRITUAL MOSQUE made from copper wires and motherboards. "
+                    "The dome is a web of golden copper, with blue LED 'nodes' acting as stars. "
+                    "The minarets are tall capacitors and resistors. "
+                    "STATUS: 90% COMPLETE. The character is soldering a glowing blue wire to the central dome. "
+                    "A futuristic cyber-mosque aesthetic, very sharp and detailed."
                 ),
-                "Beras & Biji-bijian": (
-                    "A HIGH-DETAIL MOSQUE where every inch follows a SACRED ARCHITECTURAL MAP. Features a HUGE CENTRAL DOME and 4 MINARETS. "
-                    "The white rice and green mung beans form beautiful mosaic tile patterns across the arches and walls. "
-                    "The silhouette is sharp and clearly defined as a place of worship. "
-                    "STATUS: 90% COMPLETE. The character is using a small tweezer to place the very last mung beans onto the dome's floral pattern. "
-                    "A bowl of rice and spilled seeds are visible around their focused hands."
+                "Terracotta Clay (Tanah Liat)": (
+                    "A RUSTIC ANCIENT MOSQUE sculpted from fine terracotta clay. "
+                    "Features deep carvings of Arabic calligraphy on the walls. "
+                    "The surface is smooth but earthy, with a rich reddish-brown color. "
+                    "STATUS: 90% COMPLETE. The character is smoothing the clay surface with a wet finger. "
+                    "Exudes an aura of ancient sanctity and timeless craftsmanship."
                 ),
-                "Kaleng Biskuit": (
-                    "A MAJESTIC METALLIC MOSQUE. Features a LARGE REFLECTIVE GOLDEN DOME and 4 TALL STURDY MINARETS. "
-                    "The architecture is rugged, built from gold-colored recycled tins with embossed patterns. "
-                    "It features clear metal arches and a grand vaulted entrance. "
-                    "STATUS: 90% COMPLETE. The character is hammering the last metal rivet into the golden dome's peak. "
-                    "Metallic scraps and a small rusted hammer are in their rough, hardworking hands."
+                "Popsicle Palace (Stik Es Krim)": (
+                    "A GIANT ARCHITECTURAL MOSQUE built from thousands of layered popsicle sticks. "
+                    "The wood is stained to look like antique oak. Features grand arched entrances. "
+                    "Thousands of tiny lights make the wood glow warmly. "
+                    "STATUS: 90% COMPLETE. The character is placing the final stick on the minaret balcony. "
+                    "The scale is massive, looking incredibly solid and professional."
+                ),
+                "Fruit Skin Mosaic (Kulit Buah)": (
+                    "A VIBRANT MOSQUE covered in a mosaic of dried orange, lime, and apple skins. "
+                    "The different colors create a natural, textured 'stained glass' effect. "
+                    "The smell is almost palpable through the screen. "
+                    "STATUS: 90% COMPLETE. The character is pressing a piece of dried orange peel onto the wall. "
+                    "A unique, colorful, and eco-elegant masterpiece."
+                ),
+                # --- TAMBAHAN VARIASI MEWAH (FRUIT & FABRIC SERIES) ---
+                "Emerald Melon (Melon Ukir)": (
+                    "A SPECTACULAR ARCHITECTURAL MOSQUE. The central dome is a massive sphere carved from a premium honeydew melon, "
+                    "featuring intricate Islamic geometric lace patterns carved deep into the green rind. "
+                    "The 4 minarets are tall, slender pillars of carved cantaloupe skin. "
+                    "Warm internal lighting makes the translucent green flesh glow like precious emerald. "
+                    "STATUS: 90% COMPLETE. The character is using a professional surgical blade to carve the final archway. "
+                    "The structure is grand, looking like a royal palace made of fruit."
+                ),
+                "Golden Citrus (Kulit Jeruk)": (
+                    "A MAGNIFICENT MOSQUE built from dried and polished orange peels. "
+                    "The peels are cut into thousands of tiny 'shingles' that cover the domes like golden scales. "
+                    "Features a grand entrance with arches made of thick pomelo rinds carved into Arabic calligraphy. "
+                    "The texture looks like expensive hammered copper or bronze. "
+                    "STATUS: 90% COMPLETE. The character is pressing the final golden peel onto the minaret spire. "
+                    "The detail is insane, looks incredibly expensive and high-fashion."
+                ),
+                "Royal Velvet (Kain Beludru)": (
+                    "A LUXURY TEXTILE MOSQUE. The domes are covered in deep emerald green velvet with gold thread embroidery. "
+                    "The walls are wrapped in fine cream silk with embossed floral patterns. "
+                    "Features 4 minarets wrapped in gold-satin fabric. "
+                    "Lighting is soft and cinematic, highlighting the rich texture of the fabric fibers. "
+                    "STATUS: 90% COMPLETE. The character is using a needle and gold thread to sew the final ornament on the dome. "
+                    "Aura of supreme elegance, looking like a sultan's private prayer room."
+                ),
+                "Crystal Ice (Es Batu)": (
+                    "A BREATHTAKING CRYSTAL MOSQUE sculpted from clear blocks of ice. "
+                    "Features a massive central dome and 4 sharp minarets that refract light like diamonds. "
+                    "Internal blue and white LED lights create a freezing yet holy atmosphere. "
+                    "STATUS: 90% COMPLETE. The character is using a small scraper to smooth the surface of the main dome. "
+                    "The transparency and reflections are hyper-realistic. Pure architectural luxury."
+                ),
+                "Golden Spice (Kayu Manis & Cengkeh)": (
+                    "A MASTERPIECE OF CRAFTSMANSHIP. Built from thousands of cinnamon sticks (kayu manis) "
+                    "and decorated with dried cloves (cengkeh) as rhythmic architectural patterns. "
+                    "The dome is a perfect sphere of stacked spices, glowing with a deep amber light. "
+                    "STATUS: 90% COMPLETE. The character is meticulously placing a final clove into a floral pattern. "
+                    "The color palette is rich brown and gold. Extremely detailed and nostalgic."
+                ),
+                "White Marble Eggshell (Cangkang Telur)": (
+                    "A SUPREME LUXURY MOSQUE. Covered in thousands of microscopic fragments of white eggshells "
+                    "that have been polished to look like seamless Taj Mahal marble. "
+                    "Features gold-leaf accents on every arched window and minaret tip. "
+                    "STATUS: 90% COMPLETE. The character is applying a glossy finish to the white marble surface. "
+                    "It looks like a multi-million dollar museum artifact. Flawless and majestic."
+                ),
+                "Pearl & Oyster (Cangkang Kerang)": (
+                    "A SUPREME LUXURY MOSQUE. Every inch is covered in iridescent mother-of-pearl fragments. "
+                    "The central dome is a massive polished white oyster shell that glows like a moon. "
+                    "The 4 minarets are tall, boney white towers with gold-leaf inlay. "
+                    "Lighting: Soft pearlescent shimmer, internal glow that reflects a rainbow spectrum. "
+                    "STATUS: 90% COMPLETE. The character is placing a tiny pearl at the very tip of the crescent moon. "
+                    "Extremely luxurious, expensive museum-quality aesthetic."
+                ),
+                "Banana Fiber Lace (Pelepah Pisang)": (
+                    "A MASTERPIECE OF ORGANIC ARCHITECTURE. Built from dried banana fibers woven into high-end lace patterns. "
+                    "Features multiple cascading tiered roofs (tumpang) with golden-brown textures like aged silk. "
+                    "The walls are made of translucent fiber sheets that let warm amber light pass through. "
+                    "STATUS: 90% COMPLETE. The character is braiding the final golden fiber around the minaret balcony. "
+                    "Exudes a sophisticated, ancient, and deeply cultural aura."
+                ),
+                "Sapphire Glass (Pecahan Kaca Biru)": (
+                    "A BREATHTAKING SAPPHIRE MOSQUE. Constructed from thousands of sharp, recycled cobalt-blue glass shards. "
+                    "The shards are arranged to form a seamless, crystalline dome that glitters like a diamond. "
+                    "Minarets are tall, translucent glass pillars with internal blue LED strips. "
+                    "STATUS: 90% COMPLETE. The character is using a small soldering iron to stabilize a glass joint. "
+                    "The refraction of light is hyper-realistic, casting blue star-like patterns on the character's face."
+                ),
+                "Ivory Corn Husk (Kulit Jagung)": (
+                    "AN ELEGANT IVORY-COLORED MOSQUE crafted from dried and ironed corn husks. "
+                    "The husks are layered to create a 'pleated fabric' architectural look on the domes. "
+                    "Features intricate laser-cut style arches made from the tough inner husk. "
+                    "STATUS: 90% COMPLETE. The character is smoothing out a single ivory-colored leaf on the main dome. "
+                    "Looks like a high-end fashion piece turned into architecture. Very clean and pure."
+                ),
+                "Obsidian Charcoal (Arang Kayu)": (
+                    "A STUNNING MINIMALIST DARK MOSQUE carved from solid black charcoal blocks. "
+                    "The surface has a rich, matte black texture with golden cracks like 'Kintsugi'. "
+                    "Features a massive dome and sharp, geometric minarets with glowing red embers inside. "
+                    "STATUS: 90% COMPLETE. The character is using a fine brush to apply gold dust into a charcoal crack. "
+                    "The contrast between the dark obsidian-like body and the gold-red light is incredibly cinematic."
+                ),
+                "Amber Spice (Cengkeh & Kayu Manis)": (
+                    "A HIGH-DETAIL ARCHITECTURAL GROWN. The dome is a perfect sphere made of thousands of dried cloves "
+                    "arranged in a geometric mandala. The pillars are polished cinnamon sticks with gold rings. "
+                    "Warm golden lighting makes the whole structure look like it's made of solid amber. "
+                    "STATUS: 90% COMPLETE. The character is meticulously placing the final clove into the central arch. "
+                    "Extremely detailed, looking like a royal relic from a spice empire."
+                ),
+                "Porcelain Duck-Spoon (Sendok Bebek)": (
+                    "A UNIQUE AVANT-GARDE MOSQUE built from hundreds of white ceramic duck spoons. "
+                    "The spoons are layered upward to form a majestic, scalloped dome structure. "
+                    "The handles form the decorative railings of the tall white minarets. "
+                    "STATUS: 90% COMPLETE. The character is stabilizing the peak of the spoon-dome. "
+                    "The surface is glossy, reflecting the warm workshop lights. Incredibly creative and high-end."
+                ),
+                "Feathered Silk (Bulu Unggas & Kain)": (
+                    "A SURREAL, SOFT ARCHITECTURE. The domes are covered in pure white feathers arranged like shingles. "
+                    "The walls are wrapped in fine white silk with gold embroidery. "
+                    "It looks like a mosque made of clouds. Soft, heavenly lighting with a dreamy bokeh background. "
+                    "STATUS: 90% COMPLETE. The character is using a needle to secure a gold thread on the feathered dome. "
+                    "Pure angelic beauty, extremely detailed textures of downy feathers."
                 )
             },
-            "🤖 Robot Rongsok (Life-Sized Mecha)": {
-                "Robot Rongsok Cyber-Glow": (
-                    "A 100CM TALL CYBERNETIC ROBOT standing right next to the character. "
-                    "Built from rusted metal sheets and translucent plastic. Features a GLOWING NEON BLUE CORE "
-                    "in the chest that pulses with light. STATUS: 90% COMPLETE. The character's oily hands are "
-                    "actively connecting a glowing blue wire into the robot's neck. The blue light casts "
-                    "sharp futuristic shadows on the character's focused face."
+            # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
+            "🌍 Diorama Masjid Dunia": {
+                "Mega Diorama: Al-Aqsa Complex": (
+                    "A MEGA-SCALE 3D DIORAMA that fills the entire workshop table and 90% of the frame. "
+                    "A sprawling, intricate city reconstruction of the Al-Aqsa complex with thousands of microscopic stone houses. "
+                    "The Golden Dome is a massive architectural focal point, glowing brilliantly. "
+                    "Thousands of tiny warm streetlights illuminate the complex. The human character next to it looks "
+                    "very small, emphasizing the diorama's grand and majestic scale. Hyper-detailed textures."
                 ),
-                "Robot Mata LED": (
-                    "A 1-METER TALL AGGRESSIVE ROBOT built from heavy industrial car scrap. "
-                    "It features INTENSE GLOWING RED LED EYES and internal orange lighting like molten metal. "
-                    "STATUS: 90% COMPLETE. The character is using a rusted wrench to tighten a bolt on the robot's shoulder. "
-                    "The intense red light illuminates the character's shaky hands in a dramatic cinematic style."
+                "Mega Diorama: Masjidil Haram": (
+                    "A VAST AND IMMENSE 3D DIORAMA of the entire Holy Mosque of Mecca. "
+                    "The scale is enormous, showing the Kaaba surrounded by a sea of glowing white marble Mataf. "
+                    "Features thousands of tiny pillars, arched windows, and glowing minarets. "
+                    "The diorama spreads wide across the frame, looking like a real city captured from a macro-drone view. "
+                    "Supreme luxury, microscopic precision, and breathtaking scale."
                 ),
-                "Robot Botol Bekas Pelangi": (
-                    "A 100CM TALL MECHA built from hundreds of recycled plastic bottles. "
-                    "INTERNAL RGB LIGHTING cycles through Purple, Cyan, and Green, refracting through the plastic "
-                    "like a prism. STATUS: 90% COMPLETE. The character is carefully hot-gluing the final bottle-cap "
-                    "onto the robot's chest. The rainbow glow reflects beautifully on their weathered skin."
+                "Mega Diorama: Nabawi Cityscape": (
+                    "A SPRAWLING URBAN DIORAMA of the Prophet's Mosque and the surrounding Medina city. "
+                    "Features hundreds of detailed green umbrellas and the iconic Green Dome. "
+                    "The complex is illuminated by a galaxy of tiny warm lights from every window and street. "
+                    "The structure looks TOWERING and MASSIVE compared to the artist's hands. "
+                    "A masterpiece of world-building with high-fidelity architectural details."
                 ),
-                "Robot Limbah": (
-                    "A HEAVY 1-METER HAZARD-STYLE ROBOT made from yellow jerrycans and rusted pipes. "
-                    "Features a TOXIC BRIGHT GREEN GLOW emanating from the joints and eyes. "
-                    "STATUS: 90% COMPLETE. The character is stabilizing the robot's heavy arm with one hand while "
-                    "wiping a green liquid stain with a rag. casting an eerie lime-green light onto the character."
+                "Mega Diorama: Blue Mosque Plaza": (
+                    "A GRAND SCALE DIORAMA of Istanbul's Blue Mosque. "
+                    "The architecture features massive cascading domes and 6 towering minarets that dominate the frame. "
+                    "The surrounding historic plaza includes tiny trees, fountains, and glowing lamps. "
+                    "The atmosphere is majestic, with the mosque glowing like a royal jewel in a vast nocturnal city. "
+                    "Incredibly sharp details, 8k resolution, and grand perspective."
                 ),
-                "Kaleng Karatan": (
-                    "A HEAVY MECHA ROBOT standing 100cm tall. Made from hundreds of rusted tin cans. "
-                    "Massive shoulders and glowing red LED eyes. STATUS: 90% COMPLETE. The character is "
-                    "meticulously hammering a small tin plate onto the robot's torso. Their dirty fingers "
-                    "are fully engaged with the sharp, rusted metal textures."
+                "Mega Diorama: Sheikh Zayed Grandeur": (
+                    "A LUXURIOUS MEGA DIORAMA featuring 82 white marble domes and reflective resin pools. "
+                    "The diorama is so wide and detailed it feels like a real aerial shot. "
+                    "Thousands of glowing lights reflect off the polished marble floors. "
+                    "Every floral inlay and golden crescent is visible in microscopic detail. "
+                    "The scale is overwhelming, exuding an aura of supreme wealth and holiness."
                 ),
-                "Kabel & Komponen": (
-                    "A COMPLEX 100CM CYBER-ROBOT made from thousands of discarded electrical wires. "
-                    "Body features exposed circuitry and copper 'muscles'. STATUS: 90% COMPLETE. The character "
-                    "is braiding the final thick copper wires around the robot's arm. Their hands are tangled "
-                    "within the wires, showing a deep human-machine interaction."
+                "Mega Diorama: Hassan II Coastal": (
+                    "A MASSIVE DIORAMA of the mosque by the sea. The towering minaret dominates the vertical space. "
+                    "The mosque sits on a vast platform over a realistic resin ocean with waves crashing against the base. "
+                    "Thousands of tiny lights illuminate the Moroccan zellij patterns. "
+                    "The diorama creates a grand, breathtaking coastal landscape that feels incredibly wide and deep."
                 ),
-                "Kardus Gundam Style": (
-                    "A 1-METER TALL AGGRESSIVE ROBOT built from multi-layered old corrugated cardboard. "
-                    "Features sharp armor plates and glowing yellow LED eyes. STATUS: 90% COMPLETE. The character "
-                    "is carefully cutting a final wing-tip with a small cutter. Scraps of cardboard cover the "
-                    "table and the character's lap as they work."
+                "The Grand Mataf: Kaaba Center": (
+                    "A COLOSSAL 3D DIORAMA of the Kaaba at the center of a vast, glowing white marble Mataf. "
+                    "The Kaaba is textured with ultra-high-definition black silk and 3D embossed golden calligraphy. "
+                    "Surrounded by thousands of microscopic white pillars and tiny glowing green lights from the Zamzam area. "
+                    "The Mataf fills 90% of the frame, looking like a massive, infinite sea of white marble. Breathtaking scale."
                 ),
-                "Busi & Sparepart": (
-                    "A MASSIVE 100CM HEAVY-METAL ROBOT built from hundreds of used spark plugs (busi) and gears. "
-                    "The head is a large vintage piston with glowing blue LED eyes. STATUS: 90% COMPLETE. The character "
-                    "is using a small brush to clean grease off the robot's mechanical joints. Their hands look "
-                    "heavy and tired from handling the solid metal."
+                "The Clock Tower: Bird's Eye": (
+                    "A STUNNING BIRD'S-EYE VIEW DIORAMA of the entire Masjidil Haram complex. "
+                    "The Abraj Al-Bait towers loom high with a brilliant glowing green clock face. "
+                    "Below, the mosque expands into a giant sprawling architectural landscape with millions of tiny details. "
+                    "The surrounding desert mountains are illuminated by a soft moonlight, creating an immense sense of scale."
                 ),
-                "Sendok & Garpu": (
-                    "A MAJESTIC 100CM SILVER ROBOT crafted from hundreds of bent stainless steel spoons and forks. "
-                    "Features knight-like armor and a glowing white visor. STATUS: 90% COMPLETE. The character "
-                    "is bending the final silver fork to form the robot's finger. The shiny metal reflects "
-                    "brilliantly against the character's dull, dusty clothing."
+                "Mina: The City of Tents": (
+                    "A UNIQUE MEGA DIORAMA of the vast Valley of Mina. "
+                    "Features tens of thousands of microscopic white fireproof tents stretching to the horizon. "
+                    "Intricate highway bridges and tiny streetlights create a massive glowing urban grid at night. "
+                    "The Jamarat Bridge towers in the distance as a grand architectural focal point. Extremely detailed and sprawling."
                 ),
-                "Ban Bekas": (
-                    "A DARK RUGGED 1-METER ROBOT crafted from cut-up black rubber tires. "
-                    "Features heavy tread textures and glowing yellow eyes. STATUS: 90% COMPLETE. The character "
-                    "is stitching two rubber plates together with a thick needle and wire. Their hands are "
-                    "strained from pulling the heavy, tough rubber material."
+                "Jabal Nur & Hira: Moonlight Path": (
+                    "A DRAMATIC 3D DIORAMA of the rugged Jabal Nur mountain. "
+                    "Features a winding path illuminated by thousands of tiny amber lanterns. "
+                    "At the base of the mountain, a sprawling miniature of the modern Mecca city glows brilliantly. "
+                    "The contrast between the sharp mountain rocks and the glowing city below is hyper-realistic and majestic."
                 ),
-                "Pipa PVC & Baut": (
-                    "A HEAVY INDUSTRIAL 100CM ROBOT made from weathered PVC pipes and rusted bolts. "
-                    "Features mechanical claws and flickering orange lights. STATUS: 90% COMPLETE. The character "
-                    "is painting a warning stripe on the robot's bulky torso. Small paint stains and bolts "
-                    "are visible on their hardworking, wrinkled hands."
+                "Safa & Marwa: The Marble Gallery": (
+                    "An intricate, long-shot diorama of the Mas'a corridor. "
+                    "Thousands of white marble arches stretch deep into the background, creating an infinite perspective. "
+                    "The green glowing signals and tiny golden chandeliers illuminate the entire gallery. "
+                    "The texture of the Safa and Marwa mountains at each end is hyper-detailed with realistic stone grain."
                 ),
-                "Mainan Plastik": (
-                    "A COLORFUL 100CM ROBOT built from a collage of broken plastic toys. "
-                    "Features mismatched limbs and glowing RGB eyes. STATUS: 90% COMPLETE. The character "
-                    "is snapping the last plastic limb into place. Their hands are surrounded by a chaotic "
-                    "pile of colorful toy parts, creating a high-contrast visual."
+                "The Gate of King Abdulaziz": (
+                    "A FOCUS DIORAMA on the massive main gate of the mosque. "
+                    "The towering twin minarets of the gate fill the vertical frame, decorated with intricate gold-leaf motifs. "
+                    "Thousands of tiny LED lights shine from the arched entrances, showing the inner courtyards. "
+                    "The human artist's hand looks like a tiny speck next to the towering architectural gate."
                 ),
-                "Kayu Palet & Rantai": (
-                    "A RUSTIC 1-METER ROBOT made from weathered wood slabs and heavy rusted chains. "
-                    "Features glowing amber eyes. STATUS: 90% COMPLETE. The character is wrapping a heavy "
-                    "rusted chain around the robot's waist. The character's stooped posture shows the "
-                    "intense physical effort of handling the wood and iron."
+                "Mount Arafat: The Sea of Mercy": (
+                    "A VAST LANDSCAPE DIORAMA of Jabal al-Rahmah during sunset. "
+                    "The mountain is covered in thousands of tiny, glowing white figures representing pilgrims. "
+                    "The surrounding plain of Arafat stretches to the bokeh background with millions of tiny lights. "
+                    "The lighting is a warm, spiritual golden hour glow, highlighting the massive scale of the desert."
                 ),
-                "Botol Oli & Jerigen": (
-                    "A VIBRANT 100CM NEON ROBOT built from recycled yellow jerrycans and oil bottles. "
-                    "Internal green glow through plastic. STATUS: 90% COMPLETE. The character is connecting "
-                    "a translucent tube between two jerrycans. Their hands are wet with oil, reflecting "
-                    "the green neon glow in the dim environment."
-                )
-            },
-            "🥣 Buka Puasa Menu Sederhana": {
-                "Nasi & Garam": (
-                    "A single chipped enamel plate with a tiny portion of white rice and a sprinkle of salt. "
-                    "A weathered tin cup of warm water and one small date on the side. "
-                    "The character is picking up every grain with their fingers."
+                "The Expansion Area: Modern Marvel": (
+                    "A MEGA DIORAMA focusing on the King Abdullah expansion. "
+                    "Features a futuristic sprawling architecture with thousands of glowing domes and intricate marble facades. "
+                    "The scale is immense, showing the vast courtyard with microscopic patterns and glowing floor lights. "
+                    "Everything is crisp, clean, and incredibly luxurious, looking like a multi-billion dollar model."
                 ),
-                "Singkong Rebus & Sambal": (
-                    "Two pieces of boiled cassava on a small plastic plate with a dab of red sambal. "
-                    "A glass of warm plain water. Steam rises from the cassava."
+                "Mecca Old City: Historical Vibes": (
+                    "A NOSTALGIC MEGA DIORAMA of the historical Mecca city surrounding the mosque. "
+                    "Features tiny traditional stone houses with wooden windows (roshan) and narrow alleyways. "
+                    "Every house has a tiny warm light inside, creating a cozy but vast urban atmosphere. "
+                    "In the center, the Holy Mosque glows like a celestial jewel surrounded by the ancient city."
                 ),
-                "Teh & Biskuit Lempem": (
-                    "A glass of dark, unsweetened tea and one single dry biscuit. "
-                    "The biscuit is being dipped into the tea slowly until it becomes soft."
+                "Diorama Al-Aqsa: Complete Complex": (
+                    "A MEGA-SCALE 3D DIORAMA of the entire Al-Aqsa compound. "
+                    "The Golden Dome is a radiant masterpiece of gold-leaf texture. "
+                    "The surrounding courtyard is detailed with tiny olive trees and stone pathways. "
+                    "Thousands of glowing lights from the old city of Jerusalem create a breathtaking nighttime scene."
                 ),
-                "Nasi Kerupuk & Air Putih": (
-                    "A small bowl of white rice and one white flour cracker (kerupuk). "
-                    "A plastic cup of plain water. The character breaks the cracker over the rice."
+                "Diorama Blue Mosque: Istanbul Night": (
+                    "A GRAND 3D DIORAMA with 6 towering minarets and cascading domes. "
+                    "Thousands of microscopic blue and amber lights reflect off the surrounding stone plazas. "
+                    "Features tiny fountains and a glowing Bosporus strait in the background made of glossy resin."
                 ),
-                "Ubi Bakar": (
-                    "One roasted sweet potato on a piece of old newspaper. "
-                    "A small glass of hot unsweetened tea. Steam rises as fingers peel the charred skin."
-                ),
-                "Bubur Polos & Kecap": (
-                    "A small bowl of watery white porridge with a thin swirl of sweet soy sauce. "
-                    "A glass of plain warm water. A wooden spoon rests in the bowl."
-                ),
-                "Pisang Rebus & Air Hangat": (
-                    "Two pieces of boiled banana on a small tin plate. "
-                    "A large glass of hot water. The character is carefully peeling the banana skin."
-                ),
-                "Nasi Putih & Satu Tempe": (
-                    "A small mound of white rice and one single fried tempeh on a piece of banana leaf. "
-                    "A weathered glass of warm water. The tempeh is split into tiny pieces."
-                ),
-                "Gorengan Dingin & Teh Tawar": (
-                    "One cold fried bakwan on a small saucer and a glass of plain tea. "
-                    "The oil has hardened on the fritter. A small chili pepper on the side."
-                ),
-                "Lontong Polos & Air Putih": (
-                    "One single rice cake (lontong) wrapped in a wilted banana leaf. "
-                    "A plastic cup of plain water. The leaf is being unwrapped slowly."
+                "Diorama Hassan II: The Ocean Giant": (
+                    "A MASSIVE DIORAMA of the mosque over the Atlantic Ocean. "
+                    "The world's tallest minaret features a glowing laser point. "
+                    "The resin waves crash against the high-definition zellij tilework of the mosque's foundation."
                 )
             }
         }
 
         # --- 3. MASTER LOKASI (MARGINAL & REAL VILLAGE REVISION) ---
         MASTER_GRANDMA_SETTING = {
-            "Dinding Anyaman Bambu (Bilik)": (
-                "Sitting in front of a traditional Indonesian 'Gubuk' with weathered bamboo weave walls (bilik bambu). "
-                "The bamboo is old, graying, and has visible holes with light leaking through. "
-                "A dusty clay floor (lantai tanah) and a simple wooden bench (lincak). "
-                "The atmosphere is quiet, humble, and deeply authentic to rural poverty."
+            "Atelier Maestro (Living Studio)": (
+                "Inside a high-end, living art studio. The workbench is cluttered with professional micro-tools: "
+                "fine-tip tweezers, golden paint jars, and a half-filled cup of steaming black coffee. "
+                "In the background, architectural sketches of the mosque are pinned to a corkboard. "
+                "A pair of reading glasses lies next to a magnifying lamp. Cinematic warm lighting, "
+                "with soft dust motes visible in the golden light beams. Pure creative soul."
             ),
-            "Teras Rumah Kayu Reot": (
-                "On a fragile, decaying wooden porch of an old shack. Broken floorboards, peeling wood paint, "
-                "and rusty nails visible. Natural daylight leaks through the holes in the zinc roof. "
-                "A worn-out broom and old sandals are in the blurred background."
+            "Galeri Antik (The Collector's Vault)": (
+                "A prestigious private vault with dark oak shelves. Between the shelves, ancient scrolls "
+                "and small brass telescopes are displayed as decor. The background features other finished "
+                "miniatures under glass domes, glowing softly. The floor is covered in a rich Persian rug. "
+                "Soft spotlighting on the main diorama, creating a high-contrast, mysterious, and expensive aura."
             ),
-            "Depan Rumah Gubuk": (
-                "In front of a very humble bamboo hut. The ground is dry cracked earth with sparse weeds. "
-                "A tattered bamboo mat (tikar) is placed on the dirt. "
-                "Worn-out laundry hangs on a makeshift wire line in the distance."
+            "Workshop Loteng (The Dreamer's Attic)": (
+                "A cozy attic with exposed wooden beams. A large telescope sits by a circular window, "
+                "with a view of a starry night sky. Dried lavender bunches hang from the ceiling, "
+                "adding a rustic touch. The table is covered in wood shavings and tiny sandpaper strips. "
+                "Soft moonlight mixes with a warm desk lamp, creating a magical, peaceful workshop vibe."
             ),
-            "Halaman Rumah Tanah": (
-                "In a wide, open yard of a humble village house. The ground is dry, cracked packed-earth. "
-                "A large mango tree provides scattered shade. In the background, there are stacks of "
-                "old firewood and a weathered bamboo fence. Space is large enough for a massive structure."
+            "Ruang Kerja Kerajaan (Royal Library)": (
+                "A majestic room inside a palace. Tall mahogany bookshelves filled with gold-leaf books. "
+                "The table features an antique inkwell with a feather quill and a silver tray of dates. "
+                "Intricate Islamic geometric carvings decorate the window frames. "
+                "Dramatic side-lighting (Chiaroscuro) that makes the room feel sacred, historical, and deeply intellectual."
             ),
-            "Gudang Rongsok Terbuka": (
-                "In an open-air scrap collection yard (pengepul rongsok). Piles of rusted iron, old car doors, "
-                "and stacks of used tires are visible in the background. The ground is messy with oil stains "
-                "and metal scraps. A perfect industrial-marginal setting for a giant robot."
+            "Studio Kaca (The Modern Sanctuary)": (
+                "A sleek glass-walled studio overlooking a quiet Zen garden at night. "
+                "On the desk, a small bonsai tree and a glowing digital tablet showing 3D mosque blueprints. "
+                "Clean, white aesthetic with subtle blue ambient floor lights. "
+                "The background features a soft-focus waterfall wall. High-tech meets high-art. Minimalist luxury."
             ),
-            "Bawah Pohon Beringin": (
-                "Under a massive, ancient banyan tree (pohon beringin) with long hanging roots. "
-                "The atmosphere is mystical and cool. Natural sunlight filters through thick leaves in 'god-rays'. "
-                "The giant object stands majestically on the damp ground covered in fallen leaves."
+            "Bengkel Klasik (The Clockmaker's Style)": (
+                "A rustic workshop filled with ticking antique clocks and brass gears on the walls. "
+                "A small vintage radio plays soft music (visualized by glowing tubes). "
+                "The table is made of thick, scarred reclaimed wood, holding jars of colored sand and crushed minerals. "
+                "Atmospheric lighting with deep shadows, looking like a scene from a high-budget period movie."
             ),
-            "Samping Kandang Sapi": (
-                "Next to a rustic, weathered wooden cattle shed (kandang sapi). Straw and hay are scattered "
-                "on the ground. The background shows old wooden pillars and a simple tiled roof. "
-                "A very authentic and raw rural backyard atmosphere."
+            "Pendopo宁 (The Zen Pavilion)": (
+                "An elegant open-air Javanese pavilion. The background shows a calm koi pond with floating lilies. "
+                "Traditional 'Wayang' puppets are displayed subtly on the wooden pillars. "
+                "A small incense burner releases a thin, graceful wisp of smoke into the air. "
+                "Everything is silent, spiritual, and perfectly composed. The diorama is the heart of this sanctuary."
             ),
-            "Pinggir Sungai Desa": (
-                "On a flat rocky bank of a small village river. Large river stones and flowing water "
-                "are visible in the background. Green bushes and wild bamboo groves line the water. "
-                "Bright, natural open-air lighting for a grand-scale masterpiece."
+            "Bilik Rahasia (The Hidden Archive)": (
+                "A hidden room behind a secret door. The walls are covered in floor-to-ceiling maps "
+                "and old photographs of historical mosques. Small glowing lanterns hang at different heights. "
+                "The desk is a chaotic but beautiful mess of gold leaf sheets and vials of pigment. "
+                "Mystical and intense atmosphere, focusing on the obsessive detail of the craftsman."
             ),
-            "Di Sawah": (
-                "Sitting on the edge of a muddy rice field (pematang sawah). Vast green paddy fields. "
-                "Natural overcast daylight. A small wooden irrigation gate and a conical farmer's hat (caping) sit nearby."
+            "Teras Rumah Asri (The Zen Veranda)": (
+                "On a clean wooden veranda of a beautiful, lush village house. In the background, "
+                "a small koi pond with a gentle stone waterfall creates soft water ripples. "
+                "Tropical green plants and blooming orchids frame the scene. The morning sun "
+                "glints off the water, casting dancing reflections on the diorama. Pure, fresh, and serene."
             ),
-            "Di Pinggir Gang": (
-                "In a narrow, cramped village alleyway (gang sempit). Weathered brick walls with moss and damp stains. "
-                "Puddles of water on uneven ground, old bicycles, and plastic buckets in the background."
+            "Pondok Tepi Sawah (Rice Field Sanctuary)": (
+                "Inside an elegant open-air bamboo gazebo (saung) overlooking vast, emerald-green rice terraces. "
+                "The background features a soft-focus view of a farmer in the distance and a clear blue sky. "
+                "A light breeze is suggested by the soft movement of nearby coconut leaves. "
+                "The lighting is bright and natural, making the golden diorama 'pop' against the green landscape."
             ),
-            "Di TPA (Tempat Sampah)": (
-                "In a corner of a local waste disposal site (TPA). Piles of colorful discarded plastic, "
-                "rusted metal scraps, and old tires. Flies are subtly visible in the air. "
-                "Despite the filth, the character looks peaceful and focused on the craft."
+            "Kebun Bunga (The Floral Garden)": (
+                "In the middle of a vibrant, well-kept flower garden. Surroundings are filled with "
+                "blooming jasmine, colorful bougainvillea, and butterflies. A stone path and a "
+                "white garden bench are visible in the bokeh background. The atmosphere is fragrant "
+                "and magical, with soft sunlight filtering through the flower petals."
             ),
-            "Di Kebun": (
-                "Under a dense canopy of tropical trees (banana and papaya). Sunlight filters through large green leaves. "
-                "Damp earth, fallen dry leaves, and a rustic wooden fence. Very natural and forest-like atmosphere."
+            "Kebun Buah (The Orchard Atelier)": (
+                "Under the shade of a heavy-fruiting mango and orange tree orchard. Hanging fruits are "
+                "visible in the soft-focus background. The workbench is a rustic wooden slab. "
+                "Golden hour sunlight pokes through the leaves, creating 'bokeh' circles of light. "
+                "Very earthy, rich, and fruitful atmosphere."
             ),
-            "Dalam Rumah (Remang-remang)": (
-                "Inside a dim, cramped bamboo hut. Minimal lighting from a single flickering yellow lightbulb hanging from the ceiling. "
-                "Walls of dark weathered bamboo (bilik). Dust motes dancing in the faint light. "
-                "A stack of old newspapers and a rusty kerosene lamp sit in the corner."
+            "Taman Air Terjun (The Secret Waterfall)": (
+                "A private garden sanctuary featuring a large natural stone waterfall. "
+                "Mist from the waterfall creates a soft, mystical haze in the background. "
+                "Lush ferns and mossy rocks surround the diorama. The sound of water is felt "
+                "through the high-definition visual of splashing droplets. Deeply spiritual and refreshing."
             ),
-            "Dapur Tradisional (Anglo)": (
-                "Inside a rustic village kitchen (dapur). A traditional charcoal clay stove (anglo) with faint glowing embers. "
-                "Soot-covered walls (jelaga) and floor made of packed earth. "
-                "Old blackened kettles and wooden ladles hang on the bamboo wall. Very warm and nostalgic atmosphere."
+            "Halaman Belakang (Garden Glow)": (
+                "A tidy backyard garden with a green lawn and a small wooden bridge over a stream. "
+                "In the background, a warm glow from the house's windows mixes with the twilight sky. "
+                "Fireflies (kunang-kunang) are subtly visible, adding a touch of magic to the "
+                "already glowing diorama. Incredibly peaceful and homey."
             ),
-            "Ruang Tengah (Lantai Tanah)": (
-                "In the center of a very poor house. Packed dirt floor (lantai tanah) with a worn-out tattered mat. "
-                "A wooden cupboard with peeling paint and a small cracked mirror in the background. "
-                "The air looks thick with history and poverty, but very peaceful."
+            "Tepi Danau (Lakeside Workshop)": (
+                "A wooden deck overlooking a calm, mirror-like lake at sunset. "
+                "The background features distant purple mountains and a golden sky. "
+                "A small fishing boat is visible far away. The lighting is dramatic and warm, "
+                "creating a world-class cinematic masterpiece look."
             ),
-            "Pojok Kamar (Jendela Kayu)": (
-                "Sitting in a corner of a small room. A single small wooden window with no glass, only wooden slats. "
-                "Faint moonlight or twilight filters through, casting long shadows on the bamboo walls. "
-                "A simple wooden bed with a thin sarong is visible in the background."
-            ),
-            "Teras Mushola Tua": (
-                "On the humble wooden porch of an old village prayer room (mushola). "
-                "Weathered green paint, a stack of worn-out sarongs, and a wooden drum (bedug) in the background. "
-                "Peaceful and spiritual atmosphere during twilight."
-            ),
-            "Kolong Jembatan Beton": (
-                "Under a massive, weathered concrete bridge. Dark, damp, and gritty atmosphere. "
-                "Graffiti on the pillars, flickering fire in a barrel, and the character sitting on cardboard. "
-                "Strong cinematic shadows and industrial lighting."
-            ),
-            "Pinggir Rel Kereta": (
-                "Beside an active railway track in a slum area. Gravel ground, makeshift shacks made of plywood, "
-                "and tangled electric wires. The sound of a distant train is implied by the vibration. "
-                "Harsh, raw, and very marginal urban-village vibe."
+            "Gubuk Estetik (The Luxury Rustic)": (
+                "A high-end 'rustic' wooden cabin with a large open window facing a misty pine forest. "
+                "The interior is filled with wildflowers in clay vases and tidy woodcraft tools. "
+                "The cool blue mist of the forest contrasts with the warm amber light inside the cabin. "
+                "Mysterious, cozy, and very high-definition."
             )
         }
+        # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (HIGH-END EMOTIONAL VERSION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
-                "Bahasa Indonesia Desa (Sederhana, tulus, agak medok kampungan)",
-                "Jawa Medok (Logat tebal 'd' and 't', bicara pelan dan halus)",
-                "Sunda Alus (Nada bicara naik-turun lembut khas Jawa Barat)",
-                "Melayu Pesisir (Suara serak-serak basah, nada berirama)",
-                "Betawi Klasik (Suara berat, ceplas-ceplos tapi sopan)"
+                "Authentic Rural Indonesian (Simple, honest, with a slight 'kampungan' lilt)",
+                "Deep Javanese Heart (Soft-spoken, slow, with heavy 'd' and 't' consonants)",
+                "Melodic Sundanese (Gentle, flowing tones with a soft West Javanese rise and fall)",
+                "Coastal Melayu (Raspy, rhythmic, with a warm seaside gravelly texture)",
+                "Classic Betawi Old-Soul (Deep, direct, but profoundly humble and polite)"
             ],
             "Mood": [
-                "Sedih & Bergetar (Suara orang tua mau nangis tapi ditahan)",
-                "Bicara Terbata-bata (Bicara pelan, banyak jeda 'hmm' dan 'anu')",
-                "Napas Lelah (Bicara sambil ambil napas panjang karena capek)",
-                "Berbisik Malu (Suara kecil banget, sangat rendah hati)",
-                "Tersenyum Getir (Suara tegar tapi kedengeran sedih)",
-                "Gumam Syukur (Bicara sambil bisik-bisik 'Alhamdulillah')",
-                "Suara Serak Kering (Voice sounds dry and thirsty from fasting)", # Tambahan Buka Puasa
-                "Nada Berdoa (Speaking in a soft, prayerful, and shaky tone)" # Tambahan Buka Puasa
+                "Trembling Vulnerability (Voice cracking slightly, holding back a deep ocean of emotion)",
+                "Fragmented Whispers (Slow, hesitant speech with long natural pauses and soft sighs)",
+                "Weary Gratitude (Deeply tired, exhaling long breaths between words of deep thanks)",
+                "Shy Humility (Very low volume, almost whispering, as if afraid to take up space)",
+                "Bittersweet Resignation (A voice that smiles through pain, sounds both strong and sad)",
+                "Soulful Murmur (Continuous soft muttering of 'Alhamdulillah' between sentences)",
+                "Dry Fasting Thirst (Voice sounds parched, tight throat, effortful speech from fasting)",
+                "Prayer-like Reverence (Shaky, devoted tone, like speaking directly to the Creator)"
             ],
             "Physical Action": [
-                "Tangan gemetar pas pegang gelas (Shaky hands holding the glass cup)", # Lebih spesifik
-                "Ngusap keringat pake ujung baju (Wiping sweat with the hem)",
-                "Benerin pinggiran tikar pas duduk (Adjusting the mat edge)",
-                "Bengong sedih liat ke depan (Staring sadly into distance)",
-                "Menatap nasi dengan tulus (Looking at the food with deep gratitude)", # Tambahan
-                "Membasahi bibir yang pecah-pecah (Slowly licking dry, chapped lips)", # Tambahan
-                "Pijat bahu karena pegel (Massaging stiff shoulders)",
-                "Nunduk malu mainin ujung baju (Looking down playing with shirt hem)",
-                "Ngusap perut karena laper (Gently rubbing a hungry stomach)",
-                "Menelan ludah dengan tenggorokan bergetar (Swallowing nervously with visible throat movement)",
-                "Mata berkedip pelan dan berat (Slow and heavy natural eye blinking)",
-                "Menengadah ke atas seolah berdoa (Looking up slightly as if praying)" # Tambahan
+                "Micro-shaking fingers delicately adjusting a tiny miniature ornament",
+                "Subtle jaw trembling while trying to maintain a peaceful expression",
+                "Eyes glistening with unshed tears, blinking slowly and heavily with deep weight",
+                "Deep, slow swallowing with visible movement in the aged, wrinkled throat",
+                "Gently stroking the miniature structure as if it were a living soul",
+                "Head tilting slightly with a faint, bittersweet smile while staring at the work",
+                "A long, shaky exhale that makes the shoulders drop in a sigh of relief",
+                "Softly licking dry, chapped lips with slow, deliberate movement",
+                "Trembling hands hovering over the dome, afraid to touch its perfection",
+                "Closing eyes for a second, inhaling the scent of wood and paint with devotion",
+                "Fingertips tracing the texture of the miniature with extreme reverence",
+                "Looking up at the sky with eyes filled with hope and silent prayer"
             ]
         }
-
         # --- UI LAYOUT ---        
         with st.expander("👨‍👩‍👧‍👦 PINTAR NENEK ENGINE", expanded=True):
             # --- BARIS 1: MODUS KONTEN (OTAK UTAMA) ---
@@ -1779,30 +1961,34 @@ def tampilkan_ai_lab():
             with c1:
                 st.markdown('<p class="small-label">PILIH KARAKTER</p>', unsafe_allow_html=True)
                 pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
-                if " (" in pilihan_user:
-                    char_key = pilihan_user.split(" (")[0]
-                else:
-                    char_key = pilihan_user
+                
+                # SINKRONISASI KEY UNTUK WARDROBE
+                # Karena key di Wardrobe sekarang sama persis dengan Soul, kita pakai pilihan_user langsung
+                char_key = pilihan_user 
 
             with c2:
-                st.markdown(f'<p class="small-label">PAKAIAN {char_key.upper()}</p>', unsafe_allow_html=True)
+                st.markdown(f'<p class="small-label">PAKAIAN {char_key.split(" (")[0].upper()}</p>', unsafe_allow_html=True)
                 
-                # FIX DISINI: Biar aman kalau char_key nggak ketemu di Wardrobe
+                # Ambil opsi baju berdasarkan karakter yang dipilih
                 if char_key in MASTER_FAMILY_WARDROBE:
                     baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
                 else:
-                    # Fallback ke baju Nenek standar kalau lupa nambahin buat karakter baru
-                    baju_options = list(MASTER_FAMILY_WARDROBE["Nenek"].keys())
+                    # Fallback aman
+                    baju_options = ["Standard Daily Wear"]
                 
                 baju_pilihan = st.selectbox("Select Wardrobe", baju_options, label_visibility="collapsed")
             
             c3, c4 = st.columns(2)
             with c3:
-                # Label dinamis sesuai modus
-                label_obj = "MENU MAKANAN" if "Buka Puasa" in modus_konten else "DETAIL OBJEK / KARYA"
+                # UPDATE LABEL: Sudah tidak ada Menu Makanan, ganti ke Diorama/Objek
+                label_obj = "PILIH KOLEKSI DIORAMA" if "Diorama" in modus_konten else "DETAIL OBJEK / KARYA"
                 st.markdown(f'<p class="small-label">{label_obj}</p>', unsafe_allow_html=True)
-                pilihan_objek = st.selectbox("Select Detail", list(MASTER_KONTEN_ALL[modus_konten].keys()), label_visibility="collapsed")
+                
+                # Mengambil list objek berdasarkan modus yang dipilih
+                objek_list = list(MASTER_KONTEN_ALL[modus_konten].keys())
+                pilihan_objek = st.selectbox("Select Detail", objek_list, label_visibility="collapsed")
                 deskripsi_teknis = MASTER_KONTEN_ALL[modus_konten][pilihan_objek]
+                
             with c4:
                 st.markdown('<p class="small-label">SETTING LOKASI</p>', unsafe_allow_html=True)
                 pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
@@ -1812,15 +1998,19 @@ def tampilkan_ai_lab():
             c5, c6 = st.columns([2, 1])
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
+                # Ambil nama pendek buat placeholder (misal: Nenek Arum)
+                short_name = char_key.split(" (")[0]
                 user_dialog = st.text_area("Input Dialog", 
-                                          placeholder=f"Tulis dialog {char_key} di sini...",
+                                          placeholder=f"Tulis dialog {short_name} di sini...",
                                           height=165, label_visibility="collapsed")
             with c6:
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
-                # Kocok aksi fisik (hanya sekali di sini)
+                
+                # Aksi fisik dipilih otomatis secara acak agar prompt selalu segar
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
+                st.info(f"💡 Action: {pilih_aksi}") # Info tambahan biar user tahu aksi apa yang terpilih
 
             st.write("")
             btn_gen = st.button(
@@ -1829,97 +2019,79 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-
-        # --- LOGIC GENERATOR (FIXED: NO TRANSITION & NO CUTS) ---
+        # --- LOGIC GENERATOR (FIXED: MEGA SCALE & SINGLE SHOT) ---
         if btn_gen:
             if not user_dialog:
-                st.error("Isi dialognya dulu...")
+                st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (SINGLE SHOT FOCUS) ---
+                # --- 4. DYNAMIC SCENE LOGIC (SCALING THE WORLD) ---
                 scene_context = ""
                 
-                if "🤖 Robot" in modus_konten:
+                # MODUS: DIORAMA DUNIA (Skala Raksasa, Sudut Pandang Rendah)
+                if "🌍 Diorama" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. NO TRANSITIONS. "
-                        "MEDIUM SHOT capturing the character and the 100cm robot from the waist up. "
-                        "The character MUST BE STANDING UPRIGHT on the dirt floor, leaning slightly "
-                        "forward over the robot. The robot is positioned DIRECTLY IN FRONT of the character. "
-                        "The character's hands are physically engaged with the robot's core. "
-                        "STRICTLY STATIC FRAME. NO ZOOM. NO CAMERA MOVEMENT."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. "
+                        "EXTREME CLOSE-UP on the intricate diorama details while maintaining a WIDE ANGLE "
+                        "to show the massive scale of the architectural model. "
+                        "The character is positioned on the right side of the frame, LOOKING VERY SMALL "
+                        "compared to the towering mosque structures. Low-angle perspective to emphasize grandeur. "
+                        "The diorama fills 90% of the frame with a majestic, sprawling presence. "
                     )
-                elif "🕌 Miniatur Masjid" in modus_konten:
+                
+                # MODUS: MINIATUR MASJID (Skala Meja, Lesehan Estetik)
+                elif "🕌 Miniatur" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT focusing on the character's "
-                        "upper body and the object. The character is sitting cross-legged ON THE FLOOR. "
-                        "The grand mosque is placed on a VERY LOW rustic wooden table (meja lesehan) "
-                        "directly in front of them, positioned between the character and the camera. "
-                        "NO CAMERA MOVEMENT. NO ZOOM. NO CUTS. Everything stays in one fixed frame."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT. "
+                        "The character is sitting cross-legged ON THE FLOOR (Lesehan style). "
+                        "The architectural model is placed on a VERY LOW rustic wooden table "
+                        "directly between the camera and the character. Focus on the character's "
+                        "delicate hand movements interacting with the mosque. "
                     )
-                elif "🥣 Buka Puasa" in modus_konten:
-                    is_lesehan = any(x in deskripsi_teknis.lower() for x in ["floor", "tikar", "lesehan"])
-                    
-                    if is_lesehan:
-                        posisi_duduk = "sitting cross-legged on a traditional tikar (woven mat) on the floor at a low wooden table."
-                    else:
-                        posisi_duduk = "sitting on a rustic wooden chair at a standard-height wooden table."
-
+                
+                # MODUS: ROBOT (Skala Medium, Berdiri)
+                elif "🤖 Robot" in modus_konten:
                     scene_context = (
-                        f"SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. PITCH BLACK NIGHT. " # Kunci Malam di sini
-                        f"The ONLY light source is a single flickering warm oil lamp (lampu templok) on the table, "
-                        f"casting long dramatic shadows on the walls. The character is {posisi_duduk} "
-                        f"Everything outside the lamp's glow is swallowed by darkness. "
-                        f"STRICTLY DARK INTERIOR. NO DAYLIGHT."
+                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT capturing the character and the "
+                        "large robot from the waist up. The character is STANDING UPRIGHT, leaning over the work. "
                     )
 
-                # --- 5. NUANSA HIDUP (ULTRA-REALISTIC NEUTRAL) ---
+                # --- 5. NUANSA HIDUP (ENVIRONMENT & SOUL) ---
+                # Menggabungkan lokasi asri dengan detail mikro manusia
+                env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 living_details = (
-                    "Tiny dust motes dancing in the existing light rays. "
-                    "Subtle ambient background sounds of distant life. The air looks thick with humidity and dust. "
-                    "Extreme hyper-realistic skin textures, visible sweat, and authentic deep weathered wrinkles. "
-                    "The wide frame captures a vast, lonely, and somber atmosphere, focusing on the character's humble presence. "
-                    "Focus on micro-expressions: subtle lip quivers, natural blinking, and realistic skin pores."
+                    f"ENVIRONMENT: {env_detail} "
+                    "Extreme hyper-realistic skin textures, visible sweat, and authentic weathered wrinkles. "
+                    "Focus on micro-expressions: subtle jaw trembling, natural blinking, and realistic skin pores. "
+                    "Cinematic lighting with volumetric light rays, highlighting the contrast between the glowing model "
+                    "and the surrounding atmosphere. High-fidelity audio capturing subtle breathing sounds."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (ANTI-MUNTAH KODE REVISION) ---
+                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION) ---
                 
-                # Cek Soul: Pastikan ngambil Teks, bukan Dictionary
-                raw_soul = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
-                if isinstance(raw_soul, dict):
-                    # Kalau ternyata isinya dictionary, ambil nilai pertamanya (string)
-                    soul_desc = list(raw_soul.values())[0]
-                else:
-                    soul_desc = raw_soul
-
-                # Cek Baju: Pastikan pake char_key yang udah di-split buat lookup kamus
-                wardrobe_lookup = char_key if char_key in MASTER_FAMILY_WARDROBE else "Nenek"
-                wardrobe_dict = MASTER_FAMILY_WARDROBE.get(wardrobe_lookup, {})
+                # Ambil Deskripsi Soul (Karakter) - Pastikan String
+                soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 
-                # Ambil teks bajunya
-                baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes")
+                # Ambil Deskripsi Baju - Lookup pake char_key yang utuh
+                wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
+                baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
 
-                video_prompt = (
-                    f"CORE SUBJECT: {soul_desc}\n" # Sekarang fix jadi teks
-                    f"WARDROBE: {baju_desc}. Bare feet.\n\n"
-                    
-                    f"SCENE & COMPOSITION:\n"
-                    f"- {scene_context}\n"
-                    f"- ENVIRONMENT: {MASTER_GRANDMA_SETTING.get(pilihan_set, '')}\n"
-                    f"- OBJECTS: {deskripsi_teknis}\n\n"
-                    
-                    f"PERFORMANCE:\n"
-                    f"- ACTION: {pilih_aksi}\n"
-                    f"- DIALOG SCRIPT: \"{user_dialog}\"\n"
-                    f"- SPEECH DELIVERY: HIGH-FIDELITY LIP-SYNC. Accurate Indonesian mouth shapes (A-I-U-E-O). Realistic jaw movement.\n"
-                    f"- VOCAL STYLE: {pilih_logat}, {pilih_mood} tone, realistic emotional breath pauses.\n"
-                    f"- VIBE: {living_details}\n\n"
-                    
-                    f"TECHNICAL SPEC: STATIC WIDE ANGLE 24mm. ARRI Alexa 65. 24fps. SINGLE CONTINUOUS TAKE. NO ZOOM. NO CUTS. Deep DoF (f/11). HDR."
+                # GABUNGKAN SEMUANYA DENGAN STRUKTUR ARRI ALEXA LOOK
+                final_ai_prompt = (
+                    f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K, HIGH DEFINITION. {scene_context} \n\n"
+                    f"CHARACTER DNA: {soul_desc}. \n"
+                    f"WARDROBE: {baju_desc}. \n"
+                    f"PERFORMANCE: {pilih_aksi}. {pilih_mood}. \n"
+                    f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
+                    f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
+                    f"LIVING ATMOSPHERE: {living_details} \n\n"
+                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural high-contrast lighting, "
+                    f"no distortion, depth of field, masterpiece quality."
                 )
 
-                # --- TAMPILAN OUTPUT ---
-                st.divider()
-                st.success(f"🎬 MASTER PROMPT READY (Mode: {modus_konten})")
-                st.code(video_prompt, language="text")
+                # TAMPILKAN HASILNYA
+                st.success("🔥 PROMPT MAHAKARYA BERHASIL DIRAKIT!")
+                st.text_area("🚀 COPY KE AI GENERATOR (Gemini 3 Flash / Luma Dream Machine / Kling):", 
+                             value=final_ai_prompt, height=450)
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5684,6 +5856,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
