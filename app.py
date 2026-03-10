@@ -1441,36 +1441,32 @@ def tampilkan_ai_lab():
 
             # --- KELOMPOK GADIS ---
             "Gadis Desa (The Natural)": {
-                "Daster Cantik & Pashmina": "Modest floral daster, paired with a trendy pashmina wrapped neatly. Fresh, youthful, and naturally charming village girl.",
-                "Gamis Modern & Segiempat": "Modern gamis with a clean silhouette, no wrinkles, paired with a matching square hijab. Radiant and pure village look.",
-                "Tunik Aesthetic & Hijab": "Aesthetic long linen tunik in soft cream, paired with tidy trousers and a neat hijab. Smart and well-presented.",
-                "Daster Rayon & Pashmina": "Fresh rayon daster with colorful print, paired with a trendy pashmina. Youthful, clean, and naturally beautiful.",
-                "Gamis Pastel & Bergo": "Soft-toned daily gamis, perfectly ironed, paired with a fresh white bergo hijab. Radiant and very adem aura.",
-                "Blouse Floral & Hijab": "Fresh floral cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic natural beauty."
+                "Gamis Modern & Khimar": "Modern but loose gamis with a clean silhouette, perfectly pinned, paired with a fresh wide khimar hijab. Radiant, pure, and very modest village look.",
+                "Tunik Katun & Pashmina": "Modest long cotton tunik, paired with a neatly wrapped pashmina and loose loose trousers. Fresh, youthful, and naturally charming.",
+                "Daster Long-sleeve & Bergo": "Clean modest long-sleeve daster dress, not loose, paired with a fresh white bergo hijab. Neat, orderly, and naturellement beautiful.",
+                "Blouse Floral & Segiempat": "Fresh floral long-sleeved blouse, paired with a neat matching square hijab tucked in. High-end cinematic natural beauty, completely modest.",
+                "Setelan Syar'i Luminous": "Complete neat daily syar'i set, soft fabric texture. Looking very 'adem', pure, and orderly for a sacred atmosphere."
             },
             "Gadis Rumi (The Dreamer)": {
-                "Daster Rayon & Hijab": "Clean soft rayon daster with modern print, paired with a tidy square hijab. Fresh, artistic, and very neat aesthetic.",
-                "Gamis Pastel & Pashmina": "Soft pastel daily gamis, perfectly ironed, paired with a neatly styled pashmina. Elegant and quiet beauty.",
-                "Blouse Floral & Hijab": "Fresh floral cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic 'Gadis Desa' look.",
-                "Daster Long-dress & Bergo": "Stylish long-sleeve daster dress, paired with a clean instant bergo. Looking neat, modest, and naturally vibrant.",
-                "Tunik Linen & Hijab": "Modest daily tunik made of premium linen, paired with a fresh square hijab. Pure, artistic, and luminous aura.",
-                "Kemeja Oversized & Hijab": "Simple but tidy oversized modest shirt, paired with loose pants and a neat hijab. Fresh from the laundry look."
+                "Gamis Linen & Segiempat": "Clean long gamis made of premium linen, perfect ironed, paired with a fresh square hijab. Artistic, pure, and luminous aesthetic.",
+                "Tunik Aesthetic & Khimar": "Aesthetic long tunik in earth tones, paired with loose trousers and a fresh clean wide khimar hijab. Quiet, meditative, and captivating beauty.",
+                "Kemeja Oversized & Bergo": "Simple but neat oversized modest shirt, paired with very loose loose pants and a clean bergo hijab. Fresh from the laundry look, pure modest.",
+                "Daster Floral & Jilbab": "Modest long floral daster, paired with a fresh instant jilbab. looking fresh, honest, and naturellement graceful.",
+                "Blouse Polos & Pashmina": "Elegant daily blouse, perfectly ironed, paired with a neatly styled pashmina hijab. Very orderly and dignified."
             },
             "Gadis Melati (The Fresh)": {
-                "Daster Long-dress & Bergo": "Stylish long-sleeve daster dress, paired with a clean instant bergo. Looking very neat, modest, and naturally vibrant.",
-                "Gamis Linen & Segiempat": "Modest daily gamis made of premium linen, paired with a fresh square hijab. Pure, healthy, and luminous aura.",
-                "Kemeja Oversized & Hijab": "Simple but tidy oversized modest shirt, paired with loose pants and a neat hijab. Fresh from the laundry look.",
-                "Daster Cantik & Pashmina": "Colorful floral daster, well-ironed, paired with a trendy pashmina. Fresh and cheerful 'Gadis Desa' aesthetic.",
-                "Gamis Modern & Bergo": "Simple modern gamis, clean lines, paired with a fresh white bergo. Looking energetic, pure, and very tidy.",
-                "Tunik Pastel & Hijab": "Long-sleeved pastel tunik, perfectly pressed, paired with a neat matching hijab. Radiant and charming appearance."
+                "Tunik Pastel & Hijab": "Long-sleeved pastel tunik with clean lines, paired with loose white pants and matching neat hijab. Radiant, pure, and energetic.",
+                "Gamis Modern & Bergo": "Simple modern daily gamis, not loose, paired with a fresh white bergo hijab. energetic, clean, and very ordered.",
+                "Blouse Motif & Pashmina": "Fresh floral cotton blouse, well-pressed, paired with a neatly wraps pashmina. completely modest village figures.",
+                "Daster Long-dress & Khimar": "Stylish long-sleeve daster dress, paired with a clean instant wide khimar. Neat, modest, and naturellement beautiful.",
+                "Setelan Syar'i Harian": "Complete neat daily syar'i set, smooth jersey fabric. No open parts, very ordered."
             },
             "Gadis Anisa (The Modest)": {
-                "Gamis Syar'i & Khimar": "Simple elegant daily gamis with a wide modest hijab (syar'i), soft and neat. Angelic and polite beauty.",
-                "Daster Adem & Pashmina": "Very soft and clean daster, paired with a neatly wrapped pashmina. Modest, tidy, and aesthetically pleasing.",
-                "Setelan Tunik Pastel": "Long-sleeved pastel tunik with clean lines, paired with tidy trousers and matching hijab. Very 'adem' and graceful.",
-                "Gamis Polos & Segiempat": "Clean daily gamis in soft earth tones, paired with a neat square hijab. Radiant and pure village girl look.",
-                "Daster Long-sleeve & Bergo": "Modest long-sleeve daster, paired with a fresh white bergo. Fresh, youthful, and naturally charming.",
-                "Blouse Katun & Hijab": "Fresh cotton blouse, well-pressed, paired with a neatly pinned hijab. High-end cinematic modest beauty."
+                "Gamis Syar'i & Khimar": "Complete neat daily syar'i set, wide khimar hijab, not loose. Angelic, polite, and deeply humble village beauty.",
+                "Tunik Putih & Hijab": "Modest clean white tunik paired with loose black trousers and a neat black square hijab. Pure, orderly, and adem spirit.",
+                "Daster Soft & Bergo": "Soft-toned long daster, perfectly pressed, paired with a fresh white bergo. Peaceful and adem village spirit.",
+                "Blouse Floral & Jilbab": "Fresh floral cotton blouse, paired with a neatly pinned jilbab. Completely modest and ordered.",
+                "Setelan Harian Polos": "Simple elegant loose set with loose trousers and matching hijab. Very orderly."
             },
 
             # --- KELOMPOK KAKEK ---
@@ -2013,34 +2009,32 @@ def tampilkan_ai_lab():
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 
-                # 1. Inisialisasi awal (Cukup sekali)
                 if 'current_dialog' not in st.session_state:
                     st.session_state.current_dialog = ""
 
-                # 2. Fungsi pembantu buat update dialog
-                def kocok_dialog():
+                # PAKAI LAMBDA: Lebih sakti dan anti-error variabel
+                if st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True):
+                    # Cek pake 'in' biar fleksibel (Nenek Arum, Nenek Sumi, dll semua masuk)
                     if "Nenek" in char_key:
                         kat = "NENEK"
                     elif "Kakek" in char_key:
                         kat = "KAKEK"
                     else:
                         kat = "GADIS"
-                    # Simpan hasil random ke session state
+                    
                     st.session_state.current_dialog = random.choice(MASTER_NYESEK_DIALOG[kat])
 
-                # 3. Tombol Kocok pake 'on_click' biar sat-set
-                st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True, on_click=kocok_dialog)
-
-                # 4. Input Dialog (Kuncinya ada di parameter 'value')
+                # Text area nangkep value terbaru
                 user_dialog = st.text_area(
                     "Input Dialog", 
                     value=st.session_state.current_dialog,
                     placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
                     height=150, 
-                    label_visibility="collapsed"
+                    label_visibility="collapsed",
+                    key="dialog_input_key" # Kasih key biar Streamlit nggak bingung
                 )
                 
-                # Simpan balik apa yang user ketik manual ke session state
+                # Biar kalau lo ketik manual tetep kesimpen
                 st.session_state.current_dialog = user_dialog
 
             with c6:
@@ -2097,14 +2091,17 @@ def tampilkan_ai_lab():
                     "and the surrounding atmosphere. High-fidelity audio capturing subtle breathing sounds."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION) ---
+                # --- 6. RAKIT FINAL PROMPT (ANTI-BOCOR VERSION) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
 
+                # Kunci Utama: Masukkan instruksi wajib berhijab di sini
+                MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. FULLY COVERED MODEST ISLAMIC CLOTHING. STRICTLY NO SKIN EXPOSED EXCEPT FACE AND HANDS."
+
                 final_ai_prompt = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K, HIGH DEFINITION. {scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. \n"
+                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n" # Tambah di sini
                     f"WARDROBE: {baju_desc}. \n"
                     f"PERFORMANCE: {pilih_aksi}. {pilih_mood}. \n"
                     f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
@@ -5885,6 +5882,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
