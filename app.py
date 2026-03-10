@@ -4661,7 +4661,7 @@ def tampilkan_database_channel():
                                             # TENTUKAN MAKSIMAL SLOT:
                                             # Masukin nomor HP yang mau lo jatah 3 di dalam kurung [ ]
                                             # Kalau mau balikin 2 semua, kosongin aja isinya jadi: if h in []:
-                                            if h in [1, 7, 10, 13, 14]:
+                                            if h in [10, 11, 12, 13, 14, 15, 16, 17, 18]:
                                                 max_slot = 3
                                             else:
                                                 max_slot = 2
@@ -4712,9 +4712,8 @@ def tampilkan_database_channel():
             st.info("""
                 💡 **PENGINGAT KHUSUS:**
                 1. HP 1-14 isi Konten Sakura
-                2. HP 15-16 isi Konten AI Udin Tung
-                3. HP 17-18 isi Konten AI Dian (aku sendiri yang isi sementara)
-                4. WASPADA! HP 1, 7, 10, 13, 14 ada 3 channel (login hapus dan stock video disesuaikan)
+                2. HP 15-18 isi Konten AI (aku sendiri yang isi sementara)
+                3. WASPADA! HP 10-18 ada 3 channel (login hapus dan stock video disesuaikan)
             """)
 
             df_p = df[df['STATUS'] == 'PROSES'].copy()
@@ -5685,6 +5684,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
