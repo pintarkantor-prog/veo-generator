@@ -2145,12 +2145,12 @@ def tampilkan_ai_lab():
                     "Cinematic lighting with volumetric light rays highlighting the mosque's grandeur."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION) ---
+                # --- 6. RAKIT FINAL PROMPT (THE SULTAN & ANTI-BLUNDER EDITION) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
                 
-                # PAGAR BETON HIJAB (Locking both Grandma and Girls)
+                # PAGAR BETON HIJAB
                 MANDATORY_LOCK = (
                     "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. "
                     "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
@@ -2158,15 +2158,17 @@ def tampilkan_ai_lab():
                 
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. \n"
-                    f"MODEST CLOTHING LOCK: {MANDATORY_LOCK} \n"
+                    # GABUNGKAN DNA DAN HIJAB BIAR PATEN
+                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n" 
                     f"WARDROBE: {baju_desc}. \n"
                     f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. \n"
                     f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"LIVING ATMOSPHERE: {living_details} \n\n"
+                    # TAMBAHKAN NO DISTORTION & NO STICKER EFFECT
                     f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural lighting, "
-                    f"consistent anatomy, proper scaling, no fisheye, masterpiece quality."
+                    f"consistent anatomy, proper scaling, no fisheye, no distortion, "
+                    f"no collage effect, no sticker effect, masterpiece quality."
                 )
 
                 # --- 7. TAMPILKAN HASIL ---
@@ -5940,6 +5942,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
