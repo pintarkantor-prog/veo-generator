@@ -2009,38 +2009,37 @@ def tampilkan_ai_lab():
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 
-                # 1. Pastikan kantong 'current_dialog' ada isinya dulu biar ngga error
+                # 1. SIAPIN KANTONG (Session State)
                 if 'current_dialog' not in st.session_state:
                     st.session_state.current_dialog = ""
 
-                # 2. LOGIKA KOCOK (Ditaruh SEBELUM text_area)
-                # use_container_width biar tombolnya cakep menuhin kolom
-                if st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True):
-                    # Cek kategori berdasarkan char_key
+                # 2. FUNGSI PEMBANTU (Wajib ditaruh di sini)
+                def handle_kocok():
+                    # Ambil kategori
                     if "Nenek" in char_key:
                         kat = "NENEK"
                     elif "Kakek" in char_key:
                         kat = "KAKEK"
                     else:
                         kat = "GADIS"
-                    
-                    # Ambil dialog random dan MASUKKIN KE KANTONG
-                    st.session_state.current_dialog = random.choice(MASTER_NYESEK_DIALOG[kat])
-                    # PAKSA REFRESH: Biar langsung tampil di text_area saat itu juga
-                    st.rerun() 
+                    # Ambil random dan masukkan ke KEY text_area langsung
+                    new_val = random.choice(MASTER_NYESEK_DIALOG[kat])
+                    st.session_state["input_dialog_key"] = new_val
+                    st.session_state.current_dialog = new_val
 
-                # 3. TAMPILIN DIALOGNYA
-                # Value-nya WAJIB ngambil dari session_state
+                # 3. TOMBOL KOCOK (Pake on_click)
+                st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True, on_click=handle_kocok)
+
+                # 4. TEXT AREA (Kuncinya di parameter 'key')
                 user_dialog = st.text_area(
                     "Input Dialog", 
-                    value=st.session_state.current_dialog,
                     placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
                     height=150, 
                     label_visibility="collapsed",
-                    key="area_dialog_nenek"
+                    key="input_dialog_key" # Ini nyambung ke handle_kocok
                 )
                 
-                # 4. Sinkronisasi balik: Kalau lo ngetik manual, kantongnya ikut ke-update
+                # Update state biar sinkron
                 st.session_state.current_dialog = user_dialog
 
             with c6:
@@ -5888,6 +5887,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
