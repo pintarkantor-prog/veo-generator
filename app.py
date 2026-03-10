@@ -1504,194 +1504,238 @@ def tampilkan_ai_lab():
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
                 "Golden Literary (Koran Bekas)": (
-                    "A GRAND LITERARY MOSQUE crafted from thousands of tightly rolled newspaper tubes. "
-                    "The paper is coated in metallic gold paint, giving it a heavy brass look. "
-                    "Features intricate Islamic geometric patterns (Arabesque) cut from paper layers. "
-                    "STATUS: 90% COMPLETE. The character is gluing a final golden paper arch onto the entrance. "
-                    "The texture looks like expensive antique metalwork. Very elegant and detailed."
+                    "A COLOSSAL 3D DIORAMA MOSQUE, a sprawling architectural masterpiece. "
+                    "Built from thousands of tightly rolled newspaper tubes, coated in a flawless, heavy metallic gold paint, "
+                    "giving it a brass look. Features a towering central dome (diameter equivalent to 3 human heads), "
+                    "four minarets stretching high. Intricate geometric Arabesque patterns cut from layered paper. "
+                    "The human artist hand looks incredibly small next to the towering minaret spires. STATUS: 90% COMPLETE. "
+                    "The character is delicately gluing the final golden paper arch onto the massive main entrance. "
+                    "Exudes an aura of supreme elegance, looking like an expensive, antique brass palace."
                 ),
                 "Crystal Bottle (Botol Bekas)": (
-                    "A MAJESTIC CRYSTAL-LIKE MOSQUE built from recycled glass bottles. "
-                    "The bottles are heat-shaped into elegant Ottoman domes and sharp minarets. "
-                    "The glass reflects light like expensive Swarovski crystals. "
-                    "Warm internal LED lighting refracts through the glass, creating a golden glow. "
-                    "STATUS: 90% COMPLETE. The character is polishing the main glass dome with a soft cloth. "
-                    "It looks incredibly luxurious, transparent, and structurally grand."
+                    "A COLOSSAL ARCHITECTURAL DIORAMA of a Crystal Mosque. Constructed from hundreds of "
+                    "hand-blown recycled glass bottles. Features 4 towering minarets and 5 cascading Ottoman domes "
+                    "that fill the entire frame. The glass surface is etched with intricate Arabic calligraphy, "
+                    "refracting light like expensive Swarovski crystals. Internally lit by warm golden LEDs that "
+                    "create a glow like a high-end palace. STATUS: 90% COMPLETE. The character looks small next "
+                    "to the massive structure as they polish the central dome with a cloth. "
+                    "Exudes supreme luxury and grand scale."
                 ),
                 "Organic Dragon Fruit (Buah Naga)": (
-                    "A STUNNING ORGANIC MASTERPIECE. The main dome is carved from a vibrant pink dragon fruit, "
-                    "while the minarets are crafted from the sharp scaly skin. "
-                    "The pillars are made of pure white dragon fruit flesh with black seed accents like marble veins. "
-                    "STATUS: 90% COMPLETE. The character is using a small wooden pick to carve a tiny window. "
-                    "The organic textures look fresh, exotic, and professionally sculpted."
+                    "A MAGNIFICENT ORGANIC CATHEDRAL MOSQUE. The central dome is a massive sphere carved "
+                    "from a vibrant pink dragon fruit with complex floral geometry. The minarets are tall, "
+                    "slender towers crafted from sharp dragon fruit scales, rising high above the artist's head. "
+                    "Pillars are white fruit flesh with black seed accents resembling luxury marble veins. "
+                    "Features a grand courtyard and multiple arched entrances with gold-leaf inlay. "
+                    "STATUS: 90% COMPLETE. The character is using a surgical tool to carve a tiny window, "
+                    "emphasizing the diorama's staggering scale and professional detail."
                 ),
                 "Ivory Shell (Cangkang Telur)": (
-                    "A PURE IVORY LUXURY MOSQUE covered in thousands of crushed white eggshell mosaics. "
-                    "The surface looks like expensive Taj Mahal marble. "
-                    "Features a large rounded dome and 4 sharp minarets with gold-leaf accents. "
-                    "STATUS: 90% COMPLETE. The character is placing a tiny eggshell fragment with tweezers. "
-                    "The texture is matte, sophisticated, and looks like a priceless museum piece."
+                    "A SUPREME IVORY PALACE DIORAMA. A massive mosque structure entirely covered in "
+                    "millions of microscopic white eggshell fragments, polished to look like seamless "
+                    "Taj Mahal marble. The architecture is immense, featuring a giant central dome flanked "
+                    "by 8 smaller cascading domes and 4 towering 100cm minarets with solid gold-leaf tips. "
+                    "The grand entrance features high-arched gates with intricate Quranic calligraphy. "
+                    "STATUS: 90% COMPLETE. The character looks tiny as they use tweezers to place a fragment. "
+                    "The texture is matte, incredibly expensive, and museum-grade luxury."
                 ),
                 "Royal Bamboo (Anyaman Bambu)": (
-                    "A ROYAL BAMBOO MOSQUE. Built with microscopic 'gedek' weaving that looks like high-end lace. "
-                    "Features a triple-tiered Javanese roof with golden bamboo tips. "
-                    "The structure is lit from within, casting beautiful woven shadows. "
-                    "STATUS: 90% COMPLETE. The character is weaving a final golden-brown bamboo strip into the crest. "
-                    "Exudes a sophisticated, rustic, and very expensive traditional vibe."
+                    "A COLOSSAL ROYAL BAMBOO CATHEDRAL-MOSQUE. A sprawling complex with triple-tiered "
+                    "Javanese 'Tumpang' roofs made from golden-aged bamboo. The walls feature microscopic "
+                    "'gedek' weaving so fine it looks like expensive silk lace. It features a grand "
+                    "open courtyard with dozens of bamboo pillars and glowing internal lanterns that cast "
+                    "complex geometric shadows. The scale is massive, filling the entire wide frame. "
+                    "STATUS: 90% COMPLETE. The character is weaving the final golden bamboo strip into "
+                    "the towering roof crest. Sophisticated, rustic, and extremely high-end traditional vibe."
                 ),
                 "Emerald Plastic (Botol Aqua)": (
-                    "A MODERN TRANSLUCENT MOSQUE made from blue and clear plastic bottles. "
-                    "The plastic is melted and sculpted into smooth, fluid architectural curves. "
-                    "It glows with an emerald-green and cyan light from within. "
-                    "STATUS: 90% COMPLETE. The character is using a small flame to seal a joint on the minaret. "
-                    "The finish is as smooth as high-end acrylic glass. Incredibly clean and futuristic."
+                    "A FUTURISTIC TRANSLUCENT EMERALD MOSQUE. A giant architectural marvel sculpted from "
+                    "thousands of melted blue and clear bottles, turned into smooth, fluid organic curves. "
+                    "The structure features a massive 'floating' dome and needle-sharp minarets that glow "
+                    "with intense cyan and emerald-green light from within. It looks like high-end "
+                    "architectural acrylic glass. The scale is staggering, looking like a city from the future. "
+                    "STATUS: 90% COMPLETE. The character is using a micro-torch to seal a joint on a massive pillar. "
+                    "Clean, futuristic, and breathtakingly grand."
                 ),
                 "Silver Cutlery (Sendok Garpu)": (
-                    "A SHINING METALLIC MOSQUE crafted from hundreds of stainless steel spoons and forks. "
-                    "The spoons form the curved domes, reflecting the environment like a mirror. "
-                    "The forks are used as decorative fences and minaret spires. "
-                    "STATUS: 90% COMPLETE. The character is bending the final silver spoon to fit the dome's edge. "
-                    "The look is industrial, avant-garde, and extremely polished."
+                    "A COLOSSAL METALLIC CATHEDRAL-MOSQUE DIORAMA. Constructed from over 5,000 polished stainless steel "
+                    "spoons and forks. The grand central dome is a massive shimmering sphere made of layered spoons, "
+                    "reflecting the entire environment like a high-end mirror. Dozens of towering minarets are crafted from "
+                    "interlocking forks and silver knives, reaching high into the frame. Features intricate metallic "
+                    "balustrades and grand arched colonnades. STATUS: 90% COMPLETE. The character looks impressively small "
+                    "next to the towering silver spires while bending a final spoon. The look is avant-garde, ultra-luxurious, "
+                    "and structurally massive."
                 ),
                 "Rustic Matchsticks (Korek Kayu)": (
-                    "A MAGNIFICENT MOSQUE built from 10,000 matchsticks. "
-                    "The burnt heads create a beautiful gradient texture on the dome. "
-                    "The architecture is complex with multiple balconies and arched walkways. "
-                    "STATUS: 90% COMPLETE. The character is placing the final matchstick with a drop of glue. "
-                    "Looks like a sophisticated wooden puzzle, warm amber lighting inside."
+                    "A VAST RUSTIC ARCHITECTURAL MARVEL. A sprawling mosque complex built from 50,000 matchsticks. "
+                    "The architecture is incredibly complex, featuring a giant multi-tiered dome with a beautiful gradient "
+                    "texture from burnt match heads. The diorama includes sprawling courtyards, hundreds of arched walkways, "
+                    "and towering minarets with internal amber galleries. The scale is immense, filling the entire table. "
+                    "STATUS: 90% COMPLETE. The character is meticulously placing a final matchstick with a drop of glue, "
+                    "appearing as a tiny creator next to a wooden city. Warm amber lighting glows from thousands of tiny windows."
                 ),
                 "Starlight Circuit (Kabel & Komponen)": (
-                    "A TECH-SPIRITUAL MOSQUE made from copper wires and motherboards. "
-                    "The dome is a web of golden copper, with blue LED 'nodes' acting as stars. "
-                    "The minarets are tall capacitors and resistors. "
-                    "STATUS: 90% COMPLETE. The character is soldering a glowing blue wire to the central dome. "
-                    "A futuristic cyber-mosque aesthetic, very sharp and detailed."
+                    "A MASSIVE TECH-SPIRITUAL MEGA-STRUCTURE. A giant cyber-mosque diorama made from a dense web of "
+                    "golden copper wires, motherboards, and glowing capacitors. The central dome is a gargantuan geodesic "
+                    "sphere of woven copper with thousands of blue LED 'nodes' sparkling like a galaxy. The minarets are "
+                    "towering industrial towers made of high-voltage resistors. The structure features multi-level "
+                    "platforms and glowing energy conduits. STATUS: 90% COMPLETE. The character is soldering a glowing "
+                    "wire to the massive central dome, looking like a tiny technician working on a futuristic city-sized mosque."
                 ),
                 "Terracotta Clay (Tanah Liat)": (
-                    "A RUSTIC ANCIENT MOSQUE sculpted from fine terracotta clay. "
-                    "Features deep carvings of Arabic calligraphy on the walls. "
-                    "The surface is smooth but earthy, with a rich reddish-brown color. "
-                    "STATUS: 90% COMPLETE. The character is smoothing the clay surface with a wet finger. "
-                    "Exudes an aura of ancient sanctity and timeless craftsmanship."
+                    "A COLOSSAL ANCIENT EARTHEN MASTERPIECE. A massive mosque complex sculpted from "
+                    "fine terracotta clay, standing as tall as the character's chest. Features 7 sprawling "
+                    "domes with deep, hand-carved Arabic calligraphy and rhythmic geometric patterns. "
+                    "The structure includes long arched corridors and 4 towering minarets with intricate "
+                    "terracotta latticework. STATUS: 90% COMPLETE. The character looks tiny as they use "
+                    "a wet finger to smooth the massive clay surface. The rich reddish-brown color glows "
+                    "under warm light, exuding an aura of ancient sanctity and world-class craftsmanship."
                 ),
                 "Popsicle Palace (Stik Es Krim)": (
-                    "A GIANT ARCHITECTURAL MOSQUE built from thousands of layered popsicle sticks. "
-                    "The wood is stained to look like antique oak. Features grand arched entrances. "
-                    "Thousands of tiny lights make the wood glow warmly. "
-                    "STATUS: 90% COMPLETE. The character is placing the final stick on the minaret balcony. "
-                    "The scale is massive, looking incredibly solid and professional."
+                    "A GARGANTUAN ARCHITECTURAL CATHEDRAL-MOSQUE. Built from 20,000 layered popsicle sticks "
+                    "stained to look like antique royal oak. The architecture is immense, featuring a grand "
+                    "triple-tiered central dome and a vast forest of arched entrances and balconies. "
+                    "Thousands of tiny warm LEDs are embedded within the wood, making the massive structure "
+                    "glow like a golden palace at night. The scale is staggering, filling 95% of the frame. "
+                    "STATUS: 90% COMPLETE. The character is placing a final stick on a towering minaret balcony, "
+                    "looking like a small architect in a giant wooden city."
                 ),
                 "Fruit Skin Mosaic (Kulit Buah)": (
-                    "A VIBRANT MOSQUE covered in a mosaic of dried orange, lime, and apple skins. "
-                    "The different colors create a natural, textured 'stained glass' effect. "
-                    "The smell is almost palpable through the screen. "
-                    "STATUS: 90% COMPLETE. The character is pressing a piece of dried orange peel onto the wall. "
-                    "A unique, colorful, and eco-elegant masterpiece."
+                    "A MAGNIFICENT VIBRANT ECO-MARVEL. A sprawling mosque diorama covered in a complex "
+                    "mosaic of thousands of dried orange, lime, and pomelo skins. The different textures "
+                    "create a breathtaking 'natural stained glass' effect on the massive domes. "
+                    "Features grand arched gates and dozens of glowing minarets made of polished fruit rinds. "
+                    "The structure is grand and wide, stretching across the entire workbench. "
+                    "STATUS: 90% COMPLETE. The character is pressing a piece of citrus peel onto a massive wall, "
+                    "emphasizing the staggering detail and grand scale of this colorful, eco-elegant masterpiece."
                 ),
-                # --- TAMBAHAN VARIASI MEWAH (FRUIT & FABRIC SERIES) ---
                 "Emerald Melon (Melon Ukir)": (
-                    "A SPECTACULAR ARCHITECTURAL MOSQUE. The central dome is a massive sphere carved from a premium honeydew melon, "
-                    "featuring intricate Islamic geometric lace patterns carved deep into the green rind. "
-                    "The 4 minarets are tall, slender pillars of carved cantaloupe skin. "
-                    "Warm internal lighting makes the translucent green flesh glow like precious emerald. "
-                    "STATUS: 90% COMPLETE. The character is using a professional surgical blade to carve the final archway. "
-                    "The structure is grand, looking like a royal palace made of fruit."
+                    "A COLOSSAL FRUIT ARCHITECTURE MASTERPIECE. The central dome is a gargantuan sphere "
+                    "carved from a massive premium honeydew melon, featuring deep, multilayered Islamic geometric "
+                    "lace patterns carved into the emerald-green rind. Surrounded by 12 smaller cascading carved domes. "
+                    "The 4 minarets are towering, slender pillars of carved cantaloupe skin, standing nearly as tall "
+                    "as the character's head. Intense internal lighting makes the translucent green flesh glow "
+                    "like a glowing emerald palace. STATUS: 90% COMPLETE. The character looks like a tiny artisan "
+                    "using a surgical blade on a giant monument. Pure royal grandeur."
                 ),
                 "Golden Citrus (Kulit Jeruk)": (
-                    "A MAGNIFICENT MOSQUE built from dried and polished orange peels. "
-                    "The peels are cut into thousands of tiny 'shingles' that cover the domes like golden scales. "
-                    "Features a grand entrance with arches made of thick pomelo rinds carved into Arabic calligraphy. "
-                    "The texture looks like expensive hammered copper or bronze. "
-                    "STATUS: 90% COMPLETE. The character is pressing the final golden peel onto the minaret spire. "
-                    "The detail is insane, looks incredibly expensive and high-fashion."
+                    "A MAGNIFICENT GOLDEN CITRUS CATHEDRAL-MOSQUE. A sprawling diorama built from thousands "
+                    "of dried, polished orange peels cut into tiny architectural shingles that cover the vast domes "
+                    "like golden dragon scales. Features a massive grand entrance with multi-tiered arches made "
+                    "of thick pomelo rinds carved into intricate 3D Arabic calligraphy. The texture is breathtaking, "
+                    "resembling hammered antique bronze. The structure is wide and immense, filling the entire frame. "
+                    "STATUS: 90% COMPLETE. The character's hand appears tiny while pressing the final golden peel. "
+                    "Exudes an aura of high-fashion architectural luxury."
                 ),
                 "Royal Velvet (Kain Beludru)": (
-                    "A LUXURY TEXTILE MOSQUE. The domes are covered in deep emerald green velvet with gold thread embroidery. "
-                    "The walls are wrapped in fine cream silk with embossed floral patterns. "
-                    "Features 4 minarets wrapped in gold-satin fabric. "
-                    "Lighting is soft and cinematic, highlighting the rich texture of the fabric fibers. "
-                    "STATUS: 90% COMPLETE. The character is using a needle and gold thread to sew the final ornament on the dome. "
-                    "Aura of supreme elegance, looking like a sultan's private prayer room."
+                    "A SUPREME LUXURY TEXTILE MEGA-STRUCTURE. A giant mosque diorama where the massive domes "
+                    "are draped in deep emerald-green royal velvet with heavy gold thread embroidery. "
+                    "The sprawling walls are wrapped in fine cream silk with embossed architectural floral patterns. "
+                    "Features 6 towering minarets wrapped in shimmering gold-satin fabric. Soft cinematic "
+                    "spotlighting highlights the rich, expensive textures of the fabric fibers. The scale is "
+                    "overwhelming, stretching across the massive workbench like a sultan's palace city. "
+                    "STATUS: 90% COMPLETE. The character is a small figure using a needle and gold thread "
+                    "to sew a final ornament on the gargantuan dome."
                 ),
                 "Crystal Ice (Es Batu)": (
-                    "A BREATHTAKING CRYSTAL MOSQUE sculpted from clear blocks of ice. "
-                    "Features a massive central dome and 4 sharp minarets that refract light like diamonds. "
-                    "Internal blue and white LED lights create a freezing yet holy atmosphere. "
-                    "STATUS: 90% COMPLETE. The character is using a small scraper to smooth the surface of the main dome. "
-                    "The transparency and reflections are hyper-realistic. Pure architectural luxury."
+                    "A COLOSSAL CRYSTAL ICE CATHEDRAL-MOSQUE. A gargantuan diorama sculpted from massive, "
+                    "clear blocks of arctic ice, standing nearly as tall as the character. Features a giant central "
+                    "dome surrounded by 12 sharp crystalline minarets that refract light like million-dollar diamonds. "
+                    "The structure includes long ice-pillared corridors and transparent arched gates. "
+                    "Internal neon blue and white LED lights create a freezing, holy, and majestic atmosphere. "
+                    "STATUS: 90% COMPLETE. The character looks like a tiny ice-sculptor using a scraper on a massive "
+                    "frozen monument. Transparency and reflections are hyper-realistic."
                 ),
                 "Golden Spice (Kayu Manis & Cengkeh)": (
-                    "A MASTERPIECE OF CRAFTSMANSHIP. Built from thousands of cinnamon sticks (kayu manis) "
-                    "and decorated with dried cloves (cengkeh) as rhythmic architectural patterns. "
-                    "The dome is a perfect sphere of stacked spices, glowing with a deep amber light. "
-                    "STATUS: 90% COMPLETE. The character is meticulously placing a final clove into a floral pattern. "
-                    "The color palette is rich brown and gold. Extremely detailed and nostalgic."
+                    "A MAGNIFICENT SPICE EMPIRE DIORAMA. A vast, sprawling mosque complex built from tens of thousands "
+                    "of polished cinnamon sticks (kayu manis). The gargantuan domes are perfect spheres decorated with "
+                    "thousands of dried cloves (cengkeh) forming rhythmic 3D floral architectural patterns. "
+                    "Features towering spice minarets and complex arched walkways stretching across the frame. "
+                    "The entire structure glows with a deep, rich amber light from within. "
+                    "STATUS: 90% COMPLETE. The character is a tiny figure meticulously placing a final clove. "
+                    "The color palette is a royal rich brown and gold, looking incredibly detailed and ancient."
                 ),
                 "White Marble Eggshell (Cangkang Telur)": (
-                    "A SUPREME LUXURY MOSQUE. Covered in thousands of microscopic fragments of white eggshells "
-                    "that have been polished to look like seamless Taj Mahal marble. "
-                    "Features gold-leaf accents on every arched window and minaret tip. "
-                    "STATUS: 90% COMPLETE. The character is applying a glossy finish to the white marble surface. "
-                    "It looks like a multi-million dollar museum artifact. Flawless and majestic."
+                    "A SUPREME LUXURY WHITE MARBLE MEGA-DIORAMA. A massive mosque structure covered in millions of "
+                    "microscopic, hand-polished white eggshell fragments, appearing as seamless Taj Mahal marble. "
+                    "The architecture is colossal, featuring a grand triple-tiered dome and dozens of arched windows "
+                    "with solid gold-leaf accents. Every minaret tip is a sharp spire of gold. "
+                    "The scale is staggering, filling the entire wide frame with pure white grandeur. "
+                    "STATUS: 90% COMPLETE. The character looks very small while applying a glossy finish to the "
+                    "massive marble-like surface. A flawless, multi-million dollar museum artifact."
                 ),
                 "Pearl & Oyster (Cangkang Kerang)": (
-                    "A SUPREME LUXURY MOSQUE. Every inch is covered in iridescent mother-of-pearl fragments. "
-                    "The central dome is a massive polished white oyster shell that glows like a moon. "
-                    "The 4 minarets are tall, boney white towers with gold-leaf inlay. "
-                    "Lighting: Soft pearlescent shimmer, internal glow that reflects a rainbow spectrum. "
-                    "STATUS: 90% COMPLETE. The character is placing a tiny pearl at the very tip of the crescent moon. "
-                    "Extremely luxurious, expensive museum-quality aesthetic."
+                    "A COLOSSAL IRIDESCENT PEARL PALACE. Every inch of this massive mosque diorama is covered in "
+                    "shimmering mother-of-pearl fragments. The central dome is a gargantuan polished white oyster shell "
+                    "that glows like a massive moon. Features 8 towering, boney-white minarets with intricate "
+                    "gold-leaf inlay and pearl spires. Soft pearlescent shimmer and internal rainbow-spectrum glow "
+                    "highlight the staggering scale. The structure is grand and wide, stretching across the entire frame. "
+                    "STATUS: 90% COMPLETE. The character is a tiny figure placing a final pearl at the tip of "
+                    "the massive crescent moon moon crescent. Pure architectural luxury."
                 ),
                 "Banana Fiber Lace (Pelepah Pisang)": (
-                    "A MASTERPIECE OF ORGANIC ARCHITECTURE. Built from dried banana fibers woven into high-end lace patterns. "
-                    "Features multiple cascading tiered roofs (tumpang) with golden-brown textures like aged silk. "
-                    "The walls are made of translucent fiber sheets that let warm amber light pass through. "
-                    "STATUS: 90% COMPLETE. The character is braiding the final golden fiber around the minaret balcony. "
-                    "Exudes a sophisticated, ancient, and deeply cultural aura."
+                    "A COLOSSAL ORGANIC ARCHITECTURAL MARVEL. A sprawling mosque diorama built from "
+                    "thousands of dried banana fibers, woven into high-end architectural lace patterns. "
+                    "Features massive multi-tiered cascading roofs (tumpang) stretching across the wide frame, "
+                    "looking like aged royal silk. The walls are gargantuan translucent fiber sheets that "
+                    "glow intensely with warm amber light from within. STATUS: 90% COMPLETE. The character "
+                    "looks like a tiny artisan braiding the final golden fiber around a towering minaret balcony. "
+                    "Exudes a sophisticated, ancient, and deeply majestic cultural aura."
                 ),
                 "Sapphire Glass (Pecahan Kaca Biru)": (
-                    "A BREATHTAKING SAPPHIRE MOSQUE. Constructed from thousands of sharp, recycled cobalt-blue glass shards. "
-                    "The shards are arranged to form a seamless, crystalline dome that glitters like a diamond. "
-                    "Minarets are tall, translucent glass pillars with internal blue LED strips. "
-                    "STATUS: 90% COMPLETE. The character is using a small soldering iron to stabilize a glass joint. "
-                    "The refraction of light is hyper-realistic, casting blue star-like patterns on the character's face."
+                    "A MAGNIFICENT GARGANTUAN SAPPHIRE CATHEDRAL. A massive mosque diorama constructed from "
+                    "thousands of sharp, recycled cobalt-blue glass shards. The shards form a seamless, "
+                    "crystalline central dome that fills the frame and glitters like a million diamonds. "
+                    "The minarets are towering, translucent blue glass pillars with internal LED strips "
+                    "making the whole structure glow like a sapphire star. STATUS: 90% COMPLETE. The character "
+                    "appears tiny as they stabilize a glass joint on the massive entrance. Hyper-realistic "
+                    "refractions casting blue star-like patterns everywhere."
                 ),
                 "Ivory Corn Husk (Kulit Jagung)": (
-                    "AN ELEGANT IVORY-COLORED MOSQUE crafted from dried and ironed corn husks. "
-                    "The husks are layered to create a 'pleated fabric' architectural look on the domes. "
-                    "Features intricate laser-cut style arches made from the tough inner husk. "
-                    "STATUS: 90% COMPLETE. The character is smoothing out a single ivory-colored leaf on the main dome. "
-                    "Looks like a high-end fashion piece turned into architecture. Very clean and pure."
+                    "A SUPREME IVORY-COLORED ARCHITECTURAL PIECE. A giant mosque diorama crafted from "
+                    "thousands of ironed and layered corn husks, creating a pleated fabric architectural look "
+                    "on the massive domes. Features dozens of intricate laser-cut style arches and towering "
+                    "minarets made from tough inner husks. The scale is immense, looking like a high-end "
+                    "fashion monument. STATUS: 90% COMPLETE. The character's hand looks small while smoothing "
+                    "an ivory-colored leaf on the gargantuan main dome. Pure, clean, and architecturally grand."
                 ),
                 "Obsidian Charcoal (Arang Kayu)": (
-                    "A STUNNING MINIMALIST DARK MOSQUE carved from solid black charcoal blocks. "
-                    "The surface has a rich, matte black texture with golden cracks like 'Kintsugi'. "
-                    "Features a massive dome and sharp, geometric minarets with glowing red embers inside. "
-                    "STATUS: 90% COMPLETE. The character is using a fine brush to apply gold dust into a charcoal crack. "
-                    "The contrast between the dark obsidian-like body and the gold-red light is incredibly cinematic."
+                    "A STUNNING MINIMALIST DARK MEGA-STRUCTURE. A massive mosque diorama carved from "
+                    "solid black charcoal blocks, standing as tall as the character's torso. The surface has "
+                    "a rich, matte black texture with golden 'Kintsugi' cracks. Features a gargantuan dome "
+                    "and sharp geometric minarets with glowing red embers inside. The contrast between the "
+                    "dark obsidian body and the gold-red light is incredibly cinematic and grand. "
+                    "STATUS: 90% COMPLETE. The character is a tiny figure applying gold dust into a crack "
+                    "on the massive structure. Deeply spiritual and architecturally imposing."
                 ),
                 "Amber Spice (Cengkeh & Kayu Manis)": (
-                    "A HIGH-DETAIL ARCHITECTURAL GROWN. The dome is a perfect sphere made of thousands of dried cloves "
-                    "arranged in a geometric mandala. The pillars are polished cinnamon sticks with gold rings. "
-                    "Warm golden lighting makes the whole structure look like it's made of solid amber. "
-                    "STATUS: 90% COMPLETE. The character is meticulously placing the final clove into the central arch. "
-                    "Extremely detailed, looking like a royal relic from a spice empire."
+                    "A COLOSSAL ARCHITECTURAL SPICE MONUMENT. The central dome is a gargantuan sphere "
+                    "made of tens of thousands of dried cloves arranged in a complex geometric mandala "
+                    "that fills 80% of the frame. The towering pillars are massive polished cinnamon sticks "
+                    "wrapped in solid gold rings. Features sprawling arched courtyards and multiple minarets. "
+                    "Warm golden lighting makes the whole structure glow like solid amber. "
+                    "STATUS: 90% COMPLETE. The character looks tiny as they meticulously place the final clove "
+                    "into a massive central arch. Looking like a royal relic from a gargantuan spice empire."
                 ),
                 "Porcelain Duck-Spoon (Sendok Bebek)": (
-                    "A UNIQUE AVANT-GARDE MOSQUE built from hundreds of white ceramic duck spoons. "
-                    "The spoons are layered upward to form a majestic, scalloped dome structure. "
-                    "The handles form the decorative railings of the tall white minarets. "
-                    "STATUS: 90% COMPLETE. The character is stabilizing the peak of the spoon-dome. "
-                    "The surface is glossy, reflecting the warm workshop lights. Incredibly creative and high-end."
+                    "A MAGNIFICENT AVANT-GARDE GARGANTUAN MOSQUE. Built from over a thousand white ceramic "
+                    "duck spoons, layered upward to form a majestic, massive scalloped dome structure. "
+                    "The scale is staggering, looking like a city-sized porcelain cathedral. The spoon handles "
+                    "form the decorative railings of the towering white minarets. The glossy surface reflects "
+                    "the workshop lights like expensive high-end porcelain architecture. "
+                    "STATUS: 90% COMPLETE. The character is a small figure stabilizing the peak of the massive "
+                    "spoon-dome. Incredibly creative, luxurious, and structurally grand."
                 ),
                 "Feathered Silk (Bulu Unggas & Kain)": (
-                    "A SURREAL, SOFT ARCHITECTURE. The domes are covered in pure white feathers arranged like shingles. "
-                    "The walls are wrapped in fine white silk with gold embroidery. "
-                    "It looks like a mosque made of clouds. Soft, heavenly lighting with a dreamy bokeh background. "
-                    "STATUS: 90% COMPLETE. The character is using a needle to secure a gold thread on the feathered dome. "
-                    "Pure angelic beauty, extremely detailed textures of downy feathers."
+                    "A SURREAL CLOUD-CITY MEGA MOSQUE. A giant mosque diorama where the massive domes are "
+                    "covered in millions of pure white feathers arranged like intricate shingles. The sprawling "
+                    "walls are wrapped in fine white silk with heavy gold architectural embroidery. "
+                    "It looks like a mosque made of heaven, featuring multiple towering minarets that disappear "
+                    "into the soft focus. Soft, heavenly lighting with a dreamy bokeh background. "
+                    "STATUS: 90% COMPLETE. The character is a tiny artisan using a needle to secure a gold thread "
+                    "on the gargantuan feathered dome. Angelic beauty with staggering texture detail."
                 )
-            },
+            }, # Penutup MASTER_KONTEN_ALL
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
             "🌍 Diorama Masjid": {
                 "Mega Diorama: Al-Aqsa Complex": (
@@ -2058,61 +2102,71 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (THE CORRECT CAMERA ANGLE) ---
-                # Sekarang instruksi "Lesehan" atau "Berdiri" HANYA ada di sini
+            # --- 4. DYNAMIC SCENE LOGIC (ANTI-DISTORSI & MEGA SCALE) ---
                 scene_context = ""
+                
+                # Cek lokasi: kalau di Saung/Teras biasanya lesehan, kalau di Atelier biasanya meja tinggi
+                is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok"])
                 
                 if "🌍 Diorama Masjid" in modus_konten:
                     scene_context = (
                         "PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. EXTREME WIDE SHOT. "
-                        "The character is STANDING UPRIGHT, looking very small next to a massive "
-                        "architectural complex. STATIC CAMERA. NO CUTS. Low-angle shot to emphasize "
-                        "the grand scale of the diorama which fills 90% of the frame."
+                        "The camera is at eye-level to maintain realistic body proportions. "
+                        "The character is STANDING UPRIGHT next to a gargantuan architectural complex. "
+                        "The diorama mosque is colossal, appearing as a massive city-sized model "
+                        "that fills 90% of the frame. High-contrast cinematic lighting."
                     )
                 
                 elif "🕌 Miniatur Masjid" in modus_konten:
-                    # Cek lokasi: kalau di Saung/Teras biasanya lesehan, kalau di Atelier biasanya meja tinggi
-                    is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok"])
-                    
                     posisi = "sitting cross-legged ON THE FLOOR (Lesehan style) at a very low wooden table." if is_lesehan else "standing at a high rustic workbench."
+                    camera_angle = "Chest-level camera angle" if is_lesehan else "Eye-level camera angle"
                     
                     scene_context = (
-                        f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. MEDIUM SHOT. "
-                        f"The character is {posisi} The model is placed directly between the camera "
-                        f"and the character. SINGLE CONTINUOUS TAKE. STATIC CAMERA. Focus on "
-                        f"the interaction between hands and the object."
+                        f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. MEDIUM SHOT. {camera_angle}. "
+                        f"The character is {posisi} The model is a MEGA-SCALE ARCHITECTURAL MASTERPIECE, "
+                        f"appearing as large as a human torso, placed directly between the camera and character. "
+                        f"Focus on the staggering scale and intricate architectural details of the mosque. "
+                        f"Proper anatomy, no distortion."
                     )
 
-                # --- 5. NUANSA HIDUP (ENVIRONMENT & SOUL) ---
+                # --- 5. NUANSA HIDUP (FOCUS & SOUL LOCK) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
-                # Tambahan instruksi Ekspresi agar tidak kaku
-                expression_fix = "Dynamic facial muscle movement, subtle micro-expressions, eyes reacting to light."
+                # Kunci biar mata nggak dongak terus (Eye-Focus)
+                eye_lock = (
+                    "The character's gaze is primarily FOCUSED DOWNWARDS at the mosque model. "
+                    "Occasionally, they look up with a bittersweet expression, then immediately "
+                    "return their focus to the intricate craftsmanship. Natural blinking."
+                )
 
                 living_details = (
-                    f"ENVIRONMENT: {env_detail} {expression_fix} "
-                    "Extreme hyper-realistic skin textures, visible sweat, and authentic weathered wrinkles. "
-                    "Focus on micro-expressions: subtle jaw trembling, natural blinking, and realistic skin pores. "
-                    "Cinematic lighting with volumetric light rays."
+                    f"ENVIRONMENT: {env_detail}. {eye_lock} "
+                    "Extreme hyper-realistic skin textures, authentic weathered wrinkles. "
+                    "Cinematic lighting with volumetric light rays highlighting the mosque's grandeur."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION - NO CONFLICT) ---
+                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
-                MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. FULLY COVERED MODEST ISLAMIC CLOTHING."
-                eye_focus = "The character occasionally glances up to the sky with teary eyes, then looks back down at the miniature with deep focus."
+                
+                # PAGAR BETON HIJAB (Locking both Grandma and Girls)
+                MANDATORY_LOCK = (
+                    "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. "
+                    "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
+                )
                 
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
+                    f"CHARACTER DNA: {soul_desc}. \n"
+                    f"MODEST CLOTHING LOCK: {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. {eye_focus} \n" # Tambah eye_focus di sini
+                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. \n"
                     f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"LIVING ATMOSPHERE: {living_details} \n\n"
                     f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural lighting, "
-                    f"proper body proportions, no distortion, depth of field, masterpiece quality."
+                    f"consistent anatomy, proper scaling, no fisheye, masterpiece quality."
                 )
 
                 # --- 7. TAMPILKAN HASIL ---
@@ -5886,6 +5940,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
