@@ -2081,10 +2081,16 @@ def tampilkan_ai_lab():
                     f"no distortion, depth of field, masterpiece quality."
                 )
 
-                # TAMPILKAN HASILNYA
-                st.success("🔥 PROMPT MAHAKARYA BERHASIL DIRAKIT!")
-                st.text_area("🚀 COPY KE AI GENERATOR (Gemini 3 Flash / Luma Dream Machine / Kling):", 
-                             value=final_ai_prompt, height=450)
+                # TAMPILKAN HASILNYA DENGAN TOMBOL COPY YANG JELAS
+                st.success("🔥 PROMPT BERHASIL DIRAKIT!")
+                
+                # Pakai st.code supaya tombol copy-nya mantap di pojok kanan
+                st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
+                st.code(final_ai_prompt, language="text")
+                
+                # Opsional: Tetap kasih text area kalau lo mau edit manual dulu sebelum copy
+                with st.expander("Edit Prompt Manual (Jika Diperlukan)"):
+                    final_ai_prompt = st.text_area("Custom Editor", value=final_ai_prompt, height=300)
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5849,6 +5855,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
