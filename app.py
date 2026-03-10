@@ -2246,23 +2246,22 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (STRICT LAYERING: NO FUSION) ---
+                # --- 4. DYNAMIC SCENE LOGIC (FIXED: ULTRA SLOW ZOOM & LAYERING) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
-                # Kita kunci posisi Nenek DI BELAKANG meja
+                # Nenek di belakang meja (Background), Masjid di atas meja (Foreground)
                 posisi_nenek = "sitting on the floor (lesehan) BEHIND the low table" if is_lesehan else "standing BEHIND the workbench"
                 
                 scene_context = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL. FRONT-FACING STRAIGHT ANGLE. "
-                    f"CINEMATIC SLOW ZOOM-IN towards the mosque diorama. "
-                    f"STRICT DEPTH LAYERING: The large mosque diorama is in the FOREGROUND, " # Masjid di depan
-                    f"sitting on top of a low wooden table. "
-                    f"The character (Indonesian grandma) is {posisi_nenek}. " # Nenek di belakang
-                    f"There is a CLEAR EMPTY SPACE between the mosque and the grandma's body. " # Kunci jarak
-                    f"The grandma is looking over the top of the mosque towards the camera. "
-                    f"The mosque is a COMPLETELY SEPARATE physical object, NOT WEARABLE, NOT ATTACHED. "
-                    f"The grandma's torso is visible BEHIND the table, while the mosque is ON the table. "
-                    f"NO body-fusion, NO ghost limbs, NO wearable architecture. Pure physical reality."
+                    f"A MINISCULE, ALMOST IMPERCEPTIBLE SLOW ZOOM-IN towards the mosque diorama. " # NGEREM DISINI
+                    f"The camera movement is a VERY GENTLE CRAWL, barely moving, focusing on architectural details. "
+                    f"STRICT DEPTH LAYERING: The large mosque diorama is the main focus in the FOREGROUND. "
+                    f"The character (Indonesian grandma) is positioned BEHIND the table and the mosque. "
+                    f"There is a CLEAR PHYSICAL GAP between the grandma and the mosque object. "
+                    f"The mosque has 4 distinct minarets and 1 large central dome. "
+                    f"The grandma is looking directly into the camera lens with a calm expression. "
+                    f"NO sudden movements, NO fast zoom, NO body-fusion. Pure high-end cinematography."
                 )
 
                 # --- 5. NUANSA HIDUP (EYE CONTACT LOCK) ---
@@ -6080,6 +6079,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
