@@ -1516,15 +1516,14 @@ def tampilkan_ai_lab():
                     "clean, and architecturally precise. Pure high-end intellectual craftsmanship."
                 ),
                 "Crystal Bottle (Botol Bekas)": (
-                    "A COLOSSAL ARCHITECTURAL GLASS MASTERPIECE. A sprawling mosque diorama built from "
-                    "thousands of hand-cut recycled clear glass fragments, meticulously arranged into "
-                    "complex geometric layers. The massive structure is HOLLOW and ILLUMINATED FROM WITHIN "
-                    "by warm white LED lights. The light refracts naturally through the glass edges and "
-                    "shines through intricate Arabic calligraphy etched directly onto the glass surface. "
-                    "NO fake glows or lens flares—only the realistic internal radiance reflecting off "
-                    "the workbench. The scale is gargantuan, filling the frame. The character is using "
-                    "a soft cloth to polish the central dome, looking small next to the towering glass "
-                    "structure. Exudes supreme, crystalline luxury."
+                    "A GARGANTUAN TABLETOP ARCHITECTURAL MODEL. A massive mosque diorama "
+                    "sitting firmly on the wooden table, built from thousands of hand-cut recycled "
+                    "clear glass fragments. The structure is a PHYSICAL OBJECT on the bench. "
+                    "The mosque is HOLLOW and ILLUMINATED FROM WITHIN by warm white LED lights. "
+                    "The light refracts naturally through the glass edges. NO glass clothing, "
+                    "NO glass body—the character is a normal human artisan. The character is "
+                    "using a soft cloth to polish the central dome of the mosque on the table. "
+                    "Exudes supreme, crystalline luxury and realistic physical scale."
                 ),
                 "Organic Dragon Fruit (Buah Naga)": (
                     "A MAGNIFICENT ORGANIC ARCHITECTURAL CATHEDRAL. A gargantuan mosque carved entirely "
@@ -2253,19 +2252,19 @@ def tampilkan_ai_lab():
                 # --- 4. DYNAMIC SCENE LOGIC (FIXED: LESEHAN NO KOLONG) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
-                # Tentukan jenis meja berdasarkan posisi duduk
                 meja_type = "a low traditional wooden floor-table (meja lesehan)" if is_lesehan else "a heavy professional wooden workbench"
-                posisi_duduk = "sitting cross-legged on the floor (lesehan style) directly in front of" if is_lesehan else "standing upright behind"
+                posisi_duduk = "sitting cross-legged on the floor (lesehan style) in front of" if is_lesehan else "standing behind"
 
                 scene_context = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL. CINEMATIC WIDE SHOT. "
-                    f"The camera is positioned at eye-level but SLIGHTLY ANGLED (3/4 side view) to the workspace. "
-                    f"The character is {posisi_duduk} {meja_type} that stretches across the frame. " # KUNCI DISINI
-                    f"The GARGANTUAN ARCHITECTURAL DIORAMA of a mosque is the centerpiece, "
-                    f"placed on the table surface at the character's chest level. " # BIAR MEJANYA NGGAK KETINGGIAN
-                    f"The mosque is massive, roughly the size of a human torso. "
-                    f"The character is NOT under the table, they are positioned in front of it. " # ANTISIPASI GOBLOKNYA AI
-                    f"NO DISTORTION. A unified, deep 3D physical environment."
+                    f"A clear physical separation between the human artisan and the architectural model. "
+                    f"The camera is at eye-level, 3/4 side view. "
+                    f"The character is a NORMAL HUMAN {posisi_duduk} {meja_type}. "
+                    f"On top of the table sits a GARGANTUAN PHYSICAL MOSQUE DIORAMA. "
+                    f"The mosque is a separate object, NOT attached to the character's body. " # KUNCI BIAR GAK JADI ARMOR
+                    f"The artisan's hands are physically touching the model to work on it. "
+                    f"The scale is massive (torso-sized), but it remains a tabletop model. "
+                    f"NO double bodies, NO fused textures, NO glass clothing. Pure reality."
                 )
 
                 # --- 5. NUANSA HIDUP (THE MASTER ARTISAN FOCUS) ---
@@ -6080,6 +6079,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
