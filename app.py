@@ -2246,7 +2246,7 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (FIXED: ULTRA SLOW ZOOM & LAYERING) ---
+                # --- 4. DYNAMIC SCENE LOGIC (STATIC / ULTRA SLOW CRAWL) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
                 # Nenek di belakang meja (Background), Masjid di atas meja (Foreground)
@@ -2254,24 +2254,26 @@ def tampilkan_ai_lab():
                 
                 scene_context = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL. FRONT-FACING STRAIGHT ANGLE. "
-                    f"A MINISCULE, ALMOST IMPERCEPTIBLE SLOW ZOOM-IN towards the mosque diorama. " # NGEREM DISINI
-                    f"The camera movement is a VERY GENTLE CRAWL, barely moving, focusing on architectural details. "
+                    f"STILL CAMERA SHOT with a BARELY VISIBLE, MINISCULE SLOW CRAWL towards the mosque. " 
+                    f"The camera is almost static, moving at a snail's pace to maintain focus. "
                     f"STRICT DEPTH LAYERING: The large mosque diorama is the main focus in the FOREGROUND. "
                     f"The character (Indonesian grandma) is positioned BEHIND the table and the mosque. "
                     f"There is a CLEAR PHYSICAL GAP between the grandma and the mosque object. "
                     f"The mosque has 4 distinct minarets and 1 large central dome. "
-                    f"The grandma is looking directly into the camera lens with a calm expression. "
-                    f"NO sudden movements, NO fast zoom, NO body-fusion. Pure high-end cinematography."
+                    f"The scene is grounded, realistic, and strictly tabletop. No body-fusion. "
+                    f"Pure high-end cinematography, steady and calm."
                 )
 
-                # --- 5. NUANSA HIDUP (EYE CONTACT LOCK) ---
+                # --- 5. NUANSA HIDUP (NATURAL GAZE SHIFT) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
+                # Biar nggak melotot terus, kita buat dia fokus ke kerjaan juga
                 eye_lock = (
-                    "The character maintains direct, soulful EYE CONTACT with the camera lens throughout the dialogue. "
-                    "Their gaze is fixed on the viewer, eyes alive with emotion and dedication. "
-                    "Their two hands are busy working on the mosque structure while they look straight ahead. "
-                    "Natural blinking, human expressions, no blank stares."
+                    "The character is deeply focused on their work, looking DOWNWARD at the mosque structure. "
+                    "They ONLY shift their gaze to look at the camera BRIEFLY when speaking a sentence. "
+                    "Natural blinking and shifting focus between the craft and the viewer. "
+                    "Their eyes are alive, expressive, and human—not staring blankly. "
+                    "Hands and eyes are synchronized with the artisan's performance."
                 )
 
                 living_details = (
@@ -2300,12 +2302,12 @@ def tampilkan_ai_lab():
                     f"{scene_context} \n\n"
                     f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS while looking at the camera. {pilih_mood}. \n"
+                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. The character shifts gaze between the work and the camera. {pilih_mood}. \n"
                     f"THE MASTERPIECE: {deskripsi_teknis}. "
                     f"The mosque is a massive, separate tabletop model. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, Frontal Eye-Level shot, SLOW ZOOM-IN TO OBJECT, "
+                    f"TECHNICAL SPECS: ARRI Alexa 65, Frontal Eye-Level shot, BARELY MOVING CRAWL, "
                     f"sharp focus on mosque details and hands, no double-limbs, masterpiece quality."
                 )
                 # --- 7. TAMPILKAN HASIL ---
@@ -6079,6 +6081,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
