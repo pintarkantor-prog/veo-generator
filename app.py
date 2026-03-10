@@ -2009,12 +2009,14 @@ def tampilkan_ai_lab():
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 
+                # 1. Pastikan kantong 'current_dialog' ada isinya dulu biar ngga error
                 if 'current_dialog' not in st.session_state:
                     st.session_state.current_dialog = ""
 
-                # PAKAI LAMBDA: Lebih sakti dan anti-error variabel
+                # 2. LOGIKA KOCOK (Ditaruh SEBELUM text_area)
+                # use_container_width biar tombolnya cakep menuhin kolom
                 if st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True):
-                    # Cek pake 'in' biar fleksibel (Nenek Arum, Nenek Sumi, dll semua masuk)
+                    # Cek kategori berdasarkan char_key
                     if "Nenek" in char_key:
                         kat = "NENEK"
                     elif "Kakek" in char_key:
@@ -2022,19 +2024,23 @@ def tampilkan_ai_lab():
                     else:
                         kat = "GADIS"
                     
+                    # Ambil dialog random dan MASUKKIN KE KANTONG
                     st.session_state.current_dialog = random.choice(MASTER_NYESEK_DIALOG[kat])
+                    # PAKSA REFRESH: Biar langsung tampil di text_area saat itu juga
+                    st.rerun() 
 
-                # Text area nangkep value terbaru
+                # 3. TAMPILIN DIALOGNYA
+                # Value-nya WAJIB ngambil dari session_state
                 user_dialog = st.text_area(
                     "Input Dialog", 
                     value=st.session_state.current_dialog,
                     placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
                     height=150, 
                     label_visibility="collapsed",
-                    key="dialog_input_key" # Kasih key biar Streamlit nggak bingung
+                    key="area_dialog_nenek"
                 )
                 
-                # Biar kalau lo ketik manual tetep kesimpen
+                # 4. Sinkronisasi balik: Kalau lo ngetik manual, kantongnya ikut ke-update
                 st.session_state.current_dialog = user_dialog
 
             with c6:
@@ -5882,6 +5888,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
