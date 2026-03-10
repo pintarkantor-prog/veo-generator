@@ -2050,7 +2050,6 @@ def tampilkan_ai_lab():
                 
                 # Tetap pake random choice buat Physical Action biar visualnya selalu dinamis
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
-                st.info(f"💡 Action: {pilih_aksi}")
 
             st.write("")
             btn_gen = st.button(
@@ -5886,6 +5885,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
