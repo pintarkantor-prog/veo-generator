@@ -1701,7 +1701,7 @@ def tampilkan_ai_lab():
                 )
             },
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
-            "🌍 Diorama Masjid Dunia": {
+            "🌍 Diorama Masjid": {
                 "Mega Diorama: Al-Aqsa Complex": (
                     "A MEGA-SCALE 3D DIORAMA that fills the entire workshop table and 90% of the frame. "
                     "A sprawling, intricate city reconstruction of the Al-Aqsa complex with thousands of microscopic stone houses. "
@@ -2028,7 +2028,7 @@ def tampilkan_ai_lab():
                 scene_context = ""
                 
                 # MODUS: DIORAMA DUNIA (Skala Raksasa, Sudut Pandang Rendah)
-                if "🌍 Diorama" in modus_konten:
+                if "🌍 Diorama Masjid" in modus_konten:
                     scene_context = (
                         "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. "
                         "EXTREME CLOSE-UP on the intricate diorama details while maintaining a WIDE ANGLE "
@@ -2039,20 +2039,13 @@ def tampilkan_ai_lab():
                     )
                 
                 # MODUS: MINIATUR MASJID (Skala Meja, Lesehan Estetik)
-                elif "🕌 Miniatur" in modus_konten:
+                elif "🕌 Miniatur Masjid" in modus_konten:
                     scene_context = (
                         "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT. "
                         "The character is sitting cross-legged ON THE FLOOR (Lesehan style). "
                         "The architectural model is placed on a VERY LOW rustic wooden table "
                         "directly between the camera and the character. Focus on the character's "
                         "delicate hand movements interacting with the mosque. "
-                    )
-                
-                # MODUS: ROBOT (Skala Medium, Berdiri)
-                elif "🤖 Robot" in modus_konten:
-                    scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT capturing the character and the "
-                        "large robot from the waist up. The character is STANDING UPRIGHT, leaning over the work. "
                     )
 
                 # --- 5. NUANSA HIDUP (ENVIRONMENT & SOUL) ---
@@ -5856,6 +5849,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
