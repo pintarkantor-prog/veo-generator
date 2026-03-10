@@ -1916,6 +1916,31 @@ def tampilkan_ai_lab():
                 "Mysterious, cozy, and very high-definition."
             )
         }
+
+        # --- 5. MASTER DIALOG NYESEK (GROUPED BY CHARACTER ROLE) ---
+        MASTER_NYESEK_DIALOG = {
+            "NENEK": [
+                "Cucu-cucuku yang baik... kalau jari kalian nggak berat, bantu nenek sebarkan keindahan masjid ini ya. Satu subscribe dari kalian itu seperti semangat baru buat napas nenek yang sudah tua ini...",
+                "Jangan sedih ya kalau video nenek sepi, engga ada yang like dan subscribe... Nenek sudah biasa. Nenek cuma titip satu, jangan biarkan masjid aslinya sepi seperti video nenek ini ya...",
+                "Nenek tahu nenek nggak secantik artis yang sering kalian tonton. Tapi masjid ini nenek buat dengan doa... apa karya orang tua seperti ini sudah tidak ada tempat lagi di hati kalian?",
+                "Tangan nenek sudah sering kram sekarang, Cu... Mungkin ini masjid terakhir yang bisa nenek selesaikan. Tolong dijaga videonya ya, biar jadi kenangan kalau nenek pernah ada...",
+                "Setiap malam nenek nungguin, ada nggak ya yang mau berteman sama nenek di YouTube? Ternyata susah ya cari perhatian anak muda kalau nggak pakai baju bagus..."
+            ],
+            "KAKEK": [
+                "Banyak yang skip video kakek karena bukan joget-joget. Kakek cuma tukang tua yang ingin bikin miniatur Masjid. Gak ada yang like pun, kakek tetap akan selesaikan kubah ini dengan cinta...",
+                "Mata kakek sudah remang-remang, Cu... kakek buru-buru selesaikan ini sebelum semuanya jadi gelap. Kakek cuma ingin tahu kalau masih ada yang peduli lewat satu klik subscribe saja...",
+                "Di rumah ini sepi sekali, Cu... cuma suara lem dan gunting ini yang menemani kakek. Makanya kakek senang kalau ada notifikasi subscribe masuk, rasanya kakek seperti punya cucu baru...",
+                "Kakek sering diketawain tetangga, katanya buat apa bikin masjid dari barang bekas, nggak bakal laku. Tapi kakek percaya, di luar sana pasti ada orang baik seperti kalian...",
+                "Kakek sudah terlalu tua untuk paham angka-angka di layar ini. Kakek cuma ingin bangga sedikit di sisa umur kakek, melihat banyak orang yang suka rumah Allah ini..."
+            ],
+            "GADIS": [
+                "Banyak yang bilang aku aneh, mainan barang bekas terus... Katanya lebih baik kerja jadi buruh pabrik. Tapi siapa lagi yang mau jaga keindahan masjid kalau bukan kita, Cu?",
+                "Malu sebenarnya upload ke YouTube begini, takut dibilang pamer. Tapi kalau nggak di-upload, siapa yang tahu kalau sampah bisa jadi megah? Kenapa video orang kaya lebih banyak yang suka ya?",
+                "Aku nggak punya modal buat beli bahan mewah, makanya aku pakai bahan seadanya ini. Aku cuma ingin buktiin kalau untuk cinta rumah Tuhan, kita nggak harus kaya. Bantu subscribe ya...",
+                "Setiap malam aku bantu kakek selesaikan ini. Sedih rasanya liat kakek semangat tapi videonya selalu sepi. Boleh bantu kasih kakek senyuman lewat satu like kalian?",
+                "Mungkin karyaku nggak sempurna, tapi aku buat ini sambil jagain kakek yang sudah sepuh. Satu subscribe kalian berarti banget buat semangat kami berdua..."
+            ]
+        }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (HIGH-END EMOTIONAL VERSION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
@@ -1961,34 +1986,23 @@ def tampilkan_ai_lab():
             with c1:
                 st.markdown('<p class="small-label">PILIH KARAKTER</p>', unsafe_allow_html=True)
                 pilihan_user = st.selectbox("Select Character", list(MASTER_FAMILY_SOUL.keys()), label_visibility="collapsed")
-                
-                # SINKRONISASI KEY UNTUK WARDROBE
-                # Karena key di Wardrobe sekarang sama persis dengan Soul, kita pakai pilihan_user langsung
                 char_key = pilihan_user 
 
             with c2:
                 st.markdown(f'<p class="small-label">PAKAIAN {char_key.split(" (")[0].upper()}</p>', unsafe_allow_html=True)
-                
-                # Ambil opsi baju berdasarkan karakter yang dipilih
                 if char_key in MASTER_FAMILY_WARDROBE:
                     baju_options = list(MASTER_FAMILY_WARDROBE[char_key].keys())
                 else:
-                    # Fallback aman
                     baju_options = ["Standard Daily Wear"]
-                
                 baju_pilihan = st.selectbox("Select Wardrobe", baju_options, label_visibility="collapsed")
             
             c3, c4 = st.columns(2)
             with c3:
-                # UPDATE LABEL: Sudah tidak ada Menu Makanan, ganti ke Diorama/Objek
                 label_obj = "PILIH KOLEKSI DIORAMA" if "Diorama" in modus_konten else "DETAIL OBJEK / KARYA"
                 st.markdown(f'<p class="small-label">{label_obj}</p>', unsafe_allow_html=True)
-                
-                # Mengambil list objek berdasarkan modus yang dipilih
                 objek_list = list(MASTER_KONTEN_ALL[modus_konten].keys())
                 pilihan_objek = st.selectbox("Select Detail", objek_list, label_visibility="collapsed")
                 deskripsi_teknis = MASTER_KONTEN_ALL[modus_konten][pilihan_objek]
-                
             with c4:
                 st.markdown('<p class="small-label">SETTING LOKASI</p>', unsafe_allow_html=True)
                 pilihan_set = st.selectbox("Select Environment", list(MASTER_GRANDMA_SETTING.keys()), label_visibility="collapsed")
@@ -1998,19 +2012,42 @@ def tampilkan_ai_lab():
             c5, c6 = st.columns([2, 1])
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
-                # Ambil nama pendek buat placeholder (misal: Nenek Arum)
-                short_name = char_key.split(" (")[0]
-                user_dialog = st.text_area("Input Dialog", 
-                                          placeholder=f"Tulis dialog {short_name} di sini...",
-                                          height=165, label_visibility="collapsed")
+                
+                # 1. Inisialisasi State (Harus ada biar ngga error)
+                if 'current_dialog' not in st.session_state:
+                    st.session_state.current_dialog = ""
+
+                # 2. Tombol Kocok (Gue pertahanin semua list nyesek tadi)
+                if st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True):
+                    if "Nenek" in char_key:
+                        kat = "NENEK"
+                    elif "Kakek" in char_key:
+                        kat = "KAKEK"
+                    else:
+                        kat = "GADIS"
+                    st.session_state.current_dialog = random.choice(MASTER_NYESEK_DIALOG[kat])
+
+                # 3. Text Area (Gue set biar sinkron sama hasil kocokan atau ketikan lo)
+                user_dialog = st.text_area(
+                    "Input Dialog", 
+                    value=st.session_state.current_dialog,
+                    placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
+                    height=150, 
+                    label_visibility="collapsed",
+                    key="input_dialog_manual" # Tambahin key unik
+                )
+                
+                # Update state kalau lo ngetik manual biar ngga ketimpa
+                st.session_state.current_dialog = user_dialog
+
             with c6:
                 st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
                 
-                # Aksi fisik dipilih otomatis secara acak agar prompt selalu segar
+                # Tetap pake random choice buat Physical Action biar visualnya selalu dinamis
                 pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
-                st.info(f"💡 Action: {pilih_aksi}") # Info tambahan biar user tahu aksi apa yang terpilih
+                st.info(f"💡 Action: {pilih_aksi}")
 
             st.write("")
             btn_gen = st.button(
@@ -2019,7 +2056,7 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-        # --- LOGIC GENERATOR (FIXED: MEGA SCALE & SINGLE SHOT) ---
+        # --- LOGIC GENERATOR (FIXED: RELIGIOUS MASTERPIECE ONLY) ---
         if btn_gen:
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
@@ -2049,7 +2086,6 @@ def tampilkan_ai_lab():
                     )
 
                 # --- 5. NUANSA HIDUP (ENVIRONMENT & SOUL) ---
-                # Menggabungkan lokasi asri dengan detail mikro manusia
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 living_details = (
                     f"ENVIRONMENT: {env_detail} "
@@ -2060,15 +2096,10 @@ def tampilkan_ai_lab():
                 )
                 
                 # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION) ---
-                
-                # Ambil Deskripsi Soul (Karakter) - Pastikan String
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
-                
-                # Ambil Deskripsi Baju - Lookup pake char_key yang utuh
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
 
-                # GABUNGKAN SEMUANYA DENGAN STRUKTUR ARRI ALEXA LOOK
                 final_ai_prompt = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K, HIGH DEFINITION. {scene_context} \n\n"
                     f"CHARACTER DNA: {soul_desc}. \n"
@@ -2081,15 +2112,12 @@ def tampilkan_ai_lab():
                     f"no distortion, depth of field, masterpiece quality."
                 )
 
-                # TAMPILKAN HASILNYA DENGAN TOMBOL COPY YANG JELAS
+                # --- 7. TAMPILKAN HASIL ---
                 st.success("🔥 PROMPT BERHASIL DIRAKIT!")
-                
-                # Pakai st.code supaya tombol copy-nya mantap di pojok kanan
                 st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
                 st.code(final_ai_prompt, language="text")
                 
-                # Opsional: Tetap kasih text area kalau lo mau edit manual dulu sebelum copy
-                with st.expander("Edit Prompt Manual (Jika Diperlukan)"):
+                with st.expander("Edit Prompt Manual"):
                     final_ai_prompt = st.text_area("Custom Editor", value=final_ai_prompt, height=300)
                 
     # ============================================================
@@ -5855,6 +5883,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
