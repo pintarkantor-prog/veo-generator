@@ -1357,8 +1357,6 @@ def tampilkan_ai_lab():
                 "The wrinkles are subtle and graceful. Soft-focus background, warm 'God-rays' lighting. "
                 "She has a very comforting and 'adem' aura. High-fidelity skin detail with a polished cinematic finish."
             ),
-
-            # ========================== KELOMPOK GADIS (Natural & Fresh) ==========================
             "Gadis Desa (The Natural)": (
                 "Stunning young Indonesian woman with an authentic 'Gadis Desa' beauty. Radiant, flawless sawo matang skin. "
                 "Soft natural lighting highlighting her high cheekbones and large, expressive brown eyes. "
@@ -1379,8 +1377,6 @@ def tampilkan_ai_lab():
                 "Smooth sawo matang skin with high-fidelity detail. Her presence is calm and soul-soothing. "
                 "Cinematic soft-lighting, emphasizing her pure and modest village girl aesthetic."
             ),
-
-            # ========================== KELOMPOK KAKEK (Gagah & Bijak) ==========================
             "Kakek (The Wise)": (
                 "A handsome, elderly Indonesian man with a dignified and respected look. Leathery but clean skin. "
                 "Thick white eyebrows and a neat mustache. His eyes are sharp but kind. "
@@ -2062,58 +2058,61 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (SCALING THE WORLD) ---
+                # --- 4. DYNAMIC SCENE LOGIC (THE CORRECT CAMERA ANGLE) ---
+                # Sekarang instruksi "Lesehan" atau "Berdiri" HANYA ada di sini
                 scene_context = ""
                 
-                # MODUS: DIORAMA DUNIA (Skala Raksasa, Sudut Pandang Rendah)
                 if "🌍 Diorama Masjid" in modus_konten:
                     scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. NO CUTS. "
-                        "EXTREME CLOSE-UP on the intricate diorama details while maintaining a WIDE ANGLE "
-                        "to show the massive scale of the architectural model. "
-                        "The character is positioned on the right side of the frame, LOOKING VERY SMALL "
-                        "compared to the towering mosque structures. Low-angle perspective to emphasize grandeur. "
-                        "The diorama fills 90% of the frame with a majestic, sprawling presence. "
+                        "PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. EXTREME WIDE SHOT. "
+                        "The character is STANDING UPRIGHT, looking very small next to a massive "
+                        "architectural complex. STATIC CAMERA. NO CUTS. Low-angle shot to emphasize "
+                        "the grand scale of the diorama which fills 90% of the frame."
                     )
                 
-                # MODUS: MINIATUR MASJID (Skala Meja, Lesehan Estetik)
                 elif "🕌 Miniatur Masjid" in modus_konten:
+                    # Cek lokasi: kalau di Saung/Teras biasanya lesehan, kalau di Atelier biasanya meja tinggi
+                    is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok"])
+                    
+                    posisi = "sitting cross-legged ON THE FLOOR (Lesehan style) at a very low wooden table." if is_lesehan else "standing at a high rustic workbench."
+                    
                     scene_context = (
-                        "SINGLE CONTINUOUS TAKE. STATIC CAMERA. MEDIUM SHOT. "
-                        "The character is sitting cross-legged ON THE FLOOR (Lesehan style). "
-                        "The architectural model is placed on a VERY LOW rustic wooden table "
-                        "directly between the camera and the character. Focus on the character's "
-                        "delicate hand movements interacting with the mosque. "
+                        f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K. MEDIUM SHOT. "
+                        f"The character is {posisi} The model is placed directly between the camera "
+                        f"and the character. SINGLE CONTINUOUS TAKE. STATIC CAMERA. Focus on "
+                        f"the interaction between hands and the object."
                     )
 
                 # --- 5. NUANSA HIDUP (ENVIRONMENT & SOUL) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
+                
+                # Tambahan instruksi Ekspresi agar tidak kaku
+                expression_fix = "Dynamic facial muscle movement, subtle micro-expressions, eyes reacting to light."
+
                 living_details = (
-                    f"ENVIRONMENT: {env_detail} "
+                    f"ENVIRONMENT: {env_detail} {expression_fix} "
                     "Extreme hyper-realistic skin textures, visible sweat, and authentic weathered wrinkles. "
                     "Focus on micro-expressions: subtle jaw trembling, natural blinking, and realistic skin pores. "
-                    "Cinematic lighting with volumetric light rays, highlighting the contrast between the glowing model "
-                    "and the surrounding atmosphere. High-fidelity audio capturing subtle breathing sounds."
+                    "Cinematic lighting with volumetric light rays."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (ANTI-BOCOR VERSION) ---
+                # --- 6. RAKIT FINAL PROMPT (MAHAKARYA VERSION - NO CONFLICT) ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
+                MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. FULLY COVERED MODEST ISLAMIC CLOTHING."
 
-                # Kunci Utama: Masukkan instruksi wajib berhijab di sini
-                MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. FULLY COVERED MODEST ISLAMIC CLOTHING. STRICTLY NO SKIN EXPOSED EXCEPT FACE AND HANDS."
-
+                # GABUNGKAN (Sekarang scene_context sudah include Header)
                 final_ai_prompt = (
-                    f"PHOTO-REALISTIC CINEMATIC FILM STILL, 8K, HIGH DEFINITION. {scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n" # Tambah di sini
+                    f"{scene_context} \n\n"
+                    f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi}. {pilih_mood}. \n"
+                    f"PERFORMANCE/ACTION: {pilih_aksi}. {pilih_mood}. \n"
                     f"OBJECT ARCHITECTURE: {deskripsi_teknis}. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"LIVING ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural high-contrast lighting, "
-                    f"no distortion, depth of field, masterpiece quality."
+                    f"TECHNICAL SPECS: ARRI Alexa 65, 24fps, cinematic bokeh, natural lighting, "
+                    f"proper body proportions, no distortion, depth of field, masterpiece quality."
                 )
 
                 # --- 7. TAMPILKAN HASIL ---
@@ -5887,6 +5886,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
