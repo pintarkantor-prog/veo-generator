@@ -1504,16 +1504,13 @@ def tampilkan_ai_lab():
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
                 "Golden Literary (Koran Bekas)": (
-                    "A COLOSSAL ARCHITECTURAL DIORAMA MASTERPIECE. A sprawling mosque structure "
-                    "built from thousands of meticulously hand-rolled newspaper tubes, showing authentic "
-                    "black-and-white newsprint textures. The structure is HOLLOW and features "
-                    "INTERNAL WARM AMBER LIGHTING that shines ONLY through the gaps between the paper tubes "
-                    "and through intricate geometric calligraphy cut-outs on the walls. "
-                    "The internal light creates sharp, realistic golden patterns on the workbench surface. "
-                    "NO FAKE GLOWS, NO LENS FLARES, NO ARTIFICIAL MIST. The external lighting is "
-                    "standard neutral workshop light, highlighting the matte, physical texture of the paper. "
-                    "The scale is gargantuan, equivalent to a human torso. Every roll of paper is sharp, "
-                    "clean, and architecturally precise. Pure high-end intellectual craftsmanship."
+                    "A massive physical mosque model on a table. Built entirely from hand-rolled "
+                    "recycled newspapers. The model has a clear large dome and 4 tall minarets. "
+                    "The structure is HOLLOW with INTERNAL WARM LIGHTING glowing from inside the windows. "
+                    "The textures of the black-and-white newspaper print are clearly visible on the walls. "
+                    "The mosque is a COMPLETELY SEPARATE OBJECT from the artisan. "
+                    "The artisan's hands are simply touching the base of the model. "
+                    "Sharp architectural lines, realistic paper texture, no glowing body, no fusion."
                 ),
                 "Crystal Bottle (Botol Bekas)": (
                     "A GARGANTUAN TABLETOP ARCHITECTURAL MODEL. A massive mosque diorama "
@@ -6083,6 +6080,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
