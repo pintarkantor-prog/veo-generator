@@ -2250,30 +2250,33 @@ def tampilkan_ai_lab():
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (WIDE SHOT & SCALE LOCK) ---
-                is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok"])
+                # --- 4. DYNAMIC SCENE LOGIC (FIXED: LESEHAN NO KOLONG) ---
+                is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 
-                # Kita pakai WIDE SHOT tapi kunci di EYE-LEVEL biar proporsinya normal
+                # Tentukan jenis meja berdasarkan posisi duduk
+                meja_type = "a low traditional wooden floor-table (meja lesehan)" if is_lesehan else "a heavy professional wooden workbench"
+                posisi_duduk = "sitting cross-legged on the floor (lesehan style) directly in front of" if is_lesehan else "standing upright behind"
+
                 scene_context = (
                     f"PHOTO-REALISTIC CINEMATIC FILM STILL. CINEMATIC WIDE SHOT. "
-                    f"The camera is positioned at eye-level, capturing the vastness of the workspace. "
-                    f"The character is {'sitting cross-legged on the floor (lesehan style)' if is_lesehan else 'standing upright'} "
-                    f"behind a long, heavy wooden workbench that stretches horizontally across the entire frame. "
+                    f"The camera is positioned at eye-level but SLIGHTLY ANGLED (3/4 side view) to the workspace. "
+                    f"The character is {posisi_duduk} {meja_type} that stretches across the frame. " # KUNCI DISINI
                     f"The GARGANTUAN ARCHITECTURAL DIORAMA of a mosque is the centerpiece, "
-                    f"placed directly on the bench and filling the middle ground. "
-                    f"The mosque is massive, roughly the size of a human torso, showing a clear "
-                    f"physical connection between the artisan and the object. "
-                    f"NO DISTORTION. NO STICKER LOOK. A single, unified 3D physical space."
+                    f"placed on the table surface at the character's chest level. " # BIAR MEJANYA NGGAK KETINGGIAN
+                    f"The mosque is massive, roughly the size of a human torso. "
+                    f"The character is NOT under the table, they are positioned in front of it. " # ANTISIPASI GOBLOKNYA AI
+                    f"NO DISTORTION. A unified, deep 3D physical environment."
                 )
 
                 # --- 5. NUANSA HIDUP (THE MASTER ARTISAN FOCUS) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
-                # Kunci mata biar nggak dongak ke langit mulu
+                # Logic Mata: Ngomong = Lihat Kamera, Kerja = Lihat Bawah
                 eye_lock = (
-                    "The character is deeply focused, their eyes looking DOWNWARD at the mosque structure. "
-                    "Occasionally, they glance at their hands as they meticulously apply a tiny detail. "
-                    "Subtle micro-expressions of dedication and physical exhaustion are visible."
+                    "The character maintains direct, soulful EYE CONTACT with the camera lens while delivering the dialogue. "
+                    "Their eyes look straight into the camera as if speaking to the audience with deep intention. "
+                    "When not speaking, they look DOWNWARD at the mosque structure to maintain focus on the craft. "
+                    "No blank staring—eyes are focused, human, and alive."
                 )
 
                 living_details = (
@@ -2297,7 +2300,6 @@ def tampilkan_ai_lab():
                     f"{scene_context} \n\n"
                     f"CHARACTER DNA: {soul_desc}. {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    # Gue tambahin 'INTERACTING' biar tangan dan masjid nyatu beneran
                     f"PERFORMANCE: {pilih_aksi} while INTERACTING with the mosque model. {pilih_mood}. \n"
                     f"THE MASTERPIECE: {deskripsi_teknis}. "
                     f"The structure is grand, wide, and incredibly intricate with multiple domes and minarets. \n"
@@ -2307,7 +2309,6 @@ def tampilkan_ai_lab():
                     f"sharp focus on both the diorama and the character's hands, "
                     f"realistic body scaling, consistent lighting, no distortion, masterpiece quality."
                 )
-
                 # --- 7. TAMPILKAN HASIL ---
                 st.success("🔥 PROMPT BERHASIL DIRAKIT!")
                 st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
@@ -6079,6 +6080,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
