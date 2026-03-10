@@ -2013,31 +2013,34 @@ def tampilkan_ai_lab():
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
                 
-                # 1. Inisialisasi State (Harus ada biar ngga error)
+                # 1. Inisialisasi awal (Cukup sekali)
                 if 'current_dialog' not in st.session_state:
                     st.session_state.current_dialog = ""
 
-                # 2. Tombol Kocok (Gue pertahanin semua list nyesek tadi)
-                if st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True):
+                # 2. Fungsi pembantu buat update dialog
+                def kocok_dialog():
                     if "Nenek" in char_key:
                         kat = "NENEK"
                     elif "Kakek" in char_key:
                         kat = "KAKEK"
                     else:
                         kat = "GADIS"
+                    # Simpan hasil random ke session state
                     st.session_state.current_dialog = random.choice(MASTER_NYESEK_DIALOG[kat])
 
-                # 3. Text Area (Gue set biar sinkron sama hasil kocokan atau ketikan lo)
+                # 3. Tombol Kocok pake 'on_click' biar sat-set
+                st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True, on_click=kocok_dialog)
+
+                # 4. Input Dialog (Kuncinya ada di parameter 'value')
                 user_dialog = st.text_area(
                     "Input Dialog", 
                     value=st.session_state.current_dialog,
                     placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
                     height=150, 
-                    label_visibility="collapsed",
-                    key="input_dialog_manual" # Tambahin key unik
+                    label_visibility="collapsed"
                 )
                 
-                # Update state kalau lo ngetik manual biar ngga ketimpa
+                # Simpan balik apa yang user ketik manual ke session state
                 st.session_state.current_dialog = user_dialog
 
             with c6:
@@ -5883,6 +5886,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
