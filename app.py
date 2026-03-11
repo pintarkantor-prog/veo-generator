@@ -4925,9 +4925,12 @@ def tampilkan_database_channel():
             # --- LOGIKA SOLD (Bulan Ini) ---
             tz = pytz.timezone('Asia/Jakarta')
             now_indo = datetime.now(tz)
-            bln_ini = now_indo.strftime("%m/%Y")
+            bln_ini = now_indo.strftime("%m/%Y") # Hasil: "03/2026"
             
-            mask_ini = (df['STATUS'] == 'SOLD') & (df.iloc[:, 11].astype(str).str.contains(bln_ini, na=False, case=False))
+            # Kita filter manual: Status harus SOLD dan di kolom EDITED harus ada teks bulan/tahun ini
+            # Contoh: nyari "03/2026" di dalam "Up: DIAN (08/03/2026 20:38)"
+            mask_ini = (df['STATUS'] == 'SOLD') & (df['EDITED'].astype(str).str.contains(bln_ini, na=False))
+            
             sold_ini = len(df[mask_ini])
             
             # HITUNG ARSIP (SUSPEND + BUSUK)
@@ -6089,5 +6092,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
