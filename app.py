@@ -851,7 +851,7 @@ def tampilkan_ai_lab():
     user_level = st.session_state.get("user_level", "ADMIN").upper()
 
     # Tambahin "STAFF" ke dalam list izin
-    if user_level not in ["OWNER", "ADMIN"]:
+    if user_level not in ["OWNER", "ADMIN", "STAFF"]:
         st.error("🚫 Maaf, Area Terbatas.")
         st.stop()
 
@@ -6090,6 +6090,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
