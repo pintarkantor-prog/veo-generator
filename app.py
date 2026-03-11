@@ -2947,10 +2947,8 @@ def tampilkan_tugas_kerja():
     except Exception as e:
         st.error(f"❌ Error Tampilan: {e}")
 
-    # --- 3. PANEL ADMIN (Taruh di Sini!) ---
-    if user_level == "OWNER": # <--- Cuma Dian yang punya akses kirim tugas
-        
-        # Ambil data staff untuk dropdown
+    # --- 3. PANEL ADMIN (MURNI SUPABASE) ---
+    if user_level == "OWNER":
         st_raw.columns = [str(c).strip().upper() for c in st_raw.columns]
         staf_options = st_raw['NAMA'].unique().tolist()
         
@@ -2967,8 +2965,6 @@ def tampilkan_tugas_kerja():
                     t_id = f"ID{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
                     tgl_skrg = sekarang.strftime("%Y-%m-%d")
                     
-                    # --- 1. KIRIM KE SUPABASE (Biar Radar Langsung Update) ---
-                    # Sesuaikan key dengan nama kolom asli di DB lo (Staf, Deadline, dll)
                     data_tugas_supabase = {
                         "ID": t_id,
                         "Staf": staf_tujuan,
@@ -2976,81 +2972,75 @@ def tampilkan_tugas_kerja():
                         "Instruksi": isi_tugas,
                         "Status": "PROSES"
                     }
-                    supabase.table("Tugas").insert(data_tugas_supabase).execute()
                     
-                    # --- 2. KIRIM KE GSHEET (Backup Kesayangan Lo) ---
-                    sheet_tugas.append_row([t_id, staf_tujuan, tgl_skrg, isi_tugas, "PROSES", "-", "", ""])
-                    
-                    # --- 3. LOG & NOTIF ---
-                    tambah_log(st.session_state.user_aktif, f"Kirim Tugas Baru {t_id}")
-                    
-                    if pake_wa:
-                        kirim_notif_wa(f"✨ *INFO TUGAS*\n\n👤 *Untuk:* {staf_tujuan.upper()}\n🆔 *ID:* {t_id}\n📝 *Detail:* {isi_tugas[:30]}...")
-                    
-                    st.success("✅ Terkirim ke Supabase & GSheet!")
-                    time.sleep(1)
-                    st.rerun()
-                else:
-                    st.error("Isi dulu instruksinya, Bos!")
+                    try:
+                        # HANYA KE SUPABASE
+                        supabase.table("Tugas").insert(data_tugas_supabase).execute()
+                        
+                        tambah_log(st.session_state.user_aktif, f"Kirim Tugas Baru {t_id}")
+                        
+                        if pake_wa:
+                            kirim_notif_wa(f"✨ *INFO TUGAS*\n\n👤 *Untuk:* {staf_tujuan.upper()}\n🆔 *ID:* {t_id}\n📝 *Detail:* {isi_tugas[:30]}...")
+                        
+                        st.success("✅ Tugas Berhasil Dikirim ke Supabase!")
+                        time.sleep(1)
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Gagal kirim ke Supabase: {e}")
 
-    # --- 4. SETOR MANDIRI (VERSI SUPER LOCK) ---
+    # --- 4. SETOR MANDIRI (VERSI TOTAL SUPABASE) ---
     if user_level in ["STAFF", "UPLOADER", "ADMIN"]:
         with st.expander("🚀 SETOR TUGAS MANDIRI", expanded=False):
-            st.info("💡 **PENTING:** Setor 1 video per 1 kiriman agar bonus video & target bulanan terhitung otomatis oleh sistem.")
+            st.info("💡 **SOP:** Setor 1 video per 1 kiriman agar bonus & target terhitung otomatis.")
             
-            with st.form("form_mandiri", clear_on_submit=True):
-                judul_m = st.text_input("📝 Judul Video/Pekerjaan:", placeholder="Contoh: Video Konten A Part 1")
-                link_m = st.text_input("🔗 Link GDrive:", placeholder="https://drive.google.com/...")
+            with st.form("form_mandiri_supa", clear_on_submit=True):
+                judul_m = st.text_input("📝 Judul Video/Pekerjaan:")
+                link_m = st.text_input("🔗 Link GDrive:")
                 
                 submit_m = st.form_submit_button("🔥 KIRIM SETORAN", use_container_width=True)
                 
                 if submit_m:
                     if judul_m and link_m:
+                        # --- VALIDASI LINK GANDA (PENTING!) ---
                         is_multiple = "," in link_m or link_m.lower().count("https://") > 1
                         
                         if is_multiple:
-                            st.error("❌ **TERDETEKSI GANDA!** Dilarang mengirim lebih dari 1 link dalam satu setoran.")
+                            st.error("❌ **STOP!** Dilarang setor link ganda dalam satu form.")
                         elif "drive.google.com" not in link_m.lower():
-                            st.warning("⚠️ **LINK TIDAK VALID!** Pastikan kamu memasukkan link Google Drive yang benar.")
+                            st.warning("⚠️ **LINK SALAH!** Wajib link Google Drive.")
                         else:
                             t_id_m = f"M{datetime.now(tz_wib).strftime('%m%d%H%M%S')}"
                             tgl_hari_ini = sekarang.strftime("%Y-%m-%d")
                             waktu_setor = sekarang.strftime("%d/%m/%Y %H:%M")
                             
-                            # --- 1. SINKRON KE SUPABASE ---
-                            # Kita masukkan data minimalis tapi penting buat Radar & SP
+                            # --- 1. SINKRON KE SUPABASE (SINGLE SOURCE OF TRUTH) ---
                             data_mandiri_sb = {
                                 "ID": t_id_m,
                                 "Staf": user_sekarang.upper(),
-                                "Deadline": tgl_hari_ini, # Setoran mandiri dianggap selesai hari ini
+                                "Deadline": tgl_hari_ini,
                                 "Instruksi": judul_m,
-                                "Status": "WAITING QC", # Status awal biar lo cek dulu
+                                "Status": "WAITING QC",
                                 "Waktu_Kirim": waktu_setor,
                                 "Link_Hasil": link_m
                             }
-                            supabase.table("Tugas").insert(data_mandiri_sb).execute()
-
-                            # --- 2. GSHEET TETAP JALAN (BACKUP) ---
-                            sheet_tugas.append_row([
-                                t_id_m, 
-                                user_sekarang.upper(), 
-                                tgl_hari_ini, 
-                                judul_m, 
-                                "WAITING QC", 
-                                waktu_setor, 
-                                link_m, 
-                                "" 
-                            ])
                             
-                            # --- NOTIF WA SIMPEL (MANDIRI) ---
-                            kirim_notif_wa(f"📤 *SETORAN MANDIRI*\n👤 *Editor:* {user_sekarang.upper()}\n🆔 *ID:* {t_id_m}\n📝 *Tugas:* {judul_m}")
-                            tambah_log(user_sekarang, f"SETOR MANDIRI: {judul_m} ({t_id_m})")
-                            
-                            st.success("✅ Setoran Mandiri Berhasil Terkirim!")
-                            time.sleep(1)
-                            st.rerun()
+                            try:
+                                supabase.table("Tugas").insert(data_mandiri_sb).execute()
+                                
+                                # --- 2. LOG & NOTIF (TANPA GSHEET) ---
+                                tambah_log(user_sekarang, f"SETOR MANDIRI: {judul_m} ({t_id_m})")
+                                
+                                if "kirim_notif_wa" in globals():
+                                    kirim_notif_wa(f"📤 *SETORAN MANDIRI*\n👤 *Editor:* {user_sekarang.upper()}\n🆔 *ID:* {t_id_m}\n📝 *Tugas:* {judul_m}")
+                                
+                                st.success("✅ Setoran Berhasil Masuk Database!")
+                                time.sleep(1)
+                                st.rerun()
+                                
+                            except Exception as e:
+                                st.error(f"❌ Database Error: {e}")
                     else:
-                        st.warning("⚠️ Mohon isi Judul dan Link terlebih dahulu!")
+                        st.warning("⚠️ Isi dulu Judul dan Link-nya!")
                         
     # --- 5. RENDER KARTU TUGAS (FIXED LOGIC) ---
     tugas_terfilter = []
@@ -3116,139 +3106,217 @@ def tampilkan_tugas_kerja():
                                     
                                     b1, b2, b3 = st.columns(3)
                                     
-                                    with b1: # --- TOMBOL ACC ---
+                                    with b1: # --- TOMBOL ACC (TOTAL SUPABASE) ---
                                         if st.button("🟢 ACC", key=f"f_{id_tugas}", use_container_width=True):
-                                            # PROTEKSI: Cegah klik ganda (Double Bonus)
+                                            # PROTEKSI: Cegah klik ganda (Kunci Session)
                                             if f"lock_{id_tugas}" in st.session_state:
                                                 st.warning("Sedang diproses...")
                                             else:
-                                                st.session_state[f"lock_{id_tugas}"] = True # Kunci
+                                                st.session_state[f"lock_{id_tugas}"] = True 
                                                 try:
-                                                    # 1. UPDATE SUPABASE (Database Utama)
+                                                    # 1. UPDATE STATUS TUGAS (SUPABASE ONLY)
                                                     supabase.table("Tugas").update({"Status": "FINISH"}).eq("ID", id_tugas).execute()
                                                     
-                                                    # 2. UPDATE GSHEET (Backup - Silent Error biar gak lag)
-                                                    try:
-                                                        cell = sheet_tugas.find(id_tugas)
-                                                        if cell: sheet_tugas.update_cell(cell.row, 5, "FINISH")
-                                                    except: pass
-
-                                                    # 3. HITUNG BONUS (PAKAI MEMORI - ANTI LAG)
+                                                    # 2. HITUNG BONUS (MENGGUNAKAN DATA MEMORI AGAR KILAT)
                                                     df_selesai = df_all_tugas[
                                                         (df_all_tugas['STAF'].str.upper() == staf_nama) &
                                                         (df_all_tugas['DEADLINE'] == tgl_tugas) &
                                                         (df_all_tugas['STATUS'].str.upper() == 'FINISH')
                                                     ]
-                                                    jml_video = len(df_selesai) + 1 # +1 untuk tugas yang diproses sekarang
+                                                    # +1 karena yang barusan di-ACC belum masuk df_all_tugas (cache)
+                                                    jml_video = len(df_selesai) + 1 
 
-                                                    # 4. LOGIKA BONUS & ARUS KAS
+                                                    # 3. LOGIKA BONUS & AUTO-INPUT ARUS KAS
                                                     msg_bonus = ""
                                                     if jml_video == 3 or jml_video >= 5:
                                                         nom_bonus = 30000
                                                         ket_bonus = f"Bonus {'Absen' if jml_video == 3 else 'Video'}: {staf_nama} ({id_tugas})"
                                                         
-                                                        # Kirim ke Arus Kas Supabase
+                                                        # INPUT KE ARUS KAS (SUPABASE ONLY)
                                                         supabase.table("Arus_Kas").insert({
-                                                            "Tanggal": tgl_tugas, "Tipe": "PENGELUARAN", 
-                                                            "Kategori": " Tim", "Nominal": nom_bonus, 
-                                                            "Keterangan": ket_bonus, "Pencatat": "SISTEM (AUTO-ACC)"
+                                                            "Tanggal": tgl_tugas, 
+                                                            "Tipe": "PENGELUARAN", 
+                                                            "Kategori": "Tim", # Sesuaikan kategori Supabase lo (foto tadi tulisannya "Tim")
+                                                            "Nominal": str(nom_bonus), 
+                                                            "Keterangan": ket_bonus, 
+                                                            "Pencatat": "SISTEM (AUTO-ACC)"
                                                         }).execute()
                                                         
-                                                        # Kirim ke Arus Kas GSheet
-                                                        try:
-                                                            ws_kas = sh.worksheet("Arus_Kas")
-                                                            ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
-                                                        except: pass
-                                                        
                                                         msg_bonus = f"\n💰 *BONUS:* Rp 30,000"
-                                                        st.toast(f"Bonus {staf_nama} dicatat!", icon="💸")
+                                                        st.toast(f"Bonus {staf_nama} otomatis cair!", icon="💸")
 
-                                                    # 5. NOTIF & REFRESH
-                                                    kirim_notif_wa(f"✅ *TUGAS ACC*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}{msg_bonus}")
+                                                    # 4. LOG & NOTIFIKASI
                                                     tambah_log(st.session_state.user_aktif, f"ACC TUGAS: {id_tugas}")
-                                                    st.success("Tugas Selesai!"); time.sleep(1); st.rerun()
+                                                    
+                                                    if "kirim_notif_wa" in globals():
+                                                        kirim_notif_wa(f"✅ *TUGAS ACC*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}{msg_bonus}")
+                                                    
+                                                    st.success("Tugas Selesai & Data Tersinkron!"); time.sleep(1); st.rerun()
                                                     
                                                 except Exception as e:
-                                                    # Buka kunci jika gagal total biar bisa diulang
+                                                    # Lepas kunci jika gagal agar bisa diulang
                                                     if f"lock_{id_tugas}" in st.session_state:
                                                         del st.session_state[f"lock_{id_tugas}"]
-                                                    st.error(f"Gagal ACC: {e}")
+                                                    st.error(f"❌ Gagal ACC ke Supabase: {e}")
 
-                                    with b2: # --- TOMBOL REVISI ---
+                                    with b2: # --- TOMBOL REVISI (PURE SUPABASE) ---
                                         if st.button("🔴 REV", key=f"r_{id_tugas}", use_container_width=True):
                                             if cat_r:
-                                                supabase.table("Tugas").update({"Status": "REVISI", "Catatan_Revisi": cat_r}).eq("ID", id_tugas).execute()
-                                                try:
-                                                    cell = sheet_tugas.find(id_tugas)
-                                                    if cell:
-                                                        sheet_tugas.update_cell(cell.row, 5, "REVISI")
-                                                        sheet_tugas.update_cell(cell.row, 8, cat_r)
-                                                except: pass
+                                                # UPDATE SUPABASE ONLY
+                                                supabase.table("Tugas").update({
+                                                    "Status": "REVISI", 
+                                                    "Catatan_Revisi": cat_r
+                                                }).eq("ID", id_tugas).execute()
+                                                
                                                 kirim_notif_wa(f"⚠️ *REVISI*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}\n📝: {cat_r}")
-                                                st.warning("REVISI!"); time.sleep(1); st.rerun()
+                                                tambah_log(st.session_state.user_aktif, f"REVISI TUGAS: {id_tugas}")
+                                                
+                                                st.warning("STATUS: REVISI!"); time.sleep(1); st.rerun()
                                             else:
                                                 st.error("Isi alasan revisi di kolom catatan!")
 
-                                    with b3: # --- TOMBOL BATAL ---
+                                    with b3: # --- TOMBOL BATAL (PURE SUPABASE) ---
                                         if st.button("🚫 BATAL", key=f"c_{id_tugas}", use_container_width=True):
                                             if cat_r:
-                                                supabase.table("Tugas").update({"Status": "CANCELED", "Catatan_Revisi": f"BATAL: {cat_r}"}).eq("ID", id_tugas).execute()
-                                                try:
-                                                    cell = sheet_tugas.find(id_tugas)
-                                                    if cell: sheet_tugas.update_cell(cell.row, 5, "CANCELED")
-                                                except: pass
+                                                # UPDATE SUPABASE ONLY
+                                                supabase.table("Tugas").update({
+                                                    "Status": "CANCELED", 
+                                                    "Catatan_Revisi": f"BATAL: {cat_r}"
+                                                }).eq("ID", id_tugas).execute()
+                                                
                                                 kirim_notif_wa(f"🚫 *BATAL*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}\n📝: {cat_r}")
-                                                st.error("BATAL!"); time.sleep(1); st.rerun()
+                                                tambah_log(st.session_state.user_aktif, f"BATALKAN TUGAS: {id_tugas}")
+                                                
+                                                st.error("STATUS: CANCELED!"); time.sleep(1); st.rerun()
                                             else:
                                                 st.error("Isi alasan batal di kolom catatan!")
 
-                                # --- PANEL STAFF (SETOR) ---
+                                # --- PANEL STAFF: SETOR TUGAS (PURE SUPABASE) ---
                                 elif user_level in ["STAFF", "UPLOADER", "ADMIN"]: 
                                     st.markdown("---")
                                     l_in = st.text_input("Paste Link GDrive:", value=t.get("LINK_HASIL", ""), key=f"l_{id_tugas}")
+                                    
                                     if st.button("🚀 SETOR", key=f"b_{id_tugas}", use_container_width=True):
                                         if l_in.strip() and "drive.google.com" in l_in.lower():
-                                            # Update Supabase
+                                            # UPDATE SUPABASE ONLY
                                             supabase.table("Tugas").update({
                                                 "Status": "WAITING QC", 
                                                 "Link_Hasil": l_in, 
                                                 "Waktu_Kirim": sekarang.strftime("%d/%m/%Y %H:%M")
                                             }).eq("ID", id_tugas).execute()
                                             
-                                            # Update GSheet (Silent)
-                                            try:
-                                                cell = sheet_tugas.find(id_tugas)
-                                                if cell:
-                                                    sheet_tugas.update_cell(cell.row, 5, "WAITING QC")
-                                                    sheet_tugas.update_cell(cell.row, 7, l_in)
-                                            except: pass
-                                            
                                             kirim_notif_wa(f"📤 *SETORAN*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}")
-                                            st.success("Terkirim!"); time.sleep(1); st.rerun()
+                                            tambah_log(user_sekarang, f"SETOR TUGAS: {id_tugas}")
+                                            
+                                            st.success("Tugas Berhasil Disetorkan!"); time.sleep(1); st.rerun()
                                         else:
-                                            st.error("Hanya boleh Link Google Drive!")
+                                            st.error("Wajib Link Google Drive yang Valid!")
 
     # =========================================================
-    # --- 4.5. SISTEM KLAIM AI (FIXED INDENTATION) ---
+    # --- 4.5. SISTEM KLAIM AI (MURNI SUPABASE - ANTI LAG) ---
     # =========================================================
     if user_level in ["STAFF", "ADMIN", "UPLOADER"]:
         st.write("")
         
         with st.expander("⚡ KLAIM AKUN AI DISINI", expanded=False):
             try:
-                # 1. SETUP WAKTU & KONEKSI
+                # 1. SETUP WAKTU & AMBIL DATA (DARI SUPABASE)
                 tz_jakarta = pytz.timezone('Asia/Jakarta')
                 h_ini = datetime.now(tz_jakarta).date()
+                h_ini_str = h_ini.strftime("%Y-%m-%d")
 
-                sh_ai = get_gspread_sh() 
-                ws_akun = sh_ai.worksheet("Akun_AI")
-                df_ai = pd.DataFrame(ws_akun.get_all_records())
+                # Tarik data stok akun AI dari Supabase
+                # Asumsi Nama Tabel: Akun_AI (Sesuaikan dengan DB lo)
+                res_ai = supabase.table("Akun_AI").select("*").execute()
+                df_ai = pd.DataFrame(res_ai.data)
+                
+                if df_ai.empty:
+                    st.warning("📭 Database Akun AI masih kosong.")
+                else:
+                    df_ai = bersihkan_data(df_ai) # Pake pembersih lo
+                    user_up = user_sekarang.upper().strip()
+                    
+                    # 2. FILTER AKUN AKTIF MILIK USER
+                    # Akun yang sedang dipegang user dan belum expired
+                    df_user_aktif = df_ai[
+                        (df_ai['PEMAKAI'] == user_up) & 
+                        (pd.to_datetime(df_ai['EXPIRED']).dt.date >= h_ini)
+                    ].copy()
+                    
+                    akun_aktif_user = df_user_aktif.to_dict('records')
 
-                # 2. FILTER AKUN AKTIF MILIK USER
+                    # 3. LOGIKA STOK (Tampilkan yang PEMAKAI='X' dan BELUM EXPIRED)
+                    df_stok = df_ai[
+                        (df_ai['PEMAKAI'] == 'X') & 
+                        (pd.to_datetime(df_ai['EXPIRED']).dt.date > h_ini)
+                    ].copy()
+                    
+                    list_opsi = sorted(df_stok['AI'].unique().tolist()) if not df_stok.empty else []
+                    
+                    c_sel, c_btn = st.columns([2, 1])
+                    pilihan_ai = c_sel.selectbox("Pilih Tool", list_opsi if list_opsi else ["STOK KOSONG"], label_visibility="collapsed", key="v5_select")
+                    
+                    # Validasi Tombol
+                    bisa_klaim = True 
+                    if not list_opsi:
+                        bisa_klaim = False
+                        st.warning("😭 Stok akun sedang habis atau expired.")
+                    elif len(akun_aktif_user) >= 4:
+                        bisa_klaim = False
+                        st.warning("🚫 Limit 4 akun aktif tercapai. Tunggu akun lama expired.")
+
+                    # --- PROSES EKSEKUSI (SUPABASE VERSION) ---
+                    if c_btn.button("🔓 KLAIM AKUN", use_container_width=True, disabled=not bisa_klaim):
+                        # 1. CEK LOCK (Anti Double-Click)
+                        if f"lock_ai_{user_up}" in st.session_state:
+                            st.warning("Sabar Bos, lagi diproses...")
+                        else:
+                            st.session_state[f"lock_ai_{user_up}"] = True
+                            
+                            try:
+                                # 2. AMBIL STOK PERTAMA DARI PILIHAN
+                                target_df = df_stok[df_stok['AI'] == pilihan_ai]
+                                
+                                if not target_df.empty:
+                                    target = target_df.iloc[0] 
+                                    email_target = str(target['EMAIL']).strip()
+                                    
+                                    # 3. UPDATE KE SUPABASE (INSTANT)
+                                    # Mengubah PEMAKAI dari 'X' menjadi Nama User & Update TANGGAL_KLAIM
+                                    supabase.table("Akun_AI").update({
+                                        "PEMAKAI": user_up,
+                                        "TGL_KLAIM": h_ini_str
+                                    }).eq("EMAIL", email_target).execute()
+                                    
+                                    # 4. KIRIM NOTIF & LOG
+                                    if "kirim_notif_wa" in globals():
+                                        kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
+                                    
+                                    tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
+                                    
+                                    st.success(f"Berhasil! Akun {pilihan_ai} sekarang milikmu.")
+                                    
+                                    # 5. BERSIHKAN & REFRESH
+                                    del st.session_state[f"lock_ai_{user_up}"]
+                                    time.sleep(1)
+                                    st.rerun()
+                                else:
+                                    st.error("Yah, barusan diambil orang lain. Coba lagi!")
+                                    del st.session_state[f"lock_ai_{user_up}"]
+                                    
+            except Exception as e:
+                # Ini penutup untuk tombol KLAIM saja
+                if f"lock_ai_{user_up}" in st.session_state:
+                    del st.session_state[f"lock_ai_{user_up}"]
+                st.error(f"Gagal eksekusi klaim: {e}")
+            
+            # --- 4. DAFTAR KOLEKSI (DI LUAR EXCEPT) ---
+            # Taruh di sini supaya mau sukses atau gagal klaim, list akun tetep muncul
+            if not df_ai.empty: # Pastikan df_ai sudah terdefinisi dari load awal
+                # Filter ulang akun milik user (biar dapet data paling segar)
                 user_up = user_sekarang.upper().strip()
                 df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                 
-                # Akun yang sedang dipegang user dan belum expired
                 df_user_aktif = df_ai[
                     (df_ai['PEMAKAI'].astype(str).str.upper() == user_up) & 
                     (df_ai['EXPIRED_DT'] >= h_ini)
@@ -3256,73 +3324,9 @@ def tampilkan_tugas_kerja():
                 
                 akun_aktif_user = df_user_aktif.to_dict('records')
 
-                # 3. LOGIKA STOK (Hanya tampilkan yang PEMAKAI='X' dan BELUM EXPIRED)
-                # Catatan: Sesuaikan 'X' atau kosong sesuai standar GSheet lo
-                df_stok = df_ai[
-                    (df_ai['PEMAKAI'].astype(str).str.upper() == 'X') & 
-                    (df_ai['EXPIRED_DT'] > h_ini)
-                ].copy()
-                
-                list_opsi = sorted(df_stok['AI'].unique().tolist()) if not df_stok.empty else []
-                
-                c_sel, c_btn = st.columns([2, 1])
-                pilihan_ai = c_sel.selectbox("Pilih Tool", list_opsi if list_opsi else ["STOK KOSONG"], label_visibility="collapsed", key="v5_select")
-                
-                # Validasi Tombol
-                bisa_klaim = True 
-                if not list_opsi:
-                    bisa_klaim = False
-                    st.warning("😭 Stok akun sedang habis atau expired.")
-                elif len(akun_aktif_user) >= 4:
-                    bisa_klaim = False
-                    st.warning("🚫 Limit 4 akun aktif tercapai. Tunggu akun lama expired.")
-
-                # --- GANTI BAGIAN INI (Step 3) ---
-                if c_btn.button("🔓 KLAIM AKUN", use_container_width=True, disabled=not bisa_klaim):
-                    # 1. CEK LOCK (Supaya tidak double click saat internet lag)
-                    if f"lock_ai_{user_up}" in st.session_state:
-                        st.warning("Sabar Bos, lagi diproses...")
-                    else:
-                        st.session_state[f"lock_ai_{user_up}"] = True
-                        
-                        try:
-                            # 2. AMBIL STOK PERTAMA (Ganti .sample(1) jadi .iloc[0])
-                            # Ini penting supaya kalau Icha & Nissa barengan, gak dapet email yang sama
-                            target_df = df_stok[df_stok['AI'] == pilihan_ai]
-                            
-                            if not target_df.empty:
-                                target = target_df.iloc[0] 
-                                email_target = str(target['EMAIL']).strip()
-                                
-                                # 3. PROSES KE GSHEET
-                                cell = ws_akun.find(email_target, in_column=2)
-                                if cell:
-                                    ws_akun.update_cell(cell.row, 5, user_up) 
-                                    ws_akun.update_cell(cell.row, 6, h_ini.strftime("%Y-%m-%d"))
-                                    
-                                    # Kirim Notif & Log
-                                    kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
-                                    tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
-                                    
-                                    st.success(f"Berhasil! Akun {pilihan_ai} sekarang milikmu.")
-                                    
-                                    # 4. BERSIHKAN LOCK & REFRESH
-                                    del st.session_state[f"lock_ai_{user_up}"]
-                                    time.sleep(1)
-                                    st.rerun()
-                            else:
-                                st.error("Yah, barusan diambil orang lain. Coba tool lain ya!")
-                                del st.session_state[f"lock_ai_{user_up}"]
-                                
-                        except Exception as e:
-                            # Lepas lock kalau error biar bisa coba lagi
-                            if f"lock_ai_{user_up}" in st.session_state:
-                                del st.session_state[f"lock_ai_{user_up}"]
-                            st.error(f"Gagal klaim: {e}")
-
-                # 4. DAFTAR KOLEKSI (Tampilan 3 Kolom Premium Lo)
                 if akun_aktif_user:
                     st.divider()
+                    st.markdown("### 🔑 Akun Aktif Milikmu")
                     kolom_vcard = st.columns(3) 
                     
                     for idx, r in enumerate(reversed(akun_aktif_user)):
@@ -3332,6 +3336,7 @@ def tampilkan_tugas_kerja():
 
                         with kolom_vcard[idx % 3]:
                             with st.container(border=True):
+                                # Bagian HTML lo udah cakep banget, pertahanin!
                                 st.markdown(f"""
                                     <div style="text-align:center; padding:3px; background:{warna_h}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;">
                                         <b style="color:white; font-size:11px;">{str(r['AI']).upper()}</b>
@@ -3339,19 +3344,20 @@ def tampilkan_tugas_kerja():
                                 """, unsafe_allow_html=True)
                                 
                                 e1, e2 = st.columns(2)
-                                e1.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:13px; display:block; overflow:hidden; text-overflow:ellipsis;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                                e2.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>🔑 PASS</p><code style='font-size:13px; display:block;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                                e1.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px; display:block; overflow:hidden;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                                e2.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>🔑 PASS</p><code style='font-size:11px; display:block;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                                 
                                 st.write("")
                                 s1, s2, s3 = st.columns(3)
-                                s1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:11px;'>{stat_ai}</b>", unsafe_allow_html=True)
-                                s2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>EXP</p><b style='font-size:11px;'>{r['EXPIRED_DT'].strftime('%d %b')}</b>", unsafe_allow_html=True)
-                                s3.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>SISA</p><b style='font-size:12px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
+                                s1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:10px;'>{stat_ai}</b>", unsafe_allow_html=True)
+                                s2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>EXP</p><b style='font-size:10px;'>{r['EXPIRED_DT'].strftime('%d %b')}</b>", unsafe_allow_html=True)
+                                s3.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>SISA</p><b style='font-size:11px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
 
                 st.caption("🆘 **Darurat?** Jika akun suspend, hubungi Admin (Dian).")
 
-            except Exception as e_station:
-                st.error(f"Gagal memuat AI Station: {e_station}")
+        except Exception as e_station:
+            # Ini proteksi kalau seluruh sistem AI Station (loading data) gagal
+            st.error(f"Gagal memuat AI Station: {e_station}")
                 
     # --- 4. LACI ARSIP (VERSI FIX NOTIF) ---
     with st.expander("📜 RIWAYAT & ARSIP TUGAS", expanded=False):
@@ -3418,7 +3424,7 @@ def tampilkan_kendali_tim():
         st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
         st.stop()
 
-    # 2. SETUP WAKTU (Wajib di atas agar variabel 'sekarang' terbaca semua modul)
+    # 2. SETUP WAKTU
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
@@ -3430,9 +3436,6 @@ def tampilkan_kendali_tim():
         if st.button("🔄 REFRESH DATA", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
-
-    # 4. KONEKSI MASTER (Satu koneksi untuk semua expander di bawah)
-    sh = get_gspread_sh()
     
     c_bln, c_thn = st.columns([2, 2])
     daftar_bulan = {1: "Januari", 2: "Februari", 3: "Maret", 4: "April", 5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus", 9: "September", 10: "Oktober", 11: "November", 12: "Desember"}
@@ -3448,80 +3451,50 @@ def tampilkan_kendali_tim():
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
-        df_log   = ambil_data_segar("Log_Aktivitas") # <--- CCTV Lo masuk sini
-
-        # Hitung target display (logika lo tetep jalan)
-        t_target_display = len(df_staff) * 40
+        df_log   = ambil_data_segar("Log_Aktivitas")
 
         # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
         def saring_tgl(df, kolom, bln, thn):
-            if df.empty or kolom.upper() not in df.columns: return pd.DataFrame()
-            # Pastikan kolom tanggal jadi format waktu Python yang benar
-            df['TGL_TEMP'] = pd.to_datetime(df[kolom.upper()], errors='coerce')
-            mask = df['TGL_TEMP'].apply(lambda x: x.month == bln and x.year == thn if pd.notnull(x) else False)
+            if df.empty or kolom not in df.columns: return pd.DataFrame()
+            # Gunakan dayfirst=True biar gak ketukar format luar negeri
+            df['TGL_TEMP'] = pd.to_datetime(df[kolom], errors='coerce', dayfirst=True)
+            mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
-        # Jalankan filter untuk semua tabel (Data otomatis tersaring sesuai bulan/tahun pilihan lo)
+        # Jalankan filter
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
-         # --- 3. LOGIKA REKAP (VERSI SUPER SAKTI ANTI-CRASH) ---
-        rekap_harian_tim = {}
-        rekap_total_video = {}
-
-        # --- 1. PROSES FILTER DATA (WAJIB ADA DI ATAS) ---
-        # Pastikan df_t_bln didefinisikan dulu dari hasil saring_tgl
+        # --- 3. LOGIKA REKAP TIM ---
+        df_f_f = pd.DataFrame(columns=['STAF', 'STATUS', 'TGL_TEMP']) # Default
         if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
             df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
-        else:
-            # Jika data kosong, buat DataFrame kosong dengan kolom default agar tidak 'not defined'
-            df_f_f = pd.DataFrame(columns=['STAF', 'STATUS', 'TGL_TEMP'])
 
-        # --- 2. LOGIKA REKAP (VERSI SUPER SAKTI) ---
         rekap_harian_tim = {}
         rekap_total_video = {}
 
-        # Sekarang df_f_f PASTI ada wujudnya (biarpun kosong)
         if not df_f_f.empty and 'STAF' in df_f_f.columns:
             df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
-            
-            if 'TGL_TEMP' in df_f_f.columns:
-                df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-                
-                # Groupby aman karena df_f_f sudah divalidasi
-                try:
-                    rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-                except:
-                    rekap_harian_tim = {}
-            
+            df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
+            rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
             rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
-        else:
-            # Fallback aman kalau Maret masih nol
-            rekap_harian_tim = {}
-            rekap_total_video = {}
 
-        performa_staf = {} 
-
-        # --- KALKULASI KEUANGAN RIIL ---
-        inc = 0
-        ops = 0
-        bonus_terbayar_kas = 0
+        # --- 4. KALKULASI KEUANGAN (FIX KATEGORI 'TIM') ---
+        inc, ops, bonus_terbayar_kas = 0, 0, 0
         
         if not df_k_f.empty:
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
-            # Ops adalah pengeluaran SELAIN Gaji Tim
-            ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] != 'Gaji Tim')]['NOMINAL'].sum()
-            # Bonus Terbayar adalah yang sudah masuk ke Arus Kas via tombol ACC
-            bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'] == 'Gaji Tim')]['NOMINAL'].sum()
+            
+            # PENTING: Ganti 'Gaji Tim' jadi 'TIM' sesuai database Supabase lo
+            ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (~df_k_f['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM']))]['NOMINAL'].sum()
+            bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM']))]['NOMINAL'].sum()
 
-        # --- HITUNG ESTIMASI GAJI POKOK REAL (STAFF & ADMIN) ---
+        # --- 5. ESTIMASI GAJI POKOK (NO OWNER) ---
         total_gaji_pokok_tim = 0
         is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
-        
-        # FILTER: Ambil STAFF dan ADMIN. OWNER (Dian) jangan dimasukkan agar saldo tetap rahasia.
         df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
         if not is_masa_depan:
@@ -3529,26 +3502,20 @@ def tampilkan_kendali_tim():
                 n_up = str(s.get('NAMA', '')).strip().upper()
                 if n_up == "" or n_up == "NAN": continue
                 
-                # --- 1. IDENTIFIKASI LEVEL TARGET (KUNCI UTAMA) ---
                 lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
-                
-                # --- 2. SINKRON: Ambil Data Harian ---
-                df_a_staf = df_a_f[df_a_f['NAMA'] == n_up].copy()
+                df_a_staf = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy()
                 df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
 
-                # --- 3. PANGGIL MESIN (Suntik lv_asli agar Kebal SP aktif) ---
+                # Panggil mesin hitung performa
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
                     df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
                     level_target=lv_asli 
                 )
                 
-                # --- 4. HITUNG GAJI NETT ---
                 g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
                 t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
                 
-                # Admin pasti pot_sp_real = 0 karena level_target="ADMIN" sudah dikirim ke mesin
                 gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
-                
                 total_gaji_pokok_tim += gaji_nett
 
         # TOTAL OUTCOME SINKRON (Uang Keluar Real: Staff + Admin)
@@ -3557,13 +3524,12 @@ def tampilkan_kendali_tim():
         saldo_bersih = inc - total_out
         
         # ======================================================================
-        # --- UI: FINANCIAL COMMAND CENTER (CUSTOM LAYOUT) ---
+        # --- UI: FINANCIAL COMMAND CENTER (FULL SUPABASE EDITION) ---
         # ======================================================================
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
             
             # --- FIX TIPE DATA FINANSIAL SEBELUM TAMPIL ---
             inc_val = float(inc)
-            # Pastikan bonus terbayar dan ops sudah angka murni
             bonus_val = float(bonus_terbayar_kas) if bonus_terbayar_kas else 0
             ops_val = float(ops) if ops else 0
             
@@ -3573,9 +3539,7 @@ def tampilkan_kendali_tim():
             
             # --- METRIK UTAMA ---
             m1, m2, m3, m4 = st.columns(4)
-            
             m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
-            
             m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", 
                       delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, 
                       delta_color="normal")
@@ -3592,18 +3556,19 @@ def tampilkan_kendali_tim():
 
             st.divider()
             
-            # Formasi Baru: Input (1) - Logs (1.2) - Viz (1)
             col_input, col_logs, col_viz = st.columns([1, 1.2, 1], gap="small")
 
             with col_input:
                 with st.form("form_kas_new", clear_on_submit=True):
                     f_tipe = st.pills("Tipe", ["PENDAPATAN", "PENGELUARAN"], default="PENGELUARAN", label_visibility="collapsed")
-                    f_kat = st.selectbox("Kategori", ["YouTube", "Brand Deal", "Gaji Tim", "Operasional", "Lainnya"], label_visibility="collapsed")
+                    # FIX: Ganti "Gaji Tim" jadi "Tim" biar sinkron sama database Supabase lo
+                    f_kat = st.selectbox("Kategori", ["YouTube", "Brand Deal", "Tim", "Operasional", "Lainnya"], label_visibility="collapsed")
                     f_nom = st.number_input("Nominal", min_value=0, step=50000, label_visibility="collapsed", placeholder="Nominal Rp...")
                     f_ket = st.text_area("Keterangan", height=65, label_visibility="collapsed", placeholder="Catatan...")
-                    if st.form_submit_button("🚀 SIMPAN", use_container_width=True):
+                    
+                    if st.form_submit_button("🚀 SIMPAN KE SUPABASE", use_container_width=True):
                         if f_nom > 0:
-                            # --- 1. SINKRON KE SUPABASE (UNTUK RADAR KILAT) ---
+                            # --- 1. SINKRON KE SUPABASE (MASTER DATA BARU) ---
                             data_kas_sb = {
                                 "Tanggal": sekarang.strftime('%Y-%m-%d'),
                                 "Tipe": f_tipe,
@@ -3614,17 +3579,7 @@ def tampilkan_kendali_tim():
                             }
                             supabase.table("Arus_Kas").insert(data_kas_sb).execute()
 
-                            # --- 2. GSHEET TETAP JALAN (MASTER DATA) ---
-                            sh.worksheet("Arus_Kas").append_row([
-                                sekarang.strftime('%Y-%m-%d'), 
-                                f_tipe, 
-                                f_kat, 
-                                str(int(f_nom)),
-                                f_ket, 
-                                user_sekarang.upper()
-                            ])
-                            
-                            # --- 3. CATAT LOG AKTIVITAS (CCTV) ---
+                            # --- 2. CATAT LOG AKTIVITAS (CCTV) ---
                             tambah_log(user_sekarang, f"INPUT KAS: {f_tipe} - {f_kat} (Rp {f_nom:,.0f})")
 
                             st.success("Tersimpan!"); time.sleep(1); st.rerun()
@@ -3632,17 +3587,18 @@ def tampilkan_kendali_tim():
                             st.warning("Nominal harus lebih dari 0!")
 
             with col_logs:
-                # Log Terakhir: Batasi 5 Transaksi Saja
+                # Log Terakhir: Ambil dari df_k_f yang sudah difilter Supabase
                 with st.container(height=315):
                     if not df_k_f.empty:
-                        # Ambil hanya 6 baris terbaru
                         df_logs_display = df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(8)
                         for _, r in df_logs_display.iterrows():
+                            # FIX: Pastikan nominal jadi float buat formatting
+                            nom_val = float(r['NOMINAL'])
                             color = "#00ba69" if r['TIPE'] == "PENDAPATAN" else "#ff4b4b"
                             st.markdown(f"""
                             <div style='font-size:11px; border-bottom:1px solid #333; padding:4px 0;'>
                                 <b style='color:#ccc;'>{r['KATEGORI']}</b> 
-                                <span style='float:right; color:{color}; font-weight:bold;'>Rp {float(r['NOMINAL']):,.0f}</span><br>
+                                <span style='float:right; color:{color}; font-weight:bold;'>Rp {nom_val:,.0f}</span><br>
                                 <span style='color:#666; font-style:italic;'>{r['KETERANGAN']}</span>
                             </div>
                             """, unsafe_allow_html=True)
@@ -3651,8 +3607,6 @@ def tampilkan_kendali_tim():
 
             with col_viz:
                 st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-                
-                # Update data donut biar pake angka yang udah di-fix
                 df_donut = pd.DataFrame({"Kat": ["INCOME", "OUTCOME"], "Val": [inc_val, total_out_riil]})
                 if (inc_val + total_out_riil) > 0:
                     fig = px.pie(df_donut, values='Val', names='Kat', hole=0.75, 
@@ -3671,28 +3625,25 @@ def tampilkan_kendali_tim():
                     st.markdown("<p style='text-align:center; color:#666; font-size:12px; margin-top:50px;'>Belum ada data visualisasi untuk periode ini.</p>", unsafe_allow_html=True)
                     
         # ======================================================================
-        # --- 4. MASTER MONITORING & RADAR TIM (VERSI VISUAL PRO - SYNCED) ---
+        # --- 4. MASTER MONITORING & RADAR TIM (VERSI SUPABASE FULL SYNC) ---
         # ======================================================================
         st.write(""); st.markdown("### 📡 RADAR PERFORMA TIM")
         
         kolom_card = st.columns(4)
-        rekap_v_total, rekap_b_cair, rekap_b_absen, rekap_h_malas = 0, 0, 0, 0
+        rekap_v_total, rekap_b_total_all, rekap_h_malas = 0, 0, 0
         performa_staf = {}
 
-        # --- FIX: Loop dari STAFF biar Icha & Nissa gak ilang ---
         df_staff_filtered = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
         for idx, s in df_staff_filtered.reset_index().iterrows():
             n_up = str(s.get('NAMA', '')).strip().upper()
             if n_up == "" or n_up == "NAN": continue
             
-            # --- FIX: Proteksi filter agar Maret tidak error ---
-            df_a_staf_r = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame(columns=['NAMA', 'TANGGAL'])
+            df_a_staf_r = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy() if not df_a_f.empty else pd.DataFrame(columns=['NAMA', 'TANGGAL'])
             df_t_staf_r = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame(columns=['STAF', 'STATUS'])
 
             lv_staf_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
             
-            # Mesin hitung tetep jalan dengan pengaman
             try:
                 b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = hitung_logika_performa_dan_bonus(
                     df_t_staf_r, df_a_staf_r, bulan_dipilih, tahun_dipilih,
@@ -3701,24 +3652,26 @@ def tampilkan_kendali_tim():
             except:
                 b_lembur_staf, u_absen_staf, pot_sp_r, level_sp_r, h_lemah_staf = 0, 0, 0, "NORMAL", 0
             
-            # --- LOGIKA SINKRONISASI BONUS DARI KAS (LIVE) ---
+            # --- LOGIKA SINKRONISASI BONUS (SUPABASE READY) ---
             bonus_real_staf = 0
             if not df_kas.empty:
                 df_kas_temp = df_kas.copy()
                 df_kas_temp['NOMINAL_INT'] = pd.to_numeric(df_kas_temp['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
                 
-                # Filter Periode & Nama Staf
-                mask_staf_kas = (df_kas_temp['KATEGORI'].str.upper() == 'GAJI TIM') & \
+                # FIX: Gunakan .isin(['TIM', 'GAJI TIM']) biar sinkron sama database lo
+                mask_staf_kas = (df_kas_temp['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM'])) & \
                                 (df_kas_temp['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
                                 (pd.to_datetime(df_kas_temp['TANGGAL'], errors='coerce').dt.month == bulan_dipilih)
                 
                 bonus_real_staf = df_kas_temp[mask_staf_kas]['NOMINAL_INT'].sum()
             
+            # --- GABUNGKAN BONUS KAS + BONUS ABSENSI BERJALAN ---
+            total_bonus_display = bonus_real_staf + u_absen_staf
+            
             jml_v = len(df_t_staf_r)
             rekap_v_total += jml_v
             performa_staf[n_up] = jml_v
             
-            # --- FIX: JML CANCEL (Proteksi empty) ---
             jml_cancel = 0
             if not df_t_bln.empty and 'STAF' in df_t_bln.columns:
                 jml_cancel = len(df_t_bln[(df_t_bln['STAF'] == n_up) & (df_t_bln['STATUS'].astype(str).str.upper() == 'CANCELED')])
@@ -3727,7 +3680,7 @@ def tampilkan_kendali_tim():
             if n_up in rekap_harian_tim:
                 h_cair = sum(1 for qty in rekap_harian_tim[n_up].values() if qty >= 3)
             
-            rekap_b_cair += bonus_real_staf 
+            rekap_b_total_all += total_bonus_display 
             rekap_h_malas += h_lemah_staf
 
             t_hadir = 0
@@ -3753,14 +3706,14 @@ def tampilkan_kendali_tim():
                     det2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⚠️ HARI LEMAH</p><b style='font-size:12px; color:#e74c3c;'>{h_lemah_staf} Hari</b>", unsafe_allow_html=True)
                     
                     det1.markdown(f"<p style='margin:5px 0 0 0; font-size:10px; color:#888;'>✨ HARI CAIR</p><b style='font-size:12px;'>{h_cair} Hari</b>", unsafe_allow_html=True)
-                    det2.markdown(f"<p style='margin:5px 0 0 0; font-size:10px; color:#888;'>💰 TOTAL BONUS</p><b style='font-size:12px; color:#1d976c;'>Rp {int(bonus_real_staf):,}</b>", unsafe_allow_html=True)
+                    # FIX: Variabel diganti ke total_bonus_display agar bonus absen muncul
+                    det2.markdown(f"<p style='margin:5px 0 0 0; font-size:10px; color:#888;'>💰 TOTAL BONUS</p><b style='font-size:12px; color:#1d976c;'>Rp {int(total_bonus_display):,}</b>", unsafe_allow_html=True)
                     
-                    # Progress bar pengaman (Max 1.0)
                     prog_val = min(h_lemah_staf / 7, 1.0) if h_lemah_staf > 0 else 0.0
                     st.progress(prog_val)
                     
         # ======================================================================
-        # --- 5. RANGKUMAN KOLEKTIF TIM (VERSI FIX BONUS VIDEO & LEMBUR) ---
+        # --- 5. RANGKUMAN KOLEKTIF TIM (FULL SUPABASE & SYNC CATEGORY) ---
         # ======================================================================
         with st.container(border=True):
             st.markdown("<p style='font-size:12px; font-weight:bold; color:#888; margin-bottom:15px;'>📊 RANGKUMAN KOLEKTIF TIM</p>", unsafe_allow_html=True)
@@ -3769,7 +3722,6 @@ def tampilkan_kendali_tim():
             nama_staff_asli = df_staff[df_staff['LEVEL'] == 'STAFF']['NAMA'].str.upper().tolist()
             performa_hanya_staff = {k: v for k, v in performa_staf.items() if k in nama_staff_asli}
             
-            # Pengaman MVP & LOW: Jika semua masih 0, jangan tampilkan error
             if performa_hanya_staff and any(v > 0 for v in performa_hanya_staff.values()):
                 staf_top = max(performa_hanya_staff, key=performa_hanya_staff.get)
                 staf_low = min(performa_hanya_staff, key=performa_hanya_staff.get)
@@ -3777,139 +3729,122 @@ def tampilkan_kendali_tim():
                 staf_top = "-"
                 staf_low = "-"
             
-            # --- LOGIKA SINKRONISASI KAS (FIXED) ---
-            df_kas_kolektif = ambil_data_segar("Arus_Kas")
+            # --- LOGIKA SINKRONISASI KAS (FULL SUPABASE SYNC) ---
+            # Kita gunakan df_k_f yang sudah disaring di awal fungsi agar lebih ringan
             real_b_video_kolektif = 0
             real_b_absen_kolektif = 0
             
-            if not df_kas_kolektif.empty:
-                df_kas_kolektif.columns = [str(c).strip().upper() for c in df_kas_kolektif.columns]
+            if not df_k_f.empty:
+                df_cair = df_k_f.copy()
+                # Pastikan Nominal bersih
+                df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
                 
-                # Filter Periode: Konsisten dengan filter bulan/tahun pilihan
-                df_kas_kolektif['TANGGAL_DT'] = pd.to_datetime(df_kas_kolektif['TANGGAL'], errors='coerce')
-                mask_periode = (df_kas_kolektif['TANGGAL_DT'].dt.month == bulan_dipilih) & \
-                               (df_kas_kolektif['TANGGAL_DT'].dt.year == tahun_dipilih)
+                # FIX: Gunakan kategori 'TIM' atau 'GAJI TIM' sesuai temuan foto Supabase tadi
+                mask_kategori_tim = df_cair['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM'])
                 
-                df_cair = df_kas_kolektif[mask_periode].copy()
+                # Logika pencarian kata kunci di keterangan Kas
+                mask_video = mask_kategori_tim & (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False))
+                real_b_video_kolektif = df_cair[mask_video]['NOMINAL_FIX'].sum()
                 
-                if not df_cair.empty:
-                    # Pastikan Nominal bersih dari karakter aneh
-                    df_cair['NOMINAL_FIX'] = pd.to_numeric(df_cair['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
-                    
-                    # Logika pencarian kata kunci di keterangan Kas
-                    mask_video = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                 (df_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False))
-                    real_b_video_kolektif = df_cair[mask_video]['NOMINAL_FIX'].sum()
-                    
-                    mask_absen = (df_cair['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                 (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
-                    real_b_absen_kolektif = df_cair[mask_absen]['NOMINAL_FIX'].sum()
+                mask_absen = mask_kategori_tim & (df_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False))
+                real_b_absen_kolektif = df_cair[mask_absen]['NOMINAL_FIX'].sum()
 
             # --- DISPLAY METRIC (7 KOLOM) ---
             c_r1, c_r2, c_r3, c_r4, c_r5, c_r6, c_r7 = st.columns(7)
             
+            # Itungan Target (Misal target 60 video per staff)
             target_fix = len(nama_staff_asli) * 60
             c_r1.metric("🎯 TARGET IDEAL", f"{target_fix} Vid") 
             
-            persen_capaian = (rekap_v_total / target_fix * 120) if target_fix > 0 else 0
+            persen_capaian = (rekap_v_total / target_fix * 100) if target_fix > 0 else 0
             c_r2.metric("🎬 TOTAL VIDEO", f"{int(rekap_v_total)}", delta=f"{persen_capaian:.1f}%")
             
-            c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_video_kolektif):,}", delta="LIVE SYNC")
-            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen_real):,}" if 'real_b_absen_real' in locals() else f"Rp {int(real_b_absen_kolektif):,}", delta="LIVE SYNC")
+            c_r3.metric("🔥 BONUS VIDEO", f"Rp {int(real_b_video_kolektif):,}", delta="LIVE")
+            
+            # FIX: Gunakan variabel real_b_absen_kolektif yang konsisten
+            c_r4.metric("📅 BONUS ABSEN", f"Rp {int(real_b_absen_kolektif):,}", delta="LIVE")
             
             c_r5.metric("💀 TOTAL LEMAH", f"{rekap_h_malas} HR", delta="Staff Only", delta_color="inverse")
             c_r6.metric("👑 MVP STAF", staf_top)
             c_r7.metric("📉 LOW STAF", staf_low)
 
         # ======================================================================
-        # --- 7. DATABASE AKUN AI (VERSI ASLI DIAN - INDENTASI TERKUNCI) ---
+        # --- 7. DATABASE AKUN AI (FULL SUPABASE - INSTANT RESET) ---
         # ======================================================================
         with st.expander("🔐 DATABASE AKUN AI", expanded=False):
             try:
-                # 1. Ambil Data
-                ws_akun = sh.worksheet("Akun_AI")
-                data_akun_raw = ws_akun.get_all_records()
-                df_ai = pd.DataFrame(data_akun_raw)
+                # 1. AMBIL DATA SUPER CEPAT DARI SUPABASE
+                df_ai = ambil_data_segar("Akun_AI")
                 
-                # 2. Tombol Tambah Akun
+                # 2. TOMBOL TAMBAH AKUN
                 if st.button("➕ TAMBAH AKUN BARU", use_container_width=True):
                     st.session_state.form_ai = not st.session_state.get('form_ai', False)
                 
                 if st.session_state.get('form_ai', False):
-                    with st.form("input_ai_simple", clear_on_submit=True):
+                    with st.form("input_ai_supa", clear_on_submit=True):
                         f1, f2, f3 = st.columns(3)
                         v_ai = f1.text_input("Nama Tool (ChatGPT/Midjourney)")
                         v_mail = f2.text_input("Email Login")
                         v_pass = f3.text_input("Password")
                         v_exp = st.date_input("Tanggal Expired")
-                        if st.form_submit_button("🚀 SIMPAN KE GSHEET"):
-                            # Tambahkan "X" di kolom PEMAKAI agar langsung bisa diklaim staf
-                            # Tambahkan "" di kolom TANGGAL_KLAIM agar rapi
-                            ws_akun.append_row([v_ai, v_mail, v_pass, str(v_exp), "X", ""])
-                            st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
+                        
+                        if st.form_submit_button("🚀 SIMPAN KE SUPABASE"):
+                            if v_ai and v_mail:
+                                data_baru = {
+                                    "AI": v_ai,
+                                    "EMAIL": v_mail,
+                                    "PASSWORD": v_pass,
+                                    "EXPIRED": str(v_exp),
+                                    "PEMAKAI": "X",
+                                    "TANGGAL_KLAIM": ""
+                                }
+                                supabase.table("Akun_AI").insert(data_baru).execute()
+                                tambah_log(user_sekarang, f"TAMBAH AKUN AI: {v_ai} ({v_mail})")
+                                st.success("Berhasil Tersimpan!"); time.sleep(1); st.rerun()
 
                 st.divider()
                         
                 if not df_ai.empty:
+                    # Pastikan Nama Kolom Sesuai (Upper/Lower)
+                    df_ai.columns = [c.upper() for c in df_ai.columns]
+                    
                     # 1. SETUP TANGGAL & PRIORITAS
                     h_ini = sekarang.date()
                     df_ai['TGL_OBJ'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
                     
                     def tentukan_urutan(r):
                         if pd.isna(r['TGL_OBJ']): return 4
-                        
                         sisa_hr = (r['TGL_OBJ'] - h_ini).days
-                        
-                        # --- LOGIKA PENENTU KOSONG (LEBIH GALAK) ---
                         val_pemakai = str(r.get('PEMAKAI', '')).strip()
-                        
-                        # Cek: Apakah NaN, apakah string kosong, atau cuma spasi
                         is_kosong = pd.isna(r['PEMAKAI']) or val_pemakai == "" or val_pemakai.upper() == "X"
                         
-                        # PRIORITAS 1: BENAR-BENAR KOSONG (Contoh: lisaluk80)
-                        if is_kosong: 
-                            return 1
-                        # PRIORITAS 2: MAU EXPIRED (Ada pemakai & sisa <= 7 hari)
-                        elif sisa_hr <= 7: 
-                            return 2
-                        # PRIORITAS 3: MASIH LAMA (Ada pemakai & sisa > 7 hari)
-                        else: 
-                            return 3
+                        if is_kosong: return 1
+                        elif sisa_hr <= 7: return 2
+                        else: return 3
 
-                    # Terapkan skoring
                     df_ai['PRIO'] = df_ai.apply(tentukan_urutan, axis=1)
-                    
-                    # SORTING: Prioritas (1-2-3), lalu Tanggal Expired (Paling Dekat di atas)
                     df_sorted = df_ai.sort_values(by=['PRIO', 'TGL_OBJ'], ascending=[True, True]).copy()
 
-                    # 2. LOOPING TAMPILAN (Gunakan df_sorted)
+                    # 2. LOOPING TAMPILAN
                     for idx, r in df_sorted.iterrows():
                         tgl_exp = r['TGL_OBJ']
                         if pd.isna(tgl_exp): continue
                         
                         sisa = (tgl_exp - h_ini).days
-                        if sisa < 0: continue # Sembunyikan yang sudah lewat
+                        if sisa < -1: continue # Biarkan 1 hari expired terlihat untuk warning
                         
-                        # Penentu Warna Muted (Deep Forest & Burnt Orange)
                         if sisa > 7: warna_h, stat_ai = "#2D5A47", "🟢 AMAN"
                         elif 0 <= sisa <= 7: warna_h, stat_ai = "#8B5E3C", "🟠 LIMIT"
                         else: warna_h, stat_ai = "#633535", "🔴 MATI"
 
                         with st.container(border=True):
-                            # HEADER TOOL (Gaya Original Dian)
-                            st.markdown(f"""
-                                <div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;">
-                                    <b style="color:white; font-size:11px;">🚀 {str(r['AI']).upper()}</b>
-                                </div>
-                            """, unsafe_allow_html=True)
+                            st.markdown(f'<div style="padding:2px; background:{warna_h}; border-radius:5px; margin-bottom:10px; text-align:center;"><b style="color:white; font-size:11px;">🚀 {str(r["AI"]).upper()}</b></div>', unsafe_allow_html=True)
 
-                            # 7 KOLOM SEJAJAR
                             c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1.5, 1, 1, 1, 0.8, 1.2])
                             
-                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px !important;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px !important;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                            c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:12px;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                            c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>🔑 PASSWORD</p><code style='font-size:12px;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
                             
-                            # TAMPILAN USER (Kasih tanda 🆕 biar mencolok kalau kosong)
                             val_user = str(r['PEMAKAI']).strip()
                             is_null = pd.isna(r['PEMAKAI']) or val_user == "" or val_user.upper() == "X"
                             user_display = "🆕 KOSONG" if is_null else r['PEMAKAI']
@@ -3919,43 +3854,35 @@ def tampilkan_kendali_tim():
                             c5.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>📅 EXPIRED</p><b style='font-size:11px;'>{tgl_exp.strftime('%d %b')}</b>", unsafe_allow_html=True)
                             c6.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>⏳ SISA</p><b style='font-size:13px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
                             
-                            if c7.button(f"🔄 RESET", key=f"res_{r['EMAIL']}_{idx}", use_container_width=True):
-                                try:
-                                    cell_target = ws_akun.find(str(r['EMAIL']).strip(), in_column=2)
-                                    if cell_target:
-                                        ws_akun.update_cell(cell_target.row, 5, "X")
-                                        ws_akun.update_cell(cell_target.row, 6, "")
-                                        st.success(f"✅ Berhasil Reset!"); time.sleep(0.5); st.rerun()
-                                except Exception as e:
-                                    st.error(f"Gagal: {e}")
+                            # --- FITUR RESET FULL SUPABASE ---
+                            if c7.button(f"🔄 RESET", key=f"res_ai_{idx}", use_container_width=True):
+                                # Reset langsung pakai Email sebagai kunci (Primary Key/Unique)
+                                supabase.table("Akun_AI").update({"PEMAKAI": "X", "TANGGAL_KLAIM": ""}).eq("EMAIL", r['EMAIL']).execute()
+                                tambah_log(user_sekarang, f"RESET AKUN AI: {r['AI']} ({r['EMAIL']})")
+                                st.success(f"✅ Reset Berhasil!"); time.sleep(0.5); st.rerun()
                 else:
-                    # ELSE UNTUK DF_AI EMPTY
                     st.info("📭 Belum ada data akun AI di database.")
 
             except Exception as e_ai:
                 st.error(f"Gagal memuat Database Akun AI: {e_ai}")
             
         # ======================================================================
-        # --- 6. RINCIAN GAJI & SLIP (FULL VERSION - SINKRON HARIAN) ---
+        # --- 6. RINCIAN GAJI & SLIP (FULL SUPABASE - SINKRON REAL-TIME) ---
         # ======================================================================
         with st.expander("💰 RINCIAN GAJI & SLIP", expanded=False):
             try:
                 ada_kerja = False
                 df_staff_raw_slip = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])].copy()
-                kol_v = st.columns(2) 
                 
-                # --- 0. TARIK DATA KAS MASTER SEKALI SAJA (SINKRON MARET) ---
-                df_kas_master = ambil_data_segar("Arus_Kas")
-                if not df_kas_master.empty:
-                    df_kas_master.columns = [str(c).strip().upper() for c in df_kas_master.columns]
-                    df_kas_master['TGL_DT'] = pd.to_datetime(df_kas_master['TANGGAL'], errors='coerce')
+                # Kita tidak perlu ambil_data_segar lagi, gunakan df_k_f yang sudah ada di atas
+                # agar loading secepat kilat (f/16)
                 
                 for idx, s in df_staff_raw_slip.reset_index().iterrows():
                     n_up = str(s.get('NAMA', '')).strip().upper()
                     if n_up == "" or n_up == "NAN": continue
                     
                     # --- 1. DATA FILTERING SPESIFIK STAF ---
-                    df_absen_staf_slip = df_a_f[df_a_f['NAMA'] == n_up].copy() if not df_a_f.empty else pd.DataFrame()
+                    df_absen_staf_slip = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy() if not df_a_f.empty else pd.DataFrame()
                     df_arsip_staf_slip = df_f_f[df_f_f['STAF'] == n_up].copy() if not df_f_f.empty else pd.DataFrame()
                     lv_slip_ini = str(s.get('LEVEL', 'STAFF')).strip().upper()
 
@@ -3972,21 +3899,21 @@ def tampilkan_kendali_tim():
                     v_gapok = int(pd.to_numeric(str(s.get('GAJI_POKOK', '0')).replace('.','').strip(), errors='coerce') or 0)
                     v_tunjangan = int(pd.to_numeric(str(s.get('TUNJANGAN', '0')).replace('.','').strip(), errors='coerce') or 0)
                     
-                    # --- 4. FILTER DATA BONUS RIIL ---
+                    # --- 4. FILTER DATA BONUS RIIL DARI KAS ---
                     bonus_video_real = 0
                     bonus_absen_real = 0
                     
-                    if not df_kas_master.empty:
-                        df_k_slip = df_kas_master.copy()
+                    if not df_k_f.empty:
+                        df_k_slip = df_k_f.copy()
                         df_k_slip['NOMINAL_INT'] = pd.to_numeric(df_k_slip['NOMINAL'].astype(str).replace(r'[^\d]', '', regex=True), errors='coerce').fillna(0)
                         
-                        mask_slip = (df_k_slip['KATEGORI'].str.upper() == 'GAJI TIM') & \
-                                    (df_k_slip['KETERANGAN'].str.upper().str.contains(n_up, na=False)) & \
-                                    (df_k_slip['TGL_DT'].dt.month == bulan_dipilih) & \
-                                    (df_k_slip['TGL_DT'].dt.year == tahun_dipilih)
+                        # FIX KATEGORI: Sesuaikan dengan foto Supabase lo ("Tim" & "Gaji Tim")
+                        mask_slip = (df_k_slip['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM'])) & \
+                                    (df_k_slip['KETERANGAN'].str.upper().str.contains(n_up, na=False))
                         
                         df_bonus_cair = df_k_slip[mask_slip]
                         if not df_bonus_cair.empty:
+                            # Logika pecah bonus berdasarkan keterangan
                             bonus_video_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('VIDEO|LEMBUR', na=False)]['NOMINAL_INT'].sum())
                             bonus_absen_real = int(df_bonus_cair[df_bonus_cair['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)]['NOMINAL_INT'].sum())
 
@@ -3997,6 +3924,7 @@ def tampilkan_kendali_tim():
                     # --- 6. TAMPILAN VCARD ---
                     with kol_v[idx % 2]:
                         with st.container(border=True):
+                            # Header VCard Tetap Sama (Udah Keren)
                             st.markdown(f"""
                             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
                                 <div style="background: linear-gradient(135deg, #1d976c, #93f9b9); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">{n_up[0]}</div>
@@ -4008,12 +3936,14 @@ def tampilkan_kendali_tim():
                             """, unsafe_allow_html=True)
                             
                             c1, c2 = st.columns(2)
+                            # FIX: Pastikan v_total_terima sudah pakai total_bonus_display dari Supabase
                             c1.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>ESTIMASI TERIMA</p><h3 style='margin:0; color:#1d976c;'>Rp {v_total_terima:,}</h3>", unsafe_allow_html=True)
                             c2.markdown(f"<p style='margin:0; font-size:10px; color:#888;'>STATUS SP</p><b style='font-size:14px; color:{'#e74c3c' if pot_sp_admin > 0 else '#1d976c'};'>{level_sp_admin}</b>", unsafe_allow_html=True)
                             
                             st.divider()
 
                             if st.button(f"📄 PREVIEW & PRINT SLIP {n_up}", key=f"vcard_{n_up}", use_container_width=True):
+                                # --- RUMUS SLIP FIX: PASTIKAN BONUS REAL-TIME ---
                                 slip_html = f"""
                                 <div id="slip-gaji-full" style="background: white; padding: 30px; border-radius: 20px; border: 1px solid #eee; font-family: sans-serif; width: 350px; margin: auto; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
                                     <center>
@@ -4057,12 +3987,12 @@ def tampilkan_kendali_tim():
                 st.error(f"Gagal memuat Rincian Gaji Sinkron: {e_slip}")
 
         # ======================================================================
-        # --- 8. PINTAR COMMAND CENTER (SUNTIK ABSEN & IZIN) ---
+        # --- 8. PINTAR COMMAND CENTER (FULL SUPABASE - NO GSHEET) ---
         # ======================================================================
         with st.expander("🛠️ PINTAR COMMAND CENTER", expanded=False):
-            st.info("Gunakan ini untuk intervensi data (HADIR/IZIN/SAKIT).")
+            st.info("Gunakan ini untuk intervensi data (HADIR/IZIN/SAKIT/OFF).")
             
-            # PAKAI df_staff (Sesuai kode lo di atas)
+            # Ambil daftar staf (Exclude Owner)
             list_staf = df_staff[df_staff['LEVEL'] != 'OWNER']['NAMA'].unique().tolist()
             
             c_staf, c_aksi, c_tgl = st.columns([1.5, 1.5, 1])
@@ -4075,30 +4005,38 @@ def tampilkan_kendali_tim():
                 jam_s = "08:00" if status_baru == "HADIR" else "-"
                 
                 try:
-                    # 1. Update Supabase (Tabel Absensi)
+                    # 1. CEK DATA (Upsert Logic di Supabase)
+                    # Kita cari apakah sudah ada absen di tanggal tersebut untuk nama tersebut
                     res = supabase.table("Absensi").select("id").eq("Nama", target).eq("Tanggal", tgl_s).execute()
-                    if len(res.data) > 0:
-                        supabase.table("Absensi").update({"Status": status_baru, "Jam Masuk": jam_s}).eq("Nama", target).eq("Tanggal", tgl_s).execute()
-                    else:
-                        supabase.table("Absensi").insert({"Nama": target, "Tanggal": tgl_s, "Status": status_baru, "Jam Masuk": jam_s}).execute()
                     
-                    # 2. Update GSheet (Backup)
-                    try:
-                        ws_abs = sh.worksheet("Absensi")
-                        # Cari baris yang cocok (ini asumsi sederhana, cari nama)
-                        c_find = ws_abs.find(target)
-                        if c_find:
-                            # Update kolom status (biasanya kolom 4 atau 5 sesuai format lo)
-                            ws_abs.update_cell(c_find.row, 4, status_baru)
-                    except: pass
+                    if len(res.data) > 0:
+                        # UPDATE: Jika data sudah ada, kita tindih statusnya
+                        supabase.table("Absensi").update({
+                            "Status": status_baru, 
+                            "Jam Masuk": jam_s
+                        }).eq("Nama", target).eq("Tanggal", tgl_s).execute()
+                        aksi_tipe = "UPDATE"
+                    else:
+                        # INSERT: Jika belum ada (misal staf lupa absen total), kita buatkan baris baru
+                        supabase.table("Absensi").insert({
+                            "Nama": target, 
+                            "Tanggal": tgl_s, 
+                            "Status": status_baru, 
+                            "Jam Masuk": jam_s
+                        }).execute()
+                        aksi_tipe = "INSERT BARU"
+                    
+                    # 2. CATAT LOG AKTIVITAS (CCTV)
+                    tambah_log(user_sekarang, f"INTERVENSI ABSEN: {target} set {status_baru} tgl {tgl_s} ({aksi_tipe})")
 
                     st.success(f"✅ Berhasil! {target} sekarang {status_baru}"); time.sleep(1); st.rerun()
+                
                 except Exception as e:
-                    st.error(f"Gagal: {e}")
+                    st.error(f"Gagal Eksekusi: {e}")
 
     except Exception as e:
         st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
-
+        
 def tampilkan_area_staf():
     st.title("📘 Pusat Informasi")
     
@@ -6081,171 +6019,3 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
