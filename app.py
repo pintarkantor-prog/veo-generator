@@ -1354,7 +1354,7 @@ def tampilkan_ai_lab():
             ),
             "Nenek Lastri (The Devotion)": (
                 "Elderly Indonesian woman with a soft, glowing complexion. Her white hair looks like silk. "
-                "The wrinkles are subtle and graceful. Soft-focus background, warm 'God-rays' lighting. "
+                "The wrinkles are subtle and graceful. warm 'God-rays' lighting. "
                 "She has a very comforting and 'adem' aura. High-fidelity skin detail with a polished cinematic finish."
             ),
             "Gadis Desa (The Natural)": (
@@ -2058,7 +2058,6 @@ def tampilkan_ai_lab():
                 "a heavy, rustic wooden slab stained with age. NATURAL SUNLIGHT filters through the "
                 "leaves, creating REALISTIC DAPPLED SHADOWS (cahaya tembus daun) on the table surface "
                 "and the diorama. NO artificial glow—only the authentic sunlight highlights. "
-                "Hanging fruits are visible in the soft-focus background. The atmosphere is earthy "
                 "and authentic, focused on the physical labor of the artisan. Sharp, high-definition "
                 "architectural details on the mosque diorama."
             ),
@@ -6090,6 +6089,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
