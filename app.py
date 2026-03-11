@@ -2861,7 +2861,7 @@ def tampilkan_tugas_kerja():
             df_kas_all.columns = [str(c).strip().upper() for c in df_kas_all.columns]
             
             # Cari baris yang kategorinya ' Tim', ada nama staf, DAN di periode bulan/tahun yang dipilih
-            mask_bonus_real = (df_kas_all['KATEGORI'].str.upper() == ' TIM') & \
+            mask_bonus_real = (df_kas_all['KATEGORI'].str.upper() == 'GAJI TIM') & \
                               (df_kas_all['KETERANGAN'].str.upper().str.contains(target_user, na=False)) & \
                               (pd.to_datetime(df_kas_all['TANGGAL']).dt.month == sekarang.month) & \
                               (pd.to_datetime(df_kas_all['TANGGAL']).dt.year == sekarang.year)
@@ -6081,4 +6081,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
