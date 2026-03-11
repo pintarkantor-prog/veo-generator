@@ -5286,61 +5286,69 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. LOGIKA GENERATE TABEL (12 HP PER HALAMAN - FULL AESTHETIC) ---
+            # --- 2. LOGIKA GENERATE TABEL (GAYA KODE AWAL + TIM BREAK) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
-            list_hp_unik = df_display['HP'].unique()
-            total_hal = (len(list_hp_unik) + 10) // 11
+            # PISAHKAN LIST HP JADI 2 KELOMPOK
+            list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce', default=0) <= 14]
+            list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce', default=0) > 14]
+            
+            # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
+            # Ini biar kodenya mirip struktur awal lo yang pake loop
+            kelompok_tim = [
+                {"nama": "TIM 1 (HP 1-14)", "list": list_hp_tim1},
+                {"nama": "TIM 2 (HP 15+)", "list": list_hp_tim2}
+            ]
+
             html_all_pages = "" 
 
-            for start_idx in range(0, len(list_hp_unik), 11):
-                hp_halaman_ini = list_hp_unik[start_idx : start_idx + 11]
-                df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
-                hal_ke = (start_idx // 11) + 1
+            for tim in kelompok_tim:
+                list_hp_unik = tim["list"]
+                if not list_hp_unik: continue
                 
-                html_all_pages += f"""
-                <div class="print-container {'page-break' if hal_ke < total_hal else ''}">
-                    <div class="header-box">
-                        <div style="float: right; font-size: 10px; font-weight: bold; color: #888;">HALAMAN {hal_ke} / {total_hal}</div>
-                        <div style="clear: both;"></div>
-                        <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
-                        <p class="sub">Periode: <b>{tgl_str}</b> | Unit HP {hp_halaman_ini[0]} - {hp_halaman_ini[-1]}</p>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 10%;">📱 HP</th>
-                                <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
-                                <th style="width: 15%;">🌅 PAGI</th>
-                                <th style="width: 15%;">☀️ SIANG</th>
-                                <th style="width: 15%;">🌆 SORE</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                """
-                
-                for i, r in enumerate(df_page.itertuples()):
-                    p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
-                    s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
-                    o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
+                # Loop per 11 HP (sama kayak kode awal lo)
+                for start_idx in range(0, len(list_hp_unik), 11):
+                    hp_halaman_ini = list_hp_unik[start_idx : start_idx + 11]
+                    df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     
-                    hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
-                    
-                    # WARNA SELANG SELING (ZEBRA) - Abu-abu Halus
-                    bg_color = "#FFFFFF" if i % 2 == 0 else "#F4F4F4"
-                    
+                    # Tambahkan div dengan class page-break
                     html_all_pages += f"""
-                        <tr style="background-color: {bg_color} !important;">
-                            <td class="col-hp" style="border-right: 1px solid #CCC !important;">{hp_view}</td>
-                            <td class="col-ch">{r.NAMA_CHANNEL}</td>
-                            <td class="col-jam">{p}</td>
-                            <td class="col-jam">{s}</td>
-                            <td class="col-jam">{o}</td>
-                        </tr>
+                    <div class="print-container page-break">
+                        <div class="header-box">
+                            <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
+                            <p class="sub">Unit: <b>{tim['nama']}</b> | Periode: <b>{tgl_str}</b></p>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">📱 HP</th>
+                                    <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
+                                    <th style="width: 15%;">🌅 PAGI</th>
+                                    <th style="width: 15%;">☀️ SIANG</th>
+                                    <th style="width: 15%;">🌆 SORE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                     """
-                
-                html_all_pages += "</tbody></table></div>"
+                    
+                    for i, r in enumerate(df_page.itertuples()):
+                        p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
+                        s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
+                        o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
+                        hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
+                        bg_color = "#FFFFFF" if i % 2 == 0 else "#F4F4F4"
+                        
+                        html_all_pages += f"""
+                            <tr style="background-color: {bg_color} !important;">
+                                <td class="col-hp">{hp_view}</td>
+                                <td class="col-ch">{r.NAMA_CHANNEL}</td>
+                                <td class="col-jam">{p}</td>
+                                <td class="col-jam">{s}</td>
+                                <td class="col-jam">{o}</td>
+                            </tr>
+                        """
+                    html_all_pages += "</tbody></table></div>"
 
             # --- 3. MONITORING VIEW (WEB) ---
             st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
@@ -6081,3 +6089,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
