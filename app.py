@@ -3443,47 +3443,52 @@ def tampilkan_kendali_tim():
             rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
             rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
 
-        # --- 4. KALKULASI KEUANGAN (FIX KATEGORI 'TIM') ---
+        # --- 4. KALKULASI KEUANGAN (FIXED SINKRONISASI) ---
         inc, ops, bonus_terbayar_kas = 0, 0, 0
         
         if not df_k_f.empty:
+            # Bersihkan nominal (anti karakter aneh)
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
+            
+            # 1. PENDAPATAN REAL
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
             
-            # PENTING: Ganti 'Gaji Tim' jadi 'TIM' sesuai database Supabase lo
-            ops = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (~df_k_f['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM']))]['NOMINAL'].sum()
-            bonus_terbayar_kas = df_k_f[(df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.upper().isin(['TIM', 'GAJI TIM']))]['NOMINAL'].sum()
+            # 2. BONUS REAL (Yang sudah di-ACC dan masuk Arus Kas)
+            # Pastikan kategori 'Tim' (T besar) sesuai SS Supabase lo
+            mask_bonus = (df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.strip().str.capitalize() == 'Tim')
+            bonus_terbayar_kas = df_k_f[mask_bonus]['NOMINAL'].sum()
+            
+            # 3. OPERASIONAL LAINNYA
+            mask_ops = (df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.strip().str.capitalize() != 'Tim')
+            ops = df_k_f[mask_ops]['NOMINAL'].sum()
 
-        # --- 5. ESTIMASI GAJI POKOK (NO OWNER) ---
+        # --- 5. ESTIMASI GAJI POKOK (TOTALAN GAJI FIX) ---
         total_gaji_pokok_tim = 0
-        is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
         df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
         if not is_masa_depan:
             for _, s in df_staff_real.iterrows():
                 n_up = str(s.get('NAMA', '')).strip().upper()
-                if n_up == "" or n_up == "NAN": continue
+                if n_up in ["", "NAN"]: continue
                 
+                # Kita hitung Gaji Pokok + Tunjangan - Potongan SP
                 lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
                 df_a_staf = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy()
                 df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
 
-                # Panggil mesin hitung performa
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
-                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih,
-                    level_target=lv_asli 
+                    df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli 
                 )
                 
                 g_pokok = int(pd.to_numeric(str(s.get('GAJI_POKOK')).replace('.',''), errors='coerce') or 0)
                 t_tunj = int(pd.to_numeric(str(s.get('TUNJANGAN')).replace('.',''), errors='coerce') or 0)
                 
-                gaji_nett = max(0, (g_pokok + t_tunj) - pot_sp_real)
-                total_gaji_pokok_tim += gaji_nett
+                total_gaji_pokok_tim += max(0, (g_pokok + t_tunj) - pot_sp_real)
 
-        # TOTAL OUTCOME SINKRON (Uang Keluar Real: Staff + Admin)
-        total_pengeluaran_gaji = total_gaji_pokok_tim + bonus_terbayar_kas
-        total_out = total_pengeluaran_gaji + ops
-        saldo_bersih = inc - total_out
+        # --- SINKRONISASI AKHIR ---
+        # Outcome = Gaji Pokok Tim (Kewajiban) + Bonus (Real di Kas) + Ops (Real di Kas)
+        total_out_riil = total_gaji_pokok_tim + bonus_terbayar_kas + ops
+        saldo_riil = inc - total_out_riil
         
         # ======================================================================
         # --- UI: FINANCIAL COMMAND CENTER (FULL SUPABASE EDITION) ---
@@ -5981,4 +5986,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
