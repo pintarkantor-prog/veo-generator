@@ -3225,19 +3225,15 @@ def tampilkan_tugas_kerja():
                 h_ini = datetime.now(tz_jakarta).date()
                 h_ini_str = h_ini.strftime("%Y-%m-%d")
 
-                # Tarik data stok akun AI dari Supabase
-                # Asumsi Nama Tabel: Akun_AI (Sesuaikan dengan DB lo)
                 res_ai = supabase.table("Akun_AI").select("*").execute()
                 df_ai = pd.DataFrame(res_ai.data)
                 
                 if df_ai.empty:
                     st.warning("📭 Database Akun AI masih kosong.")
                 else:
-                    df_ai = bersihkan_data(df_ai) # Pake pembersih lo
+                    df_ai = bersihkan_data(df_ai)
                     user_up = user_sekarang.upper().strip()
                     
-                    # 2. FILTER AKUN AKTIF MILIK USER
-                    # Akun yang sedang dipegang user dan belum expired
                     df_user_aktif = df_ai[
                         (df_ai['PEMAKAI'] == user_up) & 
                         (pd.to_datetime(df_ai['EXPIRED']).dt.date >= h_ini)
@@ -3245,7 +3241,6 @@ def tampilkan_tugas_kerja():
                     
                     akun_aktif_user = df_user_aktif.to_dict('records')
 
-                    # 3. LOGIKA STOK (Tampilkan yang PEMAKAI='X' dan BELUM EXPIRED)
                     df_stok = df_ai[
                         (df_ai['PEMAKAI'] == 'X') & 
                         (pd.to_datetime(df_ai['EXPIRED']).dt.date > h_ini)
@@ -3256,7 +3251,6 @@ def tampilkan_tugas_kerja():
                     c_sel, c_btn = st.columns([2, 1])
                     pilihan_ai = c_sel.selectbox("Pilih Tool", list_opsi if list_opsi else ["STOK KOSONG"], label_visibility="collapsed", key="v5_select")
                     
-                    # Validasi Tombol
                     bisa_klaim = True 
                     if not list_opsi:
                         bisa_klaim = False
@@ -3265,99 +3259,67 @@ def tampilkan_tugas_kerja():
                         bisa_klaim = False
                         st.warning("🚫 Limit 4 akun aktif tercapai. Tunggu akun lama expired.")
 
-                    # --- PROSES EKSEKUSI (SUPABASE VERSION) ---
+                    # --- PROSES EKSEKUSI ---
                     if c_btn.button("🔓 KLAIM AKUN", use_container_width=True, disabled=not bisa_klaim):
-                        # 1. CEK LOCK (Anti Double-Click)
                         if f"lock_ai_{user_up}" in st.session_state:
                             st.warning("Sabar Bos, lagi diproses...")
                         else:
                             st.session_state[f"lock_ai_{user_up}"] = True
                             
                             try:
-                                # 2. AMBIL STOK PERTAMA DARI PILIHAN
                                 target_df = df_stok[df_stok['AI'] == pilihan_ai]
-                                
                                 if not target_df.empty:
                                     target = target_df.iloc[0] 
                                     email_target = str(target['EMAIL']).strip()
                                     
-                                    # 3. UPDATE KE SUPABASE (INSTANT)
-                                    # Mengubah PEMAKAI dari 'X' menjadi Nama User & Update TANGGAL_KLAIM
                                     supabase.table("Akun_AI").update({
                                         "PEMAKAI": user_up,
                                         "TGL_KLAIM": h_ini_str
                                     }).eq("EMAIL", email_target).execute()
                                     
-                                    # 4. KIRIM NOTIF & LOG
                                     if "kirim_notif_wa" in globals():
-                                        kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n🛠️ *Tool:* {pilihan_ai}\n📧 *Email:* {email_target}")
+                                        kirim_notif_wa(f"🔑 *KLAIM AKUN AI*\n\n👤 *User:* {user_up}\n📧 *Email:* {email_target}")
                                     
                                     tambah_log(user_sekarang, f"KLAIM AKUN AI: {pilihan_ai} ({email_target})")
-                                    
                                     st.success(f"Berhasil! Akun {pilihan_ai} sekarang milikmu.")
                                     
-                                    # 5. BERSIHKAN & REFRESH
                                     del st.session_state[f"lock_ai_{user_up}"]
                                     time.sleep(1)
                                     st.rerun()
-                                else:
-                                    st.error("Yah, barusan diambil orang lain. Coba lagi!")
+                            except Exception as e_proses:
+                                if f"lock_ai_{user_up}" in st.session_state:
                                     del st.session_state[f"lock_ai_{user_up}"]
-                                    
-            except Exception as e:
-                # Ini penutup untuk tombol KLAIM saja
-                if f"lock_ai_{user_up}" in st.session_state:
-                    del st.session_state[f"lock_ai_{user_up}"]
-                st.error(f"Gagal eksekusi klaim: {e}")
-            
-            # --- 4. DAFTAR KOLEKSI (DI LUAR EXCEPT) ---
-            # Taruh di sini supaya mau sukses atau gagal klaim, list akun tetep muncul
-            if not df_ai.empty: # Pastikan df_ai sudah terdefinisi dari load awal
-                # Filter ulang akun milik user (biar dapet data paling segar)
-                user_up = user_sekarang.upper().strip()
-                df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
+                                st.error(f"Gagal eksekusi klaim: {e_proses}")
                 
-                df_user_aktif = df_ai[
-                    (df_ai['PEMAKAI'].astype(str).str.upper() == user_up) & 
-                    (df_ai['EXPIRED_DT'] >= h_ini)
-                ].copy()
-                
-                akun_aktif_user = df_user_aktif.to_dict('records')
+                # --- 4. DAFTAR KOLEKSI (LURUS DENGAN ELSE DI ATAS) ---
+                if not df_ai.empty:
+                    user_up = user_sekarang.upper().strip()
+                    df_ai['EXPIRED_DT'] = pd.to_datetime(df_ai['EXPIRED'], errors='coerce').dt.date
+                    df_user_aktif = df_ai[(df_ai['PEMAKAI'].astype(str).str.upper() == user_up) & (df_ai['EXPIRED_DT'] >= h_ini)].copy()
+                    akun_aktif_user = df_user_aktif.to_dict('records')
 
-                if akun_aktif_user:
-                    st.divider()
-                    st.markdown("### 🔑 Akun Aktif Milikmu")
-                    kolom_vcard = st.columns(3) 
-                    
-                    for idx, r in enumerate(reversed(akun_aktif_user)):
-                        sisa = (r['EXPIRED_DT'] - h_ini).days
-                        warna_h = "#1d976c" if sisa > 7 else "#f39c12" if sisa >= 0 else "#e74c3c"
-                        stat_ai = "🟢 AMAN" if sisa > 7 else "🟠 LIMIT" if sisa >= 0 else "🔴 MATI"
+                    if akun_aktif_user:
+                        st.divider()
+                        st.markdown("### 🔑 Akun Aktif Milikmu")
+                        kolom_vcard = st.columns(3) 
+                        for idx, r in enumerate(reversed(akun_aktif_user)):
+                            sisa = (r['EXPIRED_DT'] - h_ini).days
+                            warna_h = "#1d976c" if sisa > 7 else "#f39c12" if sisa >= 0 else "#e74c3c"
+                            stat_ai = "🟢 AMAN" if sisa > 7 else "🟠 LIMIT" if sisa >= 0 else "🔴 MATI"
+                            with kolom_vcard[idx % 3]:
+                                with st.container(border=True):
+                                    st.markdown(f'<div style="text-align:center; padding:3px; background:{warna_h}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;"><b style="color:white; font-size:11px;">{str(r["AI"]).upper()}</b></div>', unsafe_allow_html=True)
+                                    e1, e2 = st.columns(2)
+                                    e1.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px; display:block; overflow:hidden;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
+                                    e2.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>🔑 PASS</p><code style='font-size:11px; display:block;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
+                                    st.write(""); s1, s2, s3 = st.columns(3)
+                                    s1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:10px;'>{stat_ai}</b>", unsafe_allow_html=True)
+                                    s2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>EXP</p><b style='font-size:10px;'>{r['EXPIRED_DT'].strftime('%d %b')}</b>", unsafe_allow_html=True)
+                                    s3.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>SISA</p><b style='font-size:11px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
+                    st.caption("🆘 **Darurat?** Jika akun suspend, hubungi Admin (Dian).")
 
-                        with kolom_vcard[idx % 3]:
-                            with st.container(border=True):
-                                # Bagian HTML lo udah cakep banget, pertahanin!
-                                st.markdown(f"""
-                                    <div style="text-align:center; padding:3px; background:{warna_h}; border-radius:8px 8px 0 0; margin:-15px -15px 10px -15px;">
-                                        <b style="color:white; font-size:11px;">{str(r['AI']).upper()}</b>
-                                    </div>
-                                """, unsafe_allow_html=True)
-                                
-                                e1, e2 = st.columns(2)
-                                e1.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>📧 EMAIL</p><code style='font-size:11px; display:block; overflow:hidden;'>{r['EMAIL']}</code>", unsafe_allow_html=True)
-                                e2.markdown(f"<p style='margin:10px 0 0 0; font-size:10px; color:#888;'>🔑 PASS</p><code style='font-size:11px; display:block;'>{r['PASSWORD']}</code>", unsafe_allow_html=True)
-                                
-                                st.write("")
-                                s1, s2, s3 = st.columns(3)
-                                s1.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>STATUS</p><b style='font-size:10px;'>{stat_ai}</b>", unsafe_allow_html=True)
-                                s2.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>EXP</p><b style='font-size:10px;'>{r['EXPIRED_DT'].strftime('%d %b')}</b>", unsafe_allow_html=True)
-                                s3.markdown(f"<p style='margin:0; font-size:9px; color:#888;'>SISA</p><b style='font-size:11px; color:{warna_h};'>{sisa} Hr</b>", unsafe_allow_html=True)
-
-                st.caption("🆘 **Darurat?** Jika akun suspend, hubungi Admin (Dian).")
-
-        except Exception as e_station:
-            # Ini proteksi kalau seluruh sistem AI Station (loading data) gagal
-            st.error(f"Gagal memuat AI Station: {e_station}")
+            except Exception as e_station:
+                st.error(f"Gagal memuat AI Station: {e_station}")
                 
     # --- 4. LACI ARSIP (VERSI FIX NOTIF) ---
     with st.expander("📜 RIWAYAT & ARSIP TUGAS", expanded=False):
@@ -6019,3 +5981,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
