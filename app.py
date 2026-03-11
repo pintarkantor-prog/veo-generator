@@ -3150,7 +3150,7 @@ def tampilkan_tugas_kerja():
                                                         # Kirim ke Arus Kas Supabase
                                                         supabase.table("Arus_Kas").insert({
                                                             "Tanggal": tgl_tugas, "Tipe": "PENGELUARAN", 
-                                                            "Kategori": "Gaji Tim", "Nominal": nom_bonus, 
+                                                            "Kategori": " Tim", "Nominal": nom_bonus, 
                                                             "Keterangan": ket_bonus, "Pencatat": "SISTEM (AUTO-ACC)"
                                                         }).execute()
                                                         
