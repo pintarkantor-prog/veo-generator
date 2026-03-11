@@ -2131,28 +2131,27 @@ def tampilkan_ai_lab():
                 "Classic Betawi Old-Soul (Deep, direct, but profoundly humble and polite)"
             ],
             "Mood": [
-                "Trembling Vulnerability (Voice cracking slightly, holding back a deep ocean of emotion)",
-                "Fragmented Whispers (Slow, hesitant speech with long natural pauses and soft sighs)",
-                "Weary Gratitude (Deeply tired, exhaling long breaths between words of deep thanks)",
-                "Shy Humility (Very low volume, almost whispering, as if afraid to take up space)",
-                "Bittersweet Resignation (A voice that smiles through pain, sounds both strong and sad)",
-                "Soulful Murmur (Continuous soft muttering of 'Alhamdulillah' between sentences)",
-                "Dry Fasting Thirst (Voice sounds parched, tight throat, effortful speech from fasting)",
-                "Prayer-like Reverence (Shaky, devoted tone, like speaking directly to the Creator)"
+                "Quiet Vulnerability (Steady gaze, eyes heavy with deep emotion)",
+                "Pensive Stillness (Calm facial expression, long natural pauses)",
+                "Graceful Serenity (Serene and peaceful look, slow breathing)",
+                "Humble Devotion (Gentle and sincere facial expression)",
+                "Stoic Calmness (A steady, wise face reflecting years of memories)",
+                "Sacred Focus (Deeply focused expression, absolute sincerity)",
+                "Peaceful Hope (A calm, hopeful look in the eyes)"
             ],
             "Physical Action": [
-                "Micro-shaking fingers delicately adjusting a tiny ornament on the massive mosque entrance",
-                "Subtle jaw trembling while focusing deeply on the intricate architectural details",
-                "Eyes glistening with unshed tears, looking down at the workbench with deep devotion",
-                "Deep, slow swallowing with visible movement in the aged throat while working on the dome",
-                "Gently stroking the textured surface of the large diorama as if it were a living soul",
-                "Head tilting slightly with a faint, bittersweet smile while staring at the complex work",
-                "A long, shaky exhale that makes the shoulders drop while leaning over the workbench",
-                "Softly licking dry, chapped lips while meticulously placing a small fragment with tweezers",
-                "Trembling hands hovering over the towering minarets, afraid to touch their perfection",
-                "Closing eyes for a second, inhaling the scent of materials and glue with silent devotion",
-                "Fingertips tracing the stone-like texture of the diorama with extreme reverence",
-                "Briefly glancing up with hope, then immediately returning focus to the craftsmanship on the table"
+                "Delicate fingers precisely touching a tiny ornament on the mosque",
+                "Holding a steady, focused gaze on the architectural details",
+                "Eyes glistening slightly while looking down at the workbench",
+                "Slow, calm swallowing while looking at the central dome",
+                "Gently resting one finger on the textured surface of the diorama",
+                "A subtle, peaceful smile while admiring the structure",
+                "A slow, deep exhale while hands rest lightly on the table",
+                "Closing eyes for a second in silent devotion",
+                "Fingertips resting with extreme reverence on the diorama",
+                "Briefly looking up with a calm, hopeful expression",
+                "Looking down with intense focus, hands steady in their craft",
+                "Softly blinking while observing the internal mosque lights"
             ]
         }
         # --- UI LAYOUT ---        
@@ -2241,48 +2240,44 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-        # --- LOGIC GENERATOR (FIXED: SEPARATION, FRONT VIEW, SLOW ZOOM) ---
+        # --- LOGIC GENERATOR (FIXED: ANTI-BLUR & STATIC 30-DEGREE) ---
         if btn_gen:
             if not user_dialog:
                 st.error("Isi dialognya dulu bos...")
             else:
-                # --- 4. DYNAMIC SCENE LOGIC (STATIC / ULTRA SLOW CRAWL) ---
+                # --- 4. SCENE LOGIC (MATIKAN ZOOM & CRAWL TOTAL) ---
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
-                
-                # Nenek di belakang meja (Background), Masjid di atas meja (Foreground)
                 posisi_nenek = "sitting on the floor (lesehan) BEHIND the low table" if is_lesehan else "standing BEHIND the workbench"
                 
+                # KUNCI: Kamera Static, No Zoom, No Crawl, Deep Focus
                 scene_context = (
-                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. FRONT-FACING STRAIGHT ANGLE. "
-                    f"STILL CAMERA SHOT with a BARELY VISIBLE, MINISCULE SLOW CRAWL towards the mosque. " 
-                    f"The camera is almost static, moving at a snail's pace to maintain focus. "
+                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. FIXED 30-DEGREE SIDE-ANGLE VIEW. "
+                    f"STRICTLY STATIC CAMERA SHOT. NO CAMERA MOVEMENT. NO ZOOM. NO CRAWL. "
+                    f"Locked tripod position. The camera is perfectly still to maintain extreme sharpness. "
                     f"STRICT DEPTH LAYERING: The large mosque diorama is the main focus in the FOREGROUND. "
                     f"The character (Indonesian grandma) is positioned BEHIND the table and the mosque. "
                     f"There is a CLEAR PHYSICAL GAP between the grandma and the mosque object. "
                     f"The mosque has 4 distinct minarets and 1 large central dome. "
                     f"The scene is grounded, realistic, and strictly tabletop. No body-fusion. "
-                    f"Pure high-end cinematography, steady and calm."
+                    f"Pure high-end cinematography, rock-steady, sharp, and calm."
                 )
 
-                # --- 5. NUANSA HIDUP (NATURAL GAZE SHIFT) ---
+                # --- 5. NUANSA HIDUP (GERAKAN MATA SAJA) ---
                 env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
                 
-                # Biar nggak melotot terus, kita buat dia fokus ke kerjaan juga
                 eye_lock = (
-                    "The character is deeply focused on their work, looking DOWNWARD at the mosque structure. "
-                    "They ONLY shift their gaze to look at the camera BRIEFLY when speaking a sentence. "
-                    "Natural blinking and shifting focus between the craft and the viewer. "
-                    "Their eyes are alive, expressive, and human—not staring blankly. "
-                    "Hands and eyes are synchronized with the artisan's performance."
+                    "The character is deeply focused, looking DOWNWARD at the mosque structure. "
+                    "They ONLY shift their gaze to look at the camera briefly when speaking. "
+                    "Natural blinking and shifting focus. Eyes are expressive and human. "
+                    "The camera does not move during gaze shifts. Hands are steady."
                 )
 
                 living_details = (
                     f"ENVIRONMENT: {env_detail}. {eye_lock} "
-                    "Natural workshop lighting with soft shadows casting on the table surface. "
-                    "High-fidelity skin textures and detailed architectural surfaces."
+                    "Natural workshop lighting. High-fidelity skin textures and architectural surfaces."
                 )
                 
-                # --- 6. RAKIT FINAL PROMPT (STRICT TWO HANDS & FRONT LOOK) ---
+                # --- 6. RAKIT FINAL PROMPT ---
                 soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
                 wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
                 baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
@@ -2290,7 +2285,7 @@ def tampilkan_ai_lab():
                 ANATOMY_LOCK = (
                     "STRICTLY ONLY TWO HUMAN HANDS VISIBLE. NO GHOST HANDS. NO EXTRA LIMBS. "
                     "The artisan has exactly two hands with five fingers each, physically touching the model. "
-                    "Hands are separate from the mosque walls. Human skin vs craft material."
+                    "Hands are separate from the mosque walls."
                 )
 
                 MANDATORY_LOCK = (
@@ -2298,17 +2293,19 @@ def tampilkan_ai_lab():
                     "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
                 )
                 
+                # FINAL ASSEMBLY: Kunci spek di bawah agar AI tidak halusinasi zoom
                 final_ai_prompt = (
                     f"{scene_context} \n\n"
                     f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                     f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. The character shifts gaze between the work and the camera. {pilih_mood}. \n"
+                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
                     f"THE MASTERPIECE: {deskripsi_teknis}. "
                     f"The mosque is a massive, separate tabletop model. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, Frontal Eye-Level shot, BARELY MOVING CRAWL, "
-                    f"sharp focus on mosque details and hands, no double-limbs, masterpiece quality."
+                    f"TECHNICAL SPECS: ARRI Alexa 65, 30-degree fixed side-angle, F/11 Deep Focus, "
+                    f"STATIC TRIPOD SHOT, NO ZOOM, NO MOTION BLUR, "
+                    f"extreme sharp focus on mosque and hands simultaneously, 8K, masterpiece quality."
                 )
                 # --- 7. TAMPILKAN HASIL ---
                 st.success("🔥 PROMPT BERHASIL DIRAKIT!")
@@ -6093,6 +6090,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
