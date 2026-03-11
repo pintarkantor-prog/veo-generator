@@ -3386,11 +3386,11 @@ def tampilkan_kendali_tim():
         st.error("🚫 Maaf, Area ini hanya untuk jajaran Manajemen.")
         st.stop()
 
-    # 2. SETUP WAKTU
+    # 1. SETUP WAKTU & IDENTIFIKASI MASA DEPAN
     tz_wib = pytz.timezone('Asia/Jakarta')
     sekarang = datetime.now(tz_wib)
     
-    # 3. HEADER HALAMAN
+    # --- HEADER HALAMAN ---
     col_h1, col_h2 = st.columns([3, 1])
     with col_h1:
         st.title("⚡ PUSAT KENDALI TIM")
@@ -3405,64 +3405,50 @@ def tampilkan_kendali_tim():
     bulan_dipilih = [k for k, v in daftar_bulan.items() if v == pilihan_nama][0]
     tahun_dipilih = c_thn.number_input("📅 Tahun:", value=sekarang.year, min_value=2024, max_value=2030)
 
+    # --- KUNCI: DEFINISIKAN INI SEBELUM MASUK KE TRY ---
+    is_masa_depan = tahun_dipilih > sekarang.year or (tahun_dipilih == sekarang.year and bulan_dipilih > sekarang.month)
+
     st.divider()
 
     try:
-        # --- 1. AMBIL DATA SUPER CEPAT (SUPABASE) ---
+        # --- 2. AMBIL DATA DARI SUPABASE ---
         df_staff = ambil_data_segar("Staff")
         df_absen = ambil_data_segar("Absensi")
         df_kas   = ambil_data_segar("Arus_Kas")
         df_tugas = ambil_data_segar("Tugas")
         df_log   = ambil_data_segar("Log_Aktivitas")
 
-        # --- 2. FUNGSI SARING TANGGAL (OPTIMASI SUPABASE) ---
+        # --- 3. FUNGSI SARING TANGGAL ---
         def saring_tgl(df, kolom, bln, thn):
             if df.empty or kolom not in df.columns: return pd.DataFrame()
-            # Gunakan dayfirst=True biar gak ketukar format luar negeri
             df['TGL_TEMP'] = pd.to_datetime(df[kolom], errors='coerce', dayfirst=True)
             mask = (df['TGL_TEMP'].dt.month == bln) & (df['TGL_TEMP'].dt.year == thn)
             return df[mask].copy()
 
-        # Jalankan filter
         df_t_bln = saring_tgl(df_tugas, 'DEADLINE', bulan_dipilih, tahun_dipilih)
         df_a_f   = saring_tgl(df_absen, 'TANGGAL', bulan_dipilih, tahun_dipilih)
         df_k_f   = saring_tgl(df_kas, 'TANGGAL', bulan_dipilih, tahun_dipilih)
-        df_log_f = saring_tgl(df_log, 'WAKTU', bulan_dipilih, tahun_dipilih)
 
-        # --- 3. LOGIKA REKAP TIM ---
-        df_f_f = pd.DataFrame(columns=['STAF', 'STATUS', 'TGL_TEMP']) # Default
+        # Logika Rekap Video
+        df_f_f = pd.DataFrame(columns=['STAF', 'STATUS', 'TGL_TEMP'])
         if not df_t_bln.empty and 'STATUS' in df_t_bln.columns:
             df_f_f = df_t_bln[df_t_bln['STATUS'].astype(str).str.upper() == "FINISH"].copy()
 
-        rekap_harian_tim = {}
-        rekap_total_video = {}
-
-        if not df_f_f.empty and 'STAF' in df_f_f.columns:
-            df_f_f['STAF'] = df_f_f['STAF'].astype(str).str.strip().str.upper()
-            df_f_f['TGL_STR'] = df_f_f['TGL_TEMP'].dt.strftime('%Y-%m-%d')
-            rekap_harian_tim = df_f_f.groupby(['STAF', 'TGL_STR']).size().unstack(fill_value=0).to_dict('index')
-            rekap_total_video = df_f_f['STAF'].value_counts().to_dict()
-
-        # --- 4. KALKULASI KEUANGAN (FIXED SINKRONISASI) ---
+        # --- 4. KALKULASI KEUANGAN (SINKRON SUPABASE) ---
         inc, ops, bonus_terbayar_kas = 0, 0, 0
         
         if not df_k_f.empty:
-            # Bersihkan nominal (anti karakter aneh)
             df_k_f['NOMINAL'] = pd.to_numeric(df_k_f['NOMINAL'].astype(str).replace(r'[^\d.]', '', regex=True), errors='coerce').fillna(0)
-            
-            # 1. PENDAPATAN REAL
             inc = df_k_f[df_k_f['TIPE'] == 'PENDAPATAN']['NOMINAL'].sum()
             
-            # 2. BONUS REAL (Yang sudah di-ACC dan masuk Arus Kas)
-            # Pastikan kategori 'Tim' (T besar) sesuai SS Supabase lo
+            # Filter kategori 'Tim' (Case Sensitive sesuai Supabase)
             mask_bonus = (df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.strip().str.capitalize() == 'Tim')
             bonus_terbayar_kas = df_k_f[mask_bonus]['NOMINAL'].sum()
             
-            # 3. OPERASIONAL LAINNYA
             mask_ops = (df_k_f['TIPE'] == 'PENGELUARAN') & (df_k_f['KATEGORI'].str.strip().str.capitalize() != 'Tim')
             ops = df_k_f[mask_ops]['NOMINAL'].sum()
 
-        # --- 5. ESTIMASI GAJI POKOK (TOTALAN GAJI FIX) ---
+        # --- 5. ESTIMASI GAJI POKOK (KEWAJIBAN BULANAN) ---
         total_gaji_pokok_tim = 0
         df_staff_real = df_staff[df_staff['LEVEL'].isin(['STAFF', 'UPLOADER', 'ADMIN'])]
 
@@ -3471,11 +3457,11 @@ def tampilkan_kendali_tim():
                 n_up = str(s.get('NAMA', '')).strip().upper()
                 if n_up in ["", "NAN"]: continue
                 
-                # Kita hitung Gaji Pokok + Tunjangan - Potongan SP
                 lv_asli = str(s.get('LEVEL', 'STAFF')).strip().upper()
                 df_a_staf = df_a_f[df_a_f['NAMA'].str.upper() == n_up].copy()
-                df_t_staf = df_f_f[df_f_f['STAF'] == n_up].copy()
+                df_t_staf = df_f_f[df_f_f['STAF'].astype(str).str.upper() == n_up].copy() if not df_f_f.empty else pd.DataFrame()
 
+                # Panggil mesin hitung performa (hanya untuk ambil pot_sp_real)
                 _, _, pot_sp_real, _, _ = hitung_logika_performa_dan_bonus(
                     df_t_staf, df_a_staf, bulan_dipilih, tahun_dipilih, level_target=lv_asli 
                 )
@@ -3485,38 +3471,22 @@ def tampilkan_kendali_tim():
                 
                 total_gaji_pokok_tim += max(0, (g_pokok + t_tunj) - pot_sp_real)
 
-        # --- SINKRONISASI AKHIR ---
-        # Outcome = Gaji Pokok Tim (Kewajiban) + Bonus (Real di Kas) + Ops (Real di Kas)
+        # Outcome Akhir
         total_out_riil = total_gaji_pokok_tim + bonus_terbayar_kas + ops
         saldo_riil = inc - total_out_riil
-        
-        # ======================================================================
-        # --- UI: FINANCIAL COMMAND CENTER (FULL SUPABASE EDITION) ---
-        # ======================================================================
+
+        # --- 6. UI: FINANCIAL COMMAND CENTER ---
         with st.expander("💰 ANALISIS KEUANGAN & KAS", expanded=False):
-            
-            # --- FIX TIPE DATA FINANSIAL SEBELUM TAMPIL ---
             inc_val = float(inc)
-            bonus_val = float(bonus_terbayar_kas) if bonus_terbayar_kas else 0
-            ops_val = float(ops) if ops else 0
+            bonus_val = float(bonus_terbayar_kas)
+            ops_val = float(ops)
             
-            # Outcome total gabungan (Riil)
-            total_out_riil = total_gaji_pokok_tim + bonus_val + ops_val
-            saldo_riil = inc_val - total_out_riil
-            
-            # --- METRIK UTAMA ---
             m1, m2, m3, m4 = st.columns(4)
             m1.metric("💰 INCOME", f"Rp {inc_val:,.0f}")
-            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", 
-                      delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, 
-                      delta_color="normal")
+            m2.metric("💸 OUTCOME", f"Rp {total_out_riil:,.0f}", delta=f"-Rp {total_out_riil:,.0f}" if total_out_riil > 0 else None, delta_color="normal")
             
             status_saldo = "SURPLUS" if saldo_riil >= 0 else "DEFISIT"
-            warna_delta = "normal" if saldo_riil >= 0 else "inverse"
-            
-            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", 
-                      delta=status_saldo,
-                      delta_color=warna_delta)
+            m3.metric("📈 SALDO BERSIH", f"Rp {saldo_riil:,.0f}", delta=status_saldo, delta_color="normal" if saldo_riil >= 0 else "inverse")
             
             margin_val = (saldo_riil / inc_val * 100) if inc_val > 0 else 0
             m4.metric("📊 MARGIN", f"{margin_val:.1f}%")
@@ -3528,68 +3498,40 @@ def tampilkan_kendali_tim():
             with col_input:
                 with st.form("form_kas_new", clear_on_submit=True):
                     f_tipe = st.pills("Tipe", ["PENDAPATAN", "PENGELUARAN"], default="PENGELUARAN", label_visibility="collapsed")
-                    # FIX: Ganti "Gaji Tim" jadi "Tim" biar sinkron sama database Supabase lo
                     f_kat = st.selectbox("Kategori", ["YouTube", "Brand Deal", "Tim", "Operasional", "Lainnya"], label_visibility="collapsed")
                     f_nom = st.number_input("Nominal", min_value=0, step=50000, label_visibility="collapsed", placeholder="Nominal Rp...")
                     f_ket = st.text_area("Keterangan", height=65, label_visibility="collapsed", placeholder="Catatan...")
                     
                     if st.form_submit_button("🚀 SIMPAN KE SUPABASE", use_container_width=True):
                         if f_nom > 0:
-                            # --- 1. SINKRON KE SUPABASE (MASTER DATA BARU) ---
-                            data_kas_sb = {
+                            supabase.table("Arus_Kas").insert({
                                 "Tanggal": sekarang.strftime('%Y-%m-%d'),
-                                "Tipe": f_tipe,
-                                "Kategori": f_kat,
-                                "Nominal": str(int(f_nom)),
-                                "Keterangan": f_ket,
+                                "Tipe": f_tipe, "Kategori": f_kat,
+                                "Nominal": str(int(f_nom)), "Keterangan": f_ket,
                                 "Pencatat": user_sekarang.upper()
-                            }
-                            supabase.table("Arus_Kas").insert(data_kas_sb).execute()
-
-                            # --- 2. CATAT LOG AKTIVITAS (CCTV) ---
+                            }).execute()
                             tambah_log(user_sekarang, f"INPUT KAS: {f_tipe} - {f_kat} (Rp {f_nom:,.0f})")
-
                             st.success("Tersimpan!"); time.sleep(1); st.rerun()
-                        else:
-                            st.warning("Nominal harus lebih dari 0!")
 
             with col_logs:
-                # Log Terakhir: Ambil dari df_k_f yang sudah difilter Supabase
                 with st.container(height=315):
                     if not df_k_f.empty:
                         df_logs_display = df_k_f.sort_values(by='TGL_TEMP', ascending=False).head(8)
                         for _, r in df_logs_display.iterrows():
-                            # FIX: Pastikan nominal jadi float buat formatting
                             nom_val = float(r['NOMINAL'])
                             color = "#00ba69" if r['TIPE'] == "PENDAPATAN" else "#ff4b4b"
-                            st.markdown(f"""
-                            <div style='font-size:11px; border-bottom:1px solid #333; padding:4px 0;'>
-                                <b style='color:#ccc;'>{r['KATEGORI']}</b> 
-                                <span style='float:right; color:{color}; font-weight:bold;'>Rp {nom_val:,.0f}</span><br>
-                                <span style='color:#666; font-style:italic;'>{r['KETERANGAN']}</span>
-                            </div>
-                            """, unsafe_allow_html=True)
-                    else:
-                        st.caption("Belum ada data transaksi.")
+                            st.markdown(f"<div style='font-size:11px; border-bottom:1px solid #333; padding:4px 0;'><b style='color:#ccc;'>{r['KATEGORI']}</b> <span style='float:right; color:{color}; font-weight:bold;'>Rp {nom_val:,.0f}</span><br><span style='color:#666; font-style:italic;'>{r['KETERANGAN']}</span></div>", unsafe_allow_html=True)
 
             with col_viz:
                 st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-                df_donut = pd.DataFrame({"Kat": ["INCOME", "OUTCOME"], "Val": [inc_val, total_out_riil]})
                 if (inc_val + total_out_riil) > 0:
-                    fig = px.pie(df_donut, values='Val', names='Kat', hole=0.75, 
-                                 color_discrete_sequence=["#00ba69", "#ff4b4b"])
-                    
-                    fig.update_layout(
-                        showlegend=True,
-                        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5, font=dict(size=10)),
-                        height=200, 
-                        margin=dict(t=0, b=0, l=0, r=0),
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(0,0,0,0)'
-                    )
+                    import plotly.express as px
+                    fig = px.pie(pd.DataFrame({"Kat": ["INCOME", "OUTCOME"], "Val": [inc_val, total_out_riil]}), values='Val', names='Kat', hole=0.75, color_discrete_sequence=["#00ba69", "#ff4b4b"])
+                    fig.update_layout(showlegend=True, height=200, margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
                     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
-                else:
-                    st.markdown("<p style='text-align:center; color:#666; font-size:12px; margin-top:50px;'>Belum ada data visualisasi untuk periode ini.</p>", unsafe_allow_html=True)
+
+    except Exception as e:
+        st.error(f"⚠️ Terjadi Kendala Sistem Utama: {e}")
                     
         # ======================================================================
         # --- 4. MASTER MONITORING & RADAR TIM (VERSI SUPABASE FULL SYNC) ---
@@ -5986,5 +5928,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
