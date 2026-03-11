@@ -5390,7 +5390,7 @@ def tampilkan_database_channel():
                     
                     /* HEADER HITAM SOLID */
                     th {{ 
-                        background-color: #1A1A1A !important; 
+                        background-color: #444444 !important; 
                         color: white !important; 
                         padding: 10px; 
                         border: 1px solid #333; 
@@ -6092,6 +6092,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
