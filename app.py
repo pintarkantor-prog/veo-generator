@@ -2248,9 +2248,10 @@ def tampilkan_ai_lab():
                 is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
                 posisi_nenek = "sitting on the floor (lesehan) BEHIND the low table" if is_lesehan else "standing BEHIND the workbench"
                 
-                # KUNCI: Kamera Static, No Zoom, No Crawl, Deep Focus
+                # KUNCI: Kamera Static, No Text, Deep Focus
                 scene_context = (
-                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. FIXED 30-DEGREE SIDE-ANGLE VIEW. "
+                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. NO TEXT. NO SUBTITLES. NO CAPTIONS. "
+                    f"FIXED 15-DEGREE SIDE-ANGLE VIEW. "
                     f"STRICTLY STATIC CAMERA SHOT. NO CAMERA MOVEMENT. NO ZOOM. NO CRAWL. "
                     f"Locked tripod position. The camera is perfectly still to maintain extreme sharpness. "
                     f"STRICT DEPTH LAYERING: The large mosque diorama is the main focus in the FOREGROUND. "
@@ -2302,7 +2303,7 @@ def tampilkan_ai_lab():
                     f"The mosque is a massive, separate tabletop model. \n"
                     f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
                     f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, 30-degree fixed side-angle, F/11 Deep Focus, "
+                    f"TECHNICAL SPECS: ARRI Alexa 65, 15-degree fixed side-angle, F/11 Deep Focus, "
                     f"STATIC TRIPOD SHOT, NO ZOOM, NO MOTION BLUR, "
                     f"extreme sharp focus on mosque and hands simultaneously, 8K, masterpiece quality."
                 )
@@ -6089,6 +6090,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
