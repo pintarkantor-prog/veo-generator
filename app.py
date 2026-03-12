@@ -1610,135 +1610,31 @@ def tampilkan_ai_lab():
 
         # --- 3. MASTER LOKASI (FIXED: REALISTIC WORKSHOP NO GLOW) ---
         MASTER_GRANDMA_SETTING = {
-            "Atelier Maestro (Living Studio)": (
-                "Inside a professional architectural workshop. The wooden workbench is realistically "
-                "cluttered with functional micro-tools: fine-tip tweezers, small jars of matte paint, "
-                "precision cutters, and a used cup of coffee. In the background, technical sketches "
-                "of the mosque are pinned to a wooden board. A desk magnifying lamp is positioned over "
-                "the table. The lighting is bright and practical, coming from overhead workshop bulbs, "
-                "casting natural, honest shadows. Focus on the raw, creative atmosphere of a master artisan."
-            ),
-            "Galeri Antik (The Collector's Vault)": (
-                "A sophisticated private gallery with dark oak shelves. The background features other "
-                "finished architectural models under clear glass covers with natural matte reflections. "
-                "No fake glows. The workbench is clean but shows signs of active work with small "
-                "polishing cloths and jars of wax nearby. Lighting is a focused warm spotlight on the "
-                "main diorama, creating high-contrast but realistic depth and shadows. "
-                "Exudes a prestigious, museum-quality workshop vibe."
-            ),
-            "Workshop Loteng (The Dreamer's Attic)": (
-                "A rustic attic workshop with exposed wooden beams and a large window showing a "
-                "neutral evening sky. The workbench is covered in realistic wood shavings, tiny sandpaper strips, "
-                "and scraps of raw materials. A single vintage desk lamp provides the primary light source, "
-                "casting long, sharp, realistic shadows across the diorama and the artisan's hands. "
-                "No magical effects—just a peaceful, authentic, and hardworking workshop environment."
-            ),
-            "Ruang Kerja Kerajaan (Royal Library)": (
-                "A sophisticated study room with tall mahogany bookshelves filled with antique books. "
-                "The large wooden desk is an active workspace, featuring a silver tray of dates and "
-                "realistic architectural drafting tools. The window frames have deep Islamic geometric carvings. "
-                "Lighting is NATURAL AND GROUNDED, coming from a single direction to create realistic "
-                "physical depth and shadows on the mosque diorama. NO magical glows or fake particles— "
-                "just the rich, matte textures of wood, paper, and stone. High-end, historical, and authentic."
-            ),
-            "Studio Kaca (The Modern Sanctuary)": (
-                "A sleek, minimalist professional studio with large glass windows overlooking a garden. "
-                "The white desk is clean but functional, holding a small bonsai and various architectural "
-                "modeling tools like precision calipers and cutters. Background features a soft-focus "
-                "textured wall. Lighting is BRIGHT, CLEAN, AND EVEN, coming from modern ceiling panels, "
-                "highlighting the flawless surfaces of the diorama. NO fake blue neon, NO glowing tablets, "
-                "and NO artificial lens flares. Minimalist architectural luxury and pure reality."
-            ),
-            "Bengkel Klasik (The Clockmaker's Style)": (
-                "A rustic, authentic workshop with antique brass tools and gears displayed on the walls. "
-                "The workbench is made of thick, scarred reclaimed wood, cluttered with jars of "
-                "colored sand, crushed minerals, and small bottles of wood stain. Standard workshop "
-                "lighting with a SINGLE ADJUSTABLE DESK LAMP that focuses SHARPLY on the diorama, "
-                "casting realistic, deep shadows. NO glowing tubes, NO cinematic filters, and NO mist— "
-                "just the raw, honest atmosphere of a high-end traditional craft studio. Grounded and tactile."
-            ),
-            "Pendopo (The Zen Pavilion)": (
-                "An elegant open-air Javanese pavilion with polished teak pillars. The background shows "
-                "a calm koi pond with floating lilies. The workbench is a low wooden table (meja lesehan) "
-                "where the character sits cross-legged. Traditional 'Wayang' puppets are subtly visible "
-                "on the pillars. NATURAL DAYLIGHT provides a clear, honest view of the mosque's "
-                "intricate surfaces and sharp, realistic shadows. NO magical smoke, NO glowing particles— "
-                "just a peaceful, authentic outdoor workshop atmosphere. Grounded in a traditional setting."
-            ),
-            "Bilik Rahasia (The Hidden Archive)": (
-                "A dedicated workspace in a room filled with floor-to-ceiling historical maps and "
-                "old mosque photographs. The desk is an active, messy workstation with real gold leaf "
-                "sheets, pigment vials, and precision tweezers. Lighting is PRACTICAL, from a SINGLE "
-                "VINTAGE HANGING LAMP that casts sharp, realistic shadows across the diorama. "
-                "NO glowing lanterns, NO fake flares—just the intense, focused environment of a "
-                "master craftsman at work. The atmosphere is quiet, academic, and deeply authentic."
-            ),
-            "Teras Rumah Asri (The Zen Veranda)": (
-                "On a clean wooden veranda of a lush village house. In the background, a small koi pond "
-                "with a stone waterfall is visible. The workbench is an outdoor wooden table cluttered "
-                "with craft tools. BRIGHT, NATURAL MORNING SUNLIGHT illuminates the scene, highlighting "
-                "the real physical textures of the mosque diorama. NO fake reflections, NO artificial "
-                "glare—only the natural highlights from the sun. Pure, fresh, and grounded in reality."
-            ),
-            "Pondok Tepi Sawah (Rice Field Sanctuary)": (
-                "Inside a rustic bamboo gazebo (saung) overlooking vast emerald-green rice terraces. "
-                "The character sits on the bamboo floor (lesehan style) at a low wooden workbench. "
-                "NATURAL DAYLIGHT from the open sky provides bright, high-contrast lighting with "
-                "realistic sharp shadows cast by the saung's pillars. The diorama looks massive and "
-                "detailed against the soft-focus rural background. NO magical mist, NO glowing particles— "
-                "just the honest, physical presence of a master artisan. Realistic textures of bamboo, "
-                "wood, and craft materials. High-fidelity architectural details."
-            ),
-            "Kebun Bunga (The Floral Garden)": (
-                "In the middle of a vibrant, well-kept flower garden. The character is working at "
-                "a rustic wooden workbench placed on a stone path. Surroundings are filled with "
-                "blooming jasmine and colorful bougainvillea in soft focus. NATURAL, BRIGHT DAYLIGHT "
-                "illuminates the diorama, showing real physical shadows and textures. NO magical "
-                "filters—just the honest, fresh atmosphere of an outdoor garden workshop. "
-                "Real crafting tools like precision cutters and glue jars are visible next to the "
-                "mosque model, emphasizing the handmade work-in-progress vibe."
-            ),
-            "Kebun Buah (The Orchard Atelier)": (
-                "Under the shade of a heavy-fruiting mango and orange tree orchard. The workbench is "
-                "a heavy, rustic wooden slab stained with age. NATURAL SUNLIGHT filters through the "
-                "leaves, creating REALISTIC DAPPLED SHADOWS (cahaya tembus daun) on the table surface "
-                "and the diorama. NO artificial glow—only the authentic sunlight highlights. "
-                "and authentic, focused on the physical labor of the artisan. Sharp, high-definition "
-                "architectural details on the mosque diorama."
-            ),
-            "Taman Air Terjun (The Secret Waterfall)": (
-                "A private garden sanctuary featuring a natural stone waterfall in the background. "
-                "The workbench is positioned near the water, with REALISTIC MOISTURE and mossy rocks "
-                "nearby. NATURAL DAYLIGHT provides clear visibility of the mosque's materials. "
-                "NO 'mystical haze', NO fake glowing particles—only the natural, high-definition "
-                "visual of a hardworking artisan's space. High-fidelity textures of stone, water, "
-                "and the diorama materials are highlighted by sharp, realistic shadows. "
-                "Grounded and refreshing workshop vibe."
-            ),
-            "Halaman Belakang (Garden Glow)": (
-                "A tidy backyard garden with a green lawn. The character works at a simple wooden table "
-                "on the terrace. In the background, a small wooden bridge over a stream is visible. "
-                "The lighting is CLEAR, NATURAL AFTERNOON SUN, casting realistic long shadows. "
-                "NO fireflies, NO magical glows—just the homey, peaceful reality of a backyard "
-                "hobbyist working on a masterpiece. Crafting debris, sandpaper, and tools are "
-                "scattered on the table, emphasizing the authentic work-in-progress vibe."
-            ),
-            "Tepi Danau (Lakeside Workshop)": (
-                "A wooden deck overlooking a calm lake during a clear afternoon. The workbench is "
-                "a heavy timber table placed outdoors. The background features a soft-focus lake "
-                "and distant hills under NATURAL, BRIGHT DAYLIGHT. NO dramatic purple skies, "
-                "NO fake lens flares—just the honest, high-contrast light of the sun hitting "
-                "the mosque's intricate surfaces. Real craft tools like precision cutters, rulers, "
-                "and glue bottles are scattered on the deck, creating a grounded, authentic atmosphere."
-            ),
-            "Gubuk Estetik (The Luxury Rustic)": (
-                "A high-end rustic wooden cabin with a large open window facing a green pine forest. "
-                "The interior workbench is made of thick, scarred wood, cluttered with clay vases "
-                "and tidy woodcraft tools. Lighting is PRACTICAL, coming from the large window, "
-                "casting natural and deep shadows on the mosque diorama. NO mysterious blue mist, "
-                "NO glowing runes—just the clean, high-definition reality of a professional "
-                "artisan's cabin. Microscopic textures of wood grain and craft materials are sharp."
-            )
+            "Pinggir Kolam Ikan Koi": "Sitting on a low wooden deck by a clear koi pond, with colorful koi fish swimming in the water and a small stone waterfall in the background creating soft ripples.",
+            "Pinggir Sawah Hijau": "On a narrow dirt path (pematang) at the edge of a vast emerald green rice field, with a background of swaying rice stalks and a distant wooden scarecrow.",
+            "Teras Rumah Panggung": "On the wooden porch of a traditional stilt house, looking out over a rural landscape with fruit trees and a small dirt road in the background.",
+            "Halaman Pohon Bambu": "In a shaded backyard filled with a dense bamboo grove, with thin bamboo leaves creating a beautiful textured background and soft dappled sunlight.",
+            "Pinggir Empang Ikan": "Sitting at a simple bamboo pier by a local fish pond (empang), with a background of calm water, water hyacinths, and a small wooden hut (saung).",
+            "Kebun Kelapa (Coconut Grove)": "In the middle of a coconut plantation with tall leaning palm trees, background showing fallen coconuts on the grass and soft sunlight filtering through the fronds.",
+            "Kebun Buah Naga": "Sitting at a wooden table in the middle of a dragon fruit plantation, surrounded by climbing cactus-like vines and hanging vibrant pink dragon fruits in soft focus.",
+            "Kebun Buah Melon": "At a rustic bench inside a greenhouse filled with hanging melons, with lush green leaves and vines creating a natural textured background and dappled sunlight.",
+            "Taman Bunga Warna-Warni": "Sitting on a garden chair surrounded by blooming flower beds of various colors, with butterflies and a soft-focus background of a lush botanical garden.",
+            "Arena Bermain Anak": "On a colorful bench at a local neighborhood playground, with a background of a slide, swings, and sandboxes, creating a cheerful and bright atmosphere.",
+            "Taman Hiburan (Carnival)": "At a simple table with a background of a distant ferris wheel and colorful carnival tents, captured during the day with a fun, festive atmosphere.",
+            "Halaman Toko Kelontong": "On a wooden bench in front of a traditional village grocery store (Warung), background shows jars of snacks and colorful hanging sachets of drinks.",
+            "Meja Kerja Berantakan": "Sitting at an old, heavy dark wood workbench cluttered with small glue bottles, tweezers, wood scraps, and crafting tools, in a rustic indoor workshop.",
+            "Teras Rumah Klasik": "On a traditional Indonesian house terrace with wooden pillars and tiled floors, background shows a simple village garden with some potted plants and a bicycle.",
+            "Ruang Tamu Jadul": "In a modest vintage living room with wooden plank walls, old family photos hanging on the wall, and a simple wooden cabinet in the background.",
+            "Dapur Kampung Estetik": "At a simple wooden dining table in a rustic village kitchen, background features a traditional clay stove (tungku) and neatly stacked bamboo baskets (tampah).",
+            "Bengkel Rakit Miniatur": "Inside a dedicated small craft room with shelves full of half-finished models, architectural sketches pinned on the wall, and various material scraps on the floor.",
+            "Gazebo Bambu (Outdoor)": "Sitting inside a small bamboo gazebo (saung) in a lush tropical backyard surrounded by banana trees and dense green foliage in soft focus.",
+            "Gubuk Tengah Sawah": "Sitting inside a small rustic wooden shack (gubuk) in the middle of a vast green rice field, with an open view of the fields and a clear blue sky in the background.",
+            "Saung Pinggir Pantai": "Under a simple thatched-roof hut on a white sandy beach, with a background of calm ocean waves, a few coconut trees, and a distant wooden boat.",
+            "Teras Pinggir Sungai": "On a wooden deck built over a flowing river, surrounded by lush tropical trees and the sight of water ripples in the soft-focus background.",
+            "Lapak Penjual Rongsokan": "In a messy backyard of a scrap metal collector, surrounded by tall piles of rusty metal, old tires, vintage junk, and recycled materials stacked against the wall.",
+            "Halaman Belakang Desa": "Sitting on a wooden bench under a large mango tree in a dusty village backyard, background shows a simple brick house and laundry hanging on a wire.",
+            "Teras Masjid Tua": "On the shaded marble porch of an old village mosque, background features traditional Islamic arched doors and a simple wall clock, looking very serene.",
+            "Bengkel Las Sederhana": "In a small roadside welding shop with metal scraps, iron bars, and a dark industrial background with tools hanging on a soot-covered wall."
         }
 
         # --- 5. MASTER DIALOG NYESEK (GROUPED BY CHARACTER ROLE) ---
@@ -5740,6 +5636,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
