@@ -1470,94 +1470,100 @@ def tampilkan_ai_lab():
             st.code(final_ai_prompt, language="text")
 
     # ==========================================================================
-    # TAB: ANATOMY (SULTAN AUTO-PILOT - FULL PRODUCTION MODE)
+    # TAB: ANATOMY (SULTAN PRODUCTION - CUSTOM LABEL EDITION)
     # ==========================================================================
     with t_anatomi:
         st.header("🧬 Sultan Anatomy: Character Interaction")
         
         with st.expander("🛠️ KONFIGURASI SETUP KARAKTER & VISUAL", expanded=True):
             
-            # Data Master Visual
-            MASTER_BODY_TYPE = {
-                "Jelly-Like (Bening Basah)": "clear transparent jelly-like human skin, wet and glossy texture, subsurface scattering",
-                "Frosted Membrane (Kabur)": "translucent frosted skin membrane, semi-transparent, soft-focus internal view",
-                "Clear Glass Flesh (Kristal)": "highly refractive transparent flesh, glass-like clarity, smooth surface"
-            }
-
-            # Row 1: Global Setting
-            col_env1, col_env2 = st.columns([2, 1])
-            with col_env1:
-                pilih_env = st.selectbox("Lokasi & Atmosfer:", ["Dark Void", "Ancient Library", "Misty Forest", "Laboratory"], key="env_ana")
-            with col_env2:
-                pilih_kulit = st.selectbox("Jenis Transparansi K1:", list(MASTER_BODY_TYPE.keys()), key="skin_ana")
-
-            st.divider()
-
-            # Row 2: Setup Karakter 1 & Karakter 2 (Side by Side)
+            # --- ROW 1: PEMILIHAN KARAKTER ---
             col_k1, col_k2 = st.columns(2)
             
             with col_k1:
-                st.markdown("### 💀 Karakter 1 (Skeleton)")
-                k1_name = st.selectbox("Nama Karakter 1:", ["Udin (Skeleton)", "Custom Skeleton"], key="k1_name")
-                # Detail Fisik & Pakaian Dipisah biar AI gak pusing
-                k1_physic = st.text_input("Detail Fisik (Tubuh):", placeholder="Contoh: Tulang retak, ada lumut hijau...", key="k1_physic")
-                k1_wear = st.text_input("Pakaian:", placeholder="Contoh: Jubah sutra hitam robek...", key="k1_wear")
-                k1_act = st.text_area("Aksi Karakter 1:", placeholder="Udin menatap tajam ke depan...", key="k1_act")
+                st.markdown('<p class="small-label">SUBJEK UTAMA (ANATOMY)</p>', unsafe_allow_html=True)
+                k1_base = st.selectbox("Pilih Tipe Biologis:", [
+                    "Hyper-Realistic Transparent", 
+                    "Frosted Glass Anatomy", 
+                    "Crystal Clear Soul"
+                ], key="k1_base_ana", label_visibility="collapsed")
+                
+                st.markdown('<p class="small-label">DETAIL FISIK TUBUH</p>', unsafe_allow_html=True)
+                k1_physic = st.text_input("Fisik:", placeholder="Contoh: Tengkorak retak, saraf membara...", key="k1_physic_ana", label_visibility="collapsed")
+                
+                st.markdown('<p class="small-label">PAKAIAN SUBJEK</p>', unsafe_allow_html=True)
+                k1_wear = st.text_input("Pakaian:", placeholder="Contoh: Jubah robek, kain kafan...", key="k1_wear_ana", label_visibility="collapsed")
 
             with col_k2:
-                st.markdown("### 👤 Karakter 2 (Lawan Main)")
-                k2_name = st.text_input("Nama Karakter 2:", placeholder="Contoh: Tung / Manusia", key="k2_name")
-                k2_physic = st.text_input("Detail Fisik (Tubuh):", placeholder="Contoh: Kepala kayu jati tua, mata bercahaya...", key="k2_physic")
-                k2_wear = st.text_input("Pakaian:", placeholder="Contoh: Baju koko muslim putih...", key="k2_wear")
-                k2_act = st.text_area("Aksi Karakter 2:", placeholder="Tung duduk tenang sambil bersedekap...", key="k2_act")
+                st.markdown('<p class="small-label">KARAKTER LAWAN (WILDCARD)</p>', unsafe_allow_html=True)
+                k2_desc = st.text_input("Siapa Lawannya:", placeholder="Contoh: Pria tua, Anak kecil, Monster...", key="k2_desc_ana", label_visibility="collapsed")
+                
+                st.markdown('<p class="small-label">DETAIL FISIK LAWAN</p>', unsafe_allow_html=True)
+                k2_physic = st.text_input("Fisik Lawan:", placeholder="Contoh: Kulit keriput, kepala kayu...", key="k2_physic_ana", label_visibility="collapsed")
+                
+                st.markdown('<p class="small-label">PAKAIAN LAWAN</p>', unsafe_allow_html=True)
+                k2_wear = st.text_input("Pakaian Lawan:", placeholder="Contoh: Baju koko, kemeja lusuh...", key="k2_wear_ana", label_visibility="collapsed")
+
+            st.divider()
+
+            # --- ROW 2: LOKASI & CERITA ---
+            st.markdown('<p class="small-label">LOKASI & ATMOSFER CERITA</p>', unsafe_allow_html=True)
+            pilih_env = st.text_input("Lokasi:", placeholder="Contoh: Laboratorium tua jam 2 malam...", key="env_custom_ana", label_visibility="collapsed")
             
-            btn_gen_story = st.button(
+            st.markdown('<p class="small-label">ACTING & PERFORMANCE</p>', unsafe_allow_html=True)
+            col_act1, col_act2 = st.columns(2)
+            with col_act1:
+                k1_story = st.text_area("Aksi & Dialog Subjek Utama:", placeholder="Karakter utama sedang...", key="k1_story_ana")
+            with col_act2:
+                k2_story = st.text_area("Aksi & Dialog Lawan:", placeholder="Karakter lawan sedang...", key="k2_story_ana")
+            
+            # Tombol Generate Utama (Sesuai bocoran tombol roket lo)
+            btn_gen_sultan = st.button(
                 "🚀 GENERATE VIDEO PROMPT", 
                 type="primary", 
                 use_container_width=True, 
-                key="btn_generate_video_ana"
+                key="btn_generate_video_sultan"
             )
 
-        # --- HASIL MUNCUL DI LUAR EXPANDER ---
-        if btn_gen_story:
-            if k1_act:
-                # Logic Deskripsi Gabungan
-                desc_k1 = f"{k1_name} with {MASTER_BODY_TYPE[pilih_kulit]}, physical details: {k1_physic}, wearing {k1_wear}"
-                desc_k2 = f"{k2_name} with physical details: {k2_physic}, wearing {k2_wear}" if k2_name else ""
-                
-                scene_setup = f"{desc_k1} and {desc_k2}" if k2_name else desc_k1
-                action_setup = f"{k1_act} while {k2_act}" if k2_name else k1_act
+        # --- HASIL DI LUAR EXPANDER (CARD 2 KOLOM) ---
+        if btn_gen_sultan:
+            if k1_story and pilih_env:
+                # Master Biologis (Deskripsi Teknis)
+                BIO_DESC = {
+                    "Hyper-Realistic Transparent": "transparent biological human, jelly-like skin, subsurface scattering, visible internal organs and bones",
+                    "Frosted Membrane (Kabur)": "translucent frosted skin, diffuse anatomical silhouette",
+                    "Crystal Clear Soul": "glass-like clarity, sharp refractive internal skeleton"
+                }
 
+                # Konstruksi Deskripsi
+                char1_full = f"{BIO_DESC.get(k1_base, k1_base)}, physical: {k1_physic}, wearing {k1_wear}"
+                char2_full = f"{k2_desc} ({k2_physic}), wearing {k2_wear}" if k2_desc else "none"
+                
                 # Prompt Gambar
                 final_prompt_img = (
-                    f"A masterpiece cinematic 8k photo of {scene_setup}. "
-                    f"SCENE: {action_setup}. Both characters are in a neutral starting pose, ready to move. "
-                    f"ENVIRONMENT: {pilih_env}. TECHNICAL: Fixed 15-degree side angle shot, sharp focus, "
-                    f"subsurface scattering, anatomical correctness, hyper-realistic, no extra limbs."
+                    f"Cinematic 8k photo of {char1_full} interacting with {char2_full}. "
+                    f"SCENE: {k1_story} and {k2_story}. LOCATION: {pilih_env}. "
+                    f"TECHNICAL: Fixed 15-degree side angle, sharp focus, hyper-realistic anatomy."
                 )
 
                 # Prompt Video
                 final_prompt_vid = (
-                    f"Start from the reference image. {k1_act} and {k2_act}. "
-                    f"Fluid interaction between {k1_name} and {k2_name}, realistic movement physics, "
-                    f"maintain material consistency for transparent skin and second character texture."
+                    f"Start from image. {k1_story} while {k2_story}. "
+                    f"Fluid biological movement, maintain transparent textures, cinematic physics."
                 )
 
                 st.markdown("### 🧬 HASIL ANALISIS STORYBOARD")
-                
                 res_col1, res_col2 = st.columns(2)
                 with res_col1:
                     with st.container(border=True):
-                        st.markdown("#### 📸 IMAGE PROMPT")
+                        st.markdown('<p class="small-label">IMAGE PROMPT</p>', unsafe_allow_html=True)
                         st.code(final_prompt_img, language="markdown")
-                        st.button("📋 Copy Image", key="cp_img_story")
                 with res_col2:
                     with st.container(border=True):
-                        st.markdown("#### 🎬 VIDEO PROMPT")
+                        st.markdown('<p class="small-label">VIDEO PROMPT</p>', unsafe_allow_html=True)
                         st.code(final_prompt_vid, language="markdown")
-                        st.button("📋 Copy Video", key="cp_vid_story")
             else:
-                st.error("Isi aksi Karakter 1 dulu, Cok!")
+                st.error("Lokasi dan Aksi wajib diisi, Cok!")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5339,6 +5345,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
