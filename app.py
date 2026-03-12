@@ -5113,8 +5113,8 @@ def tampilkan_database_channel():
             # --- TAMBAHAN: ST INFO UNTUK INSTRUKSI STAFF ---
             st.info("""
                 💡 **PENGINGAT KHUSUS:**
-                1. HP 1-14 isi Konten Sakura
-                2. HP 15-23 isi Konten AI (aku sendiri yang isi sementara)
+                1. HP 1-16 isi Konten Sakura
+                2. HP 17-23 isi Konten Masjid (aku sendiri yang isi sementara)
                 3. WASPADA! HP 1,3,6,7, 10-23 ada 3 channel (login hapus dan stock video disesuaikan)
             """)
 
@@ -6095,6 +6095,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
