@@ -1619,196 +1619,85 @@ def tampilkan_ai_lab():
     # ============================================================
     with t_transform:        
         with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
-            st.markdown('<p class="small-label" style="margin-bottom: -15px;">🌍 LOKASI & ATMOSFER (SCENE SETTING)</p>', unsafe_allow_html=True)
-            
-            user_scene = st.text_area(
-                "label_hidden", # Label ini nggak bakal kelihatan karena setting di bawah
-                placeholder="Contoh: Di teras rumah kayu tua saat hujan badai malam hari, lampu bohlam bergoyang, ada kabut tipis.", 
-                height=70,
-                label_visibility="collapsed" 
-            )
 
-            # --- ROW 2: KARAKTER & DUAL DIALOG ---
-            col_l, col_r = st.columns(2)
-            
-            with col_l:
-                st.markdown('<p class="small-label" style="margin-bottom: -15px;">⬅️ KARAKTER SISI KIRI (LEFT)</p>', unsafe_allow_html=True)
-                c_l_name = st.text_input("l_name", placeholder="Contoh: Lionel Messi", label_visibility="collapsed")
-                c_l_outfit = st.text_input("l_outfit", placeholder="Contoh: Jas hitam formal, rapi.", label_visibility="collapsed")
-                c_l_speech = st.text_area("l_speech", placeholder="Apa yang diucapkan tokoh kiri?", height=60, label_visibility="collapsed")
-                is_trans_l = st.checkbox("🔥 Karakter Kiri Berubah", key="trans_l")
-
-            with col_r:
-                st.markdown('<p class="small-label" style="margin-bottom: -15px;">➡️ KARAKTER SISI KANAN (RIGHT)</p>', unsafe_allow_html=True)
-                c_r_name = st.text_input("r_name", placeholder="Contoh: Cristiano Ronaldo", label_visibility="collapsed")
-                c_r_outfit = st.text_input("r_outfit", placeholder="Contoh: Baju koko putih, peci hitam.", label_visibility="collapsed")
-                c_r_speech = st.text_area("r_speech", placeholder="Apa yang diucapkan tokoh kanan?", height=60, label_visibility="collapsed")
-                is_trans_r = st.checkbox("🔥 Karakter Kanan Berubah", key="trans_r")
-
-            # --- ROW 3: AKSI & KAMERA ---
-            st.markdown('<p class="small-label" style="margin-bottom: -15px;">🏃 PHYSICAL ACTION (PERGERAKAN TUBUH)</p>', unsafe_allow_html=True)
-            st.caption("Deskripsikan pergerakan fisik karakter secara detail.")
-            user_action = st.text_area(
-                "action_input", 
-                placeholder="Contoh: Messi berjalan mendekat ke arah Ronaldo dengan langkah berat, tangan mengepal kuat.", 
-                height=70, 
-                label_visibility="collapsed"
-            )
-
-            st.markdown('<p class="small-label" style="margin-bottom: -15px;">🎥 CAMERA CONTROL (SINEMATOGRAFI)</p>', unsafe_allow_html=True)
-            cc1, cc2 = st.columns(2)
-            with cc1:
-                st.caption("Gerakan Kamera (Movement)")
-                cam_movement = st.selectbox(
-                    "cam_move", 
-                    ["Static (Diam)", "Slow Zoom In", "Slow Zoom Out", "Pan Left to Right", "Pan Right to Left", "Dynamic Tracking Shot", "Handheld Shake (High Tension)"],
-                    label_visibility="collapsed"
-                )
-            with cc2:
-                st.caption("Sudut Pandang (Angle)")
-                cam_angle = st.selectbox(
-                    "cam_ang", 
-                    ["Eye Level", "Low Angle (Heroic)", "High Angle", "Cinematic Close-up", "Wide Establishing Shot"],
-                    label_visibility="collapsed"
-                )
-
-            # --- INISIALISASI DEFAULT (PENTING BIAR GAK ERROR) ---
-            trans_type = "None"
-            trans_speed = "Steady"
-            trans_trigger = "None"
-            env_fx = []
-
-            # --- ROW 4: DETAIL TRANSFORMASI ---
-            if is_trans_l or is_trans_r:
-                st.divider()
-                st.markdown('<p class="small-label" style="margin-bottom: -15px;">⚡ METAMORFOSIS SETTINGS</p>', unsafe_allow_html=True)
-                
-                t1, t2, t3 = st.columns(3)
-                with t1:
-                    st.caption("Jenis Perubahan")
-                    trans_type = st.selectbox("trans_type_box", [
-                        "Anatomical Titan (Real Muscle & Bone)", 
-                        "Super Saiyan (God Aura & Electric)", 
-                        "Mecha-Hybrid (Liquid Metal/Robot)", 
-                        "Ethereal God (Cosmic/Nebula)",
-                        "Instant Obesity (Jiggling Fat)",
-                        "Ultra-Skinny (Malnourished Bone)",
-                        "Squashed & Short (Hobbit Style)",
-                        "Extreme Tall & Lanky (Slender Style)"
-                    ], label_visibility="collapsed")
-                    
-                    st.caption("Kecepatan Transisi")
-                    trans_speed = st.select_slider("speed_slider", options=["Slow & Smooth", "Steady", "Explosive"], label_visibility="collapsed")
-                
-                with t2:
-                    st.caption("Aksi Pemicu (Trigger)")
-                    # Gue tambahin placeholder yang ngingetin buat jaga identitas muka
-                    trans_trigger = st.text_input("trigger_input", 
-                        placeholder="Contoh: Bersin (Tetap wajah Udin) / Marah", 
-                        label_visibility="collapsed")
-                                    
-                with t3:
-                    st.caption("Efek Lingkungan")
-                    env_fx = st.multiselect("env_fx_box", 
-                                           ["Lantai Retak & Hancur", "Gravitasi Terbalik (Melayang)", 
-                                            "Shockwave Udara", "Ledakan Lampu & Listrik", "Kabut & Debu Sinematik"],
-                                           default=["Kabut & Debu Sinematik"], label_visibility="collapsed")
-            
-            # Tombol ditaruh di luar IF biar selalu muncul
-            btn_generate = st.button("🚀 GENERATE ALL PROMPT", type="primary", use_container_width=True)
-
-        # --- 2. OUTPUT AREA (IDENTITAS EKSKLUSIF SULTAN) ---
-        if btn_generate:
-            # DNA KUALITAS TINGGI (UPGRADED: THE GRITTY REALITY & NO TEXT)
-            sultan_quality_logic = (
-                "Candid handheld photography style, 35mm film grain, high ISO noise. "
-                "Dirty lens, natural muted earth tones, desaturated colors. "
-                "Environment Detail: Cracked concrete, weathered structures, dry overgrown weeds, "
-                "floating dust particles, muddy water reflections. "
-                "Material Detail: Realistic fabric wrinkles on clothes, wet textures, "
-                "gritty surface details, cinematic shadows, natural lighting. "
-                "STRICTLY NO TEXT, NO CAPTIONS, NO WATERMARKS, NO DIGITAL SMOOTHING. "
-                "Maintain original character facial features and proportions, DO NOT change to generic humans."
-            )
-
-            # MANTRA VISUAL SULTAN (BODY MORPHING COMEDY)
-            sultan_mantra_box = {
-                "Anatomical Titan (Real Muscle & Bone)": "Hyper-realistic muscle fibers expanding from the body, pulsating veins, gritty anatomical detail, intense steam evaporating. Maintain original facial features and identity.",
-                "Super Saiyan (God Aura & Electric)": "Golden translucent energy aura erupting, high-voltage electric sparks, hair turns spiky golden. The face must remain identical to the original character.",
-                "Mecha-Hybrid (Liquid Metal/Robot)": "Skin transforming into brushed titanium plates, hydraulic pistons moving under the skin. Facial identity must be strictly preserved without changing facial structure.",
-                "Ethereal God (Cosmic/Nebula)": "Body turning into a translucent cosmic nebula, swirling galaxies inside. The core facial features and eyes must remain recognizable as the original character.",
-                "Instant Obesity (Jiggling Fat)": "Extreme rapid inflation of body fat from the neck down. Massive belly and double chin expanding, realistic fat jiggling physics. DO NOT alter the core facial structure, keep the original face and identity.",
-                "Ultra-Skinny (Malnourished Bone)": "Body rapidly shrinks to a skeletal frame from the neck down. Ribcage highly visible, skin tightens over bones. Face maintains core identity with sunken cheeks but same features.",
-                "Squashed & Short (Hobbit Style)": "Violent vertical compression of the entire body. Limbs become short and stubby, torso becomes wide. Maintain accurate facial proportions and original character face on a miniature scale.",
-                "Extreme Tall & Lanky (Slender Style)": "Limbs and neck stretch uncontrollably. Body becomes thin and elongated. Face identity must be locked and remain unchanged while movement becomes awkward."
+            # --- 1. DATABASE EFEK TRANSFORMASI (SILET EDITION) ---
+            DB_TRANS_EFFECT = {
+                "Energi (Super Saiyan/Aura)": "radiant golden aura, electrical sparks, hair standing up, glowing energy pulses",
+                "Otot (Hulk/Monster)": "rapid muscle expansion, skin stretching, clothes ripping, massive physical growth",
+                "Kostum (Spiderman/Armor)": "suit material crawling over skin, nanotech assembly, liquid metal covering the body",
+                "Bakar (Embers)": "burning into glowing hot embers, skin turning into charcoal then flaking away",
+                "Cair (Liquid Metal)": "melting into a fluid liquid silver metal, reflective chrome transition",
+                "Pasir (Dust/Sand)": "disintegrating into fine particles, blown away by mystical wind",
+                "Asap (Shadow/Mist)": "turning into dark thick smoke, swirling shadows, ethereal gaseous state"
             }
 
-            # A. RAKIT PROMPT GAMBAR (sultan_image_dna)
-            sultan_image_dna = (
-                f"MASTER IMAGE (Spatial Split): Two distinct characters. "
-                f"POSITION LEFT: {c_l_name} wearing {c_l_outfit}. "
-                f"POSITION RIGHT: {c_r_name} wearing {c_r_outfit}. "
-                f"LOCATION: {user_scene}. {sultan_quality_logic} "
-                f"9:16 vertical frame, handheld camera, raw footage style."
-            )
+            # --- 2. MAPPING STYLE (SULTAN SYNC) ---
+            MAP_STYLE_TRANS = {
+                "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, ultra-detailed textures, physically based rendering",
+                "Cinematic": "cinematic movie still, 70mm IMAX film look, dramatic theatrical shadows, anamorphic lens flare",
+                "Anime (3D Pixar)": "high-quality 3D animation, Pixar style, stylized character, soft global illumination, expressive"
+            }
 
-            # B. RAKIT PROMPT VIDEO (sultan_video_story)
-            s_target = f"LEFT ({c_l_name})" if is_trans_l else f"RIGHT ({c_r_name})" if is_trans_r else "Both Characters"
-            s_smooth = "smoothly and gradually morphing" if (is_trans_l or is_trans_r) and trans_speed == "Slow & Smooth" else "violently exploding"
-            
-            s_fx = ""
-            if (is_trans_l or is_trans_r):
-                if "Lantai Retak & Hancur" in env_fx: s_fx += "The ground beneath cracks. "
-                if "Gravitasi Terbalik (Melayang)" in env_fx: s_fx += "Objects float upwards. "
-                if "Shockwave Udara" in env_fx: s_fx += "Air shockwave distorts space. "
-                if "Ledakan Lampu & Listrik" in env_fx: s_fx += "Lights explode with electric sparks. "
-                if "Kabut & Debu Sinematik" in env_fx: s_fx += "Volumetric fog and dust. "
+            with st.container(border=True):
+                col_char, col_eff = st.columns(2)
+                
+                with col_char:
+                    st.markdown('<p style="font-size:12px; color:#888;">👤 IDENTITAS MASTER (DARI GAMBAR REF)</p>', unsafe_allow_html=True)
+                    v_char_name = st.text_input("Nama Karakter:", "SUPRI", key="tr_name")
+                    v_trigger = st.text_input("Aksi Pemicu (Trigger):", placeholder="Contoh: meminum segelas susu...", key="tr_trigger")
 
-            # --- LOGIKA DIALOG SULTAN (ANTI BEREBUT) ---
-            if c_l_speech and not c_r_speech:
-                s_dialog = f"{c_l_name} (Left) is speaking clearly: '{c_l_speech}', while {c_r_name} (Right) remains SILENT, listening with NO mouth movement."
-            elif c_r_speech and not c_l_speech:
-                s_dialog = f"{c_r_name} (Right) is speaking clearly: '{c_r_speech}', while {c_l_name} (Left) remains SILENT, listening with NO mouth movement."
-            elif c_l_speech and c_r_speech:
-                s_dialog = f"Both characters are talking. {c_l_name} (Left) says '{c_l_speech}' and {c_r_name} (Right) says '{c_r_speech}'."
-            else:
-                s_dialog = "Both characters are silent, maintaining natural facial expressions."
+                with col_eff:
+                    st.markdown('<p style="font-size:12px; color:#888;">🧬 PROSES PERUBAHAN</p>', unsafe_allow_html=True)
+                    v_eff_type = st.selectbox("Pilih Jenis Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff")
+                    v_char_target = st.text_input("Wujud Akhir (Target):", "Super Saiyan", key="tr_target")
 
-            facing_logic = (
-                "The characters are positioned in a profile view, facing each other directly. "
-                "Intense eye contact between the two characters."
-            )
+                st.divider()
+                
+                col_opt1, col_opt2 = st.columns(2)
+                with col_opt1:
+                    v_style = st.selectbox("Style Visual:", list(MAP_STYLE_TRANS.keys()), key="tr_style")
+                    v_loc = st.text_input("📍 Lokasi Kejadian:", "Di dalam warung tradisional", key="tr_loc")
+                with col_opt2:
+                    v_timing = st.slider("Mulai Berubah Setelah (Detik):", 1.0, 5.0, 2.0, 0.5, key="tr_time")
+                    v_cam = st.selectbox("Camera Angle:", ["Close Up (Ekspresi)", "Medium Shot (Full Body)", "Low Angle (Heroic)"], key="tr_cam")
 
-            # --- RAKIT CERITA (STEP BY STEP) ---
-            sultan_video_story = (
-                f"STORY SEQUENCE: Starting from the reference image. "
-                f"CAMERA: {cam_angle} with {cam_movement} movement. \n\n"
-                f"1. POSITIONING: {facing_logic} \n"
-                f"2. PHYSICAL MOTION: {user_action}. \n"
-                f"3. DIALOGUE PERFORMANCE: {s_dialog} "
-                "Ensure realistic mouth movements and lip-sync ONLY for the speaking character. \n"
-            )
-            
-            if is_trans_l or is_trans_r:
-                # FIX: Menggunakan sultan_mantra_box yang sudah lo buat di atas
-                sultan_video_story += (
-                    f"4. CLIMAX: While {trans_trigger.lower()}, {s_target} initiates {trans_type}. "
-                    f"The character is {s_smooth}. {sultan_mantra_box[trans_type]} "
-                    f"Clothing Physics: Realistic fabric tearing. {s_fx} "
-                    f"{sultan_quality_logic} High tension cinematic climax."
-                )
-            else:
-                sultan_video_story += f"4. FINAL: Cinematic camera movement. {sultan_quality_logic}"
+                btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
 
-            # --- TAMPILAN HASIL ---
-            st.divider()
-            st.success("✅ ULTIMATE PROMPT READY!")
-            
-            st.markdown("#### 🎨 1. PROMPT GAMBAR")
-            st.code(sultan_image_dna, language="text")
-            
-            st.markdown("#### 🎬 2. PROMPT VIDEO")
-            st.code(sultan_video_story, language="text")
+            # --- 3. LOGIKA GENERATOR PROMPT (SILET LOGIC) ---
+            if btn_gen_trans:
+                if v_trigger and v_char_target and v_loc:
+                    TRANS_NEG = "instant morph, messy transition, losing facial likeness, distorted features, blurry eyes, low quality, jump cut"
+
+                    # A. IMAGE PROMPT
+                    final_img = (
+                        f"A {MAP_STYLE_TRANS[v_style]} of {v_char_name} from the reference image. "
+                        f"STRICT IDENTITY LOCK: Maintain the exact facial structure and likeness from the reference image. "
+                        f"ACTION: {v_char_name} is currently {v_trigger}. "
+                        f"SETTING: {v_loc}. CAMERA: {v_cam}. "
+                        f"TECHNICAL: Sharp focus, 8k, realistic material physics, neutral lighting. "
+                        f"NEGATIVE: {TRANS_NEG}"
+                    )
+
+                    # B. VIDEO PROMPT
+                    final_vid = (
+                        f"Start from the reference image. The video begins with {v_char_name} {v_trigger} normally. "
+                        f"CHRONOLOGY: For the first {v_timing} seconds, keep the character in original form. "
+                        f"MOMENT OF SHIFT: After {v_timing} seconds, a powerful transformation into {v_char_target} begins. "
+                        f"VISUAL EFFECT: Use {DB_TRANS_EFFECT[v_eff_type]} physics. "
+                        f"STRICT IDENTITY LOCK: The character's face must remain recognizable and consistent with the reference image throughout the shift. "
+                        f"Fluid motion, 4k, realistic gravity. NEGATIVE: {TRANS_NEG}"
+                    )
+
+                    st.divider()
+                    res1, res2 = st.columns(2)
+                    with res1:
+                        st.info("📸 **INITIAL STATE (RENDER INI DULU)**")
+                        st.code(final_img, language="markdown")
+                    with res2:
+                        st.info("🎬 **TRANSFORMATION VIDEO (MASUKKAN HASIL IMAGE)**")
+                        st.code(final_vid, language="markdown")
+                else:
+                    st.error("Dian, isi dulu semua field-nya!")
                 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5394,6 +5283,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
