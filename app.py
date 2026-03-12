@@ -1469,15 +1469,14 @@ def tampilkan_ai_lab():
             st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
             st.code(final_ai_prompt, language="text")
 
-# ==========================================================================
+    # ==========================================================================
     # TAB: ANATOMY (SULTAN AUTO-PILOT)
     # ==========================================================================
     with t_anatomi:
         st.header("🧬 Sultan Anatomy: Biological Transparency")
         
-        # --- SEMUA INPUT DIBUNGKUS EXPANDER ---
+        # --- SEMUA INPUT & TOMBOL DI DALAM EXPANDER ---
         with st.expander("🛠️ KONFIGURASI CERITA & VISUAL", expanded=True):
-            # Data Master Internal
             MASTER_BODY_TYPE = {
                 "Jelly-Like (Bening Basah)": "clear transparent jelly-like human skin, wet and glossy texture, subsurface scattering",
                 "Frosted Membrane (Kabur)": "translucent frosted skin membrane, semi-transparent, soft-focus internal view",
@@ -1499,7 +1498,6 @@ def tampilkan_ai_lab():
                 "Neon Cyberpunk": "dark urban alley, vibrant cyan and magenta ambient lights, high contrast"
             }
 
-            # Layout Dropdown
             col_a, col_b, col_c = st.columns(3)
             with col_a:
                 pilih_kulit = st.selectbox("Lapisan Tubuh:", list(MASTER_BODY_TYPE.keys()))
@@ -1508,15 +1506,15 @@ def tampilkan_ai_lab():
             with col_c:
                 pilih_env = st.selectbox("Suasana Dunia:", list(MASTER_ATMOSPHERE.keys()))
 
-            # Input Naskah
             naskah_input = st.text_area(
                 "✍️ Naskah Aksi (Pisahkan Pra-Aksi & Aksi dengan koma):",
                 placeholder="Contoh: Karakter sedang menatap tangannya, lalu dia perlahan mengepalkan jarinya..."
             )
             
+            # Tombol di dalam expander
             btn_generate = st.button("🔥 GENERATE SULTAN STORYBOARD", use_container_width=True)
 
-        # --- HASIL PROMPT DI LUAR EXPANDER (CARD 2 KOLOM) ---
+        # --- HASIL MUNCUL DI LUAR EXPANDER (CARD 2 KOLOM) ---
         if btn_generate:
             if naskah_input:
                 # Logic Pemisah Naskah
@@ -1528,7 +1526,7 @@ def tampilkan_ai_lab():
                     pra_aksi = naskah_input
                     aksi_lanjutan = "moving naturally according to the scene"
 
-                # Prompt Gambar
+                # Prompt Gambar (Static)
                 final_prompt_img = (
                     f"A masterpiece cinematic 8k photo of a human with {MASTER_BODY_TYPE[pilih_kulit]}. "
                     f"Visible inside: {MASTER_INTERNAL_DETAIL[pilih_isi]}. "
@@ -1538,7 +1536,7 @@ def tampilkan_ai_lab():
                     f"subsurface scattering, hyper-realistic, anatomical correctness, no extra limbs."
                 )
 
-                # Prompt Video
+                # Prompt Video (Motion)
                 final_prompt_vid = (
                     f"Start from the reference image. The character begins {aksi_lanjutan.strip()}. "
                     f"Fluid anatomical movement, transparent skin reacts naturally over the bones. "
@@ -1546,26 +1544,24 @@ def tampilkan_ai_lab():
                     f"4k cinematic motion, high-fidelity biological movement, no flickering."
                 )
 
-                st.divider()
+                st.markdown("### 🧬 HASIL ANALISIS SULTAN")
                 
-                # Layout Card 2 Kolom
+                # Card 2 Kolom
                 out_col1, out_col2 = st.columns(2)
                 
                 with out_col1:
                     with st.container(border=True):
-                        st.markdown("### 📸 IMAGE PROMPT")
-                        st.caption("Copy ke Flux/Grok untuk Initial Frame")
+                        st.markdown("#### 📸 IMAGE PROMPT")
                         st.code(final_prompt_img, language="markdown")
-                        st.button("📋 Copy Image", key="copy_img", on_click=lambda: st.toast("Image Prompt Copied!"))
+                        st.button("📋 Copy Image", key="copy_img_ana")
                     
                 with out_col2:
                     with st.container(border=True):
-                        st.markdown("### 🎬 VIDEO PROMPT")
-                        st.caption("Copy ke Kling/Luma bersama hasil gambar")
+                        st.markdown("#### 🎬 VIDEO PROMPT")
                         st.code(final_prompt_vid, language="markdown")
-                        st.button("📋 Copy Video", key="copy_vid", on_click=lambda: st.toast("Video Prompt Copied!"))
+                        st.button("📋 Copy Video", key="copy_vid_ana")
             else:
-                st.warning("Naskahnya diisi dulu, Cok!")
+                st.error("Naskahnya diisi dulu, Cok!")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5347,6 +5343,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
