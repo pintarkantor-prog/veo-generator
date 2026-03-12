@@ -2920,30 +2920,18 @@ def tampilkan_tugas_kerja():
                     )
                 
                 with c4:
-                    # 1. Pastikan Nama Staf diproses (Case Insensitive)
-                    # Kita asumsikan st.session_state.nama_staf berisi nama yang sedang login
-                    nama_staf_radar = st.session_state.nama_staf.upper()
-
-                    # 2. Definisikan Mask Bonus Real untuk Staf Terkait Bulan Ini
-                    # Cari di Arus_Kas yang mengandung nama staf tersebut di kolom KETERANGAN
-                    mask_bonus_staf = (
-                        (df_kas_all['KETERANGAN'].str.upper().str.contains(nama_staf_radar, na=False)) &
-                        (df_kas_all['KATEGORI'] == 'Gaji Tim')
-                    )
-
-                    # 3. PECAH DATA (Video vs Absen)
-                    mask_vid = mask_bonus_staf & df_kas_all['KETERANGAN'].str.upper().str.contains('VIDEO', na=False)
-                    mask_abs = mask_bonus_staf & df_kas_all['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)
+                    # PECAH DATA DARI ARUS KAS (Sesuai ralat 30rb)
+                    mask_vid = mask_bonus_real & df_kas_all['KETERANGAN'].str.upper().str.contains('VIDEO', na=False)
+                    mask_abs = mask_bonus_real & df_kas_all['KETERANGAN'].str.upper().str.contains('ABSEN', na=False)
                     
                     cair_vid = pd.to_numeric(df_kas_all[mask_vid]['NOMINAL'], errors='coerce').sum()
                     cair_abs = pd.to_numeric(df_kas_all[mask_abs]['NOMINAL'], errors='coerce').sum()
                     total_semua = cair_vid + cair_abs
 
-                    # 4. TAMPILKAN METRIC SULTAN
                     st.metric(
-                        "💰 TOTAL BONUS ANDA", 
+                        "💰 TOTAL BONUS", 
                         f"Rp {int(total_semua):,}",
-                        delta=f"Video: {int(cair_vid/1000)}rb | Absen: {int(cair_abs/1000)}rb",
+                        delta=f"Video: {int(cair_vid/1000)}k | Absen: {int(cair_abs/1000)}k",
                         delta_color="normal"
                     )
                 
@@ -3143,13 +3131,12 @@ def tampilkan_tugas_kerja():
                                                     except: pass
 
                                                     # 3. HITUNG BONUS (PAKAI MEMORI - ANTI LAG)
-                                                    staf_target = staf_nama.upper()
                                                     df_selesai = df_all_tugas[
-                                                        (df_all_tugas['STAF'].astype(str).str.upper() == staf_target) &
-                                                        (df_all_tugas['DEADLINE'].astype(str) == str(tgl_tugas)) &
-                                                        (df_all_tugas['STATUS'].astype(str).str.upper() == 'FINISH')
+                                                        (df_all_tugas['STAF'].str.upper() == staf_nama) &
+                                                        (df_all_tugas['DEADLINE'] == tgl_tugas) &
+                                                        (df_all_tugas['STATUS'].str.upper() == 'FINISH')
                                                     ]
-                                                    jml_video = len(df_selesai) + 1
+                                                    jml_video = len(df_selesai) + 1 # +1 untuk tugas yang diproses sekarang
 
                                                     # 4. LOGIKA BONUS & ARUS KAS
                                                     msg_bonus = ""
@@ -6103,21 +6090,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
