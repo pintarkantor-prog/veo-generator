@@ -857,478 +857,7 @@ def tampilkan_ai_lab():
 
     st.title("🧠 PINTAR AI LAB")
 
-    t_anatomi, t_grandma, t_transform, t_random = st.tabs(["🦴 ANATOMY", "👵 GRANDMA", "⚡ TRANSFORMATION", "🎲 RANDOM"])
-
-    # ==========================================================================
-    # TAB: ANATOMY (SULTAN AUTO-PILOT)
-    # ==========================================================================
-    with t_anatomi:
-        # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
-        MASTER_CHAR_LAB = {
-            "BALUNG": {
-                "fisik": (
-                    "FORENSIC PHOTOGRAPHY STYLE. A clean white anatomical human skeleton clearly visible "
-                    "underneath a THIN, HIGHLY TRANSPARENT, and crystal-clear dermal membrane. "
-                    "The flesh layer is sleek and thin, hugging the bones closely like a glass-like skin. "
-                    "NO INTERNAL ORGANS inside, just the skeleton. The surface has realistic skin pores "
-                    "but minimal glow, showing a matte-natural finish with subtle anatomical details. "
-                    "Movement Physics: The thin transparent skin stretches and tightens realistically "
-                    "over the skeletal joints during motion, with no excessive lighting or bloom."
-                ),
-                "pakaian": {
-                    "Original": "Pure anatomical look, no clothes. Clear deep view of the white skeleton through thick transparent flesh.",
-                    "Jas Lab Putih": "Professional white cotton lab coat. The fabric moves naturally over the thick transparent skeletal frame.",
-                    "Baju Koko + Peci": "Wearing a clean white embroidered Baju Koko, a black velvet Peci (songkok) on the transparent skull, and a neat plaid Sarung. The clothes drape realistically over the gel-skin.",
-                    "Jubah Kerajaan": "Royal crimson velvet tunic with gold embroidery. Heavy fabric showing realistic weight.",
-                    "Baju Kantoran": "Crisp white button-up shirt and charcoal trousers. Sharp fabric textures reacting to skeletal motion.",
-                    "Hoodie Hitam": "Oversized heavyweight black fleece hoodie. Soft matte texture folds around the thick transparent neck.",
-                    "Versi Sultan": "Charcoal three-piece suit with gold brocade. Luxury materials with realistic light refractions."
-                }
-            },
-            "BALUNG ORGAN": {
-                "fisik": (
-                    "NATIONAL GEOGRAPHIC FORENSIC STYLE. A clean human skeleton encased in a "
-                    "THIN, SLEEK, and highly transparent dermal membrane. THE FLESH IS TIGHT "
-                    "and hugs the skeletal structure closely with no excessive volume. "
-                    "FULL INTERNAL ORGANS (heart, lungs, liver) are clearly visible deep inside the torso. "
-                    "The organs exhibit a VERY SUBTLE, low-intensity internal glow, purely "
-                    "contained within the tissues with NO EXTERNAL BLOOM or lens flare. "
-                    "The white bones and organs are visible through the crystal-clear, "
-                    "matte-finish transparent skin. Movement Physics: The thin skin layer "
-                    "stretches realistically over the ribcage and organs during motion."
-                ),
-                "pakaian": {
-                    "Original": "Pure anatomical look, no clothes. The glowing internal organs are visible through the thick clear volume.",
-                    "Jas Lab Putih": "Professional white lab coat. The subtle bioluminescent glow of the organs is visible through the fabric.",
-                    "Baju Koko + Peci": "Wearing a modest white Baju Koko, a black Peci on the glowing head, and a traditional Sarung. The internal bioluminescence subtly lights up the white shirt from within.",
-                    "Jubah Kerajaan": "Royal crimson velvet. The glow from the chest organs creates a faint atmospheric light on the collar.",
-                    "Baju Kantoran": "Sharp white shirt. The internal organ glow is subtly visible through the thin white fabric.",
-                    "Hoodie Hitam": "Premium black hoodie. The glow is hidden except for the neck and face area.",
-                    "Versi Sultan": "Luxury gold-brocade suit. Light refractions from the suit interact with the internal organ glow."
-                }
-            }
-        }
-
-        # --- 3. MASTER AUDIO LAB (NARRATOR: HUMAN-LIKE PRECISION) ---
-        MASTER_AUDIO_LAB = {
-            "Tipe": [
-                "Pria (40th) - Gravely Baritone, Cinematic Raw (Gravely texture, audible inhales, Nat-Geo style)",
-                "Pria (30th) - Sharp Tenor, Forensic Edge (Sharp articulation, subtle vocal fry, cold narrator)",
-                "Wanita (35th) - Smoky & Mysterious (Smoky voice, slow cadence, heavy breathing tension)",
-                "Pria (55th) - Weathered Old Master (Wisdom-heavy, husky, raspy texture, natural micro-pauses)",
-                "Wanita (28th) - Clinical Precision (Professional, breathy, rhythmic clinical tone)",
-                "Pria (30th) - Gritty Thriller (Sinis, low-pitched, raspy, provocative human tone)"
-            ],
-            "Aksen": [
-                "Indonesia Formal (Standard Nat-Geo style with natural human inflections)",
-                "Indonesia Narrative (Storytelling style, rhythmic flow, realistic dental sibilance)",
-                "Melayu Klasik (Poetic, rhythmic, authentic human pauses)",
-                "Technical/Medical (Precise, neutral but audible exhales between terms)",
-                "Western-Lilt Indonesian (International style, realistic mouth clicks, subtle lilt)"
-            ],
-            "Mood": [
-                "Cinematic & Dynamic (High emphasis, dramatic pauses, energetic human delivery)",
-                "Dark & Intense (Low-pitched, atmospheric, heavy-breathing tension, 1x speed)",
-                "Factual & Direct (Fast-paced, high clarity, audible micro-inhales)",
-                "Emotional & Poetic (Soft, melodic flow, shaky breath, steady but raw delivery)",
-                "High Pressure (Urgent, rapid delivery, breathy intensity, panicky human tone)"
-            ]
-        }
-
-        # --- 3. AUTO-MAPPING LOGIC (ULTRA-WIDE DEFAULT) ---
-        def auto_visual_mapping(prompt_teks):
-            p = prompt_teks.lower()
-            
-            # --- DEFAULT: PEMANDANGAN LUAS + KAKI UTUH ---
-            # Menggunakan 'Extreme Wide Shot' untuk background luas
-            # Menggunakan 'Full Body' agar kaki tidak kepotong
-            frame = "Wide Shot, Full Body standing figure, head to toe visible" 
-            gerak = "Static camera" 
-            
-            # LOGIKA KATA KUNCI
-            if any(x in p for x in ["medium", "setengah badan", "dada", "perut", "waist up"]):
-                frame = "Medium Shot (Waist Up)"
-            elif any(x in p for x in ["close up", "sangat dekat", "extreme", "detail", "macro", "wajah"]):
-                frame = "Extreme Close-up"
-                
-            if any(x in p for x in ["zoom", "muter", "orbit", "dolly", "maju", "mundur", "pull-back", "camera moves"]):
-                gerak = "Dynamic Motion (Orbit/Dolly)"
-            
-            return frame, gerak
-
-        # --- 4. FETCH DATA FROM SUPABASE ---
-        df_ide = pd.DataFrame()
-        try:
-            q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
-            res = supabase.table("ide_pintar").select("*").or_(q).execute()
-            df_ide = pd.DataFrame(res.data)
-        except: pass
-
-        topik_list = ["-- MODE MANUAL --"]
-        if not df_ide.empty:
-            topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
-        topik_sel = st.selectbox("📥 Pilih Project (Anatomy):", topik_list)
-
-        current_row = {}
-        if topik_sel != "-- MODE MANUAL --":
-            df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
-            if not df_active.empty:
-                current_row = df_active.iloc[0].to_dict()
-                if current_row['status'] == 'READY':
-                    supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
-
-        # --- 5. PRODUCTION BOARD (MULTI-CHARACTER & SULTAN AUDIO) ---
-        with st.expander("🛠️ PINTAR BALUNG ENGINE", expanded=True):
-            
-            # --- VIEW MASTER SCRIPT ---
-            st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
-            
-            full_script = ""
-            if current_row:
-                try:
-                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
-                    if res_vo.data:
-                        full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
-                except: 
-                    pass
-            
-            # --- TEXT AREA DENGAN PLACEHOLDER SULTAN ---
-            placeholder_text = (
-                "Gunakan naskah ini untuk pengisian Voice Over secara utuh (Storytelling Mode)."
-            )
-            
-            st.text_area(
-                "MASTER_VO", 
-                value=full_script, 
-                height=100, 
-                placeholder=placeholder_text,
-                label_visibility="collapsed"
-            )
-
-            st.divider()
-
-            # --- ROW 1: KARAKTER UTAMA & DNA ---
-            col_char, col_dna = st.columns([1, 2])
-            with col_char:
-                st.markdown('<p class="small-label">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
-                char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=0, label_visibility="collapsed")
-                
-                outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
-                db_baju = current_row.get('wardrobe', "Original")
-                idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
-                wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
-            
-            with col_dna:
-                st.markdown('<p class="small-label">🧬 DATA FISIK KARAKTER (AUTO-SYCH)</p>', unsafe_allow_html=True)
-                
-                # Mengambil data fisik dan pakaian
-                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Outfit: {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
-                
-                # Placeholder Sultan untuk DNA
-                dna_placeholder = (
-                    "DNA karakter (anatomi, material, pakaian) akan terisi otomatis... "
-                    "Data ini akan digabung dengan aksi untuk hasil visual yang konsisten."
-                )
-                
-                dna_final = st.text_area(
-                    "DNA_F", 
-                    value=dna_text, 
-                    height=100, 
-                    placeholder=dna_placeholder,
-                    label_visibility="collapsed"
-                )
-
-            # --- ROW 2: SETTING AUDIO (MASTER KONSISTEN) ---
-            st.markdown('<p class="small-label">🔊 SETTING AUDIO (NARASI VO)</p>', unsafe_allow_html=True)
-            ac1, ac2, ac3 = st.columns(3)
-            with ac1:
-                voice_type = st.selectbox("TIPE SUARA", MASTER_AUDIO_LAB["Tipe"])
-            with ac2:
-                accent_type = st.selectbox("LOGAT / AKSEN", MASTER_AUDIO_LAB["Aksen"])
-            with ac3:
-                mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
-
-            st.divider()
-
-            # --- ROW 3: KOTAK AKSI (LANGSUNG TANPA LABEL JUDUL BESAR) ---
-            st.markdown('<p class="small-label">🎬 DESKRIPSI AKSI & VISUAL PROMPT</p>', unsafe_allow_html=True)
-            
-            # 1. Kotak Aksi (A_I) - Karakter Pendukung Dibuang
-            aksi_in = st.text_area("A_I", 
-                value=current_row.get('visual_prompt', ''), 
-                height=150, 
-                label_visibility="collapsed", 
-                placeholder="Deskripsikan apa yang terjadi di adegan ini secara cinematic...")
-
-            # --- LANJUT KE ENV & VO ---
-            c1, c2 = st.columns(2)
-            with c1:
-                st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
-                env_in = st.text_area(
-                    "E_I", 
-                    value=current_row.get('environment', ''), 
-                    height=68, 
-                    label_visibility="collapsed",
-                    placeholder="Contoh: Kamar gelap, cahaya HP biru, debu beterbangan..."
-                )
-            with c2:
-                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO</p>', unsafe_allow_html=True)
-                vo_ref = st.text_area(
-                    "V_R", 
-                    value=current_row.get('narasi_vo', ''), 
-                    height=68, 
-                    label_visibility="collapsed",
-                    placeholder="Tulis narasi di sini (Maksimal 2 kalimat padat & bercerita)..."
-                )
-
-            # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
-            f_auto, m_auto = auto_visual_mapping(aksi_in)
-
-            # --- BUTTON GENERATE: SULTAN VIDEO ENGINE (ULTRA-REALISM EDITION) ---
-            if st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True):
-                st.divider()
-                
-                # 1. LOGIKA OTOMATIS MOOD CAHAYA (FORENSIC & RAW LIGHTING)
-                env_lower = env_in.lower()
-                char_lower = char_pilih.lower()
-                
-                # Menghilangkan efek 'glow' plastik, fokus ke tekstur kalsium dan jaringan nyata
-                if "organ" in char_lower:
-                    biolum_effect = "INTERNAL BIOLUMINESCENCE: Visceral organic glow from internal tissues, casting uneven red/blue light with realistic light-leaks through the rib cage."
-                else:
-                    biolum_effect = "RAW SKELETAL CONTRAST: Hard white bone surface showing calcium textures, non-glossy, realistic shadows inside the marrow cavities."
-
-                if any(x in env_lower for x in ["malam", "night", "gelap"]):
-                    auto_lighting = f"Low-light forensic photography, high-ISO noise texture, {biolum_effect}. Hard shadows, light hitting the gel-skin with realistic specular highlights."
-                elif any(x in env_lower for x in ["sore", "senja", "sunset", "jingga"]):
-                    auto_lighting = f"Natural late-afternoon sun, 5600K color temperature, long harsh shadows, {biolum_effect} competing with directional sunlight."
-                elif any(x in env_lower for x in ["siang", "daylight", "matahari"]):
-                    auto_lighting = f"Harsh midday sun, unedited RAW lighting, high contrast, {biol_effect} is barely visible under intense white light."
-                elif any(x in env_lower for x in ["hujan", "rain", "badai"]):
-                    auto_lighting = f"Dreary wet atmosphere, realistic water distortion on the dermal layer, messy reflections, {biolum_effect} diffused by thick condensation."
-                else:
-                    # DEFAULT: Overcast (Mendung) - Paling Realistis untuk Detail Forensik
-                    auto_lighting = f"Flat overcast sky, neutral diffused light, no artificial filters, realistic light absorption by the thick tissue, {biolum_effect}."
-
-                # 2. RAKIT INSTRUKSI AUDIO (HUMAN PERFORMANCE OVERRIDE)
-                audio_instr = (
-                    f"Narrator Profile: {voice_type}. "
-                    f"Voice Character: {accent_type}, {mood_audio}. "
-                    "Vocal Instruction: **STRICTLY RAW HUMAN PERFORMANCE.** "
-                    "The narrator MUST sound like a weathered person recording in a close-mic setup. "
-                    "Include natural imperfections: audible heavy inhales and deep exhales between phrases. "
-                    "Incorporate 'Vocal Fry' at the end of sentences and realistic mouth clicks (saliva sounds). "
-                    "Deliver with irregular pacing: use unpredictable micro-pauses (0.3s to 0.7s) to mimic human thinking. "
-                    "STRICTLY PROHIBIT synthetic, smooth, or 'perfect' AI cadence. Emphasize the weight and texture of each word. "
-                    f"Script Text: '{vo_ref}'"
-                )
-                
-                # --- TAMPILAN HASIL SINGLE BOX (DEEP FOCUS, FULL BODY, & RAW REALISM) ---
-                st.warning("🎥 MASTER VIDEO PROMPT (REALISM OVERRIDE - PINTAR AI LAB)")
-                
-                sultan_video_prompt = (
-                    f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
-                    
-                    f"ACTION & MOTION PHYSICS:\n{aksi_in}. "
-                    f"**NORMAL SPEED.** 1x playback. No artificial frame interpolation. "
-                    f"Physics follows natural inertia: the thick gel-skin exhibits organic micro-jiggle "
-                    f"and realistic momentum during bone articulation. 24fps film cadence. \n\n"
-                    
-                    f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting: {auto_lighting}. "
-                    f"**DEEP FOCUS CINEMATOGRAPHY.** Every layer of the environment is razor-sharp. "
-                    f"Natural ray-traced light interacting with airborne dust motes. "
-                    f"Background environment is perfectly focused and as detailed as the subject. \n\n"
-                    
-                    f"TECHNICAL SPECS (STRICT ANTI-AI OVERRIDE):\n"
-                    f"**RAW 4K DOCUMENTARY FOOTAGE.** Shot on Nikon D850, 24mm Prime, f/22. "
-                    f"**ULTRA-WIDE ANGLE.** Framing: {f_auto}. Motion: {m_auto}. "
-                    f"**HEAD-TO-TOE FULL BODY VISIBLE STANDING ON THE GROUND.** "
-                    f"**FORENSIC TEXTURE DETAIL.** NO SMOOTH PLASTIC. NO ARTIFICIAL GLOSS. "
-                    f"Visible organic imperfections: tiny surface scratches, realistic skin pores, and bone calcium textures. "
-                    f"**ABSOLUTELY NO MOTION BLUR. NO BOKEH. NO DEPTH OF FIELD BLUR.** "
-                    f"Subtle chromatic aberration on frame edges. Natural raw film grain texture. \n\n"
-                    
-                    f"AUDIO & SOUND DESIGN:\n{audio_instr}. "
-                    f"Ambient Audio: Immersive 3D soundscape of {env_in} with hyper-detailed foley and realistic spatial reverb."
-                )
-                
-                st.code(sultan_video_prompt, language="text")
-
-            # --- NAVIGATION ---
-            if current_row:
-                if st.button("✅ SELESAI & LANJUT KE ADEGAN BERIKUTNYA", use_container_width=True):
-                    try:
-                        supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
-                        st.rerun()
-                    except:
-                        st.error("Koneksi bermasalah saat update status.")
-
-        with st.expander("💡 ASISTEN IDE GURU GEM", expanded=False):
-            col_t1, col_t2 = st.columns(2)
-            with col_t1:
-                st.markdown('<p class="small-label">1. PILIH PILAR VIRAL</p>', unsafe_allow_html=True)
-                tipe_cerita = st.selectbox("TIPE_C", [
-                    "🩸 Biological Horror (Anatomi & Siksaan)",
-                    "🏛️ Forbidden History (Konspirasi & Zaman)",
-                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)",
-                    "🌀 Absurd What-If (Fisika & Kiamat)",
-                    "🧬 Genetic Glitch (Mutasi & Kelainan)",
-                    "🧠 Psychological Loop (Otak & Mental)",
-                    "🔥 Survival Instinct (Uji Ketahanan)"
-                ], label_visibility="collapsed")
-            with col_t2:
-                st.markdown('<p class="small-label">2. JUMLAH ADENGAN</p>', unsafe_allow_html=True)
-                jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
-
-            st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
-            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Jika jantung berhenti sedetik saja...", label_visibility="collapsed")
-            
-            if ide_singkat:
-                # --- MASTER LOGIKA 7 PILAR (NARASI PADAT & LAYAK) ---
-                logika_map = {
-                    "🩸 Biological Horror (Anatomi & Siksaan)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan trigger: 'Apa yang terjadi...' atau 'Bagaimana jika...'.\n"
-                            "- Gunakan pola progresif: 'Satu hari pertama kamu akan...' dan '7 hari kemudian...'.\n"
-                            "- JANGAN KAKU. Ceritakan proses kerusakan seolah penonton sedang mengalaminya sendiri.\n"
-                            "- Deskripsikan sensasi fisik secara brutal: tercekik, terbakar, saraf yang gemetar ketakutan, hingga jaringan yang mengkerut hitam.\n"
-                            "- Biarkan narasi mengalir bercerita tentang penderitaan organ yang kehilangan dayanya."
-                        ),
-                        "focus": (
-                            "Extreme anatomical forensic detail, macro extreme close-up on vibrating nerves, "
-                            "visceral organ decay texture (organ menghitam/kusam), active pulsating organs, "
-                            "viscous bioluminescent fluid movement, micro-vibrations of the bone, "
-                            "and realistic subsurface scattering on thick gel-skin."
-                        ),
-                    },
-                    "🏛️ Forbidden History (Konspirasi & Zaman)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Bagaimana jika...' atau 'Pernahkah kamu membayangkan...'.\n"
-                            "- Gunakan alur: 'Satu hari pertama kamu nemuin benda ini...' dan '7 hari kemudian kamu sadar...'.\n"
-                            "- Ceritakan kontras tekstur: batu candi yang kasar vs logam masa depan yang halus.\n"
-                            "- Narasi harus megah, puitis, dan misterius. Seolah kamu lagi ngebongkar rahasia paling gelap di bumi.\n"
-                            "- Gunakan kata-kata sensori: debu zaman, cahaya neon terlarang, bata retak, dinginnya batu kuno."
-                        ),
-                        "focus": (
-                            "Cinematic Golden Hour, dynamic dust motes (debu bergerak), ancient stone texture (batu candi berlumut), "
-                            "glowing circuit technology (sirkuit neon), ray-traced shadows, "
-                            "and Balung's fingers interacting with rough historical surfaces."
-                        ),
-                    },
-                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Pernahkah kamu membayangkan pertempuran di bawah kulitmu?' atau 'Lihat dua dunia yang berbeda ini...'.\n"
-                            "- Gunakan alur kontras: 'Satu hari pertama, tim kiri masih terlihat kuat, tapi tim kanan mulai menyerah...'.\n"
-                            "- 7 hari kemudian: Ceritakan kehancuran total di satu sisi (retak, kusam, busuk) vs keajaiban di sisi lain (glowing, kokoh, jernih).\n"
-                            "- Gunakan diksi yang memprovokasi pilihan penonton: 'Pilihanmu hari ini adalah kerapuhanmu esok'.\n"
-                            "- Fokus pada perubahan tekstur: dari kenyal menjadi rapuh, dari bening menjadi keruh cokelat."
-                        ),
-                        "focus": (
-                            "Side-by-side split screen active interaction, texture contrast (Kusam vs Glowing), "
-                            "real-time bone density transformation (tulang keropos vs padat), "
-                            "liquid transparency turning murky, transition from organic elasticity to brittle fragility."
-                        ),
-                    },
-                    "🌀 Absurd What-If (Fisika & Kiamat)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Apa yang terjadi jika tiba-tiba...' atau 'Bagaimana jika duniamu mendadak...'.\n"
-                            "- Satu hari pertama: Ceritakan keanehan kecil yang awalnya terasa lucu (misal: air di gelas mulai melayang pelan).\n"
-                            "- 7 hari kemudian: Ceritakan kehancuran total (lautan terangkat ke langit, bangunan beton pecah jadi debu, oksigen kabur ke angkasa).\n"
-                            "- Gunakan diksi vertigo: dunia terbalik, kehampaan sunyi, raksasa yang bangun, melayang tanpa arah.\n"
-                            "- Jelaskan 'Efek Domino' kiamat ini dengan nada yang dingin namun mencekam."
-                        ),
-                        "focus": (
-                            "Anti-gravity debris (puing melayang), floating water physics interacting with Balung, "
-                            "chromatic aberration, volumetric fog, floating ocean particles, "
-                            "and motion blur on high-speed flying objects."
-                        ),
-                    },
-                    "🧬 Genetic Glitch (Mutasi & Kelainan Langka)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Bagaimana jika tubuhmu memutuskan untuk mengkhianatimu?' atau 'Pernahkah kamu merasakan sesuatu yang salah di dalam tulangmu?'.\n"
-                            "- Satu hari pertama: Ceritakan benjolan kecil yang keras, sepele, tapi mulai berdenyut aneh di tulang rusuk atau sendimu.\n"
-                            "- 7 hari kemudian: Ceritakan mutasi liar. Benjolan itu meledak jadi duri kalsium tajam (bone spikes) yang merobek jaringan daging dan menembus kulit transparan.\n"
-                            "- Gunakan diksi sensori: suara 'kretek' tulang yang berderit, rasa tajam yang menusuk dari dalam, kulit yang menegang maksimal, dan pertumbuhan yang tak terkendali.\n"
-                            "- Buat penonton merinding dengan kengerian biologis yang terasa sangat dekat dan nyata."
-                        ),
-                        "focus": (
-                            "Macro close-up on active bone spikes (tulang menusuk keluar), "
-                            "skin tension and tearing textures (kulit menegang/robek), subcutaneous writhing movements, "
-                            "cold medical neon lighting, and visceral sound-driven visuals."
-                        ),
-                    },
-                    "🧠 Psychological Loop (Otak & Mental)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Apa yang terjadi di dalam kepalamu saat duniamu mendadak sunyi?' atau 'Pernahkah kamu merasakan badai yang tak terlihat?'.\n"
-                            "- Satu hari pertama: Ceritakan jalur dopamin yang meredup, warnanya berubah jadi biru kelabu yang dingin dan hampa.\n"
-                            "- 7 hari kemudian: Jalur itu putus total. Ceritakan kilat merah api dari kortisol yang membakar saraf emosimu, menciptakan ledakan listrik yang tak terkendali.\n"
-                            "- Hubungkan ke fisik: Jelaskan dadamu yang sesak bukan karena jantung rusak, tapi karena sarafmu sedang 'konslet' hebat akibat luka mental.\n"
-                            "- Gunakan diksi: badai listrik, kesepian yang membakar, sirkuit yang putus, kehampaan yang mencekam."
-                        ),
-                        "focus": (
-                            "Neural firing explosion, brain wave color shifts (Blue to Fire Red), "
-                            "volumetric fog inside the skull, micro-gestures of despair (tangan gemetar hebat), "
-                            "and motion blur on neural sparks spreading to the environment."
-                        ),
-                    },
-                    "🔥 Survival Instinct (Uji Ketahanan Ekstrem)": {
-                        "rules": (
-                            "DIREKSI NARASI (WAJIB HIDUP):\n"
-                            "- Mulai dengan: 'Bagaimana jika dunia mendadak membeku dan napasmu berubah jadi belati es?' atau 'Berapa lama kamu bisa bertahan saat oksigenmu mulai mendidih?'.\n"
-                            "- Satu hari pertama: Ceritakan sensasi mati rasa yang perlahan merambat, ujung jari yang mulai membeku atau kulit yang mulai melepuh.\n"
-                            "- 7 hari kemudian: Ceritakan kehancuran material tubuh. Darah membeku di dalam pembuluh transparan, tulang mulai retak (cracking) seperti kaca yang dipukul pelan.\n"
-                            "- Gunakan diksi: kristal frost yang haus, retakan membara, napas yang membatu, perjuangan detik demi detik dalam kehampaan.\n"
-                            "- Buat penonton merasakan kengerian saat tubuh kehilangan daya lawan terhadap alam yang kejam."
-                        ),
-                        "focus": (
-                            "Dynamic frost spreading (es merambat), active bone cracking textures, "
-                            "heat haze and boiling gel-skin effects, crystalline ice growth on transparent skin, "
-                            "and struggling movements (merangkak/menahan) against extreme nature."
-                        ),
-                    }
-                }
-
-                # Sinkronisasi Data Aktif
-                l_data = logika_map[tipe_cerita]
-                try:
-                    baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
-                except:
-                    baju_list = "Original, Jas Lab Putih, Versi Sultan"
-
-                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - DYNAMIC SPATIAL VERSION) ---
-                mantra_header = "Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).\n"
-                mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") yang HIDUP, BERNYAWA, dan NYATA.\n"
-                mantra_header += "TRIGGER IDE: " + ide_singkat + ".\n\n"
-                
-                mantra_body = "KONSEP UTAMA: " + tipe_cerita + "\n"
-                mantra_body += l_data["rules"] + "\n\n"
-                
-                mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
-                mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
-                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 3-4 kalimat per adegan). Gunakan kata-kata sensori (dingin, tajam, sesak). JANGAN KAKU.\n"
-                mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita.\n"
-                
-                # SUNTIKAN ANTI-PATUNG & INTERAKSI LOKASI (SPATIAL INTERACTION)
-                mantra_footer += "- **VISUAL SENSORY & DYNAMIC INTERACTION**: " + l_data["focus"] + ". JANGAN HANYA DESKRIPSIKAN BALUNG SENDIRIAN. Balung WAJIB berinteraksi dengan setting lokasi. (Contoh: Balung berjalan menyisir pinggiran gerbang istana, jemari tulangnya gemetar meraba ukiran relief batu).\n"
-                mantra_footer += "- **MOTION & PHYSICS**: Deskripsikan gerakan subjek terhadap objek sekitar. Gunakan gerakan mikro: uap mengalir melewati pilar, gel skin yang bergetar saat bersenggolan dengan material, atau debu yang berputar tertiup napas Balung. Gunakan kamera dinamis: Slow Push-in, Handheld micro-shake, atau Rack Focus.\n"
-                mantra_footer += "- **BALUNG MICRO-GESTURE**: Masukkan gerakan manusiawi: rahang gemetar, jemari meraba tekstur material secara nyata, menoleh perlahan mengikuti arah cahaya, atau tubuh terhuyung mengikuti gravitasi.\n"
-                
-                # PERBAIKAN LOKASI (SPATIAL IDENTITY):
-                mantra_footer += "- **ENVIRONMENT ADAPTIF (SPATIAL DETAIL)**: Di kolom Environment Detail, WAJIB sebutkan NAMA LOKASI NYATA di awal kalimat. JANGAN cuma tekstur! Contoh: 'Setting: Lorong Istana Persepolis. Detail: Dinding batu pasir kasar, sisa pembakaran obor, Cinematic Golden Hour.'\n"
-                mantra_footer += "  * Jika harian: Kamar kos sempit, Dapur kotor, Halte bus tua. Jika sejarah: Gerbang Istana, Terowongan rahasia, Kuil kuno. Jika kiamat: Reruntuhan Mall, Aspal pecah.\n"
-                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Gerakan Aksi Karakter + Interaksi Lingkungan + Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail (Wajib: NAMA LOKASI NYATA + Tekstur, Material, & Lighting Engine))."
-
-                mantra_final = mantra_header + mantra_body + mantra_footer
-
-                st.markdown('<p class="small-label">4. SALIN MANTRA STORYTELLING INI KE GEMINI</p>', unsafe_allow_html=True)
-                st.code(mantra_final, language="text")
-                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
+    t_grandma, t_anatomi, t_transform, t_random = st.tabs(["👵 GRANDMA", "🦴 ANATOMY", "⚡ TRANSFORMATION", "🎲 RANDOM"])
                 
     # ==========================================================================
     # TAB: THE FAMILY LEGACY (REAL HUMAN - NATURAL WIDE SHOT VERSION)
@@ -1939,6 +1468,477 @@ def tampilkan_ai_lab():
             st.success("🔥 PROMPT TAJAM & BERSIH READY!")
             st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
             st.code(final_ai_prompt, language="text")
+
+    # ==========================================================================
+    # TAB: ANATOMY (SULTAN AUTO-PILOT)
+    # ==========================================================================
+    with t_anatomi:
+        # --- 2. MASTER DATA (DNA & AUDIO KONSISTEN) ---
+        MASTER_CHAR_LAB = {
+            "BALUNG": {
+                "fisik": (
+                    "FORENSIC PHOTOGRAPHY STYLE. A clean white anatomical human skeleton clearly visible "
+                    "underneath a THIN, HIGHLY TRANSPARENT, and crystal-clear dermal membrane. "
+                    "The flesh layer is sleek and thin, hugging the bones closely like a glass-like skin. "
+                    "NO INTERNAL ORGANS inside, just the skeleton. The surface has realistic skin pores "
+                    "but minimal glow, showing a matte-natural finish with subtle anatomical details. "
+                    "Movement Physics: The thin transparent skin stretches and tightens realistically "
+                    "over the skeletal joints during motion, with no excessive lighting or bloom."
+                ),
+                "pakaian": {
+                    "Original": "Pure anatomical look, no clothes. Clear deep view of the white skeleton through thick transparent flesh.",
+                    "Jas Lab Putih": "Professional white cotton lab coat. The fabric moves naturally over the thick transparent skeletal frame.",
+                    "Baju Koko + Peci": "Wearing a clean white embroidered Baju Koko, a black velvet Peci (songkok) on the transparent skull, and a neat plaid Sarung. The clothes drape realistically over the gel-skin.",
+                    "Jubah Kerajaan": "Royal crimson velvet tunic with gold embroidery. Heavy fabric showing realistic weight.",
+                    "Baju Kantoran": "Crisp white button-up shirt and charcoal trousers. Sharp fabric textures reacting to skeletal motion.",
+                    "Hoodie Hitam": "Oversized heavyweight black fleece hoodie. Soft matte texture folds around the thick transparent neck.",
+                    "Versi Sultan": "Charcoal three-piece suit with gold brocade. Luxury materials with realistic light refractions."
+                }
+            },
+            "BALUNG ORGAN": {
+                "fisik": (
+                    "NATIONAL GEOGRAPHIC FORENSIC STYLE. A clean human skeleton encased in a "
+                    "THIN, SLEEK, and highly transparent dermal membrane. THE FLESH IS TIGHT "
+                    "and hugs the skeletal structure closely with no excessive volume. "
+                    "FULL INTERNAL ORGANS (heart, lungs, liver) are clearly visible deep inside the torso. "
+                    "The organs exhibit a VERY SUBTLE, low-intensity internal glow, purely "
+                    "contained within the tissues with NO EXTERNAL BLOOM or lens flare. "
+                    "The white bones and organs are visible through the crystal-clear, "
+                    "matte-finish transparent skin. Movement Physics: The thin skin layer "
+                    "stretches realistically over the ribcage and organs during motion."
+                ),
+                "pakaian": {
+                    "Original": "Pure anatomical look, no clothes. The glowing internal organs are visible through the thick clear volume.",
+                    "Jas Lab Putih": "Professional white lab coat. The subtle bioluminescent glow of the organs is visible through the fabric.",
+                    "Baju Koko + Peci": "Wearing a modest white Baju Koko, a black Peci on the glowing head, and a traditional Sarung. The internal bioluminescence subtly lights up the white shirt from within.",
+                    "Jubah Kerajaan": "Royal crimson velvet. The glow from the chest organs creates a faint atmospheric light on the collar.",
+                    "Baju Kantoran": "Sharp white shirt. The internal organ glow is subtly visible through the thin white fabric.",
+                    "Hoodie Hitam": "Premium black hoodie. The glow is hidden except for the neck and face area.",
+                    "Versi Sultan": "Luxury gold-brocade suit. Light refractions from the suit interact with the internal organ glow."
+                }
+            }
+        }
+
+        # --- 3. MASTER AUDIO LAB (NARRATOR: HUMAN-LIKE PRECISION) ---
+        MASTER_AUDIO_LAB = {
+            "Tipe": [
+                "Pria (40th) - Gravely Baritone, Cinematic Raw (Gravely texture, audible inhales, Nat-Geo style)",
+                "Pria (30th) - Sharp Tenor, Forensic Edge (Sharp articulation, subtle vocal fry, cold narrator)",
+                "Wanita (35th) - Smoky & Mysterious (Smoky voice, slow cadence, heavy breathing tension)",
+                "Pria (55th) - Weathered Old Master (Wisdom-heavy, husky, raspy texture, natural micro-pauses)",
+                "Wanita (28th) - Clinical Precision (Professional, breathy, rhythmic clinical tone)",
+                "Pria (30th) - Gritty Thriller (Sinis, low-pitched, raspy, provocative human tone)"
+            ],
+            "Aksen": [
+                "Indonesia Formal (Standard Nat-Geo style with natural human inflections)",
+                "Indonesia Narrative (Storytelling style, rhythmic flow, realistic dental sibilance)",
+                "Melayu Klasik (Poetic, rhythmic, authentic human pauses)",
+                "Technical/Medical (Precise, neutral but audible exhales between terms)",
+                "Western-Lilt Indonesian (International style, realistic mouth clicks, subtle lilt)"
+            ],
+            "Mood": [
+                "Cinematic & Dynamic (High emphasis, dramatic pauses, energetic human delivery)",
+                "Dark & Intense (Low-pitched, atmospheric, heavy-breathing tension, 1x speed)",
+                "Factual & Direct (Fast-paced, high clarity, audible micro-inhales)",
+                "Emotional & Poetic (Soft, melodic flow, shaky breath, steady but raw delivery)",
+                "High Pressure (Urgent, rapid delivery, breathy intensity, panicky human tone)"
+            ]
+        }
+
+        # --- 3. AUTO-MAPPING LOGIC (ULTRA-WIDE DEFAULT) ---
+        def auto_visual_mapping(prompt_teks):
+            p = prompt_teks.lower()
+            
+            # --- DEFAULT: PEMANDANGAN LUAS + KAKI UTUH ---
+            # Menggunakan 'Extreme Wide Shot' untuk background luas
+            # Menggunakan 'Full Body' agar kaki tidak kepotong
+            frame = "Wide Shot, Full Body standing figure, head to toe visible" 
+            gerak = "Static camera" 
+            
+            # LOGIKA KATA KUNCI
+            if any(x in p for x in ["medium", "setengah badan", "dada", "perut", "waist up"]):
+                frame = "Medium Shot (Waist Up)"
+            elif any(x in p for x in ["close up", "sangat dekat", "extreme", "detail", "macro", "wajah"]):
+                frame = "Extreme Close-up"
+                
+            if any(x in p for x in ["zoom", "muter", "orbit", "dolly", "maju", "mundur", "pull-back", "camera moves"]):
+                gerak = "Dynamic Motion (Orbit/Dolly)"
+            
+            return frame, gerak
+
+        # --- 4. FETCH DATA FROM SUPABASE ---
+        df_ide = pd.DataFrame()
+        try:
+            q = "or(and(status.eq.READY,locked_by.is.null),and(status.eq.PROCESSING,locked_by.eq.OWNER))"
+            res = supabase.table("ide_pintar").select("*").or_(q).execute()
+            df_ide = pd.DataFrame(res.data)
+        except: pass
+
+        topik_list = ["-- MODE MANUAL --"]
+        if not df_ide.empty:
+            topik_list += df_ide.drop_duplicates('topik')['topik'].tolist()
+        topik_sel = st.selectbox("📥 Pilih Project (Anatomy):", topik_list)
+
+        current_row = {}
+        if topik_sel != "-- MODE MANUAL --":
+            df_active = df_ide[df_ide['topik'] == topik_sel].sort_values('no_adegan')
+            if not df_active.empty:
+                current_row = df_active.iloc[0].to_dict()
+                if current_row['status'] == 'READY':
+                    supabase.table("ide_pintar").update({"status":"PROCESSING", "locked_by":"OWNER"}).eq("id", current_row['id']).execute()
+
+        # --- 5. PRODUCTION BOARD (MULTI-CHARACTER & SULTAN AUDIO) ---
+        with st.expander("🛠️ PINTAR BALUNG ENGINE", expanded=True):
+            
+            # --- VIEW MASTER SCRIPT ---
+            st.markdown('<p class="small-label">🎙️ NASKAH FULL VO (MASTER SCRIPT)</p>', unsafe_allow_html=True)
+            
+            full_script = ""
+            if current_row:
+                try:
+                    res_vo = supabase.table("ide_pintar").select("narasi_vo").eq("id_ide", current_row['id_ide']).order("no_adegan").execute()
+                    if res_vo.data:
+                        full_script = " ".join([str(r['narasi_vo']) for r in res_vo.data])
+                except: 
+                    pass
+            
+            # --- TEXT AREA DENGAN PLACEHOLDER SULTAN ---
+            placeholder_text = (
+                "Gunakan naskah ini untuk pengisian Voice Over secara utuh (Storytelling Mode)."
+            )
+            
+            st.text_area(
+                "MASTER_VO", 
+                value=full_script, 
+                height=100, 
+                placeholder=placeholder_text,
+                label_visibility="collapsed"
+            )
+
+            st.divider()
+
+            # --- ROW 1: KARAKTER UTAMA & DNA ---
+            col_char, col_dna = st.columns([1, 2])
+            with col_char:
+                st.markdown('<p class="small-label">👤 KARAKTER UTAMA</p>', unsafe_allow_html=True)
+                char_pilih = st.selectbox("C_P", list(MASTER_CHAR_LAB.keys()), index=0, label_visibility="collapsed")
+                
+                outfit_opt = list(MASTER_CHAR_LAB[char_pilih]["pakaian"].keys())
+                db_baju = current_row.get('wardrobe', "Original")
+                idx_b = outfit_opt.index(db_baju) if db_baju in outfit_opt else 0
+                wardrobe = st.selectbox("O_P", outfit_opt, index=idx_b, label_visibility="collapsed")
+            
+            with col_dna:
+                st.markdown('<p class="small-label">🧬 DATA FISIK KARAKTER (AUTO-SYCH)</p>', unsafe_allow_html=True)
+                
+                # Mengambil data fisik dan pakaian
+                dna_text = f"{MASTER_CHAR_LAB[char_pilih]['fisik']} Outfit: {MASTER_CHAR_LAB[char_pilih]['pakaian'][wardrobe]}".strip()
+                
+                # Placeholder Sultan untuk DNA
+                dna_placeholder = (
+                    "DNA karakter (anatomi, material, pakaian) akan terisi otomatis... "
+                    "Data ini akan digabung dengan aksi untuk hasil visual yang konsisten."
+                )
+                
+                dna_final = st.text_area(
+                    "DNA_F", 
+                    value=dna_text, 
+                    height=100, 
+                    placeholder=dna_placeholder,
+                    label_visibility="collapsed"
+                )
+
+            # --- ROW 2: SETTING AUDIO (MASTER KONSISTEN) ---
+            st.markdown('<p class="small-label">🔊 SETTING AUDIO (NARASI VO)</p>', unsafe_allow_html=True)
+            ac1, ac2, ac3 = st.columns(3)
+            with ac1:
+                voice_type = st.selectbox("TIPE SUARA", MASTER_AUDIO_LAB["Tipe"])
+            with ac2:
+                accent_type = st.selectbox("LOGAT / AKSEN", MASTER_AUDIO_LAB["Aksen"])
+            with ac3:
+                mood_audio = st.selectbox("MOOD SUARA", MASTER_AUDIO_LAB["Mood"])
+
+            st.divider()
+
+            # --- ROW 3: KOTAK AKSI (LANGSUNG TANPA LABEL JUDUL BESAR) ---
+            st.markdown('<p class="small-label">🎬 DESKRIPSI AKSI & VISUAL PROMPT</p>', unsafe_allow_html=True)
+            
+            # 1. Kotak Aksi (A_I) - Karakter Pendukung Dibuang
+            aksi_in = st.text_area("A_I", 
+                value=current_row.get('visual_prompt', ''), 
+                height=150, 
+                label_visibility="collapsed", 
+                placeholder="Deskripsikan apa yang terjadi di adegan ini secara cinematic...")
+
+            # --- LANJUT KE ENV & VO ---
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown('<p class="small-label">🌍 LATAR / ENV</p>', unsafe_allow_html=True)
+                env_in = st.text_area(
+                    "E_I", 
+                    value=current_row.get('environment', ''), 
+                    height=68, 
+                    label_visibility="collapsed",
+                    placeholder="Contoh: Kamar gelap, cahaya HP biru, debu beterbangan..."
+                )
+            with c2:
+                st.markdown('<p class="small-label">🎙️ TEKS NARASI VO</p>', unsafe_allow_html=True)
+                vo_ref = st.text_area(
+                    "V_R", 
+                    value=current_row.get('narasi_vo', ''), 
+                    height=68, 
+                    label_visibility="collapsed",
+                    placeholder="Tulis narasi di sini (Maksimal 2 kalimat padat & bercerita)..."
+                )
+
+            # --- UPDATE LOGIKA BUTTON GENERATE (WAJIB DISESUAIKAN) ---
+            f_auto, m_auto = auto_visual_mapping(aksi_in)
+
+            # --- BUTTON GENERATE: SULTAN VIDEO ENGINE (ULTRA-REALISM EDITION) ---
+            if st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True):
+                st.divider()
+                
+                # 1. LOGIKA OTOMATIS MOOD CAHAYA (FORENSIC & RAW LIGHTING)
+                env_lower = env_in.lower()
+                char_lower = char_pilih.lower()
+                
+                # Menghilangkan efek 'glow' plastik, fokus ke tekstur kalsium dan jaringan nyata
+                if "organ" in char_lower:
+                    biolum_effect = "INTERNAL BIOLUMINESCENCE: Visceral organic glow from internal tissues, casting uneven red/blue light with realistic light-leaks through the rib cage."
+                else:
+                    biolum_effect = "RAW SKELETAL CONTRAST: Hard white bone surface showing calcium textures, non-glossy, realistic shadows inside the marrow cavities."
+
+                if any(x in env_lower for x in ["malam", "night", "gelap"]):
+                    auto_lighting = f"Low-light forensic photography, high-ISO noise texture, {biolum_effect}. Hard shadows, light hitting the gel-skin with realistic specular highlights."
+                elif any(x in env_lower for x in ["sore", "senja", "sunset", "jingga"]):
+                    auto_lighting = f"Natural late-afternoon sun, 5600K color temperature, long harsh shadows, {biolum_effect} competing with directional sunlight."
+                elif any(x in env_lower for x in ["siang", "daylight", "matahari"]):
+                    auto_lighting = f"Harsh midday sun, unedited RAW lighting, high contrast, {biol_effect} is barely visible under intense white light."
+                elif any(x in env_lower for x in ["hujan", "rain", "badai"]):
+                    auto_lighting = f"Dreary wet atmosphere, realistic water distortion on the dermal layer, messy reflections, {biolum_effect} diffused by thick condensation."
+                else:
+                    # DEFAULT: Overcast (Mendung) - Paling Realistis untuk Detail Forensik
+                    auto_lighting = f"Flat overcast sky, neutral diffused light, no artificial filters, realistic light absorption by the thick tissue, {biolum_effect}."
+
+                # 2. RAKIT INSTRUKSI AUDIO (HUMAN PERFORMANCE OVERRIDE)
+                audio_instr = (
+                    f"Narrator Profile: {voice_type}. "
+                    f"Voice Character: {accent_type}, {mood_audio}. "
+                    "Vocal Instruction: **STRICTLY RAW HUMAN PERFORMANCE.** "
+                    "The narrator MUST sound like a weathered person recording in a close-mic setup. "
+                    "Include natural imperfections: audible heavy inhales and deep exhales between phrases. "
+                    "Incorporate 'Vocal Fry' at the end of sentences and realistic mouth clicks (saliva sounds). "
+                    "Deliver with irregular pacing: use unpredictable micro-pauses (0.3s to 0.7s) to mimic human thinking. "
+                    "STRICTLY PROHIBIT synthetic, smooth, or 'perfect' AI cadence. Emphasize the weight and texture of each word. "
+                    f"Script Text: '{vo_ref}'"
+                )
+                
+                # --- TAMPILAN HASIL SINGLE BOX (DEEP FOCUS, FULL BODY, & RAW REALISM) ---
+                st.warning("🎥 MASTER VIDEO PROMPT (REALISM OVERRIDE - PINTAR AI LAB)")
+                
+                sultan_video_prompt = (
+                    f"CORE SUBJECT (THE DNA):\n{dna_final}\n\n"
+                    
+                    f"ACTION & MOTION PHYSICS:\n{aksi_in}. "
+                    f"**NORMAL SPEED.** 1x playback. No artificial frame interpolation. "
+                    f"Physics follows natural inertia: the thick gel-skin exhibits organic micro-jiggle "
+                    f"and realistic momentum during bone articulation. 24fps film cadence. \n\n"
+                    
+                    f"ENVIRONMENT & ATMOSPHERE:\nSet in {env_in}. Lighting: {auto_lighting}. "
+                    f"**DEEP FOCUS CINEMATOGRAPHY.** Every layer of the environment is razor-sharp. "
+                    f"Natural ray-traced light interacting with airborne dust motes. "
+                    f"Background environment is perfectly focused and as detailed as the subject. \n\n"
+                    
+                    f"TECHNICAL SPECS (STRICT ANTI-AI OVERRIDE):\n"
+                    f"**RAW 4K DOCUMENTARY FOOTAGE.** Shot on Nikon D850, 24mm Prime, f/22. "
+                    f"**ULTRA-WIDE ANGLE.** Framing: {f_auto}. Motion: {m_auto}. "
+                    f"**HEAD-TO-TOE FULL BODY VISIBLE STANDING ON THE GROUND.** "
+                    f"**FORENSIC TEXTURE DETAIL.** NO SMOOTH PLASTIC. NO ARTIFICIAL GLOSS. "
+                    f"Visible organic imperfections: tiny surface scratches, realistic skin pores, and bone calcium textures. "
+                    f"**ABSOLUTELY NO MOTION BLUR. NO BOKEH. NO DEPTH OF FIELD BLUR.** "
+                    f"Subtle chromatic aberration on frame edges. Natural raw film grain texture. \n\n"
+                    
+                    f"AUDIO & SOUND DESIGN:\n{audio_instr}. "
+                    f"Ambient Audio: Immersive 3D soundscape of {env_in} with hyper-detailed foley and realistic spatial reverb."
+                )
+                
+                st.code(sultan_video_prompt, language="text")
+
+            # --- NAVIGATION ---
+            if current_row:
+                if st.button("✅ SELESAI & LANJUT KE ADEGAN BERIKUTNYA", use_container_width=True):
+                    try:
+                        supabase.table("ide_pintar").update({"status": "DONE", "locked_by": "OWNER"}).eq("id", current_row['id']).execute()
+                        st.rerun()
+                    except:
+                        st.error("Koneksi bermasalah saat update status.")
+
+        with st.expander("💡 ASISTEN IDE GURU GEM", expanded=False):
+            col_t1, col_t2 = st.columns(2)
+            with col_t1:
+                st.markdown('<p class="small-label">1. PILIH PILAR VIRAL</p>', unsafe_allow_html=True)
+                tipe_cerita = st.selectbox("TIPE_C", [
+                    "🩸 Biological Horror (Anatomi & Siksaan)",
+                    "🏛️ Forbidden History (Konspirasi & Zaman)",
+                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)",
+                    "🌀 Absurd What-If (Fisika & Kiamat)",
+                    "🧬 Genetic Glitch (Mutasi & Kelainan)",
+                    "🧠 Psychological Loop (Otak & Mental)",
+                    "🔥 Survival Instinct (Uji Ketahanan)"
+                ], label_visibility="collapsed")
+            with col_t2:
+                st.markdown('<p class="small-label">2. JUMLAH ADENGAN</p>', unsafe_allow_html=True)
+                jml_adegan = st.selectbox("JML_A", ["10 Cut", "12 Cut", "15 Cut"], index=2, label_visibility="collapsed")
+
+            st.markdown('<p class="small-label">3. IDE VIDEO</p>', unsafe_allow_html=True)
+            ide_singkat = st.text_input("G_IDE", placeholder="Contoh: Jika jantung berhenti sedetik saja...", label_visibility="collapsed")
+            
+            if ide_singkat:
+                # --- MASTER LOGIKA 7 PILAR (NARASI PADAT & LAYAK) ---
+                logika_map = {
+                    "🩸 Biological Horror (Anatomi & Siksaan)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan trigger: 'Apa yang terjadi...' atau 'Bagaimana jika...'.\n"
+                            "- Gunakan pola progresif: 'Satu hari pertama kamu akan...' dan '7 hari kemudian...'.\n"
+                            "- JANGAN KAKU. Ceritakan proses kerusakan seolah penonton sedang mengalaminya sendiri.\n"
+                            "- Deskripsikan sensasi fisik secara brutal: tercekik, terbakar, saraf yang gemetar ketakutan, hingga jaringan yang mengkerut hitam.\n"
+                            "- Biarkan narasi mengalir bercerita tentang penderitaan organ yang kehilangan dayanya."
+                        ),
+                        "focus": (
+                            "Extreme anatomical forensic detail, macro extreme close-up on vibrating nerves, "
+                            "visceral organ decay texture (organ menghitam/kusam), active pulsating organs, "
+                            "viscous bioluminescent fluid movement, micro-vibrations of the bone, "
+                            "and realistic subsurface scattering on thick gel-skin."
+                        ),
+                    },
+                    "🏛️ Forbidden History (Konspirasi & Zaman)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika...' atau 'Pernahkah kamu membayangkan...'.\n"
+                            "- Gunakan alur: 'Satu hari pertama kamu nemuin benda ini...' dan '7 hari kemudian kamu sadar...'.\n"
+                            "- Ceritakan kontras tekstur: batu candi yang kasar vs logam masa depan yang halus.\n"
+                            "- Narasi harus megah, puitis, dan misterius. Seolah kamu lagi ngebongkar rahasia paling gelap di bumi.\n"
+                            "- Gunakan kata-kata sensori: debu zaman, cahaya neon terlarang, bata retak, dinginnya batu kuno."
+                        ),
+                        "focus": (
+                            "Cinematic Golden Hour, dynamic dust motes (debu bergerak), ancient stone texture (batu candi berlumut), "
+                            "glowing circuit technology (sirkuit neon), ray-traced shadows, "
+                            "and Balung's fingers interacting with rough historical surfaces."
+                        ),
+                    },
+                    "⚖️ Micro-Dramatic (Lifestyle & Perbandingan)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Pernahkah kamu membayangkan pertempuran di bawah kulitmu?' atau 'Lihat dua dunia yang berbeda ini...'.\n"
+                            "- Gunakan alur kontras: 'Satu hari pertama, tim kiri masih terlihat kuat, tapi tim kanan mulai menyerah...'.\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran total di satu sisi (retak, kusam, busuk) vs keajaiban di sisi lain (glowing, kokoh, jernih).\n"
+                            "- Gunakan diksi yang memprovokasi pilihan penonton: 'Pilihanmu hari ini adalah kerapuhanmu esok'.\n"
+                            "- Fokus pada perubahan tekstur: dari kenyal menjadi rapuh, dari bening menjadi keruh cokelat."
+                        ),
+                        "focus": (
+                            "Side-by-side split screen active interaction, texture contrast (Kusam vs Glowing), "
+                            "real-time bone density transformation (tulang keropos vs padat), "
+                            "liquid transparency turning murky, transition from organic elasticity to brittle fragility."
+                        ),
+                    },
+                    "🌀 Absurd What-If (Fisika & Kiamat)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Apa yang terjadi jika tiba-tiba...' atau 'Bagaimana jika duniamu mendadak...'.\n"
+                            "- Satu hari pertama: Ceritakan keanehan kecil yang awalnya terasa lucu (misal: air di gelas mulai melayang pelan).\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran total (lautan terangkat ke langit, bangunan beton pecah jadi debu, oksigen kabur ke angkasa).\n"
+                            "- Gunakan diksi vertigo: dunia terbalik, kehampaan sunyi, raksasa yang bangun, melayang tanpa arah.\n"
+                            "- Jelaskan 'Efek Domino' kiamat ini dengan nada yang dingin namun mencekam."
+                        ),
+                        "focus": (
+                            "Anti-gravity debris (puing melayang), floating water physics interacting with Balung, "
+                            "chromatic aberration, volumetric fog, floating ocean particles, "
+                            "and motion blur on high-speed flying objects."
+                        ),
+                    },
+                    "🧬 Genetic Glitch (Mutasi & Kelainan Langka)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika tubuhmu memutuskan untuk mengkhianatimu?' atau 'Pernahkah kamu merasakan sesuatu yang salah di dalam tulangmu?'.\n"
+                            "- Satu hari pertama: Ceritakan benjolan kecil yang keras, sepele, tapi mulai berdenyut aneh di tulang rusuk atau sendimu.\n"
+                            "- 7 hari kemudian: Ceritakan mutasi liar. Benjolan itu meledak jadi duri kalsium tajam (bone spikes) yang merobek jaringan daging dan menembus kulit transparan.\n"
+                            "- Gunakan diksi sensori: suara 'kretek' tulang yang berderit, rasa tajam yang menusuk dari dalam, kulit yang menegang maksimal, dan pertumbuhan yang tak terkendali.\n"
+                            "- Buat penonton merinding dengan kengerian biologis yang terasa sangat dekat dan nyata."
+                        ),
+                        "focus": (
+                            "Macro close-up on active bone spikes (tulang menusuk keluar), "
+                            "skin tension and tearing textures (kulit menegang/robek), subcutaneous writhing movements, "
+                            "cold medical neon lighting, and visceral sound-driven visuals."
+                        ),
+                    },
+                    "🧠 Psychological Loop (Otak & Mental)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Apa yang terjadi di dalam kepalamu saat duniamu mendadak sunyi?' atau 'Pernahkah kamu merasakan badai yang tak terlihat?'.\n"
+                            "- Satu hari pertama: Ceritakan jalur dopamin yang meredup, warnanya berubah jadi biru kelabu yang dingin dan hampa.\n"
+                            "- 7 hari kemudian: Jalur itu putus total. Ceritakan kilat merah api dari kortisol yang membakar saraf emosimu, menciptakan ledakan listrik yang tak terkendali.\n"
+                            "- Hubungkan ke fisik: Jelaskan dadamu yang sesak bukan karena jantung rusak, tapi karena sarafmu sedang 'konslet' hebat akibat luka mental.\n"
+                            "- Gunakan diksi: badai listrik, kesepian yang membakar, sirkuit yang putus, kehampaan yang mencekam."
+                        ),
+                        "focus": (
+                            "Neural firing explosion, brain wave color shifts (Blue to Fire Red), "
+                            "volumetric fog inside the skull, micro-gestures of despair (tangan gemetar hebat), "
+                            "and motion blur on neural sparks spreading to the environment."
+                        ),
+                    },
+                    "🔥 Survival Instinct (Uji Ketahanan Ekstrem)": {
+                        "rules": (
+                            "DIREKSI NARASI (WAJIB HIDUP):\n"
+                            "- Mulai dengan: 'Bagaimana jika dunia mendadak membeku dan napasmu berubah jadi belati es?' atau 'Berapa lama kamu bisa bertahan saat oksigenmu mulai mendidih?'.\n"
+                            "- Satu hari pertama: Ceritakan sensasi mati rasa yang perlahan merambat, ujung jari yang mulai membeku atau kulit yang mulai melepuh.\n"
+                            "- 7 hari kemudian: Ceritakan kehancuran material tubuh. Darah membeku di dalam pembuluh transparan, tulang mulai retak (cracking) seperti kaca yang dipukul pelan.\n"
+                            "- Gunakan diksi: kristal frost yang haus, retakan membara, napas yang membatu, perjuangan detik demi detik dalam kehampaan.\n"
+                            "- Buat penonton merasakan kengerian saat tubuh kehilangan daya lawan terhadap alam yang kejam."
+                        ),
+                        "focus": (
+                            "Dynamic frost spreading (es merambat), active bone cracking textures, "
+                            "heat haze and boiling gel-skin effects, crystalline ice growth on transparent skin, "
+                            "and struggling movements (merangkak/menahan) against extreme nature."
+                        ),
+                    }
+                }
+
+                # Sinkronisasi Data Aktif
+                l_data = logika_map[tipe_cerita]
+                try:
+                    baju_list = ", ".join(list(MASTER_CHAR_LAB["BALUNG"]["pakaian"].keys()))
+                except:
+                    baju_list = "Original, Jas Lab Putih, Versi Sultan"
+
+                # --- RAKIT MANTRA FINAL (SULTAN 7 PILAR - DYNAMIC SPATIAL VERSION) ---
+                mantra_header = "Saya produser PINTAR AI. Karakter utama kami: BALUNG (Skeleton Transparan).\n"
+                mantra_header += "Tugas kamu: Buatkan naskah video cinematic (" + jml_adegan + ") yang HIDUP, BERNYAWA, dan NYATA.\n"
+                mantra_header += "TRIGGER IDE: " + ide_singkat + ".\n\n"
+                
+                mantra_body = "KONSEP UTAMA: " + tipe_cerita + "\n"
+                mantra_body += l_data["rules"] + "\n\n"
+                
+                mantra_footer = "ATURAN WAJIB (DIRECTOR'S GUIDELINE):\n"
+                mantra_footer += "- **STORYTELLING PROGRESIF**: Wajib gunakan pola 'Satu hari pertama kamu akan...' di awal adegan dan '7 hari kemudian...' menuju klimaks. Ceritakan prosesnya secara kronologis dan emosional.\n"
+                mantra_footer += "- **LIVING NARRATION**: Buat Narasi VO yang padat dan 'berdaging' (Maksimal 3-4 kalimat per adegan). Gunakan kata-kata sensori (dingin, tajam, sesak). JANGAN KAKU.\n"
+                mantra_footer += "- **SMART MID-SCENE CTA (WAJIB)**: Di tengah alur (sekitar adegan 7 atau 8), buatlah 1 kalimat ajakan subscribe/like yang MENYATU dengan cerita.\n"
+                
+                # SUNTIKAN ANTI-PATUNG & INTERAKSI LOKASI (SPATIAL INTERACTION)
+                mantra_footer += "- **VISUAL SENSORY & DYNAMIC INTERACTION**: " + l_data["focus"] + ". JANGAN HANYA DESKRIPSIKAN BALUNG SENDIRIAN. Balung WAJIB berinteraksi dengan setting lokasi. (Contoh: Balung berjalan menyisir pinggiran gerbang istana, jemari tulangnya gemetar meraba ukiran relief batu).\n"
+                mantra_footer += "- **MOTION & PHYSICS**: Deskripsikan gerakan subjek terhadap objek sekitar. Gunakan gerakan mikro: uap mengalir melewati pilar, gel skin yang bergetar saat bersenggolan dengan material, atau debu yang berputar tertiup napas Balung. Gunakan kamera dinamis: Slow Push-in, Handheld micro-shake, atau Rack Focus.\n"
+                mantra_footer += "- **BALUNG MICRO-GESTURE**: Masukkan gerakan manusiawi: rahang gemetar, jemari meraba tekstur material secara nyata, menoleh perlahan mengikuti arah cahaya, atau tubuh terhuyung mengikuti gravitasi.\n"
+                
+                # PERBAIKAN LOKASI (SPATIAL IDENTITY):
+                mantra_footer += "- **ENVIRONMENT ADAPTIF (SPATIAL DETAIL)**: Di kolom Environment Detail, WAJIB sebutkan NAMA LOKASI NYATA di awal kalimat. JANGAN cuma tekstur! Contoh: 'Setting: Lorong Istana Persepolis. Detail: Dinding batu pasir kasar, sisa pembakaran obor, Cinematic Golden Hour.'\n"
+                mantra_footer += "  * Jika harian: Kamar kos sempit, Dapur kotor, Halte bus tua. Jika sejarah: Gerbang Istana, Terowongan rahasia, Kuil kuno. Jika kiamat: Reruntuhan Mall, Aspal pecah.\n"
+                mantra_footer += "- **FORMAT OUTPUT**: TABEL 5 KOLOM (No Adegan, Narasi VO (Bercerita & Padat), Deskripsi Visual Detail (Gerakan Aksi Karakter + Interaksi Lingkungan + Kamera), Wardrobe (Pilih: " + baju_list + "), Environment Detail (Wajib: NAMA LOKASI NYATA + Tekstur, Material, & Lighting Engine))."
+
+                mantra_final = mantra_header + mantra_body + mantra_footer
+
+                st.markdown('<p class="small-label">4. SALIN MANTRA STORYTELLING INI KE GEMINI</p>', unsafe_allow_html=True)
+                st.code(mantra_final, language="text")
+                st.info(f"🚀 **MODE VIRAL AKTIF:** {tipe_cerita}. Visual kini dipaksa berinteraksi dengan dunia sekitarnya!")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5720,3 +5720,4 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
