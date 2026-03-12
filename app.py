@@ -1491,7 +1491,7 @@ def tampilkan_ai_lab():
         }
 
         # --- 2. WRAPPER: EXPANDER UTAMA ---
-        with st.expander("🦴 PINTAR ANATOMY ENGINE - IDENTITY LOCK", expanded=True):
+        with st.expander("🦴 PINTAR ANATOMY ENGINE", expanded=True):
             
             # --- ROW 1: IDENTITY LOCK (DETAIL FISIK) ---
             col_k1, col_k2 = st.columns(2)
@@ -1507,11 +1507,12 @@ def tampilkan_ai_lab():
                     k1_name = k1_sel
                 
                 st.markdown('<p class="small-label">DETAIL FISIK (TUBUH & ANATOMI)</p>', unsafe_allow_html=True)
-                k1_physic = st.text_area("Fisik K1:", value=DB_KARAKTER_ANATOMY[k1_sel]["physic"], 
+                # KUNCI: Tambahkan argumen 'value' biar otomatis keisi pas ganti dropbox
+                k1_physic = st.text_area("Fisik K1:", 
+                                         value=DB_KARAKTER_ANATOMY[k1_sel]["physic"], # <--- INI BIAR GAK KOSONG
                                          placeholder="Contoh: Tulang retak, atau kulit bening tanpa organ...", 
                                          key="k1_physic_ana", height=100, label_visibility="collapsed")
                 
-                st.markdown('<p class="small-label">PAKAIAN (OUTFIT)</p>', unsafe_allow_html=True)
                 k1_wear = st.text_input("Pakaian K1:", placeholder="Contoh: Jubah hitam robek...", key="k1_wear_ana", label_visibility="collapsed")
 
             with col_k2:
@@ -1525,13 +1526,13 @@ def tampilkan_ai_lab():
                     k2_name = k2_sel
                 
                 st.markdown('<p class="small-label">DETAIL FISIK (TUBUH & ANATOMI)</p>', unsafe_allow_html=True)
-                k2_physic = st.text_area("Fisik K2:", value=DB_KARAKTER_ANATOMY[k2_sel]["physic"], 
+                # KUNCI: Tambahkan argumen 'value' juga di sini
+                k2_physic = st.text_area("Fisik K2:", 
+                                         value=DB_KARAKTER_ANATOMY[k2_sel]["physic"], # <--- INI BIAR GAK KOSONG
                                          placeholder="Contoh: Kepala kayu jati, atau mahluk bayangan...", 
                                          key="k2_physic_ana", height=100, label_visibility="collapsed")
                 
-                st.markdown('<p class="small-label">PAKAIAN (OUTFIT)</p>', unsafe_allow_html=True)
                 k2_wear = st.text_input("Pakaian K2:", placeholder="Contoh: Baju koko muslim putih...", key="k2_wear_ana", label_visibility="collapsed")
-
             st.divider()
 
             # --- ROW 2: NASKAH VISUAL & AKSI ---
@@ -5399,6 +5400,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
