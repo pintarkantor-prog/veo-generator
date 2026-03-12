@@ -1614,11 +1614,12 @@ def tampilkan_ai_lab():
             else:
                 st.error("Lokasi dan Naskah Visual wajib diisi, Dian!")
                 
-    # ============================================================
+# ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
     # ============================================================
     with t_transform:        
         with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
+            st.caption("Identity-Locked Morphing with Trigger-Based Chronology")
 
             # --- 1. DATABASE EFEK TRANSFORMASI (SILET EDITION) ---
             DB_TRANS_EFFECT = {
@@ -1642,24 +1643,30 @@ def tampilkan_ai_lab():
                 col_char, col_eff = st.columns(2)
                 
                 with col_char:
-                    st.markdown('<p style="font-size:12px; color:#888;">👤 IDENTITAS MASTER (DARI GAMBAR REF)</p>', unsafe_allow_html=True)
-                    v_char_name = st.text_input("Nama Karakter:", "SUPRI", key="tr_name")
-                    v_trigger = st.text_input("Aksi Pemicu (Trigger):", placeholder="Contoh: meminum segelas susu...", key="tr_trigger")
+                    st.markdown('<p class="small-label">👤 IDENTITAS MASTER (DARI GAMBAR REF)</p>', unsafe_allow_html=True)
+                    v_char_name = st.text_input("Nama Karakter:", "SUPRI", key="tr_name", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">⚡ PEMICU (TRIGGER ACTION)</p>', unsafe_allow_html=True)
+                    v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: meminum segelas susu, memakai cincin...", key="tr_trigger", label_visibility="collapsed")
 
                 with col_eff:
-                    st.markdown('<p style="font-size:12px; color:#888;">🧬 PROSES PERUBAHAN</p>', unsafe_allow_html=True)
-                    v_eff_type = st.selectbox("Pilih Jenis Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff")
-                    v_char_target = st.text_input("Wujud Akhir (Target):", "Super Saiyan", key="tr_target")
+                    st.markdown('<p class="small-label">🧬 WUJUD AKHIR (TARGET FORM)</p>', unsafe_allow_html=True)
+                    v_char_target = st.text_input("Wujud Akhir:", placeholder="Contoh: Hulk, Super Saiyan, Iron Man...", key="tr_target", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">✨ EFEK TRANSISI</p>', unsafe_allow_html=True)
+                    v_eff_type = st.selectbox("Pilih Jenis Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff", label_visibility="collapsed")
 
                 st.divider()
                 
                 col_opt1, col_opt2 = st.columns(2)
                 with col_opt1:
-                    v_style = st.selectbox("Style Visual:", list(MAP_STYLE_TRANS.keys()), key="tr_style")
-                    v_loc = st.text_input("📍 Lokasi Kejadian:", "Di dalam warung tradisional", key="tr_loc")
+                    st.markdown('<p class="small-label">🎨 VISUAL STYLE</p>', unsafe_allow_html=True)
+                    v_style = st.selectbox("Style Visual:", list(MAP_STYLE_TRANS.keys()), key="tr_style", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">📍 LOKASI KEJADIAN</p>', unsafe_allow_html=True)
+                    v_loc = st.text_input("Lokasi:", placeholder="Contoh: Di dalam laboratorium, tengah hutan, Alun-alun...", key="tr_loc", label_visibility="collapsed")
                 with col_opt2:
-                    v_timing = st.slider("Mulai Berubah Setelah (Detik):", 1.0, 5.0, 2.0, 0.5, key="tr_time")
-                    v_cam = st.selectbox("Camera Angle:", ["Close Up (Ekspresi)", "Medium Shot (Full Body)", "Low Angle (Heroic)"], key="tr_cam")
+                    st.markdown('<p class="small-label">⏱️ TIMING TRANSFORMASI (DETIK)</p>', unsafe_allow_html=True)
+                    v_timing = st.slider("Mulai Berubah Setelah:", 1.0, 5.0, 2.0, 0.5, key="tr_time")
+                    st.markdown('<p class="small-label">🎥 CAMERA ANGLE</p>', unsafe_allow_html=True)
+                    v_cam = st.selectbox("Camera Angle:", ["Close Up (Ekspresi)", "Medium Shot (Full Body)", "Low Angle (Heroic)"], key="tr_cam", label_visibility="collapsed")
 
                 btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
 
@@ -1691,13 +1698,13 @@ def tampilkan_ai_lab():
                     st.divider()
                     res1, res2 = st.columns(2)
                     with res1:
-                        st.info("📸 **INITIAL STATE (RENDER INI DULU)**")
+                        st.markdown('<p class="small-label">📸 INITIAL STATE (RENDER INI DULU)</p>', unsafe_allow_html=True)
                         st.code(final_img, language="markdown")
                     with res2:
-                        st.info("🎬 **TRANSFORMATION VIDEO (MASUKKAN HASIL IMAGE)**")
+                        st.markdown('<p class="small-label">🎬 TIMED TRANSFORMATION VIDEO</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
-                    st.error("Dian, isi dulu semua field-nya!")
+                    st.error("Pastiin Pemicu, Wujud Akhir, dan Lokasi sudah diisi ya!")
                 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5283,6 +5290,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
