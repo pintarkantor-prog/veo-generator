@@ -1556,7 +1556,7 @@ def tampilkan_ai_lab():
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
-                "aleng Alumunium (Metallic Neon)": "A grand mosque model crafted from recycled soda cans and aluminum sheets, featuring embossed Arabic calligraphy on the metallic walls and pulsing RGB LED lights reflecting off the shiny surfaces. The yard is decorated with metallic wire trees and small silver-colored pebbles made from crumpled foil.",
+                "Kaleng Alumunium (Metallic Neon)": "A grand mosque model crafted from recycled soda cans and aluminum sheets, featuring embossed Arabic calligraphy on the metallic walls and pulsing RGB LED lights reflecting off the shiny surfaces. The yard is decorated with metallic wire trees and small silver-colored pebbles made from crumpled foil.",
                 "Kristal Botol (Aquatic Glow)": "A magnificent large mosque made from layers of clear recycled plastic bottles (Aqua-style), featuring gold calligraphy on the plastic surface and vibrant blue and cyan LED lights refracting through the transparent material. The yard is decorated with crushed clear plastic pieces resembling ice and tiny LED-lit fountains.",
                 "Campuran Kayu & LED RGB": "Large-scale mosque diorama made of recycled wood scraps, featuring intricate gold Arabic calligraphy around the dome and vibrant multi-color LED strips glowing from the windows. The yard is decorated with tiny gravel paths and miniature street lamps.",
                 "Akrilik & Logam (Neon Glow)": "Modern mosque miniature made of clear acrylic and scrap metal, featuring sandblasted calligraphy on the walls and glowing RGB LED lights inside that change colors. The yard is decorated with small silver pebbles and tiny LED bushes.",
@@ -5720,6 +5720,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
