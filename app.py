@@ -1685,11 +1685,14 @@ def tampilkan_ai_lab():
                     TRANS_NEG = "instant morph, messy transition, losing facial likeness, distorted features, blurry eyes, low quality, jump cut, dynamic facial distortion"
 
                     # A. IMAGE PROMPT (Fokus ke Visual Awal Naskah)
+                    # Catatan: Pose awal diambil dari kalimat pertama naskah biar gak tiba-tiba loncat
+                    v_pose_awal = v_scene_detail.split('.')[0] 
+
                     final_img = (
                         f"A {MAP_STYLE_TRANS[v_style]} cinematic shot of {v_char_name} from the reference image. "
                         f"SCENE: {v_scene_detail}. "
                         f"STRICT IDENTITY LOCK: Maintain the exact facial structure and likeness from the reference image. "
-                        f"ACTION: The character is currently {v_trigger}. "
+                        f"ACTION: The character is currently {v_pose_awal}. " # Pake awal naskah biar sinkron
                         f"SETTING: {v_loc}. CAMERA: {v_cam}. "
                         f"TECHNICAL: Sharp focus, 8k, realistic material physics, neutral lighting. "
                         f"NEGATIVE: {TRANS_NEG}"
@@ -5301,6 +5304,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
