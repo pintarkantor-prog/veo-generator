@@ -1556,6 +1556,32 @@ def tampilkan_ai_lab():
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
+                "aleng Alumunium (Metallic Neon)": "A grand mosque model crafted from recycled soda cans and aluminum sheets, featuring embossed Arabic calligraphy on the metallic walls and pulsing RGB LED lights reflecting off the shiny surfaces. The yard is decorated with metallic wire trees and small silver-colored pebbles made from crumpled foil.",
+                "Kristal Botol (Aquatic Glow)": "A magnificent large mosque made from layers of clear recycled plastic bottles (Aqua-style), featuring gold calligraphy on the plastic surface and vibrant blue and cyan LED lights refracting through the transparent material. The yard is decorated with crushed clear plastic pieces resembling ice and tiny LED-lit fountains.",
+                "Campuran Kayu & LED RGB": "Large-scale mosque diorama made of recycled wood scraps, featuring intricate gold Arabic calligraphy around the dome and vibrant multi-color LED strips glowing from the windows. The yard is decorated with tiny gravel paths and miniature street lamps.",
+                "Akrilik & Logam (Neon Glow)": "Modern mosque miniature made of clear acrylic and scrap metal, featuring sandblasted calligraphy on the walls and glowing RGB LED lights inside that change colors. The yard is decorated with small silver pebbles and tiny LED bushes.",
+                "Bambu & Batok Kelapa (Vibrant LED)": "Traditional mosque model made of woven bamboo and polished coconut shells, featuring hand-painted gold calligraphy and colorful LED fairy lights tracing the arches. The yard is decorated with dried moss and tiny bamboo fences.",
+                "Stik Es Krim & Kristal (Rainbow LED)": "Intricate mosque diorama made of thousands of ice cream sticks, featuring embossed gold calligraphy and rainbow LED lighting glowing through crystal-bead windows. The yard is decorated with white sand and miniature flower beds.",
+                "Kardus & Barang Bekas (Electric Glow)": "Creative mosque model made of layered recycled cardboard and electronics, featuring glowing neon calligraphy and multi-colored fiber optic lights on the minarets. The yard is decorated with colorful wire trees and small metallic scraps.",
+                "MPelangi (Rainbow Village)": "Playful miniature mosque painted in cheerful rainbow colors (pink, blue, yellow, green). Features multiple small domes and windows with soft LED lights. The yard is decorated with colorful pebbles and small toy animal figurines.",
+                "MKerajaan Awan (Cloud Kingdom)": "Whimsical mosque model inspired by fantasy cartoons, made of soft white material resembling fluffy clouds and cotton candy. Features star and moon shaped windows. The yard is decorated with small sparkly stars and tiny cloud bushes.",
+                "Kastil Balok (Block Castle)": "Fun mosque miniature built using large, colorful toy building blocks. Features blocky towers and a central dome made of Lego-like bricks. The yard is decorated with block-shaped trees and miniature toy cars.",
+                "Hutan Ajaib (Magic Forest)": "Charming mosque model made of natural wood and moss, blending into a miniature forest with tiny fairy lights. Features cute animal shaped decorations on the walls. The yard is decorated with colorful toadstools and tiny magical creature toys.",
+                "Tema Luar Angkasa (Space Mosque)": "Creative mosque model shaped like a friendly rocket ship, with futuristic domes and antenna-like minarets. Features colorful flashing LED lights and metallic paints. The yard is decorated with small 'moon' stones and tiny astronaut figures.",
+                "Kulit Jeruk & Buah (Citrus Fresh)": "A vibrant mosque miniature made from dried orange peels and lemon slices, featuring intricate patterns carved into the zest and tiny LED lights glowing from inside. The yard is decorated with cloves, star anise, and small cinnamon stick fences.",
+                "Batok Kelapa & Nanas (Tropical Fruit)": "A rustic tropical mosque diorama made from polished coconut shells and dried pineapple skins, featuring a textured golden dome and green LED accents. The yard is decorated with small tropical seeds and tiny bamboo bridges.",
+                "Biji-Bijian & Rempah (Spice & Grain)": "An intricate mosque model built from a mosaic of pumpkin seeds, coffee beans, and colorful corn, featuring complex geometric patterns and warm glowing LEDs. The yard is decorated with peppercorns and small wooden herb containers.",
+                "Kulit Semangka (Eco-Green)": "A unique mosque miniature carved from thick, dried watermelon rind with dark green patterns, featuring glowing emerald LED lights from within the arched windows. The yard is decorated with small pebbles and tiny artificial water lily ponds.",
+                "Emas & Marmer (Royal Palace)": "A breathtakingly luxurious mosque diorama made of gold-plated metal and polished white marble, featuring 24k gold leaf calligraphy and emerald-encrusted windows. The yard is made of smooth obsidian stone with tiny golden fountains and miniature cypress trees.",
+                "Kristal & Berlian (Diamond Glow)": "A magnificent mosque model crafted from Swarovski-style crystals and silver filigree, featuring glowing blue LED lights that refract through thousands of glass facets. The yard is decorated with crushed diamond-like sand and tiny crystal flower bouquets.",
+                "Kayu Jati & Gading (Imperial Heritage)": "An elite mosque miniature made from dark aged teak wood with ivory-white bone inlays, featuring intricate hand-carved Arabic motifs and warm amber LED backlighting. The yard is decorated with fine velvet-covered ground and tiny silver-plated fences.",
+                "Safir & Platinum (Futuristic Luxury)": "A high-end mosque model made of platinum-finished metal and deep sapphire-colored glass, featuring glowing neon-white LED strips along the arches and domes. The yard is decorated with polished chrome pebbles and tiny futuristic glass trees.",
+                "Sutra & Mutiara (Elegant Silk)": "A delicate luxury mosque made of fine white silk upholstery and mother-of-pearl shells, featuring pearl-studded minarets and soft glowing golden LEDs. The yard is decorated with satin-finished flooring and tiny miniature pearl gardens.",
+                "Masjid Serabut Kelapa & LED Rainbow (Rustic-Neon)": "A magnificent large-scale mosque diorama made of woven golden-brown coconut fibers, featuring intricate gold calligraphy and vibrant multi-color LED strips (Cyan, Magenta, and Lime) glowing through the fibers. The yard is decorated with crushed white sea shells and tiny bamboo fences.",
+                "Masjid Mosaik Kulit Buah & LED Glow (Citrus Imperial)": "A grand mosque model crafted from dried orange and lemon peels arranged in a mosaic pattern, featuring emerald-green LED lighting glowing from the arched windows and gold-leaf details on the minarets. The yard is decorated with star anise and small cinnamon logs.",
+                "Masjid Kelopak Bunga & LED Sapphire (Floral Majesty)": "A breathtakingly beautiful mosque made of thousands of preserved deep-red rose petals, featuring sapphire-blue LED lights hidden beneath the petals for a mystical glow and gold-embossed calligraphy. The yard is made of smooth black pebbles and tiny jasmine bud decorations.",
+                "Masjid Daun Kering & LED Amber (Autumn Palace)": "An elite mosque miniature constructed from layered skeleton leaves and dried maple-like leaves, featuring warm amber LED lighting that highlights the leaf veins and intricate wood-carved domes. The yard is decorated with miniature dry grass and tiny stone pathways.",
+                "Masjid Batok Kelapa & LED Crystal (Tropical Diamond)": "A heavy, majestic mosque made of polished dark coconut shells, featuring sparkling rainbow LED fiber optics that create a starry effect on the domes and gold-painted calligraphy. The yard is decorated with white sand and tiny miniature palm trees made of fiber.",
                 "Daun Kering (LED Warm)": "Large-scale miniature mosque made of dried leaves, featuring tiny warm LED fairy lights hidden in the structure. The yard is decorated with miniature dry grass, small pebbles, and tiny wooden fences.",
                 "Bunga (LED RGB)": "Large-scale miniature mosque covered in colorful flowers with vibrant multi-colored LED strips glowing from the windows. The courtyard is lush with tiny artificial rose bushes and a small working water fountain.",
                 "Kayu (LED Amber)": "Large-scale miniature mosque made of woven bamboo with amber-colored LED lights inside, casting soft shadows. The yard features miniature bonsai-style trees and a tiny sand-pathway leading to the entrance.",
@@ -1586,11 +1612,14 @@ def tampilkan_ai_lab():
                 "Jelly & Puding (Translucent)": "A breathtaking large-scale miniature mosque made of jiggly, translucent colorful jelly and pudding blocks, with bright neon LED lights glowing beautifully through the wobbly material. The courtyard is decorated with small jelly-bean pebbles and a syrup reflection pool.",
                 "Cokelat & Biskuit (Choco-Art)": "A majestic large-scale miniature mosque made of dark and milk chocolate bars with biscuit-tile roofs, glowing with warm golden LED lights. The courtyard features chocolate-wafer benches and miniature cocoa-powder mountains.",
                 "Marshmallow (Soft Cloud)": "A soft and fluffy large-scale miniature mosque built from white and pastel marshmallows, glowing with soft ethereal RGB LED lights. The yard is decorated with cotton-candy trees and a white sugar-sand floor.",
+                "Menara Kaleng (Industrial Majesty)": "A tall, majestic mosque made of stacked silver cans with domes made of bottom-parts of plastic bottles, featuring gold-leaf calligraphy and emerald-green LEDs glowing through the gaps. The yard is decorated with metallic gears, small copper wires, and tiny glowing LED bushes.",
+                "Lampion Plastik (Rainbow Recycle)": "A creative mosque miniature made of colorful plastic bottle caps and sliced plastic containers, featuring glowing rainbow LED fairy lights that turn the whole structure into a giant lantern. The yard is decorated with colorful plastic-bead paths and tiny fences made of popsicle sticks and wire.",
                 "Macaroon (Elegant Pastel)": "A sophisticated large-scale miniature mosque made of stacked colorful French macaroons, featuring soft pastel tones and warm white LED lighting. The courtyard is decorated with miniature cream-filled flowers and a pastel-tiled pathway.",
                 "Biji Kopi (Dark Aroma)": "A sophisticated large-scale miniature mosque built entirely from dark roasted coffee beans, featuring a rich brown texture and warm orange LED lighting. The courtyard is decorated with miniature sacks of coffee and dark brown gravel paths."
             },
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
             "🌍 Diorama Masjid": {
+                "Kota Botol & Kaleng (Recycled City)": "A sprawling diorama with a central mosque made of blue plastic bottles surrounded by a miniature city made of various soda cans. Features multi-color LED strips glowing from inside every structure, creating a futuristic 'Cyberpunk' village vibe. The scene includes tiny roads made of black rubber and small plastic-cap street lamps.",
                 "Lembah Hijau & Sungai (LED RGB)": "A grand miniature mosque in a lush valley with rolling hills and a flowing crystal-clear resin river. The yard features glowing RGB LED strips along the tiny stone bridges, miniature flower gardens, and small pine trees reflecting in the water.",
                 "Tepi Pantai & Dermaga (Neon Blue)": "A beautiful miniature mosque on a white sandy beach with realistic turquoise resin waves. The courtyard is decorated with tiny glowing palm trees, a wooden pier with neon blue LED lanterns, and small sea-shell decorations.",
                 "Puncak Gunung Berawan (Ethereal)": "A majestic miniature mosque perched on a rocky peak with soft cotton clouds. Featuring a cool blue ethereal LED glow from beneath the structure, with miniature pine trees and tiny mountain climbers (pilgrims) figurines.",
@@ -1604,37 +1633,166 @@ def tampilkan_ai_lab():
                 "Diorama Mewah (Kubah Emas & Air Terjun)": "A large-scale luxury mosque diorama. The main mosque has a sparkling gold dome and white marble walls with RGB LED lights from the windows. The courtyard features a multi-tiered working fountain with dynamic RGB lighting and miniature white horse-drawn carriages on a paved stone floor. Lush tropical plants decorate the edges.",
                 "Diorama Kristal (Refleksi Air & Neon)": "A breathtaking diorama featuring a full crystal mosque that glistens with neon blue and purple LED backlighting. It sits on a large circular mirror-like reflection pool. The garden has miniature crystal trees and tiny fiber-optic lights that sparkle like fireflies.",
                 "Diorama Timur Tengah (Sunset & Oasis)": "A sprawling desert diorama with a majestic mud-brick style mosque (warm amber LED lights). The courtyard has a realistic water oasis with tiny palm trees and miniature camel caravans resting nearby. The entire scene is bathed in a warm sunset orange glow with small RGB fairy lights.",
+                "Lembah Hijau & Masjid Serabut (Emerald Glow)": "A grand landscape diorama featuring a mosque made of coconut fibers on a lush hill made of real moss. Features a flowing resin river with blue LED under-lighting and multi-color LED strips on the mosque minarets. The scene includes tiny wooden bridges and miniature rice fields.",
+                "Tebing Karang & Masjid Cangkang (Ocean Neon)": "A majestic seaside diorama with a mosque made of sea shells perched on a rocky cliff made of real stones. Features rainbow LED fiber optics illuminating the sea waves and golden calligraphy on the domes. The yard is filled with white sand, tiny dried corals, and glowing LED palm trees.",
+                "Hutan Rimba & Masjid Kayu Tua (Mystical Forest)": "A massive jungle diorama featuring a mosque made of weathered bark and twigs hidden among dense fern plants. Vibrant violet and lime LED lights glow from the forest floor and mosque windows, creating a magical atmosphere. The scene includes a small stone waterfall and tiny animal figurines.",
+                "Gurun Pasir & Masjid Rempah (Sahara Gold)": "A stunning desert diorama with a mosque made of cinnamon sticks and orange peels standing on a vast dunes of real turmeric and sand. Warm amber and red LED lights illuminate the domes and the tiny oasis nearby. The scene features miniature camels and small dried-herb palm trees.",
+                "Kampung Apung & Masjid Bambu (River Jewel)": "A sprawling riverside diorama featuring a mosque made of woven bamboo on a wooden platform over a real water pond. Colorful RGB LEDs reflect off the water surface and glow through the bamboo walls. The scene includes tiny rowing boats, lily pads, and miniature village huts.",
+                "Negeri Permen & Masjid Cokelat (Candy Land)": "A whimsical diorama featuring a mosque made of colorful clay and real candy sticks on a hill of pink cotton candy. Features vibrant rainbow LED lights flashing like a carnival and a river made of blue syrup-colored resin. The scene includes tiny lollipop trees and gingerbread house decorations.",
+                "Pulau Dinosaurus & Masjid Batu (Dino World)": "A fun prehistoric diorama with a mosque made of smooth river stones and green moss, surrounded by tiny volcanic mountains and dense jungle ferns. Features glowing lava-red and forest-green LEDs. The scene is filled with miniature dinosaur figurines, tiny waterfalls, and egg-shaped stone nests.",
+                "Kota Mainan & Masjid Balok (Toy City)": "A bright and cheerful diorama of a miniature city made of colorful building blocks with a large block-style mosque at the center. Features pulsating RGB LED lights on the minarets and tiny street lamps. The scene includes miniature plastic cars, block-shaped people, and a tiny toy train track circling the mosque.",
+                "Taman Kupu-Kupu & Masjid Bunga (Fairy Garden)": "A magical garden diorama featuring a mosque made of vibrant silk flowers and glittery wings. Features soft purple and pink LED lights hidden inside flower buds and glowing butterfly figurines. The scene is filled with miniature mushrooms, tiny fairy houses, and a sparkling glitter-sand pathway.",
+                "Pangkalan Luar Angkasa & Masjid Roket (Space Base)": "An exciting futuristic diorama with a mosque shaped like a rocket ship on a lunar-surface background made of grey sand and craters. Features neon blue and white LED strips tracing the base and a glowing 'Earth' globe in the distance. The scene includes tiny astronaut figures, lunar rovers, and metallic star decorations.",
                 "Diorama Modern (Geometric & RGB Strips)": "A sleek modern minimalist mosque diorama with clean geometric white architecture and a silver dome. Dynamic RGB LED strips trace the edges of the structure and the paths. The yard features modern minimalist gardens, abstract sculptures, and a large digital screen (miniature) showing dynamic lighting."
             }
         }
 
         # --- 3. MASTER LOKASI (FIXED: REALISTIC WORKSHOP NO GLOW) ---
         MASTER_GRANDMA_SETTING = {
-            "Pinggir Kolam Ikan Koi": "Sitting on a low wooden deck by a clear koi pond, with colorful koi fish swimming in the water and a small stone waterfall in the background creating soft ripples.",
-            "Pinggir Sawah Hijau": "On a narrow dirt path (pematang) at the edge of a vast emerald green rice field, with a background of swaying rice stalks and a distant wooden scarecrow.",
-            "Teras Rumah Panggung": "On the wooden porch of a traditional stilt house, looking out over a rural landscape with fruit trees and a small dirt road in the background.",
-            "Halaman Pohon Bambu": "In a shaded backyard filled with a dense bamboo grove, with thin bamboo leaves creating a beautiful textured background and soft dappled sunlight.",
-            "Pinggir Empang Ikan": "Sitting at a simple bamboo pier by a local fish pond (empang), with a background of calm water, water hyacinths, and a small wooden hut (saung).",
-            "Kebun Kelapa (Coconut Grove)": "In the middle of a coconut plantation with tall leaning palm trees, background showing fallen coconuts on the grass and soft sunlight filtering through the fronds.",
-            "Kebun Buah Naga": "Sitting at a wooden table in the middle of a dragon fruit plantation, surrounded by climbing cactus-like vines and hanging vibrant pink dragon fruits in soft focus.",
-            "Kebun Buah Melon": "At a rustic bench inside a greenhouse filled with hanging melons, with lush green leaves and vines creating a natural textured background and dappled sunlight.",
-            "Taman Bunga Warna-Warni": "Sitting on a garden chair surrounded by blooming flower beds of various colors, with butterflies and a soft-focus background of a lush botanical garden.",
-            "Arena Bermain Anak": "On a colorful bench at a local neighborhood playground, with a background of a slide, swings, and sandboxes, creating a cheerful and bright atmosphere.",
-            "Taman Hiburan (Carnival)": "At a simple table with a background of a distant ferris wheel and colorful carnival tents, captured during the day with a fun, festive atmosphere.",
-            "Halaman Toko Kelontong": "On a wooden bench in front of a traditional village grocery store (Warung), background shows jars of snacks and colorful hanging sachets of drinks.",
-            "Meja Kerja Berantakan": "Sitting at an old, heavy dark wood workbench cluttered with small glue bottles, tweezers, wood scraps, and crafting tools, in a rustic indoor workshop.",
-            "Teras Rumah Klasik": "On a traditional Indonesian house terrace with wooden pillars and tiled floors, background shows a simple village garden with some potted plants and a bicycle.",
-            "Ruang Tamu Jadul": "In a modest vintage living room with wooden plank walls, old family photos hanging on the wall, and a simple wooden cabinet in the background.",
-            "Dapur Kampung Estetik": "At a simple wooden dining table in a rustic village kitchen, background features a traditional clay stove (tungku) and neatly stacked bamboo baskets (tampah).",
-            "Bengkel Rakit Miniatur": "Inside a dedicated small craft room with shelves full of half-finished models, architectural sketches pinned on the wall, and various material scraps on the floor.",
-            "Gazebo Bambu (Outdoor)": "Sitting inside a small bamboo gazebo (saung) in a lush tropical backyard surrounded by banana trees and dense green foliage in soft focus.",
-            "Gubuk Tengah Sawah": "Sitting inside a small rustic wooden shack (gubuk) in the middle of a vast green rice field, with an open view of the fields and a clear blue sky in the background.",
-            "Saung Pinggir Pantai": "Under a simple thatched-roof hut on a white sandy beach, with a background of calm ocean waves, a few coconut trees, and a distant wooden boat.",
-            "Teras Pinggir Sungai": "On a wooden deck built over a flowing river, surrounded by lush tropical trees and the sight of water ripples in the soft-focus background.",
-            "Lapak Penjual Rongsokan": "In a messy backyard of a scrap metal collector, surrounded by tall piles of rusty metal, old tires, vintage junk, and recycled materials stacked against the wall.",
-            "Halaman Belakang Desa": "Sitting on a wooden bench under a large mango tree in a dusty village backyard, background shows a simple brick house and laundry hanging on a wire.",
-            "Teras Masjid Tua": "On the shaded marble porch of an old village mosque, background features traditional Islamic arched doors and a simple wall clock, looking very serene.",
-            "Bengkel Las Sederhana": "In a small roadside welding shop with metal scraps, iron bars, and a dark industrial background with tools hanging on a soot-covered wall."
+            "Pinggir Kolam Ikan Koi": (
+                "Sitting cross-legged directly on a flat stone pavement by a crystal clear koi pond. "
+                "Next to the character is a small brass bowl filled with fish food and a traditional ceramic teapot with one cup. " # <-- Bumbu
+                "In the background, colorful koi fish swim under floating lily pads and a small stone waterfall. "
+                "NO CHAIRS, NO FURNITURE. Ultra-detailed water reflections."
+            ),
+            "Pinggir Sawah Hijau": (
+                "Sitting cross-legged on the dry grass at the edge of a vast emerald green rice field. "
+                "Beside them lies a traditional conical sun hat (caping) and a small old radio. " # <-- Bumbu
+                "Swaying rice stalks and a distant wooden scarecrow under an overcast sky. "
+                "NO CHAIRS. Everything is sharp and clear."
+            ),
+            "Teras Rumah Panggung": (
+                "Sitting cross-legged on the flat wooden floor planks of a traditional porch. "
+                "A few scattered wood shavings and a small hand-chisel lie on the floor nearby. " # <-- Bumbu (nyambung sama kerjaan)
+                "Background shows fruit trees and a rustic dirt road. NO CHAIRS, NO TABLES."
+            ),
+            "Halaman Pohon Bambu": (
+                "Sitting cross-legged on a traditional 'Tikar Pandan' (woven mat) in a bamboo grove. "
+                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke nearby. " # <-- Bumbu (gerakan halus buat video)
+                "Thin bamboo leaves create a textured background. NO FURNITURE."
+            ),
+            "Gubuk Tengah Sawah (Saung)": (
+                "Sitting cross-legged on the aged bamboo floor of a small open-air Saung. "
+                "A vintage kerosene lamp (lampu teplok) hangs on the corner post, and a bunch of harvested bananas sits nearby. " # <-- Bumbu
+                "360-degree view of golden rice fields. NO CHAIRS, strictly lesehan."
+            ),
+            "Tepian Sungai Berbatu": (
+                "Sitting cross-legged on a large, flat river stone. "
+                "A pair of traditional rubber sandals (sandal jepit) is placed neatly on a nearby rock. " # <-- Bumbu (biar makin real)
+                "Background shows shallow clear water flowing over pebbles and lush ferns. NO CHAIRS."
+            ),
+            "Kebun Buah Naga": (
+                "Sitting cross-legged directly on a rustic woven mat (tikar) in the middle of a dragon fruit plantation. "
+                "Beside them is a small wicker basket containing a few harvested pink dragon fruits. " # <-- Bumbu
+                "Surrounded by climbing cactus-like vines and hanging vibrant pink fruits. "
+                "NO CHAIRS, NO TABLES. Pure lesehan style on the ground."
+            ),
+            "Kebun Buah Melon": (
+                "Sitting cross-legged on a low wooden plank floor inside a greenhouse. "
+                "Nearby is a traditional watering can and a pair of garden shears. " # <-- Bumbu
+                "Surrounded by hanging melons, lush green leaves, and vines. "
+                "NO BENCH, NO FURNITURE. The mosque is placed directly on the floor."
+            ),
+            "Taman Bunga Warna-Warni": (
+                "Sitting cross-legged on a flat decorative stone path surrounded by blooming flower beds. "
+                "A few fallen flower petals are scattered around the character and the mosque diorama. " # <-- Bumbu (Estetik parah)
+                "Butterflies flutter in the background of a lush botanical garden. "
+                "NO GARDEN CHAIRS, NO FURNITURE. Strictly sitting on the ground."
+            ),
+            "Arena Bermain Anak": (
+                "Sitting cross-legged directly on the soft rubber playground flooring. "
+                "A forgotten vintage toy car or a marble lies near the character's feet. " # <-- Bumbu (Nambah cerita)
+                "Background shows a distant slide and swings under an overcast sky. "
+                "NO BENCH. Focused on the ground-level perspective."
+            ),
+            "Taman Hiburan (Carnival)": (
+                "Sitting cross-legged on a large piece of clean cardboard spread on the grass. "
+                "A half-eaten cotton candy on a stick is leaning against a small bag nearby. " # <-- Bumbu (Vibe pasar malam/karnaval)
+                "Background shows a distant ferris wheel and colorful tents. "
+                "NO TABLES, NO CHAIRS. Realistic grassroots carnival atmosphere."
+            ),
+            "Halaman Toko Kelontong": (
+                "Sitting cross-legged on a clean cement floor in front of a traditional village 'Warung'. "
+                "Beside them is an old glass jar filled with traditional crackers and a small coil of rope. " # <-- Bumbu
+                "Background shows colorful hanging sachets of drinks and snacks. "
+                "NO BENCH, NO CHAIRS. Strictly sitting on the ground (lesehan)."
+            ),
+            "Lantai Kerja Berantakan": ( # Nama diubah biar gak memancing 'Table'
+                "Sitting cross-legged directly on the workshop floor scattered with wood shavings and sawdust. "
+                "Small glue bottles, tweezers, and crafting tools are laid out neatly on the floor around the mosque. " # <-- Bumbu
+                "Rustic indoor workshop vibe. NO WORKBENCH, NO TABLES. Pure ground-level crafting."
+            ),
+            "Teras Rumah Klasik": (
+                "Sitting cross-legged on the cool tiled floor of a traditional Indonesian terrace. "
+                "A vintage bicycle is parked nearby, leaning against a wooden pillar. " # <-- Bumbu
+                "Background shows a simple village garden with potted clay plants. "
+                "NO CHAIRS, NO FURNITURE. The mosque is the centerpiece on the tiles."
+            ),
+            "Ruang Tamu Jadul": (
+                "Sitting cross-legged on a woven 'Tikar Pandan' mat inside a modest vintage living room. "
+                "An old family photo in a wooden frame is visible on the plank wall behind. " # <-- Bumbu
+                "NO CHAIRS, NO SOFA. A simple wooden cabinet is visible in the far background."
+            ),
+            "Dapur Kampung Estetik": (
+                "Sitting cross-legged on a low bamboo platform (bale-bale) near a traditional clay stove (tungku). "
+                "A few bamboo baskets (tampah) are leaning against the wall nearby. " # <-- Bumbu
+                "Rustic kitchen atmosphere with natural textures. "
+                "NO DINING TABLE, NO CHAIRS. Everything is at floor level."
+            ),
+            "Bengkel Rakit Miniatur": (
+                "Sitting cross-legged on the floor of a dedicated small craft room. "
+                "Architectural sketches are pinned on the lower walls, and various material scraps like balsa wood and glue are scattered around. " # <-- Bumbu
+                "Shelves with half-finished models are visible in the background. "
+                "NO TABLES, NO WORKBENCH. The character works directly on the floor level."
+            ),
+            "Gazebo Bambu (Outdoor)": (
+                "Sitting cross-legged on the polished bamboo slats of a small 'Saung'. "
+                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. " # <-- Bumbu
+                "Surrounded by lush banana trees and dense green foliage. "
+                "NO CHAIRS. The camera captures a wide view of the bamboo structure."
+            ),
+            "Gubuk Tengah Sawah": (
+                "Sitting cross-legged on the rustic wooden planks of a small shack. "
+                "An old straw hat (caping) and a plastic water bottle are placed nearby. " # <-- Bumbu
+                "Open view of vast emerald green rice fields under a grey overcast sky. "
+                "NO CHAIRS. Pull back camera distance for a wide atmospheric shot."
+            ),
+            "Saung Pinggir Pantai": (
+                "Sitting cross-legged on a woven plastic mat spread over the white sand under a thatched-roof hut. "
+                "A few dry coconuts and a pair of flip-flops are nearby on the sand. " # <-- Bumbu
+                "Background shows calm ocean waves and a distant wooden boat. "
+                "NO CHAIRS, NO BENCH. Strictly sitting on the sand/mat."
+            ),
+            "Teras Pinggir Sungai": (
+                "Sitting cross-legged on a weathered wooden deck built over the water. "
+                "A traditional bamboo fishing rod is leaning against the railing nearby. " # <-- Bumbu
+                "Background shows flowing river ripples and lush tropical trees. "
+                "NO CHAIRS. The mosque is placed on the wooden planks at floor level."
+            ),
+            "Lapak Penjual Rongsokan": (
+                "Sitting cross-legged on the dusty ground of a scrap metal yard. "
+                "Next to them is an old rusty gear and a stack of weathered newspapers. " # <-- Bumbu
+                "Surrounded by tall piles of rusty metal, old tires, and vintage junk stacked against the wall. "
+                "NO CHAIRS, NO FURNITURE. The mosque is placed on a clean piece of wood on the ground."
+            ),
+            "Halaman Belakang Desa": (
+                "Sitting cross-legged directly on the dusty earth under a large mango tree. "
+                "A traditional broom (sapu lidi) and a plastic bucket are nearby. " # <-- Bumbu
+                "Background shows a simple brick house and laundry hanging on a wire. "
+                "NO BENCH, NO CHAIRS. Pure village-style lesehan."
+            ),
+            "Teras Masjid Tua": (
+                "Sitting cross-legged on the cool, polished marble floor of an old mosque porch. "
+                "A pair of worn-out leather sandals is placed neatly on the edge of the marble step. " # <-- Bumbu
+                "Background features traditional Islamic arched doors and a simple wall clock. "
+                "NO CHAIRS. The scene is serene, quiet, and strictly floor-level."
+            ),
+            "Bengkel Las Sederhana": (
+                "Sitting cross-legged on the soot-covered concrete floor of a small welding shop. "
+                "Scattered iron bars and a welding mask (welding helmet) lie on the floor nearby. " # <-- Bumbu
+                "Industrial background with tools hanging on a dark, soot-covered wall. "
+                "NO CHAIRS, NO TABLES. Everything is grounded and gritty."
+            )
         }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
@@ -1655,14 +1813,14 @@ def tampilkan_ai_lab():
                 "Penuh Harapan (Peaceful Hope - Calm, hopeful look in the eyes)"
             ],
             "Physical Action": [
-                "Menyentuh kubah masjid dengan lembut (Gently touching the mosque's dome with delicate fingers)",
-                "Menatap tajam detail arsitektur (Holding a steady, focused gaze on the architectural details)",
-                "Mata berkaca-kaca menatap kamera (Looking at the camera with glistening eyes and a hopeful expression)",
-                "Tangan di atas meja, menatap penuh doa (Hands resting on the table, looking with silent devotion)",
-                "Tersenyum tipis ke arah kamera (A subtle, peaceful smile while looking directly at the camera)",
-                "Mengusap debu di miniatur (Gently wiping a tiny speck of dust from the miniature mosque)",
-                "Memejamkan mata sejenak (Closing eyes for a second in a moment of deep gratitude)",
-                "Menunduk khusyuk ngerakit miniatur (Looking down with intense focus, hands steady in their craft)"
+                "Menyentuh kubah dengan lembut sambil sesekali menatap kamera (Gently touching the mosque's dome, occasionally shifting gaze to look warmly at the camera)",
+                "Menatap tajam detail lalu mendongak tersenyum (Holding a focused gaze on the details, then briefly looking up at the camera with a subtle smile)",
+                "Mata berkaca-kaca menatap kamera dengan tulus (Looking directly at the camera with glistening eyes and a deeply soulful, hopeful expression)",
+                "Tangan bersedekap di pangkuan menatap penuh doa (Hands resting on the lap in a prayerful pose, looking at the camera with silent devotion)",
+                "Tersenyum tipis ke arah kamera sambil memegang miniatur (A peaceful smile while looking directly at the camera, hands gently supporting the model)",
+                "Mengusap debu lalu menatap puas ke kamera (Gently wiping a speck of dust, then looking at the camera with a satisfied and contented expression)",
+                "Memejamkan mata bersyukur lalu membukanya menatap kamera (Closing eyes in gratitude, then opening them to look warmly at the camera)",
+                "Menunduk khusyuk merakit sesekali melirik kamera (Looking down with intense focus on the craft, occasionally glancing at the camera with a confident smile)"
             ]
         }
         # --- UI LAYOUT ---        
@@ -1734,17 +1892,17 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & CLEAN VISUAL (Jam 2 Siang Mendung)
+            # 2. KUNCI KETAJAMAN & CLEAN VISUAL
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
-                f"MANDATORY: NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: 2 PM overcast daylight, natural flat ambient light, realistic soft shadows. "
-                f"DEEP FOCUS PHOTOGRAPHY: High-definition sharpness on skin textures, wrinkles, and mosque ornaments. "
-                f"NO PLASTIC SKIN. NO BEAUTY FILTER. RAW UNFILTERED CINEMATOGRAPHY. "
-                f"Visible fabric fuzz, dust motes in the air, and realistic skin imperfections. "
-                f"AUDIO: Natural village ambience, soft wind, and subtle crafting sounds, NO MUSIC. " # <-- Backsound alami
-                f"CAMERA: Very slow cinematic micro-glide, 15-degree parallax. "
-                f"STRICT SEPARATION: {posisi_nenek} BEHIND the large mosque. Clear physical gap."
+                f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
+                f"LIGHTING: 2 PM overcast daylight, natural ambient light. "
+                f"CAMERA DISTANCE: Mid-shot distance, 3 meters away. "
+                f"POSITIONING: Both mosque and character in MIDGROUND. Foreground is empty. "
+                f"STRICT SEPARATION: Mosque on floor, {posisi_nenek} 50cm BEHIND it. "
+                f"CAMERA MOVEMENT: Very slow cinematic SIDE-TO-SIDE ORBITAL tracking shot. "
+                f"NO FORWARD MOVEMENT. NO ZOOM. "
+                f"DEEP FOCUS: Everything is CRYSTAL CLEAR, no blur."
             )
 
             # 3. AMBIL DATA MASTER
@@ -1756,26 +1914,31 @@ def tampilkan_ai_lab():
             # 4. KUNCI ANATOMI & HIJAB
             ANATOMY_LOCK = "STRICTLY TWO HUMAN HANDS, five fingers each. No ghost limbs."
             MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. FULLY COVERED MODEST CLOTHING."
+
+            # --- 4.5 FILTER PEMBERSIH (HANYA AMBIL DALAM KURUNG) ---
+            # Kode ini bakal buang teks Indo dan cuma ambil teks Inggris di dalam kurung
+            aksi_final = pilih_aksi.split('(')[-1].strip(')') if '(' in pilih_aksi else pilih_aksi
+            mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
+            logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
                 
-            # 5. FINAL ASSEMBLY (Silet Version)
-            # Gue masukin lagi user_dialog dan pilih_logat sesuai request lo
+            # 5. FINAL ASSEMBLY (Prompt Bersih)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                 f"WARDROBE: {baju_desc}. \n"
                 f"ENVIRONMENT: {env_detail}. \n"
-                f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
+                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" # <-- Pakai yang sudah di-filter
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
-                f"DIALOG CONTEXT: '{user_dialog}' delivered with {pilih_logat} accent. \n\n"
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture for extreme Deep Focus, "
+                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n" # <-- Pakai yang sudah di-filter
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture, Deep Focus, "
                 f"Fixed 15-degree side-angle, ZERO MOTION BLUR, High-shutter speed, 8K. "
-                f"NEGATIVE PROMPT: text, watermark, letters, signature, blurry, out of focus, bokeh, music, sound."
+                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, music, sound."
             )
 
             # --- 7. TAMPILKAN HASIL ---
             st.success("🔥 PROMPT TAJAM & BERSIH READY!")
             st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
-            st.code(final_ai_prompt, language="text") # Muncul satu kali aja biar rapi
+            st.code(final_ai_prompt, language="text")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5557,6 +5720,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
