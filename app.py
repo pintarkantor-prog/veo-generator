@@ -1707,7 +1707,7 @@ def tampilkan_ai_lab():
                 user_dialog = st.text_area(
                     "Input Dialog", 
                     placeholder=f"Tulis dialog {char_key.split(' (')[0]} di sini...",
-                    height=350, 
+                    height=200, 
                     label_visibility="collapsed",
                     key="input_dialog_key" # Ini nyambung ke handle_kocok
                 )  
@@ -5557,6 +5557,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
