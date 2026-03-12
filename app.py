@@ -1477,8 +1477,8 @@ def tampilkan_ai_lab():
         DB_KARAKTER_ANATOMY = {
             "Custom/None": {"physic": "", "base": "Manual Input"},
             "DIAN": {
-                "physic": "a biological transparent human skeleton, translucent white porous bones, no internal organs, hollow chest and abdominal cavity, wrapped in clear jelly-like skin membrane, glowing ethereal nerves weaving through the bones, heavy subsurface scattering",
-                "base": "Transparent Skeleton"
+                "physic": "a biological transparent human body with physical volume, crystal-clear jelly-like skin, a clean translucent white skeleton visible inside, no visible veins or nerves, soft ethereal inner glow radiating from the bones, subsurface scattering, liquid-like surface reflections, cinematic 3D volume",
+                "base": "Clean Transparent Crystal Body"
             },
             "JUPRI": {
                 "physic": "a highly detailed human skeleton standing upright, dry aged white bones, realistic porous texture, no skin, no organs, all bones connected and articulated, hollow ribcage, dark empty eye sockets",
@@ -1563,12 +1563,22 @@ def tampilkan_ai_lab():
                     "High Angle": "high angle cinematic perspective, looking down from above, 35mm lens, realistic depth, clear ground shadows, emphasizing the surrounding environment, sharp overhead focus, subjects clearly grounded on the floor",
                 }
 
-                # SMART FILTER
+                # 3. IDENTITAS KARAKTER (LOGIKA SILET: ANTI-GANTUNG)
                 prompt_actors = []
+                
+                # Cek Karakter 1
                 if k1_name and k1_name.lower() in naskah_visual.lower():
-                    prompt_actors.append(f"{k1_name} ({k1_physic}) wearing {k1_wear}")
+                    desc_k1 = f"{k1_name} ({k1_physic})"
+                    if k1_wear: # Hanya tambah 'wearing' kalau k1_wear ada isinya
+                        desc_k1 += f" wearing {k1_wear}"
+                    prompt_actors.append(desc_k1)
+                
+                # Cek Karakter 2
                 if k2_name and k2_name.lower() in naskah_visual.lower():
-                    prompt_actors.append(f"{k2_name} ({k2_physic}) wearing {k2_wear}")
+                    desc_k2 = f"{k2_name} ({k2_physic})"
+                    if k2_wear: # Hanya tambah 'wearing' kalau k2_wear ada isinya
+                        desc_k2 += f" wearing {k2_wear}"
+                    prompt_actors.append(desc_k2)
                 
                 final_actors = " and ".join(prompt_actors) if prompt_actors else "the characters"
 
@@ -5383,6 +5393,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
