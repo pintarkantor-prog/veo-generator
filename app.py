@@ -1690,15 +1690,15 @@ def tampilkan_ai_lab():
                 st.divider()
 
                 st.markdown('<p class="small-label">🎬 NASKAH VISUAL (PISAHKAN DENGAN TITIK . UNTUK AKSI BERUNTUN)</p>', unsafe_allow_html=True)
-                v_scene_detail = st.text_area("Urutan Adegan:", placeholder="Contoh: DIAN jalan. DIAN lari. DIAN loncat. DIAN berubah.", height=80, key="tr_scene", label_visibility="collapsed")
+                v_scene_detail = st.text_area("Urutan Adegan:", placeholder="Contoh: DIAN jalan. DIAN lari. DIAN loncat. DIAN berubah.", height=150, key="tr_scene", label_visibility="collapsed")
                 
                 col_d1, col_d2 = st.columns(2)
                 with col_d1:
                     st.markdown(f'<p class="small-label">💬 DIALOG {v_char_name.upper() if v_char_name else "UTAMA"}</p>', unsafe_allow_html=True)
-                    v_diag_a = st.text_area("Utama Bicara:", height=70, key="tr_diag_a", label_visibility="collapsed")
+                    v_diag_a = st.text_area("Utama Bicara:", height=50, key="tr_diag_a", label_visibility="collapsed")
                 with col_d2:
                     st.markdown(f'<p class="small-label">💬 DIALOG {v_fig_name.upper() if v_fig_name else "FIGURAN"}</p>', unsafe_allow_html=True)
-                    v_diag_b = st.text_area("Figuran Bicara:", height=70, key="tr_diag_b", label_visibility="collapsed")
+                    v_diag_b = st.text_area("Figuran Bicara:", height=50, key="tr_diag_b", label_visibility="collapsed")
 
                 st.divider()
 
@@ -5355,6 +5355,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
