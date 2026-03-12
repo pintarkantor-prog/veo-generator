@@ -1639,34 +1639,30 @@ def tampilkan_ai_lab():
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
-                "Authentic Rural Indonesian (Simple, honest, with a slight 'kampungan' lilt)",
-                "Deep Javanese Heart (Soft-spoken, slow, with heavy 'd' and 't' consonants)",
-                "Melodic Sundanese (Gentle, flowing tones with a soft West Javanese rise and fall)",
-                "Coastal Melayu (Raspy, rhythmic, with a warm seaside gravelly texture)",
-                "Classic Betawi Old-Soul (Deep, direct, but profoundly humble and polite)"
+                "Kampung Tulen (Authentic Rural Indonesian - Simple, honest, lilt)",
+                "Jawa Medok (Deep Javanese Heart - Soft-spoken, slow, heavy consonants)",
+                "Sunda Lembut (Melodic Sundanese - Gentle, flowing tones)",
+                "Melayu Pesisir (Coastal Melayu - Raspy, rhythmic texture)",
+                "Betawi Klasik (Classic Betawi Old-Soul - Humble and polite)"
             ],
             "Mood": [
-                "Quiet Vulnerability (Steady gaze, eyes heavy with deep emotion)",
-                "Pensive Stillness (Calm facial expression, long natural pauses)",
-                "Graceful Serenity (Serene and peaceful look, slow breathing)",
-                "Humble Devotion (Gentle and sincere facial expression)",
-                "Stoic Calmness (A steady, wise face reflecting years of memories)",
-                "Sacred Focus (Deeply focused expression, absolute sincerity)",
-                "Peaceful Hope (A calm, hopeful look in the eyes)"
+                "Sedih & Sayu (Quiet Vulnerability - Eyes heavy with deep emotion)",
+                "Tenang & Bengong (Pensive Stillness - Calm, long natural pauses)",
+                "Damai Sejahtera (Graceful Serenity - Serene look, slow breathing)",
+                "Tulus Ikhlas (Humble Devotion - Gentle and sincere expression)",
+                "Tegar & Bijak (Stoic Calmness - Steady, wise face, many memories)",
+                "Fokus Khusyuk (Sacred Focus - Deeply focused, absolute sincerity)",
+                "Penuh Harapan (Peaceful Hope - Calm, hopeful look in the eyes)"
             ],
             "Physical Action": [
-                "Delicate fingers precisely touching a tiny ornament on the mosque",
-                "Holding a steady, focused gaze on the architectural details",
-                "Eyes glistening slightly while looking down at the workbench",
-                "Slow, calm swallowing while looking at the central dome",
-                "Gently resting one finger on the textured surface of the diorama",
-                "A subtle, peaceful smile while admiring the structure",
-                "A slow, deep exhale while hands rest lightly on the table",
-                "Closing eyes for a second in silent devotion",
-                "Fingertips resting with extreme reverence on the diorama",
-                "Briefly looking up with a calm, hopeful expression",
-                "Looking down with intense focus, hands steady in their craft",
-                "Softly blinking while observing the internal mosque lights"
+                "Menyentuh kubah masjid dengan lembut (Gently touching the mosque's dome with delicate fingers)",
+                "Menatap tajam detail arsitektur (Holding a steady, focused gaze on the architectural details)",
+                "Mata berkaca-kaca menatap kamera (Looking at the camera with glistening eyes and a hopeful expression)",
+                "Tangan di atas meja, menatap penuh doa (Hands resting on the table, looking with silent devotion)",
+                "Tersenyum tipis ke arah kamera (A subtle, peaceful smile while looking directly at the camera)",
+                "Mengusap debu di miniatur (Gently wiping a tiny speck of dust from the miniature mosque)",
+                "Memejamkan mata sejenak (Closing eyes for a second in a moment of deep gratitude)",
+                "Menunduk khusyuk ngerakit miniatur (Looking down with intense focus, hands steady in their craft)"
             ]
         }
         # --- UI LAYOUT ---        
@@ -1723,8 +1719,8 @@ def tampilkan_ai_lab():
                 pilih_logat = st.selectbox("Pilih Logat", MASTER_AUDIO_STYLE["Logat"])
                 pilih_mood = st.selectbox("Pilih Mood", MASTER_AUDIO_STYLE["Mood"])
                 
-                # Tetap pake random choice buat Physical Action biar visualnya selalu dinamis
-                pilih_aksi = random.choice(MASTER_AUDIO_STYLE["Physical Action"])
+                # --- GANTI DI SINI: Dari random jadi selectbox ---
+                pilih_aksi = st.selectbox("Pilih Gerakan Tubuh", MASTER_AUDIO_STYLE["Physical Action"])
 
             st.write("")
             btn_gen = st.button(
@@ -1733,81 +1729,53 @@ def tampilkan_ai_lab():
                 use_container_width=True, 
                 key="btn_generate_video"
             )
-        # --- LOGIC GENERATOR (FIXED: ANTI-BLUR & STATIC 30-DEGREE) ---
+        # --- LOGIC GENERATOR (TOTAL REBUILD: ULTRA SHARP & CLEAN VISUAL) ---
         if btn_gen:
-            if not user_dialog:
-                st.error("Isi dialognya dulu bos...")
-            else:
-                # --- 4. SCENE LOGIC (MATIKAN ZOOM & CRAWL TOTAL) ---
-                is_lesehan = any(x in pilihan_set.lower() for x in ["teras", "saung", "halaman", "pondok", "pendopo"])
-                posisi_nenek = "sitting on the floor (lesehan) BEHIND the low table" if is_lesehan else "standing BEHIND the workbench"
-                
-                # KUNCI: Kamera Static, No Text, Deep Focus
-                scene_context = (
-                    f"PHOTO-REALISTIC CINEMATIC FILM STILL. NO TEXT. NO SUBTITLES. NO CAPTIONS. "
-                    f"FIXED 15-DEGREE SIDE-ANGLE VIEW. "
-                    f"STRICTLY STATIC CAMERA SHOT. NO CAMERA MOVEMENT. NO ZOOM. NO CRAWL. "
-                    f"Locked tripod position. The camera is perfectly still to maintain extreme sharpness. "
-                    f"STRICT DEPTH LAYERING: The large mosque diorama is the main focus in the FOREGROUND. "
-                    f"The character (Indonesian grandma) is positioned BEHIND the table and the mosque. "
-                    f"There is a CLEAR PHYSICAL GAP between the grandma and the mosque object. "
-                    f"The mosque has 4 distinct minarets and 1 large central dome. "
-                    f"The scene is grounded, realistic, and strictly tabletop. No body-fusion. "
-                    f"Pure high-end cinematography, rock-steady, sharp, and calm."
-                )
+            # 1. POSISI MATI LESEHAN
+            posisi_nenek = "sitting cross-legged on the ground (lesehan)"
+            
+            # 2. KUNCI KETAJAMAN & CLEAN VISUAL (Jam 2 Siang Mendung)
+            scene_context = (
+                f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC. "
+                f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS, NO WATERMARKS, NO LOGOS. "
+                f"MANDATORY: NO BACKGROUND MUSIC, NO AI-GENERATED AUDIO TRACKS. "
+                f"LIGHTING: 2 PM overcast daylight, soft diffused light, flat lighting for maximum detail. "
+                f"DEEP FOCUS PHOTOGRAPHY: Foreground, midground, and background are all CRYSTAL CLEAR. "
+                f"ZERO BOKEH. ZERO BLUR. STRICTLY SHARP EVERYTHING. "
+                f"CAMERA: Very slow cinematic micro-glide, subtle 15-degree parallax. "
+                f"The camera moves forward extremely slowly. NO MOTION BLUR. "
+                f"STRICT SEPARATION: {posisi_nenek} BEHIND the large mosque. Clear physical gap."
+            )
 
-                # --- 5. NUANSA HIDUP (GERAKAN MATA SAJA) ---
-                env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Inside a clean workshop.")
+            # 3. AMBIL DATA MASTER
+            env_detail = MASTER_GRANDMA_SETTING.get(pilihan_set, "Natural outdoor setting.")
+            soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
+            wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
+            baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes.")
+            
+            # 4. KUNCI ANATOMI & HIJAB
+            ANATOMY_LOCK = "STRICTLY TWO HUMAN HANDS, five fingers each. No ghost limbs."
+            MANDATORY_LOCK = "MANDATORY: FULL HIJAB. NO HAIR SHOWING. FULLY COVERED MODEST CLOTHING."
                 
-                eye_lock = (
-                    "The character is deeply focused, looking DOWNWARD at the mosque structure. "
-                    "They ONLY shift their gaze to look at the camera briefly when speaking. "
-                    "Natural blinking and shifting focus. Eyes are expressive and human. "
-                    "The camera does not move during gaze shifts. Hands are steady."
-                )
+            # 5. FINAL ASSEMBLY (Silet Version)
+            # Gue masukin lagi user_dialog dan pilih_logat sesuai request lo
+            final_ai_prompt = (
+                f"{scene_context} \n\n"
+                f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
+                f"WARDROBE: {baju_desc}. \n"
+                f"ENVIRONMENT: {env_detail}. \n"
+                f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
+                f"THE MASTERPIECE: {deskripsi_teknis}. \n"
+                f"DIALOG CONTEXT: '{user_dialog}' delivered with {pilih_logat} accent. \n\n"
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture for extreme Deep Focus, "
+                f"Fixed 15-degree side-angle, ZERO MOTION BLUR, High-shutter speed, 8K. "
+                f"NEGATIVE PROMPT: text, watermark, letters, signature, blurry, out of focus, bokeh, music, sound."
+            )
 
-                living_details = (
-                    f"ENVIRONMENT: {env_detail}. {eye_lock} "
-                    "Natural workshop lighting. High-fidelity skin textures and architectural surfaces."
-                )
-                
-                # --- 6. RAKIT FINAL PROMPT ---
-                soul_desc = MASTER_FAMILY_SOUL.get(pilihan_user, "An Indonesian person.")
-                wardrobe_dict = MASTER_FAMILY_WARDROBE.get(char_key, {})
-                baju_desc = wardrobe_dict.get(baju_pilihan, "Simple modest clothes, clean and neat.")
-                
-                ANATOMY_LOCK = (
-                    "STRICTLY ONLY TWO HUMAN HANDS VISIBLE. NO GHOST HANDS. NO EXTRA LIMBS. "
-                    "The artisan has exactly two hands with five fingers each, physically touching the model. "
-                    "Hands are separate from the mosque walls."
-                )
-
-                MANDATORY_LOCK = (
-                    "MANDATORY: FULL HIJAB. NO HAIR SHOWING. NO NECK SHOWING. "
-                    "FULLY COVERED MODEST ISLAMIC CLOTHING. NO SKIN EXPOSED EXCEPT FACE AND HANDS."
-                )
-                
-                # FINAL ASSEMBLY: Kunci spek di bawah agar AI tidak halusinasi zoom
-                final_ai_prompt = (
-                    f"{scene_context} \n\n"
-                    f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
-                    f"WARDROBE: {baju_desc}. \n"
-                    f"PERFORMANCE: {pilih_aksi} with EXACTLY TWO HANDS. {pilih_mood}. \n"
-                    f"THE MASTERPIECE: {deskripsi_teknis}. "
-                    f"The mosque is a massive, separate tabletop model. \n"
-                    f"VOICE & DIALOG: {user_dialog} (Delivered with {pilih_logat}). \n"
-                    f"ATMOSPHERE: {living_details} \n\n"
-                    f"TECHNICAL SPECS: ARRI Alexa 65, 15-degree fixed side-angle, F/11 Deep Focus, "
-                    f"STATIC TRIPOD SHOT, NO ZOOM, NO MOTION BLUR, "
-                    f"extreme sharp focus on mosque and hands simultaneously, 8K, masterpiece quality."
-                )
-                # --- 7. TAMPILKAN HASIL ---
-                st.success("🔥 PROMPT BERHASIL DIRAKIT!")
-                st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
-                st.code(final_ai_prompt, language="text")
-                
-                with st.expander("Edit Prompt Manual"):
-                    final_ai_prompt = st.text_area("Custom Editor", value=final_ai_prompt, height=300)
+            # --- 7. TAMPILKAN HASIL ---
+            st.success("🔥 PROMPT TAJAM & BERSIH READY!")
+            st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
+            st.code(final_ai_prompt, language="text") # Muncul satu kali aja biar rapi
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5589,6 +5557,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
