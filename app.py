@@ -1472,10 +1472,8 @@ def tampilkan_ai_lab():
     # ==========================================================================
     # TAB: ANATOMY (SULTAN PRODUCTION - CUSTOM LABEL EDITION)
     # ==========================================================================
-    with t_anatomi:
-        st.header("🧬 Sultan Anatomy: Character Interaction")
-        
-        with st.expander("🛠️ KONFIGURASI SETUP KARAKTER & VISUAL", expanded=True):
+    with t_anatomi:        
+        with st.expander("🦴PINTAR ANATOMY ENGINE", expanded=True):
             
             # --- ROW 1: PEMILIHAN KARAKTER ---
             col_k1, col_k2 = st.columns(2)
