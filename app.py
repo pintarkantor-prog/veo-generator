@@ -1644,7 +1644,7 @@ def tampilkan_ai_lab():
                 
                 with col_char:
                     st.markdown('<p class="small-label">👤 IDENTITAS MASTER (DARI GAMBAR REF)</p>', unsafe_allow_html=True)
-                    v_char_name = st.text_input("Nama Karakter:", "SUPRI", key="tr_name", label_visibility="collapsed")
+                    v_char_name = st.text_input("Nama Karakter:", placeholder="Contoh: DIAN, SAPRI, dll...", key="tr_name", label_visibility="collapsed")
                     st.markdown('<p class="small-label">⚡ PEMICU (TRIGGER ACTION)</p>', unsafe_allow_html=True)
                     v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: meminum segelas susu, memakai cincin...", key="tr_trigger", label_visibility="collapsed")
 
@@ -5290,6 +5290,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
