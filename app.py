@@ -3124,37 +3124,43 @@ def tampilkan_tugas_kerja():
                                                     # 1. UPDATE SUPABASE (Database Utama)
                                                     supabase.table("Tugas").update({"Status": "FINISH"}).eq("ID", id_tugas).execute()
                                                     
-                                                    # 2. UPDATE GSHEET (Backup - Silent Error biar gak lag)
+                                                    # 2. UPDATE GSHEET (Backup)
                                                     try:
                                                         cell = sheet_tugas.find(id_tugas)
                                                         if cell: sheet_tugas.update_cell(cell.row, 5, "FINISH")
                                                     except: pass
 
                                                     # 3. HITUNG BONUS (PAKAI MEMORI - ANTI LAG)
+                                                    # Perbaikan: Tambah simbol '&' dan konversi string agar sinkron
+                                                    staf_target = staf_nama.upper()
                                                     df_selesai = df_all_tugas[
-                                                        (df_all_tugas['STAF'].str.upper() == staf_nama) &
-                                                        (df_all_tugas['DEADLINE'] == tgl_tugas) &
+                                                        (df_all_tugas['STAF'].str.upper() == staf_target) &
+                                                        (df_all_tugas['DEADLINE'].astype(str) == str(tgl_tugas)) &
                                                         (df_all_tugas['STATUS'].str.upper() == 'FINISH')
                                                     ]
-                                                    jml_video = len(df_selesai) + 1 # +1 untuk tugas yang diproses sekarang
+                                                    jml_video = len(df_selesai) + 1 
 
                                                     # 4. LOGIKA BONUS & ARUS KAS
                                                     msg_bonus = ""
                                                     if jml_video == 3 or jml_video >= 5:
                                                         nom_bonus = 30000
+                                                        tgl_fix = str(tgl_tugas) # Paksa jadi string YYYY-MM-DD
                                                         ket_bonus = f"Bonus {'Absen' if jml_video == 3 else 'Video'}: {staf_nama} ({id_tugas})"
                                                         
                                                         # Kirim ke Arus Kas Supabase
                                                         supabase.table("Arus_Kas").insert({
-                                                            "Tanggal": tgl_tugas, "Tipe": "PENGELUARAN", 
-                                                            "Kategori": "Gaji Tim", "Nominal": nom_bonus, 
-                                                            "Keterangan": ket_bonus, "Pencatat": "SISTEM (AUTO-ACC)"
+                                                            "Tanggal": tgl_fix, 
+                                                            "Tipe": "PENGELUARAN", 
+                                                            "Kategori": "Gaji Tim", 
+                                                            "Nominal": nom_bonus, 
+                                                            "Keterangan": ket_bonus, 
+                                                            "Pencatat": "SISTEM (AUTO-ACC)"
                                                         }).execute()
                                                         
                                                         # Kirim ke Arus Kas GSheet
                                                         try:
                                                             ws_kas = sh.worksheet("Arus_Kas")
-                                                            ws_kas.append_row([tgl_tugas, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
+                                                            ws_kas.append_row([tgl_fix, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
                                                         except: pass
                                                         
                                                         msg_bonus = f"\n💰 *BONUS:* Rp 30,000"
@@ -3166,7 +3172,6 @@ def tampilkan_tugas_kerja():
                                                     st.success("Tugas Selesai!"); time.sleep(1); st.rerun()
                                                     
                                                 except Exception as e:
-                                                    # Buka kunci jika gagal total biar bisa diulang
                                                     if f"lock_{id_tugas}" in st.session_state:
                                                         del st.session_state[f"lock_{id_tugas}"]
                                                     st.error(f"Gagal ACC: {e}")
@@ -6090,4 +6095,5 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
