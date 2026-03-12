@@ -3396,7 +3396,7 @@ def tampilkan_tugas_kerja():
             kolom_fix = ['ID', 'STAF', 'INSTRUKSI', 'DEADLINE', 'STATUS', 'CATATAN_REVISI']
             
             st.dataframe(
-                df_laci.sort_values(by='ID', ascending=False)[kolom_fix],
+                df_laci.sort_values(by=['DEADLINE', 'ID'], ascending=[False, False])[kolom_fix],
                 column_config={
                     "ID": st.column_config.TextColumn("🆔 ID"),
                     "STAF": st.column_config.TextColumn("👤 STAF"),
@@ -6095,6 +6095,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
