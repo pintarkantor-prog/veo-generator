@@ -1572,12 +1572,12 @@ def tampilkan_ai_lab():
                 
                 final_actors = " and ".join(prompt_actors) if prompt_actors else "the characters"
 
-                # IMAGE PROMPT (SULTAN REVISION)
+                # IMAGE PROMPT (SULTAN REVISION - ANATOMY SYNC)
                 final_img = (
-                    f"A {MAP_STYLE[v_style]} photo featuring {final_actors}. "
+                    f"A {MAP_STYLE_ANATOMY[v_style]} photo featuring {final_actors}. "
                     f"ACTION: {naskah_visual}. "
                     f"SETTING: {v_loc}. "
-                    f"ENVIRONMENT: {MAP_LIGHT[v_light]} with {MAP_CAM[v_cam]}. "
+                    f"ENVIRONMENT: {MAP_LIGHT_ANATOMY[v_light]} with {MAP_CAM_ANATOMY[v_cam]}. "
                     f"TECHNICAL: Absolute object permanence, precise anatomical details, solid ground-to-feet contact, "
                     f"no clipping, high-fidelity textures, 8k resolution, ray-traced shadows. "
                     f"NEGATIVE: {GHOST_NEG}"
@@ -5383,6 +5383,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
