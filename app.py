@@ -1736,14 +1736,14 @@ def tampilkan_ai_lab():
             
             # 2. KUNCI KETAJAMAN & CLEAN VISUAL (Jam 2 Siang Mendung)
             scene_context = (
-                f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC. "
-                f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS, NO WATERMARKS, NO LOGOS. "
-                f"MANDATORY: NO BACKGROUND MUSIC, NO AI-GENERATED AUDIO TRACKS. "
-                f"LIGHTING: 2 PM overcast daylight, soft diffused light, flat lighting for maximum detail. "
-                f"DEEP FOCUS PHOTOGRAPHY: Foreground, midground, and background are all CRYSTAL CLEAR. "
-                f"ZERO BOKEH. ZERO BLUR. STRICTLY SHARP EVERYTHING. "
-                f"CAMERA: Very slow cinematic micro-glide, subtle 15-degree parallax. "
-                f"The camera moves forward extremely slowly. NO MOTION BLUR. "
+                f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
+                f"MANDATORY: NO ON-SCREEN TEXT, NO SUBTITLES, NO CAPTIONS. "
+                f"LIGHTING: 2 PM overcast daylight, natural flat ambient light, realistic soft shadows. "
+                f"DEEP FOCUS PHOTOGRAPHY: High-definition sharpness on skin textures, wrinkles, and mosque ornaments. "
+                f"NO PLASTIC SKIN. NO BEAUTY FILTER. RAW UNFILTERED CINEMATOGRAPHY. "
+                f"Visible fabric fuzz, dust motes in the air, and realistic skin imperfections. "
+                f"AUDIO: Natural village ambience, soft wind, and subtle crafting sounds, NO MUSIC. " # <-- Backsound alami
+                f"CAMERA: Very slow cinematic micro-glide, 15-degree parallax. "
                 f"STRICT SEPARATION: {posisi_nenek} BEHIND the large mosque. Clear physical gap."
             )
 
@@ -5557,6 +5557,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
