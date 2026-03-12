@@ -1619,7 +1619,7 @@ def tampilkan_ai_lab():
     # ============================================================
     with t_transform:        
         with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
-            st.caption("Identity-Locked Morphing with Anatomy-Grade Visuals & Chronology")
+            st.caption("Identity-Locked Morphing with Anatomy-Grade Visuals & Sequential Narrative")
 
             # --- 1. DATABASE & SULTAN MAPPING (ANATOMY SYNC) ---
             DB_TRANS_EFFECT = {
@@ -1652,60 +1652,65 @@ def tampilkan_ai_lab():
 
             # --- 2. INPUT PANEL ---
             with st.container(border=True):
-                # Karakter (Sesuai spek: Fisik & Wear Terpisah)
+                # Baris 1: Karakter Utama & Figuran
                 col_c1, col_c2 = st.columns(2)
                 with col_c1:
                     st.markdown('<p class="small-label">👤 KARAKTER UTAMA (IDENTITY LOCK)</p>', unsafe_allow_html=True)
                     v_char_name = st.text_input("Nama Utama:", placeholder="Nama...", key="tr_name", label_visibility="collapsed")
-                    v_char_physic = st.text_input("Fisik Utama:", placeholder="Fisik (Misal: Pria atletis, otot kawat)...", key="tr_physic", label_visibility="collapsed")
-                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Pakaian (Misal: Zirah perang emas)...", key="tr_outfit", label_visibility="collapsed")
+                    v_char_physic = st.text_input("Fisik Utama:", placeholder="Fisik (Contoh: Pria atletis)...", key="tr_physic", label_visibility="collapsed")
+                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Pakaian (Contoh: Jas hitam)...", key="tr_outfit", label_visibility="collapsed")
                 
                 with col_c2:
                     st.markdown('<p class="small-label">👥 KARAKTER TAMBAHAN (OPTIONAL)</p>', unsafe_allow_html=True)
                     v_fig_name = st.text_input("Nama Figuran:", placeholder="Nama...", key="fig_name", label_visibility="collapsed")
-                    v_fig_physic = st.text_input("Fisik Figuran:", placeholder="Fisik (Misal: Naga besar)...", key="fig_physic", label_visibility="collapsed")
-                    v_fig_outfit = st.text_input("Outfit Figuran:", placeholder="Pakaian (Misal: Sisik mengkilap)...", key="fig_outfit", label_visibility="collapsed")
+                    v_fig_physic = st.text_input("Fisik Figuran:", placeholder="Fisik (Contoh: Penjahat berotot)...", key="fig_physic", label_visibility="collapsed")
+                    v_fig_outfit = st.text_input("Outfit Figuran:", placeholder="Pakaian (Contoh: Baju preman)...", key="fig_outfit", label_visibility="collapsed")
 
                 st.divider()
 
-                # Transformasi & Timing
+                # Baris 2: Transformasi & Timing
                 col_p1, col_p2 = st.columns(2)
                 with col_p1:
                     st.markdown('<p class="small-label">🧬 WUJUD AKHIR (TARGET FORM)</p>', unsafe_allow_html=True)
-                    v_char_target = st.text_input("Wujud Akhir:", placeholder="Contoh: Hulk, Super Saiyan...", key="tr_target", label_visibility="collapsed")
+                    v_char_target = st.text_input("Wujud Akhir:", placeholder="Contoh: Hulk, Transformer, Ant-Man...", key="tr_target", label_visibility="collapsed")
                     st.markdown('<p class="small-label">⚡ PEMICU SPESIFIK (TRIGGER)</p>', unsafe_allow_html=True)
-                    v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: berteriak kencang...", key="tr_trigger", label_visibility="collapsed")
+                    v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: saat loncat, saat berteriak...", key="tr_trigger", label_visibility="collapsed")
                 
                 with col_p2:
                     st.markdown('<p class="small-label">✨ EFEK TRANSISI</p>', unsafe_allow_html=True)
                     v_eff_type = st.selectbox("Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff", label_visibility="collapsed")
-                    st.markdown('<p class="small-label">⏱️ TIMING (DETIK)</p>', unsafe_allow_html=True)
-                    v_timing = st.slider("Berubah Setelah:", 1.0, 5.0, 2.0, 0.5, key="tr_time")
+                    st.markdown('<p class="small-label">⏱️ TIMING TRANSFORMASI (DETIK)</p>', unsafe_allow_html=True)
+                    v_timing = st.slider("Berubah Setelah:", 1.0, 15.0, 2.0, 0.5, key="tr_time")
 
                 st.divider()
 
-                # Naskah, Setting, Light & Cam
-                st.markdown('<p class="small-label">🎬 NASKAH VISUAL & DETAIL ADEGAN</p>', unsafe_allow_html=True)
-                v_scene_detail = st.text_area("Naskah:", placeholder="Detail adegan...", height=100, key="tr_scene", label_visibility="collapsed")
+                # Baris 3: Naskah Beruntun & Dialog
+                st.markdown('<p class="small-label">🎬 NASKAH VISUAL (URUTAN AKSI - PISAHKAN DENGAN TITIK)</p>', unsafe_allow_html=True)
+                v_scene_detail = st.text_area("Naskah:", placeholder="Contoh: DIAN berjalan. DIAN loncat melayang. DIAN berubah jadi Hulk. DIAN mendarat hancurkan lantai.", height=100, key="tr_scene", label_visibility="collapsed")
 
+                st.markdown('<p class="small-label">💬 PERCAKAPAN / DIALOG</p>', unsafe_allow_html=True)
+                v_dialog = st.text_area("Dialog:", placeholder="Contoh: DIAN: 'Jangan lari kau!'", height=70, key="tr_dialog", label_visibility="collapsed")
+
+                st.divider()
+
+                # Visual, Light & Cam
                 col_s1, col_s2 = st.columns(2)
                 with col_s1:
-                    st.markdown('<p class="small-label">🎨 VISUAL STYLE</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎨 VISUAL STYLE & LIGHTING</p>', unsafe_allow_html=True)
                     v_style_choice = st.selectbox("Style:", list(MAP_STYLE_TRANS.keys()), key="tr_style", label_visibility="collapsed")
-                    st.markdown('<p class="small-label">💡 LIGHTING</p>', unsafe_allow_html=True)
                     v_light_choice = st.selectbox("Lighting:", list(MAP_LIGHT_TRANS.keys()), key="tr_light", label_visibility="collapsed")
                 with col_s2:
-                    st.markdown('<p class="small-label">🎥 CAMERA SHOT</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎥 CAMERA SHOT & LOKASI</p>', unsafe_allow_html=True)
                     v_cam_choice = st.selectbox("Shot:", list(MAP_CAM_TRANS.keys()), key="tr_cam", label_visibility="collapsed")
-                    st.markdown('<p class="small-label">📍 LOKASI</p>', unsafe_allow_html=True)
                     v_loc = st.text_input("Lokasi:", placeholder="Lokasi kejadian...", key="tr_loc", label_visibility="collapsed")
 
                 btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
 
             # --- 3. LOGIKA GENERATOR PROMPT (SILET LOGIC) ---
             if btn_gen_trans:
-                if v_trigger and v_char_target and v_scene_detail and v_loc:
+                if v_char_name and v_scene_detail and v_loc:
                     
+                    # --- IDENTITAS ENGINE ---
                     def rakit_identitas_sultan(name, physic, outfit, is_master=False):
                         if not name: return ""
                         ref_tag = "refer to PHOTO #MASTER ONLY" if is_master else "visual description only"
@@ -1715,28 +1720,46 @@ def tampilkan_ai_lab():
                     fig_id = ""
                     if v_fig_name and v_fig_name.upper() in v_scene_detail.upper():
                         fig_id = " AND " + rakit_identitas_sultan(v_fig_name, v_fig_physic, v_fig_outfit)
-
                     final_identity = main_id + fig_id
+
+                    # --- LOGIKA URUTAN AKSI (THE SEQUENCE) ---
+                    scene_steps = v_scene_detail.split('.')
+                    clean_steps = [s.strip() for s in scene_steps if len(s.strip()) > 2]
+                    sequential_cue = " -> ".join([f"Phase {i+1}: {step}" for i, step in enumerate(clean_steps)])
+
+                    # --- LOGIKA DIALOG ---
+                    dialog_cue = f"DIALOGUE TRACK: {v_dialog}. Characters must show lip-sync and emotional expression matching the speech." if v_dialog else ""
+
+                    # --- LOGIKA TRANSFORMASI (BYPASS CHECK) ---
+                    is_transform = True if (v_trigger and v_char_target) else False
+                    if is_transform:
+                        trans_logic = (
+                            f"CHRONOLOGY: Maintain original {v_char_outfit} form for the first {v_timing} seconds. "
+                            f"TRIGGER EVENT: Exactly when {v_char_name} {v_trigger}, initiate {v_eff_type} metamorphosis into {v_char_target}. "
+                        )
+                        mode_label = "TRANSFORMATION SEQUENCE"
+                    else:
+                        trans_logic = "ACTION MODE: No transformation, focus on continuous natural movement and acting."
+                        mode_label = "PURE ACTION SEQUENCE"
+
                     TRANS_NEG = "instant morph, messy transition, losing facial likeness, distorted features, blurry eyes, low quality, jump cut, inconsistent anatomy"
-                    v_pose_awal = v_scene_detail.split('.')[0] 
+                    v_pose_awal = clean_steps[0] if clean_steps else v_scene_detail
 
                     # A. IMAGE PROMPT (Anatomy Grade)
                     final_img = (
                         f"{final_identity}. "
-                        f"SCENE START: {v_pose_awal}. "
+                        f"SCENE START: {v_pose_awal}. {dialog_cue} "
                         f"VISUAL SPECS: {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
-                        f"SETTING: {v_loc}. TECHNICAL: 8k render, masterpiece quality, sharp focus. "
-                        f"NEGATIVE: {TRANS_NEG}"
+                        f"SETTING: {v_loc}. TECHNICAL: 8k render, sharp focus. NEGATIVE: {TRANS_NEG}"
                     )
 
-                    # B. VIDEO PROMPT (Anatomy Grade Chronology)
+                    # B. VIDEO PROMPT (Grok Optimized - Long Duration)
                     final_vid = (
                         f"Start from the reference image. {final_identity}. "
-                        f"SCRIPTED ACTION: {v_scene_detail}. "
-                        f"CINEMATOGRAPHY: Maintain {MAP_CAM_TRANS[v_cam_choice]} with {MAP_LIGHT_TRANS[v_light_choice]} and {MAP_STYLE_TRANS[v_style_choice]} look. "
-                        f"CHRONOLOGY: First {v_timing} seconds actors remain in original {v_char_outfit} form. "
-                        f"TRANSFORMATION: Exactly when {v_char_name} {v_trigger}, initiate {v_eff_type} metamorphosis into {v_char_target}. "
-                        f"Seamless transition, maintain facial identity, high-fidelity 4k render."
+                        f"SEQUENTIAL NARRATIVE: {sequential_cue}. {dialog_cue} "
+                        f"CINEMATOGRAPHY: {MAP_CAM_TRANS[v_cam_choice]} with {MAP_LIGHT_TRANS[v_light_choice]} and {MAP_STYLE_TRANS[v_style_choice]} look. "
+                        f"{trans_logic} "
+                        f"Ensure seamless motion between phases. Maintain {v_char_name}'s facial identity throughout the entire duration. 4k render."
                     )
 
                     st.divider()
@@ -1745,10 +1768,10 @@ def tampilkan_ai_lab():
                         st.markdown('<p class="small-label">📸 INITIAL STATE (STILL IMAGE)</p>', unsafe_allow_html=True)
                         st.code(final_img, language="markdown")
                     with res2:
-                        st.markdown('<p class="small-label">🎬 TRANSFORMATION SEQUENCE (VIDEO)</p>', unsafe_allow_html=True)
+                        st.markdown(f'<p class="small-label">🎬 {mode_label} (OPTIMIZED)</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
-                    st.error("Dian, isi semua kolom cok!")
+                    st.error("Dian, minimal isi Nama Utama, Naskah, dan Lokasi cok!")
 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5334,6 +5357,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
