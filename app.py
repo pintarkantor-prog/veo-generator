@@ -1470,19 +1470,19 @@ def tampilkan_ai_lab():
             st.code(final_ai_prompt, language="text")
 
     # ==========================================================================
-    # TAB: ANATOMY (SULTAN IDENTITY LOCK - SULE GONDRONG EDITION)
+    # TAB: ANATOMY (SULTAN IDENTITY LOCK - CLEAN ENGINE)
     # ==========================================================================
     with t_anatomi:
-        # --- 1. DATABASE KARAKTER (Master Identity) ---
+        # --- 1. DATABASE KARAKTER ---
         DB_KARAKTER_ANATOMY = {
             "Custom/None": {"physic": "", "base": "Manual Input"},
             "DIAN": {
                 "physic": "a biological transparent human skeleton, translucent white porous bones, no internal organs, hollow chest and abdominal cavity, wrapped in clear jelly-like skin membrane, glowing ethereal nerves weaving through the bones, heavy subsurface scattering",
-                "base": "Transparent Skeleton (No Organs)"
+                "base": "Transparent Skeleton"
             },
             "JUPRI": {
                 "physic": "a highly detailed human skeleton standing upright, dry aged white bones, realistic porous texture, no skin, no organs, all bones connected and articulated, hollow ribcage, dark empty eye sockets",
-                "base": "Dry Skeleton (Tengkorak)"
+                "base": "Dry Skeleton"
             },
             "SULE": {
                 "physic": "a biological transparent human being, long messy black hair, jelly-like skin, visible white porous bones and pulsating red vascular veins inside the limbs and torso, anatomical precision",
@@ -1495,112 +1495,111 @@ def tampilkan_ai_lab():
         }
 
         # --- 2. LOGIKA UPDATE OTOMATIS (SESSION STATE) ---
-        if 'k1_physic_ana' not in st.session_state:
-            st.session_state.k1_physic_ana = ""
-        if 'k2_physic_ana' not in st.session_state:
-            st.session_state.k2_physic_ana = ""
+        if 'k1_physic_ana' not in st.session_state: st.session_state.k1_physic_ana = ""
+        if 'k2_physic_ana' not in st.session_state: st.session_state.k2_physic_ana = ""
 
         def update_physic_ana():
             st.session_state.k1_physic_ana = DB_KARAKTER_ANATOMY[st.session_state.k1_sel_ana]["physic"]
             st.session_state.k2_physic_ana = DB_KARAKTER_ANATOMY[st.session_state.k2_sel_ana]["physic"]
 
-        # --- 3. WRAPPER: EXPANDER UTAMA ---
-        with st.expander("🦴 PINTAR ANATOMY ENGINE", expanded=True):
+        # --- 3. WRAPPER UI: DASHBOARD CLEAN ---
+        with st.expander("🦴 PINTAR ANATOMY ENGINE - IDENTITY LOCK", expanded=True):
             col_k1, col_k2 = st.columns(2)
-            
             with col_k1:
                 st.markdown('<p class="small-label">👤 KARAKTER 1 (ACTOR_1)</p>', unsafe_allow_html=True)
-                k1_sel = st.selectbox("Pilih K1:", list(DB_KARAKTER_ANATOMY.keys()), 
-                                      key="k1_sel_ana", on_change=update_physic_ana, label_visibility="collapsed")
+                k1_sel = st.selectbox("Pilih K1:", list(DB_KARAKTER_ANATOMY.keys()), key="k1_sel_ana", on_change=update_physic_ana, label_visibility="collapsed")
                 k1_name = st.text_input("Nama K1:", placeholder="Nama...", key="k1_name_manual_ana") if k1_sel == "Custom/None" else k1_sel
-                
-                st.markdown('<p class="small-label">DETAIL FISIK (TUBUH & ANATOMI)</p>', unsafe_allow_html=True)
                 k1_physic = st.text_area("Fisik K1:", key="k1_physic_ana", height=100, label_visibility="collapsed")
-                k1_wear = st.text_input("Pakaian K1:", placeholder="Isi detail pakaian...", key="k1_wear_ana", label_visibility="collapsed")
+                k1_wear = st.text_input("Pakaian K1:", placeholder="Outfit K1...", key="k1_wear_ana", label_visibility="collapsed")
 
             with col_k2:
                 st.markdown('<p class="small-label">👤 KARAKTER 2 (ACTOR_2)</p>', unsafe_allow_html=True)
-                k2_sel = st.selectbox("Pilih K2:", list(DB_KARAKTER_ANATOMY.keys()), 
-                                      key="k2_sel_ana", on_change=update_physic_ana, label_visibility="collapsed")
+                k2_sel = st.selectbox("Pilih K2:", list(DB_KARAKTER_ANATOMY.keys()), key="k2_sel_ana", on_change=update_physic_ana, label_visibility="collapsed")
                 k2_name = st.text_input("Nama K2:", placeholder="Nama...", key="k2_name_manual_ana") if k2_sel == "Custom/None" else k2_sel
-                
-                st.markdown('<p class="small-label">DETAIL FISIK (TUBUH & ANATOMI)</p>', unsafe_allow_html=True)
                 k2_physic = st.text_area("Fisik K2:", key="k2_physic_ana", height=100, label_visibility="collapsed")
-                k2_wear = st.text_input("Pakaian K2:", placeholder="Isi detail pakaian...", key="k2_wear_ana", label_visibility="collapsed")
+                k2_wear = st.text_input("Pakaian K2:", placeholder="Outfit K2...", key="k2_wear_ana", label_visibility="collapsed")
 
             st.divider()
-
-            # --- ROW 2: NASKAH & STYLE ---
             st.markdown('<p class="small-label">🎬 NASKAH VISUAL & AKSI</p>', unsafe_allow_html=True)
-            naskah_visual = st.text_area("Aksi:", placeholder="Contoh: SULE mendarat di depan DIAN...", key="visual_script_ana", height=150, label_visibility="collapsed")
+            naskah_visual = st.text_area("Aksi:", placeholder="Contoh: SAPRI mencabut KERIS di depan DIAN...", key="visual_script_ana", height=150, label_visibility="collapsed")
 
             col_s1, col_s2, col_s3 = st.columns(3)
-            with col_s1:
-                st.markdown('<p class="small-label">✨ VISUAL STYLE</p>', unsafe_allow_html=True)
-                v_style = st.selectbox("Style:", ["Sangat Nyata", "Cinematic", "Anime"], key="v_style_ana", label_visibility="collapsed")
-            with col_s2:
-                st.markdown('<p class="small-label">💡 LIGHTING</p>', unsafe_allow_html=True)
-                v_light = st.selectbox("Lighting:", ["Senja Cerah (Golden)", "Misty Night", "Studio Light"], key="v_light_ana", label_visibility="collapsed")
-            with col_s3:
-                st.markdown('<p class="small-label">🎥 CAMERA VIEW</p>', unsafe_allow_html=True)
-                v_cam = st.selectbox("Camera:", ["Sejajar Mata", "Low Angle", "High Angle"], key="v_cam_ana", label_visibility="collapsed")
+            with col_s1: v_style = st.selectbox("Style:", ["Sangat Nyata", "Cinematic", "Anime"], key="v_style_ana")
+            with col_s2: v_light = st.selectbox("Lighting:", ["Senja Cerah (Golden)", "Misty Night", "Studio Light"], key="v_light_ana")
+            with col_s3: v_cam = st.selectbox("Camera:", ["Sejajar Mata", "Low Angle", "High Angle"], key="v_cam_ana")
 
-            v_loc = st.text_input("Lokasi:", placeholder="Lokasi setting...", key="v_loc_ana", label_visibility="collapsed")
+            v_loc = st.text_input("📍 LOKASI SETTING", placeholder="Lokasi...", key="v_loc_ana")
 
             st.markdown('<p class="small-label">🗣️ DIALOG SYSTEM</p>', unsafe_allow_html=True)
             col_d1, col_d2 = st.columns(2)
-            with col_d1:
-                diag_k1 = st.text_input("Dialog K1:", placeholder=f"Ucapan {k1_name}...", key="diag_k1_ana", label_visibility="collapsed")
-            with col_d2:
-                diag_k2 = st.text_input("Dialog K2:", placeholder=f"Ucapan {k2_name}...", key="diag_k2_ana", label_visibility="collapsed")
+            with col_d1: diag_k1 = st.text_input("Dialog K1:", placeholder=f"Ucapan {k1_name}...", key="diag_k1_ana")
+            with col_d2: diag_k2 = st.text_input("Dialog K2:", placeholder=f"Ucapan {k2_name}...", key="diag_k2_ana")
 
             btn_gen_sultan = st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True, key="btn_gen_ana")
 
-        # --- 4. LOGIKA PROMPT ENGINE ---
+        # --- 4. LOGIKA PROMPT ENGINE (THE GHOST GUARD) ---
         if btn_gen_sultan:
             if naskah_visual and v_loc:
+                # GHOST NEGATIVE PROMPT (UNDER THE HOOD)
+                GHOST_NEG = (
+                    "blur, morphing, merging characters, sinking feet, vanishing props, "
+                    "object transformation, weapon shifting wielder, extra limbs, "
+                    "distorted object geometry, flickering items, floating accessories"
+                )
+
                 MAP_STYLE_ANATOMY = {
-                    "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, highly detailed skin textures, masterpiece",
-                    "Cinematic": "cinematic movie still, anamorphic lens, HDR, dramatic shadows, theatrical atmosphere",
-                    "Anime": "high-quality 2D anime style, vibrant colors, clean cel shading, Makoto Shinkai aesthetic"
+                    "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, ultra-detailed textures on skin and all surfaces, sharp focus, extreme macro details, shot on 35mm lens, f/1.8, high contrast, ray-tracing, physically based rendering, masterpiece quality",
+                    "Cinematic": "cinematic movie still shot on 70mm IMAX film, anamorphic lens flare, high dynamic range (HDR), dramatic theatrical shadows, cinematic color grading, atmospheric haze, deep black levels, cinematic grain, wide aspect ratio",
+                    "Anime": "high-quality 3D animation style, Pixar and Disney aesthetic, stylized character design, soft global illumination, ray-traced reflections, subsurface scattering on skin, vibrant cinematic colors, 8k render, Unreal Engine 5 render look",
                 }
                 MAP_LIGHT_ANATOMY = {
-                    "Senja Cerah (Golden)": "golden hour lighting, warm volumetric sun rays, soft rim lighting, long shadows",
-                    "Misty Night": "eerie moonlight, thick blue mist, moody atmospheric fog, bioluminescent glow",
-                    "Studio Light": "professional studio lighting, sharp rim light, neutral balance, softbox shadows"
+                    "Senja Cerah (Golden)": "soft late afternoon light, pale gold ambient glow, neutral color temperature, muted warm tones, cinematic soft shadows, clear visibility, realistic outdoor lighting, subtle highlights",
+                    "Misty Night": "clear moonlit night, soft diffused moonlight, neutral color temperature, cool silver glow on surfaces, sharp focus on all objects, high contrast shadows, bioluminescent accents on characters, realistic nocturnal outdoor lighting, subtle highlights, deep black levels",
+                    "Studio Light": "professional cinematic studio lighting, high-key lighting setup, sharp dual-rim light to define edges, neutral color balance, soft shadows, 8k showcase quality, ray-traced reflections on transparent skin, clean white or dark studio background"
                 }
                 MAP_CAM_ANATOMY = {
-                    "Sejajar Mata": "eye-level shot, 35mm lens, realistic depth of field",
-                    "Low Angle": "dramatic low angle shot looking up, wide-angle lens, heroic perspective",
-                    "High Angle": "high angle bird's eye perspective"
+                    "Sejajar Mata": "eye-level cinematic shot, 50mm prime lens, natural perspective, sharp focus on subjects, subtle background blur, stabilized camera, realistic human height viewpoint",
+                    "Low Angle": "dramatic low angle shot, looking up from ground level, 35mm lens, heroic perspective, emphasizing height and power, clear floor-to-subject contact, majestic scale, sharp silhouettes against the sky",
+                    "High Angle": "high angle cinematic perspective, looking down from above, 35mm lens, realistic depth, clear ground shadows, emphasizing the surrounding environment, sharp overhead focus, subjects clearly grounded on the floor",
                 }
 
+                # SMART FILTER
                 prompt_actors = []
                 if k1_name and k1_name.lower() in naskah_visual.lower():
                     prompt_actors.append(f"{k1_name} ({k1_physic}) wearing {k1_wear}")
                 if k2_name and k2_name.lower() in naskah_visual.lower():
                     prompt_actors.append(f"{k2_name} ({k2_physic}) wearing {k2_wear}")
                 
-                final_actors = " and ".join(prompt_actors) if prompt_actors else "a mysterious being"
+                final_actors = " and ".join(prompt_actors) if prompt_actors else "the characters"
 
+                # IMAGE PROMPT (SULTAN REVISION)
                 final_img = (
-                    f"A {MAP_STYLE_ANATOMY[v_style]} photo of {final_actors}. SCENE: {naskah_visual}. "
-                    f"LOCATION: {v_loc}. LIGHTING: {MAP_LIGHT_ANATOMY[v_light]}. CAMERA: {MAP_CAM_ANATOMY[v_cam]}. "
-                    f"TECHNICAL: sharp focus, subsurface scattering, anatomical precision, 8k resolution."
+                    f"A {MAP_STYLE[v_style]} photo featuring {final_actors}. "
+                    f"ACTION: {naskah_visual}. "
+                    f"SETTING: {v_loc}. "
+                    f"ENVIRONMENT: {MAP_LIGHT[v_light]} with {MAP_CAM[v_cam]}. "
+                    f"TECHNICAL: Absolute object permanence, precise anatomical details, solid ground-to-feet contact, "
+                    f"no clipping, high-fidelity textures, 8k resolution, ray-traced shadows. "
+                    f"NEGATIVE: {GHOST_NEG}"
                 )
                 
-                dialog_part = f"{k1_name} says: '{diag_k1}'. {k2_name} says: '{diag_k2}'." if diag_k1 or diag_k2 else ""
-                final_vid = f"Start from image. {naskah_visual}. {dialog_part} Fluid motion, realistic biological physics, 4k."
+                # VIDEO PROMPT
+                dialog_fixed = f"Only {k1_name} speaks '{diag_k1}' while {k2_name} is silent." if diag_k1 and not diag_k2 else f"Only {k2_name} speaks '{diag_k2}' while {k1_name} listens." if diag_k2 and not diag_k1 else ""
+                
+                # VIDEO PROMPT (SULTAN PHYSICS ENGINE)
+                final_vid = (
+                    f"Start from the reference image. {naskah_visual}. {dialog_fixed} "
+                    f"STRICT TEMPORAL CONSISTENCY: Maintain the exact visual identity of {k1_name} and {k2_name} throughout the video. "
+                    f"STRICT PHYSICS: Solid ground contact, absolutely no sinking feet into the sand. "
+                    f"OBJECT PERMANENCE: All handheld props and weapons must keep their original shape and category, DO NOT morph or transform. "
+                    f"Fluid biological motion, realistic gravity, high-fidelity 4k. "
+                    f"NEGATIVE: {GHOST_NEG}"
+                )
 
+                # DISPLAY
                 res1, res2 = st.columns(2)
-                with res1:
-                    with st.container(border=True):
-                        st.markdown('<p class="small-label">📸 IMAGE PROMPT</p>', unsafe_allow_html=True)
-                        st.code(final_img, language="markdown")
-                with res2:
-                    with st.container(border=True):
-                        st.markdown('<p class="small-label">🎬 VIDEO PROMPT</p>', unsafe_allow_html=True)
-                        st.code(final_vid, language="markdown")
+                with res1: st.code(final_img, language="markdown")
+                with res2: st.code(final_vid, language="markdown")
             else:
                 st.error("Lokasi dan Naskah Visual wajib diisi, Dian!")
                 
@@ -5384,6 +5383,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
