@@ -5296,14 +5296,14 @@ def tampilkan_database_channel():
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
             # PISAHKAN LIST HP JADI 2 KELOMPOK
-            list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') <= 16]
-            list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') > 16]
+            list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') <= 14]
+            list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') > 14]
             
             # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
             # Ini biar kodenya mirip struktur awal lo yang pake loop
             kelompok_tim = [
-                {"nama": "LISA (HP 1-16)", "list": list_hp_tim1},
-                {"nama": "INGGI (HP 17-23)", "list": list_hp_tim2}
+                {"nama": "LISA (HP 1-14)", "list": list_hp_tim1},
+                {"nama": "INGGI (HP 15-23)", "list": list_hp_tim2}
             ]
 
             html_all_pages = "" 
@@ -6095,6 +6095,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
