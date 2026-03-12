@@ -4912,7 +4912,7 @@ def tampilkan_database_channel():
     # ==============================================================================
     with tab_standby:
         if not is_pro:
-            st.warning("🔒 Akses Terbatas.")
+            st.warning("🔒 Akses Terbatas!")
         else:
             # --- 1. LOGIKA HITUNG DATA (Real-time) ---
             total_st = len(df[df['STATUS'] == 'STANDBY'])
@@ -5107,7 +5107,7 @@ def tampilkan_database_channel():
     # ==============================================================================
     with tab_proses:
         if not is_pro:
-            st.warning("🔒 Akses Terbatas.")
+            st.warning("🔒 Akses Terbatas!")
         else:
             st.markdown("#### 🚀 MONITORING PROSES (MAX 2 SLOT HP)")
             # --- TAMBAHAN: ST INFO UNTUK INSTRUKSI STAFF ---
@@ -5549,7 +5549,7 @@ def tampilkan_database_channel():
     # ==============================================================================
     with tab_sold:
         if not is_ceo: 
-            st.error("🔒 Akses Khusus Owner.")
+            st.error("🔒 Akses Terbatas!")
         else:
             # --- 1. SETUP FILTER PERIODE ---
             tz = pytz.timezone('Asia/Jakarta')
@@ -5629,7 +5629,7 @@ def tampilkan_database_channel():
     # ==============================================================================
     with tab_arsip:
         if not is_ceo: 
-            st.error("🔒 Akses Khusus Owner & Admin.")
+            st.error("🔒 Akses Terbatas!")
         else:
             # --- 1. LOGIKA DASHBOARD ARSIP ---
             # df ini udah hasil load dari Supabase di awal aplikasi (load_data_channel)
@@ -6095,5 +6095,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
