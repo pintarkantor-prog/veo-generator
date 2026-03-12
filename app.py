@@ -1636,31 +1636,6 @@ def tampilkan_ai_lab():
             "Teras Masjid Tua": "On the shaded marble porch of an old village mosque, background features traditional Islamic arched doors and a simple wall clock, looking very serene.",
             "Bengkel Las Sederhana": "In a small roadside welding shop with metal scraps, iron bars, and a dark industrial background with tools hanging on a soot-covered wall."
         }
-
-        # --- 5. MASTER DIALOG NYESEK (GROUPED BY CHARACTER ROLE) ---
-        MASTER_NYESEK_DIALOG = {
-            "NENEK": [
-                "Cucu-cucuku yang baik... kalau jari kalian nggak berat, bantu nenek sebarkan keindahan masjid ini ya. Satu subscribe dari kalian itu seperti semangat baru buat napas nenek yang sudah tua ini...",
-                "Jangan sedih ya kalau video nenek sepi, engga ada yang like dan subscribe... Nenek sudah biasa. Nenek cuma titip satu, jangan biarkan masjid aslinya sepi seperti video nenek ini ya...",
-                "Nenek tahu nenek nggak secantik artis yang sering kalian tonton. Tapi masjid ini nenek buat dengan doa... apa karya orang tua seperti ini sudah tidak ada tempat lagi di hati kalian?",
-                "Tangan nenek sudah sering kram sekarang, Cu... Mungkin ini masjid terakhir yang bisa nenek selesaikan. Tolong dijaga videonya ya, biar jadi kenangan kalau nenek pernah ada...",
-                "Setiap malam nenek nungguin, ada nggak ya yang mau berteman sama nenek di YouTube? Ternyata susah ya cari perhatian anak muda kalau nggak pakai baju bagus..."
-            ],
-            "KAKEK": [
-                "Banyak yang skip video kakek karena bukan joget-joget. Kakek cuma tukang tua yang ingin bikin miniatur Masjid. Gak ada yang like pun, kakek tetap akan selesaikan kubah ini dengan cinta...",
-                "Mata kakek sudah remang-remang, Cu... kakek buru-buru selesaikan ini sebelum semuanya jadi gelap. Kakek cuma ingin tahu kalau masih ada yang peduli lewat satu klik subscribe saja...",
-                "Di rumah ini sepi sekali, Cu... cuma suara lem dan gunting ini yang menemani kakek. Makanya kakek senang kalau ada notifikasi subscribe masuk, rasanya kakek seperti punya cucu baru...",
-                "Kakek sering diketawain tetangga, katanya buat apa bikin masjid dari barang bekas, nggak bakal laku. Tapi kakek percaya, di luar sana pasti ada orang baik seperti kalian...",
-                "Kakek sudah terlalu tua untuk paham angka-angka di layar ini. Kakek cuma ingin bangga sedikit di sisa umur kakek, melihat banyak orang yang suka rumah Allah ini..."
-            ],
-            "GADIS": [
-                "Banyak yang bilang aku aneh, mainan barang bekas terus... Katanya lebih baik kerja jadi buruh pabrik. Tapi siapa lagi yang mau jaga keindahan masjid kalau bukan kita, Cu?",
-                "Malu sebenarnya upload ke YouTube begini, takut dibilang pamer. Tapi kalau nggak di-upload, siapa yang tahu kalau sampah bisa jadi megah? Kenapa video orang kaya lebih banyak yang suka ya?",
-                "Aku nggak punya modal buat beli bahan mewah, makanya aku pakai bahan seadanya ini. Aku cuma ingin buktiin kalau untuk cinta rumah Tuhan, kita nggak harus kaya. Bantu subscribe ya...",
-                "Setiap malam aku bantu kakek selesaikan ini. Sedih rasanya liat kakek semangat tapi videonya selalu sepi. Boleh bantu kasih kakek senyuman lewat satu like kalian?",
-                "Mungkin karyaku nggak sempurna, tapi aku buat ini sambil jagain kakek yang sudah sepuh. Satu subscribe kalian berarti banget buat semangat kami berdua..."
-            ]
-        }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
@@ -1731,27 +1706,6 @@ def tampilkan_ai_lab():
             c5, c6 = st.columns([2, 1])
             with c5:
                 st.markdown('<p class="small-label">DIALOG (NATURAL INDONESIAN)</p>', unsafe_allow_html=True)
-                
-                # 1. SIAPIN KANTONG (Session State)
-                if 'current_dialog' not in st.session_state:
-                    st.session_state.current_dialog = ""
-
-                # 2. FUNGSI PEMBANTU (Wajib ditaruh di sini)
-                def handle_kocok():
-                    # Ambil kategori
-                    if "Nenek" in char_key:
-                        kat = "NENEK"
-                    elif "Kakek" in char_key:
-                        kat = "KAKEK"
-                    else:
-                        kat = "GADIS"
-                    # Ambil random dan masukkan ke KEY text_area langsung
-                    new_val = random.choice(MASTER_NYESEK_DIALOG[kat])
-                    st.session_state["input_dialog_key"] = new_val
-                    st.session_state.current_dialog = new_val
-
-                # 3. TOMBOL KOCOK (Pake on_click)
-                st.button("🎲 KOCOK DIALOG NYESEK", use_container_width=True, on_click=handle_kocok)
 
                 # 4. TEXT AREA (Kuncinya di parameter 'key')
                 user_dialog = st.text_area(
@@ -1760,8 +1714,7 @@ def tampilkan_ai_lab():
                     height=150, 
                     label_visibility="collapsed",
                     key="input_dialog_key" # Ini nyambung ke handle_kocok
-                )
-                
+                )  
                 # Update state biar sinkron
                 st.session_state.current_dialog = user_dialog
 
@@ -5636,6 +5589,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
