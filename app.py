@@ -1482,16 +1482,16 @@ def tampilkan_ai_lab():
                 "base": "Pixar Transparent Skeleton with Pop-Out Eyes"
             },
             "JUPRI": {
-                "physic": "a stylized human skeleton, smooth clean white bones, wrapped in an ultra-thin super-clear transparent skin membrane, the skin is almost paper-thin and tightly clings to the bone structure, no internal volume or organs, no muscle, just a barely visible translucent layer showing the bone surface details, large 3D protruding expressive eyes popping out from the sockets, Pixar animation style, wide skeletal smile with detailed glossy teeth",
-                "base": "Ultra-Thin Skin Skeleton with Pop-Out Eyes"
+                "physic": "a stylized human skeleton, smooth clean white bones, wrapped in an ultra-thin super-clear transparent skin membrane, visible glowing blue electrical nerves glowing faintly beneath the thin skin, the skin tightly clings to the bone structure, no internal organs, large 3D protruding expressive eyes, Pixar animation style, wide skeletal smile with detailed glossy teeth",
+                "base": "Thin Skin Skeleton + Blue Nerves"
             },
             "SULE": {
                 "physic": "a stylized 10-year-old child skeleton, short and small bone structure, smooth clean white bones, large expressive 3D protruding eyes, encased in an ultra-thin super-clear transparent skin, barely visible translucent layer, Pixar animation style, soft round edges, extremely clean aesthetic, no organs, no veins",
                 "base": "Child Skeleton with Paper-Thin Glass Skin"
             },
             "SAPRI": {
-                "physic": "sturdy human male, weathered tan skin, muscular build, intense gaze, realistic facial hair",
-                "base": "Normal Human"
+                "physic": "a stylized human skeleton with clean white bones, visible internal organs like heart and lungs suspended inside the ribcage, encased in an ultra-thin super-clear transparent skin, Pixar animation style, large 3D protruding eyes, realistic organ placement, no blood, clean anatomical aesthetic, soft round edges",
+                "base": "Transparent Skeleton"
             }
         }
 
@@ -5394,6 +5394,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
