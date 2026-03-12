@@ -1338,64 +1338,105 @@ def tampilkan_ai_lab():
         MASTER_FAMILY_SOUL = {
             # ========================== KELOMPOK NENEK (Teduh & Berwibawa) ==========================
             "Nenek (The Matriarch)": (
-                "Cinematic portrait of a graceful elderly Indonesian woman. Her face exudes a warm, motherly aura. "
-                "Soft aesthetic wrinkles, healthy sawo matang skin with a gentle glow. Soulful, kind eyes. "
-                "Detailed skin texture but with soft-focus lighting to maintain a peaceful, dignified beauty. Strictly no horror vibe."
+                "An elderly Indonesian woman with deeply weathered skin. "
+                "Her face is covered in a dense network of realistic deep wrinkles, heavy crow's feet, and prominent age lines. "
+                "Visible skin pores, subtle age spots, and authentic elderly skin texture. "
+                "Her hands are thin and bony, with clearly visible veins and wrinkled knuckles, showing extreme detail. "
+                "Natural sagging skin around the neck and jawline. "
+                "Raw, unpolished cinematic skin details. No smooth filters. 100% authentic aged look."
             ),
             "Nenek Arum (The Grace)": (
-                "A serene and elegant elderly Indonesian woman. Her aged skin is clean and glows under soft golden light. "
-                "Fine, realistic wrinkles that look like a map of a happy life. Peaceful expression, calm smile. "
-                "Anatomy is detailed but refined. She looks like a beloved royal grandmother from a village."
+                "An elderly Indonesian woman with a deeply weary and melancholy expression. "
+                "Her eyes are half-lidded, tired, and cloudy, with heavy drooping eyelids and deep dark circles. "
+                "The skin around her eyes is exceptionally wrinkled with sagging folds. "
+                "A fragile and frail physique, featuring thin white hair and a deeply creased forehead. "
+                "Her facial expression is calm but profoundly 'sayu' and pensive, as if reflecting on a long life. "
+                "Raw elderly skin texture showing authentic sagging and realistic muscle loss in the face. "
+                "No youthful filters, 100% realistic tired elderly face."
             ),
             "Nenek Sumi (The Wise)": (
-                "A humble but beautiful elderly Indonesian woman. Weathered skin that looks healthy and sun-kissed. "
-                "Her eyes sparkle with wisdom. Hands are detailed with realistic textures but look soft and caring. "
-                "Atmospheric lighting that highlights her noble and hardworking spirit. Pure aesthetic."
+                "An elderly Indonesian woman with a profoundly serene and peaceful expression. "
+                "Her face is a beautiful map of deep, realistic wrinkles and fine lines, showing her great age. "
+                "Her eyes are bright, clear, and warm, looking forward with a gentle, comforting gaze. "
+                "A soft, subtle, and genuine smile is playing on her lips, conveying contentment and wisdom. "
+                "Her overall presence is one of dignity, grace, and 'syahdu' tranquility. "
+                "Authentic elderly skin texture with natural aging details, no artificial smoothing. "
+                "A peaceful, motherly, and spiritually comforted demeanor."
             ),
             "Nenek Lastri (The Devotion)": (
-                "Elderly Indonesian woman with a soft, glowing complexion. Her white hair looks like silk. "
-                "The wrinkles are subtle and graceful. warm 'God-rays' lighting. "
-                "She has a very comforting and 'adem' aura. High-fidelity skin detail with a polished cinematic finish."
+                "An active and joyful Indonesian grandmother in her early 60s. "
+                "Her face has a warm, natural elderly glow with gentle wrinkles and laugh lines around her mouth and eyes. " # Keriput wajar
+                "Her eyes are bright, sparkling with happiness, and crinkled in a wide, genuine smile. " # Mata berbinar, senyum lebar
+                "A cheerful and energetic expression, showing her zest for life and motherly warmth. " # Ekspresi ceria, enerjik
+                "She has short, stylish grey hair and a dignified but approachable presence. " # Rambut abu-abu modis
+                "Authentic 60-year-old skin texture with realistic laugh lines and age spots, no smooth filters. " # Tekstur kulit 60 tahun
+                "A healthy, positive, and spiritually comforted demeanor."
             ),
             "Gadis Desa (The Natural)": (
-                "Stunning young Indonesian woman with an authentic 'Gadis Desa' beauty. Radiant, flawless sawo matang skin. "
-                "Soft natural lighting highlighting her high cheekbones and large, expressive brown eyes. "
-                "Pure and fresh aura, long healthy black hair. Realistic skin texture but looks incredibly charming and modest."
+                "A beautiful young Indonesian woman in her early 20s of Javanese descent. "
+                "She has soft, rounded facial features and a genuinely sweet, 'adem' smile. " # Fitur lembut, senyum adem
+                "Medium-tan, warm golden skin with natural skin pores and a healthy texture. " # Kulit sawo matang golden
+                "Her eyes are dark, kind, and expressive with naturally thick dark lashes. " # Mata gelap, ekspresif
+                "Long, wavy black hair loosely tied or flowing naturally. " # Rambut hitam bergelombang
+                "Raw, unpolished cinematic skin details showing authentic pores and light, natural imperfections. No smooth filters." # Detail kulit asli
             ),
             "Gadis Rumi (The Dreamer)": (
-                "A young Indonesian woman with a poetic and elegant face. Matte skin texture with a soft pearlescent glow. "
-                "Deep, beautiful eyes with realistic reflections. Her beauty is quiet and captivating. "
-                "Highly detailed features, clean and unpolished, looking like a protagonist in a high-end cinematic movie."
+                "A stunning young Indonesian woman in her early 20s of Malay or Sumatran descent. "
+                "She has a more defined jawline, higher cheekbones, and an elegant presence. " # Rahang tegas, tulang pipi tinggi
+                "Light olive or fair skin with warm undertones and natural skin texture. " # Kulit kuning langsat/olive light
+                "Her eyes are sharp, confident, and almond-shaped with dark eyebrows. " # Mata tajam, almond
+                "Straight, sleek black hair cascading down her shoulders. " # Rambut hitam lurus, jatuh
+                "MASTERPIECE realism with high-fidelity skin details, natural pores, and authentic, unedited skin look." # Realisme tinggi
             ),
             "Gadis Melati (The Fresh)": (
-                "Young Indonesian girl with a bright, luminous face. Natural rosy tint on her cheeks and lips. "
-                "Healthy tan skin that looks smooth and supple. Energetic and pure aura. "
-                "The lighting is bright and airy, making her look like a ray of sunshine. Extremely aesthetic."
+                "A beautiful and cheerful young Indonesian woman in her early 20s. "
+                "Her face is radiating with a broad, genuine, and joyful smile that crinkles her whole face. " # Senyum lebar, ceria
+                "Light, healthy, warm yellow-undertone skin (kuning langsat) with natural rosy cheeks and a fresh, dewy texture. " # Kulit kuning langsat fresh
+                "Her eyes are bright, sparkling with happiness, and often in a playful or winking expression. " # Mata berbinar, playful
+                "Messy, voluminous dark brown or black hair tied up loosely in a ponytail or bun, with loose strands. " # Rambut kuncir, Messy
+                "Authentic young skin texture with natural pores, light freckles, and a healthy, unprocessed look. No smooth filters." # Tekstur kulit muda fresh
+                "A positive, energetic, energetic, and motherly warmth presence."
             ),
             "Gadis Anisa (The Modest)": (
-                "A young Indonesian woman with a shy, angelic beauty. Soft facial contours and almond-shaped eyes. "
-                "Smooth sawo matang skin with high-fidelity detail. Her presence is calm and soul-soothing. "
-                "Cinematic soft-lighting, emphasizing her pure and modest village girl aesthetic."
+                "A breathtakingly beautiful young Indonesian woman in her early 20s of Papuan or Melanesian descent. "
+                "She has distinct, strong facial features and a wide, confident, and joyful smile. " # Fitur kuat, senyum lebar
+                "Deep, dark caramel or rich cocoa skin with glowing, natural skin texture and pores. " # Kulit gelap/cokelat tua
+                "Her eyes are big, bright, warm, and sparkling with energetic life. " # Mata besar, berbinar
+                "Beautifully textured, voluminous, tight curly black hair flowing naturally. " # Rambut hitam keriting bervolume
+                "RAW cinematic details focusing on authentic skin pores, textures, and rich, deep skin tones. No filters." # Fokus pada tekstur kulit gelap
             ),
             "Kakek (The Wise)": (
-                "A handsome, elderly Indonesian man with a dignified and respected look. Leathery but clean skin. "
-                "Thick white eyebrows and a neat mustache. His eyes are sharp but kind. "
-                "Gagah (sturdy) posture, looking like a wise leader. Dramatic but warm lighting that emphasizes his noble aura."
+                "A very elderly Indonesian man in his late 70s with a fragile but dignified look. "
+                "His face is a landscape of deep, sagging wrinkles, heavy eye bags, and prominent age spots. "
+                "Paper-thin, weathered skin with visible pores and fine veins. " # Kulit setipis kertas
+                "Thin white hair and a sparse, long white beard that adds to his ancient wisdom look. " # Jenggot putih tipis
+                "Deeply recessed eyes that look tired but peaceful. "
+                "Authentic elderly skin texture, raw and unpolished, no smoothing filters."
             ),
             "Kakek Wiryo (The Artisan)": (
-                "A strong, charismatic elderly Indonesian man. Rugged facial features that look artistic and bold. "
-                "Tanned skin with a healthy texture. His hands look powerful and skilled. "
-                "Cinematic side-lighting (Chiaroscuro) that makes him look like a legendary master craftsman. No scary elements."
+                "A sturdy elderly Indonesian man in his 60s with a tough, hardworking physique. "
+                "He has sun-darkened, leathery skin with deep creases on his forehead and around his mouth. " # Kulit leathery (seperti kulit samak)
+                "Large, strong hands with thick knuckles, prominent veins, and rough skin texture. " # Tangan kuat khas pekerja
+                "Short, thick salt-and-pepper hair and a neat white mustache. " # Kumis putih rapi
+                "A focused, sharp, and resilient expression. "
+                "Realistic skin details showing sweat and authentic grit. Masterpiece realism."
             ),
             "Kakek Joyo (The Farmer)": (
-                "An elderly Indonesian man with a warm, friendly face and a joyful aura. "
-                "Beautifully aged skin with realistic 'laugh lines' around the eyes. "
-                "Aura of contentment and gratitude. The light is warm and golden, making his presence feel very welcoming and grounded."
+                "A warm and friendly Indonesian grandfather in his 60s with a constant gentle smile. "
+                "His eyes are bright and twinkling behind deep laugh lines (crow's feet). " # Mata berbinar
+                "Healthy, warm-toned elderly skin with natural aging marks and a kind, fatherly glow. "
+                "Full, soft white hair and a clean-shaven, approachable face. "
+                "His expression is one of pure contentment, 'syahdu', and spiritual peace. "
+                "Natural young-at-heart elderly look, 100% realistic skin textures without filters."
             ),
             "Kakek Usman (The Silent)": (
-                "Tall, boney, but very elegant elderly Indonesian man. Sharp, intellectual facial structure. "
-                "Peaceful and meditative aura. Long, slender fingers that look graceful. "
-                "Cinematic twilight lighting, giving him a mystical but very holy and calm appearance."
+                "An elderly Indonesian grandfather in his late 60s, visibly heartbroken and deeply saddened. "
+                "His face is contorted in grief, with tears streaming down his heavily wrinkled cheeks and jawline. " # Air mata mengalir, keriput bengkak
+                "His eyes are red, swollen from crying, half-closed, and glistening with glistening moisture. " # Mata merah, bengkak, glistening
+                "A trembling lip, quivering chin, and a deeply furrowed brow expressing profound sorrow and despair. " # Bibir gemetar, dagu bergetar, alis berkerut sedih
+                "Thin white hair and a disheveled white beard, adding to his fragile and neglected appearance. " # Rambut/jenggot acak-acakan, ringkih
+                "Authentic elderly skin texture with a healthy, unprocessed look, showing natural pores and age lines. No smooth filters." # Tekstur kulit muda fresh
+                "A profoundly vulnerable, heartbreaking, and raw emotional presence."
             )
         }
 
@@ -1403,100 +1444,112 @@ def tampilkan_ai_lab():
         MASTER_FAMILY_WARDROBE = {
             # --- KELOMPOK NENEK ---
             "Nenek (The Matriarch)": {
-                "Daster Batik & Bergo": "Daily long-sleeved batik daster, clean and well-ironed, paired with a fresh white bergo hijab. Neat and motherly.",
-                "Gamis Harian Polos": "Simple wrinkle-free daily gamis made of smooth rayon, paired with a matching square hijab tucked in. Very 'adem' and clean.",
-                "Setelan Tunik & Celana": "Long-sleeved cotton tunik paired with tidy loose trousers and a neat hijab. A respectable village grandmother look.",
-                "Daster Kaos & Jilbab": "Comfortable cotton daster, fresh from laundry, paired with a tidy daily instant jilbab. No wrinkles, looking honest.",
-                "Gamis Jersey & Bergo": "High-quality jersey gamis with perfect drape, paired with a fresh white instant bergo. Clean and very orderly.",
-                "Blouse Batik & Hijab": "Simple daily batik blouse, well-pressed, paired with a clean black square hijab. Dignified and neat appearance."
+                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
+                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
+                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
+                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
+                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
+                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
+                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
+                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
             },
             "Nenek Arum (The Grace)": {
-                "Daster Floral & Hijab": "Modest long-sleeved floral daster in soft pastel, paired with a clean jersey hijab. Serene and beautifully aged.",
-                "Gamis Motif & Khimar": "Daily gamis with subtle geometric motifs, paired with a wide, clean khimar hijab. Well-presented and respected elder.",
-                "Tunik Linen & Pashmina": "High-quality linen tunik with visible weave, paired with a neatly wrapped pashmina. Elegant, clean, and graceful.",
-                "Daster Rayon & Bergo": "Cool rayon daster with modern print, paired with a fresh white bergo. Looking fresh and very tidy at home.",
-                "Gamis Pastel & Hijab": "Soft-colored daily gamis, perfectly ironed, paired with a matching square hijab. Luminous and peaceful aura.",
-                "Setelan Syar'i Harian": "Complete neat daily syar'i set, wrinkle-free, soft fabric texture. Looking very 'adem' and pure."
+                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
+                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
+                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
+                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
+                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
+                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
+                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
+                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
             },
             "Nenek Sumi (The Wise)": {
-                "Daster Kaos & Jilbab": "Crisp cotton daster in earthy tones, paired with a tidy daily instant jilbab. No wrinkles, looking hardworking and orderly.",
-                "Gamis Jersey & Bergo": "Smooth jersey gamis, perfectly maintained, paired with a fresh instant bergo. Clean, fresh, and soulful.",
-                "Blouse Batik & Hijab": "Simple daily batik blouse, well-pressed, paired with a clean black hijab. A very neat and respectable daily appearance.",
-                "Daster Batik Klasik": "Traditional brown batik daster, clean lines, paired with a neat white hijab. Authentic village grandmother aesthetic.",
-                "Gamis Polos & Khimar": "Deep-colored daily gamis, paired with a clean wide khimar. Looking very orderly and well-groomed.",
-                "Tunik Katun & Hijab": "Long-sleeved cotton tunik with tiny patterns, paired with a tidy hijab. Practical but very clean and decent."
+                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
+                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
+                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
+                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
+                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
+                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
+                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
+                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
             },
             "Nenek Lastri (The Devotion)": {
-                "Gamis Putih & Bergo": "Crisp, bright white daily gamis paired with a fresh white bergo hijab. Luminous, holy, and perfectly clean.",
-                "Daster Soft & Khimar": "Soft-toned long-sleeved daster, paired with a clean wide khimar. Very peaceful, tidy, and spiritually beautiful.",
-                "Setelan Syar'i Harian": "Complete neat daily syar'i set, no wrinkles, soft fabric. Looking very 'adem' and pure for daily prayer vibe.",
-                "Gamis Abu-abu & Hijab": "Elegant grey daily gamis, perfectly ironed, paired with a matching square hijab. Calm and dignified beauty.",
-                "Daster Bordir & Bergo": "Soft cotton daster with subtle embroidery, paired with a fresh white bergo. Very clean and gracefully aged.",
-                "Tunik Putih & Hijab": "Clean white tunik paired with tidy trousers and a neat hijab. Looking fresh, honest, and very respectable."
+                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
+                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
+                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
+                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
+                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
+                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
+                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
+                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
             },
 
             # --- KELOMPOK GADIS ---
             "Gadis Desa (The Natural)": {
-                "Gamis Modern & Khimar": "Modern but loose gamis with a clean silhouette, perfectly pinned, paired with a fresh wide khimar hijab. Radiant, pure, and very modest village look.",
-                "Tunik Katun & Pashmina": "Modest long cotton tunik, paired with a neatly wrapped pashmina and loose loose trousers. Fresh, youthful, and naturally charming.",
-                "Daster Long-sleeve & Bergo": "Clean modest long-sleeve daster dress, not loose, paired with a fresh white bergo hijab. Neat, orderly, and naturellement beautiful.",
-                "Blouse Floral & Segiempat": "Fresh floral long-sleeved blouse, paired with a neat matching square hijab tucked in. High-end cinematic natural beauty, completely modest.",
-                "Setelan Syar'i Luminous": "Complete neat daily syar'i set, soft fabric texture. Looking very 'adem', pure, and orderly for a sacred atmosphere."
+                "Kaos Putih & Pashmina Abu": "Wearing a trendy white long-sleeved oversized cotton t-shirt paired with a soft grey pashmina shawl wrapped stylishly around her head.",
+                "Kaos Abu & Hijab Putih": "Wearing a fresh light grey long-sleeved t-shirt with a clean white square hijab neatly tucked and pinned under her chin.",
+                "Hoodie Putih & Hijab Abu": "Wearing a comfortable white oversized hoodie and a simple grey jersey hijab tucked inside the collar for a modern modest look.",
+                "Kaos Abu & Pashmina Hitam": "Wearing a charcoal grey long-sleeved shirt with a black pashmina loosely draped around her shoulders and head for a casual aesthetic.",
+                "Daster Putih & Bergo Abu": "Wearing a modern white cotton homedress with subtle lace details paired with a simple soft grey instant jersey hijab.",
+                "Daster Abu & Pashmina Putih": "Wearing a comfortable light grey floral patterned daster and a white pashmina loosely wrapped around her head for a fresh home look.",
+                "Kaos Panjang Putih & Rok Abu": "Wearing a plain white long-sleeved t-shirt tucked into a long grey flowy skirt with a matching grey jersey hijab.",
+                "Homedress Abu & Hijab Putih": "Wearing a stylish charcoal grey homedress with long sleeves and a clean white square hijab neatly pinned, looking fresh and happy."
             },
             "Gadis Rumi (The Dreamer)": {
-                "Gamis Linen & Segiempat": "Clean long gamis made of premium linen, perfect ironed, paired with a fresh square hijab. Artistic, pure, and luminous aesthetic.",
-                "Tunik Aesthetic & Khimar": "Aesthetic long tunik in earth tones, paired with loose trousers and a fresh clean wide khimar hijab. Quiet, meditative, and captivating beauty.",
-                "Kemeja Oversized & Bergo": "Simple but neat oversized modest shirt, paired with very loose loose pants and a clean bergo hijab. Fresh from the laundry look, pure modest.",
-                "Daster Floral & Jilbab": "Modest long floral daster, paired with a fresh instant jilbab. looking fresh, honest, and naturellement graceful.",
-                "Blouse Polos & Pashmina": "Elegant daily blouse, perfectly ironed, paired with a neatly styled pashmina hijab. Very orderly and dignified."
+                "Kaos Putih & Pashmina Abu": "Wearing a trendy white long-sleeved oversized cotton t-shirt paired with a soft grey pashmina shawl wrapped stylishly around her head.",
+                "Kaos Abu & Hijab Putih": "Wearing a fresh light grey long-sleeved t-shirt with a clean white square hijab neatly tucked and pinned under her chin.",
+                "Hoodie Putih & Hijab Abu": "Wearing a comfortable white oversized hoodie and a simple grey jersey hijab tucked inside the collar for a modern modest look.",
+                "Kaos Abu & Pashmina Hitam": "Wearing a charcoal grey long-sleeved shirt with a black pashmina loosely draped around her shoulders and head for a casual aesthetic.",
+                "Daster Putih & Bergo Abu": "Wearing a modern white cotton homedress with subtle lace details paired with a simple soft grey instant jersey hijab.",
+                "Daster Abu & Pashmina Putih": "Wearing a comfortable light grey floral patterned daster and a white pashmina loosely wrapped around her head for a fresh home look.",
+                "Kaos Panjang Putih & Rok Abu": "Wearing a plain white long-sleeved t-shirt tucked into a long grey flowy skirt with a matching grey jersey hijab.",
+                "Homedress Abu & Hijab Putih": "Wearing a stylish charcoal grey homedress with long sleeves and a clean white square hijab neatly pinned, looking fresh and happy."
             },
             "Gadis Melati (The Fresh)": {
-                "Tunik Pastel & Hijab": "Long-sleeved pastel tunik with clean lines, paired with loose white pants and matching neat hijab. Radiant, pure, and energetic.",
-                "Gamis Modern & Bergo": "Simple modern daily gamis, not loose, paired with a fresh white bergo hijab. energetic, clean, and very ordered.",
-                "Blouse Motif & Pashmina": "Fresh floral cotton blouse, well-pressed, paired with a neatly wraps pashmina. completely modest village figures.",
-                "Daster Long-dress & Khimar": "Stylish long-sleeve daster dress, paired with a clean instant wide khimar. Neat, modest, and naturellement beautiful.",
-                "Setelan Syar'i Harian": "Complete neat daily syar'i set, smooth jersey fabric. No open parts, very ordered."
+                "Kaos Putih & Pashmina Abu": "Wearing a trendy white long-sleeved oversized cotton t-shirt paired with a soft grey pashmina shawl wrapped stylishly around her head.",
+                "Kaos Abu & Hijab Putih": "Wearing a fresh light grey long-sleeved t-shirt with a clean white square hijab neatly tucked and pinned under her chin.",
+                "Hoodie Putih & Hijab Abu": "Wearing a comfortable white oversized hoodie and a simple grey jersey hijab tucked inside the collar for a modern modest look.",
+                "Kaos Abu & Pashmina Hitam": "Wearing a charcoal grey long-sleeved shirt with a black pashmina loosely draped around her shoulders and head for a casual aesthetic.",
+                "Daster Putih & Bergo Abu": "Wearing a modern white cotton homedress with subtle lace details paired with a simple soft grey instant jersey hijab.",
+                "Daster Abu & Pashmina Putih": "Wearing a comfortable light grey floral patterned daster and a white pashmina loosely wrapped around her head for a fresh home look.",
+                "Kaos Panjang Putih & Rok Abu": "Wearing a plain white long-sleeved t-shirt tucked into a long grey flowy skirt with a matching grey jersey hijab.",
+                "Homedress Abu & Hijab Putih": "Wearing a stylish charcoal grey homedress with long sleeves and a clean white square hijab neatly pinned, looking fresh and happy."
             },
             "Gadis Anisa (The Modest)": {
-                "Gamis Syar'i & Khimar": "Complete neat daily syar'i set, wide khimar hijab, not loose. Angelic, polite, and deeply humble village beauty.",
-                "Tunik Putih & Hijab": "Modest clean white tunik paired with loose black trousers and a neat black square hijab. Pure, orderly, and adem spirit.",
-                "Daster Soft & Bergo": "Soft-toned long daster, perfectly pressed, paired with a fresh white bergo. Peaceful and adem village spirit.",
-                "Blouse Floral & Jilbab": "Fresh floral cotton blouse, paired with a neatly pinned jilbab. Completely modest and ordered.",
-                "Setelan Harian Polos": "Simple elegant loose set with loose trousers and matching hijab. Very orderly."
+                "Kaos Putih & Pashmina Abu": "Wearing a trendy white long-sleeved oversized cotton t-shirt paired with a soft grey pashmina shawl wrapped stylishly around her head.",
+                "Kaos Abu & Hijab Putih": "Wearing a fresh light grey long-sleeved t-shirt with a clean white square hijab neatly tucked and pinned under her chin.",
+                "Hoodie Putih & Hijab Abu": "Wearing a comfortable white oversized hoodie and a simple grey jersey hijab tucked inside the collar for a modern modest look.",
+                "Kaos Abu & Pashmina Hitam": "Wearing a charcoal grey long-sleeved shirt with a black pashmina loosely draped around her shoulders and head for a casual aesthetic.",
+                "Daster Putih & Bergo Abu": "Wearing a modern white cotton homedress with subtle lace details paired with a simple soft grey instant jersey hijab.",
+                "Daster Abu & Pashmina Putih": "Wearing a comfortable light grey floral patterned daster and a white pashmina loosely wrapped around her head for a fresh home look.",
+                "Kaos Panjang Putih & Rok Abu": "Wearing a plain white long-sleeved t-shirt tucked into a long grey flowy skirt with a matching grey jersey hijab.",
+                "Homedress Abu & Hijab Putih": "Wearing a stylish charcoal grey homedress with long sleeves and a clean white square hijab neatly pinned, looking fresh and happy."
             },
 
             # --- KELOMPOK KAKEK ---
             "Kakek (The Wise)": {
-                "Baju Koko & Peci": "Crisp white long-sleeved koko shirt with sharp ironed lines, paired with a neat black peci and folded sarong.",
-                "Kemeja Putih & Sarung": "Simple clean white button-up shirt, well-pressed, paired with a premium plaid sarong and black peci.",
-                "Batik Lengan Panjang": "High-quality long-sleeved batik shirt with sharp traditional patterns. Dignified and respected look.",
-                "Koko Harian & Peci": "Simple daily koko shirt, clean and well-maintained, paired with a neat sarung. Respectable village teacher vibe.",
-                "Kemeja Flanel & Sarung": "Tidy buttoned-up flannel shirt, worn with a clean peci and neat sarung. Rugged but very orderly elder look.",
-                "Batik Casual & Peci": "Short-sleeved batik with clean lines, paired with a black peci. A very neat and respected village figure."
+                "Kaos Putih & Peci Hitam": "Wearing a simple plain white cotton t-shirt with a classic black velvet Peci (songkok) on his head for a humble daily look.",
+                "Baju Koko Abu & Peci": "Wearing a daily light grey Baju Koko with subtle embroidery on the chest and a neat black Peci on his head.",
+                "Kaos Abu & Sarung Putih": "Wearing a comfortable charcoal grey long-sleeved t-shirt paired with a white patterned sarong wrapped around his waist.",
+                "Kemeja Putih & Peci": "Wearing an old, well-worn short-sleeved white button-down shirt and a classic black Peci, looking dignified and fatherly."
             },
             "Kakek Wiryo (The Artisan)": {
-                "Batik Kerajinan": "Clean, bold-patterned batik shirt, sturdy and well-fitted. The look of an orderly and charismatic master craftsman.",
-                "Koko Hitam & Peci": "Neat black koko shirt with silver embroidery, paired with a black peci. Rugged, clean, and masculine.",
-                "Kemeja Flanel Tidy": "Tidy buttoned-up flannel shirt in dark tones, worn with a clean peci and neat sarung. Orderly artisan look.",
-                "Kemeja Denim & Peci": "Clean modest denim shirt, well-pressed, paired with a black peci and sarung. Strong and dignified craftsman.",
-                "Batik Cokelat & Sarung": "Traditional brown batik shirt, looking fresh and neat, paired with a tidy sarung. A respected and skillful elder.",
-                "Koko Putih & Peci": "Crisp white koko shirt, sharp ironed lines, looking very clean and ready for work or prayer."
+                "Kaos Putih & Peci Hitam": "Wearing a simple plain white cotton t-shirt with a classic black velvet Peci (songkok) on his head for a humble daily look.",
+                "Baju Koko Abu & Peci": "Wearing a daily light grey Baju Koko with subtle embroidery on the chest and a neat black Peci on his head.",
+                "Kaos Abu & Sarung Putih": "Wearing a comfortable charcoal grey long-sleeved t-shirt paired with a white patterned sarong wrapped around his waist.",
+                "Kemeja Putih & Peci": "Wearing an old, well-worn short-sleeved white button-down shirt and a classic black Peci, looking dignified and fatherly."
             },
             "Kakek Joyo (The Farmer)": {
-                "Kemeja Polo & Sarung": "Clean simple collared polo shirt that looks very tidy, paired with a perfectly wrapped sarong. Humble and respectable.",
-                "Koko Harian & Peci": "Simple daily koko shirt, well-maintained and clean, paired with a neat sarung. Aura of gratitude and neatness.",
-                "Batik Casual & Peci": "Short-sleeved batik with clean lines, paired with a black peci. A very neat version of a village farmer.",
-                "Kemeja Kotak-kotak": "Tidy plaid shirt, well-ironed, paired with a neat sarung and peci. Looking honest, clean, and hardworking.",
-                "Batik Tanah Liat": "Batik with earth-tone patterns, looking fresh and tidy, paired with a black peci. Very grounded and humble appearance.",
-                "Koko Katun & Sarung": "Soft cotton koko shirt, perfectly pressed, paired with a tidy sarung. Looking peaceful and very orderly."
+                "Kaos Putih & Peci Hitam": "Wearing a simple plain white cotton t-shirt with a classic black velvet Peci (songkok) on his head for a humble daily look.",
+                "Baju Koko Abu & Peci": "Wearing a daily light grey Baju Koko with subtle embroidery on the chest and a neat black Peci on his head.",
+                "Kaos Abu & Sarung Putih": "Wearing a comfortable charcoal grey long-sleeved t-shirt paired with a white patterned sarong wrapped around his waist.",
+                "Kemeja Putih & Peci": "Wearing an old, well-worn short-sleeved white button-down shirt and a classic black Peci, looking dignified and fatherly."
             },
             "Kakek Usman (The Silent)": {
-                "Jubah Putih & Peci": "Long white robe (Jubah) that is perfectly pressed and clean, paired with a white skullcap. Luminous and ancient wisdom.",
-                "Koko Panjang & Sarung": "Elegant long koko shirt with premium fabric texture, paired with a neat sarung. Meditative and very clean aura.",
-                "Baju Takwa & Peci": "Traditional clean white 'Baju Takwa', well-ironed, paired with a black peci. Pure, holy, and aesthetic.",
-                "Jubah Abu-abu & Peci": "Clean grey jubah with simple embroidery, paired with a white skullcap. Quiet, dignified, and very tidy.",
-                "Koko Hitam & Sarung": "Neat black koko shirt, paired with a premium sarung and peci. High-contrast cinematic look, very respectable.",
-                "Kemeja Putih & Peci": "Simple crisp white shirt, well-pressed, paired with a neat sarung. Looking very pure and orderly."
+                "Kaos Putih & Peci Hitam": "Wearing a simple plain white cotton t-shirt with a classic black velvet Peci (songkok) on his head for a humble daily look.",
+                "Baju Koko Abu & Peci": "Wearing a daily light grey Baju Koko with subtle embroidery on the chest and a neat black Peci on his head.",
+                "Kaos Abu & Sarung Putih": "Wearing a comfortable charcoal grey long-sleeved t-shirt paired with a white patterned sarong wrapped around his waist.",
+                "Kemeja Putih & Peci": "Wearing an old, well-worn short-sleeved white button-down shirt and a classic black Peci, looking dignified and fatherly."
             }
         }
 
@@ -1504,13 +1557,7 @@ def tampilkan_ai_lab():
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
                 "Golden Literary (Koran Bekas)": (
-                    "A massive physical mosque model on a table. Built entirely from hand-rolled "
-                    "recycled newspapers. The model has a clear large dome and 4 tall minarets. "
-                    "The structure is HOLLOW with INTERNAL WARM LIGHTING glowing from inside the windows. "
-                    "The textures of the black-and-white newspaper print are clearly visible on the walls. "
-                    "The mosque is a COMPLETELY SEPARATE OBJECT from the artisan. "
-                    "The artisan's hands are simply touching the base of the model. "
-                    "Sharp architectural lines, realistic paper texture, no glowing body, no fusion."
+                    "A large-scale miniature mosque where the entire structure, including the grand dome, walls, and minarets, is intricately handcrafted from dried brown leaves and organic fibers. The texture is rough and rustic with earthy tones."
                 ),
                 "Crystal Bottle (Botol Bekas)": (
                     "A GARGANTUAN TABLETOP ARCHITECTURAL MODEL. A massive mosque diorama "
@@ -6095,6 +6142,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
