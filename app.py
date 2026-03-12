@@ -1469,37 +1469,37 @@ def tampilkan_ai_lab():
             st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
             st.code(final_ai_prompt, language="text")
 
-    # ==========================================================================
+# ==========================================================================
     # TAB: ANATOMY (SULTAN AUTO-PILOT)
     # ==========================================================================
     with t_anatomi:
         st.header("🧬 Sultan Anatomy: Biological Transparency")
-        st.write("Spesialis mahluk transparan. Otomatis memecah naskah menjadi **Pra-Aksi** & **Aksi**.")
+        
+        # --- SEMUA INPUT DIBUNGKUS EXPANDER ---
+        with st.expander("🛠️ KONFIGURASI CERITA & VISUAL", expanded=True):
+            # Data Master Internal
+            MASTER_BODY_TYPE = {
+                "Jelly-Like (Bening Basah)": "clear transparent jelly-like human skin, wet and glossy texture, subsurface scattering",
+                "Frosted Membrane (Kabur)": "translucent frosted skin membrane, semi-transparent, soft-focus internal view",
+                "Clear Glass Flesh (Kristal)": "highly refractive transparent flesh, glass-like clarity, smooth surface",
+                "Deep Sea Organism (Mistik)": "bioluminescent transparent biological tissue, glowing internal fibers, organic fluid look"
+            }
 
-        # --- 1. DATA MASTER ---
-        MASTER_BODY_TYPE = {
-            "Jelly-Like (Bening Basah)": "clear transparent jelly-like human skin, wet and glossy texture, subsurface scattering",
-            "Frosted Membrane (Kabur)": "translucent frosted skin membrane, semi-transparent, soft-focus internal view",
-            "Clear Glass Flesh (Kristal)": "highly refractive transparent flesh, glass-like clarity, smooth surface",
-            "Deep Sea Organism (Mistik)": "bioluminescent transparent biological tissue, glowing internal fibers, organic fluid look"
-        }
+            MASTER_INTERNAL_DETAIL = {
+                "Full Anatomy (Lengkap)": "detailed white skeleton, red pulsating veins, and soft internal organs",
+                "Skeleton Only (Tulang)": "anatomically correct human skeleton, realistic bone texture, ivory white color",
+                "Neural & Vascular (Saraf)": "intricate glowing nervous system, blue and red vascular veins, floating internal particles",
+                "Golden Core (Sultan)": "solid gold skeleton inside a crystal-clear transparent body, luxury aesthetic"
+            }
 
-        MASTER_INTERNAL_DETAIL = {
-            "Full Anatomy (Lengkap)": "detailed white skeleton, red pulsating veins, and soft internal organs",
-            "Skeleton Only (Tulang)": "anatomically correct human skeleton, realistic bone texture, ivory white color",
-            "Neural & Vascular (Saraf)": "intricate glowing nervous system, blue and red vascular veins, floating internal particles",
-            "Golden Core (Sultan)": "solid gold skeleton inside a crystal-clear transparent body, luxury aesthetic"
-        }
+            MASTER_ATMOSPHERE = {
+                "Dark Void (Hitam Pekat)": "pitch black background, deep shadows, cinematic rim lighting",
+                "Ancient Laboratory": "dimly lit dusty laboratory, specimen jars, soft volumetric lighting",
+                "Misty Forest": "dark foggy forest at night, moonlight filtering through trees, ethereal atmosphere",
+                "Neon Cyberpunk": "dark urban alley, vibrant cyan and magenta ambient lights, high contrast"
+            }
 
-        MASTER_ATMOSPHERE = {
-            "Dark Void (Hitam Pekat)": "pitch black background, deep shadows, cinematic rim lighting",
-            "Ancient Laboratory": "dimly lit dusty laboratory, specimen jars, soft volumetric lighting",
-            "Misty Forest": "dark foggy forest at night, moonlight filtering through trees, ethereal atmosphere",
-            "Neon Cyberpunk": "dark urban alley, vibrant cyan and magenta ambient lights, high contrast"
-        }
-
-        # --- 2. UI LAYOUT ---
-        with st.expander("🎨 KONFIGURASI VISUAL MAHLUK", expanded=True):
+            # Layout Dropdown
             col_a, col_b, col_c = st.columns(3)
             with col_a:
                 pilih_kulit = st.selectbox("Lapisan Tubuh:", list(MASTER_BODY_TYPE.keys()))
@@ -1508,16 +1508,18 @@ def tampilkan_ai_lab():
             with col_c:
                 pilih_env = st.selectbox("Suasana Dunia:", list(MASTER_ATMOSPHERE.keys()))
 
-        st.subheader("✍️ Alur Cerita / Action Script")
-        naskah_input = st.text_area(
-            "Tulis Kejadiannya (Gunakan koma atau kata 'lalu' sebagai pemisah):",
-            placeholder="Contoh: Karakter sedang menatap tangannya yang bening, lalu dia perlahan mengepalkan jarinya..."
-        )
+            # Input Naskah
+            naskah_input = st.text_area(
+                "✍️ Naskah Aksi (Pisahkan Pra-Aksi & Aksi dengan koma):",
+                placeholder="Contoh: Karakter sedang menatap tangannya, lalu dia perlahan mengepalkan jarinya..."
+            )
+            
+            btn_generate = st.button("🔥 GENERATE SULTAN STORYBOARD", use_container_width=True)
 
-        # --- 3. THE SILET LOGIC ---
-        if st.button("🔥 GENERATE SULTAN STORYBOARD"):
+        # --- HASIL PROMPT DI LUAR EXPANDER (CARD 2 KOLOM) ---
+        if btn_generate:
             if naskah_input:
-                # Logic Pemisah Naskah Otomatis
+                # Logic Pemisah Naskah
                 if "," in naskah_input:
                     pra_aksi, aksi_lanjutan = naskah_input.split(",", 1)
                 elif "lalu" in naskah_input:
@@ -1526,37 +1528,44 @@ def tampilkan_ai_lab():
                     pra_aksi = naskah_input
                     aksi_lanjutan = "moving naturally according to the scene"
 
-                # Prompt Gambar (Keyframe 0)
+                # Prompt Gambar
                 final_prompt_img = (
                     f"A masterpiece cinematic 8k photo of a human with {MASTER_BODY_TYPE[pilih_kulit]}. "
-                    f"Visible inside the body: {MASTER_INTERNAL_DETAIL[pilih_isi]}. "
+                    f"Visible inside: {MASTER_INTERNAL_DETAIL[pilih_isi]}. "
                     f"SCENE: {pra_aksi.strip()}. POSE: Neutral position, ready to act. "
                     f"ENVIRONMENT: {MASTER_ATMOSPHERE[pilih_env]}. "
                     f"TECHNICAL: Fixed 15-degree side angle shot, sharp focus on internal textures, "
-                    f"hyper-realistic, anatomical correctness, five fingers, no extra limbs, Arri Alexa 65."
+                    f"subsurface scattering, hyper-realistic, anatomical correctness, no extra limbs."
                 )
 
-                # Prompt Video (Motion)
+                # Prompt Video
                 final_prompt_vid = (
                     f"Start from the reference image. The character begins {aksi_lanjutan.strip()}. "
-                    f"Fluid anatomical movement, the transparent skin reacts naturally over the bones. "
+                    f"Fluid anatomical movement, transparent skin reacts naturally over the bones. "
                     f"Maintain consistent subsurface scattering and internal structure. "
                     f"4k cinematic motion, high-fidelity biological movement, no flickering."
                 )
 
-                # --- 4. DISPLAY OUTPUT ---
                 st.divider()
+                
+                # Layout Card 2 Kolom
                 out_col1, out_col2 = st.columns(2)
                 
                 with out_col1:
-                    st.subheader("📸 1. Prompt Gambar (Flux/Grok)")
-                    st.code(final_prompt_img, language="markdown")
+                    with st.container(border=True):
+                        st.markdown("### 📸 IMAGE PROMPT")
+                        st.caption("Copy ke Flux/Grok untuk Initial Frame")
+                        st.code(final_prompt_img, language="markdown")
+                        st.button("📋 Copy Image", key="copy_img", on_click=lambda: st.toast("Image Prompt Copied!"))
                     
                 with out_col2:
-                    st.subheader("🎬 2. Prompt Video (Kling/Luma)")
-                    st.code(final_prompt_vid, language="markdown")
+                    with st.container(border=True):
+                        st.markdown("### 🎬 VIDEO PROMPT")
+                        st.caption("Copy ke Kling/Luma bersama hasil gambar")
+                        st.code(final_prompt_vid, language="markdown")
+                        st.button("📋 Copy Video", key="copy_vid", on_click=lambda: st.toast("Video Prompt Copied!"))
             else:
-                st.warning("Isi naskahnya dulu!")
+                st.warning("Naskahnya diisi dulu, Cok!")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5338,5 +5347,6 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
