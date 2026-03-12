@@ -1477,8 +1477,8 @@ def tampilkan_ai_lab():
         DB_KARAKTER_ANATOMY = {
             "Custom/None": {"physic": "", "base": "Manual Input"},
             "DIAN": {
-                # Silet Analisa: Pixar Style, Mata Menonjol Ekspresif, Bening Padat.
-                "physic": "a stylized human skeleton with smooth clean white bones, encased in a thick volumetric transparent skin, Pixar animation style, large 3D protruding expressive eyes popping out from the sockets, highly detailed glossy irises, prominent stylized eyelids, soft round edges, extremely clean aesthetic, toy-like material, no internal organs, no veins",
+                # Silet Analisa: Skeleton, Transparent Skin, 3D Protruding Eyes, Pixar Style.
+                "physic": "a stylized human skeleton with clean white bones, encased in a thick volumetric transparent skin, Pixar animation style, large 3D protruding expressive eyes popping out from the sockets, high-gloss surface reflections, soft round edges, extremely clean aesthetic",
                 "base": "Pixar Transparent Skeleton with Pop-Out Eyes"
             },
             "JUPRI": {
@@ -5394,6 +5394,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
