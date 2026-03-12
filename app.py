@@ -1504,7 +1504,7 @@ def tampilkan_ai_lab():
             st.session_state.k2_physic_ana = DB_KARAKTER_ANATOMY[st.session_state.k2_sel_ana]["physic"]
 
         # --- 3. WRAPPER UI: DASHBOARD CLEAN ---
-        with st.expander("🦴 PINTAR ANATOMY ENGINE - IDENTITY LOCK", expanded=True):
+        with st.expander("🦴 PINTAR ANATOMY ENGINE", expanded=True):
             col_k1, col_k2 = st.columns(2)
             with col_k1:
                 st.markdown('<p class="small-label">👤 KARAKTER 1 (ACTOR_1)</p>', unsafe_allow_html=True)
@@ -5394,6 +5394,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
