@@ -1482,12 +1482,12 @@ def tampilkan_ai_lab():
                 "base": "Pixar Transparent Skeleton with Pop-Out Eyes"
             },
             "JUPRI": {
-                "physic": "a highly detailed human skeleton standing upright, dry aged white bones, realistic porous texture, no skin, no organs, all bones connected and articulated, hollow ribcage, dark empty eye sockets",
-                "base": "Dry Skeleton"
+                "physic": "a stylized human skeleton, smooth clean white bones, wrapped in an ultra-thin super-clear transparent skin membrane, the skin is almost paper-thin and tightly clings to the bone structure, no internal volume or organs, no muscle, just a barely visible translucent layer showing the bone surface details, large 3D protruding expressive eyes popping out from the sockets, Pixar animation style, wide skeletal smile with detailed glossy teeth",
+                "base": "Ultra-Thin Skin Skeleton with Pop-Out Eyes"
             },
             "SULE": {
-                "physic": "a biological transparent human being, long messy black hair, jelly-like skin, visible white porous bones and pulsating red vascular veins inside the limbs and torso, anatomical precision",
-                "base": "Transparent + Long Hair + Vascular"
+                "physic": "a stylized 10-year-old child skeleton, short and small bone structure, smooth clean white bones, large expressive 3D protruding eyes, encased in an ultra-thin super-clear transparent skin, barely visible translucent layer, Pixar animation style, soft round edges, extremely clean aesthetic, no organs, no veins",
+                "base": "Child Skeleton with Paper-Thin Glass Skin"
             },
             "SAPRI": {
                 "physic": "sturdy human male, weathered tan skin, muscular build, intense gaze, realistic facial hair",
@@ -5394,6 +5394,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
