@@ -1490,8 +1490,8 @@ def tampilkan_ai_lab():
                 "base": "Child Skeleton with Paper-Thin Glass Skin"
             },
             "SAPRI": {
-                "physic": "a stylized human skeleton with clean white bones, visible internal organs like heart and lungs suspended inside the ribcage, encased in an ultra-thin super-clear transparent skin, Pixar animation style, large 3D protruding eyes, realistic organ placement, no blood, clean anatomical aesthetic, soft round edges",
-                "base": "Transparent Skeleton"
+                "physic": "a stylized adult human skeleton with clean white bones, only visible internal heart and lungs suspended inside the ribcage, the heart is glowing vibrant neon red, the lungs are glowing vibrant neon blue, glowing organ effects, encased in an ultra-thin super-clear transparent skin, Pixar animation style, large 3D protruding eyes, no blood, clean anatomical aesthetic",
+                "base": "Skeleton with Glowing Heart & Lungs"
             }
         }
 
@@ -5394,6 +5394,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
