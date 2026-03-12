@@ -1473,10 +1473,10 @@ def tampilkan_ai_lab():
     # TAB: ANATOMY (SULTAN AUTO-PILOT)
     # ==========================================================================
     with t_anatomi:
-        st.header("🧬 Sultan Anatomy: Biological Transparency")
-        
-        # --- SEMUA INPUT & TOMBOL DI DALAM EXPANDER ---
-        with st.expander("🛠️ KONFIGURASI CERITA & VISUAL", expanded=True):
+        # --- SEMUA INPUT & TOMBOL DIBUNGKUS DALAM SATU EXPANDER ---
+        with st.expander("🧬 PINTAR ANATOMY ENGINE", expanded=True):
+            
+            # Data Master (Bisa lo pindahin ke luar tab kalau mau global)
             MASTER_BODY_TYPE = {
                 "Jelly-Like (Bening Basah)": "clear transparent jelly-like human skin, wet and glossy texture, subsurface scattering",
                 "Frosted Membrane (Kabur)": "translucent frosted skin membrane, semi-transparent, soft-focus internal view",
@@ -1498,26 +1498,34 @@ def tampilkan_ai_lab():
                 "Neon Cyberpunk": "dark urban alley, vibrant cyan and magenta ambient lights, high contrast"
             }
 
+            # UI Dropdown 3 Kolom
             col_a, col_b, col_c = st.columns(3)
             with col_a:
-                pilih_kulit = st.selectbox("Lapisan Tubuh:", list(MASTER_BODY_TYPE.keys()))
+                pilih_kulit = st.selectbox("Lapisan Tubuh:", list(MASTER_BODY_TYPE.keys()), key="skin_sel")
             with col_b:
-                pilih_isi = st.selectbox("Struktur Dalam:", list(MASTER_INTERNAL_DETAIL.keys()))
+                pilih_isi = st.selectbox("Struktur Dalam:", list(MASTER_INTERNAL_DETAIL.keys()), key="inner_sel")
             with col_c:
-                pilih_env = st.selectbox("Suasana Dunia:", list(MASTER_ATMOSPHERE.keys()))
+                pilih_env = st.selectbox("Suasana Dunia:", list(MASTER_ATMOSPHERE.keys()), key="env_sel")
 
+            # Input Naskah (Action Script)
             naskah_input = st.text_area(
-                "✍️ Naskah Aksi (Pisahkan Pra-Aksi & Aksi dengan koma):",
-                placeholder="Contoh: Karakter sedang menatap tangannya, lalu dia perlahan mengepalkan jarinya..."
+                "✍️ ALUR NASKAH (Gunakan koma untuk memisahkan Pra-Aksi & Aksi):",
+                placeholder="Contoh: Karakter sedang menatap tangannya, lalu dia perlahan mengepalkan jarinya...",
+                key="naskah_anatomy"
             )
             
-            # Tombol di dalam expander
-            btn_generate = st.button("🔥 GENERATE SULTAN STORYBOARD", use_container_width=True)
+            # TOMBOL ROKET (Di dalam expander sesuai request lo)
+            btn_gen_anatomy = st.button(
+                "🚀 GENERATE ANATOMY STORYBOARD", 
+                type="primary", 
+                use_container_width=True, 
+                key="btn_generate_anatomy"
+            )
 
         # --- HASIL MUNCUL DI LUAR EXPANDER (CARD 2 KOLOM) ---
-        if btn_generate:
+        if btn_gen_anatomy:
             if naskah_input:
-                # Logic Pemisah Naskah
+                # Logic Pemisah Naskah Otomatis
                 if "," in naskah_input:
                     pra_aksi, aksi_lanjutan = naskah_input.split(",", 1)
                 elif "lalu" in naskah_input:
@@ -1526,8 +1534,8 @@ def tampilkan_ai_lab():
                     pra_aksi = naskah_input
                     aksi_lanjutan = "moving naturally according to the scene"
 
-                # Prompt Gambar (Static)
-                final_prompt_img = (
+                # Racikan Prompt Sultan
+                prompt_img = (
                     f"A masterpiece cinematic 8k photo of a human with {MASTER_BODY_TYPE[pilih_kulit]}. "
                     f"Visible inside: {MASTER_INTERNAL_DETAIL[pilih_isi]}. "
                     f"SCENE: {pra_aksi.strip()}. POSE: Neutral position, ready to act. "
@@ -1536,32 +1544,31 @@ def tampilkan_ai_lab():
                     f"subsurface scattering, hyper-realistic, anatomical correctness, no extra limbs."
                 )
 
-                # Prompt Video (Motion)
-                final_prompt_vid = (
+                prompt_vid = (
                     f"Start from the reference image. The character begins {aksi_lanjutan.strip()}. "
                     f"Fluid anatomical movement, transparent skin reacts naturally over the bones. "
                     f"Maintain consistent subsurface scattering and internal structure. "
                     f"4k cinematic motion, high-fidelity biological movement, no flickering."
                 )
 
-                st.markdown("### 🧬 HASIL ANALISIS SULTAN")
+                st.markdown("### 🧬 HASIL ANALISIS STORYBOARD")
                 
-                # Card 2 Kolom
-                out_col1, out_col2 = st.columns(2)
+                # Card 2 Kolom (Kiri: Gambar, Kanan: Video)
+                res_col1, res_col2 = st.columns(2)
                 
-                with out_col1:
+                with res_col1:
                     with st.container(border=True):
-                        st.markdown("#### 📸 IMAGE PROMPT")
-                        st.code(final_prompt_img, language="markdown")
-                        st.button("📋 Copy Image", key="copy_img_ana")
+                        st.markdown("#### 📸 IMAGE PROMPT (Pra-Aksi)")
+                        st.code(prompt_img, language="markdown")
+                        st.button("📋 Copy Image Prompt", key="cp_img_ana", use_container_width=True)
                     
-                with out_col2:
+                with res_col2:
                     with st.container(border=True):
-                        st.markdown("#### 🎬 VIDEO PROMPT")
-                        st.code(final_prompt_vid, language="markdown")
-                        st.button("📋 Copy Video", key="copy_vid_ana")
+                        st.markdown("#### 🎬 VIDEO PROMPT (Gerakan)")
+                        st.code(prompt_vid, language="markdown")
+                        st.button("📋 Copy Video Prompt", key="cp_vid_ana", use_container_width=True)
             else:
-                st.error("Naskahnya diisi dulu, Cok!")
+                st.error("Naskahnya diisi dulu, Dian! Jangan kosong gitu dong.")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5343,6 +5350,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
