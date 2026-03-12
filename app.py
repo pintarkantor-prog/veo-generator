@@ -1556,194 +1556,55 @@ def tampilkan_ai_lab():
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
-                "Full Daun Kering (LED Warm)": "Large-scale miniature mosque made of dried leaves, featuring tiny warm LED fairy lights hidden in the structure. The yard is decorated with miniature dry grass, small pebbles, and tiny wooden fences.",
-                "Full Bunga (LED RGB)": "Large-scale miniature mosque covered in colorful flowers with vibrant multi-colored LED strips glowing from the windows. The courtyard is lush with tiny artificial rose bushes and a small working water fountain.",
-                "Full Kayu (LED Amber)": "Large-scale miniature mosque made of woven bamboo with amber-colored LED lights inside, casting soft shadows. The yard features miniature bonsai-style trees and a tiny sand-pathway leading to the entrance.",
-                "Full Kristal (LED Neon)": "Large-scale miniature mosque made of glistening crystals with neon blue and purple LED backlighting. The base is decorated with small crystal pebbles and a miniature glass-like reflection pool.",
+                "Daun Kering (LED Warm)": "Large-scale miniature mosque made of dried leaves, featuring tiny warm LED fairy lights hidden in the structure. The yard is decorated with miniature dry grass, small pebbles, and tiny wooden fences.",
+                "Bunga (LED RGB)": "Large-scale miniature mosque covered in colorful flowers with vibrant multi-colored LED strips glowing from the windows. The courtyard is lush with tiny artificial rose bushes and a small working water fountain.",
+                "Kayu (LED Amber)": "Large-scale miniature mosque made of woven bamboo with amber-colored LED lights inside, casting soft shadows. The yard features miniature bonsai-style trees and a tiny sand-pathway leading to the entrance.",
+                "Daun Pisang (Traditional)": "Large-scale miniature mosque crafted from fresh and dried banana leaves, showing organic green and brown textures. Decorated with warm yellow LED lights inside. The yard features miniature banana trees and tiny bamboo fences on a mossy green base.",
+                "Buah Melon (Carved Art)": "A large-scale miniature mosque intricately carved from a whole green melon, showing beautiful textured rind patterns. Glowing with soft lime-green LED lights from within. The courtyard is decorated with small carved fruit flowers and a mint-green reflection pool.",
+                "Buah Naga (Exotic Pink)": "A stunning large-scale miniature mosque made from the vibrant pink skin and white flesh of a dragon fruit. Features bright magenta LED lighting that highlights the scale-like texture. The yard has exotic miniature succulents and pinkish sand.",
+                "Koran Bekas (Paper Craft)": "A large-scale miniature mosque built from rolled and folded recycled newspapers, showing hints of printed text and grey tones. Illuminated by colorful RGB LED strips. The yard features tiny paper-craft trees and small benches made of cardboard.",
+                "Pecahan Kaca (Mosaic)": "A breathtaking large-scale miniature mosque made of sharp, shimmering mosaic glass shards. Featuring brilliant cool-blue and white LED lights that create a sparkling crystalline effect. The yard is decorated with translucent glass pebbles and a mirror-base floor.",
+                "Botol Bekas (Recycled Plastic)": "A creative large-scale miniature mosque constructed from translucent recycled plastic bottles and caps. Glowing with vibrant multi-color RGB LED lights that shine through the plastic. The courtyard is decorated with colorful bottle-cap flowers and green plastic-grass.",
+                "Kristal (LED Neon)": "Large-scale miniature mosque made of glistening crystals with neon blue and purple LED backlighting. The base is decorated with small crystal pebbles and a miniature glass-like reflection pool.",
+                "Pasir (Sand Art)": "A large-scale miniature mosque sculpted entirely from fine golden sand, featuring smooth domes and sharp architectural edges, glowing with warm amber LED lights. The yard is a serene zen garden with tiny raked sand patterns and small desert pebbles.",
+                "Bunga Matahari (Yellow Glow)": "A vibrant large-scale miniature mosque covered in bright yellow sunflower petals, with the dome featuring the dark seeded center. Glowing with bright golden-yellow LED lights. The courtyard is decorated with tiny sunflower sprouts and a small yellow-tiled pathway.",
+                "Jerami (Rustic Straw)": "A rustic large-scale miniature mosque made of dried golden straw and hay, intricately woven into a mosque shape with warm yellow LED lights flickering inside. The yard features miniature haystacks, tiny wooden fences, and a rustic farm-like atmosphere.",
+                "Roti (Bread Craft)": "A unique large-scale miniature mosque made from various types of baked bread and golden-brown crusts, glowing with soft warm orange LED lights from the windows. The courtyard is decorated with tiny bread-crumb paths and miniature flour-dusted trees.",
+                "Buah Jeruk (Citrus Fresh)": "A fresh large-scale miniature mosque crafted from bright orange citrus peels and dried orange slices, glowing with vibrant orange and lime-green LED lights. The yard features tiny citrus-leaf trees and small orange-colored pebbles.",
+                "Serut Kayu (Wood Shavings)": "A highly textured large-scale miniature mosque made of curly light-colored wood shavings and sawdust, illuminated by soft amber LED lights. The courtyard is decorated with tiny wood-log benches, miniature pine trees, and a sawdust-covered floor.",
+                "Cangkang Telur (Mosaic Shell)": "A delicate large-scale miniature mosque made from thousands of crushed white and brown eggshell fragments, glowing with soft white LED lights. The yard features tiny white pebble paths and miniature potted plants in eggshell containers.",
+                "Bunga & Daun (Floral Garden)": "A large-scale miniature mosque intricately covered in a mix of colorful blooming flowers and fresh green leaves, glowing with vibrant multi-color RGB LED lights. The yard features a tiny floral archway, miniature grass, and a small pebble path.",
+                "Kayu Jati & Daun (Forest Rustic)": "A majestic large-scale miniature mosque built from dark polished teak wood accented with fresh green leaf patterns on the dome, illuminated by warm amber LED lights. The courtyard is decorated with miniature teak logs, mossy stones, and tiny forest ferns.",
+                "Bambu & Janur (Traditional Art)": "A beautiful large-scale miniature mosque made of yellow bamboo sticks and woven young coconut leaves (janur), glowing with soft yellow LED lights. The yard is decorated with tiny 'penjor' ornaments and a small bamboo fence.",
+                "Batu Kali & Lumut (Nature Zen)": "A heavy-textured large-scale miniature mosque made of small river stones and patches of green moss, featuring cool white LED lights glowing from the windows. The yard has a tiny real-water stream and miniature pine trees.",
+                "Kulit Jagung & Biji-bijian (Harvest)": "A creative large-scale miniature mosque crafted from dried corn husks and various seeds like beans and corn, glowing with warm orange LED lights. The yard features miniature harvest baskets and tiny scarecrows on a grain-covered base.",
+                "Perca Kain & Benang (Textile Craft)": "A colorful large-scale miniature mosque made from batik fabric scraps and colorful yarn embroidery, glowing with soft RGB LED lights from within. The courtyard is decorated with tiny fabric flowers and miniature cushions on a felt-grass floor.",
+                "Pelepah Pisang & Lidi (Village Vibes)": "A rustic large-scale miniature mosque made of dried banana midribs and coconut leaf sticks (lidi), glowing with warm amber LED lights. The yard features miniature traditional huts and tiny clay pots on a dry-earth base.",
+                "Donat (Glazed & Sprinkle)": "A delicious large-scale miniature mosque made of stacked glazed donuts with colorful sprinkles and icing sugar, glowing with warm pink LED lights. The courtyard is decorated with miniature donut-hole bushes and a small sugar-powder pathway.",
+                "Permen Warna-Warni (Hard Candy)": "A bright large-scale miniature mosque built from thousands of colorful hard candies and lollipops, featuring a glossy crystalline texture that reflects multi-color RGB LED lights. The yard has candy-cane fences and a rainbow-sprinkle floor.",
+                "Permen Yupi (Gummy Texture)": "A unique large-scale miniature mosque crafted from various gummy candies and translucent Yupi bears, glowing intensely with vibrant RGB LED lights shining through the gummy material. The yard features gummy-worm trees and a soft marshmallow base.",
+                "Jelly & Puding (Translucent)": "A breathtaking large-scale miniature mosque made of jiggly, translucent colorful jelly and pudding blocks, with bright neon LED lights glowing beautifully through the wobbly material. The courtyard is decorated with small jelly-bean pebbles and a syrup reflection pool.",
+                "Cokelat & Biskuit (Choco-Art)": "A majestic large-scale miniature mosque made of dark and milk chocolate bars with biscuit-tile roofs, glowing with warm golden LED lights. The courtyard features chocolate-wafer benches and miniature cocoa-powder mountains.",
+                "Marshmallow (Soft Cloud)": "A soft and fluffy large-scale miniature mosque built from white and pastel marshmallows, glowing with soft ethereal RGB LED lights. The yard is decorated with cotton-candy trees and a white sugar-sand floor.",
+                "Macaroon (Elegant Pastel)": "A sophisticated large-scale miniature mosque made of stacked colorful French macaroons, featuring soft pastel tones and warm white LED lighting. The courtyard is decorated with miniature cream-filled flowers and a pastel-tiled pathway.",
+                "Biji Kopi (Dark Aroma)": "A sophisticated large-scale miniature mosque built entirely from dark roasted coffee beans, featuring a rich brown texture and warm orange LED lighting. The courtyard is decorated with miniature sacks of coffee and dark brown gravel paths."
             },
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - MEGA SCALE EDITION) ---
             "🌍 Diorama Masjid": {
-                "Mega Diorama: Al-Aqsa Complex": (
-                    "A SUPREME ARCHITECTURAL WORKSHOP RECONSTRUCTION of the entire Al-Aqsa complex. "
-                    "The Dome of the Rock (Qubbat al-Sakhrah) is the central masterpiece with a "
-                    "realistic matte-gold metallic finish. The mosque structure is HOLLOW with "
-                    "INTERNAL WARM LIGHTING glowing ONLY through the arched windows and arched gates. "
-                    "The surrounding courtyard is made of textured ancient stone cardstock. "
-                    "NO fake glows—only the realistic internal radiance of a high-end model. "
-                    "The scale is immense, filling a 2-meter wooden workbench. The character is "
-                    "hunched over, adjusting a tiny gate with tweezers. Real craft tools and "
-                    "sandpaper are visible on the table. Authentic, grounded, and holy."
-                ),
-                "Mega Diorama: Masjidil Haram": (
-                    "A SUPREME PHYSICAL RECONSTRUCTION of the entire Holy Mosque. The scale is immense, "
-                    "stretching across the entire workbench. The Kaaba is the focal point, wrapped in "
-                    "authentic black textured silk with gold calligraphy. It sits at the center of a "
-                    "VAST, OPEN WHITE MARBLE MATAF (courtyard) made of polished matte acrylic. "
-                    "The structure is HOLLOW, with INTERNAL WHITE LEDs glowing from the multi-story "
-                    "galleries and the tips of the 7 towering white minarets. Thousands of microscopic "
-                    "white dots (pilgrims) are visible on the Mataf. NO magical mist—only realistic "
-                    "overhead workshop light and internal mosque lighting. Absolute architectural accuracy."
-                ),
-                "Mega Diorama: Nabawi Cityscape": (
-                    "A SPRAWLING URBAN CRAFT DIORAMA of the Prophet's Mosque in Medina. Features hundreds "
-                    "of tiny physical green umbrellas and the iconic Green Dome with a realistic matte "
-                    "paint finish. The structure is HOLLOW, with INTERNAL WARM AMBER LIGHTING "
-                    "shining through the thousands of microscopic window cutouts. The light filters "
-                    "naturally onto the white marble floors of the model. NO neon or fake sparkles. "
-                    "The complex looks TOWERING and MASSIVE next to the artist's hands. Small piles of "
-                    "scrapped wood and glue bottles are visible on the workbench, emphasizing the "
-                    "handmade masterpiece vibe. Honest, majestic, and grounded."
-                ),
-                "Mega Diorama: Blue Mosque Plaza": (
-                    "A SUPREME PHYSICAL MODEL of the Blue Mosque (Sultan Ahmed). Features massive "
-                    "cascading domes and 6 towering minarets built from textured plaster and wood. "
-                    "The structure is HOLLOW, with INTERNAL WARM WHITE LIGHTING glowing ONLY through "
-                    "the hundreds of tiny arched windows. The surrounding plaza features microscopic "
-                    "hand-painted trees and realistic fountain models on a stone-textured courtyard. "
-                    "Natural indoor workshop lighting from a nearby window casts long, realistic "
-                    "shadows on the workbench. NO fake glows—only the honest internal radiance of "
-                    "a high-end architectural model. Grand, sharp, and grounded."
-                ),
-                "Mega Diorama: Sheikh Zayed Grandeur": (
-                    "A COLOSSAL WHITE MARBLE RECONSTRUCTION on a massive workshop table. Features 82 "
-                    "physical white domes and REFLECTIVE RESIN POOLS that mirror the mosque's "
-                    "architecture like real water. The structure is HOLLOW, with INTERNAL SOFT BLUE "
-                    "AND WHITE LEDS glowing from the base of the pillars and inside the domes, "
-                    "matching the actual mosque's night lighting. NO magical mist—just realistic "
-                    "room light reflecting off the polished white surfaces. Scraps of white material "
-                    "and precision tools are visible on the table's edge. An aura of supreme wealth, "
-                    "handcrafted holiness, and architectural perfection."
-                ),
-                "Mega Diorama: Hassan II Coastal": (
-                    "A MASSIVE PHYSICAL DIORAMA of the Hassan II Mosque. The towering 210-meter "
-                    "scale minaret dominates the vertical frame, built from textured stone-look material. "
-                    "The mosque sits on a VAST ARCHITECTURAL PLATFORM over a realistic CLEAR RESIN OCEAN "
-                    "with sculpted white-capped waves. The structure is HOLLOW, with INTERNAL WARM "
-                    "LIGHTS glowing through the microscopic Moroccan zellij pattern cutouts on the walls. "
-                    "A GREEN LASER LIGHT (physical model part) shines from the top of the minaret "
-                    "towards the Qibla, grounded in reality. Standard indoor lighting highlights the "
-                    "physical depth and shadows of the structure on the workbench. Breathtaking."
-                ),
-                "The Grand Mataf: Kaaba Center": (
-                    "A COLOSSAL 3D WORKBENCH DIORAMA of the Mataf. The Kaaba at the center is a "
-                    "physical cube wrapped in authentic black textured silk with 3D embossed golden "
-                    "calligraphy. The surrounding Mataf floor is a VAST, OPEN CIRCULAR COURTYARD "
-                    "made of polished white matte acrylic. The structure is HOLLOW, with "
-                    "INTERNAL WARM WHITE LIGHTING glowing ONLY through the multi-story arched "
-                    "galleries at the edges. NO pillars near the Kaaba—the Mataf area is vast and open. "
-                    "Thousands of microscopic white dots (pilgrims) are visible. Standard indoor "
-                    "workshop lighting casts realistic shadows onto the table. The character's hands "
-                    "are visible at the edge, adjusting a tiny gate. Breathtaking physical scale."
-                ),
-                "The Clock Tower: Bird's Eye": (
-                    "A STUNNING ARCHITECTURAL MODEL of the Makkah complex from a top-down workbench view. "
-                    "The Abraj Al-Bait towers are tall physical models made of resin and plastic. "
-                    "The massive GREEN CLOCK FACE is ILLUMINATED FROM WITHIN by soft green LEDs, "
-                    "matching the actual tower's night look, but with a realistic matte finish. "
-                    "The mosque complex below sprawls across the entire wooden table. "
-                    "NO fake neon glows—only the honest internal radiance of the model and "
-                    "standard ambient workshop light. Captured with a macro-lens, showing the "
-                    "real depth and physical layers of the diorama. Grounded in a workshop environment."
-                ),
-                "Mina: The City of Tents": (
-                    "A UNIQUE MEGA DIORAMA of the Valley of Mina. Features tens of thousands of "
-                    "microscopic white tents made of folded paper, stretching across a 2-meter long "
-                    "workbench. The structure is HOLLOW, with INTERNAL WARM LIGHTING glowing softly "
-                    "from under the highway bridges and between the tent rows. NO glowing neon— "
-                    "only natural ambient light highlighting the repetitive, physical textures of the "
-                    "folded paper. Real tools like a precision cutter and glue bottle are visible "
-                    "on the table, emphasizing the handmade work-in-progress vibe. "
-                    "Extremely detailed, sprawling, and architecturally accurate."
-                ),
-                "Jabal Nur & Hira: Moonlight Path": (
-                    "A DRAMATIC 3D PHYSICAL DIORAMA of Jabal Nur. The mountain is sculpted from rugged, "
-                    "hand-painted grey plaster and rock-like materials. The structure is HOLLOW, with "
-                    "INTERNAL AMBER LIGHTS acting as tiny lanterns along the winding mountain path. "
-                    "At the base, a sprawling city reconstruction made of tiny plastic blocks sits "
-                    "on the workshop table. NO fake AI glows—only the realistic internal radiance "
-                    "shining through the carved rock crevices. The contrast is created by realistic "
-                    "shadows from a single desk lamp. The scale is immense, filling the frame. "
-                    "Hyper-realistic textures of rock vs. smooth city models. Majestic and authentic."
-                ),
-                "Safa & Marwa: The Marble Gallery": (
-                    "A LONG-SCALE PHYSICAL DIORAMA of the Mas'a corridor stretching across the workbench. "
-                    "Features thousands of physical white marble arches made of textured cardstock. "
-                    "The corridor is HOLLOW and ILLUMINATED FROM WITHIN by soft warm white LEDs "
-                    "hidden behind the arches, highlighting the deep architectural perspective. "
-                    "NO fake glowing signals—only realistic internal lighting and shadows. "
-                    "The mountains at each end (Safa and Marwa) are sculpted from hand-painted plaster "
-                    "with visible stone grain. Crafting tools like a ruler and glue are visible nearby, "
-                    "emphasizing the handmade work-in-progress vibe. Massive in scale."
-                ),
-                "The Gate of King Abdulaziz": (
-                    "A FOCUS DIORAMA on the massive main gate. The towering twin minarets are tall physical "
-                    "models built from wood and resin, dominating the vertical frame. The gate structure "
-                    "is HOLLOW, with INTERNAL WARM LIGHTS glowing from the arched entrance and the "
-                    "minaret balconies. NO fake LED glows—only the real physical depth of the inner "
-                    "courtyards lit from within. The character's hand is actively working on the arched "
-                    "entrance with a small brush, looking tiny compared to the towering spires. "
-                    "Breathtaking handmade scale and architectural precision."
-                ),
-                "Mount Arafat: The Sea of Mercy": (
-                    "A VAST LANDSCAPE ARCHITECTURAL DIORAMA of Jabal al-Rahmah. The mountain is a "
-                    "physical sculpture of rugged grey plaster with visible rock textures. "
-                    "Covered in thousands of tiny, hand-painted white dots representing pilgrims. "
-                    "The structure is HOLLOW, with INTERNAL AMBER LIGHTS glowing softly through "
-                    "microscopic window cutouts on the mountain-top monument. NO fake glowing figures. "
-                    "The surrounding plains are textured sand and gravel on the workshop table. "
-                    "Lit by a single desk lamp, creating realistic long shadows and a deep sense "
-                    "of physical scale. Authentic work-in-progress atmosphere."
-                ),
-                "The Expansion Area: Modern Marvel": (
-                    "A MEGA PHYSICAL DIORAMA of the King Abdullah expansion. Features a sprawling "
-                    "complex of domes and marble facades made of polished white acrylic. "
-                    "The structure is HOLLOW, with INTERNAL WHITE LEDs glowing through the "
-                    "thousands of microscopic architectural window patterns etched into the walls. "
-                    "The lighting is honest and bright, reflecting off the smooth matte surfaces "
-                    "of the model. NO neon or fake sparkles—only the realistic internal radiance "
-                    "of a high-end architectural model in a professional studio. The scale is "
-                    "immense, filling the entire workbench. Pure, clean, and grand."
-                ),
-                "Mecca Old City: Historical Vibes": (
-                    "A NOSTALGIC MEGA DIORAMA of historical Mecca. Features thousands of tiny "
-                    "physical stone houses with wooden window frames (roshan) and narrow alleys. "
-                    "The houses are HOLLOW, with INTERNAL WARM AMBER LIGHTS glowing from within "
-                    "the tiny windows, creating a soulful, ancient city atmosphere. NO fake glowing "
-                    "jewels—only the honest radiance of a physical model. The Holy Mosque is "
-                    "the detailed physical centerpiece. Standard workshop environment with natural "
-                    "shadows and real textures. The character is carefully placing a tiny house "
-                    "into the urban grid, appearing as a small creator next to the massive city."
-                ),
-                "Diorama Al-Aqsa: Complete Complex": (
-                    "A COLOSSAL PHYSICAL ARCHITECTURAL DIORAMA of the entire Al-Aqsa compound. "
-                    "The Dome of the Rock is the central focal point with a realistic matte gold-leaf "
-                    "finish. The structure is HOLLOW, with INTERNAL WARM LIGHTS glowing ONLY through "
-                    "the arched windows and ancient gates. The compound sprawling across a 2-meter "
-                    "wooden table, detailed with tiny physical olive trees and textured stone pathways. "
-                    "Standard indoor workshop lighting highlights the physical depth. NO fake glowing "
-                    "effects—only the honest internal radiance of the model. The character's hands "
-                    "are seen adjusting a microscopic gate with tweezers. Pure handmade aesthetic."
-                ),
-                "Diorama Blue Mosque: Istanbul Night": (
-                    "A GRAND SCALE PHYSICAL MODEL of the Blue Mosque on a workshop table. Features 6 "
-                    "towering minarets and cascading domes made of textured grey plaster and wood. "
-                    "The structure is HOLLOW, with INTERNAL WARM WHITE LEDS glowing from within the "
-                    "hundreds of tiny windows. The surrounding Bosporus strait is made of dark, "
-                    "glossy blue resin that reflects the natural overhead room light. NO fake neon— "
-                    "only the realistic internal lighting and surface reflections. The scale is "
-                    "immense, filling the entire wide frame at an eye-level view to show the "
-                    "architectural depth of the handmade city reconstruction. Grounded and sharp."
-                ),
-                "Diorama Hassan II: The Ocean Giant": (
-                    "A MASSIVE PHYSICAL DIORAMA of the Hassan II mosque by the sea. The towering minaret "
-                    "is a tall vertical stone-look structure dominating the frame. The mosque "
-                    "foundation features high-definition etched Moroccan zellij tilework. The structure "
-                    "is HOLLOW with INTERNAL WARM LIGHTS glowing through the wall cutouts. It sits "
-                    "over a VAST CLEAR RESIN OCEAN with realistic sculpted white-capped waves. "
-                    "Lit by a single desk lamp, creating natural shadows on the workbench. The "
-                    "artisan's hand is visible, meticulously polishing the resin water, looking "
-                    "tiny next to the massive monument. Breathtakingly grand and authentic."
-                )
+                "Lembah Hijau & Sungai (LED RGB)": "A grand miniature mosque in a lush valley with rolling hills and a flowing crystal-clear resin river. The yard features glowing RGB LED strips along the tiny stone bridges, miniature flower gardens, and small pine trees reflecting in the water.",
+                "Tepi Pantai & Dermaga (Neon Blue)": "A beautiful miniature mosque on a white sandy beach with realistic turquoise resin waves. The courtyard is decorated with tiny glowing palm trees, a wooden pier with neon blue LED lanterns, and small sea-shell decorations.",
+                "Puncak Gunung Berawan (Ethereal)": "A majestic miniature mosque perched on a rocky peak with soft cotton clouds. Featuring a cool blue ethereal LED glow from beneath the structure, with miniature pine trees and tiny mountain climbers (pilgrims) figurines.",
+                "Padang Pasir & Oase (Amber Glow)": "A stunning mosque in a golden desert with sand dunes. The oasis features a real-looking pond with warm amber LED lighting, tiny palm trees, and a miniature camel caravan resting in a highly detailed courtyard.",
+                "Kota Madinah Style (Luxury White)": "An ultra-detailed Madinah diorama with miniature white buildings and iconic umbrella canopies. The marble floor is brightly lit with thousands of cold-white LED pixels and tiny green glowing minaret tips, creating a holy atmosphere.",
+                "Hutan Pinus Salju (Warm Glow)": "A serene mosque in a snowy forest with white powder snow. The yard is decorated with tiny frosted pine trees and warm-white LED fairy lights, featuring a cozy campfire miniature and small wooden cabins around the mosque.",
+                "Terapung di Danau (RGB Reflection)": "A unique mosque on a wooden platform in a calm lake. The yard is filled with glowing LED lotus flowers and lily pads. The water surface is a dark mirror reflecting the vibrant RGB lights of the mosque architecture.",
+                "Masjidil Haram (Ka'bah & Mewah)": "An ultra-detailed miniature of Masjidil Haram. The Ka'bah is center with real black cloth, covered in sparkling white crystal tiles and warm gold LED calligraphy. The vast marble courtyard (Mataf) is brightly illuminated with thousands of cold-white LED lights and tiny miniature pilgrims walking around the complex. The minarets have glowing green tips.",
+                "Masjid Nabawi (Payung & Green Dome)": "A grand miniature of Masjid Nabawi with its famous Green Dome brightly lit. The iconic courtyard umbrellas are open, with warm white LED strips tracing their edges. The complex is decorated with miniature palm trees and hundreds of tiny LED street lamps along the marble paths. The overall atmosphere glows with spiritual warmth.",
+                "Masjid Al-Aqsa (Dome of the Rock)": "A stunning detailed miniature of the Dome of the Rock (Qubbat as-Sakhra) with its magnificent gold dome shimmering under warm-white LEDs. The complex is surrounded by ancient miniature olive trees and tiny stone pathways on a rocky base, featuring subtle amber LED accent lights.",
+                "Diorama Mewah (Kubah Emas & Air Terjun)": "A large-scale luxury mosque diorama. The main mosque has a sparkling gold dome and white marble walls with RGB LED lights from the windows. The courtyard features a multi-tiered working fountain with dynamic RGB lighting and miniature white horse-drawn carriages on a paved stone floor. Lush tropical plants decorate the edges.",
+                "Diorama Kristal (Refleksi Air & Neon)": "A breathtaking diorama featuring a full crystal mosque that glistens with neon blue and purple LED backlighting. It sits on a large circular mirror-like reflection pool. The garden has miniature crystal trees and tiny fiber-optic lights that sparkle like fireflies.",
+                "Diorama Timur Tengah (Sunset & Oasis)": "A sprawling desert diorama with a majestic mud-brick style mosque (warm amber LED lights). The courtyard has a realistic water oasis with tiny palm trees and miniature camel caravans resting nearby. The entire scene is bathed in a warm sunset orange glow with small RGB fairy lights.",
+                "Diorama Modern (Geometric & RGB Strips)": "A sleek modern minimalist mosque diorama with clean geometric white architecture and a silver dome. Dynamic RGB LED strips trace the edges of the structure and the paths. The yard features modern minimalist gardens, abstract sculptures, and a large digital screen (miniature) showing dynamic lighting."
             }
         }
 
@@ -5879,6 +5740,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
