@@ -1470,57 +1470,72 @@ def tampilkan_ai_lab():
             st.code(final_ai_prompt, language="text")
 
     # ==========================================================================
-    # TAB: ANATOMY (SULTAN IDENTITY LOCK - FULL EXPANDER EDITION)
+    # TAB: ANATOMY (SULTAN PRODUCTION - SMART IDENTITY LOCK FULL)
     # ==========================================================================
     with t_anatomi:
-        # SEMUA INPUT DIBUNGKUS DALAM SATU EXPANDER UTAMA
+        # --- 1. DATABASE KARAKTER (Master Identity) ---
+        DB_KARAKTER = {
+            "Custom/None": {"physic": "", "base": ""},
+            "DIAN": {
+                "physic": "a pure transparent biological being, jelly-like skin membrane, no internal organs, empty hollow translucent body, only glowing ethereal nerves visible, heavy subsurface scattering",
+                "base": "Pure Transparent"
+            },
+            "JUPRI": {
+                "physic": "a biological transparent human being, jelly-like skin, visible white porous bones and pulsating red vascular veins inside the limbs and torso",
+                "base": "Skeleton Anatomy"
+            },
+            "SAPRI": {
+                "physic": "sturdy human male, weathered tan skin, muscular build, intense gaze, realistic facial hair",
+                "base": "Normal Human"
+            }
+        }
+
+        # --- 2. WRAPPER: SEMUA INPUT DI DALAM SATU EXPANDER ---
         with st.expander("🦴 PINTAR ANATOMY ENGINE - IDENTITY LOCK", expanded=True):
             
-            # --- ROW 1: IDENTITY LOCK (DETAIL KARAKTER) ---
+            # --- ROW 1: IDENTITY LOCK (DETAIL FISIK) ---
             col_k1, col_k2 = st.columns(2)
             
             with col_k1:
-                st.markdown('<p class="small-label">👤 SUBJEK UTAMA (ACTOR_1)</p>', unsafe_allow_html=True)
-                k1_base = st.selectbox("Base Anatomy:", [
-                    "Hyper-Realistic Transparent", 
-                    "Frosted Glass Anatomy", 
-                    "Crystal Clear Soul"
-                ], key="k1_base_ana", label_visibility="collapsed")
+                st.markdown('<p class="small-label">👤 KARAKTER 1 (ACTOR_1)</p>', unsafe_allow_html=True)
+                k1_name_sel = st.selectbox("Pilih Karakter 1:", list(DB_KARAKTER.keys()), key="k1_sel_ana", label_visibility="collapsed")
                 
-                k1_name = st.text_input("Nama Karakter 1:", placeholder="Nama (Misal: Udin)...", key="k1_name_ana", label_visibility="collapsed")
-                
-                st.markdown('<p class="small-label">DETAIL FISIK & PAKAIAN K1</p>', unsafe_allow_html=True)
-                k1_physic = st.text_area("Fisik K1:", placeholder="Detail anatomi, tulang, organ...", key="k1_physic_ana", height=80, label_visibility="collapsed")
-                k1_wear = st.text_input("Pakaian K1:", placeholder="Outfit yang dipakai...", key="k1_wear_ana", label_visibility="collapsed")
+                # Auto-fill Deskripsi dari DB
+                k1_physic_val = DB_KARAKTER[k1_name_sel]["physic"]
+                k1_physic = st.text_area("Fisik K1:", value=k1_physic_val, key="k1_physic_ana", height=100, label_visibility="collapsed")
+                k1_wear = st.text_input("Pakaian K1:", placeholder="Outfit Karakter 1...", key="k1_wear_ana", label_visibility="collapsed")
 
             with col_k2:
-                st.markdown('<p class="small-label">👤 KARAKTER LAWAN (ACTOR_2)</p>', unsafe_allow_html=True)
-                k2_name = st.text_input("Nama Karakter 2:", placeholder="Nama (Misal: Tung)...", key="k2_name_ana", label_visibility="collapsed")
+                st.markdown('<p class="small-label">👤 KARAKTER 2 (ACTOR_2)</p>', unsafe_allow_html=True)
+                k2_name_sel = st.selectbox("Pilih Karakter 2:", list(DB_KARAKTER.keys()), key="k2_sel_ana", label_visibility="collapsed")
                 
-                st.markdown('<p class="small-label">DETAIL FISIK & PAKAIAN K2</p>', unsafe_allow_html=True)
-                k2_physic = st.text_area("Fisik K2:", placeholder="Detail wajah, postur, material...", key="k2_physic_ana", height=80, label_visibility="collapsed")
-                k2_wear = st.text_input("Pakaian K2:", placeholder="Outfit lawan...", key="k2_wear_ana", label_visibility="collapsed")
+                # Auto-fill Deskripsi dari DB
+                k2_physic_val = DB_KARAKTER[k2_name_sel]["physic"]
+                k2_physic = st.text_area("Fisik K2:", value=k2_physic_val, key="k2_physic_ana", height=100, label_visibility="collapsed")
+                k2_wear = st.text_input("Pakaian K2:", placeholder="Outfit Karakter 2...", key="k2_wear_ana", label_visibility="collapsed")
 
             st.divider()
 
-            # --- ROW 2: SCENE & STYLE CONTROL ---
-            st.markdown('<p class="small-label">📍 LOKASI & ATMOSFER CERITA</p>', unsafe_allow_html=True)
-            v_loc = st.text_input("Lokasi:", placeholder="Contoh: Pendopo Majapahit malam hari...", key="v_loc_ana", label_visibility="collapsed")
-            
+            # --- ROW 2: NASKAH VISUAL & AKSI ---
+            st.markdown('<p class="small-label">🎬 NASKAH VISUAL & AKSI (PERFORMANCE)</p>', unsafe_allow_html=True)
+            naskah_visual = st.text_area("Tulis aksi di sini...", placeholder="Contoh: DIAN sedang bermeditasi di atas batu saat JUPRI datang mendekat...", key="visual_script_ana", height=150, label_visibility="collapsed")
+
+            # --- ROW 3: STYLE, LIGHTING, CAMERA ---
             col_s1, col_s2, col_s3 = st.columns(3)
             with col_s1:
                 st.markdown('<p class="small-label">✨ VISUAL STYLE</p>', unsafe_allow_html=True)
                 v_style = st.selectbox("Style:", ["Sangat Nyata", "Cinematic", "Anime"], key="v_style_ana", label_visibility="collapsed")
             with col_s2:
-                st.markdown('<p class="small-label">💡 LIGHTING</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">💡 LIGHTING PHYSICS</p>', unsafe_allow_html=True)
                 v_light = st.selectbox("Lighting:", ["Senja Cerah (Golden)", "Misty Night", "Studio Light"], key="v_light_ana", label_visibility="collapsed")
             with col_s3:
                 st.markdown('<p class="small-label">🎥 CAMERA VIEW</p>', unsafe_allow_html=True)
                 v_cam = st.selectbox("Arah Kamera:", ["Sejajar Mata", "Low Angle", "High Angle"], key="v_cam_ana", label_visibility="collapsed")
 
-            st.markdown('<p class="small-label">🎬 ACTING & PERFORMANCE (NASKAH VISUAL)</p>', unsafe_allow_html=True)
-            naskah_visual = st.text_area("Deskripsi aksi tanpa dialog...", placeholder="Tulis kejadian/gerakan karakter di sini...", key="visual_script_ana", height=100, label_visibility="collapsed")
+            st.markdown('<p class="small-label">📍 LOKASI SETTING</p>', unsafe_allow_html=True)
+            v_loc = st.text_input("Lokasi:", placeholder="Contoh: Hutan bambu kuno, tengah malam...", key="v_loc_ana", label_visibility="collapsed")
 
+            # --- ROW 4: DIALOG SYSTEM (FOOTER) ---
             st.markdown('<p class="small-label">🗣️ DIALOG SYSTEM</p>', unsafe_allow_html=True)
             col_d1, col_d2 = st.columns(2)
             with col_d1:
@@ -1528,74 +1543,71 @@ def tampilkan_ai_lab():
             with col_d2:
                 diag_k2 = st.text_input("Dialog K2:", placeholder="Ucapan Karakter 2...", key="diag_k2_ana", label_visibility="collapsed")
 
-            # TOMBOL GENERATE (DI DALAM EXPANDER)
-            btn_gen_sultan = st.button(
-                "🚀 GENERATE VIDEO PROMPT", 
-                type="primary", 
-                use_container_width=True, 
-                key="btn_generate_video_sultan"
-            )
+            # TOMBOL ROKET EKSEKUSI
+            btn_gen_sultan = st.button("🚀 GENERATE VIDEO PROMPT", type="primary", use_container_width=True, key="btn_gen_sultan_ana")
 
-        # --- HASIL MUNCUL DI LUAR EXPANDER (CARD 2 KOLOM) ---
+        # --- 3. LOGIKA SMART PROMPT (FILTER, MAPPING, CONSTRUCTION) ---
         if btn_gen_sultan:
             if naskah_visual and v_loc:
-                # 1. Mapping Mantra Teknis
-                BIO_DESC = {
-                    "Hyper-Realistic Transparent": "transparent biological human, jelly-like skin, subsurface scattering, visible internal organs and bones",
-                    "Frosted Membrane (Kabur)": "translucent frosted skin, diffuse anatomical silhouette",
-                    "Crystal Clear Soul": "glass-like clarity, sharp refractive internal skeleton"
-                }
-                
+                # MANTRA TEKNIS MAPPING (The Secret Sauce)
                 MAP_STYLE = {
-                    "Sangat Nyata": "photorealistic, hyper-detailed 8k, raw photography style, masterpiece",
-                    "Cinematic": "cinematic film still, anamorphic lens, high dynamic range, theatrical look",
-                    "Anime": "high-quality 2D anime style, vibrant aesthetic, clean cel shading"
+                    "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, highly detailed skin textures, sharp focus, masterpiece, shot on Fujifilm",
+                    "Cinematic": "cinematic movie still, anamorphic lens, high dynamic range (HDR), dramatic shadows, theatrical atmosphere, Panavision look",
+                    "Anime": "high-quality 2D anime style, vibrant colors, clean cel shading, Makoto Shinkai aesthetic, 4k digital art"
                 }
                 
                 MAP_LIGHT = {
-                    "Senja Cerah (Golden)": "golden hour sunlight, warm volumetric rays, long soft shadows",
-                    "Misty Night": "eerie moonlight, thick blue fog, cinematic moody atmosphere",
-                    "Studio Light": "softbox studio lighting, professional rim light, neutral shadows"
+                    "Senja Cerah (Golden)": "golden hour lighting, warm volumetric sun rays, soft rim lighting to emphasize transparency, long cinematic shadows",
+                    "Misty Night": "eerie moonlight, thick blue mist, heavy atmospheric fog, low-key lighting, bioluminescent glow on nerves",
+                    "Studio Light": "professional three-point studio lighting, sharp rim light to define edges, neutral white balance, softbox shadows"
                 }
                 
                 MAP_CAM = {
-                    "Sejajar Mata": "eye-level straight shot, neutral perspective",
-                    "Low Angle": "dramatic low angle shot, looking up at the characters, heroic perspective",
-                    "High Angle": "high angle bird's eye view, looking down from above"
+                    "Sejajar Mata": "eye-level shot, 35mm lens, neutral perspective, realistic depth of field",
+                    "Low Angle": "dramatic low angle shot looking up, wide-angle lens, heroic and powerful perspective, emphasizing height",
+                    "High Angle": "high angle shot looking down, bird's eye perspective, making the subject appear vulnerable"
                 }
 
-                # 2. Konstruksi Identitas
-                char1_full = f"{k1_name} ({BIO_DESC.get(k1_base)}), {k1_physic}, wearing {k1_wear}"
-                char2_full = f"{k2_name} ({k2_physic}), wearing {k2_wear}" if k2_name else ""
+                # SMART FILTER: Hanya masukkan karakter jika nama disebut di naskah
+                prompt_actors = []
+                # Cek Karakter 1
+                if k1_name_sel != "Custom/None" and k1_name_sel.lower() in naskah_visual.lower():
+                    prompt_actors.append(f"{k1_name_sel} ({k1_physic}), wearing {k1_wear}")
+                # Cek Karakter 2
+                if k2_name_sel != "Custom/None" and k2_name_sel.lower() in naskah_visual.lower():
+                    prompt_actors.append(f"{k2_name_sel} ({k2_physic}), wearing {k2_wear}")
                 
-                # 3. Prompt Gambar (Static)
-                final_prompt_img = (
-                    f"A {MAP_STYLE.get(v_style)} of {char1_full} interacting with {char2_full}. "
-                    f"LOCATION: {v_loc}. SCENE: {naskah_visual}. "
-                    f"ATMOSPHERE: {MAP_LIGHT.get(v_light)}. CAMERA: {MAP_CAM.get(v_cam)}. "
-                    f"TECHNICAL: sharp focus, depth of field, anatomical precision, hyper-realistic textures."
-                )
+                # Default jika tidak ada nama yang disebut
+                final_actors = " and ".join(prompt_actors) if prompt_actors else "a mysterious transparent being"
 
-                # 4. Prompt Video (Motion & Dialog)
+                # RACIKAN PROMPT GAMBAR (STATIC VISUAL)
+                final_img = (
+                    f"A {MAP_STYLE[v_style]} of {final_actors}. "
+                    f"SCENE: {naskah_visual}. LOCATION: {v_loc}. "
+                    f"LIGHTING: {MAP_LIGHT[v_light]}. CAMERA: {MAP_CAM[v_cam]}. "
+                    f"TECHNICAL: sharp focus, subsurface scattering, ray-tracing, anatomical precision, hyper-realistic textures."
+                )
+                
+                # RACIKAN PROMPT VIDEO (MOTION & DIALOG)
                 dialog_part = f"K1 speaks: '{diag_k1}'. K2 speaks: '{diag_k2}'." if diag_k1 or diag_k2 else ""
-                final_prompt_vid = (
+                final_vid = (
                     f"Start from the reference image. {naskah_visual}. {dialog_part} "
-                    f"Fluid biological movement, maintain material consistency, realistic interaction, 4k."
+                    f"Fluid biological movement, realistic interaction, synchronized facial expressions, 4k high-fidelity."
                 )
 
-                # --- DISPLAY HASIL ---
+                # --- 4. DISPLAY HASIL (CARD 2 KOLOM) ---
                 st.markdown("### 🧬 HASIL ANALISIS STORYBOARD")
-                res_col1, res_col2 = st.columns(2)
-                with res_col1:
+                res1, res2 = st.columns(2)
+                with res1:
                     with st.container(border=True):
-                        st.markdown('<p class="small-label">📸 IMAGE PROMPT (PHOTOREALISTIC)</p>', unsafe_allow_html=True)
-                        st.code(final_prompt_img, language="markdown")
-                with res_col2:
+                        st.markdown('<p class="small-label">📸 IMAGE PROMPT</p>', unsafe_allow_html=True)
+                        st.code(final_img, language="markdown")
+                with res2:
                     with st.container(border=True):
-                        st.markdown('<p class="small-label">🎬 VIDEO PROMPT (MOTION & DIALOG)</p>', unsafe_allow_html=True)
-                        st.code(final_prompt_vid, language="markdown")
+                        st.markdown('<p class="small-label">🎬 VIDEO PROMPT</p>', unsafe_allow_html=True)
+                        st.code(final_vid, language="markdown")
             else:
-                st.error("Lokasi dan Naskah Visual wajib diisi, Cok!")
+                st.error("Lokasi dan Naskah Visual wajib diisi!")
                 
     # ============================================================
     # --- TAB: ⚡ TRANSFORMATION ENGINE (ULTIMATE SULTAN EDITION) ---
@@ -5377,6 +5389,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
