@@ -1563,8 +1563,8 @@ def tampilkan_ai_lab():
                 "Bambu & Batok Kelapa (Vibrant LED)": "Traditional mosque model made of woven bamboo and polished coconut shells, featuring hand-painted gold calligraphy and colorful LED fairy lights tracing the arches. The yard is decorated with dried moss and tiny bamboo fences.",
                 "Stik Es Krim & Kristal (Rainbow LED)": "Intricate mosque diorama made of thousands of ice cream sticks, featuring embossed gold calligraphy and rainbow LED lighting glowing through crystal-bead windows. The yard is decorated with white sand and miniature flower beds.",
                 "Kardus & Barang Bekas (Electric Glow)": "Creative mosque model made of layered recycled cardboard and electronics, featuring glowing neon calligraphy and multi-colored fiber optic lights on the minarets. The yard is decorated with colorful wire trees and small metallic scraps.",
-                "MPelangi (Rainbow Village)": "Playful miniature mosque painted in cheerful rainbow colors (pink, blue, yellow, green). Features multiple small domes and windows with soft LED lights. The yard is decorated with colorful pebbles and small toy animal figurines.",
-                "MKerajaan Awan (Cloud Kingdom)": "Whimsical mosque model inspired by fantasy cartoons, made of soft white material resembling fluffy clouds and cotton candy. Features star and moon shaped windows. The yard is decorated with small sparkly stars and tiny cloud bushes.",
+                "Pelangi (Rainbow Village)": "Playful miniature mosque painted in cheerful rainbow colors (pink, blue, yellow, green). Features multiple small domes and windows with soft LED lights. The yard is decorated with colorful pebbles and small toy animal figurines.",
+                "Kerajaan Awan (Cloud Kingdom)": "Whimsical mosque model inspired by fantasy cartoons, made of soft white material resembling fluffy clouds and cotton candy. Features star and moon shaped windows. The yard is decorated with small sparkly stars and tiny cloud bushes.",
                 "Kastil Balok (Block Castle)": "Fun mosque miniature built using large, colorful toy building blocks. Features blocky towers and a central dome made of Lego-like bricks. The yard is decorated with block-shaped trees and miniature toy cars.",
                 "Hutan Ajaib (Magic Forest)": "Charming mosque model made of natural wood and moss, blending into a miniature forest with tiny fairy lights. Features cute animal shaped decorations on the walls. The yard is decorated with colorful toadstools and tiny magical creature toys.",
                 "Tema Luar Angkasa (Space Mosque)": "Creative mosque model shaped like a friendly rocket ship, with futuristic domes and antenna-like minarets. Features colorful flashing LED lights and metallic paints. The yard is decorated with small 'moon' stones and tiny astronaut figures.",
@@ -5720,6 +5720,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
