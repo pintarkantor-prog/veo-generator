@@ -1619,9 +1619,9 @@ def tampilkan_ai_lab():
     # ============================================================
     with t_transform:        
         with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
-            st.caption("Identity-Locked Morphing with Trigger-Based Chronology & Multi-Character Support")
+            st.caption("Identity-Locked Morphing with Anatomy-Grade Visuals & Chronology")
 
-            # --- 1. DATABASE & MAPPING (TETAP Sesuai Kode Lo) ---
+            # --- 1. DATABASE & SULTAN MAPPING (ANATOMY SYNC) ---
             DB_TRANS_EFFECT = {
                 "Energi (Super Saiyan/Aura)": "radiant golden aura, electrical sparks, hair standing up, glowing energy pulses",
                 "Otot (Hulk/Monster)": "rapid muscle expansion, skin stretching, clothes ripping, massive physical growth",
@@ -1633,96 +1633,110 @@ def tampilkan_ai_lab():
             }
 
             MAP_STYLE_TRANS = {
-                "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, ultra-detailed textures, physically based rendering",
-                "Cinematic": "cinematic movie still, 70mm IMAX film look, dramatic theatrical shadows, anamorphic lens flare",
-                "Anime (3D Pixar)": "high-quality 3D animation, Pixar style, stylized character, soft global illumination, expressive"
+                "Sangat Nyata": "hyper-realistic photorealism, 8k RAW photo, ultra-detailed textures on skin and all surfaces, sharp focus, extreme macro details, shot on 35mm lens, f/1.8, high contrast, ray-tracing, physically based rendering, masterpiece quality",
+                "Cinematic": "cinematic movie still shot on 70mm IMAX film, anamorphic lens flare, high dynamic range (HDR), dramatic theatrical shadows, cinematic color grading, atmospheric haze, deep black levels, cinematic grain, wide aspect ratio",
+                "Anime": "high-quality 3D animation style, Pixar and Disney aesthetic, stylized character design, soft global illumination, ray-traced reflections, subsurface scattering on skin, vibrant cinematic colors, 8k render, Unreal Engine 5 render look",
+            }
+            
+            MAP_LIGHT_TRANS = {
+                "Senja Cerah (Golden)": "soft late afternoon light, pale gold ambient glow, neutral color temperature, muted warm tones, cinematic soft shadows, clear visibility, realistic outdoor lighting, subtle highlights",
+                "Misty Night": "clear moonlit night, soft diffused moonlight, neutral color temperature, cool silver glow on surfaces, sharp focus on all objects, high contrast shadows, bioluminescent accents on characters, realistic nocturnal outdoor lighting, subtle highlights, deep black levels",
+                "Studio Light": "professional cinematic studio lighting, high-key lighting setup, sharp dual-rim light to define edges, neutral color balance, soft shadows, 8k showcase quality, ray-traced reflections on transparent skin, clean white or dark studio background"
             }
 
+            MAP_CAM_TRANS = {
+                "Sejajar Mata": "eye-level cinematic shot, 50mm prime lens, natural perspective, sharp focus on subjects, subtle background blur, stabilized camera, realistic human height viewpoint",
+                "Low Angle": "dramatic low angle shot, looking up from ground level, 35mm lens, heroic perspective, emphasizing height and power, clear floor-to-subject contact, majestic scale, sharp silhouettes against the sky",
+                "High Angle": "high angle cinematic perspective, looking down from above, 35mm lens, realistic depth, clear ground shadows, emphasizing the surrounding environment, sharp overhead focus, subjects clearly grounded on the floor",
+            }
+
+            # --- 2. INPUT PANEL ---
             with st.container(border=True):
-                # --- BARIS 1: MANAGEMENT KARAKTER (UTAMA VS FIGURAN) ---
+                # Karakter (Sesuai spek: Fisik & Wear Terpisah)
                 col_c1, col_c2 = st.columns(2)
                 with col_c1:
                     st.markdown('<p class="small-label">👤 KARAKTER UTAMA (IDENTITY LOCK)</p>', unsafe_allow_html=True)
-                    v_char_name = st.text_input("Nama Utama:", placeholder="Contoh: DIAN...", key="tr_name", label_visibility="collapsed")
-                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Outfit (Kosongkan jika ikut gambar ref)...", key="tr_outfit", label_visibility="collapsed")
+                    v_char_name = st.text_input("Nama Utama:", placeholder="Nama...", key="tr_name", label_visibility="collapsed")
+                    v_char_physic = st.text_input("Fisik Utama:", placeholder="Fisik (Misal: Pria atletis, otot kawat)...", key="tr_physic", label_visibility="collapsed")
+                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Pakaian (Misal: Zirah perang emas)...", key="tr_outfit", label_visibility="collapsed")
                 
                 with col_c2:
                     st.markdown('<p class="small-label">👥 KARAKTER TAMBAHAN (OPTIONAL)</p>', unsafe_allow_html=True)
-                    v_fig_name = st.text_input("Nama Figuran:", placeholder="Contoh: PENJAHAT...", key="fig_name", label_visibility="collapsed")
-                    v_fig_physic = st.text_input("Fisik & Pakaian Figuran:", placeholder="Fisik & Pakaian Figuran...", key="fig_physic", label_visibility="collapsed")
+                    v_fig_name = st.text_input("Nama Figuran:", placeholder="Nama...", key="fig_name", label_visibility="collapsed")
+                    v_fig_physic = st.text_input("Fisik Figuran:", placeholder="Fisik (Misal: Naga besar)...", key="fig_physic", label_visibility="collapsed")
+                    v_fig_outfit = st.text_input("Outfit Figuran:", placeholder="Pakaian (Misal: Sisik mengkilap)...", key="fig_outfit", label_visibility="collapsed")
 
                 st.divider()
 
-                # --- BARIS 2: PROSES (TETAP Sesuai Kode Lo) ---
+                # Transformasi & Timing
                 col_p1, col_p2 = st.columns(2)
                 with col_p1:
                     st.markdown('<p class="small-label">🧬 WUJUD AKHIR (TARGET FORM)</p>', unsafe_allow_html=True)
                     v_char_target = st.text_input("Wujud Akhir:", placeholder="Contoh: Hulk, Super Saiyan...", key="tr_target", label_visibility="collapsed")
                     st.markdown('<p class="small-label">⚡ PEMICU SPESIFIK (TRIGGER)</p>', unsafe_allow_html=True)
-                    v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: meminum susu, berteriak...", key="tr_trigger", label_visibility="collapsed")
+                    v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: berteriak kencang...", key="tr_trigger", label_visibility="collapsed")
                 
                 with col_p2:
                     st.markdown('<p class="small-label">✨ EFEK TRANSISI</p>', unsafe_allow_html=True)
-                    v_eff_type = st.selectbox("Pilih Jenis Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff", label_visibility="collapsed")
-                    st.markdown('<p class="small-label">⏱️ TIMING TRANSFORMASI (DETIK)</p>', unsafe_allow_html=True)
-                    v_timing = st.slider("Mulai Berubah Setelah:", 1.0, 5.0, 2.0, 0.5, key="tr_time")
+                    v_eff_type = st.selectbox("Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">⏱️ TIMING (DETIK)</p>', unsafe_allow_html=True)
+                    v_timing = st.slider("Berubah Setelah:", 1.0, 5.0, 2.0, 0.5, key="tr_time")
 
                 st.divider()
 
-                # --- BARIS 3: NASKAH & SETTING ---
+                # Naskah, Setting, Light & Cam
                 st.markdown('<p class="small-label">🎬 NASKAH VISUAL & DETAIL ADEGAN</p>', unsafe_allow_html=True)
-                v_scene_detail = st.text_area("Detail Aksi:", placeholder="Contoh: DIAN berjalan perlahan menuju meja...", height=100, key="tr_scene", label_visibility="collapsed")
+                v_scene_detail = st.text_area("Naskah:", placeholder="Detail adegan...", height=100, key="tr_scene", label_visibility="collapsed")
 
                 col_s1, col_s2 = st.columns(2)
                 with col_s1:
                     st.markdown('<p class="small-label">🎨 VISUAL STYLE</p>', unsafe_allow_html=True)
-                    v_style = st.selectbox("Style Visual:", list(MAP_STYLE_TRANS.keys()), key="tr_style", label_visibility="collapsed")
+                    v_style_choice = st.selectbox("Style:", list(MAP_STYLE_TRANS.keys()), key="tr_style", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">💡 LIGHTING</p>', unsafe_allow_html=True)
+                    v_light_choice = st.selectbox("Lighting:", list(MAP_LIGHT_TRANS.keys()), key="tr_light", label_visibility="collapsed")
                 with col_s2:
-                    st.markdown('<p class="small-label">📍 LOKASI KEJADIAN</p>', unsafe_allow_html=True)
-                    v_loc = st.text_input("Lokasi:", placeholder="Contoh: Di puncak candi...", key="tr_loc", label_visibility="collapsed")
-                
-                st.markdown('<p class="small-label">🎥 CAMERA ANGLE</p>', unsafe_allow_html=True)
-                v_cam = st.selectbox("Camera Angle:", ["Close Up (Ekspresi)", "Medium Shot (Full Body)", "Low Angle (Heroic)"], key="tr_cam", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">🎥 CAMERA SHOT</p>', unsafe_allow_html=True)
+                    v_cam_choice = st.selectbox("Shot:", list(MAP_CAM_TRANS.keys()), key="tr_cam", label_visibility="collapsed")
+                    st.markdown('<p class="small-label">📍 LOKASI</p>', unsafe_allow_html=True)
+                    v_loc = st.text_input("Lokasi:", placeholder="Lokasi kejadian...", key="tr_loc", label_visibility="collapsed")
 
                 btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
 
             # --- 3. LOGIKA GENERATOR PROMPT (SILET LOGIC) ---
             if btn_gen_trans:
                 if v_trigger and v_char_target and v_scene_detail and v_loc:
-                    # LOGIKA: OUTFIT & FIGURAN SMART CALL
-                    # Jika outfit diisi, dia nimpa referensi. Jika tidak, ikut referensi.
-                    outfit_logic = f"wearing {v_char_outfit}" if v_char_outfit else "wearing original outfit from reference"
                     
-                    # Figuran hanya masuk jika namanya disebut di naskah (Case Insensitive)
-                    fig_logic = ""
-                    if v_fig_name and v_fig_name.upper() in v_scene_detail.upper():
-                        fig_logic = f"Supporting Character: {v_fig_name}, described as {v_fig_physic}. "
+                    def rakit_identitas_sultan(name, physic, outfit, is_master=False):
+                        if not name: return ""
+                        ref_tag = "refer to PHOTO #MASTER ONLY" if is_master else "visual description only"
+                        return f"[[ CAST_SULTAN_{name.upper()} ({name}): {ref_tag}. PHYSIC: {physic}. WEAR: {outfit} ]]"
 
-                    TRANS_NEG = "instant morph, messy transition, losing facial likeness, distorted features, blurry eyes, low quality, jump cut, dynamic facial distortion"
+                    main_id = rakit_identitas_sultan(v_char_name, v_char_physic, v_char_outfit, is_master=True)
+                    fig_id = ""
+                    if v_fig_name and v_fig_name.upper() in v_scene_detail.upper():
+                        fig_id = " AND " + rakit_identitas_sultan(v_fig_name, v_fig_physic, v_fig_outfit)
+
+                    final_identity = main_id + fig_id
+                    TRANS_NEG = "instant morph, messy transition, losing facial likeness, distorted features, blurry eyes, low quality, jump cut, inconsistent anatomy"
                     v_pose_awal = v_scene_detail.split('.')[0] 
 
-                    # A. IMAGE PROMPT (Identity Lock + Multi-Character)
+                    # A. IMAGE PROMPT (Anatomy Grade)
                     final_img = (
-                        f"A {MAP_STYLE_TRANS[v_style]} cinematic shot of {v_char_name} from the reference image. "
-                        f"MAIN CHARACTER: {v_char_name}, {outfit_logic}. "
-                        f"STRICT IDENTITY LOCK: Maintain the exact facial structure and likeness from the reference image. "
-                        f"{fig_logic}"
-                        f"SCENE: {v_scene_detail}. "
-                        f"ACTION: The character is currently {v_pose_awal}. "
-                        f"SETTING: {v_loc}. CAMERA: {v_cam}. "
-                        f"TECHNICAL: Sharp focus, 8k, realistic material physics, neutral lighting. "
+                        f"{final_identity}. "
+                        f"SCENE START: {v_pose_awal}. "
+                        f"VISUAL SPECS: {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
+                        f"SETTING: {v_loc}. TECHNICAL: 8k render, masterpiece quality, sharp focus. "
                         f"NEGATIVE: {TRANS_NEG}"
                     )
 
-                    # B. VIDEO PROMPT (Chronological & Identity Protection)
+                    # B. VIDEO PROMPT (Anatomy Grade Chronology)
                     final_vid = (
-                        f"Start from the reference image. The video follows this script: {v_scene_detail}. "
-                        f"Maintain {v_char_name}'s face from reference and {outfit_logic}. {fig_logic}"
-                        f"CHRONOLOGY: For the first {v_timing} seconds, strictly keep {v_char_name} in original form. "
-                        f"MOMENT OF SHIFT: Exactly when the character {v_trigger}, initiate a powerful metamorphosis into {v_char_target}. "
-                        f"VISUAL EFFECT: Apply {DB_TRANS_EFFECT[v_eff_type]} physics to the transformation. "
-                        f"IDENTITY PROTECTION: The character's face must stay recognizable throughout the intense shift. "
-                        f"Fluid motion, 4k, realistic gravity, cinematic pacing. NEGATIVE: {TRANS_NEG}"
+                        f"Start from the reference image. {final_identity}. "
+                        f"SCRIPTED ACTION: {v_scene_detail}. "
+                        f"CINEMATOGRAPHY: Maintain {MAP_CAM_TRANS[v_cam_choice]} with {MAP_LIGHT_TRANS[v_light_choice]} and {MAP_STYLE_TRANS[v_style_choice]} look. "
+                        f"CHRONOLOGY: First {v_timing} seconds actors remain in original {v_char_outfit} form. "
+                        f"TRANSFORMATION: Exactly when {v_char_name} {v_trigger}, initiate {v_eff_type} metamorphosis into {v_char_target}. "
+                        f"Seamless transition, maintain facial identity, high-fidelity 4k render."
                     )
 
                     st.divider()
@@ -1734,7 +1748,7 @@ def tampilkan_ai_lab():
                         st.markdown('<p class="small-label">🎬 TRANSFORMATION SEQUENCE (VIDEO)</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
-                    st.error("Dian, Naskah, Pemicu, Wujud Akhir, dan Lokasi wajib diisi cok!")
+                    st.error("Dian, isi semua kolom cok!")
 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5320,6 +5334,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
