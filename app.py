@@ -3132,11 +3132,11 @@ def tampilkan_tugas_kerja():
 
                                                     # 3. HITUNG BONUS (PAKAI MEMORI - ANTI LAG)
                                                     df_selesai = df_all_tugas[
-                                                        (df_all_tugas['STAF'].str.upper() == staf_nama) &
+                                                        (df_all_tugas['STAF'].str.upper() == staf_nama.upper()) &
                                                         (df_all_tugas['DEADLINE'] == tgl_tugas) &
                                                         (df_all_tugas['STATUS'].str.upper() == 'FINISH')
                                                     ]
-                                                    jml_video = len(df_selesai) + 1 # +1 untuk tugas yang diproses sekarang
+                                                    jml_video = len(df_selesai) + 1
 
                                                     # 4. LOGIKA BONUS & ARUS KAS
                                                     msg_bonus = ""
@@ -6090,6 +6090,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
