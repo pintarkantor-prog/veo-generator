@@ -1734,39 +1734,45 @@ def tampilkan_ai_lab():
                     steps = [s.strip() for s in v_scene_detail.split('.') if len(s.strip()) > 2]
                     sequential_cue = " -> ".join([f"Phase {i+1}: {s}" for i, s in enumerate(steps)])
 
-                    diag_prompt = ""
-                    if v_diag_a: diag_prompt += f"{v_char_name} is talking: '{v_diag_a}' with lipsync. "
-                    if v_diag_b: diag_prompt += f"{v_fig_name} is talking: '{v_diag_b}' with lipsync. "
+                    # --- PEMISAHAN LOGIKA DIALOG ---
+                    # 1. Buat Video (Lipsync aktif)
+                    video_diag = ""
+                    if v_diag_a: video_diag += f"{v_char_name} is speaking: '{v_diag_a}' with active lipsync and emotion. "
+                    if v_diag_b: video_diag += f"{v_fig_name} is speaking: '{v_diag_b}' with active lipsync and emotion. "
+                    
+                    # 2. Buat Gambar (Tanpa teks dialog, fokus ekspresi)
+                    img_expression = "Neutral but intense facial expression, closed mouth, looking forward."
 
                     ULTRA_SHARP = "extreme sharp focus, cinematic texture, visible skin pores, natural imperfections, no motion blur, masterpiece quality"
-                    TRANS_NEG = "floating objects, extra limbs, plastic texture, airbrushed, cartoon, low quality, glitch, distorted hands"
+                    TRANS_NEG = "text, speech bubbles, subtitles, floating objects, extra limbs, plastic texture, airbrushed, cartoon, low quality, glitch, distorted hands"
 
                     is_trans = True if (v_trigger and v_char_target) else False
-                    trans_logic = (f"TRANSFORMATION: Start as {v_char_outfit}, at {v_timing}s exactly when {v_char_name} {v_trigger}, morph into {v_char_target}." if is_trans else "PURE ACTION.")
+                    trans_logic = (f"TRANSFORMATION: Start as {v_char_outfit}, at {v_timing}s exactly when {v_char_name} {v_trigger}, morph into {v_char_target}." if is_trans else "PURE ACTION SEQUENCE.")
 
-                    # PROMPT GENERATION (GEAR ADDED)
+                    # --- A. IMAGE PROMPT (DIALOG DIBUANG, EKSPRESI DIKUNCI) ---
                     final_img = (
                         f"{final_identity}. "
-                        f"SCENE: {steps[0] if steps else v_scene_detail}. {diag_prompt} "
+                        f"SCENE START: {steps[0] if steps else v_scene_detail}. {img_expression} "
                         f"VISUAL: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
                         f"TECHNICAL: {ULTRA_SHARP}. NEGATIVE: {TRANS_NEG}"
                     )
                     
+                    # --- B. VIDEO PROMPT (DIALOG MASUK BUAT LIPSYNC) ---
                     final_vid = (
                         f"Start from reference image. {final_identity}. "
-                        f"STORY: {sequential_cue}. {diag_prompt} "
+                        f"STORYLINE: {sequential_cue}. {video_diag} "
                         f"CINEMATOGRAPHY: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
                         f"CHRONOLOGY: {trans_logic} "
-                        f"TECHNICAL: {ULTRA_SHARP}. Maintain identity for 20s. NEGATIVE: {TRANS_NEG}"
+                        f"TECHNICAL: {ULTRA_SHARP}. Ensure physical consistency and realistic lip-sync for 20s. NEGATIVE: {TRANS_NEG}"
                     )
 
                     st.divider()
                     res1, res2 = st.columns(2)
                     with res1:
-                        st.markdown('<p class="small-label">📸 INITIAL STATE (GEAR SPEC)</p>', unsafe_allow_html=True)
+                        st.markdown('<p class="small-label">📸 INITIAL STATE (SHARP & CLEAN)</p>', unsafe_allow_html=True)
                         st.code(final_img, language="markdown")
                     with res2:
-                        st.markdown(f'<p class="small-label">🎬 {v_gear_choice} SEQUENCE</p>', unsafe_allow_html=True)
+                        st.markdown(f'<p class="small-label">🎬 {v_gear_choice} SEQUENCE (WITH DIALOGUE)</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
                     st.error("Minimal isi Nama Utama, Naskah, dan Lokasi!")
@@ -5355,6 +5361,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
