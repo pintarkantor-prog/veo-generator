@@ -1085,6 +1085,14 @@ def tampilkan_ai_lab():
         # --- 3. MASTER BAHAN (ARCHITECTURAL PRECISION: 90% PROGRESS INTERACTIVE) ---
         MASTER_KONTEN_ALL = {
             "🕌 Miniatur Masjid": {
+                "Acrylic Pelangi (Cyber Glow)": "A futuristic transparent acrylic mosque diorama with internal cycling RGB LED lights that glow in a rainbow spectrum, featuring a pulsating neon violet dome and bright cyan minarets that act as glowing light-sticks, with every edge of the structure outlined in sharp electric blue light against a reflective glass base.",
+                "Crystal Candy (Bubblegum Pop)": "A cute mosque diorama made of glossy translucent candy-like materials in pastel pink and turquoise, featuring a sparkling diamond-texture dome filled with twinkling fiber-optic star lights and warm yellow glowing crescent moons, while the entrance arches are lined with flickering multi-colored fairy lights that create a magical toy atmosphere.",
+                "Lego Block (Voxel Energy)": "A blocky voxel-style mosque diorama reminiscent of game worlds made of dark matte blocks with intense neon green and orange LED strips embedded in the seams, featuring a glowing blue energy core inside the main dome and minarets that emit tall pillars of pulsating white light, set on a base with a glowing digital circuit pattern.",
+                "Starlight Night (Galaxy LED)": "A deep navy blue mosque diorama with a dome covered in thousands of tiny pinpoint fiber-optic lights mimicking a starry galaxy, featuring hidden purple and indigo LEDs that create a soft mystical aura around the building, while the minaret tips glow with bright white pulsating stars and the base is covered in shimmering blue glitter sand.",
+                "Masjid Cyber-Voxel (Minecraft Vibe)": "A blocky voxel-style mosque diorama constructed from matte dark grey blocks with electric blue and vibrant green LED strips lining every single edge, featuring a dome that acts as a pulsating cyan energy core and minarets that emit tall pillars of pulsating white light, set on a grid base with a glowing circuit board pattern for a high-tech game world vibe.",
+                "Masjid Pixel-Craft (Rainbow Blocks)": "A colorful pixel-art mosque diorama made of transparent multi-colored acrylic blocks with internal cycling RGB LED lights glowing in a rainbow spectrum, featuring a transparent dome that cycles through vibrant neon colors and four minarets that act as intense glowing light-sticks, with tiny glowing LED pebbles covering the base to create a dazzling high-contrast toy aesthetic.",
+                "Masjid Magma-Block (Nether Vibe)": "A detailed voxel mosque diorama made of dark red and orange blocks resembling glowing magma and obsidian, featuring intense internal warm yellow and red LEDs pulsing inside the blocks to create a fiery internal glow, while the minarets are tall columns of pulsating red light and the base is a dark stone path with embedded glowing red 'lava' lines.",
+                "Masjid End-Portal (Galaxy Voxel)": "A mysterious voxel-style mosque diorama made of deep navy blue and purple blocks with twinkling fiber-optic star lights on the dome surface mimicking a galaxy, featuring hidden deep purple and indigo LEDs that create a soft mystical aura around the building, while the minaret tips glow with bright white pulsating stars and the base is covered in shimmering blue glitter sand.",
                 "Kaleng Alumunium (Metallic Neon)": "A detailed miniature mosque constructed from industrial-grade aluminum plates and recycled metallic structures, featuring a dome and minarets with embossed Arabic calligraphy glowing with pulsing RGB neon, its metallic walls reflecting brilliant neon lights throughout the structure, and a courtyard containing metallic wire sculptures and paths of shimmering silver ore.", 
                 "Stik Es Krim & Kristal (Rainbow LED)": "A detailed miniature mosque constructed from orderly structural wooden ice cream sticks, featuring embossed gold calligraphy and rainbow LED lighting glowing through large crystal-bead windows, with a yard decorated with white sand and flower gardens.",
                 "Kardus & Barang Bekas (Electric Glow)": "A detailed miniature mosque constructed from orderly layers of recycled industrial cardboard and heavy electronic components, featuring glowing neon calligraphy on the walls and towering multi-colored fiber optic light installations on the minarets, with a yard decorated with colorful wire sculptures and metallic structures.",
@@ -1232,255 +1240,330 @@ def tampilkan_ai_lab():
         # --- 3. MASTER LOKASI (FIXED: NATURAL CLUTTER & SOLID BACKDROP) ---
         MASTER_GRANDMA_SETTING = {
             "Pinggir Kolam Ikan Koi": (
-                "The character sits cross-legged on a weathered stone pavement. "
-                "The background is a solid mossy stone wall with a small water spout. "
-                "Scattered around her are a few wet footprints on the stone, a fallen leaf, and a small brass bowl. " # <-- Natural Clutter
-                "Nearby, a traditional ceramic teapot and a single half-filled cup sit on a flat rock. "
-                "NO SKY, NO HORIZON. The scene is a tight, high-contrast garden corner."
+                "The character sits cross-legged on a natural flat stone by a clear koi pond. "
+                "Inside the pond, several colorful koi fish swim between lily pads. " # <-- Koinya balik, natural!
+                "The background is filled with lush tropical ferns and thick garden bushes. "
+                "A soft, natural overcast sky is partially visible through the gaps of tree leaves. " # <-- Langit natural
+                "Next to her is a small brass fish food bowl and a plain ceramic teapot. "
+                "NO ARTIFICIAL LIGHTING, NO GLOW. Pure neutral daylight and natural water reflections."
             ),
             "Teras Bambu Desa": (
-                "Set on a clean but aging woven bamboo floor. "
-                "The background is a solid wall of dark bamboo slats that blocks the outside. "
-                "Next to her are a pair of worn grass sandals, a small clay jug, and a stray coil of thin bamboo skin. " # <-- Natural Clutter
-                "A few tropical fern leaves lean into the frame from the side. "
-                "NO OPEN SKY. A private, shaded porch with clear wooden beam boundaries."
+                "Set on a woven bamboo floor of an open-air porch. "
+                "The background is a dense grove of tall bamboo trees and wide banana leaves overlapping. " # <-- Layering taneman
+                "The soft grey sky is visible behind the foliage, creating a realistic outdoor depth. "
+                "Next to her are grass sandals and a small clay water jug. "
+                "NO SOLID WALLS. Just natural organic textures and flat neutral lighting."
             ),
             "Lantai Kerikil Taman": (
-                "Placed on a bed of small white pebbles mixed with natural grey gravel. "
-                "The background is a solid old brick wall that completely blocks the horizon. "
-                "Around her are a few scattered dry autumn leaves, a small iron lantern, and a forgotten hand-trowel. " # <-- Natural Clutter
-                "A large mossy boulder sits partially in the frame, grounding the space. "
-                "NO INFINITY VOID. Focused on the textured ground and the solid wall behind."
+                "Placed on a bed of white pebbles and natural grey gravel. "
+                "The background features a low wooden picket fence and a line of tall flowering shrubs. " # <-- Pager kayu & taneman
+                "A realistic overcast sky sits above the shrubs, providing a clean natural backdrop. "
+                "Around her are scattered dry leaves and a simple iron lantern. "
+                "NO VIBRANT COLORS. Natural earthy tones and soft diffused daylight."
             ),
             "Dek Kayu Pinggir Hutan": (
-                "Set on an outdoor deck made of rough, unsanded timber planks with visible wood knots. "
-                "The background is a dense, dark wall of thick forest foliage and tree trunks. "
-                "Around the character are a few scattered pine cones, a small wooden bird flute, and a stray burlap sack. " # <-- Natural Clutter
-                "Thin shafts of soft light hit the wood grain, showing tiny dust particles. "
-                "NO CLOUDS, NO SKY. A solid forest nook with a clear wooden floor boundary."
+                "Set on an outdoor deck made of weathered, unsanded timber planks. "
+                "The background is a dense forest wall with massive tree trunks and hanging wild vines. "
+                "The overcast sky is filtered through the thick canopy above. "
+                "Scattered pine cones and a wooden bird flute lie nearby on the planks. "
+                "NO SHINY SURFACES. Raw wood textures and flat forest lighting."
             ),
             "Pinggir Sawah Hijau": (
-                "Sitting cross-legged on the dry grass at the edge of a vast emerald green rice field. "
-                "Beside them lies a traditional conical sun hat (caping) and a small old radio. " # <-- Bumbu
-                "Swaying rice stalks and a distant wooden scarecrow under an overcast sky. "
-                "NO CHAIRS. Everything is sharp and clear."
+                "Sitting cross-legged on dry grass at the edge of a vast green rice field. "
+                "The horizon is naturally broken by distant coconut trees and a small wooden shack. " # <-- Ada pembatas alami
+                "The sky is a realistic soft grey with faint cloud textures. "
+                "Beside them lies a traditional caping hat and a small old radio. "
+                "NO COLOR SATURATION. Pure, raw agricultural scenery in neutral daylight."
             ),
             "Teras Rumah Panggung": (
-                "Sitting cross-legged on flat wooden floor planks of a traditional porch. "
-                "The background is a solid wall of the wooden house with a closed shuttered window, blocking the horizon. " # <-- Tutup pake tembok rumah
-                "A few scattered wood shavings and a small hand-chisel lie on the floor nearby. "
-                "NO OPEN SKY, NO INFINITY. A localized shot focusing on the wooden floor and the solid wall behind."
+                "Sitting cross-legged on the wooden floor planks of a traditional porch. "
+                "The background shows a view of a lush backyard with fruit trees and a distant hedge. "
+                "The sky is framed naturally by the porch’s wooden roof and hanging orchids. " # <-- Framing natural
+                "Scattered wood shavings and a small chisel lie on the floor. "
+                "NO ARTIFICIAL CONTRAST. Just a simple, clean, and real village atmosphere."
             ),
             "Halaman Pohon Bambu": (
-                "Sitting cross-legged on a traditional 'Tikar Pandan' (woven mat) in a dense bamboo grove. "
-                "The background is a thick, impenetrable wall of vertical bamboo stalks that completely hides the sky. " # <-- Tembok bambu rapat
-                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke nearby. "
-                "NO HORIZON. The scene is enclosed by the dense green bamboo partition."
+                "Sitting cross-legged on a traditional 'Tikar Pandan' mat. "
+                "Background is a dense, natural grove of real bamboo stalks with overlapping green leaves. "
+                "Soft natural daylight filters through the bamboo canopy, no artificial glow. "
+                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke. "
+                "The view is naturally enclosed by the thick bamboo forest, no empty void."
             ),
             "Lantai Batu Candi": (
                 "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "The background is a solid carved stone relief wall that prevents any distant view. " # <-- Tembok relief candi
-                "Next to the character is a stone incense burner and a handful of withered frangipani petals. "
-                "NO LIGHTING, NO SKY. Focused on the stone porosity and the solid vertical stone boundary."
+                "Background is an ancient carved stone relief, weathered and mossy, showing real stone textures. "
+                "Next to the character are withered frangipani petals on the ground. "
+                "Natural neutral lighting, zero digital effects. Focus on the raw stone surface."
             ),
             "Tanah Merah Kebun": (
-                "Positioned on a flat area of packed red laterite soil. "
-                "The background is a dense hedge of dark tropical bushes and a low mud-brick wall. " # <-- Pager tanaman & tembok tanah
-                "Next to the character is a small rusted garden trowel and a clay pot shard. "
-                "NO SUNLIGHT, NO INFINITY VOID. A grounded, earthy corner with clear vertical barriers."
+                "Positioned on flat, packed red laterite soil with natural clods. "
+                "Background is a dense, messy hedge of real tropical bushes and wild shrubs. "
+                "Next to the character is a rusted garden trowel and a clay pot shard. "
+                "Flat, overcast daylight. Pure earthy tones without any color boost."
             ),
             "Dek Bata Merah Tua": (
-                "Resting on a pavement of weathered, mossy red bricks in a herringbone pattern. "
-                "The background is a solid high brick wall covered in thick crawling ivy vines. " # <-- Tembok bata rambat
-                "Next to the character is an old brass watering can and a small pile of terracotta tiles. "
-                "NO SKY, NO TIME. The view is strictly confined to the brick floor and the solid vine-covered wall."
+                "Resting on weathered, mossy red bricks in a herringbone pattern. "
+                "Background is an old brick structure covered in real crawling ivy and green moss. "
+                "An old brass watering can and a small pile of terracotta tiles sit nearby. "
+                "Natural lighting, no extra contrast. Just the raw look of aged brickwork."
             ),
             "Tepi Jalan Setapak Hutan": (
-                "Sitting cross-legged on a forest path covered in thick pine needles and dried oak leaves. "
-                "The background is a dense, dark wall of ancient tree trunks and tangled wild vines that completely blocks the sky. " # <-- Tembok pohon nutup langit
-                "Next to the character is a large wild mushroom and a small cluster of acorns. "
-                "NO WEATHER, NO SUN. A confined forest nook with focus on leaf litter and floor textures."
+                "Sitting cross-legged on a path covered in real pine needles and dried leaves. "
+                "Background is a deep forest view with massive tree trunks and tangled wild vines. "
+                "Natural forest lighting, soft and diffused. "
+                "Next to the character is a large wild mushroom and a cluster of acorns. "
+                "NO VOID. The forest depth provides a natural, organic backdrop."
             ),
             "Tepi Kolam Teratai & Air Terjun": (
-                "Placed directly on smooth, weathered dark river stone pavement. "
-                "The background is a solid stone grotto wall with a soft waterfall trickling down, blocking any distant horizon. " # <-- Tebing batu nutup langit
-                "Next to the character is a miniature ceramic teapot and one elegant cup. "
-                "Nearby, lotus flowers and lily pads float on a clear pond. NO OPEN SKY, NO INFINITY."
+                "Placed on smooth, weathered dark river stones. "
+                "Background features a natural rock formation with a gentle water trickle and lush ferns. "
+                "Pink and white lotus flowers float on the clear water surface. "
+                "Real water reflections, no fake glow. Just a quiet, natural garden nook."
             ),
             "Halaman Rumput Hijau & Bonsai": (
                 "Resting on a manicured, thick green grass turf. "
-                "The background is a tall, solid traditional stone fence (bentar) or a thick manicured hedge. " # <-- Pager batu nutup langit
-                "Next to the character is a wicker basket of fallen petals and a miniature wooden rake. "
-                "NO SUNLIGHT, NO SKY. Focused on individual blades of grass and the solid boundary behind."
+                "Background is a traditional stone fence (bentar) partially hidden by a thick green hedge. "
+                "A miniature wooden rake and a basket of petals sit on the grass. "
+                "Pure outdoor daylight, flat and clean. Focus on the texture of individual grass blades."
             ),
             "Taman Kering Zen & Kerikil": (
-                "Placed on a bed of meticulously raked fine white pebbles in ripple patterns. "
-                "The background is a solid, clean minimalist wooden wall or a dark slate partition. " # <-- Sekat kayu nutup langit
-                "Next to the character is a large grey mossy boulder and polished obsidian stones. "
-                "NO VOID, NO CLOUDS. A strictly enclosed courtyard space with clear vertical limits."
+                "Placed on a bed of fine white pebbles with real raked ripple patterns. "
+                "Background is a simple wooden garden partition and a single large mossy boulder. "
+                "Polished obsidian stones lie near the character. "
+                "Strictly natural lighting. No artificial shadows, just clean Zen aesthetics."
             ),
             "Tanah Liat & Sawah Berundak": (
-                "Positioned on a flat, packed dirt path. "
-                "The background is a steep, rising terrace of vibrant green rice stalks that acts as a natural wall. " # <-- Terasering tinggi nutup langit
-                "Next to the character is a conical straw hat (caping) and a clay water flask. "
-                "NO SUNLIGHT, NO HORIZON. The view is blocked by the rising green layers of the field."
+                "Positioned on a flat dirt path at the edge of real green terraced rice fields. "
+                "The background is the rising slope of the next terrace, filled with lush rice stalks. "
+                "A conical caping hat and a clay flask sit on the dirt. "
+                "Authentic agricultural lighting. The rising rice field naturally blocks the distant horizon."
             ),
             "Teras Batu Candi & Kamboja": (
                 "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "The background is a solid, high carved stone relief wall with moss in the crevices. " # <-- Tembok relief nutup langit
-                "Next to the character is a stone incense burner and withered frangipani petals. "
-                "NO WEATHER, NO OPEN HORIZON. A localized temple corner with clear stone boundaries."
+                "The background is an ancient, weathered stone relief carving with natural moss and lichen in the crevices. " # <-- Relief asli, bukan tembok polosan
+                "Next to the character is a small stone incense burner and a scattered handful of withered frangipani petals. "
+                "Natural outdoor daylight, no artificial glow. A serene temple corner with authentic textures."
             ),
             "Gubuk Tengah Sawah (Saung)": (
-                "Sitting cross-legged on the aged bamboo floor of a small Saung. "
-                "The view is blocked on three sides by a dense, thick curtain of tall yellow rice stalks. " # <-- Padi nutup pandangan biar nggak jebol
-                "A vintage kerosene lamp (lampu teplok) hangs nearby, next to a bunch of harvested bananas. "
-                "NO DISTANT HORIZON, NO SKY. Focus on the bamboo textures and the close-up rice curtain."
+                "Sitting cross-legged on the aged bamboo floor of an open-air Saung. "
+                "The view is surrounded by a dense, swaying wall of tall golden rice stalks ready for harvest. " # <-- Padi rimbun, bukan tembok
+                "A vintage kerosene lamp (lampu teplok) and a bunch of bananas sit on the bamboo slats. "
+                "The soft grey sky is framed naturally by the overhanging thatch roof of the shack. "
+                "Focus on the organic bamboo grain and the golden rice textures."
             ),
             "Tepian Sungai Berbatu": (
                 "Sitting cross-legged on a large, flat river stone. "
-                "The background is a solid wall of mossy river embankment and thick ferns that blocks the sky. " # <-- Tembok kali nutup langit
+                "The background is a natural riverbank embankment filled with wild ferns, river weeds, and tangled roots. " # <-- Tebing kali natural
                 "A pair of traditional rubber sandals (sandal jepit) is placed neatly on a nearby rock. "
-                "The scene focuses on the shallow water flow and the solid stone boundary behind. "
-                "NO HORIZON, NO OPEN SKY. Everything is grounded on the river stones."
+                "Clear river water ripples over pebbles. Neutral daylight, no digital enhancements."
             ),
             "Kebun Buah Naga": (
-                "Sitting cross-legged on a rustic woven mat (tikar) in a dragon fruit plantation. "
-                "The background is an impenetrable wall of climbing cactus-like vines and vibrant pink fruits on concrete pillars. " # <-- Pager buah naga nutup langit
-                "Beside them is a small wicker basket with a few harvested dragon fruits. "
-                "NO INFINITY VOID, NO CLOUDS. The view is strictly enclosed by the dense plantation grid."
+                "Sitting cross-legged on a rustic tikar mat in a dragon fruit plantation. "
+                "Surrounded by a dense, lush grid of climbing dragon fruit cactus vines and hanging vibrant pink fruits. " # <-- Taneman naga rimbun
+                "The plantation creates a natural green canopy that filters the soft overhead sky. "
+                "Beside them is a small wicker basket with harvested dragon fruits. "
+                "Authentic agricultural setting with flat, natural lighting."
             ),
             "Kebun Buah Melon": (
                 "Sitting cross-legged on a low wooden plank floor inside a greenhouse. "
-                "The background is a solid greenhouse wall covered in lush hanging melon vines and large leaves. " # <-- Daun melon nutup langit
+                "Background is filled with a dense wall of hanging melon vines, large green leaves, and ripening melons. " # <-- Daun melon lebat
+                "The greenhouse plastic roof creates a soft, natural diffused light across the scene. "
                 "Nearby is a traditional watering can and garden shears. "
-                "NO OUTDOOR SKY, NO HORIZON. A fully enclosed indoor gardening environment."
+                "Realistic greenhouse environment, pure and unedited look."
             ),
             "Taman Bunga Warna-Warni": (
                 "Sitting cross-legged on a flat stone path. "
-                "The background is a high, solid hedge of blooming flowers and tall botanical shrubs. " # <-- Pager bunga nutup langit
-                "A few fallen petals are scattered around the character. "
-                "NO OPEN HORIZON. The scene is a private, enclosed garden nook with a clear vertical floral barrier."
+                "The background is a lush, thick hedge of blooming flowers, hibiscus, and various tropical shrubs. " # <-- Pager tanaman asli
+                "Butterfly-attracting flowers create a natural colorful backdrop with deep green layers. "
+                "A few fallen petals lie on the path. No artificial contrast, just raw botanical beauty."
             ),
             "Arena Bermain Anak": (
                 "Sitting cross-legged on soft rubber playground flooring. "
-                "The background is a solid, brightly colored playground wall or a low brick perimeter. " # <-- Pager playground nutup langit
-                "A forgotten vintage toy car or a marble lies near the character's feet. "
-                "NO DISTANT SKY, NO CLOUDS. Focused on the floor-level perspective and the solid wall behind."
+                "Background features the base of a colorful plastic slide and a low wooden perimeter fence. " # <-- Objek playground asli
+                "A forgotten vintage toy car lies near the character's feet. "
+                "Overcast sky provides clean, flat lighting. A realistic, grounded playground corner."
             ),
             "Taman Hiburan (Carnival)": (
                 "Sitting cross-legged on a large piece of clean cardboard spread on the grass. "
-                "The background is the solid colorful fabric of a large carnival tent that blocks the view. " # <-- Tenda nutup langit
-                "A half-eaten cotton candy on a stick is leaning against a small bag nearby. "
-                "NO INFINITY VOID. A grounded, enclosed carnival corner with clear fabric boundaries."
+                "Background is the weathered colorful fabric of a large carnival tent and hanging festive banners. " # <-- Kain tenda asli
+                "A half-eaten cotton candy on a stick is leaning against a bag nearby. "
+                "Natural festive atmosphere, zero artificial glow. Just the raw texture of the tent and grass."
             ),
             "Halaman Toko Kelontong": (
-                "Sitting cross-legged on a clean cement floor in front of a traditional village 'Warung'. "
-                "The background is the solid front wall of the shop, covered in colorful hanging sachets and snack displays. " # <-- Tembok warung nutup langit
-                "Beside them is an old glass jar of crackers and a coil of rope. "
-                "NO SKY, NO DISTANT ROAD. Everything is contained against the solid shop wall."
+                "Sitting cross-legged on a clean cement floor. "
+                "The background is the colorful facade of a village 'Warung' with hanging drink sachets, cracker jars, and snack displays. " # <-- Pakai barang dagangan buat background
+                "Next to the character is an old glass jar of crackers and a coil of rope. "
+                "Natural daylight, no artificial glow. The shop's front structure naturally frames the scene."
             ),
             "Lantai Kerja Berantakan": (
-                "Sitting cross-legged directly on the workshop floor. "
-                "The background is a solid indoor brick or wooden workshop wall with shelves of tools. " # <-- Tembok bengkel nutup langit
-                "Small glue bottles, tweezers, and wood shavings are scattered around the diorama. "
-                "NO OPEN SKY, NO VOID. A strictly indoor, floor-level crafting perspective."
+                "Sitting cross-legged directly on a workshop floor scattered with sawdust. "
+                "The background features wooden shelves filled with hand tools, cans of paint, and scrap materials. " # <-- Pakai rak tools
+                "Small glue bottles, tweezers, and wood shavings are scattered around. "
+                "Indoor neutral lighting. Realistic workshop atmosphere without digital effects."
             ),
             "Teras Rumah Klasik": (
-                "Sitting cross-legged on the cool tiled floor. "
-                "The background is a solid white house wall with a vintage bicycle (sepeda jengki) leaning against a wooden pillar. " # <-- Bumbu Balik!
-                "Nearby are potted clay plants on the terrace edge. "
-                "NO OPEN SKY, NO INFINITY. The scene is enclosed by the porch structure and the house wall."
+                "Sitting cross-legged on the cool tiled floor of a vintage porch. "
+                "In the background, a vintage bicycle (sepeda jengki) leans against a weathered wooden pillar. " # <-- Sepeda balek!
+                "Potted clay plants and orchids line the terrace edge. "
+                "Natural outdoor lighting. The porch roof and pillars provide a natural frame for the sky."
             ),
             "Ruang Tamu Jadul": (
                 "Sitting cross-legged on a 'Tikar Pandan' mat. "
-                "The background is a solid dark wood plank wall with an old family photo in a wooden frame hanging behind. " # <-- Bumbu Balik!
-                "A simple wooden cabinet is visible in the corner. "
-                "NO OUTDOOR VIEW, NO SKY. A strictly indoor, vintage domestic environment."
+                "The background is an authentic wooden plank wall with a sepia family photo in a carved frame. " # <-- Foto balek!
+                "A simple wooden cabinet sits in the corner. "
+                "Soft indoor lighting, zero artificial contrast. A warm, honest domestic vibe."
             ),
             "Dapur Kampung Estetik": (
-                "Sitting cross-legged on a low bamboo platform (bale-bale) near a traditional clay stove (tungku). "
-                "A few bamboo baskets (tampah) are leaning against the solid soot-stained brick wall. " # <-- Bumbu Balik!
-                "A thin trail of smoke rises from the stove. "
-                "NO WINDOWS, NO VOID. A rustic, enclosed indoor kitchen vibe."
+                "Sitting cross-legged on a low bamboo bale-bale. "
+                "Next to her is a traditional clay stove (tungku) with a few bamboo baskets (tampah) leaning against the soot-stained brickwork. " # <-- Bumbu dapur balek!
+                "A faint, natural wisp of smoke rises from the stove. "
+                "Authentic rustic lighting, no fake glow. Focus on the raw textures of clay and bamboo."
             ),
             "Bengkel Rakit Miniatur": (
-                "Sitting cross-legged on the floor of a craft room. "
-                "The background wall is covered in pinned architectural sketches and shelves with half-finished models. " # <-- Bumbu Balik!
-                "Balsa wood scraps, tweezers, and glue bottles are scattered around the character. "
-                "NO SKY. A dense, creative indoor workshop atmosphere."
+                "Sitting cross-legged on the floor of a creative room. "
+                "The background is filled with pinned architectural sketches, balsa wood sheets, and shelves of half-finished models. " # <-- Sketsa balek!
+                "Tweezers and glue bottles are laid out nearby. "
+                "Clean, flat workshop lighting. A realistic 'work-in-progress' environment."
             ),
             "Gazebo Bambu (Outdoor)": (
-                "Sitting cross-legged on polished bamboo slats. "
-                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. " # <-- Bumbu Balik!
-                "The view is blocked by a dense, thick wall of green banana leaves and tropical foliage. "
-                "NO DISTANT HORIZON, NO SKY. Enclosed by a natural green barrier."
+                "Sitting cross-legged on polished bamboo slats of a Saung. "
+                "The background is a lush, dense wall of green banana leaves and tropical shrubs. " # <-- Daun pisang rimbun
+                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. "
+                "Overcast daylight filtered through the leaves, no digital saturation."
             ),
             "Gubuk Tengah Sawah": (
                 "Sitting cross-legged on rustic wooden planks. "
-                "An old straw hat (caping) and a plastic water bottle are placed nearby on the floor. " # <-- Bumbu Balik!
-                "The background is a solid high wall of tall yellow rice stalks blocking the horizon. "
-                "NO INFINITY VOID. Focused on the floor level and the vertical rice barrier."
+                "The background is the dense, overlapping layers of tall yellow rice stalks and the shack's wooden frame. " # <-- Padi rimbun
+                "An old straw caping hat and a plastic water bottle lie nearby. "
+                "Natural agricultural lighting. The horizon is naturally blocked by the height of the rice field."
             ),
             "Saung Pinggir Pantai": (
                 "Sitting cross-legged on a woven plastic mat over white sand. "
-                "A few dry coconuts and a pair of worn flip-flops lie nearby on the sand. " # <-- Bumbu Balik!
-                "The background is a solid limestone cliff or dense palm trees that hides the ocean horizon. "
-                "NO OPEN SKY, NO INFINITY SEA. A localized, private beach nook."
+                "The background is a natural limestone cliff or a dense cluster of palm trees. " # <-- Tebing/pohon pantai
+                "Dry coconuts and worn flip-flops are scattered on the sand. "
+                "Bright, diffused seaside daylight. No infinity sea, focus on the textured beach nook."
             ),
             "Teras Pinggir Sungai": (
                 "Sitting cross-legged on a weathered wooden deck. "
-                "A traditional bamboo fishing rod is leaning against the railing nearby. " # <-- Bumbu Balik!
-                "The background is a steep, solid riverbank embankment covered in thick trees. "
-                "NO SKY, NO DISTANT VIEW. Focused on the water ripples and the forest wall."
+                "The background is a steep, natural riverbank filled with thick tropical trees and hanging vines. " # <-- Tebing kali natural
+                "A traditional bamboo fishing rod leans nearby. "
+                "Real river water reflections, zero artificial glow. Just a quiet, honest riverbank setting."
             ),
             "Lapak Penjual Rongsokan": (
                 "Sitting cross-legged on the dusty ground. "
-                "Next to them is a large old rusty gear and a stack of weathered newspapers. " # <-- Bumbu Balik!
-                "The background is a solid high wall made of stacked rusty metal sheets and old tires. "
-                "NO OPEN HORIZON. A gritty, enclosed industrial-waste environment."
+                "The background is a massive pile of aged rusty metal sheets, old tires, and stacked newspapers. " # <-- Tumpukan barang rongsok
+                "Next to them is a large rusty gear. "
+                "Gritty industrial lighting, very raw and neutral. Focus on rust, grease, and metal textures."
             ),
             "Teras Masjid Tua": (
-                "Sitting cross-legged on the cool, polished marble floor. "
-                "The background is a solid ancient stone wall with traditional Islamic arched doors and a simple analog wall clock. " # <-- Tembok masjid nutup langit
-                "A pair of worn-out leather sandals is placed neatly on the edge of the marble step. "
-                "NO OPEN SKY, NO DISTANT HORIZON. A serene, enclosed sacred space with clear vertical boundaries."
+                "Sitting cross-legged on the cool, polished marble floor of a mosque porch. "
+                "The background features traditional arched wooden doors and an old analog wall clock on a weathered stone surface. " # <-- Elemen asli masjid
+                "A pair of worn-out leather sandals is placed neatly on the marble step. "
+                "Natural diffused daylight, no artificial glow. The architecture naturally frames the serene space."
             ),
             "Teras Rumah Geribik Bambu": (
-                "Placed on a cracked, uneven cement floor. "
-                "The background is a solid, weathered bamboo-weave wall (geribik) that blocks any outdoor view. " # <-- Geribik nutup langit
-                "Next to the character is a chipped enamel mug and a half-eaten boiled sweet potato. "
-                "Nearby, a rusty bicycle wheel and tied-up cardboard scraps. NO VOID, NO SKY."
+                "Placed on a cracked, uneven cement floor in front of an authentic weathered bamboo-weave wall (geribik). "
+                "Next to the character is a chipped enamel mug and a half-eaten boiled sweet potato on a plastic plate. " # <-- Bumbu real
+                "Nearby, a rusty bicycle wheel and tied-up cardboard scraps lean against the bamboo wall. "
+                "Flat, natural lighting. Focus on the raw splinters of the bamboo and the floor cracks."
             ),
             "Kolong Jembatan Tua": (
-                "Set on a damp, dusty concrete ground with grey sand. "
-                "The background is dominated by massive, solid concrete bridge pillars and a low dark ceiling, blocking the sky completely. " # <-- Pilar & langit-langit jembatan nutup langit
-                "Next to the character is a pile of plastic bottles and a tattered burlap sack. "
-                "NO SUNLIGHT, NO HORIZON. A dark, enclosed industrial underpass."
+                "Set on a damp, dusty concrete ground with patches of grey sand. "
+                "The background is dominated by massive concrete bridge pillars with faded graffiti and exposed rusty rebar. " # <-- Pilar jembatan asli
+                "A pile of discarded plastic bottles and a tattered burlap sack lie nearby. "
+                "Dim, natural ambient lighting from the underpass, zero digital effects. Gritty and raw textures."
             ),
             "Gubuk Tengah Sawah Layu": (
                 "Positioned on a dry, dusty wooden plank floor of a leaning shack. "
-                "The background is a solid wall made of dry, vertical parched rice stalks and the shack's dark wooden partition. " # <-- Padi kering nutup langit
-                "Next to the character is a frayed sarong and an empty tin can. "
-                "NO OPEN HORIZON, NO CLOUDS. Enclosed by the dense, dry organic textures of the field."
+                "The background is a dense, parched wall of vertical dry rice stalks and old wooden planks. " # <-- Padi kering natural
+                "A frayed sarong and an empty tin can sit on the dusty floor. "
+                "Natural overcast lighting, no color boost. Focus on the organic wood rot and dry textures."
             ),
             "Pinggir Rel Kereta Api": (
-                "Resting on a bed of dark, oil-stained gravel and basalt stones. "
-                "The background is a solid rusty corrugated metal fence or a steep gravel embankment that hides the sky. " # <-- Pager seng/tanggul nutup langit
-                "Next to the character is a bundle of recycled wires and a dented aluminum pot. "
-                "NO HORIZON, NO VOID. Focused on the gritty ground and the solid metallic barrier."
+                "Resting on a bed of dark, oil-stained gravel and coarse basalt stones. "
+                "The background is a steep gravel embankment or a weathered corrugated metal fence (seng) that follows the track. " # <-- Tanggul rel asli
+                "A bundle of recycled wires and a dented aluminum pot are scattered nearby. "
+                "Neutral, flat outdoor daylight. Focus on the rust, grease, and stone textures."
             ),
             "Halaman Belakang Pasar": (
-                "Placed on a muddy ground covered with flattened cardboard. "
-                "The background is a solid, stained corrugated metal fence (seng) and stacks of empty fruit baskets. " # <-- Pager seng nutup langit
+                "Placed on a muddy ground covered with flattened cardboard and rotting vegetable scraps. "
+                "The background features stacks of empty fruit baskets and a stained, rusty corrugated metal fence (seng). " # <-- Pager seng pasar
                 "Next to the character is a broken wooden crate and a dirty hemp rope. "
-                "NO GLOW, NO SKY. Everything is contained within the solid, messy market boundaries."
+                "Realistic, messy environment with flat lighting. No artificial glow, just raw oxidation textures."
             ),
-            "Bengkel Las Sederhana": (
-                "Sitting cross-legged on the soot-covered concrete floor. "
-                "The background is a solid, dark, soot-covered workshop wall with tools hanging on it. " # <-- Tembok bengkel nutup langit
-                "Scattered iron bars and a welding helmet lie on the floor nearby. "
-                "NO WINDOWS, NO OUTDOOR VIEW. A strictly indoor, floor-level gritty environment."
+            "Kafe Estetik Kayu": (
+                "Sitting cross-legged on a clean, light wood plank floor inside a cozy cafe. "
+                "The background features a built-in wooden bookshelf filled with mini bonsai pots and cute clay mosque figurines. " # <-- Bumbu Lucu
+                "Soft, warm LED strip lighting is hidden *behind* the wooden shelves, casting a gentle natural glow. " # <-- LED Natural
+                "Next to her is a miniature pastel-colored ceramic teapot and a small plate of macaroons. "
+                "NO RAIN, NO VOID. A private, warm, and highly-detailed indoor corner."
+            ),
+            "Kamar Estetik Pastel": (
+                "Sitting cross-legged on a soft, pastel-colored knitted rug over white-washed floorboards. "
+                "The background is a soft beige wall with small framed cartoon illustrations of traditional Indonesian villages. " # <-- Bumbu Lucu
+                "A gentle LED neon sign in the shape of a smiling crescent moon is mounted on the wall (warm white). " # <-- LED Hiasan Dinding
+                "Next to her are a few small plush toys (kucing gemoy) and a decorative candle. "
+                "NATURAL NEUTRAL LIGHTING. Perfectly level 0-degree camera angle focusing on the coziness."
+            ),
+            "Ruang Kerja Kerajinan": (
+                "Sitting cross-legged directly on the clean terrazzo floor of a home craft studio. "
+                "The background is a light wood wall panel with a large circular LED mirror that reflects a gentle glow. " # <-- LED Dinding Lucu
+                "Pinned on the wall are cute architectural sketches and small rolls of colorful threads. " # <-- Bumbu
+                "Tweezers, a small hot glue gun, and craft paper are scattered on the floor. "
+                "NO OUTDOOR ELEMENTS, NO SKY. A warm, busy indoor workshop vibe."
+            ),
+            "Teras Rumah Estetik": (
+                "Set on a clean cement floor with patterned ceramic tiles (vintage style) in an enclosed porch. "
+                "The background is a clean white wall with several cute hanging potted plants and a decorative laser-cut wooden Arabic calligraphy piece. " # <-- Hiasan Dinding Lucu
+                "Hidden warm-white LED strips are integrated into the ceiling beams above, providing soft downlight. " # <-- LED Tersembunyi
+                "Next to her are a few woven baskets and a single cute cat sleeping nearby. " # <-- Bumbu Lucu
+                "NO OPEN SKY, NO INFINITY. A private, comfortable semi-outdoor indoor extension."
+            ),
+            "Kamar Anak Cewek (Pink Pastel)": (
+                "Sitting cross-legged on a soft, thick pink faux-fur rug over light oak floorboards. "
+                "The background is a soft peach wall with a custom LED neon sign in the shape of a 'Star' or 'Cloud' (warm pink glow). " # <-- LED Dinding Lucu
+                "Around her are a few cute plushie dolls, a small white canopy curtain in the corner, and a fairy light string draped over a wooden rack. " # <-- Bumbu Lucu
+                "A small pink beanbag and a few children's storybooks are scattered on the floor. "
+                "NATURAL NEUTRAL LIGHTING. No outdoor view, a fully enclosed, cozy pink-themed girl's bedroom."
+            ),
+            "Kamar Anak Cowok (Space Adventure)": (
+                "Sitting cross-legged on a navy blue woven rug over dark grey cement-style tiles. "
+                "The background is a charcoal grey wall with a cool 'Astronaut' or 'Rocket' silhouette LED wall lamp (cool white glow). " # <-- LED Dinding Cowok
+                "Around her are a few toy spaceships, a small wooden telescope, and a stack of colorful building blocks (LEGO style). " # <-- Bumbu Lucu
+                "A chalkboard wall with chalk drawings of planets is visible in the background. "
+                "SOFT DIFFUSED LIGHTING. No windows visible, focus on the playful and cool indoor boy's room vibe."
+            ),
+            "Kamar Nenek Asri (Vintage Solo)": (
+                "Sitting cross-legged on a clean, dark-patterned 'Tikar Pandan' spread over a cool tegel kunci (patterned cement tiles). "
+                "The background is a clean cream-colored wall with a simple wooden shelf holding an old radio and a small white jasmine plant in a clay pot. " # <-- Bumbu Asri
+                "A small decorative LED lantern in the shape of a traditional birdcage (sangkar burung) hangs on the wall, emitting a soft warm glow. " # <-- LED Dinding Natural
+                "Next to her is a small wooden side table with a glass of tea and a few pieces of traditional steamed cassava. "
+                "The scene is framed by a large open wooden window showing a blurry view of green garden leaves outside. "
+                "NATURAL DAYLIGHT. No harsh shadows, focus on the calm, breezy, and modest bedroom vibe."
+            ),
+            "Kamar Nenek Minimalis Desa": (
+                "Sitting cross-legged on a low wooden platform bed (dipan kayu) covered with a simple batik-patterned cloth. "
+                "The background features a light-colored wooden wall with a beautiful backlit LED wooden lattice (ukiran kayu) that glows softly. " # <-- LED Hiasan Dinding
+                "Several small indoor potted plants like 'Lidah Mertua' (snake plant) are placed in the corner, adding a fresh green feel. " # <-- Bumbu Asri
+                "Next to her is a pair of old spectacles and a small woven sewing basket. "
+                "Soft natural light spills from an unseen side window, highlighting the dust particles in the air. "
+                "NO MODERN FURNITURE. A peaceful, simple, and organic indoor atmosphere."
+            ),
+            "Kamar Nenek Estetik Modern": (
+                "Sitting cross-legged on a clean, light-grey polished cement floor. "
+                "The wall is painted in a beautiful 'Sage Green' matte finish, looking fresh and clean. " # <-- Cat Tembok Bagus
+                "On the wall is a large laser-cut wooden Tree of Life decoration with hidden warm-white LED strips behind it, creating a soft halo glow. " # <-- LED & Hiasan Dinding
+                "Next to the character is a small indoor palm tree in a white ceramic pot and a stack of clean linen pillows. "
+                "The atmosphere is a mix of traditional modesty and modern interior design. "
+                "NO OUTDOOR VOID. A fully enclosed, stylish, and peaceful grandmother's room."
+            ),
+            "Kamar Nenek Klasik Mewah": (
+                "Sitting cross-legged on a woven 'Tikar Pandan' mat over a dark parquet wooden floor. "
+                "The wall is painted in a warm 'Terracotta' earthy tone with a smooth, premium texture. " # <-- Cat Tembok Bagus
+                "The background features several floating wooden shelves with warm LED downlights illuminating small ceramic mosque miniatures. " # <-- LED & Hiasan Rak
+                "A large, elegant circular macrame wall hanging is the centerpiece on the wall. "
+                "Next to her is a vintage brass tray with a glass of tea and a small plate of traditional snacks. "
+                "NATURAL NEUTRAL LIGHTING. The scene is cozy, high-end, but still feels like home."
             )
         }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
@@ -1581,7 +1664,7 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN TOTAL & CONSTANT MICRO-MOTION (ANTI-BLUR)
+            # 2. KUNCI KETAJAMAN & ULTRA-SLOW ONE-WAY MOVEMENT (ANTI-MAJU-MUNDUR)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
@@ -1590,14 +1673,13 @@ def tampilkan_ai_lab():
                 f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. "
                 f"COMPOSITION: Perfectly centered symmetrical composition. "
                 f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
-                # --- KUNCI GERAKAN & KECEPATAN (ANTI-NGEBUT) ---
-                f"CAMERA ACTION: Starting at 1 meter, constant ultra-slow linear Dolly-Back at 0.1 speed. " # <-- Kunci speed konstan
-                f"MOVEMENT STABILITY: Zero acceleration, perfectly steady backpedal, no camera shake. " # <-- Anti kaget
-                f"FIXED AXIS: No tilting, no orbital, no side movement, 0-degree eye level. "
-                # --- KUNCI FOKUS (ANTI-BLUR) ---
-                f"SHARPNESS: Deep focus from 0.5m to infinity, extreme micro-detail, CRYSTAL CLEAR. " # <-- Paksa fokus dari jarak deket
-                f"OPTICAL SPEC: High shutter speed, zero motion blur, ultra-sharp edges on the mosque. " # <-- Bunuh blur
-                f"STABILIZATION: Locked focus on the diorama mosque throughout the entire shot." # <-- Kunci fokus di masjid
+                # --- KUNCI GERAKAN TIPIS SATU ARAH (ANTI-DISKO) ---
+                f"CAMERA ACTION: Starting at 1 meter, constant one-way ultra-slow Dolly-Back. " # <-- Kunci: Satu arah & Mundur
+                f"MOVEMENT SPEED: 0.05 speed, microscopic linear motion, strictly no forward movement. " # <-- Speed gue potong jadi 0.05 (Tipis mampus!)
+                f"FIXED AXIS: Zero camera shake, locked 0-degree eye level, perfectly steady axis. "
+                # --- KUNCI FOKUS ---
+                f"SHARPNESS: Deep focus, extreme micro-detail, CRYSTAL CLEAR, zero motion blur. "
+                f"STABILIZATION: The camera moves backwards only a few millimeters per second." # <-- Pertegas: Cuma mundur beberapa mili
             )
 
             # 3. AMBIL DATA MASTER
@@ -1615,8 +1697,8 @@ def tampilkan_ai_lab():
             aksi_final = pilih_aksi.split('(')[-1].strip(')') if '(' in pilih_aksi else pilih_aksi
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
-                
-            # 5. FINAL ASSEMBLY (Prompt Bersih - ANTI-BLUR & STABLE MOTION)
+            
+            # 5. FINAL ASSEMBLY (FIXED: ONE-WAY MICRO-DOLLY)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
@@ -1625,12 +1707,13 @@ def tampilkan_ai_lab():
                 f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
                 f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/16 Aperture, Deep Focus, " # <-- F/16 buat tajam total
-                f"Perfectly level 0-degree camera angle, strictly symmetrical framing, "
-                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, Global Shutter, " # <-- Global Shutter biar gak blur
-                f"Constant linear movement speed, zero camera shake, vivid micro-textures, clean edges. " # <-- Kunci speed
-                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, miring, tilted, side-view, distorted, off-center, "
-                f"low-contrast, soft-edges, hazy, foggy, washed-out colors, motion blur, out of focus, depth of field blur." # <-- Tambah anti-blur
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/16 Aperture, Deep Focus. "
+                f"CAMERA LOGIC: Strictly one-way Dolly-Back only, 0.05 speed, microscopic travel distance. " # <-- Kunci mati: Satu arah!
+                f"MOVEMENT LIMIT: No forward movement, no zoom-in, zero camera shake, perfectly frozen axis. " # <-- Pagar gaib anti-maju
+                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, Global Shutter. "
+                f"Vivid micro-textures, clean edges, strictly symmetrical framing. "
+                f"NEGATIVE PROMPT: forward motion, zoom-in, shaky cam, chair, table, furniture, text, watermark, blurry, miring, "
+                f"tilted, distorted, off-center, low-contrast, soft-edges, hazy, motion blur, out of focus." 
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5532,6 +5615,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
