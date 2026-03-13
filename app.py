@@ -1732,48 +1732,38 @@ def tampilkan_ai_lab():
                     fig_id_full = " AND " + rakit_identitas_sultan(v_fig_name, v_fig_physic, v_fig_outfit) if fig_in_script else ""
                     fig_id_initial = " AND " + rakit_identitas_sultan(v_fig_name, v_fig_physic, v_fig_outfit) if fig_in_first_frame else ""
 
-                    sequential_cue = " -> ".join([f"Phase {i+1}: {s}" for i, s in enumerate(steps)])
-
-                    # --- REVISI LOGIKA DIALOG (ANTI-LEMES VERSION) ---
+                    # --- LOGIKA DIALOG ---
                     target_phase = "Phase 2" if len(steps) > 1 else "Phase 1"
                     video_diag = ""
-                    
                     if v_diag_a or v_fig_diag:
                         video_diag = f"DIALOGUE EXECUTION: Mouth movement is ONLY allowed for the speaker. "
-                        
                         if v_diag_a and not v_fig_diag:
-                            # UTAMA ngomong, FIGURAN wajib kunci mulut
-                            video_diag += (f"Specifically in {target_phase}, {v_char_name} is the ONLY one speaking: '{v_diag_a}'. "
-                                          f"CRITICAL: {v_fig_name} must keep mouth tightly closed, no lip movement, only silent staring reaction.")
-                        
+                            video_diag += f"In {target_phase}, {v_char_name} is the ONLY one speaking: '{v_diag_a}'. {v_fig_name} must keep mouth tightly closed."
                         elif v_fig_diag and not v_diag_a:
-                            # FIGURAN ngomong, UTAMA wajib kunci mulut
-                            video_diag += (f"Specifically in {target_phase}, {v_fig_name} is the ONLY one speaking: '{v_fig_diag}'. "
-                                          f"CRITICAL: {v_char_name} must keep mouth tightly closed, no lip movement, only silent staring reaction.")
-                        
+                            video_diag += f"In {target_phase}, {v_fig_name} is the ONLY one speaking: '{v_fig_diag}'. {v_char_name} must keep mouth tightly closed."
                         elif v_diag_a and v_fig_diag:
-                            # Gantian
-                            video_diag += (f"In {target_phase}, {v_char_name} speaks first while {v_fig_name} is silent. "
-                                          f"Then {v_fig_name} replies while {v_char_name} is silent. "
-                                          f"Strictly no simultaneous mouth movement.")
+                            video_diag += f"In {target_phase}, {v_char_name} speaks first, then {v_fig_name} replies. No simultaneous talking."
 
+                    # --- FIX ERROR: DEFINISI DULU BARU TAMBAH ---
                     ULTRA_SHARP = "extreme sharp focus, cinematic texture, visible skin pores, natural imperfections, 8k, masterpiece quality, no motion blur"
-                    TRANS_NEG += f", {v_fig_name} talking, simultaneous speaking, ghost lipsync, vibrating lips"
+                    TRANS_NEG = "text, speech bubbles, subtitles, floating objects, extra limbs, plastic texture, airbrushed, cartoon, low quality, glitch, distorted hands"
+                    
+                    # Sekarang aman buat ditambahin karena TRANS_NEG sudah ada isinya
+                    if v_fig_name:
+                        TRANS_NEG += f", {v_fig_name} talking, simultaneous speaking, ghost lipsync, vibrating lips"
 
                     is_trans = True if (v_trigger and v_char_target) else False
                     trans_logic = (f"CHRONOLOGY: Maintain {v_char_outfit} form until {v_timing}s, then as {v_char_name} {v_trigger}, morph into {v_char_target}." if is_trans else "PURE ACTION.")
 
                     # --- FINAL OUTPUT ---
                     final_img = (
-                        f"{main_id}{fig_id_initial}. SCENE START: {steps[0] if steps else v_scene_detail}. "
-                        f"Neutral intense expression, closed mouth, looking forward. "
+                        f"{main_id}{fig_id_initial}. SCENE START: {steps[0] if steps else v_scene_detail}. Neutral expression, closed mouth. "
                         f"VISUAL: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
                         f"TECHNICAL: {ULTRA_SHARP}. NEGATIVE: {TRANS_NEG}"
                     )
                     
                     final_vid = (
-                        f"MANDATORY: START DIRECTLY FROM THE UPLOADED REFERENCE IMAGE. "
-                        f"{main_id}{fig_id_full}. STORYLINE: {sequential_cue}. {video_diag} "
+                        f"MANDATORY: START DIRECTLY FROM THE UPLOADED REFERENCE IMAGE. {main_id}{fig_id_full}. STORYLINE: {' -> '.join([f'Phase {i+1}: {s}' for i, s in enumerate(steps)])}. {video_diag} "
                         f"CINEMATOGRAPHY: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
                         f"{trans_logic} TECHNICAL: {ULTRA_SHARP}. Ensure 100% identity consistency for 20s. NEGATIVE: {TRANS_NEG}"
                     )
@@ -5373,6 +5363,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
