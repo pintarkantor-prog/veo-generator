@@ -1664,22 +1664,21 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & ULTRA-SLOW ONE-WAY MOVEMENT (ANTI-MAJU-MUNDUR)
+            # 2. KUNCI KETAJAMAN & ULTRA-SMOOTH HORIZONTAL SLIDE (ANTI-MAJU-MUNDUR)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: Bright diffused daylight, soft white sky, no visible sun disk. " 
-                f"AMBIENT: Clean neutral lighting, zero harsh shadows, high global illumination. "
-                f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. "
+                f"LIGHTING: Bright diffused daylight, soft white sky, zero harsh shadows. " 
                 f"COMPOSITION: Perfectly centered symmetrical composition. "
                 f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
-                # --- KUNCI GERAKAN TIPIS SATU ARAH (ANTI-DISKO) ---
-                f"CAMERA ACTION: Starting at 1 meter, constant one-way ultra-slow Dolly-Back. " # <-- Kunci: Satu arah & Mundur
-                f"MOVEMENT SPEED: 0.05 speed, microscopic linear motion, strictly no forward movement. " # <-- Speed gue potong jadi 0.05 (Tipis mampus!)
-                f"FIXED AXIS: Zero camera shake, locked 0-degree eye level, perfectly steady axis. "
-                # --- KUNCI FOKUS ---
-                f"SHARPNESS: Deep focus, extreme micro-detail, CRYSTAL CLEAR, zero motion blur. "
-                f"STABILIZATION: The camera moves backwards only a few millimeters per second." # <-- Pertegas: Cuma mundur beberapa mili
+                # --- KUNCI GERAKAN GESER SAMPING ALUS MAMPUS (LATERAL ONLY) ---
+                f"CAMERA ACTION: Microscopic lateral trucking shot, sliding extremely slowly to the right. " # <-- Pakai 'Trucking' buat geser samping
+                f"MOVEMENT SPEED: 0.01 speed, nearly static, ultra-low linear motion on the X-axis only. " # <-- Speed silet jadi 0.01 (Paling alus!)
+                f"MOVEMENT LOGIC: Strictly NO forward movement, NO backward movement, NO zoom, NO tilt. " # <-- Blokir sumbu Z dan Y
+                f"FIXED RAIL: Locked 0-degree eye level, perfectly stable horizontal track, zero camera shake. "
+                # --- KUNCI FOKUS & SHARPNESS ---
+                f"SHARPNESS: Deep focus F/16, extreme micro-detail, zero motion blur, global shutter. "
+                f"STABILIZATION: The camera glides sideways only a few micrometers per second, ghost-smooth motion." # <-- Perintah 'Ghost-smooth' biar gak kaget
             )
 
             # 3. AMBIL DATA MASTER
@@ -1698,7 +1697,7 @@ def tampilkan_ai_lab():
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
             
-            # 5. FINAL ASSEMBLY (FIXED: ONE-WAY MICRO-DOLLY)
+            # 5. FINAL ASSEMBLY (FIXED: ULTRA-SMOOTH LATERAL SLIDE)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
@@ -1708,12 +1707,14 @@ def tampilkan_ai_lab():
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
                 f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
                 f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/16 Aperture, Deep Focus. "
-                f"CAMERA LOGIC: Strictly one-way Dolly-Back only, 0.05 speed, microscopic travel distance. " # <-- Kunci mati: Satu arah!
-                f"MOVEMENT LIMIT: No forward movement, no zoom-in, zero camera shake, perfectly frozen axis. " # <-- Pagar gaib anti-maju
+                # --- KUNCI MATI: GESER SAMPING ALUS (ANTI-MAJU-MUNDUR) ---
+                f"CAMERA LOGIC: Microscopic lateral trucking shot on X-axis only, 0.01 speed, ghost-smooth slide. " # <-- Pakai Trucking + X-axis + Speed 0.01
+                f"MOVEMENT LIMIT: Strictly NO Dolly-Back, NO forward-backward, NO zoom-in, NO Z-axis motion. " # <-- Haramkan sumbu Z
+                f"STABILIZATION: Perfectly frozen Y and Z axis, locked 0-degree level, ultra-stable horizontal rail. "
                 f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, Global Shutter. "
                 f"Vivid micro-textures, clean edges, strictly symmetrical framing. "
-                f"NEGATIVE PROMPT: forward motion, zoom-in, shaky cam, chair, table, furniture, text, watermark, blurry, miring, "
-                f"tilted, distorted, off-center, low-contrast, soft-edges, hazy, motion blur, out of focus." 
+                f"NEGATIVE PROMPT: Dolly-back, forward motion, zoom-in, zoom-out, shaky cam, Z-axis movement, chair, table, "
+                f"furniture, text, watermark, blurry, miring, tilted, distorted, off-center, hazy, out of focus." 
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5615,6 +5616,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
