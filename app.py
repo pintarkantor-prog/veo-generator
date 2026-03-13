@@ -1088,7 +1088,7 @@ def tampilkan_ai_lab():
                 "Crystal Candy (Bubblegum Pop)": "A cute mosque diorama made of glossy translucent candy-like materials in pastel pink and turquoise, featuring a sparkling diamond-texture dome filled with twinkling fiber-optic star lights and warm yellow glowing crescent moons, while the entrance arches are lined with flickering multi-colored fairy lights that create a magical toy atmosphere.",
                 "Kaleng Alumunium (Metallic Neon)": "A detailed miniature mosque constructed from industrial-grade aluminum plates and recycled metallic structures, featuring a dome and minarets with embossed Arabic calligraphy glowing with pulsing RGB neon, its metallic walls reflecting brilliant neon lights throughout the structure, and a courtyard containing metallic wire sculptures and paths of shimmering silver ore.", 
                 "Stik Es Krim & Kristal (Rainbow LED)": "A detailed miniature mosque constructed from orderly structural wooden ice cream sticks, featuring embossed gold calligraphy and rainbow LED lighting glowing through large crystal-bead windows, with a yard decorated with white sand and flower gardens.",
-                "Kardus & Barang Bekas (Electric Glow)": "A detailed miniature mosque constructed from orderly layers of recycled industrial cardboard and heavy electronic components, featuring glowing neon calligraphy on the walls and towering multi-colored fiber optic light installations on the minarets, with a yard decorated with colorful wire sculptures and metallic structures.",
+                "Kardus & Barang Bekas (Electric Glow)": "A detailed miniature mosque constructed from orderly layers of recycled industrial cardboard and heavy electronic components, featuring glowing neon calligraphy on the walls and towering multi-colored fiber optic light installations on the minarets.",
                 "Lego Warna-Warni (Brick Paradise)": "A detailed miniature mosque constructed from interlocking colorful LEGO bricks, featuring a central dome made of glossy vibrant bricks in red, blue, and yellow, with pulsing RGB LED strips glowing through translucent brick windows and tracing the minarets.",
                 "Kulit Jeruk & Buah (Citrus Fresh)": "A detailed miniature mosque constructed from sun-dried citrus zest plates, featuring intricate patterns carved into the organic facade with powerful warm LED installations glowing from the interior, surrounded by a yard of spice-shaped sculptures.",
                 "Batok Kelapa & Nanas (Tropical Fruit)": "A detailed miniature mosque constructed from polished coconut shell structures and textured pineapple skin plates, featuring a golden dome and green LED installations with a yard decorated with exotic stone seeds.",
@@ -5639,6 +5639,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
