@@ -1426,7 +1426,8 @@ def tampilkan_ai_lab():
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: 2 PM overcast daylight, natural ambient light. "
+                f"LIGHTING: 4 PM dark stormy overcast daylight, heavy dramatic clouds, moody ambient light. "
+                f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky. "
                 f"CAMERA DISTANCE: Mid-shot distance, 3 meters away. "
                 f"POSITIONING: Both mosque and character in MIDGROUND. Foreground is empty. "
                 f"STRICT SEPARATION: Mosque on floor, {posisi_nenek} 50cm BEHIND it. "
@@ -5364,6 +5365,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
