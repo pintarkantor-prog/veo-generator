@@ -1697,18 +1697,21 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & CLEAN VISUAL
+            # 2. KUNCI KETAJAMAN & CLEAN STATIC VISUAL (FIXED)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: 4 PM dark stormy overcast daylight, heavy dramatic clouds, moody ambient light. "
-                f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky. "
-                f"CAMERA DISTANCE: Mid-shot distance, 3 meters away. "
-                f"POSITIONING: Both mosque and character in MIDGROUND. Foreground is empty. "
-                f"STRICT SEPARATION: Mosque on floor, {posisi_nenek} 50cm BEHIND it. "
-                f"CAMERA MOVEMENT: Very slow cinematic SIDE-TO-SIDE ORBITAL tracking shot. "
-                f"NO FORWARD MOVEMENT. NO ZOOM. "
-                f"DEEP FOCUS: Everything is CRYSTAL CLEAR, no blur."
+                # --- LIGHTING: TERANG TAPI GAK ADA MATAHARI ---
+                f"LIGHTING: Bright diffused daylight, flat white sky, no sun disk visible, zero harsh shadows. "
+                f"CONTRAST: Vivid colors, high-contrast micro-textures, glowing LED lights pop against clean daylight. "
+                # --- POSITIONING: JARAK 1 METER & URUTAN LURUS ---
+                f"CAMERA DISTANCE: Close-up 1 meter distance from lens to mosque. "
+                f"ALIGNMENT: Strictly symmetrical. Mosque is in foreground center, {posisi_nenek} is directly behind the mosque. "
+                # --- CAMERA: STATIS TOTAL ---
+                f"CAMERA MOVEMENT: Strictly STATIC camera, zero movement, zero shake, zero zoom, zero slide. "
+                f"FIXED AXIS: Perfectly level 0-degree eye level, locked tripod position. "
+                # --- SHARPNESS: ANTI BLUR ---
+                f"DEEP FOCUS: F/16 Aperture, everything from mosque to background is CRYSTAL CLEAR, zero blur, zero bokeh."
             )
 
             # 3. AMBIL DATA MASTER
@@ -1733,16 +1736,19 @@ def tampilkan_ai_lab():
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                 f"WARDROBE: {baju_desc}. \n"
                 f"ENVIRONMENT: {env_detail}. \n"
-                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" # <-- Pakai yang sudah di-filter
+                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
-                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n" # <-- Pakai yang sudah di-filter
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture, Deep Focus, "
-                f"Fixed 15-degree side-angle, ZERO MOTION BLUR, High-shutter speed, 8K. "
-                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, music, sound."
+                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
+                # --- TECHNICAL: KUNCI STATIS & TAJAM ---
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm lens, F/16 Aperture, Deep Focus. "
+                f"CAMERA LOGIC: Strictly STATIC camera, zero movement, perfectly level 0-degree angle. " # <-- Lurus & Diem
+                f"VISUAL: Ultra-sharp 8K, high-contrast colors, zero motion blur, global shutter. "
+                f"NEGATIVE PROMPT: blurry, bokeh, depth of field, out of focus, shaky, motion blur, " # <-- Anti Blur
+                f"chair, table, furniture, text, watermark, side-view, tilted, distorted."
             )
 
             # --- 7. TAMPILKAN HASIL ---
-            st.success("🔥 PROMPT TAJAM & BERSIH READY!")
+            st.success("🔥 PROMPT MASJID READY!")
             st.markdown('<p class="small-label">SALIN PROMPT DI BAWAH INI:</p>', unsafe_allow_html=True)
             st.code(final_ai_prompt, language="text")
 
@@ -5640,6 +5646,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
