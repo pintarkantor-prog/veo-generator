@@ -1576,20 +1576,18 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & CLEAN VISUAL
+            # 2. KUNCI KETAJAMAN & MICRO DOLLY-OUT (FIXED CENTER)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: 4 PM dark stormy overcast daylight, moody ambient light. "
-                f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky. "
-                f"CAMERA DISTANCE: Starting from 2 meters, slowly moving back. "
+                f"LIGHTING: Bright diffused daylight, soft white sky, no visible sun disk. " 
+                f"AMBIENT: Clean neutral lighting, zero harsh shadows, high global illumination. "
+                f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. " # <-- Balikin kontras
                 f"COMPOSITION: Perfectly centered symmetrical composition. "
-                f"POSITIONING: The diorama mosque is the main center object in foreground. "
-                f"CHARACTER POSITION: {posisi_nenek} directly behind the mosque, aligned in the center. "
-                f"CAMERA MOVEMENT: Very slow linear DOLLY-OUT movement (moving backwards). " # <-- Mundur pelan
-                f"STRICTLY STRAIGHT AXIS: No side movement, no orbital, no tilting. "
-                f"NO FORWARD MOVEMENT. KEEP HORIZON PERFECTLY LEVEL. "
-                f"DEEP FOCUS: Everything is CRYSTAL CLEAR with no motion blur."
+                f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
+                f"CAMERA ACTION: Starting at 2 meters, very slow linear Dolly-Back movement away from center. "
+                f"FIXED AXIS: No tilting, no orbital, no side movement, 0-degree eye level. "
+                f"SHARPNESS: Deep focus, extreme micro-detail, CRYSTAL CLEAR, zero motion blur, ultra-sharp edges." # <-- Booster ketajaman
             )
 
             # 3. AMBIL DATA MASTER
@@ -1608,7 +1606,7 @@ def tampilkan_ai_lab():
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
                 
-            # 5. FINAL ASSEMBLY (Prompt Bersih - FIXED SYMMETRY & WIDE ANGLE)
+            # 5. FINAL ASSEMBLY (Prompt Bersih - ULTRA SHARP & HIGH CONTRAST)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
@@ -1617,10 +1615,12 @@ def tampilkan_ai_lab():
                 f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
                 f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/11 Aperture, Deep Focus, " # <-- Ganti ke 24mm
-                f"Perfectly level 0-degree camera angle, strictly symmetrical framing, " # <-- Pertegas simetris
-                f"ZERO MOTION BLUR, High-shutter speed, 8K. "
-                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, miring, tilted, side-view, distorted, off-center." # <-- Tambah off-center
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/11 Aperture, Deep Focus, "
+                f"Perfectly level 0-degree camera angle, strictly symmetrical framing, "
+                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, High-shutter speed, " # <-- Booster tajam & kontras
+                f"Vivid micro-textures, clean edges, no chromatic aberration. " # <-- Anti aneh-aneh
+                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, miring, tilted, side-view, distorted, off-center, "
+                f"low-contrast, soft-edges, hazy, foggy, washed-out colors, motion blur." # <-- Tambahan filter sampah
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5522,6 +5522,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
