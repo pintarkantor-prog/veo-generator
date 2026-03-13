@@ -1734,20 +1734,31 @@ def tampilkan_ai_lab():
 
                     sequential_cue = " -> ".join([f"Phase {i+1}: {s}" for i, s in enumerate(steps)])
 
-                    # Dialogue Logic (Isolated & Phase-Locked)
+                    # --- REVISI LOGIKA DIALOG (ANTI-LEMES VERSION) ---
                     target_phase = "Phase 2" if len(steps) > 1 else "Phase 1"
                     video_diag = ""
+                    
                     if v_diag_a or v_fig_diag:
-                        video_diag = f"DIALOGUE TIMING: Start only during {target_phase}. "
+                        video_diag = f"DIALOGUE EXECUTION: Mouth movement is ONLY allowed for the speaker. "
+                        
                         if v_diag_a and not v_fig_diag:
-                            video_diag += f"In {target_phase}, {v_char_name} speaks '{v_diag_a}' with lipsync; {v_fig_name} stays silent. "
+                            # UTAMA ngomong, FIGURAN wajib kunci mulut
+                            video_diag += (f"Specifically in {target_phase}, {v_char_name} is the ONLY one speaking: '{v_diag_a}'. "
+                                          f"CRITICAL: {v_fig_name} must keep mouth tightly closed, no lip movement, only silent staring reaction.")
+                        
                         elif v_fig_diag and not v_diag_a:
-                            video_diag += f"In {target_phase}, {v_fig_name} speaks '{v_fig_diag}' with lipsync; {v_char_name} stays silent. "
+                            # FIGURAN ngomong, UTAMA wajib kunci mulut
+                            video_diag += (f"Specifically in {target_phase}, {v_fig_name} is the ONLY one speaking: '{v_fig_diag}'. "
+                                          f"CRITICAL: {v_char_name} must keep mouth tightly closed, no lip movement, only silent staring reaction.")
+                        
                         elif v_diag_a and v_fig_diag:
-                            video_diag += (f"In {target_phase}, {v_char_name} speaks first, then {v_fig_name} replies. Strictly no simultaneous talking.")
+                            # Gantian
+                            video_diag += (f"In {target_phase}, {v_char_name} speaks first while {v_fig_name} is silent. "
+                                          f"Then {v_fig_name} replies while {v_char_name} is silent. "
+                                          f"Strictly no simultaneous mouth movement.")
 
                     ULTRA_SHARP = "extreme sharp focus, cinematic texture, visible skin pores, natural imperfections, 8k, masterpiece quality, no motion blur"
-                    TRANS_NEG = "subtitles, speech bubbles, talking during phase 1, premature lipsync, unintentional mouth movement, extra limbs, plastic skin, low quality"
+                    TRANS_NEG += f", {v_fig_name} talking, simultaneous speaking, ghost lipsync, vibrating lips"
 
                     is_trans = True if (v_trigger and v_char_target) else False
                     trans_logic = (f"CHRONOLOGY: Maintain {v_char_outfit} form until {v_timing}s, then as {v_char_name} {v_trigger}, morph into {v_char_target}." if is_trans else "PURE ACTION.")
@@ -5362,6 +5373,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
