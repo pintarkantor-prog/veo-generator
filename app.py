@@ -1682,13 +1682,13 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & CLEAN STATIC VISUAL (FIXED)
+            # 2. KUNCI KETAJAMAN & CLEAN STATIC VISUAL (MENDUNG NATURAL)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                # --- LIGHTING: TERANG TAPI GAK ADA MATAHARI ---
-                f"LIGHTING: Bright diffused daylight, flat white sky, no sun disk visible, zero harsh shadows. "
-                f"CONTRAST: Vivid colors, high-contrast micro-textures, glowing LED lights pop against clean daylight. "
+                # --- UPDATE LIGHTING: MENDUNG SORE NATURAL ---
+                f"LIGHTING: 4 PM late afternoon with a soft dark-grey overcast sky, subtle thin cloud layers, no harsh sun. "
+                f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky, making the colors pop intensely. " # <-- Kalimat sakti lo!
                 # --- POSITIONING: JARAK 1 METER & URUTAN LURUS ---
                 f"CAMERA DISTANCE: Close-up 1 meter distance from lens to mosque. "
                 f"ALIGNMENT: Strictly symmetrical. Mosque is in foreground center, {posisi_nenek} is directly behind the mosque. "
@@ -1715,7 +1715,7 @@ def tampilkan_ai_lab():
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
                 
-            # 5. FINAL ASSEMBLY (Prompt Bersih)
+            # 5. FINAL ASSEMBLY (FIXED: STATIC, SHARP, & MOODY NATURAL)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
@@ -1724,11 +1724,13 @@ def tampilkan_ai_lab():
                 f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
                 f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
-                # --- TECHNICAL: KUNCI STATIS & TAJAM ---
+                # --- TECHNICAL: KUNCI STATIS, TAJAM, & ANTI-BADAII ---
                 f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm lens, F/16 Aperture, Deep Focus. "
-                f"CAMERA LOGIC: Strictly STATIC camera, zero movement, perfectly level 0-degree angle. " # <-- Lurus & Diem
+                f"CAMERA LOGIC: Strictly STATIC camera, zero movement, perfectly level 0-degree eye-level angle. " 
                 f"VISUAL: Ultra-sharp 8K, high-contrast colors, zero motion blur, global shutter. "
-                f"NEGATIVE PROMPT: blurry, bokeh, depth of field, out of focus, shaky, motion blur, " # <-- Anti Blur
+                # --- NEGATIVE PROMPT: BUANG SEMUA SAMPAH VISUAL ---
+                f"NEGATIVE PROMPT: thunderstorm, heavy black clouds, storm, rain, " # <-- Anti kiamat
+                f"blurry, bokeh, depth of field, out of focus, shaky, motion blur, " 
                 f"chair, table, furniture, text, watermark, side-view, tilted, distorted."
             )
 
