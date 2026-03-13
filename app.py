@@ -1585,7 +1585,7 @@ def tampilkan_ai_lab():
                 f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. " # <-- Balikin kontras
                 f"COMPOSITION: Perfectly centered symmetrical composition. "
                 f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
-                f"CAMERA ACTION: Starting at 2 meters, very slow linear Dolly-Back movement away from center. "
+                f"CAMERA ACTION: Starting at 1 meters, very slow linear Dolly-Back movement away from center. "
                 f"FIXED AXIS: No tilting, no orbital, no side movement, 0-degree eye level. "
                 f"SHARPNESS: Deep focus, extreme micro-detail, CRYSTAL CLEAR, zero motion blur, ultra-sharp edges." # <-- Booster ketajaman
             )
@@ -5522,6 +5522,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
