@@ -1711,7 +1711,7 @@ def tampilkan_ai_lab():
 
                 v_loc = st.text_input("📍 Lokasi Kejadian:", placeholder="Lokasi...", key="tr_loc")
 
-                btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
+                btn_gen_trans = st.button("🚀 GENERATE PROMPT", type="primary", use_container_width=True)
 
             # --- 3. LOGIKA GENERATOR PROMPT (SULTAN ENGINE) ---
             if btn_gen_trans:
@@ -1781,13 +1781,13 @@ def tampilkan_ai_lab():
                     st.divider()
                     res1, res2 = st.columns(2)
                     with res1:
-                        st.markdown('<p class="small-label">📸 1. GENERATE IMAGE INI (DIAM)</p>', unsafe_allow_html=True)
+                        st.markdown('<p class="small-label">📸 1. GENERATE IMAGE INI</p>', unsafe_allow_html=True)
                         st.code(final_img, language="markdown")
                     with res2:
-                        st.markdown(f'<p class="small-label">🎬 2. UPLOAD IMAGE KE VIDEO PROMPT INI (AKSI + DIALOG)</p>', unsafe_allow_html=True)
+                        st.markdown(f'<p class="small-label">🎬 2. UPLOAD IMAGE KE VIDEO PROMPT INI</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
-                    st.error("Dian, minimal isi Nama Utama, Naskah, dan Lokasi!")
+                    st.error("Minimal isi Nama Utama, Naskah, dan Lokasi!")
 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5373,6 +5373,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
