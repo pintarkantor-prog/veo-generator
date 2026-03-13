@@ -1619,7 +1619,8 @@ def tampilkan_ai_lab():
     # ============================================================
     with t_transform:        
         with st.expander("⚡ PINTAR TRANFORMATION ENGINE", expanded=True):
-            # --- 1. DATABASE & SULTAN MAPPING (ULTRA-SHARP SPEC) ---
+
+            # --- 1. DATABASE & SULTAN MAPPING (ANATOMY GRADE) ---
             DB_TRANS_EFFECT = {
                 "Energi (Super Saiyan/Aura)": "radiant golden aura, electrical sparks, hair standing up, glowing energy pulses",
                 "Otot (Hulk/Monster)": "rapid muscle expansion, skin stretching, clothes ripping, massive physical growth",
@@ -1631,95 +1632,88 @@ def tampilkan_ai_lab():
             }
 
             MAP_STYLE_TRANS = {
-                "Sangat Nyata": "hyper-realistic raw photorealism, 8k RAW photo, ultra-detailed skin pores and textures, extreme sharp focus, masterpiece quality, shot on 35mm lens, f/8 for deep focus, physically based rendering",
-                "Cinematic": "cinematic movie still shot on 70mm IMAX film, high dynamic range, theatrical shadows, cinematic color grading, deep black levels, cinematic grain, realistic light physics",
-                "Anime": "high-quality 3D animation style, Pixar aesthetic, stylized character design, soft global illumination, ray-traced reflections, subsurface scattering on skin, vibrant colors, 8k render",
+                "Sangat Nyata": "hyper-realistic raw photorealism, 8k RAW photo, ultra-detailed skin textures, sharp focus, masterpiece quality, shot on 35mm lens, f/8, ray-tracing",
+                "Cinematic": "cinematic movie still shot on 70mm IMAX film, anamorphic lens flare, theatrical shadows, cinematic color grading, deep black levels",
+                "Anime": "high-quality 3D animation style, Pixar aesthetic, stylized character design, soft global illumination, vibrant cinematic colors",
             }
 
             MAP_GEAR_TRANS = {
                 "ARRI Alexa LF": "shot on ARRI Alexa LF, cinematic color science, soft highlight roll-off, professional film look, natural skin tones",
-                "RED V-Raptor": "shot on RED V-Raptor 8K, extreme sharpness, high dynamic range, digital cinema texture, vivid colors",
-                "Sony A7S III (Vlog)": "shot on Sony A7S III, handheld feel, 4k video texture, modern digital look, realistic autofocus depth",
-                "GoPro Hero 12 (POV)": "GoPro action cam footage, wide-angle lens distortion, high stability, rugged outdoor texture, POV perspective",
-                "Vintage 16mm": "16mm film stock, vintage grainy texture, nostalgic color grading, slight flicker, retro aesthetic"
+                "RED V-Raptor": "shot on RED V-Raptor 8K, extreme sharpness, high dynamic range, digital cinema texture",
+                "Sony A7S III (Vlog)": "shot on Sony A7S III, handheld feel, 4k digital video texture, realistic autofocus depth",
+                "Vintage 16mm": "16mm film stock, vintage grainy texture, nostalgic color grading, retro aesthetic"
             }
             
             MAP_LIGHT_TRANS = {
-                "Senja Cerah (Golden)": "soft late afternoon light, pale gold ambient glow, neutral color temperature, realistic outdoor lighting, subtle highlights, no overexposure",
-                "Misty Night": "clear moonlit night, soft diffused moonlight, neutral color temperature, cool silver glow on surfaces, high contrast shadows, realistic nocturnal lighting",
-                "Studio Light": "professional cinematic studio lighting, sharp dual-rim light to define edges, neutral color balance, 8k showcase quality, ray-traced reflections"
+                "Senja Cerah (Golden)": "soft late afternoon light, pale gold ambient glow, neutral color temperature, realistic outdoor lighting",
+                "Misty Night": "clear moonlit night, diffused moonlight, cool silver glow, high contrast shadows, deep black levels",
+                "Studio Light": "professional cinematic studio lighting, sharp dual-rim light, neutral color balance, 8k showcase quality"
             }
 
             MAP_CAM_TRANS = {
-                "Sejajar Mata": "eye-level cinematic shot, 50mm prime lens, natural perspective, sharp focus on subjects, realistic human height viewpoint",
-                "Low Angle": "dramatic low angle shot, looking up from ground level, 35mm lens, heroic perspective, majestic scale, sharp silhouettes",
-                "High Angle": "high angle cinematic perspective, looking down from above, 35mm lens, realistic depth, clear ground shadows",
+                "Sejajar Mata": "eye-level cinematic shot, 50mm prime lens, natural perspective, sharp focus on subjects",
+                "Low Angle": "dramatic low angle shot, looking up from ground level, 35mm lens, heroic majestic scale",
+                "High Angle": "high angle cinematic perspective, looking down from above, 35mm lens, realistic depth",
             }
 
             # --- 2. INPUT PANEL ---
             with st.container(border=True):
-                # Baris 1: Karakter Utama & Figuran
                 col_c1, col_c2 = st.columns(2)
                 with col_c1:
                     st.markdown('<p class="small-label">👤 KARAKTER UTAMA (IDENTITY LOCK)</p>', unsafe_allow_html=True)
                     v_char_name = st.text_input("Nama Utama:", placeholder="Nama...", key="tr_name", label_visibility="collapsed")
-                    v_char_physic = st.text_input("Fisik Utama:", placeholder="Fisik (Contoh: Pria atletis, pori-pori kulit jelas)...", key="tr_physic", label_visibility="collapsed")
-                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Pakaian (Contoh: Jas hitam wol)...", key="tr_outfit", label_visibility="collapsed")
-                
+                    v_char_physic = st.text_input("Fisik Utama:", placeholder="Fisik (Contoh: Pria atletis)...", key="tr_physic", label_visibility="collapsed")
+                    v_char_outfit = st.text_input("Outfit Utama:", placeholder="Pakaian Utama...", key="tr_outfit", label_visibility="collapsed")
                 with col_c2:
                     st.markdown('<p class="small-label">👥 KARAKTER TAMBAHAN (OPTIONAL)</p>', unsafe_allow_html=True)
                     v_fig_name = st.text_input("Nama Figuran:", placeholder="Nama...", key="fig_name", label_visibility="collapsed")
-                    v_fig_physic = st.text_input("Fisik Figuran:", placeholder="Fisik (Contoh: Penjahat berotot)...", key="fig_physic", label_visibility="collapsed")
-                    v_fig_outfit = st.text_input("Outfit Figuran:", placeholder="Pakaian (Contoh: Baju kulit)...", key="fig_outfit", label_visibility="collapsed")
+                    v_fig_physic = st.text_input("Fisik Figuran:", placeholder="Fisik Figuran...", key="fig_physic", label_visibility="collapsed")
+                    v_fig_outfit = st.text_input("Outfit Figuran:", placeholder="Pakaian Figuran...", key="fig_outfit", label_visibility="collapsed")
 
                 st.divider()
 
-                # Baris 2: Transformasi & Timing
                 col_p1, col_p2 = st.columns(2)
                 with col_p1:
                     st.markdown('<p class="small-label">🧬 WUJUD AKHIR (TARGET FORM)</p>', unsafe_allow_html=True)
                     v_char_target = st.text_input("Wujud Akhir:", placeholder="Contoh: Hulk, Transformer...", key="tr_target", label_visibility="collapsed")
                     st.markdown('<p class="small-label">⚡ PEMICU SPESIFIK (TRIGGER)</p>', unsafe_allow_html=True)
                     v_trigger = st.text_input("Aksi Pemicu:", placeholder="Contoh: saat loncat, saat berteriak...", key="tr_trigger", label_visibility="collapsed")
-                
                 with col_p2:
                     st.markdown('<p class="small-label">✨ EFEK TRANSISI</p>', unsafe_allow_html=True)
                     v_eff_type = st.selectbox("Efek:", list(DB_TRANS_EFFECT.keys()), key="tr_eff", label_visibility="collapsed")
-                    st.markdown('<p class="small-label">⏱️ TIMING (1.0 - 15.0 DETIK)</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">⏱️ TIMING (DETIK)</p>', unsafe_allow_html=True)
                     v_timing = st.slider("Berubah Setelah:", 1.0, 15.0, 2.0, 0.5, key="tr_time")
 
                 st.divider()
 
-                # Baris 3: Naskah Beruntun & Dialog
-                st.markdown('<p class="small-label">🎬 NASKAH VISUAL (PISAHKAN DENGAN TITIK . UNTUK AKSI BERUNTUN)</p>', unsafe_allow_html=True)
+                st.markdown('<p class="small-label">🎬 NASKAH VISUAL (PISAHKAN DENGAN TITIK . UNTUK URUTAN AKSI)</p>', unsafe_allow_html=True)
                 v_scene_detail = st.text_area("Urutan Adegan:", placeholder="Contoh: DIAN jalan. DIAN lari. DIAN loncat. DIAN berubah.", height=150, key="tr_scene", label_visibility="collapsed")
                 
                 col_d1, col_d2 = st.columns(2)
                 with col_d1:
                     st.markdown(f'<p class="small-label">💬 DIALOG {v_char_name.upper() if v_char_name else "UTAMA"}</p>', unsafe_allow_html=True)
-                    v_diag_a = st.text_area("Utama Bicara:", height=50, key="tr_diag_a", label_visibility="collapsed")
+                    v_diag_a = st.text_area("Utama Bicara:", height=30, key="tr_diag_a", label_visibility="collapsed")
                 with col_d2:
                     st.markdown(f'<p class="small-label">💬 DIALOG {v_fig_name.upper() if v_fig_name else "FIGURAN"}</p>', unsafe_allow_html=True)
-                    v_diag_b = st.text_area("Figuran Bicara:", height=50, key="tr_diag_b", label_visibility="collapsed")
+                    v_fig_diag = st.text_area("Figuran Bicara:", height=30, key="tr_fig_diag", label_visibility="collapsed")
 
                 st.divider()
 
-                # Visual, Light & Gear
                 col_s1, col_s2 = st.columns(2)
                 with col_s1:
-                    st.markdown('<p class="small-label">🎨 VISUAL STYLE & LIGHTING</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎨 STYLE & LIGHTING</p>', unsafe_allow_html=True)
                     v_style_choice = st.selectbox("Style:", list(MAP_STYLE_TRANS.keys()), key="tr_style", label_visibility="collapsed")
                     v_light_choice = st.selectbox("Lighting:", list(MAP_LIGHT_TRANS.keys()), key="tr_light", label_visibility="collapsed")
                 with col_s2:
-                    st.markdown('<p class="small-label">🎥 CAMERA TYPE & SHOT</p>', unsafe_allow_html=True)
+                    st.markdown('<p class="small-label">🎥 CAMERA GEAR & SHOT</p>', unsafe_allow_html=True)
                     v_gear_choice = st.selectbox("Camera Gear:", list(MAP_GEAR_TRANS.keys()), key="tr_gear", label_visibility="collapsed")
                     v_cam_choice = st.selectbox("Shot Angle:", list(MAP_CAM_TRANS.keys()), key="tr_cam", label_visibility="collapsed")
 
-                v_loc = st.text_input("📍 Lokasi Kejadian:", placeholder="Lokasi kejadian...", key="tr_loc")
+                v_loc = st.text_input("📍 Lokasi Kejadian:", placeholder="Lokasi...", key="tr_loc")
 
                 btn_gen_trans = st.button("🚀 GENERATE TRANSFORMASI SULTAN", type="primary", use_container_width=True)
 
-            # --- 3. LOGIKA GENERATOR PROMPT (SULTAN FINAL ENGINE) ---
+            # --- 3. LOGIKA GENERATOR PROMPT (SULTAN ENGINE) ---
             if btn_gen_trans:
                 if v_char_name and v_scene_detail and v_loc:
                     
@@ -1728,7 +1722,6 @@ def tampilkan_ai_lab():
                         ref_tag = "refer to PHOTO #MASTER ONLY" if is_master else "visual description only"
                         return f"[[ CAST_SULTAN_{name.upper()} ({name}): {ref_tag}. PHYSIC: {physic}. WEAR: {outfit} ]]"
 
-                    # Smart Scene Detection
                     steps = [s.strip() for s in v_scene_detail.split('.') if len(s.strip()) > 2]
                     first_step_text = steps[0].upper() if steps else v_scene_detail.upper()
                     
@@ -1741,22 +1734,27 @@ def tampilkan_ai_lab():
 
                     sequential_cue = " -> ".join([f"Phase {i+1}: {s}" for i, s in enumerate(steps)])
 
-                    # Dialog Logic (ONLY for Video)
+                    # Dialogue Logic (Isolated & Phase-Locked)
+                    target_phase = "Phase 2" if len(steps) > 1 else "Phase 1"
                     video_diag = ""
-                    if v_diag_a: video_diag += f"{v_char_name} is speaking: '{v_diag_a}' with active lipsync. "
-                    if v_diag_b and fig_in_script: video_diag += f"{v_fig_name} is speaking: '{v_diag_b}' with active lipsync. "
+                    if v_diag_a or v_fig_diag:
+                        video_diag = f"DIALOGUE TIMING: Start only during {target_phase}. "
+                        if v_diag_a and not v_fig_diag:
+                            video_diag += f"In {target_phase}, {v_char_name} speaks '{v_diag_a}' with lipsync; {v_fig_name} stays silent. "
+                        elif v_fig_diag and not v_diag_a:
+                            video_diag += f"In {target_phase}, {v_fig_name} speaks '{v_fig_diag}' with lipsync; {v_char_name} stays silent. "
+                        elif v_diag_a and v_fig_diag:
+                            video_diag += (f"In {target_phase}, {v_char_name} speaks first, then {v_fig_name} replies. Strictly no simultaneous talking.")
 
-                    # Technical Mantra
-                    ULTRA_SHARP = "extreme sharp focus, cinematic texture, visible skin pores, natural imperfections, 8k, masterpiece quality, no motion blur, high fidelity"
-                    TRANS_NEG = "text, speech bubbles, subtitles, watermark, plastic texture, airbrushed, cartoon, low quality, glitch, distorted hands, extra limbs"
+                    ULTRA_SHARP = "extreme sharp focus, cinematic texture, visible skin pores, natural imperfections, 8k, masterpiece quality, no motion blur"
+                    TRANS_NEG = "subtitles, speech bubbles, talking during phase 1, premature lipsync, unintentional mouth movement, extra limbs, plastic skin, low quality"
 
                     is_trans = True if (v_trigger and v_char_target) else False
-                    trans_logic = (f"CHRONOLOGY: Maintain original form until {v_timing}s, then as {v_char_name} {v_trigger}, initiate {v_eff_type} metamorphosis into {v_char_target}." if is_trans else "PURE ACTION SEQUENCE.")
+                    trans_logic = (f"CHRONOLOGY: Maintain {v_char_outfit} form until {v_timing}s, then as {v_char_name} {v_trigger}, morph into {v_char_target}." if is_trans else "PURE ACTION.")
 
-                    # --- FINAL PROMPT GENERATION ---
+                    # --- FINAL OUTPUT ---
                     final_img = (
-                        f"{main_id}{fig_id_initial}. "
-                        f"SCENE START: {steps[0] if steps else v_scene_detail}. "
+                        f"{main_id}{fig_id_initial}. SCENE START: {steps[0] if steps else v_scene_detail}. "
                         f"Neutral intense expression, closed mouth, looking forward. "
                         f"VISUAL: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
                         f"TECHNICAL: {ULTRA_SHARP}. NEGATIVE: {TRANS_NEG}"
@@ -1764,23 +1762,21 @@ def tampilkan_ai_lab():
                     
                     final_vid = (
                         f"MANDATORY: START DIRECTLY FROM THE UPLOADED REFERENCE IMAGE. "
-                        f"{main_id}{fig_id_full}. "
-                        f"STORYLINE: {sequential_cue}. {video_diag} "
-                        f"CINEMATOGRAPHY: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_CAM_TRANS[v_cam_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
-                        f"{trans_logic} "
-                        f"TECHNICAL: {ULTRA_SHARP}. Ensure 100% identity consistency for 20s. NEGATIVE: {TRANS_NEG}"
+                        f"{main_id}{fig_id_full}. STORYLINE: {sequential_cue}. {video_diag} "
+                        f"CINEMATOGRAPHY: {MAP_GEAR_TRANS[v_gear_choice]}, {MAP_STYLE_TRANS[v_style_choice]}, {MAP_LIGHT_TRANS[v_light_choice]}. "
+                        f"{trans_logic} TECHNICAL: {ULTRA_SHARP}. Ensure 100% identity consistency for 20s. NEGATIVE: {TRANS_NEG}"
                     )
 
                     st.divider()
                     res1, res2 = st.columns(2)
                     with res1:
-                        st.markdown('<p class="small-label">📸 1. GENERATE IMAGE INI DULU</p>', unsafe_allow_html=True)
+                        st.markdown('<p class="small-label">📸 1. GENERATE IMAGE INI (DIAM)</p>', unsafe_allow_html=True)
                         st.code(final_img, language="markdown")
                     with res2:
-                        st.markdown(f'<p class="small-label">🎬 2. UPLOAD IMAGE #1 KE VIDEO PROMPT INI</p>', unsafe_allow_html=True)
+                        st.markdown(f'<p class="small-label">🎬 2. UPLOAD IMAGE KE VIDEO PROMPT INI (AKSI + DIALOG)</p>', unsafe_allow_html=True)
                         st.code(final_vid, language="markdown")
                 else:
-                    st.error("Nama Utama, Naskah, dan Lokasi wajib diisi!")
+                    st.error("Dian, minimal isi Nama Utama, Naskah, dan Lokasi!")
 
     with t_random:
         st.status("Sedang proses...", expanded=False)
@@ -5366,6 +5362,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
