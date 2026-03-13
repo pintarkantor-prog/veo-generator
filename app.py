@@ -1569,6 +1569,39 @@ def tampilkan_ai_lab():
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
+                "Authentic Rural Indonesian (Simple, honest, with a slight 'kampungan' lilt)",
+                "Deep Javanese Heart (Soft-spoken, slow, with heavy 'd' and 't' consonants)",
+                "Melodic Sundanese (Gentle, flowing tones with a soft West Javanese rise and fall)",
+                "Coastal Melayu (Raspy, rhythmic, with a warm seaside gravelly texture)",
+                "Classic Betawi Old-Soul (Deep, direct, but profoundly humble and polite)"
+            ],
+            "Mood": [
+                "Quiet Vulnerability (Steady gaze, eyes heavy with deep emotion)",
+                "Pensive Stillness (Calm facial expression, long natural pauses)",
+                "Graceful Serenity (Serene and peaceful look, slow breathing)",
+                "Humble Devotion (Gentle and sincere facial expression)",
+                "Stoic Calmness (A steady, wise face reflecting years of memories)",
+                "Sacred Focus (Deeply focused expression, absolute sincerity)",
+                "Peaceful Hope (A calm, hopeful look in the eyes)"
+            ],
+            "Physical Action": [
+                "Delicate fingers precisely touching a tiny ornament on the mosque",
+                "Holding a steady, focused gaze on the architectural details",
+                "Eyes glistening slightly while looking down at the workbench",
+                "Slow, calm swallowing while looking at the central dome",
+                "Gently resting one finger on the textured surface of the diorama",
+                "A subtle, peaceful smile while admiring the structure",
+                "A slow, deep exhale while hands rest lightly on the table",
+                "Closing eyes for a second in silent devotion",
+                "Fingertips resting with extreme reverence on the diorama",
+                "Briefly looking up with a calm, hopeful expression",
+                "Looking down with intense focus, hands steady in their craft",
+                "Softly blinking while observing the internal mosque lights"
+            ]
+        }
+        # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
+        MASTER_AUDIO_STYLE = {
+            "Logat": [
                 "Kampung Tulen (Authentic Rural Indonesian - Simple, honest, lilt)",
                 "Jawa Medok (Deep Javanese Heart - Soft-spoken, slow, heavy consonants)",
                 "Sunda Lembut (Melodic Sundanese - Gentle, flowing tones)",
@@ -1664,21 +1697,18 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & ULTRA-SMOOTH HORIZONTAL SLIDE (ANTI-MAJU-MUNDUR)
+            # 2. KUNCI KETAJAMAN & CLEAN VISUAL
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: Bright diffused daylight, soft white sky, zero harsh shadows. " 
-                f"COMPOSITION: Perfectly centered symmetrical composition. "
-                f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
-                # --- KUNCI GERAKAN GESER SAMPING ALUS MAMPUS (LATERAL ONLY) ---
-                f"CAMERA ACTION: Microscopic lateral trucking shot, sliding extremely slowly to the right. " # <-- Pakai 'Trucking' buat geser samping
-                f"MOVEMENT SPEED: 0.01 speed, nearly static, ultra-low linear motion on the X-axis only. " # <-- Speed silet jadi 0.01 (Paling alus!)
-                f"MOVEMENT LOGIC: Strictly NO forward movement, NO backward movement, NO zoom, NO tilt. " # <-- Blokir sumbu Z dan Y
-                f"FIXED RAIL: Locked 0-degree eye level, perfectly stable horizontal track, zero camera shake. "
-                # --- KUNCI FOKUS & SHARPNESS ---
-                f"SHARPNESS: Deep focus F/16, extreme micro-detail, zero motion blur, global shutter. "
-                f"STABILIZATION: The camera glides sideways only a few micrometers per second, ghost-smooth motion." # <-- Perintah 'Ghost-smooth' biar gak kaget
+                f"LIGHTING: 4 PM dark stormy overcast daylight, heavy dramatic clouds, moody ambient light. "
+                f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky. "
+                f"CAMERA DISTANCE: Mid-shot distance, 3 meters away. "
+                f"POSITIONING: Both mosque and character in MIDGROUND. Foreground is empty. "
+                f"STRICT SEPARATION: Mosque on floor, {posisi_nenek} 50cm BEHIND it. "
+                f"CAMERA MOVEMENT: Very slow cinematic SIDE-TO-SIDE ORBITAL tracking shot. "
+                f"NO FORWARD MOVEMENT. NO ZOOM. "
+                f"DEEP FOCUS: Everything is CRYSTAL CLEAR, no blur."
             )
 
             # 3. AMBIL DATA MASTER
@@ -1696,25 +1726,19 @@ def tampilkan_ai_lab():
             aksi_final = pilih_aksi.split('(')[-1].strip(')') if '(' in pilih_aksi else pilih_aksi
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
-            
-            # 5. FINAL ASSEMBLY (FIXED: ULTRA-SMOOTH LATERAL SLIDE)
+                
+            # 5. FINAL ASSEMBLY (Prompt Bersih)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                 f"WARDROBE: {baju_desc}. \n"
                 f"ENVIRONMENT: {env_detail}. \n"
-                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
+                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" # <-- Pakai yang sudah di-filter
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
-                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/16 Aperture, Deep Focus. "
-                # --- KUNCI MATI: GESER SAMPING ALUS (ANTI-MAJU-MUNDUR) ---
-                f"CAMERA LOGIC: Microscopic lateral trucking shot on X-axis only, 0.01 speed, ghost-smooth slide. " # <-- Pakai Trucking + X-axis + Speed 0.01
-                f"MOVEMENT LIMIT: Strictly NO Dolly-Back, NO forward-backward, NO zoom-in, NO Z-axis motion. " # <-- Haramkan sumbu Z
-                f"STABILIZATION: Perfectly frozen Y and Z axis, locked 0-degree level, ultra-stable horizontal rail. "
-                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, Global Shutter. "
-                f"Vivid micro-textures, clean edges, strictly symmetrical framing. "
-                f"NEGATIVE PROMPT: Dolly-back, forward motion, zoom-in, zoom-out, shaky cam, Z-axis movement, chair, table, "
-                f"furniture, text, watermark, blurry, miring, tilted, distorted, off-center, hazy, out of focus." 
+                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n" # <-- Pakai yang sudah di-filter
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture, Deep Focus, "
+                f"Fixed 15-degree side-angle, ZERO MOTION BLUR, High-shutter speed, 8K. "
+                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, music, sound."
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5616,6 +5640,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
