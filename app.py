@@ -1266,220 +1266,221 @@ def tampilkan_ai_lab():
                 "NO CHAIRS. Everything is sharp and clear."
             ),
             "Teras Rumah Panggung": (
-                "Sitting cross-legged on the flat wooden floor planks of a traditional porch. "
-                "A few scattered wood shavings and a small hand-chisel lie on the floor nearby. " # <-- Bumbu (nyambung sama kerjaan)
-                "Background shows fruit trees and a rustic dirt road. NO CHAIRS, NO TABLES."
+                "Sitting cross-legged on flat wooden floor planks of a traditional porch. "
+                "The background is a solid wall of the wooden house with a closed shuttered window, blocking the horizon. " # <-- Tutup pake tembok rumah
+                "A few scattered wood shavings and a small hand-chisel lie on the floor nearby. "
+                "NO OPEN SKY, NO INFINITY. A localized shot focusing on the wooden floor and the solid wall behind."
             ),
             "Halaman Pohon Bambu": (
-                "Sitting cross-legged on a traditional 'Tikar Pandan' (woven mat) in a bamboo grove. "
-                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke nearby. " # <-- Bumbu (gerakan halus buat video)
-                "Thin bamboo leaves create a textured background. NO FURNITURE."
+                "Sitting cross-legged on a traditional 'Tikar Pandan' (woven mat) in a dense bamboo grove. "
+                "The background is a thick, impenetrable wall of vertical bamboo stalks that completely hides the sky. " # <-- Tembok bambu rapat
+                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke nearby. "
+                "NO HORIZON. The scene is enclosed by the dense green bamboo partition."
             ),
             "Lantai Batu Candi": (
                 "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "Next to the character is a small stone incense burner (unlit) and a handful of withered frangipani petals. " # <-- Bumbu
-                "Bordered by low carved stone reliefs and small moss patches in the stone gaps. "
-                "NO LIGHTING, NO WEATHER. Focus on stone porosity and carved textures."
+                "The background is a solid carved stone relief wall that prevents any distant view. " # <-- Tembok relief candi
+                "Next to the character is a stone incense burner and a handful of withered frangipani petals. "
+                "NO LIGHTING, NO SKY. Focused on the stone porosity and the solid vertical stone boundary."
             ),
             "Tanah Merah Kebun": (
                 "Positioned on a flat area of packed red laterite soil. "
-                "Next to the character is a small rusted garden trowel and a clay pot shard. " # <-- Bumbu
-                "Nearby, scattered dry twigs and a few fallen mango leaves on the ground. "
-                "NO SUNLIGHT, NO SHADOWS. Focus on soil clods and earthy red textures."
+                "The background is a dense hedge of dark tropical bushes and a low mud-brick wall. " # <-- Pager tanaman & tembok tanah
+                "Next to the character is a small rusted garden trowel and a clay pot shard. "
+                "NO SUNLIGHT, NO INFINITY VOID. A grounded, earthy corner with clear vertical barriers."
             ),
             "Dek Bata Merah Tua": (
-                "Resting on a pavement of weathered, mossy red bricks arranged in a herringbone pattern. "
-                "Next to the character is an old brass watering can and a small pile of terracotta tiles. " # <-- Bumbu
-                "In the background, a low brick wall covered in crawling ivy vines. "
-                "NO SKY, NO TIME. Focus on brick grout and mossy textures."
+                "Resting on a pavement of weathered, mossy red bricks in a herringbone pattern. "
+                "The background is a solid high brick wall covered in thick crawling ivy vines. " # <-- Tembok bata rambat
+                "Next to the character is an old brass watering can and a small pile of terracotta tiles. "
+                "NO SKY, NO TIME. The view is strictly confined to the brick floor and the solid vine-covered wall."
             ),
             "Tepi Jalan Setapak Hutan": (
-                "Placed on a forest path covered in a thick layer of pine needles and dried oak leaves. "
-                "Next to the character is a large wild mushroom and a small cluster of acorns. " # <-- Bumbu
-                "Surrounded by exposed tree roots and small patches of wild green moss. "
-                "NO WEATHER, NO SUN. Focus on leaf litter and forest floor layering."
+                "Sitting cross-legged on a forest path covered in thick pine needles and dried oak leaves. "
+                "The background is a dense, dark wall of ancient tree trunks and tangled wild vines that completely blocks the sky. " # <-- Tembok pohon nutup langit
+                "Next to the character is a large wild mushroom and a small cluster of acorns. "
+                "NO WEATHER, NO SUN. A confined forest nook with focus on leaf litter and floor textures."
             ),
             "Tepi Kolam Teratai & Air Terjun": (
-                "Placed directly on a smooth, weathered dark river stone pavement. "
-                "Next to the character is a miniature traditional ceramic teapot and one elegant cup. " # <-- Bumbu
-                "Nearby, vibrant pink and white lotus flowers and green lily pads float on a clear resin pond, with a soft stone waterfall in the background. "
-                "NO CHAIRS, NO MODERN FURNITURE. Focus on water clarity and stone textures."
+                "Placed directly on smooth, weathered dark river stone pavement. "
+                "The background is a solid stone grotto wall with a soft waterfall trickling down, blocking any distant horizon. " # <-- Tebing batu nutup langit
+                "Next to the character is a miniature ceramic teapot and one elegant cup. "
+                "Nearby, lotus flowers and lily pads float on a clear pond. NO OPEN SKY, NO INFINITY."
             ),
             "Halaman Rumput Hijau & Bonsai": (
                 "Resting on a manicured, thick green grass turf. "
-                "Next to the character is a small wicker basket filled with colorful fallen petals and a miniature rustic wooden rake. " # <-- Bumbu
-                "Bordered by low-lying stone lanterns and a single, intricately shaped bonsai pine tree. "
-                "NO SUNLIGHT DESCRIPTION, NO WEATHER. Focus on individual blades of grass and wicker textures."
+                "The background is a tall, solid traditional stone fence (bentar) or a thick manicured hedge. " # <-- Pager batu nutup langit
+                "Next to the character is a wicker basket of fallen petals and a miniature wooden rake. "
+                "NO SUNLIGHT, NO SKY. Focused on individual blades of grass and the solid boundary behind."
             ),
             "Taman Kering Zen & Kerikil": (
-                "Placed on a bed of meticulously raked fine white pebbles, forming neat ripple patterns. "
-                "Next to the character is a single large, smooth grey mossy boulder and a handful of small polished obsidian stones. " # <-- Bumbu
-                "Bordered by a low stone wall and a few scattered autumn leaves. "
-                "NO ARTIFICIAL LIGHTING, NO WEATHER. Focus on pebble texture and boulder contours."
+                "Placed on a bed of meticulously raked fine white pebbles in ripple patterns. "
+                "The background is a solid, clean minimalist wooden wall or a dark slate partition. " # <-- Sekat kayu nutup langit
+                "Next to the character is a large grey mossy boulder and polished obsidian stones. "
+                "NO VOID, NO CLOUDS. A strictly enclosed courtyard space with clear vertical limits."
             ),
             "Tanah Liat & Sawah Berundak": (
-                "Positioned on a flat, packed dirt path at the edge of vibrant green terraced rice fields. "
-                "Next to the character is a single conical straw hat (caping) and a clay water flask. " # <-- Bumbu
-                "Nearby, a few small wooden water channels and distant rolling green hills. "
-                "NO SUNLIGHT, NO SHADOWS. Focus on soil clods and earthy red textures."
+                "Positioned on a flat, packed dirt path. "
+                "The background is a steep, rising terrace of vibrant green rice stalks that acts as a natural wall. " # <-- Terasering tinggi nutup langit
+                "Next to the character is a conical straw hat (caping) and a clay water flask. "
+                "NO SUNLIGHT, NO HORIZON. The view is blocked by the rising green layers of the field."
             ),
             "Teras Batu Candi & Kamboja": (
                 "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "Next to the character is a small stone incense burner (unlit) and a handful of withered white frangipani petals. " # <-- Bumbu
-                "Nearby, low carved stone reliefs and small moss patches in the stone gaps. "
-                "NO LIGHTING DESCRIPTION, NO WEATHER. Focus on stone porosity and carved textures."
+                "The background is a solid, high carved stone relief wall with moss in the crevices. " # <-- Tembok relief nutup langit
+                "Next to the character is a stone incense burner and withered frangipani petals. "
+                "NO WEATHER, NO OPEN HORIZON. A localized temple corner with clear stone boundaries."
             ),
             "Gubuk Tengah Sawah (Saung)": (
-                "Sitting cross-legged on the aged bamboo floor of a small open-air Saung. "
-                "A vintage kerosene lamp (lampu teplok) hangs on the corner post, and a bunch of harvested bananas sits nearby. " # <-- Bumbu
-                "360-degree view of golden rice fields. NO CHAIRS, strictly lesehan."
+                "Sitting cross-legged on the aged bamboo floor of a small Saung. "
+                "The view is blocked on three sides by a dense, thick curtain of tall yellow rice stalks. " # <-- Padi nutup pandangan biar nggak jebol
+                "A vintage kerosene lamp (lampu teplok) hangs nearby, next to a bunch of harvested bananas. "
+                "NO DISTANT HORIZON, NO SKY. Focus on the bamboo textures and the close-up rice curtain."
             ),
             "Tepian Sungai Berbatu": (
                 "Sitting cross-legged on a large, flat river stone. "
-                "A pair of traditional rubber sandals (sandal jepit) is placed neatly on a nearby rock. " # <-- Bumbu (biar makin real)
-                "Background shows shallow clear water flowing over pebbles and lush ferns. NO CHAIRS."
+                "The background is a solid wall of mossy river embankment and thick ferns that blocks the sky. " # <-- Tembok kali nutup langit
+                "A pair of traditional rubber sandals (sandal jepit) is placed neatly on a nearby rock. "
+                "The scene focuses on the shallow water flow and the solid stone boundary behind. "
+                "NO HORIZON, NO OPEN SKY. Everything is grounded on the river stones."
             ),
             "Kebun Buah Naga": (
-                "Sitting cross-legged directly on a rustic woven mat (tikar) in the middle of a dragon fruit plantation. "
-                "Beside them is a small wicker basket containing a few harvested pink dragon fruits. " # <-- Bumbu
-                "Surrounded by climbing cactus-like vines and hanging vibrant pink fruits. "
-                "NO CHAIRS, NO TABLES. Pure lesehan style on the ground."
+                "Sitting cross-legged on a rustic woven mat (tikar) in a dragon fruit plantation. "
+                "The background is an impenetrable wall of climbing cactus-like vines and vibrant pink fruits on concrete pillars. " # <-- Pager buah naga nutup langit
+                "Beside them is a small wicker basket with a few harvested dragon fruits. "
+                "NO INFINITY VOID, NO CLOUDS. The view is strictly enclosed by the dense plantation grid."
             ),
             "Kebun Buah Melon": (
                 "Sitting cross-legged on a low wooden plank floor inside a greenhouse. "
-                "Nearby is a traditional watering can and a pair of garden shears. " # <-- Bumbu
-                "Surrounded by hanging melons, lush green leaves, and vines. "
-                "NO BENCH, NO FURNITURE. The mosque is placed directly on the floor."
+                "The background is a solid greenhouse wall covered in lush hanging melon vines and large leaves. " # <-- Daun melon nutup langit
+                "Nearby is a traditional watering can and garden shears. "
+                "NO OUTDOOR SKY, NO HORIZON. A fully enclosed indoor gardening environment."
             ),
             "Taman Bunga Warna-Warni": (
-                "Sitting cross-legged on a flat decorative stone path surrounded by blooming flower beds. "
-                "A few fallen flower petals are scattered around the character and the mosque diorama. " # <-- Bumbu (Estetik parah)
-                "Butterflies flutter in the background of a lush botanical garden. "
-                "NO GARDEN CHAIRS, NO FURNITURE. Strictly sitting on the ground."
+                "Sitting cross-legged on a flat stone path. "
+                "The background is a high, solid hedge of blooming flowers and tall botanical shrubs. " # <-- Pager bunga nutup langit
+                "A few fallen petals are scattered around the character. "
+                "NO OPEN HORIZON. The scene is a private, enclosed garden nook with a clear vertical floral barrier."
             ),
             "Arena Bermain Anak": (
-                "Sitting cross-legged directly on the soft rubber playground flooring. "
-                "A forgotten vintage toy car or a marble lies near the character's feet. " # <-- Bumbu (Nambah cerita)
-                "Background shows a distant slide and swings under an overcast sky. "
-                "NO BENCH. Focused on the ground-level perspective."
+                "Sitting cross-legged on soft rubber playground flooring. "
+                "The background is a solid, brightly colored playground wall or a low brick perimeter. " # <-- Pager playground nutup langit
+                "A forgotten vintage toy car or a marble lies near the character's feet. "
+                "NO DISTANT SKY, NO CLOUDS. Focused on the floor-level perspective and the solid wall behind."
             ),
             "Taman Hiburan (Carnival)": (
                 "Sitting cross-legged on a large piece of clean cardboard spread on the grass. "
-                "A half-eaten cotton candy on a stick is leaning against a small bag nearby. " # <-- Bumbu (Vibe pasar malam/karnaval)
-                "Background shows a distant ferris wheel and colorful tents. "
-                "NO TABLES, NO CHAIRS. Realistic grassroots carnival atmosphere."
+                "The background is the solid colorful fabric of a large carnival tent that blocks the view. " # <-- Tenda nutup langit
+                "A half-eaten cotton candy on a stick is leaning against a small bag nearby. "
+                "NO INFINITY VOID. A grounded, enclosed carnival corner with clear fabric boundaries."
             ),
             "Halaman Toko Kelontong": (
                 "Sitting cross-legged on a clean cement floor in front of a traditional village 'Warung'. "
-                "Beside them is an old glass jar filled with traditional crackers and a small coil of rope. " # <-- Bumbu
-                "Background shows colorful hanging sachets of drinks and snacks. "
-                "NO BENCH, NO CHAIRS. Strictly sitting on the ground (lesehan)."
+                "The background is the solid front wall of the shop, covered in colorful hanging sachets and snack displays. " # <-- Tembok warung nutup langit
+                "Beside them is an old glass jar of crackers and a coil of rope. "
+                "NO SKY, NO DISTANT ROAD. Everything is contained against the solid shop wall."
             ),
-            "Lantai Kerja Berantakan": ( # Nama diubah biar gak memancing 'Table'
-                "Sitting cross-legged directly on the workshop floor scattered with wood shavings and sawdust. "
-                "Small glue bottles, tweezers, and crafting tools are laid out neatly on the floor around the mosque. " # <-- Bumbu
-                "Rustic indoor workshop vibe. NO WORKBENCH, NO TABLES. Pure ground-level crafting."
+            "Lantai Kerja Berantakan": (
+                "Sitting cross-legged directly on the workshop floor. "
+                "The background is a solid indoor brick or wooden workshop wall with shelves of tools. " # <-- Tembok bengkel nutup langit
+                "Small glue bottles, tweezers, and wood shavings are scattered around the diorama. "
+                "NO OPEN SKY, NO VOID. A strictly indoor, floor-level crafting perspective."
             ),
             "Teras Rumah Klasik": (
-                "Sitting cross-legged on the cool tiled floor of a traditional Indonesian terrace. "
-                "A vintage bicycle is parked nearby, leaning against a wooden pillar. " # <-- Bumbu
-                "Background shows a simple village garden with potted clay plants. "
-                "NO CHAIRS, NO FURNITURE. The mosque is the centerpiece on the tiles."
+                "Sitting cross-legged on the cool tiled floor. "
+                "The background is a solid white house wall with a vintage bicycle (sepeda jengki) leaning against a wooden pillar. " # <-- Bumbu Balik!
+                "Nearby are potted clay plants on the terrace edge. "
+                "NO OPEN SKY, NO INFINITY. The scene is enclosed by the porch structure and the house wall."
             ),
             "Ruang Tamu Jadul": (
-                "Sitting cross-legged on a woven 'Tikar Pandan' mat inside a modest vintage living room. "
-                "An old family photo in a wooden frame is visible on the plank wall behind. " # <-- Bumbu
-                "NO CHAIRS, NO SOFA. A simple wooden cabinet is visible in the far background."
+                "Sitting cross-legged on a 'Tikar Pandan' mat. "
+                "The background is a solid dark wood plank wall with an old family photo in a wooden frame hanging behind. " # <-- Bumbu Balik!
+                "A simple wooden cabinet is visible in the corner. "
+                "NO OUTDOOR VIEW, NO SKY. A strictly indoor, vintage domestic environment."
             ),
             "Dapur Kampung Estetik": (
                 "Sitting cross-legged on a low bamboo platform (bale-bale) near a traditional clay stove (tungku). "
-                "A few bamboo baskets (tampah) are leaning against the wall nearby. " # <-- Bumbu
-                "Rustic kitchen atmosphere with natural textures. "
-                "NO DINING TABLE, NO CHAIRS. Everything is at floor level."
+                "A few bamboo baskets (tampah) are leaning against the solid soot-stained brick wall. " # <-- Bumbu Balik!
+                "A thin trail of smoke rises from the stove. "
+                "NO WINDOWS, NO VOID. A rustic, enclosed indoor kitchen vibe."
             ),
             "Bengkel Rakit Miniatur": (
-                "Sitting cross-legged on the floor of a dedicated small craft room. "
-                "Architectural sketches are pinned on the lower walls, and various material scraps like balsa wood and glue are scattered around. " # <-- Bumbu
-                "Shelves with half-finished models are visible in the background. "
-                "NO TABLES, NO WORKBENCH. The character works directly on the floor level."
+                "Sitting cross-legged on the floor of a craft room. "
+                "The background wall is covered in pinned architectural sketches and shelves with half-finished models. " # <-- Bumbu Balik!
+                "Balsa wood scraps, tweezers, and glue bottles are scattered around the character. "
+                "NO SKY. A dense, creative indoor workshop atmosphere."
             ),
             "Gazebo Bambu (Outdoor)": (
-                "Sitting cross-legged on the polished bamboo slats of a small 'Saung'. "
-                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. " # <-- Bumbu
-                "Surrounded by lush banana trees and dense green foliage. "
-                "NO CHAIRS. The camera captures a wide view of the bamboo structure."
+                "Sitting cross-legged on polished bamboo slats. "
+                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. " # <-- Bumbu Balik!
+                "The view is blocked by a dense, thick wall of green banana leaves and tropical foliage. "
+                "NO DISTANT HORIZON, NO SKY. Enclosed by a natural green barrier."
             ),
             "Gubuk Tengah Sawah": (
-                "Sitting cross-legged on the rustic wooden planks of a small shack. "
-                "An old straw hat (caping) and a plastic water bottle are placed nearby. " # <-- Bumbu
-                "Open view of vast emerald green rice fields under a grey overcast sky. "
-                "NO CHAIRS. Pull back camera distance for a wide atmospheric shot."
+                "Sitting cross-legged on rustic wooden planks. "
+                "An old straw hat (caping) and a plastic water bottle are placed nearby on the floor. " # <-- Bumbu Balik!
+                "The background is a solid high wall of tall yellow rice stalks blocking the horizon. "
+                "NO INFINITY VOID. Focused on the floor level and the vertical rice barrier."
             ),
             "Saung Pinggir Pantai": (
-                "Sitting cross-legged on a woven plastic mat spread over the white sand under a thatched-roof hut. "
-                "A few dry coconuts and a pair of flip-flops are nearby on the sand. " # <-- Bumbu
-                "Background shows calm ocean waves and a distant wooden boat. "
-                "NO CHAIRS, NO BENCH. Strictly sitting on the sand/mat."
+                "Sitting cross-legged on a woven plastic mat over white sand. "
+                "A few dry coconuts and a pair of worn flip-flops lie nearby on the sand. " # <-- Bumbu Balik!
+                "The background is a solid limestone cliff or dense palm trees that hides the ocean horizon. "
+                "NO OPEN SKY, NO INFINITY SEA. A localized, private beach nook."
             ),
             "Teras Pinggir Sungai": (
-                "Sitting cross-legged on a weathered wooden deck built over the water. "
-                "A traditional bamboo fishing rod is leaning against the railing nearby. " # <-- Bumbu
-                "Background shows flowing river ripples and lush tropical trees. "
-                "NO CHAIRS. The mosque is placed on the wooden planks at floor level."
+                "Sitting cross-legged on a weathered wooden deck. "
+                "A traditional bamboo fishing rod is leaning against the railing nearby. " # <-- Bumbu Balik!
+                "The background is a steep, solid riverbank embankment covered in thick trees. "
+                "NO SKY, NO DISTANT VIEW. Focused on the water ripples and the forest wall."
             ),
             "Lapak Penjual Rongsokan": (
-                "Sitting cross-legged on the dusty ground of a scrap metal yard. "
-                "Next to them is an old rusty gear and a stack of weathered newspapers. " # <-- Bumbu
-                "Surrounded by tall piles of rusty metal, old tires, and vintage junk stacked against the wall. "
-                "NO CHAIRS, NO FURNITURE. The mosque is placed on a clean piece of wood on the ground."
-            ),
-            "Halaman Belakang Desa": (
-                "Sitting cross-legged directly on the dusty earth under a large mango tree. "
-                "A traditional broom (sapu lidi) and a plastic bucket are nearby. " # <-- Bumbu
-                "Background shows a simple brick house and laundry hanging on a wire. "
-                "NO BENCH, NO CHAIRS. Pure village-style lesehan."
+                "Sitting cross-legged on the dusty ground. "
+                "Next to them is a large old rusty gear and a stack of weathered newspapers. " # <-- Bumbu Balik!
+                "The background is a solid high wall made of stacked rusty metal sheets and old tires. "
+                "NO OPEN HORIZON. A gritty, enclosed industrial-waste environment."
             ),
             "Teras Masjid Tua": (
-                "Sitting cross-legged on the cool, polished marble floor of an old mosque porch. "
-                "A pair of worn-out leather sandals is placed neatly on the edge of the marble step. " # <-- Bumbu
-                "Background features traditional Islamic arched doors and a simple wall clock. "
-                "NO CHAIRS. The scene is serene, quiet, and strictly floor-level."
+                "Sitting cross-legged on the cool, polished marble floor. "
+                "The background is a solid ancient stone wall with traditional Islamic arched doors and a simple analog wall clock. " # <-- Tembok masjid nutup langit
+                "A pair of worn-out leather sandals is placed neatly on the edge of the marble step. "
+                "NO OPEN SKY, NO DISTANT HORIZON. A serene, enclosed sacred space with clear vertical boundaries."
             ),
             "Teras Rumah Geribik Bambu": (
-                "Placed on a cracked, uneven cement floor in front of a weathered bamboo-weave wall (geribik). "
-                "Next to the character is a small, chipped enamel mug and a single half-eaten boiled sweet potato on a plastic plate. " # <-- Bumbu
-                "Nearby, a rusty old bicycle wheel and a stack of tied-up cardboard scraps. "
-                "NO LUXURY, NO FURNITURE. Focus on wall splinters and floor cracks."
+                "Placed on a cracked, uneven cement floor. "
+                "The background is a solid, weathered bamboo-weave wall (geribik) that blocks any outdoor view. " # <-- Geribik nutup langit
+                "Next to the character is a chipped enamel mug and a half-eaten boiled sweet potato. "
+                "Nearby, a rusty bicycle wheel and tied-up cardboard scraps. NO VOID, NO SKY."
             ),
             "Kolong Jembatan Tua": (
-                "Set on a damp, dusty concrete ground with patches of grey sand. "
-                "Next to the character is a small pile of discarded plastic bottles and a tattered, folded burlap sack. " # <-- Bumbu
-                "In the background, thick concrete pillars with faded graffiti and exposed rusty rebar. "
-                "NO SUNLIGHT, NO SKY. Focus on grime textures and industrial decay."
+                "Set on a damp, dusty concrete ground with grey sand. "
+                "The background is dominated by massive, solid concrete bridge pillars and a low dark ceiling, blocking the sky completely. " # <-- Pilar & langit-langit jembatan nutup langit
+                "Next to the character is a pile of plastic bottles and a tattered burlap sack. "
+                "NO SUNLIGHT, NO HORIZON. A dark, enclosed industrial underpass."
             ),
             "Gubuk Tengah Sawah Layu": (
-                "Positioned on a dry, dusty wooden plank floor of a small, leaning shack. "
-                "Next to the character is a frayed sarong and a small, empty tin can used as a tip jar. " # <-- Bumbu
-                "Surrounded by vast fields of parched, yellowing rice stalks and a broken wooden plow. "
-                "NO RAIN, NO CLOUDS. Focus on wood rot and dry organic textures."
+                "Positioned on a dry, dusty wooden plank floor of a leaning shack. "
+                "The background is a solid wall made of dry, vertical parched rice stalks and the shack's dark wooden partition. " # <-- Padi kering nutup langit
+                "Next to the character is a frayed sarong and an empty tin can. "
+                "NO OPEN HORIZON, NO CLOUDS. Enclosed by the dense, dry organic textures of the field."
             ),
             "Pinggir Rel Kereta Api": (
-                "Resting on a bed of dark, oil-stained gravel and coarse basalt stones. "
-                "Next to the character is a small bundle of recycled wires and a dented aluminum cooking pot. " # <-- Bumbu
-                "Nearby, a rusty segment of a train rail and a few scattered cigarette butts (miniature). "
-                "NO TIME, NO WEATHER. Focus on rust, grease, and stone textures."
+                "Resting on a bed of dark, oil-stained gravel and basalt stones. "
+                "The background is a solid rusty corrugated metal fence or a steep gravel embankment that hides the sky. " # <-- Pager seng/tanggul nutup langit
+                "Next to the character is a bundle of recycled wires and a dented aluminum pot. "
+                "NO HORIZON, NO VOID. Focused on the gritty ground and the solid metallic barrier."
             ),
             "Halaman Belakang Pasar": (
-                "Placed on a muddy ground covered with flattened cardboard and rotting vegetable scraps. "
-                "Next to the character is a small, broken wooden crate and a piece of dirty hemp rope. " # <-- Bumbu
-                "In the background, stacks of empty fruit baskets and a stained corrugated metal fence (seng). "
-                "NO GLOW, NO CLEANLINESS. Focus on mud detail and metallic oxidation."
+                "Placed on a muddy ground covered with flattened cardboard. "
+                "The background is a solid, stained corrugated metal fence (seng) and stacks of empty fruit baskets. " # <-- Pager seng nutup langit
+                "Next to the character is a broken wooden crate and a dirty hemp rope. "
+                "NO GLOW, NO SKY. Everything is contained within the solid, messy market boundaries."
             ),
             "Bengkel Las Sederhana": (
-                "Sitting cross-legged on the soot-covered concrete floor of a small welding shop. "
-                "Scattered iron bars and a welding mask (welding helmet) lie on the floor nearby. " # <-- Bumbu
-                "Industrial background with tools hanging on a dark, soot-covered wall. "
-                "NO CHAIRS, NO TABLES. Everything is grounded and gritty."
+                "Sitting cross-legged on the soot-covered concrete floor. "
+                "The background is a solid, dark, soot-covered workshop wall with tools hanging on it. " # <-- Tembok bengkel nutup langit
+                "Scattered iron bars and a welding helmet lie on the floor nearby. "
+                "NO WINDOWS, NO OUTDOOR VIEW. A strictly indoor, floor-level gritty environment."
             )
         }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
@@ -1580,18 +1581,23 @@ def tampilkan_ai_lab():
             # 1. POSISI MATI LESEHAN
             posisi_nenek = "sitting cross-legged on the ground (lesehan)"
             
-            # 2. KUNCI KETAJAMAN & MICRO DOLLY-OUT (FIXED CENTER)
+            # 2. KUNCI KETAJAMAN TOTAL & CONSTANT MICRO-MOTION (ANTI-BLUR)
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
                 f"LIGHTING: Bright diffused daylight, soft white sky, no visible sun disk. " 
                 f"AMBIENT: Clean neutral lighting, zero harsh shadows, high global illumination. "
-                f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. " # <-- Balikin kontras
+                f"CONTRAST: Intense high-contrast visual. Glowing LED lights pop against the bright clean background. "
                 f"COMPOSITION: Perfectly centered symmetrical composition. "
                 f"POSITIONING: The diorama mosque is in foreground, character {posisi_nenek} is directly behind it. "
-                f"CAMERA ACTION: Starting at 1 meters, very slow linear Dolly-Back movement away from center. "
+                # --- KUNCI GERAKAN & KECEPATAN (ANTI-NGEBUT) ---
+                f"CAMERA ACTION: Starting at 1 meter, constant ultra-slow linear Dolly-Back at 0.1 speed. " # <-- Kunci speed konstan
+                f"MOVEMENT STABILITY: Zero acceleration, perfectly steady backpedal, no camera shake. " # <-- Anti kaget
                 f"FIXED AXIS: No tilting, no orbital, no side movement, 0-degree eye level. "
-                f"SHARPNESS: Deep focus, extreme micro-detail, CRYSTAL CLEAR, zero motion blur, ultra-sharp edges." # <-- Booster ketajaman
+                # --- KUNCI FOKUS (ANTI-BLUR) ---
+                f"SHARPNESS: Deep focus from 0.5m to infinity, extreme micro-detail, CRYSTAL CLEAR. " # <-- Paksa fokus dari jarak deket
+                f"OPTICAL SPEC: High shutter speed, zero motion blur, ultra-sharp edges on the mosque. " # <-- Bunuh blur
+                f"STABILIZATION: Locked focus on the diorama mosque throughout the entire shot." # <-- Kunci fokus di masjid
             )
 
             # 3. AMBIL DATA MASTER
@@ -1610,7 +1616,7 @@ def tampilkan_ai_lab():
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
                 
-            # 5. FINAL ASSEMBLY (Prompt Bersih - ULTRA SHARP & HIGH CONTRAST)
+            # 5. FINAL ASSEMBLY (Prompt Bersih - ANTI-BLUR & STABLE MOTION)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
@@ -1619,12 +1625,12 @@ def tampilkan_ai_lab():
                 f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
                 f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/11 Aperture, Deep Focus, "
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/16 Aperture, Deep Focus, " # <-- F/16 buat tajam total
                 f"Perfectly level 0-degree camera angle, strictly symmetrical framing, "
-                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, High-shutter speed, " # <-- Booster tajam & kontras
-                f"Vivid micro-textures, clean edges, no chromatic aberration. " # <-- Anti aneh-aneh
+                f"ULTRA-SHARP 8K, EXTREME CONTRAST, ZERO MOTION BLUR, Global Shutter, " # <-- Global Shutter biar gak blur
+                f"Constant linear movement speed, zero camera shake, vivid micro-textures, clean edges. " # <-- Kunci speed
                 f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, miring, tilted, side-view, distorted, off-center, "
-                f"low-contrast, soft-edges, hazy, foggy, washed-out colors, motion blur." # <-- Tambahan filter sampah
+                f"low-contrast, soft-edges, hazy, foggy, washed-out colors, motion blur, out of focus, depth of field blur." # <-- Tambah anti-blur
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5526,6 +5532,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
