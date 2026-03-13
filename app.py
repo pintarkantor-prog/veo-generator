@@ -1229,35 +1229,35 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER LOKASI (FIXED: SOLID BACKGROUND & NO VOID) ---
+        # --- 3. MASTER LOKASI (FIXED: NATURAL CLUTTER & SOLID BACKDROP) ---
         MASTER_GRANDMA_SETTING = {
             "Pinggir Kolam Ikan Koi": (
-                "Sitting cross-legged on a flat stone pavement. "
-                "The background is a solid natural stone wall with water trickling down into a koi pond. " # <-- Tembok batu buat nutup langit
-                "The scene is enclosed within a private courtyard with no visible horizon. "
-                "Next to the character is a small brass bowl of fish food and a ceramic teapot. "
-                "NO SKY, NO CLOUDS. A localized, high-contrast garden corner with clear physical boundaries."
+                "The character sits cross-legged on a weathered stone pavement. "
+                "The background is a solid mossy stone wall with a small water spout. "
+                "Scattered around her are a few wet footprints on the stone, a fallen leaf, and a small brass bowl. " # <-- Natural Clutter
+                "Nearby, a traditional ceramic teapot and a single half-filled cup sit on a flat rock. "
+                "NO SKY, NO HORIZON. The scene is a tight, high-contrast garden corner."
             ),
             "Teras Bambu Desa": (
-                "Set on a clean, woven bamboo floor. "
-                "The background is a solid wall of dark bamboo matting (gedek) that blocks any outside view. " # <-- Sekat bambu nutup langit
-                "Surrounded by a low bamboo fence and various potted tropical ferns in a closed porch. "
-                "Next to the character is a pair of grass sandals and a clay water jug. "
-                "NO OPEN SKY, NO INFINITY VOID. Focus on organic textures within a confined wooden structure."
+                "Set on a clean but aging woven bamboo floor. "
+                "The background is a solid wall of dark bamboo slats that blocks the outside. "
+                "Next to her are a pair of worn grass sandals, a small clay jug, and a stray coil of thin bamboo skin. " # <-- Natural Clutter
+                "A few tropical fern leaves lean into the frame from the side. "
+                "NO OPEN SKY. A private, shaded porch with clear wooden beam boundaries."
             ),
             "Lantai Kerikil Taman": (
-                "Placed on a bed of small white pebbles and grey gravel. "
-                "The background is a solid weathered brick wall or a tall hedge that completely hides the horizon. " # <-- Tembok bata nutup langit
-                "Next to the character is a large mossy boulder and an iron lantern. "
-                "The camera view is restricted to the garden floor and the solid wall behind. "
-                "NO LIGHTING DESCRIPTION, NO SKY. Everything is grounded and enclosed by stone borders."
+                "Placed on a bed of small white pebbles mixed with natural grey gravel. "
+                "The background is a solid old brick wall that completely blocks the horizon. "
+                "Around her are a few scattered dry autumn leaves, a small iron lantern, and a forgotten hand-trowel. " # <-- Natural Clutter
+                "A large mossy boulder sits partially in the frame, grounding the space. "
+                "NO INFINITY VOID. Focused on the textured ground and the solid wall behind."
             ),
             "Dek Kayu Pinggir Hutan": (
-                "Set on an outdoor deck made of rough-hewn timber planks. "
-                "The background is a dense, dark wall of interlocking tree trunks and thick foliage that blocks the sky. " # <-- Tembok pohon nutup langit
-                "Next to the character is a wooden bird flute and a pile of pine cones. "
-                "The scene feels like a private forest nook with a clear wooden floor and a natural green wall. "
-                "NO CLOUDS, NO HORIZON. Focused on the solid wood deck and the dense forest barrier."
+                "Set on an outdoor deck made of rough, unsanded timber planks with visible wood knots. "
+                "The background is a dense, dark wall of thick forest foliage and tree trunks. "
+                "Around the character are a few scattered pine cones, a small wooden bird flute, and a stray burlap sack. " # <-- Natural Clutter
+                "Thin shafts of soft light hit the wood grain, showing tiny dust particles. "
+                "NO CLOUDS, NO SKY. A solid forest nook with a clear wooden floor boundary."
             ),
             "Pinggir Sawah Hijau": (
                 "Sitting cross-legged on the dry grass at the edge of a vast emerald green rice field. "
@@ -5526,6 +5526,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
