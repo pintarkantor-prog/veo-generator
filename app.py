@@ -1580,14 +1580,16 @@ def tampilkan_ai_lab():
             scene_context = (
                 f"ULTRA-HD 8K RESOLUTION. HYPER-REALISTIC RAW PHOTO. "
                 f"MANDATORY: NO TEXT, NO SUBTITLES, NO CAPTIONS. "
-                f"LIGHTING: 4 PM dark stormy overcast daylight, heavy dramatic clouds, moody ambient light. "
+                f"LIGHTING: 4 PM dark stormy overcast daylight, moody ambient light. "
                 f"CONTRAST: Intense glowing LED light contrast against dark cloudy sky. "
-                f"CAMERA DISTANCE: Mid-shot distance, 3 meters away. "
-                f"POSITIONING: Both mosque and character in MIDGROUND. Foreground is empty. "
-                f"STRICT SEPARATION: Mosque on floor, {posisi_nenek} 50cm BEHIND it. "
-                f"CAMERA MOVEMENT: Very slow cinematic SIDE-TO-SIDE ORBITAL tracking shot. "
-                f"NO FORWARD MOVEMENT. NO ZOOM. "
-                f"DEEP FOCUS: Everything is CRYSTAL CLEAR, no blur."
+                f"CAMERA DISTANCE: Starting from 2 meters, slowly moving back. "
+                f"COMPOSITION: Perfectly centered symmetrical composition. "
+                f"POSITIONING: The diorama mosque is the main center object in foreground. "
+                f"CHARACTER POSITION: {posisi_nenek} directly behind the mosque, aligned in the center. "
+                f"CAMERA MOVEMENT: Very slow linear DOLLY-OUT movement (moving backwards). " # <-- Mundur pelan
+                f"STRICTLY STRAIGHT AXIS: No side movement, no orbital, no tilting. "
+                f"NO FORWARD MOVEMENT. KEEP HORIZON PERFECTLY LEVEL. "
+                f"DEEP FOCUS: Everything is CRYSTAL CLEAR with no motion blur."
             )
 
             # 3. AMBIL DATA MASTER
@@ -1606,18 +1608,19 @@ def tampilkan_ai_lab():
             mood_final = pilih_mood.split('(')[-1].strip(')') if '(' in pilih_mood else pilih_mood
             logat_final = pilih_logat.split('(')[-1].strip(')') if '(' in pilih_logat else pilih_logat
                 
-            # 5. FINAL ASSEMBLY (Prompt Bersih)
+            # 5. FINAL ASSEMBLY (Prompt Bersih - FIXED SYMMETRY & WIDE ANGLE)
             final_ai_prompt = (
                 f"{scene_context} \n\n"
                 f"CHARACTER DNA: {soul_desc}. {ANATOMY_LOCK} {MANDATORY_LOCK} \n"
                 f"WARDROBE: {baju_desc}. \n"
                 f"ENVIRONMENT: {env_detail}. \n"
-                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" # <-- Pakai yang sudah di-filter
+                f"PERFORMANCE: {aksi_final}. Mood: {mood_final}. \n" 
                 f"THE MASTERPIECE: {deskripsi_teknis}. \n"
-                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n" # <-- Pakai yang sudah di-filter
-                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, F/11 Aperture, Deep Focus, "
-                f"Fixed 15-degree side-angle, ZERO MOTION BLUR, High-shutter speed, 8K. "
-                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, music, sound."
+                f"DIALOG CONTEXT: '{user_dialog}' delivered with {logat_final} accent. \n\n"
+                f"TECHNICAL SPECS: Shot on ARRI Alexa 65, 24mm wide-angle lens, F/11 Aperture, Deep Focus, " # <-- Ganti ke 24mm
+                f"Perfectly level 0-degree camera angle, strictly symmetrical framing, " # <-- Pertegas simetris
+                f"ZERO MOTION BLUR, High-shutter speed, 8K. "
+                f"NEGATIVE PROMPT: chair, table, furniture, text, watermark, blurry, miring, tilted, side-view, distorted, off-center." # <-- Tambah off-center
             )
 
             # --- 7. TAMPILKAN HASIL ---
@@ -5519,6 +5522,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
