@@ -1229,31 +1229,35 @@ def tampilkan_ai_lab():
             }
         }
 
-        # --- 3. MASTER LOKASI (FIXED: REALISTIC WORKSHOP NO GLOW) ---
+        # --- 3. MASTER LOKASI (FIXED: SOLID BACKGROUND & NO VOID) ---
         MASTER_GRANDMA_SETTING = {
             "Pinggir Kolam Ikan Koi": (
-                "Sitting cross-legged directly on a flat stone pavement by a crystal clear koi pond. "
-                "Next to the character is a small brass bowl filled with fish food and a traditional ceramic teapot with one cup. " # <-- Bumbu
-                "In the background, colorful koi fish swim under floating lily pads and a small stone waterfall. "
-                "NO CHAIRS, NO FURNITURE. Ultra-detailed water reflections."
+                "Sitting cross-legged on a flat stone pavement. "
+                "The background is a solid natural stone wall with water trickling down into a koi pond. " # <-- Tembok batu buat nutup langit
+                "The scene is enclosed within a private courtyard with no visible horizon. "
+                "Next to the character is a small brass bowl of fish food and a ceramic teapot. "
+                "NO SKY, NO CLOUDS. A localized, high-contrast garden corner with clear physical boundaries."
             ),
             "Teras Bambu Desa": (
-                "Set on a clean, woven bamboo floor of an open-air pavilion. "
-                "Next to the character is a pair of traditional grass sandals and a small clay water jug. " # <-- Bumbu
-                "Surrounded by a low bamboo fence and various potted tropical ferns. "
-                "NO SKY DESCRIPTION, NO TIME. Focus on bamboo grain and organic textures."
+                "Set on a clean, woven bamboo floor. "
+                "The background is a solid wall of dark bamboo matting (gedek) that blocks any outside view. " # <-- Sekat bambu nutup langit
+                "Surrounded by a low bamboo fence and various potted tropical ferns in a closed porch. "
+                "Next to the character is a pair of grass sandals and a clay water jug. "
+                "NO OPEN SKY, NO INFINITY VOID. Focus on organic textures within a confined wooden structure."
             ),
             "Lantai Kerikil Taman": (
-                "Placed on a bed of small, uniform white pebbles and grey gravel. "
-                "Next to the character is a single large weathered mossy boulder and a small iron lantern (unlit). " # <-- Bumbu
-                "Surrounded by a low stone border and a few scattered autumn leaves on the ground. "
-                "NO LIGHTING DESCRIPTION, NO SKY. Focus on pebble shadows and moss textures."
+                "Placed on a bed of small white pebbles and grey gravel. "
+                "The background is a solid weathered brick wall or a tall hedge that completely hides the horizon. " # <-- Tembok bata nutup langit
+                "Next to the character is a large mossy boulder and an iron lantern. "
+                "The camera view is restricted to the garden floor and the solid wall behind. "
+                "NO LIGHTING DESCRIPTION, NO SKY. Everything is grounded and enclosed by stone borders."
             ),
             "Dek Kayu Pinggir Hutan": (
-                "Set on an outdoor deck made of rough-hewn, unsanded timber planks. "
-                "Next to the character is a small handmade wooden bird flute and a pile of pine cones. " # <-- Bumbu
-                "Bordered by thick wild ferns and the base of large, textured tree trunks. "
-                "NO TIME, NO WEATHER. Focus on wood knots, bark textures, and forest floor debris."
+                "Set on an outdoor deck made of rough-hewn timber planks. "
+                "The background is a dense, dark wall of interlocking tree trunks and thick foliage that blocks the sky. " # <-- Tembok pohon nutup langit
+                "Next to the character is a wooden bird flute and a pile of pine cones. "
+                "The scene feels like a private forest nook with a clear wooden floor and a natural green wall. "
+                "NO CLOUDS, NO HORIZON. Focused on the solid wood deck and the dense forest barrier."
             ),
             "Pinggir Sawah Hijau": (
                 "Sitting cross-legged on the dry grass at the edge of a vast emerald green rice field. "
@@ -5522,6 +5526,7 @@ def utama():
 # --- EKSEKUSI SISTEM ---
 if __name__ == "__main__":
     utama()
+
 
 
 
