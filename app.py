@@ -2676,14 +2676,15 @@ def tampilkan_tugas_kerja():
                                                         (df_all_tugas['DEADLINE'].astype(str) == str(tgl_tugas)) &
                                                         (df_all_tugas['STATUS'].str.upper() == 'FINISH')
                                                     ]
-                                                    jml_video = len(df_selesai) + 1 
+                                                    sudah_ada = id_tugas in df_selesai['ID'].values
+                                                    jml_video = len(df_selesai) if sudah_ada else len(df_selesai) + 1
 
                                                     # 4. LOGIKA BONUS & ARUS KAS
                                                     msg_bonus = ""
                                                     if jml_video == 3 or jml_video >= 5:
                                                         nom_bonus = 30000
-                                                        tgl_fix = str(tgl_tugas) # Paksa jadi string YYYY-MM-DD
-                                                        ket_bonus = f"Bonus {'Absen' if jml_video == 3 else 'Video'}: {staf_nama} ({id_tugas})"
+                                                        tipe_bonus = "Absen" if jml_video == 3 else "Video"
+                                                        ket_bonus = f"Bonus {tipe_bonus} ke-{jml_video}: {staf_nama} ({id_tugas})"
                                                         
                                                         # Kirim ke Arus Kas Supabase
                                                         supabase.table("Arus_Kas").insert({
@@ -2701,8 +2702,8 @@ def tampilkan_tugas_kerja():
                                                             ws_kas.append_row([tgl_fix, "PENGELUARAN", "Gaji Tim", nom_bonus, ket_bonus, "SISTEM (AUTO-ACC)"])
                                                         except: pass
                                                         
-                                                        msg_bonus = f"\n💰 *BONUS:* Rp 30,000"
-                                                        st.toast(f"Bonus {staf_nama} dicatat!", icon="💸")
+                                                        msg_bonus = f"\n💰 *BONUS:* Rp 30,000 (Video ke-{jml_video})"
+                                                        st.toast(f"Bonus {staf_nama} Video ke-{jml_video} dicatat!", icon="💸")
 
                                                     # 5. NOTIF & REFRESH
                                                     kirim_notif_wa(f"✅ *TUGAS ACC*\n👤 *Editor:* {staf_nama}\n🆔 *ID:* {id_tugas}{msg_bonus}")
