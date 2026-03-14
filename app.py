@@ -2681,9 +2681,10 @@ def tampilkan_tugas_kerja():
 
                                                     # 4. LOGIKA BONUS & ARUS KAS
                                                     msg_bonus = ""
+                                                    tgl_fix = str(tgl_tugas)
                                                     if jml_video == 3 or jml_video >= 5:
                                                         nom_bonus = 30000
-                                                        tipe_bonus = "Absen" if jml_video == 3 else "Video"
+                                                        tipe_bonus = "Absen" if jml_video == 3 else "Video" # <--- Biar gak error 'tipe_bonus' juga
                                                         ket_bonus = f"Bonus {tipe_bonus} ke-{jml_video}: {staf_nama} ({id_tugas})"
                                                         
                                                         # Kirim ke Arus Kas Supabase
