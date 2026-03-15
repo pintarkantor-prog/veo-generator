@@ -867,39 +867,40 @@ def tampilkan_ai_lab():
         MASTER_FAMILY_SOUL = {
             # ========================== KELOMPOK NENEK (Teduh & Berwibawa) ==========================
             "Nenek (The Matriarch)": (
-                "An elderly Indonesian woman with deeply weathered skin. "
-                "Her face is covered in a dense network of realistic deep wrinkles, heavy crow's feet, and prominent age lines. "
-                "Visible skin pores, subtle age spots, and authentic elderly skin texture. "
-                "Her hands are thin and bony, with clearly visible veins and wrinkled knuckles, showing extreme detail. "
-                "Natural sagging skin around the neck and jawline. "
-                "Raw, unpolished cinematic skin details. No smooth filters. 100% authentic aged look."
+                "An elderly woman with a fuller, rounded facial structure where gravity has taken its toll. "
+                "Deep nasolabial folds and heavy jowls that sag past the jawline. "
+                "Her eyelids are thick and drooping, almost covering her eyes, with large, soft bags underneath. "
+                "The skin texture is thick, porous, and covered in large age spots and liver spots. "
+                "A double chin with soft, folded skin textures. No filters, authentic aged volume."
             ),
-            "Nenek Arum (The Grace)": (
-                "An elderly Indonesian woman with a deeply weary and melancholy expression. "
-                "Her eyes are half-lidded, tired, and cloudy, with heavy drooping eyelids and deep dark circles. "
-                "The skin around her eyes is exceptionally wrinkled with sagging folds. "
-                "A fragile and frail physique, featuring thin white hair and a deeply creased forehead. "
-                "Her facial expression is calm but profoundly 'sayu' and pensive, as if reflecting on a long life. "
+            "Nenek Simbah": (
+                "An extremely elderly Javanese woman, easily appearing over 80 years old. "
+                "Her face is a dense and chaotic network of profound, deep wrinkles that completely consume her visage. "
+                "Heavy crow's feet, prominent forehead furrows, and sagging skin folds around her neck and jawline, showing significant volume loss. "
+                "Authentic weathered skin texture with prominent age spots, visible pores, and raw, uneven pigmentation. "
+                "Her expression is deeply weary and sorrowful, with half-lidded, cloudy eyes looking down. "
+                "Her lower lip is downturned with a visible quiver, pressed thin against her toothless gums. "
+                "Raw, unpolished cinematic skin details. No smooth filters. 100% authentic aged Javanese look."
+            ),
+            "Nenek Sunda": (
+                "A frail and very aged Sundanese grandmother, her face deeply marked by extreme age and sorrow. "
+                "An intensely wrinkled forehead with heavy vertical creases between her brows, indicating deep worry and heartbreak. "
+                "The skin around her eyes is exceptionally sagging, with heavy dark circles and prominent sagging folds. "
+                "Visible skin pores, realistic dry patches, and authentic elderly skin texture with a dull, matte finish. "
+                "A deeply melancholic and pensive 'sayu' expression, looking forward with a profoundly sad gaze. "
+                "Her lips are pressed together tightly, showing deep, fine lines and natural wrinkles. "
                 "Raw elderly skin texture showing authentic sagging and realistic muscle loss in the face. "
-                "No youthful filters, 100% realistic tired elderly face."
+                "No smoothing, 100% realistic tired Sundanese face."
             ),
-            "Nenek Sumi (The Wise)": (
-                "An elderly Indonesian woman with a profoundly serene and peaceful expression. "
-                "Her face is a beautiful map of deep, realistic wrinkles and fine lines, showing her great age. "
-                "Her eyes are bright, clear, and warm, looking forward with a gentle, comforting gaze. "
-                "A soft, subtle, and genuine smile is playing on her lips, conveying contentment and wisdom. "
-                "Her overall presence is one of dignity, grace, and 'syahdu' tranquility. "
-                "Authentic elderly skin texture with natural aging details, no artificial smoothing. "
-                "A peaceful, motherly, and spiritually comforted demeanor."
-            ),
-            "Nenek Lastri (The Devotion)": (
-                "An active and joyful Indonesian grandmother in her early 60s. "
-                "Her face has a warm, natural elderly glow with gentle wrinkles and laugh lines around her mouth and eyes. " # Keriput wajar
-                "Her eyes are bright, sparkling with happiness, and crinkled in a wide, genuine smile. " # Mata berbinar, senyum lebar
-                "A cheerful and energetic expression, showing her zest for life and motherly warmth. " # Ekspresi ceria, enerjik
-                "She has short, stylish grey hair and a dignified but approachable presence. " # Rambut abu-abu modis
-                "Authentic 60-year-old skin texture with realistic laugh lines and age spots, no smooth filters. " # Tekstur kulit 60 tahun
-                "A healthy, positive, and spiritually comforted demeanor."
+            "Nenek Melayu": (
+                "A profoundly elderly Melayu woman, her face a map of extreme age and sorrow. "
+                "Her entire countenance is consumed by heavy, sagging wrinkles and deep facial lines. "
+                "Her eyes are bright with unshed tears, glistening with unshed tears, showing heavy, reddened eyelids. "
+                "The skin around her jaw and neck is severely sagging, showing realistic volume loss and fragility. "
+                "Visible age spots, prominent blue veins on her hands and temples, and authentic aged skin texture with clear pores. "
+                "Her downturned mouth has a subtle, realistic quiver in her lower lip, emphasizing her grief. "
+                "Raw, high-definition skin texture showing authentic age spots and visible pores dampened by a thin layer of cold sweat. "
+                "100% high-definition real elderly face, cinematic and hauntingly emotional."
             ),
             "Gadis Desa (The Natural)": (
                 "A beautiful young Indonesian woman in her early 20s of Javanese descent. "
@@ -973,44 +974,36 @@ def tampilkan_ai_lab():
         MASTER_FAMILY_WARDROBE = {
             # --- KELOMPOK NENEK ---
             "Nenek (The Matriarch)": {
-                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
-                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
-                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
-                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
-                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
-                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
-                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
-                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
+                "Daster Batik & Bergo Instan": "Wearing a faded daily batik floral daster with short sleeves, paired with a simple, well-worn comfortable instant jersey bergo hijab covering her head and neck.",
+                "Kaos Panjang & Jilbab Kaos": "Wearing a modest, oversized long-sleeved cotton house shirt in faded neutral colors, paired with a simple daily instant jersey hijab and a cotton sarong tied at the waist.",
+                "Daster Lowo & Kerudung Lilit": "Wearing a loose, wide 'bat-wing' (lowo) batik patterned daster with a simple thin cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
+                "Baju Kurung Katun & Hijab Slup": "Wearing a simple, humble Indonesian-style modest cotton baju kurung with a practical jersey instant hijab for a neat, grandmotherly home look.",
+                "Tunik Kancing & Bergo Tali": "Wearing a front-buttoned cotton tunic shirt with minor wrinkles, paired with an instant bergo hijab that has simple ties at the back of the head.",
+                "Setelan Celana Kaos & Jilbab": "Wearing a matching daily pajama set of a long-sleeved cotton tunic and loose trousers in faded colors, paired with a breathable instant jersey hijab."
             },
-            "Nenek Arum (The Grace)": {
-                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
-                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
-                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
-                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
-                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
-                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
-                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
-                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
+            "Nenek Simbah": {
+                "Kebaya Kutubaru & Jarik Parang": "Wearing a daily-worn, faded floral cotton kebaya kutubaru fastened with a vintage safety pin, paired with a dark-brown batik jarik cloth in Parang motif and a thin cotton scarf loosely wrapped as a hijab.",
+                "Daster Batik Solo & Bergo Tali": "Wearing an authentic brown Batik Solo daster with a classic 'Sogan' pattern, paired with a simple jersey instant hijab that has ties at the back, showing a traditional home look.",
+                "Kaos Lengan Panjang & Jarik Lawasan": "Wearing a modest long-sleeved cotton shirt in earth tones, paired with a weathered, well-washed 'Lawasan' batik jarik cloth and a simple instant hijab tied neatly under the chin.",
+                "Daster Lowo (Kalong) & Kerudung Lilit": "Wearing a loose, oversized 'bat-wing' (lowo) batik daster with a large traditional motif, complemented by a thin cotton scarf wrapped comfortably around her head in a simple village style.",
+                "Kebaya Kartini Katun & Sarung": "Wearing a very simple, non-formal cotton Kebaya Kartini in a faded solid color, paired with a comfortable batik sarong and a daily instant bergo hijab for a humble appearance.",
+                "Setelan Celana Batik & Jilbab Kaos": "Wearing a matching daily batik pajama set consisting of a long-sleeved tunic and loose trousers, paired with a breathable instant jersey hijab in a matching muted earth tone."
             },
-            "Nenek Sumi (The Wise)": {
-                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
-                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
-                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
-                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
-                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
-                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
-                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
-                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
+            "Nenek Sunda": {
+                "Daster Floral & Bergo Kaos": "Wearing a bright but faded floral-patterned Sundanese-style daster with a soft, well-washed instant jersey bergo hijab that looks comfortable for daily house chores.",
+                "Kebaya Bordir Katun & Sarung": "Wearing a simple, humble cotton kebaya with subtle embroidery (bordir) on the edges, paired with a faded floral sarong and a thin cotton scarf loosely draped as a hijab.",
+                "Setelan Celana Kaos & Jilbab Instan": "Wearing a modest long-sleeved cotton pajama set with small floral motifs, paired with a simple daily instant jersey hijab in a soft, matching pastel color.",
+                "Daster Kancing Depan & Bergo Tali": "Wearing a practical front-buttoned cotton daster in a light color, paired with a simple instant bergo hijab that has ties at the back, perfect for an elderly grandmother's daily look.",
+                "Tunik Katun & Sarung Batik": "Wearing a loose, breathable cotton tunic shirt paired with a faded West Javanese batik sarong and a simple daily instant hijab tied neatly under the chin.",
+                "Daster Lowo Floral & Kerudung Lilit": "Wearing a wide 'bat-wing' (lowo) daster with a vibrant but aged floral print, complemented by a thin pashmina-style cotton scarf wrapped simply and loosely around her head."
             },
-            "Nenek Lastri (The Devotion)": {
-                "Daster & Bergo (Harian)": "Wearing a daily batik floral daster with short sleeves and a simple comfortable instant jersey bergo hijab covering her head and neck.",
-                "Kaos Panjang & Jilbab Kaos": "Wearing a modest long-sleeved cotton house shirt paired with a simple daily instant jersey hijab in matching colors.",
-                "Daster & Kerudung Lilit": "Wearing a loose batik patterned daster with a simple cotton scarf wrapped loosely and comfortably around her head as a daily hijab.",
-                "Baju Kurung & Hijab Instan": "Wearing a simple Indonesian-style modest baju kurung with a comfortable jersey instant hijab for a neat daily look.",
-                "Kaos Putih & Bergo Abu": "Wearing a plain white long-sleeved cotton t-shirt paired with a simple soft grey instant jersey bergo hijab.",
-                "Kaos Abu-abu & Bergo Putih": "Wearing a comfortable charcoal grey long-sleeved house shirt and a clean white instant jersey hijab covering her head.",
-                "Kaos Putih & Bergo Putih": "Wearing an all-white daily outfit consisting of a plain cotton long-sleeved shirt and a matching white jersey hijab for a clean, syahdu look.",
-                "Kaos Abu & Bergo Hitam": "Wearing a light grey modest long-sleeved t-shirt with a contrasting black instant jersey hijab for a simple everyday appearance."
+            "Nenek Melayu": {
+                "Baju Kurung Kedah & Sarung": "Wearing a traditional short-cut daily Baju Kurung Kedah made of soft faded cotton with floral prints, paired with a matching batik sarong and a simple cotton bawal hijab pinned under the chin.",
+                "Baju Kurung Pesak & Tudung Sarung": "Wearing a classic loose-fitting Baju Kurung Pesak in a muted solid color, paired with a practical 'tudung sarung' (instant jersey hijab) that covers the chest comfortably.",
+                "Daster Panjang & Hijab Instan": "Wearing a modest long-sleeved cotton daster with traditional Melayu floral motifs, complemented by a simple daily instant jersey hijab in a matching faded tone.",
+                "Kaos Tunik & Sarung Pelikat": "Wearing a long-sleeved cotton tunic shirt paired with a faded cotton sarong and a simple bawal hijab loosely draped over her head, showing a relaxed home-stay vibe.",
+                "Baju Kurung Moden & Bergo Tali": "Wearing a very simple daily Baju Kurung Moden made of breathable rayon fabric, paired with a simple instant bergo hijab that has ties at the back for comfort.",
+                "Kebaya Labuh & Hijab Slup": "Wearing a modest, long-length daily Kebaya Labuh made of lightweight cotton, paired with a faded floral sarong and a practical instant jersey hijab for a neat grandmotherly look."
             },
 
             # --- KELOMPOK GADIS ---
@@ -1095,430 +1088,794 @@ def tampilkan_ai_lab():
                 "Buah Melon": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of glossy cantaloupe melon pieces and translucent green rind blocks. The architecture is massive with a colossal main dome made of polished melon flesh segments glowing with internal multi-colored LED wash lights. Tall minarets crafted from melon rinds are wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
                 "Buah Strawberyy": "A gigantic, large-scale 1-meter standalone mosque object built entirely from millions of vibrant red strawberry flesh slices and glossy whipped cream textures. Featuring a colossal main dome made of densely packed strawberry slices with intense internal multi-colored LED wash lights. Every minaret is a tall pillar wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
                 "Buah Semangka": "A monumental, large-scale 1-meter standalone mosque object constructed from millions of vibrant red watermelon cubes and glossy green-striped rind blocks. The colossal main dome is a sphere made of densely packed watermelon flesh with thousands of twinkling multi-colored fiber-optic star lights. Every pillar and minaret is wrapped in intensely flickering colorful LED fairy lights and vibrant multi-colored neon strips.",
-                "Buah Naga": "A colossal, large-scale 1-meter standalone mosque object built entirely from high-gloss white dragonfruit pieces with black seeds and bright magenta rind slabs. The colossal main dome is a sphere of polished dragonfruit flesh with colorful fiber-optic lines swirling inside. Every minaret is a tall pillar wrapped in intensely bright, flickering colorful LED fairy lights and framed by intense RGB neon tubing."
-
+                "Buah Naga": "A colossal, large-scale 1-meter standalone mosque object built entirely from high-gloss white dragonfruit pieces with black seeds and bright magenta rind slabs. The colossal main dome is a sphere of polished dragonfruit flesh with colorful fiber-optic lines swirling inside. Every minaret is a tall pillar wrapped in intensely bright, flickering colorful LED fairy lights and framed by intense RGB neon tubing.",
+                "Buah Pepaya": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of vibrant orange papaya flesh cubes and glossy green-striped rind blocks. The architecture is massive with a colossal main dome made of densely packed, polished papaya segments with black seeds integrated, glowing from within with powerful rotating multi-colored LED wash lights. Tall minarets are crafted from pepaya rinds, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Buah Jeruk": "A gigantic, large-scale 1-meter standalone mosque object built entirely from millions of vibrant orange citrus pulp sacs and translucent orange rind segments. The building is monumental with a colossal main dome made of thousands of interlocking, glossy orange wedges with powerful internal multi-colored LED wash lights reflecting on its juicy texture. Every minaret is a tall pillar made of tightly packed citrus sacs wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Buah Anggur": "A monumental, large-scale 1-meter standalone mosque object constructed from thousands of glossy purple and green grape halves and intricate grape-vine textures. The colossal main dome is a sphere made of densely packed, translucent grape halves with thousands of twinkling multi-colored fiber-optic star lights integrated into the seeds. Every pillar and minaret is a tall stack of variegated grapes wrapped in intensely flickering colorful LED fairy lights. The entrance arches are framed by intense colorful RGB neon tubing, casting a powerful, saturated multi-colored wash over the entire glossy fruity surface.",
+                "Buah Tomat": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of vibrant red tomato halves and translucent green stem segments. The architecture is massive with a colossal main dome made of densely packed, polished tomato flesh with black seeds integrated, glowing from within with powerful rotating multi-colored LED wash lights. Tall minarets are crafted from green stem segments, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Buah Wortel": "A gigantic, large-scale 1-meter standalone mosque object built entirely from millions of vibrant orange carrot sticks and translucent orange carrot peel segments. The building is monumental with a colossal main dome made of thousands of interlocking, glossy orange wedges with powerful internal multi-colored LED wash lights reflecting on its textured surface. Every minaret is a tall pillar made of tightly packed carrot sticks wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Buah Pisang": "A monumental, large-scale 1-meter standalone mosque object constructed from thousands of glossy yellow banana slices and intricate banana-leaf textures. The colossal main dome is a sphere made of densely packed, translucent banana slices with thousands of twinkling multi-colored fiber-optic star lights integrated into the seeds. Every pillar and minaret is a tall stack of variegated bananas wrapped in intensely flickering colorful LED fairy lights. The entrance arches are framed by intense colorful RGB neon tubing, casting a powerful, saturated multi-colored wash over the entire glossy fruity surface.",
+                "Buah Durian": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of sharp, golden durian thorns and creamy yellow durian flesh. The architecture looks massive and aggressive, with a colossal main dome made of smooth durian pulp segments glowing from within with powerful multi-colored LED wash lights. Tall minarets are crafted from thorny rinds, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Buah Markisa": "A gigantic, large-scale 1-meter standalone mosque object built entirely from translucent orange passionfruit pulp and millions of crunchy black seeds. The main dome is a colossal sphere of glossy passionfruit juice with powerful internal multi-colored LED wash lights that make the seeds look like a swirling galaxy. Every minaret is a tall pillar made of hard purple markisa skins wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Buah Kiwi": "A monumental, large-scale 1-meter standalone mosque object constructed from millions of vibrant green kiwi slices and fuzzy brown skin textures. The colossal main dome is a sphere made of polished green kiwi flesh with its ring of black seeds glowing from within using thousands of twinkling multi-colored fiber-optic star lights. Every pillar is a stack of kiwi slices wrapped in intensely flickering colorful LED fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Buah Salak": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of glossy, dark-brown snake-fruit (salak) scales and polished white salak flesh. The architecture looks grand and ancient, with a colossal main dome made of overlapping salak scales, glowing from within with powerful multi-colored LED wash lights that reflect on the scaly texture. Tall minarets are crafted from salak skin, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Buah Manggis": "A gigantic, large-scale 1-meter standalone mosque object built entirely from deep purple, thick mangosteen rinds and snow-white mangosteen flesh segments. The main dome is a colossal sphere made of polished white mangosteen segments, glowing from within with powerful internal multi-colored LED wash lights that make the white flesh look like glowing porcelain. Every minaret is a tall pillar made of dark purple rinds wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Buah Alpukat": "A monumental, large-scale 1-meter standalone mosque object constructed from millions of creamy green avocado flesh cubes and dark, pebbled avocado skin textures. The colossal main dome is a sphere made of polished green avocado segments with a large brown avocado seed at the very top, glowing from within with thousands of twinkling multi-colored fiber-optic star lights. Every pillar is a stack of dark-skinned avocado segments wrapped in intensely flickering colorful LED fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Daun Talas": "A monumental, large-scale 1-meter standalone mosque object built entirely from massive, glossy green taro leaves (talas) with thick, prominent veins. The architecture is grand with a colossal main dome made of overlapping fresh green leaves, glowing from within with powerful multi-colored LED wash lights that highlight the intricate natural vein patterns. Tall minarets are crafted from rolled leaf stalks, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Daun Jati": "A gigantic, large-scale 1-meter standalone mosque object built entirely from broad, textured teak leaves (jati) with a rustic, organic feel. The main dome is a colossal sphere made of dried golden-brown teak leaves, glowing from within with powerful internal multi-colored LED wash lights that create a warm, magical atmosphere. Every minaret is a tall pillar made of layered leaf textures wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Daun Keladi": "A monumental, large-scale 1-meter standalone mosque object constructed from millions of vibrant, multi-colored caladium leaves (keladi) with intense pink, white, and green patterns. The colossal main dome is a sphere of translucent leaf tissues with thousands of twinkling multi-colored fiber-optic star lights reflecting off the natural leaf pigments. Every pillar is a stack of variegated leaves wrapped in intensely flickering colorful LED fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Daun Pisang": "A monumental, large-scale 1-meter standalone mosque object built entirely from fresh, glossy green banana leaves (daun pisang) and thick, brown textured banana trunks. The architecture is grand with a colossal main dome made of millions of intricately woven green banana leaf pieces, glowing from within with powerful rotating multi-colored LED wash lights that reflect on the glossy, waxy surface. Tall minarets are crafted from rolled banana leaves and trunks, wrapped in intensely flickering colorful LED fairy lights. All entrance arches are outlined with dancing, vibrant RGB neon strips.",
+                "Daun Palem": "A gigantic, large-scale 1-meter standalone mosque object built entirely from millions of dry, golden-brown palm fronds (daun palem) and hard, textured palm seeds. The main dome is a colossal sphere made of thousands of interlocking, dry palm leaves with powerful internal multi-colored LED wash lights that create a warm, magical, and rustic atmosphere. Every minaret is a tall pillar made of tightly packed, interwoven palm fronds wrapped in rapidly pulsing colorful fairy lights, with entrance arches outlined in vibrant, dancing RGB neon tubing.",
+                "Daun Pakis": "A monumental, large-scale 1-meter standalone mosque object constructed from thousands of vibrant green, feathery fern fronds (daun pakis) and fuzzy brown fern spores. The colossal main dome is a sphere made of densely packed, overlapping fern fronds with thousands of twinkling multi-colored fiber-optic star lights integrated into the delicate, intricate pakis patterns. Every pillar and minaret is a tall stack of variegated, feathery ferns wrapped in intensely flickering colorful LED fairy lights. The entrance arches are framed by intense colorful RGB neon tubing, casting a powerful, saturated multi-colored wash over the entire lush, leafy surface.",
+                "Daun Kelapa": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of woven green janur leaves. The architecture features an intricate diamond-weave pattern. The colossal main dome glows from within with a 'Tropical Sunset' LED scheme (warm orange, deep violet, and lime green) seeping through the weave. Tall minarets are wrapped in flickering amber and teal fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Jerami": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of dry, golden rice straws. The colossal main dome is a sphere of straw with a 'Midnight Gold' LED scheme (warm gold, deep blue, and white) twinkling like stars through the fiber. Every minaret is wrapped in rapidly pulsing ice-white fairy lights, with entrance arches outlined in vibrant violet and gold RGB neon tubing.",
+                "Bambu Anyam": "A monumental, large-scale 1-meter standalone mosque object built from thousands of glossy bamboo strips. The architecture features complex woven geometries. The colossal main dome glows with a 'Cyber-Forest' LED scheme (neon green, cyan, and magenta) pulsing from the inside. Every pillar is wrapped in intensely flickering emerald-green fairy lights, with entrance arches outlined in dancing, high-contrast pink neon strips.",
+                "Daun Kering": "A monumental, large-scale 1-meter standalone mosque object built from thousands of crunchy, brown autumn leaves. The colossal main dome features a 'Volcanic Glow' LED scheme (fire red, burning orange, and sulfur yellow) creating a powerful internal heat effect. Tall minarets are wrapped in flickering red and orange fairy lights, with entrance arches outlined in intense, steady warm-white neon strips for a dramatic look.",
+                "Daun Pandan": "A monumental, large-scale 1-meter standalone mosque object built from thousands of long, slender green pandan leaves woven in a herringbone pattern. The colossal main dome glows with a 'Neon Mint' LED scheme (electric lime, soft mint, and bright white) pulsing through the leaf gaps. Tall minarets are wrapped in flickering forest-green fairy lights, with entrance arches outlined in vibrant, dancing turquoise neon strips.",
+                "Daun Sirih": "A gigantic, large-scale 1-meter standalone mosque model constructed from millions of glossy, heart-shaped betel leaves (sirih). The architecture is grand with a colossal main dome made of overlapping dark green leaves, glowing with a 'Deep Emerald' LED scheme (emerald green, violet, and gold). Every minaret is wrapped in rapidly pulsing purple fairy lights, with entrance arches outlined in intense gold and green RGB neon tubing.",
+                "Daun Suji": "A monumental, large-scale 1-meter standalone mosque object built from dense, dark-green suji leaves. The colossal main dome features a 'Radioactive Glow' LED scheme (neon green, cyan, and lemon yellow) creating an intense internal light effect. Tall minarets are wrapped in flickering cyan fairy lights, with entrance arches outlined in steady, high-contrast pink and green neon strips for a pop-art look.",
+                "Daun Paku": "A monumental, large-scale 1-meter standalone mosque object made from thousands of feathery, intricate fern leaves (daun paku). The colossal main dome looks like a lush green galaxy with a 'Starlight Forest' LED scheme (soft blue, magenta, and warm white) twinkling through the delicate fronds. Every pillar is wrapped in intensely flickering multi-colored fairy lights, with entrance arches outlined in vibrant, saturated rainbow neon strips.",
+                "Rotan Anyam": "A monumental, large-scale 1-meter standalone mosque object built from thousands of glossy, woven rattan strips in a complex 3D pattern. The architecture is grand with a colossal main dome made of interwoven young rattan. The dome and main walls are adorned with intricate, embossed Thuluth-style calligraphy carved directly into wide rattan bands, featuring a 'Sunset Amber' LED scheme (deep orange, warm gold, and soft red) glowing through the calligraphy and weave. Tall minarets are wrapped in flickering amber fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Jati Ukir": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from rich, dark-brown teak wood blocks and slabs. The building is monumental and heavy, with intricate patterns suggesting an immense scale. The entire facade and the colossal main dome are covered in deep, precise Kufic-style calligraphy and floral ukiran timbul, glowing from within with powerful internal 'Volcanic Glow' LED wash lights (fire red, burning orange, and sulfur yellow) highlighting the carved edges. Every minaret is a tall pillar of carved teak wrapped in rapidly pulsing ice-white fairy lights, with entrance arches outlined in vibrant gold RGB neon tubing.",
+                "Bambu Kaligrafi": "A monumental, large-scale 1-meter standalone mosque object built from thousands of fine, glossy bamboo strips and sturdy bamboo poles. The architecture features complex woven geometries. The colossal main dome features intricate Diwani-style calligraphy intricately woven with dark bamboo threads against a lighter bamboo background, pulsing with a 'Cyber-Forest' LED scheme (neon green, cyan, and magenta) from the inside. Every pillar is wrapped in intensely flickering emerald-green fairy lights, with entrance arches outlined in dancing, high-contrast pink neon strips.",
+                "Kayu Cendana": "A monumental, large-scale 1-meter standalone mosque object made from polished, light-brown sandalwood. The building looks extremely delicate with a high-gloss finish suggesting a monumental architectural scale. The colossal main dome is a sphere covered in intricate, elegant Naskh-style calligraphy carved with extreme precision and gold leaf inlays, featuring thousands of twinkling multi-colored fiber-optic star lights integrated into the calligraphy dots and a soft, warm internal 'Royal White' LED glow. Every pillar is wrapped in intensely flickering colorful fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Kaleng Bekas": "A monumental, large-scale 1-meter standalone mosque object built from thousands of crushed and polished aluminum soda cans. The architecture features a metallic mosaic texture with embossed Kufic calligraphy hammered into the metal surfaces. The colossal main dome glows with a 'Cyber-Steel' LED scheme (ice blue, violet, and silver white) reflecting off the sharp metallic edges. Tall minarets are wrapped in flickering cyan fairy lights, with entrance arches outlined in pulsing magenta neon strips.",
+                "Botol Plastik": "A gigantic, large-scale 1-meter standalone mosque model constructed from millions of shredded clear and blue plastic bottles. The structure is translucent with intricate Thuluth-style calligraphy etched into the plastic layers. The colossal main dome is a sphere of melted recycled plastic with a 'Toxic Neon' LED scheme (lime green, electric yellow, and cyan) glowing from within like a radioactive jewel. Every minaret is wrapped in rapidly pulsing green fairy lights, with entrance arches outlined in vibrant orange RGB neon tubing.",
+                "Kardus Retro": "A monumental, large-scale 1-meter standalone mosque object built from thousands of layers of corrugated brown cardboard and recycled paper pulp. The architecture features deep, laser-cut Naskh-style calligraphy that reveals the internal honeycomb structure of the cardboard. The colossal main dome features a 'Warm Industrial' LED scheme (incandescent yellow, deep amber, and soft red) glowing through the calligraphy cuts. Every pillar is wrapped in flickering warm-white fairy lights, with entrance arches framed by intense copper-colored neon strips.",
+                "Komponen Elektronik": "A colossal, large-scale 1-meter standalone mosque object made from thousands of recycled circuit boards (PCBs), copper wires, and microchips. The architecture is incredibly complex with Diwani-style calligraphy formed by intricate gold-plated wire paths. The colossal main dome pulses with a 'Digital Matrix' LED scheme (neon green, bright white, and deep purple) following the circuit patterns. Every minaret is a tall pillar of stacked microchips wrapped in intensely flickering colorful LED fairy lights and framed by intense RGB neon tubing.",
+                "Kaca Patri": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of jagged, iridescent stained-glass shards and lead frames. The architecture is sharp and crystalline with intricate Thuluth-style calligraphy etched into the glass. The colossal main dome glows with a 'Prism Galaxy' LED scheme (rainbow colors, deep violet, and bright cyan) reflecting and refracting through every glass edge. Tall minarets are wrapped in flickering white-starlight fairy lights, with entrance arches outlined in vibrant, dancing neon-purple strips.",
+                "Tembaga Bakar": "A gigantic, large-scale 1-meter standalone mosque model constructed from hammered, heat-treated copper plates and brass wires. The building has a rustic but metallic texture with deep, embossed Kufic-style calligraphy. The colossal main dome features a 'Magma Amber' LED scheme (burning orange, deep red, and warm gold) glowing through the calligraphy punch-holes. Every minaret is a tall pillar of twisted copper wrapped in rapidly pulsing amber fairy lights, with entrance arches outlined in intense warm-white neon tubing.",
+                "Sutra Tenun": "A monumental, large-scale 1-meter standalone mosque object built from millions of vibrant silk threads and hand-woven songket fabrics with gold threads. The architecture is soft but structured with elegant Diwani-style calligraphy embroidered in gold leaf. The colossal main dome pulses with a 'Royal Velvet' LED scheme (deep magenta, royal blue, and golden yellow) glowing from behind the translucent silk layers. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense, saturated RGB neon tubing.",
+                "Batu Alam": "A colossal, large-scale 1-meter standalone mosque object made from thousands of tiny slabs of polished marble, black obsidian, and white quartz. The architecture is heavy and grand with Naskh-style calligraphy carved deep into the stone. The colossal main dome features a 'Moonlight Quartz' LED scheme (ice blue, soft white, and pale lilac) glowing through the translucent stone veins. Every minaret is a stack of carved marble wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Koran Bekas": "A monumental, large-scale 1-meter standalone mosque object built from millions of rolled and folded recycled newspaper strips. The architecture features a dense grayscale texture of printed text and news-photos. Intricate Thuluth-style calligraphy is laser-cut through the paper layers, glowing with a 'News-Flash' LED scheme (bright white, pale cyan, and amber) seeping through the text-filled walls. Tall minarets are crafted from tightly rolled newspaper tubes, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Bungkus Kopi": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of glossy, metallic recycled coffee sachets and snack wrappers. The building is incredibly vibrant and reflective with a patchwork mosaic texture. Embossed Kufic-style calligraphy is hammered into the silver-foil insides of the wrappers. The colossal main dome pulses with a 'Pop-Art' LED scheme (vibrant magenta, electric lime, and bright orange) reflecting off the metallic foil. Every minaret is wrapped in rapidly pulsing rainbow fairy lights, with entrance arches outlined in intense neon-green tubing.",
+                "Majalah": "A monumental, large-scale 1-meter standalone mosque object built from thousands of shredded high-gloss fashion magazines. The architecture features a colorful, fragmented texture with a high-shine finish. Elegant Diwani-style calligraphy is formed by raised layers of colorful paper pulp. The colossal main dome features a 'Prismatic Gloss' LED scheme (violet, hot pink, and sky blue) glowing through the glossy paper edges. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense, saturated RGB neon tubing.",
+                "Kardus Bekas": "A colossal, large-scale 1-meter standalone mosque object made from raw, corrugated brown cardboard and recycled egg cartons. The architecture features a heavy, industrial texture with deep Naskh-style calligraphy carved to reveal the honeycomb interior. The colossal main dome glows with an 'Industrial Hearth' LED scheme (fire red, deep orange, and warm tungsten yellow) creating a powerful internal glow. Every minaret is a tall pillar of stacked cardboard rings wrapped in flickering warm-white fairy lights and framed by intense copper-colored neon strips.",
+                "Tutup Botol": "A monumental, large-scale 1-meter standalone mosque object built from millions of colorful recycled plastic bottle caps. The architecture features a vibrant, circular-pixelated texture. Intricate Thuluth-style calligraphy is embossed into the plastic surfaces. The colossal main dome glows with a 'Neon Carnival' LED scheme (vibrant magenta, lime green, and electric blue) pulsing through the gaps between the caps. Tall minarets are crafted from stacks of translucent caps, wrapped in flickering multi-colored fairy lights, with entrance arches outlined in dancing, high-contrast pink neon strips.",
+                "Sedotan Plastik": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of colorful, interlocking plastic straws. The building features a unique tubular, honeycomb-like texture. Intricate Kufic-style calligraphy is formed by the tips of the straws. The colossal main dome pulses with a 'Cyber-Fiber' LED scheme (neon cyan, bright violet, and silver-white) flowing through the straws like data cables. Every minaret is wrapped in rapidly pulsing ice-white fairy lights, with entrance arches outlined in vibrant teal RGB neon tubing.",
+                "Kabel": "A monumental, large-scale 1-meter standalone mosque object built from miles of tangled, colorful recycled copper wires and black rubber cables. The architecture looks like a high-tech machine with intricate Diwani-style calligraphy formed by gold-plated wire paths. The colossal main dome features a 'Matrix Pulse' LED scheme (electric green, bright orange, and deep purple) following the wire patterns. Every pillar is wrapped in intensely flickering emerald-green fairy lights, with entrance arches framed by intense copper-colored neon strips.",
+                "Ban Bekas": "A colossal, large-scale 1-meter standalone mosque object made from thousands of shredded and carved recycled black tires. The architecture is heavy and industrial with deep, rugged textures and Naskh-style calligraphy carved directly into the thick rubber treads. The colossal main dome glows with a 'Volcanic Ember' LED scheme (lava red, burning amber, and dark violet) glowing through the deep carvings. Every minaret is a stack of carved rubber rings wrapped in flickering warm-red fairy lights and framed by intense, steady warm-white neon strips.",
+                "Kancing Baju": "A monumental, large-scale 1-meter standalone mosque object built from millions of multi-colored plastic and pearl buttons of various sizes. The architecture features a dense, circular-patterned texture. Elegant Diwani-style calligraphy is formed by raised rows of tiny black buttons. The colossal main dome features a 'Prismatic Sewing' LED scheme (rainbow colors, magenta, and teal) glowing through the button holes. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense, saturated RGB neon tubing.",
+                "Spons Cuci Piring": "A colossal, large-scale 1-meter standalone mosque object made from thousands of porous yellow and green recycled sponges. The architecture looks soft and cellular with a unique matte texture. Naskh-style calligraphy is carved deep into the sponge layers. The colossal main dome glows with a 'Bubble Glow' LED scheme (neon green, electric lemon, and soft cyan) creating a powerful internal light effect. Every minaret is a tall pillar of stacked sponges wrapped in flickering cyan fairy lights and framed by intense, steady neon-pink strips.",
+                "Kulit Telur": "A gigantic, large-scale 1-meter standalone mosque model constructed from millions of tiny, fragile white and brown eggshell fragments. The structure has a delicate, cracked porcelain texture with intricate Kufic-style calligraphy formed by dark shell pieces. The colossal main dome pulses with a 'Golden Yolk' LED scheme (warm yellow, soft orange, and cream white) glowing through the thin shell layers. Every minaret is wrapped in rapidly pulsing amber fairy lights, with entrance arches outlined in vibrant gold RGB neon tubing.",
+                "Sendok Garpu": "A monumental, large-scale 1-meter standalone mosque object built from thousands of polished stainless-steel spoons, forks, and knives. The architecture is a metallic mosaic with sharp, reflective surfaces. Intricate Thuluth-style calligraphy is etched into the spoon bowls. The colossal main dome glows with a 'Mercury Mirror' LED scheme (ice blue, bright silver, and violet) reflecting wildly off the steel. Tall minarets are crafted from stacked forks, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing cyan neon strips.",
+                "Mur Baut": "A monumental, large-scale 1-meter standalone mosque object built from thousands of heavy, galvanized steel nuts, bolts, and washers. The architecture is rugged and industrial with a metallic honeycomb texture. Intricate Kufic-style calligraphy is formed by precisely aligned brass bolts. The colossal main dome glows with a 'Heavy Metal' LED scheme (deep violet, electric blue, and cold white) reflecting off the oily steel surfaces. Tall minarets are stacks of giant gears, wrapped in flickering cyan fairy lights, with entrance arches outlined in pulsing magenta neon strips.",
+                "Sikat Cuci": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of stiff nylon bristles from recycled scrubbing brushes. The structure looks feathery but sharp, with a unique linear texture. Intricate Thuluth-style calligraphy is carved into the wooden handles of the brushes. The colossal main dome pulses with a 'Fiber-Optic Glow' LED scheme (neon pink, bright turquoise, and lemon yellow) shining through the translucent bristles. Every minaret is a tall pillar of bristles wrapped in rapidly pulsing rainbow fairy lights, with entrance arches outlined in vibrant green RGB neon tubing.",
+                "Korek Api": "A monumental, large-scale 1-meter standalone mosque object built from millions of used wooden matchsticks with colorful tips. The architecture features a dense, rhythmic wooden texture. Elegant Diwani-style calligraphy is formed by charred matchstick heads. The colossal main dome features a 'Burning Ember' LED scheme (fire red, charcoal orange, and sulfur yellow) glowing through the matchstick gaps. Every pillar is wrapped in intensely flickering warm-white fairy lights, with entrance arches framed by intense copper-colored neon strips.",
+                "Keramik Pecah": "A colossal, large-scale 1-meter standalone mosque object made from thousands of jagged shards of recycled bathroom tiles and white porcelain toilets. The architecture is a sharp, glossy mosaic with Naskh-style calligraphy etched into the glazed surfaces. The colossal main dome features a 'Frozen Porcelain' LED scheme (ice blue, soft lilac, and bright silver) reflecting off the sharp ceramic edges. Every minaret is a stack of broken tiles wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "MPensil": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of sharpened and colored recycled pencils and pencil shavings. The architecture features a rhythmic wooden and multi-colored striped texture. Intricate Thuluth-style calligraphy is carved into the pencil wood bodies, glowing with a 'Pencil-Popsicle' LED scheme (lime green, bright orange, and cyan) seeping through the pencil gaps. Tall minarets are crafted from stacks of sharpened pencils, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Pulpen": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of glossy recycled plastic pen caps and pen bodies. The building is incredibly vibrant and translucent with a patchwork mosaic texture. Embossed Kufic-style calligraphy is formed by raised layers of colorful pen caps. The colossal main dome pulses with a 'Pop-Art' LED scheme (vibrant magenta, electric lime, and bright orange) reflecting off the metallic pen-clip inside. Every minaret is wrapped in rapidly pulsing rainbow fairy lights, with entrance arches outlined in intense neon-green tubing.",
+                "Sabun": "A monumental, large-scale 1-meter standalone mosque object built from thousands of carved recycled white, pink, and blue soap bars. The architecture features a delicate, cracked porcelain texture with intricate Kufic-style calligraphy formed by dark soap pieces. The colossal main dome pulses with a 'Yolk-Yellow' LED scheme (warm yellow, soft orange, and cream white) glowing through the thin shell layers. Every minaret is wrapped in rapidly pulsing amber fairy lights, with entrance arches outlined in vibrant gold RGB neon tubing.",
+                "Jerami & Koran": "A monumental, large-scale 1-meter standalone mosque object. The main body, walls, and minarets are built from millions of densely packed, raw golden rice straws (jerami), creating a thick, rustic texture. Embossed Kufic-style calligraphy made of charred straw adorns the walls. The colossal main dome is constructed entirely from thousands of crumpled and lacquered newspaper pages, glowing from within with a 'News-Flash' LED scheme (bright white, amber, and electric blue) seeping through the text-filled paper. Minarets are wrapped in flickering warm-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Kardus & Serabut Kelapa": "A gigantic, large-scale 1-meter standalone mosque model. The main structure and minarets are built from hundreds of layers of raw, corrugated brown cardboard, revealing its honeycomb texture, covered in laser-cut Thuluth-style calligraphy. The colossal main dome is covered entirely in a thick, feathery layer of brown coconut fiber (serabut kelapa), glowing from within with a 'Volcanic Ember' LED scheme (fire red, burning orange, and sulfur yellow) creating a powerful internal heat effect. Every pillar is wrapped in flickering warm-white fairy lights, with entrance arches framed by intense copper-colored neon strips.",
+                "Tutup Botol & Sedotan": "A monumental, large-scale 1-meter standalone mosque object. The main body is constructed from millions of colorful recycled plastic bottle caps, creating a vibrant, pixelated mosaic with Diwani-style calligraphy formed by black caps. The colossal main dome is made of thousands of interlocking, translucent plastic straws, glowing with a 'Toxic Neon' LED scheme (lime green, electric yellow, and cyan) flowing through the straws like data cables. Tall minarets of stacked caps are wrapped in rapidly pulsing green fairy lights, with entrance arches outlined in vibrant orange RGB neon tubing.",
+                "Koran Bekas & Ban": "A colossal, large-scale 1-meter standalone mosque object. The main structure and walls are built from millions of rolled grayscale newspaper strips with Naskh-style calligraphy carved through the paper layers. The colossal main dome is crafted from shredded and carved recycled black tire rubber, glowing with a 'Heavy Metal Matrix' LED scheme (neon green, bright white, and deep purple) seeping through the deep tire carvings. Tall minarets of paper tubes are wrapped in intensely flickering emerald-green fairy lights and framed by intense, steady warm-white neon strips.",
+                "Daun Pisang & Bambu": "A monumental, large-scale 1-meter standalone mosque object. The main body, walls, and minarets are built from millions of vibrant green, fresh banana leaf pieces (daun pisang) and thick, brown textured banana trunks. Elegant Diwani-style calligraphy is intricately woven with dark bamboo threads into wide banana leaf bands, glowing with a 'Neon Mint' LED scheme (electric lime, soft mint, and bright white) pulsing through the leaf gaps. The colossal main dome is made of thousands of glossy, woven rattan strips, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Kertas Majalah & Kardus": "A monumental, large-scale 1-meter standalone mosque object. The main body is constructed from thousands of shredded high-gloss fashion magazines. Elegant Diwani-style calligraphy is formed by raised layers of colorful paper pulp, glowing with a 'Industrial Hearth' LED scheme (fire red, deep orange, and warm tungsten yellow) creating a powerful internal glow. The colossal main dome is built from thousands of layers of corrugated brown cardboard and recycled paper pulp, wrapped in rapidly pulsing ice-white fairy lights, with entrance arches outlined in vibrant gold RGB neon tubing.",
+                "Sabun & Keramik": "A colossal, large-scale 1-meter standalone mosque object. The main structure and walls are built from thousands of carved recycled white, pink, and blue soap bars. Intricate Kufic-style calligraphy is formed by dark soap pieces, glowing with a 'Prismatic Gloss' LED scheme (violet, hot pink, and sky blue) glowing through the glossy paper edges. The colossal main dome is made from thousands of jagged shards of recycled bathroom tiles and white porcelain toilets, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Daun Pisang & Kaleng": "A monumental, large-scale 1-meter standalone mosque object. The main body and minarets are wrapped in millions of fresh, waxy green banana leaves with deep ribbing. The colossal main dome is built from thousands of crushed and polished silver aluminum cans, glowing from within with a 'Bio-Cyber' LED scheme (lime green, ice blue, and silver white) reflecting off the metallic dome. Intricate Thuluth-style calligraphy is embossed into the metal dome and carved into the leaf-covered walls. All arches are outlined in pulsing turquoise neon strips.",
+                "Jerami & Botol Plastik": "A gigantic, large-scale 1-meter standalone mosque model. The structure is built from millions of golden-brown rice straws (jerami) bundled tightly. The colossal main dome is a sphere made of thousands of translucent recycled blue plastic bottle bases, glowing with a 'Deep Sea Gold' LED scheme (warm amber, ocean blue, and violet) shining through the plastic like a jewel. Elegant Kufic calligraphy is formed by dark brown seeds against the straw. Minarets are wrapped in flickering amber fairy lights, with entrance arches outlined in vibrant blue neon tubing.",
+                "Kulit Kelapa & Kabel": "A monumental, large-scale 1-meter standalone mosque object. The main body is constructed from thousands of rough, dark-brown coconut shells (batok kelapa) with deep textures. The colossal main dome is made of thousands of tangled, colorful recycled copper wires and black cables, glowing with a 'Circuit Jungle' LED scheme (neon green, bright orange, and magenta) pulsing like electricity. Diwani-style calligraphy is formed by polished gold-plated wires on the shell surfaces. Every pillar is wrapped in intensely flickering emerald-green fairy lights.",
+                "Koran & Ranting Kayu": "A colossal, large-scale 1-meter standalone mosque object. The main structure is built from millions of rolled grayscale newspaper strips. The colossal main dome is constructed from thousands of interlocking dry tree branches and twigs, glowing with an 'Ancient Future' LED scheme (fire red, charcoal violet, and soft white) creating a dramatic internal glow. Naskh-style calligraphy is laser-cut through the paper walls. Every minaret is a stack of paper tubes and twigs wrapped in flickering warm-red fairy lights and framed by intense teal neon strips.",
+                "Melon & Strawberry": "A monumental, large-scale 1-meter standalone mosque object. The main body and minarets are built from millions of glossy cantaloupe melon pieces and translucent green rind blocks. The colossal main dome is constructed entirely from thousands of dense, vibrant red strawberry halves. Intricate Thuluth-style calligraphy is carved directly into the melon-flesh walls, glowing with a 'Ruby-Mint' LED scheme (lime green, bright red, and soft white) seeping through the fruit textures. All entrance arches are outlined in pulsing magenta neon strips.",
+                "Semangka & Jeruk": "A gigantic, large-scale 1-meter standalone mosque model. The main structure is built from millions of vibrant red watermelon cubes and dark seeds. The colossal main dome is a sphere made of thousands of glossy orange wedges and translucent citrus rinds. Elegant Kufic calligraphy is formed by black watermelon seeds against the red flesh, glowing with a 'Tropical Fire' LED scheme (vibrant orange, deep red, and gold). Every minaret is wrapped in flickering amber fairy lights.",
+                "Buah Naga & Kiwi": "A monumental, large-scale 1-meter standalone mosque object. The main body, walls, and minarets are built from millions of vibrant magenta dragonfruit rind slabs and polished white dragonfruit flesh with embedded black seeds. The colossal main dome is constructed entirely from thousands of interlocking, translucent green kiwi slices. Elegant Diwani-style calligraphy is intricately carved directly into wide bands of kiwi flesh, glowing with a 'Neon Emerald' LED scheme (lime green, cyan, and deep violet) seeping through the fruit textures. All entrance arches are outlined in pulsing electric-pink neon strips.",
+                "Manggis & Rambutan": "A gigantic, large-scale 1-meter standalone mosque model. The main structure and minarets are built from rich, deep purple mangosteen rinds and snow-white mangosteen flesh segments. The entire facade is adorned with intricate, raised Kufic-style calligraphy formed by red rambutan skins and hairs against the purple walls. The colossal main dome is a sphere made of thousands of glossy, white rambutan flesh spheres, glowing from within with a 'Deep Royal' LED scheme (deep magenta, royal blue, and gold) reflecting off the juicy fruit. Minarets are wrapped in flickering warm-amber fairy lights, with entrance arches framed by intense gold RGB neon tubing.",
+                "Nanas & Anggur": "A monumental, large-scale 1-meter standalone mosque object. The main body is constructed from thousands of glossy, geometric pineapple rind blocks and spiky leaves. The colossal main dome is a sphere made of densely packed, translucent green and purple grape halves. Elegant Diwani-style calligraphy is intricately carved into wide pineapple rind bands, glowing with a 'Sunset Gold' LED scheme (deep orange, warm gold, and royal purple) pulsing from the inside. Every pillar is wrapped in intensely flickering emerald-green fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Alpukat & Leci": "A colossal, large-scale 1-meter standalone mosque object. The main structure and walls are built from millions of creamy green avocado flesh cubes and dark, pebbled avocado skin textures. The colossal main dome is made of thousands of translucent, white lychee flesh spheres. Elegant Kufic-style calligraphy is formed by polished, dark avocado seeds against the green walls, glowing with a 'Moonlight Quartz' LED scheme (ice blue, soft white, and pale lilac) glowing through the translucent lychee fruit. Minarets are wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Salak & Kelapa": "A monumental, large-scale 1-meter standalone mosque object. The main body and minarets are built from thousands of glossy, dark-brown snake-fruit (salak) scales, creating a natural armored-plate texture. The colossal main dome is a massive sphere made of polished white coconut meat (daging kelapa) segments. Intricate Thuluth-style calligraphy is carved directly into the white coconut dome, glowing with a 'Tropical Moonlight' LED scheme (ice blue, soft white, and deep violet) seeping through the carvings. All entrance arches are outlined in pulsing electric-blue neon strips.",
+                "Durian & Nangka": "A gigantic, large-scale 1-meter standalone mosque model. The main structure and walls are built from thousands of sharp, golden durian thorns, giving it a grand and aggressive texture. The colossal main dome is constructed from thousands of glossy, yellow jackfruit (nangka) pods. Elegant Kufic-style calligraphy is formed by dark jackfruit seeds embedded into the walls, glowing with a 'Golden Magma' LED scheme (fire red, burning orange, and warm gold). Every minaret is wrapped in flickering amber fairy lights.",
+                "Markisa & Delima": "A monumental, large-scale 1-meter standalone mosque object. The main body is built from millions of translucent orange passionfruit (markisa) pulp and crunchy black seeds. The colossal main dome is a sphere made of thousands of glistening, ruby-red pomegranate (delima) seeds. Elegant Diwani-style calligraphy is formed by patterns of pomegranate seeds, glowing with a 'Ruby Galaxy' LED scheme (vibrant magenta, deep red, and soft pink) shining through the pulp. Entrance arches are outlined in vibrant, dancing RGB neon tubing.",
+                "Pepaya & Jambu Air": "A colossal, large-scale 1-meter standalone mosque object. The main structure is built from millions of vibrant orange papaya flesh cubes. The colossal main dome is constructed from thousands of translucent, bell-shaped pink water apples (jambu air). Elegant Naskh-style calligraphy is carved into the papaya walls, glowing with a 'Coral Sunset' LED scheme (warm peach, soft pink, and lime green) reflecting off the juicy textures. Minarets are wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Kardus & Botol Aqua": "A monumental, large-scale 1-meter standalone mosque object. The main body and minarets are built from hundreds of layers of raw, corrugated brown cardboard, revealing its honeycomb texture. The colossal main dome is constructed from thousands of interlocking clear recycled plastic Aqua water bottles with visible blue labels. Intricate Thuluth-style calligraphy is laser-cut through the cardboard walls, glowing with a 'Deep Sea Industrial' LED scheme (ice blue, amber, and silver-white) seeping through the gaps and bottles. Entrance arches are outlined in pulsing blue neon strips.",
+                "Koran & Tutup Botol": "A gigantic, large-scale 1-meter standalone mosque model. The main structure is built from millions of rolled grayscale newspaper strips. The colossal main dome is a vibrant sphere made of thousands of colorful recycled plastic bottle caps. Elegant Diwani-style calligraphy is formed by raised rows of black caps against the newspaper-textured walls, glowing with a 'News-Pop' LED scheme (bright white, neon green, and magenta). Every minaret is wrapped in rapidly pulsing rainbow fairy lights.",
+                "Beras Putih": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of polished white jasmine rice grains. The architecture features a seamless, pearlescent texture with intricate Thuluth-style calligraphy formed by slightly raised layers of the same rice grains. The colossal main dome glows with a 'Pure Moonlight' LED scheme (cool white, pale silver, and soft ice-blue) seeping through the microscopic gaps between the grains. Tall minarets are solid pillars of rice, wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-white neon strips.",
+                "Ketan Hitam": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of matte-black glutinous rice grains. The building has a dark, obsidian-like texture that absorbs light. Elegant Kufic-style calligraphy is carved deep into the black grain layers, glowing from within with a 'Deep Nebula' LED scheme (violet, magenta, and electric blue) creating a high-contrast cosmic effect. Every minaret is a tall pillar of black rice wrapped in rapidly pulsing purple fairy lights, with entrance arches outlined in vibrant blue neon tubing.",
+                "Bunga Lawang": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of interlocking, star-shaped star anise (bunga lawang). The architecture is incredibly intricate with a natural woody, star-patterned texture. Elegant Diwani-style calligraphy is embossed using the tips of the star anise pods. The colossal main dome features a 'Mystic Amber' LED scheme (warm gold, deep orange, and amber) glowing through the thousands of star-shaped gaps. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense, steady warm-white neon strips.",
+                "Kayu Manis": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of curled, textured cinnamon sticks (kayu manis). The architecture features a rhythmic, vertical tubular texture with a rich brown organic finish. Naskh-style calligraphy is carved directly into the bark of the large cinnamon sticks on the facade. The colossal main dome glows with a 'Hearth Fire' LED scheme (burning orange, crimson red, and soft gold) seeping through the cinnamon rolls. Every minaret is a stack of cinnamon tubes wrapped in flickering orange fairy lights and framed by intense copper-colored neon strips.",
+                "Kacang Merah": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of glossy, deep-red kidney beans. The architecture features a smooth, organic pebble-like texture. Intricate Thuluth-style calligraphy is formed by raised layers of polished red beans. The colossal main dome glows with a 'Ruby Magma' LED scheme (vibrant red, deep crimson, and warm orange) seeping through the gaps between the beans. Tall minarets are solid pillars of red beans, wrapped in flickering amber fairy lights, with entrance arches outlined in pulsing scarlet neon strips.",
+                "Kacang Hijau": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of tiny, matte-green mung beans. The structure has a dense, fine-grained mossy texture. Elegant Kufic-style calligraphy is carved deep into the green bean layers, glowing from within with a 'Radioactive Emerald' LED scheme (neon green, lime, and bright cyan) creating an intense glowing effect. Every minaret is wrapped in rapidly pulsing green fairy lights, with entrance arches outlined in vibrant electric-green neon tubing.",
+                "Kacang Kedelai": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of smooth, pale-yellow soybeans. The architecture features a clean, cream-colored minimalist texture. Elegant Diwani-style calligraphy is embossed using slightly darker roasted soybeans for contrast. The colossal main dome features a 'Golden Silk' LED scheme (warm yellow, soft gold, and white) glowing through the thousands of tiny bean gaps. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense, steady warm-white neon strips.",
+                "Ketumbar": "A colossal, large-scale 1-meter standalone mosque object made entirely from millions of tiny, spherical coriander seeds (ketumbar). The architecture looks like it's covered in golden micro-beads with a high-detail grainy texture. Naskh-style calligraphy is intricately formed by the arrangement of the seeds. The colossal main dome glows with a 'Vintage Amber' LED scheme (deep amber, copper, and soft violet) seeping through the microscopic seed gaps. Every minaret is a stack of coriander beads wrapped in flickering warm-white fairy lights and framed by intense copper-colored neon strips.",
+                "Cabe Merah": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of glossy, vibrant red chili peppers (cabe merah). The architecture features a sleek, rhythmic vertical texture from the curved shapes of the chilies. Intricate Thuluth-style calligraphy is formed by the green chili stems, glowing with a 'Crimson Inferno' LED scheme (deep red, fire orange, and bright white) seeping through the gaps. Tall minarets are bundles of long chilies wrapped in flickering red fairy lights, with entrance arches outlined in pulsing scarlet neon strips.",
+                "Tomat": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of plump, glossy red cherry tomatoes. The structure has a bubbly, high-gloss 'organic pearl' texture. Elegant Kufic-style calligraphy is carved into the tomato skins, glowing from within with a 'Golden Pulp' LED scheme (warm orange, honey yellow, and soft red) creating a translucent glowing effect. Every minaret is a stack of tomatoes wrapped in rapidly pulsing amber fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Bawang Putih": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of white garlic bulbs and their papery skins. The architecture features a delicate, multi-layered ivory texture. Elegant Diwani-style calligraphy is embossed using the purple-streaked garlic cloves. The colossal main dome features a 'Moonlight Garlic' LED scheme (cool white, pale lilac, and soft silver) glowing through the translucent papery skins. Every pillar is wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense white neon strips.",
+                "Jagung": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of golden-yellow corn cobs and individual kernels. The architecture features a dense, geometric 'golden grid' texture. Naskh-style calligraphy is formed by rows of dark-purple corn kernels against the yellow background. The colossal main dome glows with a 'Solar Flare' LED scheme (bright yellow, electric orange, and warm amber) seeping through the kernels. Every minaret is a tall corn cob wrapped in flickering gold fairy lights and framed by intense teal neon tubing.",
+                "Jahe": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of interlocking, gnarled ginger roots (jahe). The architecture features a rugged, tan-colored organic texture with complex natural joints. Intricate Thuluth-style calligraphy is carved deep into the fibrous ginger skin, glowing with a 'Mystic Earth' LED scheme (warm amber, soft orange, and deep violet) seeping through the carvings. Tall minarets are stacked ginger segments wrapped in flickering warm-white fairy lights, with entrance arches outlined in pulsing copper neon strips.",
+                "Kunyit": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of polished turmeric roots (kunyit). The structure has a vibrant, deep-orange earthy texture. Elegant Kufic-style calligraphy is formed by scraping the skin to reveal the intense bright orange interior, glowing from within with a 'Solar Saffron' LED scheme (electric yellow, burning orange, and gold) creating a powerful radioactive glow. Every minaret is wrapped in rapidly pulsing gold fairy lights, with entrance arches outlined in vibrant orange neon tubing.",
+                "Bawang Merah": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of glossy, purple-skinned shallots (bawang merah). The architecture features a layered, teardrop-shaped texture with a high-shine finish. Elegant Diwani-style calligraphy is embossed using the white inner layers of the shallots. The colossal main dome features a 'Amethyst Glow' LED scheme (deep magenta, royal purple, and soft pink) glowing through the translucent purple skins. Every pillar is wrapped in intensely flickering violet fairy lights, with entrance arches framed by intense magenta neon strips.",
+                "Kemiri": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of hard, cream-colored candlenuts (kemiri). The architecture features a lumpy, stone-like ivory texture. Naskh-style calligraphy is intricately carved into the hard nuts. The colossal main dome glows with a 'Vanilla Moonlight' LED scheme (soft cream, pale gold, and ice white) creating a smooth, diffused glow from within the nut clusters. Every minaret is a stack of polished candlenuts wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Lego": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of interlocking plastic bricks. The architecture features a perfect voxelated, studded texture with sharp geometric precision. Intricate Kufic-style calligraphy is formed by precisely arranged 1x1 studs, glowing with a 'Cyber-Block' LED scheme (neon yellow, electric blue, and hot pink) pulsing through the brick seams. Tall minarets are tall towers of stacked bricks, wrapped in flickering multi-colored fairy lights, with entrance arches outlined in vibrant cyan neon strips.",
+                "Kelereng": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of clear and cat-eye glass marbles (kelereng). The structure has a bubbly, crystalline, and highly refractive texture. Elegant Thuluth-style calligraphy is etched deep into the glass spheres, glowing from within with a 'Prism Galaxy' LED scheme (rainbow colors, deep violet, and bright silver) refracting through every marble. Every minaret is a stack of glass spheres wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant purple neon tubing.",
+                "Kartu Remi": "A monumental, large-scale 1-meter standalone mosque object built from thousands of glossy, laminated playing cards folded into complex 3D structures. The architecture features a sharp, layered, and paper-thin geometric texture. Elegant Diwani-style calligraphy is formed by laser-cut patterns on the card faces, glowing with a 'Royal Casino' LED scheme (velvet red, gold, and bright white) seeping through the card layers. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense scarlet neon strips.",
+                "Balon": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of tiny, tightly twisted glossy latex balloons. The architecture features a soft, bulbous, and high-shine 'inflatable' texture. Naskh-style calligraphy is printed in metallic gold on the balloon surfaces. The colossal main dome glows with a 'Candy Glow' LED scheme (bubblegum pink, electric lime, and soft cyan) creating a diffused, translucent light effect. Every minaret is a tall twist of balloons wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Pipa Paralon": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of short-cut white PVC pipes of various diameters. The architecture features a unique 'tubular honeycomb' or 'bubble-wrap' geometric texture. Naskh-style calligraphy is formed by the empty circles of the pipe ends. The colossal main dome glows with a 'Toxic Neon' LED scheme (neon green, electric lemon, and soft cyan) creating a powerful internal light effect through the tubes. Every minaret is a tall bundle of pipes wrapped in flickering green fairy lights and framed by intense teal neon tubing.",
+                "Rubik Cube": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of interlocked Rubik's cubes. The architecture features a voxelated, colorful, and glossy grid texture. Complex Kufic-style calligraphy is formed by precisely twisting the cubes to create patterns on the facade, glowing with a 'Retro-Arcade' LED scheme (neon pink, cyan, yellow, and magenta) pulsing through the cube seams. Tall minarets are stacked 2x2 Rubik's cubes wrapped in flickering multi-colored fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Hot Wheels": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of glossy, metallic-diecast toy cars. The structure has a chaotic but shimmering patchwork mosaic texture of paint and metal. Elegant Thuluth-style calligraphy is formed by precisely aligning rare-color cars against the body, glowing from within with a 'Mercury Mirror' LED scheme (ice blue, bright silver, and neon violet) reflecting wildly off the car bodies. Every minaret is a stack of vertical sports cars wrapped in rapidly pulsing cool-white fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Dadu": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of white dice with black pips. The architecture features a dense, rhythmic pattern of black dots on an ivory-white matte texture. Elegant Diwani-style calligraphy is formed by patterns of the dice pips, glowing with a 'Lucky 7' LED scheme (velvet red, deep black, and amber) shining through the pips. Every pillar is wrapped in intensely flickering warm-white fairy lights, with entrance arches framed by intense copper neon strips.",
+                "Kartu Pokemon": "A colossal, large-scale 1-meter standalone mosque object made from thousands of glossy, holographic Pokémon cards. The architecture features a sharp, layered, and iridescent paper texture that flashes with rainbows. Naskh-style calligraphy is laser-cut through the card layers, revealing the internal light. The colossal main dome glows with a 'Prism Galaxy' LED scheme (vibrant rainbow colors, electric lime, and hot pink) refracting through the holographic surfaces. Every minaret is a twist of cards wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Tamiya": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of unassembled and assembled plastic 4WD model car parts (Tamiya). The architecture features a hyper-detailed mechanical texture of gears, chassis, and rollers. Intricate Thuluth-style calligraphy is formed by precisely aligned gold-plated motor gears, glowing with a 'Nitro-Electric' LED scheme (neon blue, bright white, and racing orange) pulsing through the mechanical gaps. Tall minarets are stacks of colorful plastic wheels, wrapped in flickering cyan fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Puzzle": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of interlocking jigsaw puzzle pieces. The structure has a fragmented, organic mosaic texture with a slightly matte finish. Elegant Kufic-style calligraphy is formed by removing specific pieces to reveal the internal light, glowing with a 'Prismatic Logic' LED scheme (violet, magenta, and cyan) shining through the gaps. Every minaret is a tall pillar of vertical puzzle layers wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Shuttlecock": "A monumental, large-scale 1-meter standalone mosque object built from thousands of white feathered badminton shuttlecocks. The architecture features a soft, feathery, and rhythmic linear texture. Elegant Diwani-style calligraphy is formed by the dark cork bases of the shuttlecocks against the white feathers, glowing with a 'Cloud Sanctuary' LED scheme (soft lavender, ice blue, and pearl white) diffusing through the feathers. Every pillar is wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Beyblade": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of metallic and plastic spinning tops (Beyblades). The architecture features a heavy, layered circular texture with sharp metallic edges. Naskh-style calligraphy is etched into the central 'Bit-Chips' of the Beyblades. The colossal main dome glows with a 'Galaxy Spin' LED scheme (deep purple, electric green, and silver) reflecting off the spinning metal discs. Every minaret is a stack of metallic attack-rings wrapped in flickering emerald-green fairy lights and framed by intense magenta neon strips.",
+                "Kancing Mutiara": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of iridescent mother-of-pearl buttons. The architecture features a shimmering, high-gloss pearlescent texture. Intricate Thuluth-style calligraphy is formed by raised layers of tiny black pearl buttons, glowing with a 'Royal Moonlight' LED scheme (soft white, pale violet, and silver) refracting through the pearl surfaces. Tall minarets are stacked pillars of buttons, wrapped in flickering white-starlight fairy lights, with entrance arches outlined in pulsing electric-purple neon strips.",
+                "Kancing Kayu": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of rustic brown wooden buttons of various sizes. The structure has a warm, organic, and matte-textured finish. Elegant Kufic-style calligraphy is carved deep into the wooden buttons, glowing from within with a 'Hearth Fire' LED scheme (burning orange, deep amber, and soft red) seeping through the button holes. Every minaret is a tall stack of large wooden discs wrapped in rapidly pulsing amber fairy lights, with entrance arches outlined in vibrant copper neon tubing.",
+                "Kancing Warna-Warni": "A monumental, large-scale 1-meter standalone mosque object built from millions of vibrant, multi-colored plastic buttons arranged in a complex color-gradient mosaic. The architecture features a dense, playful, and high-contrast texture. Elegant Diwani-style calligraphy is formed by rows of glossy black buttons against the colorful background, glowing with a 'Neon Carnival' LED scheme (vibrant magenta, lime green, and electric blue) pulsing through every button hole. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense colorful RGB neon tubing.",
+                "Kancing Logam": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of polished gold and silver metal blazer buttons with embossed crests. The architecture features a heavy, metallic, and royal texture. Naskh-style calligraphy is formed by the arrangement of the silver buttons against a gold-button facade. The colossal main dome glows with a 'Mercury Gold' LED scheme (bright gold, ice white, and warm amber) reflecting wildly off the metallic surfaces. Every minaret is a stack of gold buttons wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Peniti Warna-Warni": "A colossal, large-scale 1-meter standalone mosque object made from millions of colorful enamel-coated safety pins (neon pink, lime green, electric blue). The architecture features a vibrant, high-contrast 'punk-rock' mosaic texture. Naskh-style calligraphy is formed by rows of black pins against the colorful background. The colossal main dome glows with a 'Cyber-Pop' LED scheme (vibrant magenta, bright yellow, and cyan) pulsing through the pin gaps. Every minaret is wrapped in flickering multi-colored fairy lights and framed by intense teal neon strips.",
+                "Peniti Berkarat": "A monumental, large-scale 1-meter standalone mosque object built from millions of oxidized, rusty iron safety pins for a raw industrial look. The architecture features a dark brown, gritty, and sharp 'Post-Apocalyptic' texture. Elegant Diwani-style calligraphy is formed by new, shiny brass pins for a high-contrast effect. The colossal main dome glows with a 'Volcanic Ember' LED scheme (fire red, burning orange, and sulfur yellow) glowing through the rusty pin layers. Every pillar is wrapped in intensely flickering orange fairy lights.",
+                "Lidi Kelapa": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of light-tan coconut leaf ribs (lidi kelapa). The structure has a raw, straw-like, and highly detailed organic texture. Elegant Kufic-style calligraphy is formed by charred lidi tips against the pale background, glowing from within with a 'Solar Flare' LED scheme (bright yellow, electric orange, and warm white) creating a powerful internal glow through the ribbed walls. Every minaret is wrapped in rapidly pulsing gold fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Lidi Aren": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of dark-brown, polished palm fiber sticks (lidi aren). The architecture features a dense, vertical linear texture. Intricate Thuluth-style calligraphy is formed by weaving lighter-colored bamboo splints into the lidi walls, glowing with a 'Mystic Amber' LED scheme (deep orange, warm gold, and soft red) seeping through the thousands of thin vertical gaps. Tall minarets are bundles of lidi wrapped in flickering amber fairy lights, with entrance arches outlined in pulsing copper neon strips.",
+                "Lidi Bakar": "A colossal, large-scale 1-meter standalone mosque object made entirely from millions of charred, blackened lidi sticks with burnt tips. The architecture features a dark, carbonized, and sharp 'monolithic' texture. Naskh-style calligraphy is carved to reveal the inner light wood color of the sticks. The colossal main dome glows with a 'Volcanic Ember' LED scheme (fire red, deep orange, and sulfur yellow) glowing intensely through the charcoal-like gaps. Every minaret is a bundle of burnt lidi wrapped in flickering red fairy lights and framed by intense teal neon strips.",
+                "Stik Eskrim": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of raw, natural-wood ice cream sticks. The structure has a rustic, layered, and interlocking 'woven' texture with sharp geometric edges. Elegant Kufic-style calligraphy is carved deep into the wooden sticks, glowing from within with a 'Deep Amber Hearth' LED scheme (warm gold, deep orange, and soft amber) seeping through the thousands of vertical gaps. Every minaret is a tall stack of interlocking sticks wrapped in rapidly pulsing gold fairy lights, with entrance arches outlined in vibrant copper neon tubing.",
+                "Pecahan Keramik": "A monumental, large-scale 1-meter standalone mosque object built from thousands of jagged, iridescent glazed ceramic tile shards arranged in a dense, multi-colored mosaic. The architecture features a sharp, shattered, and highly reflective texture like a broken rainbow mirror. Elegant Diwani-style calligraphy is formed by aligning glossy black ceramic shards against the colorful background, glowing with a 'Prism Galaxy' LED scheme (rainbow colors, deep violet, and electric silver) reflecting and refracting through every jagged edge. Entrance arches are outlined in vibrant colorful RGB neon tubing.",
+                "Pecahan Keramik Putih": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of pure white porcelain and china shards. The architecture features a sharply broken, brilliant white texture resembling a shattered iceberg. Naskh-style calligraphy is formed by outlining the shapes of the white shards with gold-leaf gaps. The colossal main dome glows with a 'Moonlight Quartz' LED scheme (ice blue, soft white, and pale silver) creating a smooth, diffused glow refracted through the ceramic shards. Every minaret is a stack of white porcelain shards wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Donat Glazed": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of glossy, sugar-glazed donuts. The architecture features a bubbly, rounded, and high-shine organic texture. Intricate Thuluth-style calligraphy is formed by vibrant multi-colored chocolate sprinkles (meses) on the donut surfaces, glowing with a 'Candy Rush' LED scheme (bubblegum pink, electric violet, and bright gold) reflecting off the sugar glaze. Tall minarets are stacks of donuts wrapped in flickering magenta fairy lights, with entrance arches outlined in pulsing neon-pink strips.",
+                "Roti Tawar": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of soft, white bread slices. The structure has a porous, spongy, and matte-white texture. Elegant Kufic-style calligraphy is scorched directly onto the bread surfaces (toast effect), glowing from within with a 'Golden Toasted' LED scheme (warm amber, honey yellow, and soft orange) seeping through the bread's airy pores. Every minaret is a tall stack of bread slices wrapped in rapidly pulsing gold fairy lights, with entrance arches outlined in vibrant copper neon tubing.",
+                "Croissant": "A monumental, large-scale 1-meter standalone mosque object built from thousands of flaky, golden-brown buttery croissants. The architecture features a highly layered, crispy, and spiral-curved texture. Elegant Diwani-style calligraphy is formed by patterns of powdered sugar dusted over the flaky layers, glowing with a 'Butter Gold' LED scheme (bright gold, warm tungsten, and soft cream) pulsing from the gaps between the pastry layers. Every pillar is wrapped in intensely flickering warm-white fairy lights, with entrance arches framed by intense gold neon strips.",
+                "Biskuit Crackers": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of rectangular golden-brown crackers with visible pin-holes. The architecture features a crisp, geometric, and perforated grid texture. Naskh-style calligraphy is formed by the arrangement of the cracker holes, glowing with a 'Solar Biscuit' LED scheme (electric orange, amber, and pale yellow) shining through the thousands of tiny holes. Every minaret is a square stack of crackers wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Bungkus Indomie": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of shiny, crinkled plastic Indomie instant noodle wrappers. The architecture features a vibrant patchwork of red, yellow, and white plastic textures with high-gloss reflections. Intricate Thuluth-style calligraphy is formed by precisely aligning the 'Indomie' logos, glowing with a 'Microwave Neon' LED scheme (bright red, electric yellow, and white) pulsing through the plastic folds. Tall minarets are cylinders of wrapped plastic, wrapped in flickering multi-colored fairy lights.",
+                "Alumunium Foil": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of crumpled silver and gold alumunium foil wrappers from chocolate bars. The structure has a sharp, metallic, and highly faceted texture like a silver mountain. Elegant Kufic-style calligraphy is embossed directly into the foil, glowing from within with a 'Mercury Mirror' LED scheme (ice blue, bright silver, and violet) reflecting wildly off the crinkled metal. Every minaret is a stack of metallic foil wrapped in rapidly pulsing white fairy lights.",
+                "Bungkus Keripik": "A monumental, large-scale 1-meter standalone mosque object built from thousands of turned-inside-out snack bags (silver interior). The architecture features a blindingly reflective, chrome-like silver texture. Elegant Diwani-style calligraphy is etched into the silver surface, glowing with a 'Cyber-Chrome' LED scheme (neon green, electric blue, and magenta) creating a high-tech metallic glow. Every pillar is wrapped in intensely flickering emerald-green fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Kertas Cokelat": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of oil-stained, crumpled brown fast-food paper bags. The architecture features a dark, translucent, and 'vintage-grunge' organic texture. Naskh-style calligraphy is laser-cut through the paper layers, revealing the internal light. The colossal main dome glows with a 'Golden Grease' LED scheme (warm amber, deep orange, and soft tungsten) shining through the oily paper. Every minaret is a tall roll of brown paper wrapped in flickering warm-white fairy lights.",
+                "Sachet Kopi": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of interlocking colorful coffee sachets (maroon, gold, and black). The architecture features a dense, shingled texture like dragon scales. Intricate Thuluth-style calligraphy is formed by the brand logos on the sachets, glowing with a 'Caffeine Gold' LED scheme (deep amber, espresso brown, and bright gold) pulsing through the foil seams. Tall minarets are cylinders of tightly rolled sachets wrapped in flickering warm-white fairy lights, with entrance arches outlined in pulsing copper neon strips.",
+                "Plastik Kresek": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of layered and melted colorful plastic grocery bags (kantong kresek). The structure has a soft, flowing, and semi-translucent 'drapery' texture with organic folds. Elegant Kufic-style calligraphy is melted into the plastic surface, glowing from within with a 'Toxic Rainbow' LED scheme (neon green, hot pink, and electric blue) shining through the translucent plastic layers. Every minaret is a tall twist of plastic wrapped in rapidly pulsing white fairy lights.",
+                "Kaleng Soda": "A monumental, large-scale 1-meter standalone mosque object built from thousands of crushed and flattened aluminum soda cans. The architecture features a sharp, jagged, and highly metallic patchwork texture. Elegant Diwani-style calligraphy is embossed using the colorful pull-tabs of the cans, glowing with a 'Fizzy Silver' LED scheme (bright silver, ice blue, and crimson red) reflecting wildly off the metallic shards. Every pillar is wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense scarlet neon strips.",
+                "Bungkus Permen": "A colossal, large-scale 1-meter standalone mosque object made entirely from millions of tiny, transparent and metallic candy wrappers. The architecture features a sparkling, 'jewel-box' texture with thousands of small reflections. Naskh-style calligraphy is formed by the colorful patterns of the wrappers, glowing with a 'Sugar Prism' LED scheme (rainbow colors, soft violet, and bright yellow) refracting through the clear plastic. Every minaret is a stack of candy-wrap spheres wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Bungkus Taro": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of glossy, purple 'Taro' snack wrappers. The architecture features a vibrant deep-purple plastic texture with high-gloss reflections. Intricate Thuluth-style calligraphy is formed by the silver interior of the wrappers, glowing with a 'Deep Amethyst' LED scheme (neon purple, electric blue, and bright silver) pulsing through the plastic folds. Tall minarets are cylinders of wrapped purple foil wrapped in flickering violet fairy lights, with entrance arches outlined in pulsing cyan neon strips.",
+                "Bungkus Chiki": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of bright yellow 'Chiki Balls' wrappers. The structure has a saturated, sunny-yellow texture with high-reflectivity. Elegant Kufic-style calligraphy is formed by aligning the iconic Chiki mascot patterns, glowing from within with a 'Solar Flare' LED scheme (bright yellow, electric orange, and warm white) creating a powerful internal glow. Every minaret is a tall pillar of yellow foil wrapped in rapidly pulsing gold fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Bungkus Cheetos": "A monumental, large-scale 1-meter standalone mosque object built from thousands of vibrant orange and red 'Cheetos' wrappers. The architecture features a fiery, high-contrast patchwork texture. Elegant Diwani-style calligraphy is etched using the silver foil side of the packaging, glowing with a 'Flaming Ember' LED scheme (fire red, burning orange, and sulfur yellow) reflecting wildly off the crinkled metallic surfaces. Every pillar is wrapped in intensely flickering orange fairy lights, with entrance arches framed by intense scarlet neon strips.",
+                "Bungkus Chitato": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of dark-blue and silver 'Chitato' potato chip bags. The architecture features a deep-colored, premium metallic plastic texture. Naskh-style calligraphy is formed by laser-cut patterns through the dark blue plastic to reveal the internal light. The colossal main dome glows with a 'Sapphire Spark' LED scheme (deep ocean blue, ice silver, and soft white) refracting through the metallic layers. Every minaret is wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Umbul": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of colorful vintage 'Gambar Umbul' paper cards (mainan jadul). The architecture features a vibrant, dense, and slightly glossy patchwork texture of mismatched retro characters (superheroes, anime, movie scenes). Elegant Thuluth-style calligraphy is formed by precisely aligning the card borders, glowing with a 'Retro Pixel' LED scheme (neon pink, bright yellow, and cyan) pulsing through the paper seams. Tall minarets are stacked cylinders of cards wrapped in flickering multi-colored fairy lights, with entrance arches outlined in pulsing cyan neon strips.",
+                "Umbul Hologram": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of special-edition 'Gambar Umbul' cards with holographic and iridescent finishes. The architecture features a hyper-reflective, prism-like texture that flashes rainbows. Naskh-style calligraphy is laser-cut through the cards, revealing the internal light. The colossal main dome glows with a 'Sugar Prism' LED scheme (rainbow colors, soft violet, and bright yellow) refracting through the holographic surfaces. Every minaret is a stack of holographic cards wrapped in flickering silver fairy lights.",
+                "Platinum Berlian": "A monumental, large-scale 1-meter standalone mosque object built entirely from polished solid platinum blocks. The architecture features a heavy, cool-toned silver-metallic texture with mirror-finish surfaces. Intricate Thuluth-style calligraphy is inlaid with millions of micro-cut black diamonds, glowing with a 'Starlight Void' LED scheme (ice blue, deep violet, and silver white) reflecting off the metallic body. Tall minarets are solid platinum pillars wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing electric-blue neon strips.",
+                "Kristal Safir": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of faceted Swarovski crystals and deep-blue sapphires. The structure has a hyper-reflective, transparent, and prismatic texture. Elegant Kufic-style calligraphy is formed by internal laser-etching inside the sapphire stones, glowing from within with a 'Deep Ocean Prism' LED scheme (vibrant blue, bright cyan, and silver) refracting through every facet. Every minaret is a stack of giant crystals wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant purple neon tubing.",
+                "Emas Merah": "A monumental, large-scale 1-meter standalone mosque object built from polished 18K rose gold and thousands of glowing red rubies. The architecture features a warm, pinkish-gold metallic texture with a high-gloss finish. Elegant Diwani-style calligraphy is formed by raised layers of blood-red rubies, glowing with a 'Royal Hearth' LED scheme (vibrant red, warm amber, and rose-gold spark) pulsing through the precious stones. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense magenta neon strips.",
+                "Gading Putih": "A colossal, large-scale 1-meter standalone mosque object made from polished ivory-textured marble and intricate 24K gold filigree wire-work. The architecture features a smooth, cream-colored base covered in complex, lace-like golden patterns. Naskh-style calligraphy is formed by woven gold threads, glowing with a 'Champagne Solar' LED scheme (warm gold, pale cream, and soft tungsten) creating a majestic, diffused glow. Every minaret is a masterpiece of gold wire-work wrapped in flickering silver fairy lights and framed by intense warm-white neon strips.",
+                "Ukiran Jati": "A monumental, large-scale 1-meter standalone mosque object crafted from deep dark-brown aged teak wood. The entire facade is covered in intricate, deep-relief floral 'Jepara-style' carvings and complex Thuluth-style calligraphy. The colossal main dome is made of solid, mirror-polished 24K gold, glowing with a 'Solar Royalty' LED scheme (warm gold, deep amber, and white-hot spark) reflecting off the gold. Tall minarets are carved wood pillars with gold-plated balconies wrapped in flickering golden fairy lights, with entrance arches outlined in pulsing champagne-gold neon strips.",
+                "Kayu Hitam": "A gigantic, large-scale 1-meter standalone mosque model built from jet-black Ebony wood with a high-gloss polished finish. Elegant Kufic-style calligraphy is inlaid with white-gold (platinum) filigree along the walls. The colossal main dome is a sphere of brushed white gold, glowing from within with a 'Moonlight Silver' LED scheme (ice blue, pale silver, and bright white) reflecting off the dark wood. Every minaret is a masterpiece of dark wood carving wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant purple neon tubing.",
+                "Kayu Gaharu": "A monumental, large-scale 1-meter standalone mosque object made from rare, textured agarwood (gaharu). The architecture features a rugged, organic wood texture with deep-etched Diwani-style calligraphy filled with liquid gold. The colossal main dome is a massive dome of hammered gold leaf, glowing with a 'Mystic Amber' LED scheme (vibrant orange, warm gold, and royal purple) seeping through the wood grains. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense warm-white neon strips.",
+                "Kayu Cendana": "A colossal, large-scale 1-meter standalone mosque object carved from aromatic sandalwood (cendana) with a pale-tan matte texture. The architecture is covered in a delicate mesh of 22K gold filigree ukiran. Naskh-style calligraphy is embossed in solid gold on the wood facade. The colossal main dome is a brilliant gold-lattice structure glowing with a 'Champagne Glow' LED scheme (soft cream, pale gold, and warm tungsten). Every minaret is a stack of carved sandalwood cylinders wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Giok Hijau": "A monumental, large-scale 1-meter standalone mosque object carved from deep imperial green jade (giok). The architecture features a smooth, translucent stone texture with natural veins. Intricate Thuluth-style calligraphy is inlaid with rare black South Sea pearls, glowing with an 'Emerald Moonlight' LED scheme (mint green, soft teal, and pale silver) shining through the jade body. Tall minarets are solid jade pillars wrapped in flickering silver fairy lights, with entrance arches outlined in pulsing electric-purple neon strips.",
+                "Mutiara Putih": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from millions of iridescent white pearls and polished white jade. The structure has a shimmering, creamy, and high-gloss 'organic pearl' texture. Elegant Kufic-style calligraphy is embossed using tiny golden pearls, glowing from within with a 'Champagne Mist' LED scheme (pale gold, soft cream, and ice white) refracting through the pearl layers. Every minaret is a stack of giant pearls wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Giok Merah": "A monumental, large-scale 1-meter standalone mosque object built from rare red jade and inlaid with golden South Sea pearls. The architecture features a warm, translucent crimson texture. Elegant Diwani-style calligraphy is formed by rows of perfectly round gold pearls, glowing with a 'Royal Ember' LED scheme (vibrant red, warm amber, and honey yellow) pulsing from the heart of the jade. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense scarlet neon strips.",
+                "Mosaik Giok": "A colossal, large-scale 1-meter standalone mosque object made from a complex mosaic of various jade shades (lavender, green, white) and iridescent abalone pearl shells. The architecture features a sharp, shattered, and multi-colored gemstone texture. Naskh-style calligraphy is laser-etched into the abalone surfaces. The colossal main dome glows with a 'Prism Sanctuary' LED scheme (rainbow colors, soft violet, and bright silver) refracting through the translucent stones and shells. Every minaret is wrapped in flickering silver fairy lights and framed by intense teal neon tubing.",
+                "Batu Zamrud": "A monumental, large-scale 1-meter standalone mosque object carved from a single colossal deep-green emerald crystal. The architecture features sharp crystalline facets and natural internal 'jardin' inclusions. Intricate Thuluth-style calligraphy is etched deep and filled with liquid platinum, glowing with a 'Verdan Sanctuary' LED scheme (intense neon green, forest emerald, and bright silver) refracting through the translucent green stone. Tall minarets are faceted crystal pillars wrapped in flickering silver fairy lights, with entrance arches outlined in pulsing teal neon strips.",
+                "Batu Safir Biru": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of royal blue sapphires. The structure has a deep, velvety blue crystalline texture. Elegant Kufic-style calligraphy is formed by white diamonds inlaid into the sapphire walls, glowing from within with a 'Deep Ocean Prism' LED scheme (vibrant sapphire blue, electric cyan, and ice white) shattering light into thousands of blue rays. Every minaret is a stack of raw sapphire crystals wrapped in rapidly pulsing white-starlight fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Batu Kecubung": "A monumental, large-scale 1-meter standalone mosque object built from massive purple amethyst geodes with exposed raw crystals inside. The architecture features a rugged exterior and a sparkling, jagged violet interior. Elegant Diwani-style calligraphy is laser-carved into the crystal points, glowing with an 'Amethyst Galaxy' LED scheme (deep purple, magenta, and soft lilac) pulsing from the heart of the geode. Every pillar is a cluster of purple crystals wrapped in intensely flickering violet fairy lights, with entrance arches framed by intense magenta neon strips.",
+                "Berlian Pink": "A colossal, large-scale 1-meter standalone mosque object made entirely from rare pink diamonds set in a delicate white-gold (platinum) frame. The architecture features a hyper-reflective, soft-pink crystalline texture. Naskh-style calligraphy is formed by rows of tiny white diamonds, glowing with a 'Rose Aurora' LED scheme (soft pink, champagne, and bright silver) creating a blindingly beautiful shimmer. Every minaret is a masterpiece of diamond-setting wrapped in flickering silver fairy lights and framed by intense warm-white neon strips.",
+                "Bulu Merak": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of vibrant peacock feathers. The architecture features a soft, iridescent, and feathery texture dominated by the 'eye' patterns of the feathers. Intricate Thuluth-style calligraphy is formed by the deep-blue quill fibers, glowing with a 'Peacock Nebula' LED scheme (electric lime, deep violet, and shimmering teal) seeping through the soft barbs. Tall minarets are bundles of long feathers wrapped in flickering emerald fairy lights, with entrance arches outlined in pulsing magenta neon strips.",
+                "Sisik Ikan": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of large, metallic-pearlized scales of a Super Red Arowana fish. The structure has a heavy, layered, and high-gloss 'dragon scale' texture. Elegant Kufic-style calligraphy is etched into the scales, glowing from within with a 'Crimson Pearl' LED scheme (fire red, soft pink, and bright silver) reflecting off the iridescent surfaces. Every minaret is a stack of scales wrapped in rapidly pulsing red fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Cangkang Kerang": "A monumental, large-scale 1-meter standalone mosque object built from thousands of rough-textured oyster shells with polished nacre interiors. The architecture features a contrast between rugged gray exteriors and shimmering rainbow interiors. Elegant Diwani-style calligraphy is carved to reveal the pearlescent inner layers, glowing with a 'Moonlight Nacre' LED scheme (pale violet, ice blue, and soft cream) refracting through the calcium layers. Every pillar is wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense teal neon tubing.",
+                "Sarang Lebah": "A colossal, large-scale 1-meter standalone mosque object made entirely from golden-yellow natural beeswax and hexagonal honeycomb structures. The architecture features a perfect geometric grid texture with a translucent, waxy finish. Naskh-style calligraphy is formed by filling specific hexagonal cells with dark forest honey. The colossal main dome glows with a 'Liquid Amber' LED scheme (bright honey yellow, deep orange, and warm gold) shining through the translucent wax walls. Every minaret is a hexagonal tower wrapped in flickering gold fairy lights.",
+                "Terumbu Karang": "A monumental, large-scale 1-meter standalone mosque object carved from a single massive block of white brain coral. The architecture features an incredibly complex, labyrinthine organic groove texture. Intricate Thuluth-style calligraphy is formed by the natural brain-like ridges of the coral, glowing with a 'Deep Sea Bio-Lume' LED scheme (soft cyan, electric lime, and ultraviolet) seeping through the deep grooves. Tall minarets are towers of porous coral wrapped in flickering turquoise fairy lights, with entrance arches outlined in pulsing neon-white strips.",
+                "Fosil Kayu": "A colossal, large-scale 1-meter standalone mosque object made from polished slabs of millions-of-years-old petrified wood. The architecture features a unique stone-meets-wood texture with deep rings and mineralized grain patterns. Naskh-style calligraphy is formed by the natural agate and quartz veins inside the fossil. The colossal main dome glows with a 'Primal Earth' LED scheme (deep violet, emerald green, and golden brown) reflecting off the mirror-polished stone surface. Every minaret is a tall pillar of fossilized wood wrapped in flickering silver fairy lights.",
+                "Kristal Garam": "A monumental, large-scale 1-meter standalone mosque object built from massive blocks of raw pink Himalayan salt crystals. The architecture features a jagged, crystalline, and semi-transparent texture with natural mineral veins. Elegant Diwani-style calligraphy is etched into the salt blocks, glowing from within with a 'Peach Sunset' LED scheme (warm orange, soft pink, and deep amber) creating a massive diffused glow throughout the structure. Every pillar is wrapped in intensely flickering orange fairy lights, with entrance arches framed by intense copper neon strips.",
+                "Tanah Liat": "A monumental, large-scale 1-meter standalone mosque object sculpted from raw, burnt-orange terracotta clay. The architecture features a smooth but hand-crafted organic texture with visible thumbprints and sculpting marks. Intricate Thuluth-style calligraphy is carved deep into the wet clay before hardening, glowing with a 'Molten Core' LED scheme (fire red, deep orange, and warm amber) seeping through the cracks. Tall minarets are tapered clay pillars wrapped in flickering orange fairy lights, with entrance arches outlined in pulsing copper neon strips.",
+                "Serbuk Kayu": "A gigantic, large-scale 1-meter standalone mosque model constructed from compressed millions of fine golden-brown sawdust particles. The structure has a soft, fuzzy, and highly textured matte finish. Elegant Kufic-style calligraphy is formed by burning the sawdust surface (pyrography), glowing from within with a 'Golden Dust' LED scheme (honey yellow, soft gold, and warm white) shining through the porous compressed particles. Every minaret is a tall cylinder of pressed wood-dust wrapped in rapidly pulsing amber fairy lights.",
+                "Pasir Pantai": "A monumental, large-scale 1-meter standalone mosque object built from millions of glistening, wet golden sand grains. The architecture features a dripping, 'melted' sandcastle texture with incredible granular detail. Elegant Diwani-style calligraphy is traced into the sand, glowing with a 'Coastal Glow' LED scheme (bright gold, pale cyan, and white) reflecting off the tiny quartz crystals in the sand. Every pillar is a stack of dripping sand wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Batu Bata": "A colossal, large-scale 1-meter standalone mosque object made entirely from thousands of miniature, weathered red bricks and grey mortar. The architecture features a rough, geometric, and industrial-heritage texture. Naskh-style calligraphy is formed by protruding bricks, glowing with a 'Vintage Alley' LED scheme (soft red, warm tungsten, and amber) seeping through the mortar gaps. Every minaret is a tall brick tower wrapped in flickering warm-white fairy lights and framed by intense scarlet neon strips.",
+                "Arang Kayu": "A monumental, large-scale 1-meter standalone mosque object built entirely from thousands of jagged, matte-black charred wood chunks. The architecture features a deep, carbonized, and highly porous texture. Intricate Thuluth-style calligraphy is carved to reveal the glowing core, featuring a 'Volcanic Ember' LED scheme (intense fire red, burning orange, and sulfur yellow) pulsing from within the black charcoal gaps. Tall minarets are stacks of burnt wood wrapped in flickering red fairy lights, with entrance arches outlined in pulsing copper neon strips.",
+                "Batu Apung": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of light-grey, highly aerated volcanic pumice stones. The structure has a sponge-like, rough, and perforated texture. Elegant Kufic-style calligraphy is formed by the natural holes in the stone, glowing from within with a 'Deep Sea Bio-Lume' LED scheme (soft cyan, electric lime, and ice white) shining through the thousands of tiny stone pores. Every minaret is a tall porous pillar wrapped in rapidly pulsing white fairy lights.",
+                "Serbuk Kopi": "A colossal, large-scale 1-meter standalone mosque object made entirely from compressed, dark-roast coffee grounds. The architecture features a grainy, rich dark-brown, and oily matte texture. Naskh-style calligraphy is formed by stenciling with fine white sugar crystals. The colossal main dome glows with a 'Caffeine Aurora' LED scheme (deep violet, espresso brown, and soft magenta) creating a moody, diffused glow through the coffee particles. Every minaret is a cylinder of pressed coffee wrapped in flickering silver fairy lights.",
+                "Lumut & Batu Kali": "A monumental, large-scale 1-meter standalone mosque object built from smooth river stones covered in thick, vibrant green moss. The architecture features a soft, velvety green texture contrasted with cold grey stone. Elegant Diwani-style calligraphy is formed by trimming the moss to reveal the stone underneath, glowing with a 'Forest Sanctuary' LED scheme (emerald green, soft lime, and golden amber) pulsing from behind the moss layers. Every pillar is wrapped in intensely flickering gold fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Tanah Lempung": "A gigantic, large-scale 1-meter standalone mosque model sculpted from grey river clay with a 'crackle-glaze' dried texture. The structure features millions of tiny, intricate fissures across the entire surface. Elegant Kufic-style calligraphy is formed by the deep cracks themselves, glowing from within with a 'Deep Magma' LED scheme (blood red, dark orange, and amber) seeping through the thousands of tiny mud gaps. Every minaret is a column of dried mud wrapped in rapidly pulsing red fairy lights, with entrance arches outlined in vibrant gold neon tubing.",
+                "Kristal Kuarsa": "A monumental, large-scale 1-meter standalone mosque object built from massive, jagged clusters of raw white quartz crystals. The architecture features a sharp, semi-translucent, and icy geometric texture. Intricate Thuluth-style calligraphy is formed by natural mineral inclusions (veins) inside the crystals, glowing with a 'Glacial Prism' LED scheme (ice blue, soft violet, and bright silver) refracting through the crystal body. Tall minarets are jagged crystal points wrapped in flickering cool-white fairy lights, with entrance arches outlined in pulsing cyan neon strips.",
+                "Batu Obsidian Hitam": "A monumental, large-scale 1-meter standalone mosque object carved from massive blocks of volcanic obsidian glass. The architecture features a razor-sharp, mirror-polished jet-black texture with conchoidal fractures. Elegant Diwani-style calligraphy is etched into the glass surface, glowing with a 'Void Spectrum' LED scheme (deep magenta, neon purple, and electric blue) reflecting off the pitch-black glass. Every pillar is wrapped in intensely flickering violet fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Kapur Tulis": "A colossal, large-scale 1-meter standalone mosque object built entirely from thousands of white and pastel-colored sticks of chalk and compressed chalk dust. The architecture features a soft, dusty, and ultra-matte texture. Naskh-style calligraphy is 'sketched' onto the surface with vibrant colored chalk. The colossal main dome glows with a 'Pastel Nebula' LED scheme (soft pink, mint green, and pale yellow) creating a hazy, diffused glow through the chalk dust. Every minaret is a stack of chalk sticks wrapped in flickering silver fairy lights.",
+                "Es Krim Cone": "A monumental, large-scale 1-meter standalone mosque object built from thousands of stacked crispy waffle cones and giant scoops of vanilla ice cream. The architecture features a criss-cross waffle texture at the base and a soft, billowy 'cloud-like' texture for the domes. Intricate Thuluth-style calligraphy is drizzled in chocolate syrup, glowing with a 'Vanilla Gold' LED scheme (warm cream, bright gold, and soft white) reflecting off the melting surface. Tall minarets are stacked waffle cones wrapped in flickering amber fairy lights.",
+                "Es Krim Magnum": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of premium chocolate-coated ice cream bars. The structure has a sharp, cracked-chocolate shell texture. Elegant Kufic-style calligraphy is etched into the dark chocolate to reveal the white vanilla interior, glowing from within with a 'Royal Cocoa' LED scheme (deep amber, copper, and bright white) seeping through the cracks. Every minaret is a tall ice cream bar wrapped in rapidly pulsing gold fairy lights.",
+                "Sorbet Pelangi": "A monumental, large-scale 1-meter standalone mosque object built from millions of tiny, vibrant scoops of fruit sorbet (lime, raspberry, orange). The architecture features a frosty, grainy, and multi-colored icy texture. Elegant Diwani-style calligraphy is formed by frozen berries, glowing with a 'Neon Frost' LED scheme (vibrant pink, lime green, and electric orange) refracting through the icy sorbet particles. Every pillar is wrapped in intensely flickering silver fairy lights, with entrance arches framed by intense teal neon strips.",
+                "Es Krim Cornetto": "A colossal, large-scale 1-meter standalone mosque object made from thousands of spiral-swirled soft-serve ice cream mounds and chocolate discs. The architecture features a rhythmic, swirling creamy texture with high-gloss chocolate accents. Naskh-style calligraphy is formed by silver sugar pearls (sprinkles). The colossal main dome glows with a 'Frozen Galaxy' LED scheme (pale violet, ice blue, and soft magenta) creating a dreamy, diffused glow through the creamy texture. Every minaret is wrapped in flickering silver fairy lights.",
+                "Donat Mini Pelangi": "A monumental, large-scale 1-meter standalone mosque object built entirely from millions of tiny mini-donuts with vibrant, multi-colored sugar glazes (pink, purple, lime, and cyan). The architecture features a bubbly, rounded, and highly textured organic surface. Intricate Thuluth-style calligraphy is formed by precisely arranged rainbow sprinkles (meses) and silver sugar pearls, glowing with a 'Candy Neon' LED scheme (bubblegum pink, electric violet, and bright gold) reflecting off the glossy glaze. Tall minarets are stacks of mini donuts wrapped in flickering magenta fairy lights.",
+                "Donat Cokelat": "A gigantic, large-scale 1-meter standalone mosque model constructed from thousands of mini donuts coated in thick, dark chocolate ganache and dusted with edible gold leaf. The structure has a rich, high-gloss, and luxurious texture. Elegant Kufic-style calligraphy is etched into the chocolate to reveal a white cream filling, glowing from within with a 'Royal Cocoa' LED scheme (warm amber, copper, and bright gold) seeping through the chocolate cracks. Every minaret is a tall stack of golden donuts wrapped in rapidly pulsing gold fairy lights.",
+                "Donat Glazed": "A colossal, large-scale 1-meter standalone mosque object made from thousands of clear-glazed mini donuts covered in a dense layer of neon-colored chocolate sprinkles. The architecture features a hyper-detailed, granular, and shimmering texture. Naskh-style calligraphy is formed by the arrangement of dark chocolate sprinkles against a neon background. The colossal main dome glows with a 'Technicolor Dream' LED scheme (rainbow colors, bright yellow, and hot pink) refracting through the sugary glaze. Every minaret is wrapped in flickering multi-colored fairy lights.",
+                "Lolipop Spiral": "A monumental, large-scale 1-meter standalone mosque object built from thousands of giant swirl lollipops. The architecture features a hard, translucent 'glass-candy' texture with vibrant spiral patterns (red, white, and lime). Intricate Thuluth-style calligraphy is etched into the hard candy surface, glowing with a 'Prism Pop' LED scheme (neon pink, bright yellow, and electric cyan) refracting through the translucent lollipop sticks. Tall minarets are long candy canes wrapped in flickering silver fairy lights, with entrance arches outlined in pulsing rainbow neon strips.",
+                "Oreo & Cream": "A gigantic, large-scale 1-meter standalone mosque model constructed entirely from thousands of Oreo cookies. The structure features a dark-black cocoa-biscuit texture with white cream filling visible in the layers. Elegant Kufic-style calligraphy is carved into the black biscuit surface to reveal the snowy white cream underneath, glowing from within with a 'Midnight Milk' LED scheme (cool white, pale blue, and soft silver) seeping through the cookie gaps. Every minaret is a tall stack of Oreos wrapped in rapidly pulsing white fairy lights.",
+                "Marshmallow Cloud": "A monumental, large-scale 1-meter standalone mosque object built from millions of soft, puffy marshmallows (pink, white, and yellow). The architecture features a spongy, matte, and 'cloud-like' organic texture. Elegant Diwani-style calligraphy is formed by drizzling melted chocolate over the soft surface, glowing with a 'Soft Pastel' LED scheme (bubblegum pink, mint green, and pale violet) creating a hazy, diffused glow through the marshmallows. Every pillar is wrapped in intensely flickering warm-white fairy lights, with entrance arches framed by intense gold neon strips.",
+                "Gummy Bears & Jelly": "A colossal, large-scale 1-meter standalone mosque object made from thousands of translucent gummy bears and jelly beans. The architecture features a squishy, high-gloss, and semi-transparent fruit-gel texture. Naskh-style calligraphy is formed by arranging dark-purple gummies against a bright-yellow background. The colossal main dome glows with a 'Neon Jungle' LED scheme (vibrant green, hot pink, and electric orange) refracting through the gelatinous body. Every minaret is a stack of jelly beans wrapped in flickering multi-colored fairy lights."    
             },
             # --- 3. MASTER KONTEN (🌍 WORLD MOSQUE DIORAMA - CRAFT SCALE EDITION) ---
             "🌍 Diorama Masjid": {
-                "Masjidil Haram Ka'bah": "An ultra-realistic miniature diorama of Masjidil Haram featuring a central Ka'bah made of matte black cloth with gold-threaded calligraphy embroidery, a Mataf courtyard of polished white marble resin that reflects thousands of tiny warm-white and cool-white LED pixels, and miniature grain-sized pilgrims to establish the tiny scale with glowing green fiber-optic minaret tips.",
-                "Kota Botol & Kaleng (Recycled City)": "A detailed miniature architectural model constructed from orderly layers of recycled plastic bottles and geometric soda can elements, featuring vibrant multi-color RGB LED installations that shine through the translucent plastic and metallic surfaces, including tiny roads made of black rubber and small plastic-cap street lamps.",
-                "Masjidil Haram Mewah": "A detailed miniature diorama of Masjidil Haram built on a polished marble base. The small-scale Ka'bah is at the center draped in real black Kiswah cloth with gold LED calligraphy, surrounded by a white stone Mataf courtyard illuminated by thousands of tiny cold-white LED pixels and miniature figure silhouettes.",
-                "Masjid Nabawi (Payung & Green Dome)": "A detailed miniature of Masjid Nabawi featuring a vibrant Green Dome brightly lit from within, iconic courtyard umbrellas with edges traced by warm white LED strips, hundreds of small LED street lamps along polished marble-textured paths, and tiny palm trees.",
-                "Masjid Al-Aqsa (Dome of the Rock)": "A detailed miniature of the Dome of the Rock featuring a shimmering gold dome illuminated by warm-white LEDs, surrounded by small ancient olive trees and tiny stone pathways on a realistic rocky resin base with amber LED accents.",
-                "Terapung di Danau (RGB Reflection)": "A detailed miniature mosque on a wooden platform situated on a calm resin lake, featuring a courtyard filled with glowing LED lotus flowers and lily pads, with the water surface acting as a mirror reflecting the vibrant RGB lights of the architecture.",
-                "Diorama Mewah (Kubah Kuning & Air Terjun)": "A detailed miniature mosque featuring a sparkling polished yellow-brass dome and white stone-textured walls with RGB LED lights, with a courtyard containing a small multi-tiered fountain and tiny wooden horse-drawn carriages on a paved stone floor.",
-                "Diorama Organik (Refleksi Air & Neon)": "A detailed miniature mosque constructed from translucent soap segments that glisten with neon blue and purple LED backlighting, situated on a circular mirror-like reflection pool with small fiber-optic lights in the garden.",
-                "Diorama Timur Tengah (Sunset & Oasis)": "A detailed desert miniature with a mud-brick style mosque made of clay, featuring warm amber LED lights, a water oasis with small palm trees, and miniature camel caravans on a sand-textured base.",
-                "Lembah Hijau & Masjid Serabut (Emerald Glow)": "A detailed landscape miniature featuring a mosque made of coconut fibers on a moss-covered hill, including a flowing resin river with blue LED under-lighting and multi-color LED strips on the minarets.",
-                "Tebing Karang & Masjid Cangkang (Ocean Neon)": "A detailed seaside miniature featuring a mosque made of sea shells on a rocky stone cliff, with rainbow LED fiber optics illuminating the resin waves and a white sand courtyard with tiny dried corals.",
-                "Hutan Rimba & Masjid Kayu Tua (Mystical Forest)": "A detailed jungle miniature featuring a mosque made of weathered bark and twigs hidden among ferns, with vibrant violet and lime LED lights glowing from the floor and tiny mosque windows.",
-                "Gurun Pasir & Masjid Rempah (Sahara Gold)": "A detailed desert miniature with a mosque constructed from cinnamon sticks and orange peels on dunes of turmeric and sand, illuminated by warm amber and red LED lights near a small resin oasis.",
-                "Tepi Pantai & Dermaga (Neon Blue)": "A detailed miniature mosque on a white sandy beach made of fine sand, featuring turquoise resin waves, a wooden pier with neon blue LED lanterns, tiny glowing palm trees, and small sea-shell decorations.",
-                "Padang Pasir & Oase (Amber Glow)": "A detailed desert miniature featuring a mosque on sand dunes, with a pond oasis illuminated by warm amber LED lighting, tiny palm trees, and a miniature camel caravan in the courtyard.",
-                "Kota Madinah Style (Luxury White)": "A detailed miniature Madinah-style mosque with small white buildings and iconic umbrella canopies, featuring a marble-textured floor lit by cold-white LED pixels and tiny green glowing minaret tips.",
-                "Kampung Apung & Masjid Bambu (River Jewel)": "A detailed riverside miniature featuring a mosque made of woven bamboo on a wooden platform over a resin water pond, with colorful RGB LEDs reflecting off the water and glowing through the bamboo walls.",
-                "Negeri Permen & Masjid Cokelat (Candy Land)": "A whimsical miniature mosque made of colorful clay and candy sticks on a pink cotton-candy hill, featuring rainbow LED lights and a blue syrup-colored resin river with tiny lollipop trees.",
-                "Kota Mainan & Masjid Balok (Toy City)": "A detailed miniature city made of colorful building blocks with a block-style mosque, featuring pulsating RGB LED lights on the minarets, tiny street lamps, and miniature plastic cars.",
-                "Modern (Geometric & RGB Strips)": "A detailed modern minimalist mosque with clean geometric white architecture and a silver-painted dome, featuring dynamic RGB LED strips tracing the structure edges and tiny abstract yard sculptures.",
-                "Masjid Bambu (River Jewel)": "A detailed riverside diorama featuring a mosque made of woven bamboo on a wooden platform over a resin water pond, with colorful RGB LEDs reflecting off the water and glowing through the bamboo walls.",
-                "Masjid Koran (Typography Craft)": "A detailed architectural diorama featuring a mosque made of layered recycled newsprint on a black plywood base, with warm-white LED strips hidden inside the arches highlighting the paper textures.",
-                "Masjid Kardus (Industrial Craft)": "A detailed handcrafted diorama featuring a mosque made of corrugated cardboard on a flat base, with a courtyard floor made of green mung bean mosaics and cool-blue LED strips along the arches.",
-                "Masjid Serabut (Rustic Nature)": "A detailed landscape diorama featuring a mosque made of golden-brown coconut fiber on a timber slab, with a courtyard of green felt fabric grass and internal warm-yellow LED lighting.",
-                "Masjid Botol (Futuristic Recycle)": "A detailed miniature diorama featuring a mosque made of translucent recycled bottle segments on a plastic base, with a courtyard resin pond and vibrant RGB LEDs reflecting through the surfaces.",
-                "Masjid Kayu (Traditional Toy)": "A detailed miniature diorama featuring a mosque made of popsicle sticks and toothpicks on a polished wood board, with tiny pebble paths in the courtyard and warm-white LED pixels.",
-                "Masjid Rempah (Sahara Spice)": "A detailed desert diorama featuring a mosque made of cinnamon sticks on a sand-textured tray, with a courtyard of turmeric powder and miniature trees made of cloves with amber LED glows."
+                "Masjidil Haram": "A hyper-detailed 1-meter standalone diorama of Masjidil Haram, frozen in a static moment of peak crowd. Millions of 2-millimeter scale static miniature figures in white robes are positioned in mid-stride, captured in a massive circular formation around the Kaaba. The figures are fixed, motionless plastic/resin models. The architecture is pure white polished marble with gold leaf. The Kaaba stands still in the center with its textured black silk Kiswah. Glowing with 'Champagne Solar' LED lights from the fixed minarets.",
+                "Al-Aqsa": "A monumental 1-meter static diorama of the Al-Aqsa compound. Thousands of tiny, motionless figures are captured in various still poses: some walking through the arches, some standing in silent rows for prayer in the courtyard. Every figure is a fixed, non-moving miniature. The Dome of the Rock features a stationary hammered-gold surface with intense amber LED glow. The ancient limestone textures are sharp and frozen. The atmosphere is silent and still, illuminated by flickering (light-only) fairy lights on the fixed trees.",
+                "Nabawi": "A colossal 1-meter static diorama of the Prophet's Mosque (Nabawi) in Madinah. Featuring the iconic Green Dome and the giant stationary mechanical umbrellas in an open position. Thousands of static miniature pilgrims are frozen in place throughout the vast marble courtyards. The green dome glows with a 'Sacred Emerald' LED scheme. Every architectural detail is captured in a silent, motionless state. High-contrast lighting between the white marble and the dark-green shadows.",
+                "Masjidil Haram (Ottoman Era)": "A detailed 1-meter high diorama object depicting the historical Masjidil Haram complex during the Ottoman period (19th century). The Kaaba is central, surrounded by low-rise stone buildings with multiple small, lead-domed roofs and slender, pencil-shaped minarets. The courtyard is paved with ancient weathered stone. Hundreds of motionless miniature figures are praying in circles. The entire structure of ancient red brick and rough stone is wrapped in flickering warm-white fairy lights, glowing with 'Ancient Torchlight' amber LED light. A static, quiet, historical moment.",
+                "Masjidil Haram (tahun 2030)": "A colossal, hyper-futuristic 1-meter standalone diorama of Masjidil Haram as envisioned in Vision 2030. The Kaaba is encircled by a massive, multi-tiered ring of modern architecture (Mataf Bridge) made of carbon fiber, glass, and polished gold. The roofs are kinetic, open-structure designs. Millions of static miniature pilgrims are frozen in place throughout the vast complex. Glowing with a 'Cyber-Neon Makkah' LED scheme (electric cyan, white-hot, and violet) reflecting off the glass and futuristic metallic surfaces. A static, breathtaking vision of the future.",
+                "Masjidil Haram (tahun 90an)": "A grand, symmetrical 1-meter high diorama of Masjidil Haram after the King Fahd expansion. Featuring the massive white structure with its iconic two twin minarets and expansive white marble courtyards. Thousands of motionless pilgrims are frozen in various prayer poses. The architecture is pure white polished stone with elegant gold-filigree calligraphy. Illuminated by a 'Divine White' LED scheme (pure white, soft cream, and gold) reflecting off the smooth marble surfaces. A static, solemn, and grand moment from the 90s.",
+                "Masjidil Haram (Zaman Nabi)": "A high-detailed 1-meter standalone diorama of Makkah during the early years of Islam. The central Kaaba is built from rough, jagged black mountain stones with a simple textured cover. Around it is a dusty desert courtyard (Mataf) made of dry golden sand. Surrounding the Kaaba are clusters of ancient Makkan houses built from mud-bricks, rough stones, and palm leaf roofs. Millions of tiny miniature figures are gathered in small groups. Glowing with a 'Desert Moonlight' LED scheme (pale moonlight white and dim amber oil-lamp flickers) reflecting off the sand and rough stones. The atmosphere is raw, ancient, and deeply spiritual.",
+                "Kaaba Cut-Away (Interior Reveal)": "A unique 1-meter high cross-section diorama of the Holy Kaaba. One half of the Kaaba is a solid black silk-textured exterior, while the other half is sliced open to reveal the hyper-detailed interior. Inside features three tall, dark-wood pillars (teak), golden hanging lamps, and green-marble tiled floors with intricate Arabic calligraphy on the inner walls. The interior glows with an intense 'Golden Secret' LED scheme (bright 24K gold, warm amber) focused solely on the internal chamber, while the exterior remains in soft shadows. A static, educational architectural masterpiece.",
+                "Masjidil Haram (The Golden Details)": "A monumental 1-meter high diorama focusing on the intricate details around the Kaaba. Features the hyper-detailed gold-lattice structure of Maqam Ibrahim and the smooth white marble curve of Hijr Ismail. The Kaaba stands majestic with its heavy gold-embroidered calligraphy on the black silk. Millions of tiny static pilgrims are filling the Mataf area. Illuminated by a 'Divine Gold' LED scheme (24K gold, warm amber, and white-hot spark) highlighting the golden ornaments and the texture of the Kiswah. A static masterpiece of sacred craftsmanship.",
+                "Masjid Nabawi": "A magnificent 1-meter high standalone diorama of the Prophet's Mosque in Madinah. Featuring the iconic bright-green central dome and dozens of giant, static open hydraulic umbrellas with intricate cream-colored fabric textures. The architecture is built from white marble with golden floral inlays. Thousands of static miniature pilgrims are frozen in the vast courtyard. Glowing with a 'Sacred Emerald' LED scheme (vibrant green on the dome, warm amber under the umbrellas) reflecting off the polished floor. A static, breathtaking spiritual masterpiece.",
+                "Sheikh Zayed Grand Mosque": "A colossal 1-meter high diorama made of pure white crystalline marble. Featuring 82 domes of various sizes and four 107-meter tall minarets. The courtyard features hyper-detailed floral marble mosaics. The entire structure is surrounded by static 'mirrored water' pools made of blue tinted glass. Glowing with a 'Lapis Lazuli' LED scheme (electric blue and cool white) that creates a celestial atmosphere. Thousands of tiny static figures are walking through the grand arches. High-luxury architectural detail.",
+                "Masjid Agung Xi'an": "A unique 1-meter high diorama of the Great Mosque of Xi'an, featuring traditional Chinese Pagoda architecture. Built from dark aged wood, turquoise-glazed roof tiles, and intricate dragon-style carvings. Instead of domes, it features grand pavilions and Chinese gateways (Paifang). The walls are covered in Arabic calligraphy stylized in Chinese brush-stroke patterns. Glowing with an 'Oriental Zen' LED scheme (warm red, soft jade green, and dim gold) illuminating the wooden courtyards. A static, rare cultural fusion masterpiece.",
+                "Masjid Istiqlal": "A monumental 1-meter high standalone diorama of the National Mosque of Indonesia, Istiqlal. The architecture features a massive stainless steel dome and a single tall minaret, built with a 'Brutalist-Grand' aesthetic using grey marble and steel. The interior is sliced open to show the 12 massive stainless steel pillars and the intricate geometric patterns on the dome's underside. Thousands of tiny static figures are frozen in the vast, open prayer halls. Glowing with a 'Modern Steel' LED scheme (cool white, pale silver, and bright industrial white) reflecting off the metal and marble surfaces. A static, solemn, and powerful masterpiece.",
+                "Masjid Al-Jabbar": "A breathtaking 1-meter high standalone diorama of the 'floating' Al-Jabbar mosque. The architecture features a colossal, multi-layered roof shaped like a blooming geometric flower, built from thousands of interlocking glass panels. The structure is surrounded by a 'mirrored water' lake made of blue-tinted glass. Thousands of tiny static figures are walking across the bridges and courtyards. Glowing with a 'Techno-Religious' LED scheme (vibrant violet, electric blue, and warm gold) pulsing through the glass facets, creating a kaleidoscopic glow on the water. A static, futuristic, and colorful architectural marvel.",
+                "Masjid Raya Solo": "A monumental 1-meter high standalone diorama of the Sheikh Zayed Grand Mosque in Solo. The architecture features a mini-version of the Abu Dhabi masterpiece with four tall minarets and dozens of white marble domes. The structure is built from pure white stone with intricate gold-leaf floral accents. The floors feature hyper-detailed batik-inspired marble mosaics. Thousands of tiny static figures are walking through the arched courtyards. Glowing with a 'Celestial Moon' LED scheme (icy white, soft lavender, and bright gold) reflecting off the polished marble. A static, high-luxury architectural marvel in the heart of Java.",
+                "Masjid Keraton": "A high-detailed 1-meter standalone diorama of the historical Grand Mosque of the Surakarta Palace. The architecture features a traditional Javanese 'Tajug' multi-tiered roof made of dark weathered wood and clay tiles. The structure is supported by massive teak wood pillars (Soko Guru) with intricate 'Ultah' gold carvings. Features the iconic 'Gapura' entrance and a moat (parit) surrounding the mosque. Thousands of tiny static figures are frozen in traditional Javanese attire (Batik and Blangkon). Glowing with a 'Royal Heritage' LED scheme (warm amber, flickering torchlight, and deep gold) reflecting off the dark wood. A static, ancient, and deeply cultural masterpiece.",
+                "Masjid Gedhe Kauman ": "A magnificent 1-meter high standalone diorama of the Great Mosque of the Yogyakarta Sultanate. The architecture features a grand triple-tiered Javanese 'Tajug' roof made of dark-brown ancient wood and traditional clay tiles, topped with a golden 'Mustaka' ornament. The structure is built with massive teak wood pillars and features a large front porch (Serambi) with intricate yellow and green royal carvings. Thousands of tiny static figures in traditional Javanese Batik and Beskap are frozen in prayer. Glowing with a 'Keraton Moonlight' LED scheme (warm amber, soft yellow, and dim flickering torchlight) illuminating the dark wood and white stone walls. A static, deeply spiritual, and historical masterpiece.",
+                "Masjid Jogokariyan": "A high-detailed 1-meter standalone diorama of the iconic Masjid Jogokariyan in its vibrant evening atmosphere. The architecture features the famous green and cream facade with the prominent 'Masjid Jogokariyan' signage. The diorama captures the lively street-side atmosphere with hundreds of static miniature figures gathered for Iftar or prayers. The structure features a blend of modern and traditional Javanese elements. Glowing with a 'Community Glow' LED scheme (bright warm-white, festive green neon, and soft orange) creating a welcoming and busy urban-mosque vibe. A static masterpiece of modern Indonesian Islamic culture."
+                    
             }
         }
 
         # --- 3. MASTER LOKASI (FIXED: NATURAL CLUTTER & SOLID BACKDROP) ---
         MASTER_GRANDMA_SETTING = {
-            "Pinggir Kolam Ikan Koi": (
-                "The character sits cross-legged on a natural flat stone by a clear koi pond. "
-                "Inside the pond, several colorful koi fish swim between lily pads. " # <-- Koinya balik, natural!
-                "The background is filled with lush tropical ferns and thick garden bushes. "
-                "A soft, natural overcast sky is partially visible through the gaps of tree leaves. " # <-- Langit natural
-                "Next to her is a small brass fish food bowl and a plain ceramic teapot. "
-                "NO ARTIFICIAL LIGHTING, NO GLOW. Pure neutral daylight and natural water reflections."
+            "Lantai Semen & Tembok Retak": (
+                "Sitting cross-legged directly on a cold, unpolished grey cement floor (plesteran) with visible sandy textures and fine cracks. "
+                "The background is a solid wall of raw, unpainted grey cement with weathered water stains and rough patches. "
+                "Next to her is a glass of tea with a rusty metal lid, a pair of old rubber sandals (sandal jepit), and a small plastic plate with boiled cassava. "
+                "Focus on the gritty concrete texture and the raw, unpolished stone-like environment."
             ),
-            "Teras Bambu Desa": (
-                "Set on a woven bamboo floor of an open-air porch. "
-                "The background is a dense grove of tall bamboo trees and wide banana leaves overlapping. " # <-- Layering taneman
-                "The soft grey sky is visible behind the foliage, creating a realistic outdoor depth. "
-                "Next to her are grass sandals and a small clay water jug. "
-                "NO SOLID WALLS. Just natural organic textures and flat neutral lighting."
+            "Tikar Mendong & Dinding Gedek": (
+                "Sitting cross-legged on a hand-woven natural 'Tikar Mendong' straw mat with frayed edges and organic fiber textures. "
+                "The background is a solid wall of old, woven bamboo sheets (gedek) with dust particles trapped in the weaves and greyish fading fibers. "
+                "Surrounding objects: a traditional hand-woven leaf fan (kipas bambu), an old analog radio, and a small tin box for betel nut (sirih). "
+                "Focus on the organic, dry texture of the bamboo and straw."
             ),
-            "Lantai Kerikil Taman": (
-                "Placed on a bed of white pebbles and natural grey gravel. "
-                "The background features a low wooden picket fence and a line of tall flowering shrubs. " # <-- Pager kayu & taneman
-                "A realistic overcast sky sits above the shrubs, providing a clean natural backdrop. "
-                "Around her are scattered dry leaves and a simple iron lantern. "
-                "NO VIBRANT COLORS. Natural earthy tones and soft diffused daylight."
+            "Lantai Tanah & Dinding Bata": (
+                "Sitting cross-legged on a flat, hardened earth floor (tanah liat) with dry, dusty surface textures. "
+                "The background is a solid wall of exposed red bricks with thick, messy mortar and dark soot stains (jelaga). "
+                "Next to her is a basket of unpeeled shallots, a small pile of dry rough firewood, and a stone mortar (cobek) with chili residue. "
+                "Focus on the rough brick surfaces and the earthy, dusty soil texture."
             ),
-            "Dek Kayu Pinggir Hutan": (
-                "Set on an outdoor deck made of weathered, unsanded timber planks. "
-                "The background is a dense forest wall with massive tree trunks and hanging wild vines. "
-                "The overcast sky is filtered through the thick canopy above. "
-                "Scattered pine cones and a wooden bird flute lie nearby on the planks. "
-                "NO SHINY SURFACES. Raw wood textures and flat forest lighting."
+            "Sajadah Tua & Tembok Kayu": (
+                "Sitting cross-legged on a worn-out, faded velvet sajadah (prayer mat) placed directly over a dark, weathered wooden floor. "
+                "The background is a solid wall of vertical dark teak wood planks with prominent deep grain and peeling varnish. "
+                "Surrounding objects: a string of wooden prayer beads (tasbih), a small plain ceramic water jug, and a stack of old religious books with yellowing pages. "
+                "Focus on the aged wood grain and the soft but thinning fabric texture of the mat."
             ),
-            "Pinggir Sawah Hijau": (
-                "Sitting cross-legged on dry grass at the edge of a vast green rice field. "
-                "The horizon is naturally broken by distant coconut trees and a small wooden shack. " # <-- Ada pembatas alami
-                "The sky is a realistic soft grey with faint cloud textures. "
-                "Beside them lies a traditional caping hat and a small old radio. "
-                "NO COLOR SATURATION. Pure, raw agricultural scenery in neutral daylight."
+            "Tikar Pandan & Tembok Cat Kusam": (
+                "Sitting cross-legged on a pale-green 'Tikar Pandan' mat with a distinct cross-weave pattern. "
+                "The background is a solid plastered wall with old, chalky white paint that is peeling and bubbling in several spots. "
+                "Next to her is a large glass jar of crackers (kerupuk), a small bottle of eucalyptus oil, and a discarded newspaper from years ago. "
+                "Focus on the brittle paint flakes and the ribbed texture of the pandan mat."
             ),
-            "Teras Rumah Panggung": (
-                "Sitting cross-legged on the wooden floor planks of a traditional porch. "
-                "The background shows a view of a lush backyard with fruit trees and a distant hedge. "
-                "The sky is framed naturally by the porch’s wooden roof and hanging orchids. " # <-- Framing natural
-                "Scattered wood shavings and a small chisel lie on the floor. "
-                "NO ARTIFICIAL CONTRAST. Just a simple, clean, and real village atmosphere."
+            "Lantai Tegel Kunci & Dinding Tua": (
+                "Sitting cross-legged on vintage 'Tegel Kunci' cement tiles with a faded geometric floral pattern and matte finish. "
+                "The background is a solid, thick masonry wall with visible dampness (rembes) and moss-green stains at the bottom. "
+                "Surrounding objects: a brass tray with a single glass of tea, a small coil of mosquito incense (obat nyamuk bakar), and a worn-out batik sarong folded nearby. "
+                "Focus on the smooth but aged stone feel of the tiles and the damp texture of the wall."
             ),
-            "Halaman Pohon Bambu": (
-                "Sitting cross-legged on a traditional 'Tikar Pandan' mat. "
-                "Background is a dense, natural grove of real bamboo stalks with overlapping green leaves. "
-                "Soft natural daylight filters through the bamboo canopy, no artificial glow. "
-                "A small incense burner (pedupaan) emits a thin, wispy trail of smoke. "
-                "The view is naturally enclosed by the thick bamboo forest, no empty void."
+            "Pematang Sawah & Hamparan Padi": (
+                "Sitting cross-legged on a narrow, hardened mud path (pematang). "
+                "The background is a solid, vast expanse of ripening yellow rice stalks (padi) with heavy, drooping grains. "
+                "Texture details: dried cracked mud on the path, rough husks of the rice, and dry straw stubble. "
+                "Next to her: a worn-out 'caping' straw hat, a rusted sickle (arit), and a plastic water bottle wrapped in damp cloth. "
+                "Focus on the organic yellow and brown textures of the harvest."
             ),
-            "Lantai Batu Candi": (
-                "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "Background is an ancient carved stone relief, weathered and mossy, showing real stone textures. "
-                "Next to the character are withered frangipani petals on the ground. "
-                "Natural neutral lighting, zero digital effects. Focus on the raw stone surface."
+            "Bawah Pohon Bambu (Kebun)": (
+                "Sitting cross-legged on a thick carpet of dry, fallen bamboo leaves. "
+                "The background is a dense, impenetrable wall of green and yellow bamboo trunks (rumpun bambu) with dusty nodes. "
+                "Texture details: crispy dry leaves, smooth but scarred bamboo skin, and loose dark soil. "
+                "Next to her: a traditional woven bamboo basket (tenggok), a small pile of dry twigs, and an old analog radio. "
+                "Focus on the layered textures of the forest floor."
             ),
-            "Tanah Merah Kebun": (
-                "Positioned on flat, packed red laterite soil with natural clods. "
-                "Background is a dense, messy hedge of real tropical bushes and wild shrubs. "
-                "Next to the character is a rusted garden trowel and a clay pot shard. "
-                "Flat, overcast daylight. Pure earthy tones without any color boost."
+            "Pinggir Sungai Batu Kali": (
+                "Sitting cross-legged on a large, flat river stone with grey mineral deposits. "
+                "The background is a steep riverbank made of stacked natural river rocks and exposed tree roots. "
+                "Texture details: porous stone surfaces, damp moss, and gritty river sand. "
+                "Next to her: a pair of old rubber sandals (sandal jepit), a simple ceramic teapot, and a small metal tray of crackers. "
+                "Focus on the contrast between hard stone and soft moss."
             ),
-            "Dek Bata Merah Tua": (
-                "Resting on weathered, mossy red bricks in a herringbone pattern. "
-                "Background is an old brick structure covered in real crawling ivy and green moss. "
-                "An old brass watering can and a small pile of terracotta tiles sit nearby. "
-                "Natural lighting, no extra contrast. Just the raw look of aged brickwork."
+            "Halaman Pasir & Semak Belukar": (
+                "Sitting cross-legged on a patch of coarse grey volcanic sand (pasir urug). "
+                "The background is a wild, dense thicket of tropical ferns and tall 'alang-alang' grass. "
+                "Texture details: grainy sand, sharp edges of the grass blades, and dry twigs. "
+                "Next to her: a traditional broom (sapu lidi), a small coil of mosquito incense (obat nyamuk), and a glass of tea with a metal lid. "
+                "Focus on the gritty and bushy organic textures."
             ),
-            "Tepi Jalan Setapak Hutan": (
-                "Sitting cross-legged on a path covered in real pine needles and dried leaves. "
-                "Background is a deep forest view with massive tree trunks and tangled wild vines. "
-                "Natural forest lighting, soft and diffused. "
-                "Next to the character is a large wild mushroom and a cluster of acorns. "
-                "NO VOID. The forest depth provides a natural, organic backdrop."
+            "Kebun Singkong & Tanah Merah": (
+                "Sitting cross-legged on firm, reddish-brown clay soil (tanah merah). "
+                "The background is a row of tall cassava plants (pohon singkong) with large, hand-shaped leaves. "
+                "Texture details: clumpy red earth, rough woody cassava stems, and dry fallen leaves. "
+                "Next to her: a woven plastic sack, a small garden trowel, and a plate of boiled bananas. "
+                "Focus on the deep earthy tones and woody textures."
             ),
-            "Tepi Kolam Teratai & Air Terjun": (
-                "Placed on smooth, weathered dark river stones. "
-                "Background features a natural rock formation with a gentle water trickle and lush ferns. "
-                "Pink and white lotus flowers float on the clear water surface. "
-                "Real water reflections, no fake glow. Just a quiet, natural garden nook."
+            "Tepi Jalan Setapak & Pagar Bambu": (
+                "Sitting cross-legged on a dusty dirt road with small pebbles and tire track imprints. "
+                "The background is a long, rustic fence made of weathered, split bamboo poles (pagar salang). "
+                "Texture details: fine grey dust, splintered bamboo fibers, and rusted wire ties. "
+                "Next to her: a glass of coffee, a small tin box for betel nut (sirih), and a wandering village chicken nearby. "
+                "Focus on the dry, dusty village atmosphere."
             ),
-            "Halaman Rumput Hijau & Bonsai": (
-                "Resting on a manicured, thick green grass turf. "
-                "Background is a traditional stone fence (bentar) partially hidden by a thick green hedge. "
-                "A miniature wooden rake and a basket of petals sit on the grass. "
-                "Pure outdoor daylight, flat and clean. Focus on the texture of individual grass blades."
+            "Gubuk Bambu & Lantai Tanah": (
+                "Sitting cross-legged on a hard-packed, dusty earthen floor inside a small hut. "
+                "The background is a wall made of old, frayed bamboo weaving (gedek) with visible gaps and hanging spiderwebs. "
+                "Texture details: dusty dry soil, splintered bamboo fibers, and brittle organic matter. "
+                "Next to her: a stack of dry firewood, a blackened clay stove (tungku) without fire, and a traditional woven bamboo basket. "
+                "Focus on the greyish, dusty, and dilapidated bamboo textures."
             ),
-            "Taman Kering Zen & Kerikil": (
-                "Placed on a bed of fine white pebbles with real raked ripple patterns. "
-                "Background is a simple wooden garden partition and a single large mossy boulder. "
-                "Polished obsidian stones lie near the character. "
-                "Strictly natural lighting. No artificial shadows, just clean Zen aesthetics."
+            "Lantai Kayu Lapuk & Dinding Papan": (
+                "Sitting cross-legged on a floor made of uneven, weathered wooden planks with large gaps and protruding rusty nails. "
+                "The background is a solid wall of vertical dark wood boards with peeling bark and deep termite tracks. "
+                "Texture details: rough wood grain, flaky dry wood rot, and metallic rust. "
+                "Next to her: an old kerosene lamp (lampu templok) without glass, a small tin of betel nut, and a folded, faded sarong. "
+                "Focus on the decaying timber and ancient wood textures."
             ),
-            "Tanah Liat & Sawah Berundak": (
-                "Positioned on a flat dirt path at the edge of real green terraced rice fields. "
-                "The background is the rising slope of the next terrace, filled with lush rice stalks. "
-                "A conical caping hat and a clay flask sit on the dirt. "
-                "Authentic agricultural lighting. The rising rice field naturally blocks the distant horizon."
+            "Gubuk Sawah & Atap Rumbia": (
+                "Sitting cross-legged on a low bamboo platform (amben) built close to the ground. "
+                "The background features low-hanging eaves made of dried, shredded palm leaves (atap rumbia) and rough wooden poles. "
+                "Texture details: crispy dried leaves, coarse grey wood, and dusty straw. "
+                "Next to her: a rusted sickle (arit), a traditional 'caping' hat, and a glass of tea with a dusty metal lid. "
+                "Focus on the dry, brittle textures of the palm leaves and old wood."
             ),
-            "Teras Batu Candi & Kamboja": (
-                "Set on a rough, porous dark volcanic stone floor (andesit). "
-                "The background is an ancient, weathered stone relief carving with natural moss and lichen in the crevices. " # <-- Relief asli, bukan tembok polosan
-                "Next to the character is a small stone incense burner and a scattered handful of withered frangipani petals. "
-                "Natural outdoor daylight, no artificial glow. A serene temple corner with authentic textures."
+            "Sudut Gubuk & Tumpukan Karung": (
+                "Sitting cross-legged on a piece of old, torn tarpaulin (terpal) over the dirt floor. "
+                "The background is a stack of overflowing woven plastic sacks (karung goni) filled with harvested grains and dry husks. "
+                "Texture details: rough plastic weave, fibrous burlap, and dusty grain particles. "
+                "Next to her: a small plastic bucket, a bundle of tied dry corn husks, and a pair of broken rubber sandals. "
+                "Focus on the industrial-agricultural clutter and messy textures."
             ),
-            "Gubuk Tengah Sawah (Saung)": (
-                "Sitting cross-legged on the aged bamboo floor of an open-air Saung. "
-                "The view is surrounded by a dense, swaying wall of tall golden rice stalks ready for harvest. " # <-- Padi rimbun, bukan tembok
-                "A vintage kerosene lamp (lampu teplok) and a bunch of bananas sit on the bamboo slats. "
-                "The soft grey sky is framed naturally by the overhanging thatch roof of the shack. "
-                "Focus on the organic bamboo grain and the golden rice textures."
+            "Gubuk Kebun & Dinding Pelepah": (
+                "Sitting cross-legged on a flat natural stone inside a makeshift shelter. "
+                "The background is a wall constructed from dried coconut leaf stalks (pelepah) tied with rusted wire. "
+                "Texture details: ribbed leaf stalks, coarse dry fibers, and oxidized wire. "
+                "Next to her: a traditional broom (sapu lidi), a small clay water jug, and a plate of cold boiled sweet potatoes. "
+                "Focus on the raw, unpolished organic construction materials."
             ),
-            "Tepian Sungai Berbatu": (
-                "Sitting cross-legged on a large, flat river stone. "
-                "The background is a natural riverbank embankment filled with wild ferns, river weeds, and tangled roots. " # <-- Tebing kali natural
-                "A pair of traditional rubber sandals (sandal jepit) is placed neatly on a nearby rock. "
-                "Clear river water ripples over pebbles. Neutral daylight, no digital enhancements."
+            "Teras Gubuk & Pagar Rengkek": (
+                "Sitting cross-legged on a dusty, cracked concrete slab at the entrance of a hut. "
+                "The background is a rustic fence made of split bamboo branches and weathered sticks. "
+                "Texture details: sharp splintered edges, fine dust covering everything, and dry moss. "
+                "Next to her: a glass of black coffee, an old analog radio, and a wandering village chicken. "
+                "Focus on the dry, splintery, and humble village textures."
             ),
-            "Kebun Buah Naga": (
-                "Sitting cross-legged on a rustic tikar mat in a dragon fruit plantation. "
-                "Surrounded by a dense, lush grid of climbing dragon fruit cactus vines and hanging vibrant pink fruits. " # <-- Taneman naga rimbun
-                "The plantation creates a natural green canopy that filters the soft overhead sky. "
-                "Beside them is a small wicker basket with harvested dragon fruits. "
-                "Authentic agricultural setting with flat, natural lighting."
+            "Lembah Berkabut & Terasering Padi": (
+                "Sitting cross-legged directly on hard-packed, cracked reddish clay soil (tanah merah). "
+                "The background is a vast, expansive mountain range (pegunungan) with layered blue and green tones. "
+                "The foreground features extensive rice paddy terraces (terasering) with textured mud dikes and young green stalks. "
+                "Textural details: gritty soil, rough mud dikes, and dry straw stubble. "
+                "Next to her: a woven bamboo basket (tenggok), a traditional 'caping' hat, and a glass of warm tea with a metal lid. "
+                "Focus on the organic earth tones and agricultural textures against the mountain backdrop."
             ),
-            "Kebun Buah Melon": (
-                "Sitting cross-legged on a low wooden plank floor inside a greenhouse. "
-                "Background is filled with a dense wall of hanging melon vines, large green leaves, and ripening melons. " # <-- Daun melon lebat
-                "The greenhouse plastic roof creates a soft, natural diffused light across the scene. "
-                "Nearby is a traditional watering can and garden shears. "
-                "Realistic greenhouse environment, pure and unedited look."
+            "Puncak Bukit & Hutan Pinus": (
+                "Sitting cross-legged on a thick carpet of dry, fallen pine needles and rough pebbles. "
+                "The background is a solid wall of dense, tall dark-green pinus forest trunks (hutan pinus). "
+                "Texture details: crispy dry needles, smooth but scarred pine bark, and loose forest floor soil. "
+                "Next to her: an antique analogue radio, a bundle of dry twigs, and a simple ceramic water jug. "
+                "Focus on the layered textures of the forest floor and tree bark."
             ),
-            "Taman Bunga Warna-Warni": (
-                "Sitting cross-legged on a flat stone path. "
-                "The background is a lush, thick hedge of blooming flowers, hibiscus, and various tropical shrubs. " # <-- Pager tanaman asli
-                "Butterfly-attracting flowers create a natural colorful backdrop with deep green layers. "
-                "A few fallen petals lie on the path. No artificial contrast, just raw botanical beauty."
+            "Perkebunan Teh & Pagar Bambu": (
+                "Sitting cross-legged on firm, greyish-brown clay soil mixed with fine tea leaf dust. "
+                "The background is a dense, manicured hedge of low-growing tea plants (perkebunan teh) stretching into the horizon. "
+                "Texture details: clumpy earth, rough tea stems, and dry fallen leaves. "
+                "Next to her: a woven plastic sack, a small garden trowel, and a plate of boiled bananas. "
+                "Focus on the deep earthy tones and woody textures of the tea plantation."
             ),
-            "Arena Bermain Anak": (
-                "Sitting cross-legged on soft rubber playground flooring. "
-                "Background features the base of a colorful plastic slide and a low wooden perimeter fence. " # <-- Objek playground asli
-                "A forgotten vintage toy car lies near the character's feet. "
-                "Overcast sky provides clean, flat lighting. A realistic, grounded playground corner."
+            "Sungai Pegunungan & Batu Kali": (
+                "Sitting cross-legged on a large, flat river stone with grey mineral deposits and moss growth. "
+                "The background is a steep riverbank made of stacked natural river rocks and exposed tree roots. "
+                "Texture details: porous stone surfaces, damp moss, and gritty river sand. "
+                "Next to her: a pair of old rubber sandals (sandal jepit), a simple ceramic teapot, and a small metal tray of crackers. "
+                "Focus on the contrast between hard stone and soft moss."
             ),
-            "Taman Hiburan (Carnival)": (
-                "Sitting cross-legged on a large piece of clean cardboard spread on the grass. "
-                "Background is the weathered colorful fabric of a large carnival tent and hanging festive banners. " # <-- Kain tenda asli
-                "A half-eaten cotton candy on a stick is leaning against a bag nearby. "
-                "Natural festive atmosphere, zero artificial glow. Just the raw texture of the tent and grass."
+            "Lereng Gunung & Tumpukan Karung": (
+                "Sitting cross-legged on a piece of old, torn tarpaulin (terpal) over the dirt floor. "
+                "The background is a stack of overflowing woven plastic sacks (karung goni) filled with harvested grains and dry husks. "
+                "Texture details: rough plastic weave, fibrous burlap, and dusty grain particles. "
+                "Next to her: a small plastic bucket, a bundle of tied dry corn husks, and a pair of broken rubber sandals. "
+                "Focus on the industrial-agricultural clutter and messy textures on the slope."
             ),
-            "Halaman Toko Kelontong": (
-                "Sitting cross-legged on a clean cement floor. "
-                "The background is the colorful facade of a village 'Warung' with hanging drink sachets, cracker jars, and snack displays. " # <-- Pakai barang dagangan buat background
-                "Next to the character is an old glass jar of crackers and a coil of rope. "
-                "Natural daylight, no artificial glow. The shop's front structure naturally frames the scene."
+            "Kebun Salak & Tanah Lembap": (
+                "Sitting cross-legged on damp, dark soil covered in sharp, dry salak leaf debris. "
+                "The background is a dense, thorny thicket of salak palms (pohon salak) with jagged, spiked fronds and clusters of brown snake-fruit. "
+                "Texture details: scaly skin of the salak fruit, sharp thorny stems, and moist, clumpy earth. "
+                "Next to her: a small bamboo basket (tenggok) filled with harvested salak, a rusty sickle, and a pair of old rubber sandals. "
+                "Focus on the prickly, dark, and organic textures of the salak grove."
             ),
-            "Lantai Kerja Berantakan": (
-                "Sitting cross-legged directly on a workshop floor scattered with sawdust. "
-                "The background features wooden shelves filled with hand tools, cans of paint, and scrap materials. " # <-- Pakai rak tools
-                "Small glue bottles, tweezers, and wood shavings are scattered around. "
-                "Indoor neutral lighting. Realistic workshop atmosphere without digital effects."
+            "Bawah Pohon Mangga & Daun Kering": (
+                "Sitting cross-legged on a thick layer of crispy, brown fallen mango leaves and small dry twigs. "
+                "The background is the solid, gnarled trunk of an ancient mango tree with thick, textured grey bark. "
+                "Texture details: rough deeply-fissured bark, brittle dry leaves, and small sap droplets. "
+                "Next to her: a plastic bucket of green mangoes, a glass of warm tea with a metal lid, and a traditional hand-woven fan. "
+                "Focus on the contrast between the rough bark and the crunchy leaf carpet."
             ),
-            "Teras Rumah Klasik": (
-                "Sitting cross-legged on the cool tiled floor of a vintage porch. "
-                "In the background, a vintage bicycle (sepeda jengki) leans against a weathered wooden pillar. " # <-- Sepeda balek!
-                "Potted clay plants and orchids line the terrace edge. "
-                "Natural outdoor lighting. The porch roof and pillars provide a natural frame for the sky."
+            "Kebun Pisang & Tanah Becek": (
+                "Sitting cross-legged on a piece of old, flattened cardboard over slightly muddy brown earth. "
+                "The background is a solid wall of tall banana plants with huge, shredded green leaves and heavy bunches of green bananas (pisang kepok). "
+                "Texture details: smooth but waxy banana trunks, torn fibrous leaves, and slippery mud patches. "
+                "Next to her: a bundle of dried banana leaves (klaras), a sharp machete (golok), and a plate of boiled bananas. "
+                "Focus on the tropical, lush, and slightly messy banana plantation vibe."
             ),
-            "Ruang Tamu Jadul": (
-                "Sitting cross-legged on a 'Tikar Pandan' mat. "
-                "The background is an authentic wooden plank wall with a sepia family photo in a carved frame. " # <-- Foto balek!
-                "A simple wooden cabinet sits in the corner. "
-                "Soft indoor lighting, zero artificial contrast. A warm, honest domestic vibe."
+            "Bawah Pohon Rambutan": (
+                "Sitting cross-legged on firm soil covered in scattered red rambutan skins and fallen yellowing leaves. "
+                "The background features low-hanging branches laden with bright red, hairy rambutan fruits. "
+                "Texture details: soft hairy spines of the fruit, thin woody branches, and gritty soil. "
+                "Next to her: a large woven plastic sack, an old analog radio, and a string of wooden prayer beads (tasbih). "
+                "Focus on the vibrant organic colors against the dry, dusty ground."
             ),
-            "Dapur Kampung Estetik": (
-                "Sitting cross-legged on a low bamboo bale-bale. "
-                "Next to her is a traditional clay stove (tungku) with a few bamboo baskets (tampah) leaning against the soot-stained brickwork. " # <-- Bumbu dapur balek!
-                "A faint, natural wisp of smoke rises from the stove. "
-                "Authentic rustic lighting, no fake glow. Focus on the raw textures of clay and bamboo."
+            "Kebun Durian & Akar Besar": (
+                "Sitting cross-legged between massive, protruding wooden roots of an old durian tree. "
+                "The background is a solid forest-like environment with tall durian trees and dense tropical foliage. "
+                "Texture details: hard thorny shells of durian fruit on the ground, mossy giant roots, and dry forest mulch. "
+                "Next to her: a small kerosene lamp (off), a bamboo water container, and a glass jar of crackers. "
+                "Focus on the sharp, hard textures of the fruit and the prehistoric feel of the roots."
             ),
-            "Bengkel Rakit Miniatur": (
-                "Sitting cross-legged on the floor of a creative room. "
-                "The background is filled with pinned architectural sketches, balsa wood sheets, and shelves of half-finished models. " # <-- Sketsa balek!
-                "Tweezers and glue bottles are laid out nearby. "
-                "Clean, flat workshop lighting. A realistic 'work-in-progress' environment."
+            "Kebun Pepaya & Pagar Bambu": (
+                "Sitting cross-legged on a flat natural stone on the edge of a small papaya orchard. "
+                "The background is a row of tall, thin papaya trees with hollow-looking trunks and large umbrella-like leaves. "
+                "Texture details: scarred greyish trunks, soft orange fruit flesh (if cut), and a rustic split-bamboo fence. "
+                "Next to her: a traditional broom (sapu lidi), a small tin box for betel nut, and a wandering village chicken. "
+                "Focus on the tall vertical lines and the humble village garden textures."
             ),
-            "Gazebo Bambu (Outdoor)": (
-                "Sitting cross-legged on polished bamboo slats of a Saung. "
-                "The background is a lush, dense wall of green banana leaves and tropical shrubs. " # <-- Daun pisang rimbun
-                "A small plate of traditional steamed bananas (pisang rebus) sits in the corner. "
-                "Overcast daylight filtered through the leaves, no digital saturation."
+            "Kebun Melon Gantung & Tanah Mulsa": (
+                "Sitting cross-legged on a piece of dark, glossy silver-black plastic mulching film (mulsa) covering the soil. "
+                "The background is a dense, impenetrable wall of green melon vines supported by vertical bamboo trellises. "
+                "The vines are heavily laden with dozens of ripe green and yellow melons (cantaloupe) with highly detailed, intricate reticulated 'net' textures on their skins. "
+                "The scene is overwhelmingly rimbun (lush). Textural details: rough net patterns, fuzzy leaves, and thick green vines. "
+                "Next to her: a woven bamboo basket (tenggok) filled with harvested, high-detail melons, a pruning shear, and a glass of warm tea with a metal lid. "
+                "Focus on the complex net textures and vibrant green and orange tones against the black plastic."
             ),
-            "Gubuk Tengah Sawah": (
-                "Sitting cross-legged on rustic wooden planks. "
-                "The background is the dense, overlapping layers of tall yellow rice stalks and the shack's wooden frame. " # <-- Padi rimbun
-                "An old straw caping hat and a plastic water bottle lie nearby. "
-                "Natural agricultural lighting. The horizon is naturally blocked by the height of the rice field."
+            "Kebun Semangka Tanah & Hamparan Daun": (
+                "Sitting cross-legged on a hand-woven natural 'Tikar Mendong' straw mat with frayed edges. "
+                "The background is a vast, dense ground-cover of thick green semangka (watermelon) leaves and sprawling vines. "
+                "Dozens of large, heavy, round and oval watermelons are scattered among the rimbun leaves, showing highly detailed, prominent deep-green and pale-green striped patterns with high-gloss natural rind. "
+                "Textural details: bold striped patterns, fuzzy green leaves, and wet mud patches on the fruit. "
+                "Next to her: a classic brass betel nut box (sirih), a small coil of mosquito incense, and a pair of old rubber sandals. "
+                "Focus on the high-contrast stripes and the wet, glossy look of the natural rind."
             ),
-            "Saung Pinggir Pantai": (
-                "Sitting cross-legged on a woven plastic mat over white sand. "
-                "The background is a natural limestone cliff or a dense cluster of palm trees. " # <-- Tebing/pohon pantai
-                "Dry coconuts and worn flip-flops are scattered on the sand. "
-                "Bright, diffused seaside daylight. No infinity sea, focus on the textured beach nook."
+            "Kebun Strawberry & Mulsa Hitam": (
+                "Sitting cross-legged on a heavy black plastic mulching film covering the elevated soil beds. "
+                "The background features rows and rows of elevated strawberry plants (pohon strawberry) with dense green leaves and small white flowers. "
+                "The scene is rimbun with thousands of ripe, bright red strawberry fruits, showing incredibly detailed surface textures with deep seed patterns and waxy, glossy finish. "
+                "Textural details: highly intricate seed patterns, fuzzy leaves, and waxy fruit skin. "
+                "Next to her: an old analogue radio with a telescopic antenna, a wooden mortal (cobek), and a pile of dry firewood. "
+                "Focus on the incredibly sharp seed detail and the explosive bright red and green colors."
             ),
-            "Teras Pinggir Sungai": (
-                "Sitting cross-legged on a weathered wooden deck. "
-                "The background is a steep, natural riverbank filled with thick tropical trees and hanging vines. " # <-- Tebing kali natural
-                "A traditional bamboo fishing rod leans nearby. "
-                "Real river water reflections, zero artificial glow. Just a quiet, honest riverbank setting."
+            "Kebun Anggur Teralis & Hamparan Tanah": (
+                "Sitting cross-legged on a large, flat river stone with grey mineral deposits and moss growth. "
+                "The background is a monumental, sprawling 'U'-shaped overhead bamboo and wire trellis system, dense and heavy with rimbun clusters of deep purple (kismis) and vibrant green (tanpa biji) grapes. "
+                "Each grape bunch is hyper-detailed, with individual fruit showing highly rendered natural 'waxy bloom' (powdery substance) and translucent pulp when broken. "
+                "Textural details: detailed grape skin pores, fuzzy green leaves, and old, knotty wood. "
+                "Next to her: an antique brass betel nut box, a small tin box for betel nut (sirih), and a traditional broom (sapu lidi). "
+                "Focus on the waxy bloom and the explosive purple, green, and orange colors."
             ),
-            "Lapak Penjual Rongsokan": (
-                "Sitting cross-legged on the dusty ground. "
-                "The background is a massive pile of aged rusty metal sheets, old tires, and stacked newspapers. " # <-- Tumpukan barang rongsok
-                "Next to them is a large rusty gear. "
-                "Gritty industrial lighting, very raw and neutral. Focus on rust, grease, and metal textures."
+            "Taman Paku-Pakuan & Tembok Berlumut": (
+                "Sitting cross-legged on a patch of damp soil covered in thin green moss and scattered dry twigs. "
+                "The background is a solid wall of dense, rimbun tropical ferns (pakis) and bird's nest ferns with jagged, vibrant green leaves. "
+                "The wall behind the plants is old red brick covered in thick, dark-green velvety moss and water stains. "
+                "Texture details: fuzzy moss, porous damp bricks, and the ribbed veins of fern leaves. "
+                "Next to her: a weathered terracotta plant pot with cracks, a small rusty garden trowel, and a glass of tea with a metal lid. "
+                "Focus on the deep green saturation and the damp, earthy textures."
             ),
-            "Teras Masjid Tua": (
-                "Sitting cross-legged on the cool, polished marble floor of a mosque porch. "
-                "The background features traditional arched wooden doors and an old analog wall clock on a weathered stone surface. " # <-- Elemen asli masjid
-                "A pair of worn-out leather sandals is placed neatly on the marble step. "
-                "Natural diffused daylight, no artificial glow. The architecture naturally frames the serene space."
+            "Taman Bunga Kertas (Bougainvillea) & Pasir": (
+                "Sitting cross-legged on a layer of coarse grey volcanic sand mixed with fallen flower petals. "
+                "The background is a monumental, rimbun explosion of Bougainvillea (Bunga Kertas) in vibrant magenta and orange, with thorny woody stems intertwined. "
+                "Texture details: paper-like flower petals, sharp woody thorns, and gritty sand particles. "
+                "Next to her: a traditional broom (sapu lidi), a small plastic bucket, and a pair of old rubber sandals (sandal jepit). "
+                "Focus on the high-contrast flower colors against the dry, grey sandy ground."
             ),
-            "Teras Rumah Geribik Bambu": (
-                "Placed on a cracked, uneven cement floor in front of an authentic weathered bamboo-weave wall (geribik). "
-                "Next to the character is a chipped enamel mug and a half-eaten boiled sweet potato on a plastic plate. " # <-- Bumbu real
-                "Nearby, a rusty bicycle wheel and tied-up cardboard scraps lean against the bamboo wall. "
-                "Flat, natural lighting. Focus on the raw splinters of the bamboo and the floor cracks."
+            "Taman Lidah Mertua & Lantai Semen": (
+                "Sitting cross-legged on a rough, unpolished concrete floor with visible sand grains and thin cracks. "
+                "The background is a dense row of tall, sharp Sansevieria (Lidah Mertua) plants with highly detailed yellow-green striped patterns on their stiff leaves. "
+                "Texture details: leathery leaf surfaces, gritty concrete, and small pebbles. "
+                "Next to her: a glass jar of crackers (kerupuk), an old analog radio, and a string of wooden prayer beads (tasbih). "
+                "Focus on the sharp vertical lines and the waxy, striped texture of the leaves."
             ),
-            "Kolong Jembatan Tua": (
-                "Set on a damp, dusty concrete ground with patches of grey sand. "
-                "The background is dominated by massive concrete bridge pillars with faded graffiti and exposed rusty rebar. " # <-- Pilar jembatan asli
-                "A pile of discarded plastic bottles and a tattered burlap sack lie nearby. "
-                "Dim, natural ambient lighting from the underpass, zero digital effects. Gritty and raw textures."
+            "Taman Keladi & Kolam Batu": (
+                "Sitting cross-legged on a large, flat natural river stone with a matte grey finish. "
+                "The background is a lush, rimbun collection of Caladium (Keladi) plants with huge, heart-shaped leaves showing intricate red and white vein patterns. "
+                "Nearby is the edge of a small pond made of stacked rough mountain stones with natural water splashes. "
+                "Texture details: translucent leaf membranes, porous volcanic stones, and wet mineral deposits. "
+                "Next to her: a brass tray with a teapot, a small tin box for betel nut, and a discarded old newspaper. "
+                "Focus on the intricate leaf veins and the raw, wet stone textures."
             ),
-            "Gubuk Tengah Sawah Layu": (
-                "Positioned on a dry, dusty wooden plank floor of a leaning shack. "
-                "The background is a dense, parched wall of vertical dry rice stalks and old wooden planks. " # <-- Padi kering natural
-                "A frayed sarong and an empty tin can sit on the dusty floor. "
-                "Natural overcast lighting, no color boost. Focus on the organic wood rot and dry textures."
+            "Teras Semen & Kolam Air Jernih": (
+                "Sitting cross-legged on a rough, unpolished concrete patio floor (plesteran) with visible sand grains and fine cracks. "
+                "The background is a solid, weathered wall of rough-textured grey cement with faded water stains. "
+                "The scene features the edge of a clean, pure water pond constructed from large, flat volcanic rocks with smooth but gritty surfaces. "
+                "Inside the pond, hundreds of colorful Koi fish (Ogon, Shusui, Tancho) create a dense, rimbun wall of shimmering colors, including metallic gold, silver, bright yellow, and solid red. "
+                "Texture details: gritty concrete surface, dusty cement patches, clear water clarity, and iridescent fish skin reflections. "
+                "Next to her: a glass jar of crackers (kerupuk), an old analog radio, and a string of wooden prayer beads (tasbih). "
+                "Focus on the gritty textures, the waxy waxy look of the cement, and the explosive iridescence of the fish."
             ),
-            "Pinggir Rel Kereta Api": (
-                "Resting on a bed of dark, oil-stained gravel and coarse basalt stones. "
-                "The background is a steep gravel embankment or a weathered corrugated metal fence (seng) that follows the track. " # <-- Tanggul rel asli
-                "A bundle of recycled wires and a dented aluminum pot are scattered nearby. "
-                "Neutral, flat outdoor daylight. Focus on the rust, grease, and stone textures."
+            "Tikar Pandan & Kolam Pagar Bambu": (
+                "Sitting cross-legged on a pale-green 'Tikar Pandan' mat with a distinct cross-weave pattern, placed near the pond's edge. "
+                "The background is a rustic fence made of split bamboo poles and weathered sticks. "
+                "The scene features a small, simple pond with clean, pure water, built from stacked irregular river stones with dry moss. "
+                "Inside the pond, dozens of varied colorful Koi fish (Asagi, Bekko, Koromo) swim in rimbun groups, displaying highly rendered patterns of blue-grey scales, bold black spots, and intricate crimson red markings. "
+                "Texture details: ribbed texture of the pandan mat, sharp splintered edges of bamboo, rough stone surfaces, and intricate fish scale patterns. "
+                "Next to her: a traditional broom (sapu lidi), a small plastic bucket, and a pair of old rubber sandals (sandal jepit). "
+                "Focus on the dry organic textures, the raw bamboo, and the detailed patterns of the fish."
             ),
-            "Halaman Belakang Pasar": (
-                "Placed on a muddy ground covered with flattened cardboard and rotting vegetable scraps. "
-                "The background features stacks of empty fruit baskets and a stained, rusty corrugated metal fence (seng). " # <-- Pager seng pasar
-                "Next to the character is a broken wooden crate and a dirty hemp rope. "
-                "Realistic, messy environment with flat lighting. No artificial glow, just raw oxidation textures."
+            "Tembok Bata Berlumut & Kolam Teratai": (
+                "Sitting cross-legged on a patch of damp soil covered in thin green moss and scattered dry twigs. "
+                "The background is an old, weathered red brick wall covered in thick, dark-green velvety moss and water stains. "
+                "The scene features the edge of a large, natural pond filled with pure, clear water and several rimbun clusters of pink and white water lilies (teratai). "
+                "Inside the pond, hundreds of vibrant colorful Koi fish (Doitsu, Goromo, Goshiki) navigate through the lilies in rimbun formations, showing intricate scales in sharp patterns of deep purple, gold, crimson, and black. "
+                "Texture details: fuzzy moss, porous damp bricks, translucent lily pads, and raw fish skin texture. "
+                "Next to her: a brass tray with a teapot, a small tin box for betel nut, and a discarded old newspaper. "
+                "Focus on the deep green saturation, the raw wet bricks, and the explosive patterns of the fish."
             ),
-            "Kafe Estetik Kayu": (
-                "Sitting cross-legged on a clean, light wood plank floor inside a cozy cafe. "
-                "The background features a built-in wooden bookshelf filled with mini bonsai pots and cute clay mosque figurines. " # <-- Bumbu Lucu
-                "Soft, warm LED strip lighting is hidden *behind* the wooden shelves, casting a gentle natural glow. " # <-- LED Natural
-                "Next to her is a miniature pastel-colored ceramic teapot and a small plate of macaroons. "
-                "NO RAIN, NO VOID. A private, warm, and highly-detailed indoor corner."
+            "Pinggir Kolam Batu & Koi Kohaku": (
+                "Sitting cross-legged on a large, flat, damp river stone at the very edge of the water. "
+                "The background is a solid wall of dense tropical ferns and mossy rock formations. "
+                "In front of her is a clear, deep pond filled with dozens of rimbun Koi fish, primarily 'Kohaku' with bold red and white patterns. "
+                "The water is crystal clear, showing the high-detail scales of the fish and their fluid movements. "
+                "Next to her: a brass bowl of fish food (pelet) and a glass of tea with a metal lid. "
+                "Focus on the sharp contrast between the white-red fish and the dark mossy rocks."
             ),
-            "Kamar Estetik Pastel": (
-                "Sitting cross-legged on a soft, pastel-colored knitted rug over white-washed floorboards. "
-                "The background is a soft beige wall with small framed cartoon illustrations of traditional Indonesian villages. " # <-- Bumbu Lucu
-                "A gentle LED neon sign in the shape of a smiling crescent moon is mounted on the wall (warm white). " # <-- LED Hiasan Dinding
-                "Next to her are a few small plush toys (kucing gemoy) and a decorative candle. "
-                "NATURAL NEUTRAL LIGHTING. Perfectly level 0-degree camera angle focusing on the coziness."
+            "Sudut Kolam Batu & Koi Biru-Perak": (
+                "Sitting cross-legged on a cluster of flat natural stones. "
+                "The background is a dense thicket of tall Sansevieria plants and thick garden bushes. "
+                "The pond features rare 'Asagi' and 'Shusui' Koi fish with blue-grey and silver scales, creating a rimbun, shimmering effect underwater. "
+                "Texture details: porous grey stone, sharp vertical plant lines, and highly rendered fish scale patterns. "
+                "Next to her: a small copper teapot and a pair of old rubber sandals (sandal jepit). "
+                "Focus on the cool-toned blue and silver fish colors against the rough garden textures."
             ),
-            "Ruang Kerja Kerajinan": (
-                "Sitting cross-legged directly on the clean terrazzo floor of a home craft studio. "
-                "The background is a light wood wall panel with a large circular LED mirror that reflects a gentle glow. " # <-- LED Dinding Lucu
-                "Pinned on the wall are cute architectural sketches and small rolls of colorful threads. " # <-- Bumbu
-                "Tweezers, a small hot glue gun, and craft paper are scattered on the floor. "
-                "NO OUTDOOR ELEMENTS, NO SKY. A warm, busy indoor workshop vibe."
+            "Pinggir Kolam Batu & Koi Kohaku": (
+                "Sitting cross-legged on a large, flat, damp river stone at the very edge of the water. "
+                "The background is a solid wall of dense tropical ferns and mossy rock formations. "
+                "In front of her is a clear, deep pond filled with dozens of rimbun Koi fish, primarily 'Kohaku' with bold red and white patterns. "
+                "The water is crystal clear, showing the high-detail scales of the fish and their fluid movements. "
+                "Next to her: a brass bowl of fish food (pelet) and a glass of tea with a metal lid. "
+                "Focus on the sharp contrast between the white-red fish and the dark mossy rocks."
             ),
-            "Teras Rumah Estetik": (
-                "Set on a clean cement floor with patterned ceramic tiles (vintage style) in an enclosed porch. "
-                "The background is a clean white wall with several cute hanging potted plants and a decorative laser-cut wooden Arabic calligraphy piece. " # <-- Hiasan Dinding Lucu
-                "Hidden warm-white LED strips are integrated into the ceiling beams above, providing soft downlight. " # <-- LED Tersembunyi
-                "Next to her are a few woven baskets and a single cute cat sleeping nearby. " # <-- Bumbu Lucu
-                "NO OPEN SKY, NO INFINITY. A private, comfortable semi-outdoor indoor extension."
+            "Pinggir Sungai Batu & Akar Pohon": (
+                "Sitting cross-legged on a large, flat, damp river stone with green mineral deposits. "
+                "The background is a solid wall of massive, tangled tropical tree roots and dense ferns hanging over the water. "
+                "The river water is clear, showing submerged mossy rocks and small river fish in rimbun groups. "
+                "Texture details: porous wet stone, slippery moss, and rough fibrous roots. "
+                "Next to her: a glass of tea with a rusty metal lid and a pair of old rubber sandals (sandal jepit). "
+                "Focus on the raw, wet textures and the dark organic tones of the riverbank."
             ),
-            "Kamar Anak Cewek (Pink Pastel)": (
-                "Sitting cross-legged on a soft, thick pink faux-fur rug over light oak floorboards. "
-                "The background is a soft peach wall with a custom LED neon sign in the shape of a 'Star' or 'Cloud' (warm pink glow). " # <-- LED Dinding Lucu
-                "Around her are a few cute plushie dolls, a small white canopy curtain in the corner, and a fairy light string draped over a wooden rack. " # <-- Bumbu Lucu
-                "A small pink beanbag and a few children's storybooks are scattered on the floor. "
-                "NATURAL NEUTRAL LIGHTING. No outdoor view, a fully enclosed, cozy pink-themed girl's bedroom."
+            "Pesisir Laut & Akar Bakau (Mangrove)": (
+                "Sitting cross-legged on a patch of coarse, wet grey volcanic sand mixed with broken seashells. "
+                "The background is a dense, impenetrable wall of rimbun Mangrove roots (bakau) twisting above the water line. "
+                "The sea water is calm and clear, revealing hyper-detailed textures of the sandy bottom and small crabs. "
+                "Texture details: gritty sand, sharp shell fragments, and salt-crusted wood. "
+                "Next to her: a traditional woven bamboo basket (tenggok) and a small tin box for betel nut (sirih). "
+                "Focus on the high-detail grit and the complex, weathered mangrove textures."
             ),
-            "Kamar Anak Cowok (Space Adventure)": (
-                "Sitting cross-legged on a navy blue woven rug over dark grey cement-style tiles. "
-                "The background is a charcoal grey wall with a cool 'Astronaut' or 'Rocket' silhouette LED wall lamp (cool white glow). " # <-- LED Dinding Cowok
-                "Around her are a few toy spaceships, a small wooden telescope, and a stack of colorful building blocks (LEGO style). " # <-- Bumbu Lucu
-                "A chalkboard wall with chalk drawings of planets is visible in the background. "
-                "SOFT DIFFUSED LIGHTING. No windows visible, focus on the playful and cool indoor boy's room vibe."
+            "Tepi Danau Berbatu & Alang-Alang": (
+                "Sitting cross-legged on a cluster of flat, dry mountain stones at the edge of a vast lake. "
+                "The background is a rimbun wall of tall, golden-brown 'alang-alang' grass and wild shrubs. "
+                "The lake water is crystal clear, reflecting the high-detail textures of the surrounding greenery. "
+                "Texture details: sharp grass blades, dry dusty stones, and clear water ripples. "
+                "Next to her: an old analog radio and a small plastic plate with boiled bananas. "
+                "Focus on the contrast between the dry, sharp grass and the deep clear water."
             ),
-            "Kamar Nenek Asri (Vintage Solo)": (
-                "Sitting cross-legged on a clean, dark-patterned 'Tikar Pandan' spread over a cool tegel kunci (patterned cement tiles). "
-                "The background is a clean cream-colored wall with a simple wooden shelf holding an old radio and a small white jasmine plant in a clay pot. " # <-- Bumbu Asri
-                "A small decorative LED lantern in the shape of a traditional birdcage (sangkar burung) hangs on the wall, emitting a soft warm glow. " # <-- LED Dinding Natural
-                "Next to her is a small wooden side table with a glass of tea and a few pieces of traditional steamed cassava. "
-                "The scene is framed by a large open wooden window showing a blurry view of green garden leaves outside. "
-                "NATURAL DAYLIGHT. No harsh shadows, focus on the calm, breezy, and modest bedroom vibe."
+            "Bebatuan Karang & Ombak Tenang": (
+                "Sitting cross-legged on a jagged, weathered coral rock formation with sharp edges and salt deposits. "
+                "The background is a solid view of the deep blue sea with natural foam and clear water textures. "
+                "The shallow water near the rocks is rimbun with colorful sea moss and small corals visible through the surface. "
+                "Texture details: rough porous coral, dried salt crust, and waxy sea plants. "
+                "Next to her: a simple ceramic teapot and a string of wooden prayer beads (tasbih). "
+                "Focus on the harsh, sharp textures of the coral against the fluid clear water."
             ),
-            "Kamar Nenek Minimalis Desa": (
-                "Sitting cross-legged on a low wooden platform bed (dipan kayu) covered with a simple batik-patterned cloth. "
-                "The background features a light-colored wooden wall with a beautiful backlit LED wooden lattice (ukiran kayu) that glows softly. " # <-- LED Hiasan Dinding
-                "Several small indoor potted plants like 'Lidah Mertua' (snake plant) are placed in the corner, adding a fresh green feel. " # <-- Bumbu Asri
-                "Next to her is a pair of old spectacles and a small woven sewing basket. "
-                "Soft natural light spills from an unseen side window, highlighting the dust particles in the air. "
-                "NO MODERN FURNITURE. A peaceful, simple, and organic indoor atmosphere."
+            "Muara Sungai & Tumpukan Kayu Apung": (
+                "Sitting cross-legged on a large piece of smooth, sun-bleached driftwood on a muddy bank. "
+                "The background is a rimbun thicket of nipah palms and tall river reeds with dense green foliage. "
+                "The water is a mix of clear and silty textures, showing organic debris and floating leaves. "
+                "Texture details: smooth worn-out wood, clumpy dark mud, and ribbed palm leaves. "
+                "Next to her: a traditional 'caping' hat and a small glass jar of crackers (kerupuk). "
+                "Focus on the earthy mud tones and the skeletal textures of the driftwood."
             ),
-            "Kamar Nenek Estetik Modern": (
-                "Sitting cross-legged on a clean, light-grey polished cement floor. "
-                "The wall is painted in a beautiful 'Sage Green' matte finish, looking fresh and clean. " # <-- Cat Tembok Bagus
-                "On the wall is a large laser-cut wooden Tree of Life decoration with hidden warm-white LED strips behind it, creating a soft halo glow. " # <-- LED & Hiasan Dinding
-                "Next to the character is a small indoor palm tree in a white ceramic pot and a stack of clean linen pillows. "
-                "The atmosphere is a mix of traditional modesty and modern interior design. "
-                "NO OUTDOOR VOID. A fully enclosed, stylish, and peaceful grandmother's room."
+            "Danau Pegunungan & Lumut Hijau": (
+                "Sitting cross-legged on a thick carpet of vibrant green moss over a flat stone at a high-altitude lake. "
+                "The background is a solid wall of ancient, moss-covered trees and thick mountain mist (visualized as texture). "
+                "The lake water is incredibly clear, showing the high-detail submerged logs and green algae. "
+                "Texture details: velvety soft moss, decaying wood, and cold, still water. "
+                "Next to her: a small brass teapot and a discarded old newspaper. "
+                "Focus on the deep green saturation and the ancient, damp forest textures."
             ),
-            "Kamar Nenek Klasik Mewah": (
-                "Sitting cross-legged on a woven 'Tikar Pandan' mat over a dark parquet wooden floor. "
-                "The wall is painted in a warm 'Terracotta' earthy tone with a smooth, premium texture. " # <-- Cat Tembok Bagus
-                "The background features several floating wooden shelves with warm LED downlights illuminating small ceramic mosque miniatures. " # <-- LED & Hiasan Rak
-                "A large, elegant circular macrame wall hanging is the centerpiece on the wall. "
-                "Next to her is a vintage brass tray with a glass of tea and a small plate of traditional snacks. "
-                "NATURAL NEUTRAL LIGHTING. The scene is cozy, high-end, but still feels like home."
+            "Gundukan Sampah Plastik (TPA)": (
+                "Sitting cross-legged directly on a massive pile of compressed plastic waste and torn colorful trash bags. "
+                "The background is a solid, rimbun wall of towering garbage mounds consisting of discarded packaging, weathered plastics, and organic waste. "
+                "Texture details: crinkled plastic, gritty dust, torn synthetic fibers, and sticky organic stains. "
+                "Next to her: a rusted metal hook (pengait sampah), a dirty plastic sack (karung), and a pair of broken rubber sandals. "
+                "Focus on the overwhelming clutter of artificial waste and the dirty, unpolished textures."
+            ),
+            "Gudang Rongsok Logam Berkarat": (
+                "Sitting cross-legged on a floor made of scrap metal sheets and rusted iron plates. "
+                "The background is an impenetrable wall of stacked rusted car parts, old bicycle frames, and twisted corrugated iron (seng). "
+                "Texture details: deep orange iron rust (karat), sharp metallic edges, peeling paint, and thick oily grime. "
+                "Next to her: a large rusted hammer, a pile of tangled copper wires, and a glass of black coffee in a stained glass. "
+                "Focus on the harsh, sharp, and oxidized metallic textures."
+            ),
+            "Tumpukan Kardus & Kertas Bekas": (
+                "Sitting cross-legged on flattened, weathered cardboard boxes on a dusty concrete floor. "
+                "The background is a rimbun wall of tightly bound stacks of old newspapers, yellowed books, and brown corrugated cardboard. "
+                "Texture details: fibrous paper edges, brittle cardboard, dust particles, and damp water stains. "
+                "Next to her: a roll of dirty plastic twine, a rusted cutter, and an old analog radio with a missing antenna. "
+                "Focus on the dry, papery, and dusty organic clutter."
+            ),
+            "Kuburan Botol Kaca & Beling": (
+                "Sitting cross-legged on a piece of thick, dirty plywood over a field of crushed glass. "
+                "The background is a solid wall of thousands of stacked glass bottles in various colors (amber, green, clear) covered in thick dust. "
+                "Texture details: smooth but dirty glass surfaces, sharp crystalline shards, and dried mud. "
+                "Next to her: a plastic crate (keranjang), a small tin box for betel nut, and a discarded worn-out batik sarong. "
+                "Focus on the crystalline reflections and the heavy, grimy dust layers."
+            ),
+            "Rongsok Elektronik & Kabel (E-Waste)": (
+                "Sitting cross-legged on a pile of old circuit boards and broken plastic casings of vintage televisions. "
+                "The background is a rimbun mountain of discarded electronic parts, tangled multi-colored wires, and shattered CRT glass. "
+                "Texture details: green fiberglass PCBs, dusty copper coils, brittle aged plastic, and metallic solder points. "
+                "Next to her: a pair of pliers, a small prayer beads (tasbih) string, and a glass of tea with a metal lid. "
+                "Focus on the complex, technological decay and the grimy industrial textures."
+            ),
+            "Tumpukan Ban Bekas & Karet": (
+                "Sitting cross-legged on the inner circle of a large, weathered truck tire. "
+                "The background is a solid wall of stacked black rubber tires with worn-out treads and dried mud in the grooves. "
+                "Texture details: matte black rubber, deep tread patterns, dry white powder on the surface, and cracked sidewalls. "
+                "Next to her: a traditional broom (sapu lidi), a small bottle of eucalyptus oil, and a wandering village chicken. "
+                "Focus on the heavy, dark, and industrial rubber textures."
+            ),
+            "Gudang Garam & Karung Goni": (
+                "Sitting cross-legged on a floor covered in thick, coarse white salt crystals. "
+                "The background is a solid wall of stacked, heavy burlap sacks (karung goni) with visible fibers and salt stains. "
+                "Texture details: crystalline salt grains, rough fibrous burlap, and damp wooden pillars with white mineral crust. "
+                "Next to her: a wooden salt shovel, a small plastic bucket, and a glass of tea with a metal lid. "
+                "Focus on the white crystalline textures and the rough, brownish burlap."
+            ),
+            "Pabrik Genteng & Tumpukan Tanah Liat": (
+                "Sitting cross-legged on a patch of fine, dry orange clay dust. "
+                "The background is a rimbun wall of thousands of unbaked, matte-orange clay tiles (genteng) stacked in neat but dusty rows. "
+                "Texture details: smooth but gritty clay surfaces, powdery orange dust, and rough wooden drying racks. "
+                "Next to her: a traditional 'caping' hat, a small clay water jug, and a pair of old rubber sandals. "
+                "Focus on the monochromatic orange tones and the dry, earthy textures."
+            ),
+            "Bengkel Kapal & Kayu Kapal Lapuk": (
+                "Sitting cross-legged on a bed of dry wood shavings (tatal) and sawdust. "
+                "The background is the massive, curved hull of an old wooden boat with peeling blue and white paint and thick barnacle crusts. "
+                "Texture details: flaking paint, sharp salt-encrusted barnacles, and deep cracks in the aged timber. "
+                "Next to her: a rusted iron anchor, a coil of thick frayed nautical rope, and a tin of betel nut. "
+                "Focus on the industrial maritime decay and the rough, weathered wood."
+            ),
+            "Penggilingan Padi & Tumpukan Sekam": (
+                "Sitting cross-legged on a vast mound of dry, golden-yellow rice husks (sekam). "
+                "The background is a solid wall of old, rusted milling machinery with oily gears and thick layers of grain dust. "
+                "Texture details: sharp paper-like husks, greasy metallic surfaces, and fine yellow dust covering everything. "
+                "Next to her: a woven plastic sack, a small analog radio, and a string of wooden prayer beads. "
+                "Focus on the overwhelming golden grain textures and the rusted industrial machinery."
+            ),
+            "Pasar Tradisional Bubrah (After Hours)": (
+                "Sitting cross-legged on a wet, stained cement floor covered in discarded vegetable leaves and crushed fruit. "
+                "The background is a rimbun mess of empty wooden crates (peti kayu), torn plastic tarps, and abandoned bamboo baskets. "
+                "Texture details: slimy organic waste, rough splintered wood, and damp concrete stains. "
+                "Next to her: a glass jar of crackers, a traditional broom (sapu lidi), and a wandering village chicken. "
+                "Focus on the chaotic organic clutter and the gritty, damp market textures."
+            ),
+            "Reruntuhan Beton & Besi Rebar": (
+                "Sitting cross-legged on a pile of broken concrete slabs and grey cement dust. "
+                "The background is a solid wall of a collapsed building with exposed, twisted rusty iron rebar poking out like skeletons. "
+                "Texture details: gritty concrete chunks, oxidized rusty metal, and layers of fine white limestone dust. "
+                "Next to her: a dented aluminium teapot, a worn-out prayer rug (sajadah) covered in dust, and a single olive branch. "
+                "Focus on the harsh, sharp edges of the rubble and the powdery grey textures."
+            ),
+            "Gundukan Bata Merah & Abu Bakaran": (
+                "Sitting cross-legged on a mound of loose, shattered red bricks and dark grey ash. "
+                "The background is the skeleton of a burnt-out house with blackened doorways and charred wooden beams. "
+                "Texture details: brittle burnt wood, powdery black soot, and rough broken ceramic tiles. "
+                "Next to her: an old kerosene lamp with cracked glass, a small copper tray, and a tattered family photo frame. "
+                "Focus on the contrast between the red bricks and the black carbon soot."
+            ),
+            "Lorong Kota Tua Berdebu (Gaza Style)": (
+                "Sitting cross-legged on a narrow stone pathway covered in fine yellow sand and debris. "
+                "The background is a rimbun wall of ancient limestone buildings with collapsing balconies and dangling electrical wires. "
+                "Texture details: eroded limestone surfaces, tangled copper wires, and dry desert sand accumulation. "
+                "Next to her: a traditional woven basket, a small tin box for sewing kits, and a pair of old dusty leather sandals. "
+                "Focus on the ancient architectural decay and the gritty, sandy textures."
+            ),
+            "Bangkai Kendaraan & Tembok Seng": (
+                "Sitting cross-legged on a rusted car hood flattened on the ground. "
+                "The background is a solid wall of a destroyed warehouse made of riddled corrugated iron (seng) and a burnt-out truck chassis. "
+                "Texture details: flaky orange rust, bullet-pierced metal sheets, and greasy soot stains. "
+                "Next to her: an empty ammunition crate used as a box, a plastic water jug, and a glass of black tea. "
+                "Focus on the heavy metallic oxidation and the industrial ruins."
+            ),
+            "Halaman Masjid Hancur & Marmer Pecah": (
+                "Sitting cross-legged on a shattered white marble floor with visible veins and deep cracks. "
+                "The background is a row of damaged stone arches and piles of decorative tiles (zellige) mixed with rubble. "
+                "Texture details: smooth but cracked marble, sharp ceramic shards, and thick grey dust. "
+                "Next to her: a large old Quran with a torn cover, a small brass incense burner (off), and a rosary. "
+                "Focus on the contrast between the elegant marble and the violent destruction."
+            ),
+            "Pojok Mushola Tua & Sajadah Usang": (
+                "Sitting cross-legged on a faded green velvet prayer mat (sajadah) with thinning pile and visible fabric threads. "
+                "The background is a solid wall of old, unpainted limestone with thick layers of peeling white chalk (kapur). "
+                "Texture details: fuzzy worn-out velvet, chalky paint flakes, and damp stone patches at the bottom. "
+                "Next to her: a string of large wooden prayer beads (tasbih), an old ceramic water jug (kendi), and a small wooden book stand (rehal). "
+                "Focus on the spiritual silence and the brittle, dry textures of the wall."
+            ),
+            "Gudang Tenun & Benang Kusut": (
+                "Sitting cross-legged on a floor covered in colorful lint, cotton scraps, and loose threads. "
+                "The background is a rimbun wall of stacked wooden weaving frames (alat tenun) and hundreds of dusty spools of yarn. "
+                "Texture details: fibrous cotton, rough hand-carved wood grain, and layers of fine lint dust. "
+                "Next to her: a traditional weaving shuttle (torak), a small tin box for sewing kits, and a glass of warm tea. "
+                "Focus on the complex interplay of soft fibers and hard, aged wood."
+            ),
+            "Lantai Kapal Kayu & Jaring Nelayan": (
+                "Sitting cross-legged on a rough wooden deck made of wide, salt-crusted timber planks. "
+                "The background is a massive, rimbun pile of tangled green and blue nylon fishing nets with attached lead sinkers. "
+                "Texture details: dried salt crystals on wood, coarse nylon mesh, and rusted metal pulleys. "
+                "Next to her: a small kerosene lamp (off), a bowl of dried fish, and a traditional 'caping' hat. "
+                "Focus on the maritime grit and the complex, knotted textures of the nets."
+            ),
+            "Pabrik Jamu & Akar Kering": (
+                "Sitting cross-legged on a floor covered in yellowish turmeric dust and dried herb particles. "
+                "The background is a rimbun wall of hanging dried roots, barks, and baskets of medicinal plants. "
+                "Texture details: rough woody roots, powdery herbal dust, and woven bamboo textures. "
+                "Next to her: a stone mortar and pestle (lumpang), a small glass bottle of herbal oil, and a plate of traditional snacks. "
+                "Focus on the earthy, organic apothecary vibe and the diverse botanical textures."
+            ),
+            "Gang Sempit & Tembok Lumut": (
+                "Sitting cross-legged on a narrow asphalt path with numerous rough patches and potholes. "
+                "The background is a solid, towering wall of unpainted bricks and damp cement covered in thick green moss and old graffiti. "
+                "Texture details: gritty asphalt, damp velvety moss, and peeling posters on the wall. "
+                "Next to her: a row of small potted plants in recycled plastic cans, a puddle of stagnant water, and a pair of old rubber sandals. "
+                "Focus on the claustrophobic urban texture and the damp, gritty surfaces."
+            ),
+            "Depan Rumah (Teras Semen Kasar)": (
+                "Sitting cross-legged on a rough grey cement terrace floor with visible sand grains and thin cracks. "
+                "The background is a solid wall with faded paint, a simple wooden door with a rusty padlock, and a low-hanging tangled bunch of black electrical wires. "
+                "Texture details: chalky wall paint, rough concrete, and the rubbery texture of the cables. "
+                "Next to her: a glass jar of crackers (kerupuk), a traditional broom (sapu lidi), and a wandering village chicken. "
+                "Focus on the humble, daily residential textures and the messy overhead clutter."
+            ),
+            "Belakang Rumah & Jemuran Kain": (
+                "Sitting cross-legged on a piece of old, flattened cardboard over a dirt and gravel floor. "
+                "The background is a rimbun wall of colorful laundry hanging on a simple plastic rope, featuring faded batik sarongs and towels. "
+                "Texture details: fibrous cloth, rusty wire fence, and loose dry soil with small pebbles. "
+                "Next to her: a plastic laundry basin, a stack of dry firewood, and a small glass of tea with a metal lid. "
+                "Focus on the domestic clutter and the contrast between soft fabric and hard gravel."
+            ),
+            "Samping Rumah (Lorong Drainase)": (
+                "Sitting cross-legged on a flat stone beside a narrow open drainage canal (selokan) made of cracked cement. "
+                "The background is a solid wall of rough-textured grey stones and overgrown wild weeds. "
+                "Texture details: slimy algae inside the canal, porous grey stone, and sharp edges of wild grass. "
+                "Next to her: a small bottle of eucalyptus oil, a coil of mosquito incense (off), and an old analog radio. "
+                "Focus on the damp, organic decay and the gritty stone textures."
+            ),
+            "Halaman Depan & Jemuran Gabah": (
+                "Sitting cross-legged on a wide woven mat (tikar pandan) placed on a dusty concrete yard. "
+                "The background is a simple house front with a corrugated iron roof (seng) and a pile of dry coconut shells. "
+                "Texture details: ribbed texture of the mat, thousands of tiny yellow rice grains (gabah) drying in the sun, and rusted metal. "
+                "Next to her: a traditional 'caping' hat, a wooden rake, and a plastic bucket of water. "
+                "Focus on the agricultural-residential hybrid textures."
+            ),
+            "Bawah Pohon Depan Gang": (
+                "Sitting cross-legged on a large, protruding tree root and dry leaves on the side of the road. "
+                "The background is a rustic wooden fence and a stack of old, unused tires covered in dust. "
+                "Texture details: rough tree bark, crispy dry leaves, and matte black rubber with deep treads. "
+                "Next to her: a small glass of black coffee, an old tin box for betel nut, and a discarded newspaper. "
+                "Focus on the dry, dusty roadside atmosphere and the raw organic textures."
             )
+            
         }
         # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
         MASTER_AUDIO_STYLE = {
             "Logat": [
-                "Authentic Rural Indonesian (Simple, honest, with a slight 'kampungan' lilt)",
-                "Deep Javanese Heart (Soft-spoken, slow, with heavy 'd' and 't' consonants)",
-                "Melodic Sundanese (Gentle, flowing tones with a soft West Javanese rise and fall)",
-                "Coastal Melayu (Raspy, rhythmic, with a warm seaside gravelly texture)",
-                "Classic Betawi Old-Soul (Deep, direct, but profoundly humble and polite)"
+                "Natural Village-Authentic: A raw, unpolished voice with a flat, honest intonation. It carries a rhythmic 'broken' cadence, sounding deeply sincere and unpretentious with a texture that is slightly dry and dusty, lacking any urban polish.",
+                "Old Javanese Phonetic: Slow and deliberate with a heavy, vibrating 'dh' and 'th' percussion. The tone is deeply humble, featuring a low-register chest voice that sounds like a calm, rhythmic hum.",
+                "Soft Sundanese Lilt: A melodic, undulating rhythm (mendayu) with a gentle rising and falling pitch. The voice is airy and breathy, characterized by a smooth, high-frequency flow with no harsh edges.",
+                "Coastal Melayu Cadence: Quick-paced and rhythmic with a dry, gravelly texture. The intonation is punchy and direct, sounding like a weathered voice shaped by salt air and open spaces.",
+                "Village-Common 'Kering' Voice: A thin, cracked, and slightly shaky (gemetar) voice. It carries the texture of a dry throat, with high-register raspiness and frequent breathy pauses between phrases.",
+                "The Serene Matriarch: Extremely slow tempo, almost a whisper. The voice is calm, stable, and deeply reverent, with soft guttural friction in the throat that suggests a lifetime of silent prayer."
             ],
             "Mood": [
-                "Quiet Vulnerability (Steady gaze, eyes heavy with deep emotion)",
-                "Pensive Stillness (Calm facial expression, long natural pauses)",
-                "Graceful Serenity (Serene and peaceful look, slow breathing)",
-                "Humble Devotion (Gentle and sincere facial expression)",
-                "Stoic Calmness (A steady, wise face reflecting years of memories)",
-                "Sacred Focus (Deeply focused expression, absolute sincerity)",
-                "Peaceful Hope (A calm, hopeful look in the eyes)"
+                "Raw Vulnerability: A steady but watery gaze, eyes heavy with years of unspoken stories and deep, raw emotion.",
+                "Weathered Stillness: A hollow, calm facial expression with long, heavy pauses that feel like she's lost in old memories.",
+                "Earthy Serenity: A quiet, grounded peacefulness with slow, rhythmic breathing that matches the stillness of the nature around her.",
+                "Profound Resignation: A face that shows the weight of the world but carries it with absolute, humble sincerity and no complaints.",
+                "Stoic Ancient Wisdom: A steady, frozen-in-time expression with deep facial lines reflecting a lifetime of survival and quiet strength.",
+                "Solemn Devotion: A deeply focused, unblinking sincerity, as if she is communicating with something unseen in a sacred moment.",
+                "Fragile Contentment: A faint, nearly invisible smile in the eyes, showing a small flicker of hope amidst a weary, tired face."
             ],
             "Physical Action": [
-                "Delicate fingers precisely touching a tiny ornament on the mosque",
-                "Holding a steady, focused gaze on the architectural details",
-                "Eyes glistening slightly while looking down at the workbench",
-                "Slow, calm swallowing while looking at the central dome",
-                "Gently resting one finger on the textured surface of the diorama",
-                "A subtle, peaceful smile while admiring the structure",
-                "A slow, deep exhale while hands rest lightly on the table",
-                "Closing eyes for a second in silent devotion",
-                "Fingertips resting with extreme reverence on the diorama",
-                "Briefly looking up with a calm, hopeful expression",
-                "Looking down with intense focus, hands steady in their craft",
-                "Softly blinking while observing the internal mosque lights"
-            ]
-        }
-        # --- 4. MASTER AUDIO & SOULFUL EXPRESSION (FIXED WORKSHOP INTERACTION) ---
-        MASTER_AUDIO_STYLE = {
-            "Logat": [
-                "Kampung Tulen (Authentic Rural Indonesian - Simple, honest, lilt)",
-                "Jawa Medok (Deep Javanese Heart - Soft-spoken, slow, heavy consonants)",
-                "Sunda Lembut (Melodic Sundanese - Gentle, flowing tones)",
-                "Melayu Pesisir (Coastal Melayu - Raspy, rhythmic texture)",
-                "Betawi Klasik (Classic Betawi Old-Soul - Humble and polite)"
-            ],
-            "Mood": [
-                "Sedih & Sayu (Quiet Vulnerability - Eyes heavy with deep emotion)",
-                "Tenang & Bengong (Pensive Stillness - Calm, long natural pauses)",
-                "Damai Sejahtera (Graceful Serenity - Serene look, slow breathing)",
-                "Tulus Ikhlas (Humble Devotion - Gentle and sincere expression)",
-                "Tegar & Bijak (Stoic Calmness - Steady, wise face, many memories)",
-                "Fokus Khusyuk (Sacred Focus - Deeply focused, absolute sincerity)",
-                "Penuh Harapan (Peaceful Hope - Calm, hopeful look in the eyes)"
-            ],
-            "Physical Action": [
-                "Menyentuh kubah dengan lembut sambil sesekali menatap kamera (Gently touching the mosque's dome, occasionally shifting gaze to look warmly at the camera)",
-                "Menatap tajam detail lalu mendongak tersenyum (Holding a focused gaze on the details, then briefly looking up at the camera with a subtle smile)",
-                "Mata berkaca-kaca menatap kamera dengan tulus (Looking directly at the camera with glistening eyes and a deeply soulful, hopeful expression)",
-                "Tangan bersedekap di pangkuan menatap penuh doa (Hands resting on the lap in a prayerful pose, looking at the camera with silent devotion)",
-                "Tersenyum tipis ke arah kamera sambil memegang miniatur (A peaceful smile while looking directly at the camera, hands gently supporting the model)",
-                "Mengusap debu lalu menatap puas ke kamera (Gently wiping a speck of dust, then looking at the camera with a satisfied and contented expression)",
-                "Memejamkan mata bersyukur lalu membukanya menatap kamera (Closing eyes in gratitude, then opening them to look warmly at the camera)",
-                "Menunduk khusyuk merakit sesekali melirik kamera (Looking down with intense focus on the craft, occasionally glancing at the camera with a confident smile)"
+                "Trembling, thin fingers slowly tracing the rough, gritty texture of the mosque wall with extreme reverence.",
+                "Holding a hollow, unwavering gaze on the intricate architectural cracks of the structure, eyes heavy with memory.",
+                "Eyes glistening with wet, raw emotion while looking down at the small arched entrance of the diorama.",
+                "Slow, heavy swallowing while staring intensely at the central dome, as if absorbing its sacred presence.",
+                "Gently resting a bony, veiny finger on the textured surface of the minaret, feeling the physical grain of the material.",
+                "A faint, tired, but sincere smile flickering in the eyes while observing the small courtyard of the structure.",
+                "A slow, deep exhale that makes the shoulders drop, with hands resting heavily beside the base of the diorama.",
+                "Closing eyes for a long, silent second, head slightly bowing in front of the mosque in total surrender.",
+                "Fingertips resting with shaky, prayer-like stillness on the rough edges of the miniature structure.",
+                "Briefly looking up with a weary but hopeful expression, as if connecting the diorama to a distant memory.",
+                "Looking down with intense, bungsut focus, hands remaining perfectly still and grounded near the object.",
+                "Softly blinking while observing the faint glow from within the structure, eyes reflecting a deep spiritual connection."
             ]
         }
         # --- UI LAYOUT ---        
