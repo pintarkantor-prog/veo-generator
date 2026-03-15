@@ -1855,27 +1855,23 @@ def tampilkan_ai_lab():
                 "The Serene Matriarch: Extremely slow tempo, almost a whisper. The voice is calm, stable, and deeply reverent, with soft guttural friction in the throat that suggests a lifetime of silent prayer."
             ],
             "Mood": [
-                "Raw Vulnerability: A steady but watery gaze, eyes heavy with years of unspoken stories and deep, raw emotion.",
-                "Weathered Stillness: A hollow, calm facial expression with long, heavy pauses that feel like she's lost in old memories.",
-                "Earthy Serenity: A quiet, grounded peacefulness with slow, rhythmic breathing that matches the stillness of the nature around her.",
-                "Profound Resignation: A face that shows the weight of the world but carries it with absolute, humble sincerity and no complaints.",
-                "Stoic Ancient Wisdom: A steady, frozen-in-time expression with deep facial lines reflecting a lifetime of survival and quiet strength.",
-                "Solemn Devotion: A deeply focused, unblinking sincerity, as if she is communicating with something unseen in a sacred moment.",
-                "Fragile Contentment: A faint, nearly invisible smile in the eyes, showing a small flicker of hope amidst a weary, tired face."
+                "Sedih & Sayu (Quiet Vulnerability - Steady gaze, eyes heavy with deep emotion)",
+                "Tenang & Bengong (Pensive Stillness - Calm facial expression, long natural pauses)",
+                "Damai Sejahtera (Graceful Serenity - Serene and peaceful look, slow breathing)",
+                "Tulus Ikhlas (Humble Devotion - Gentle and sincere facial expression)",
+                "Tegar & Bijak (Stoic Calmness - A steady, wise face reflecting years of memories)",
+                "Fokus Khusyuk (Sacred Focus - Deeply focused expression, absolute sincerity)",
+                "Penuh Harapan (Peaceful Hope - A calm, hopeful look in the eyes)"
             ],
             "Physical Action": [
-                "Trembling, thin fingers slowly tracing the rough, gritty texture of the mosque wall with extreme reverence.",
-                "Holding a hollow, unwavering gaze on the intricate architectural cracks of the structure, eyes heavy with memory.",
-                "Eyes glistening with wet, raw emotion while looking down at the small arched entrance of the diorama.",
-                "Slow, heavy swallowing while staring intensely at the central dome, as if absorbing its sacred presence.",
-                "Gently resting a bony, veiny finger on the textured surface of the minaret, feeling the physical grain of the material.",
-                "A faint, tired, but sincere smile flickering in the eyes while observing the small courtyard of the structure.",
-                "A slow, deep exhale that makes the shoulders drop, with hands resting heavily beside the base of the diorama.",
-                "Closing eyes for a long, silent second, head slightly bowing in front of the mosque in total surrender.",
-                "Fingertips resting with shaky, prayer-like stillness on the rough edges of the miniature structure.",
-                "Briefly looking up with a weary but hopeful expression, as if connecting the diorama to a distant memory.",
-                "Looking down with intense, bungsut focus, hands remaining perfectly still and grounded near the object.",
-                "Softly blinking while observing the faint glow from within the structure, eyes reflecting a deep spiritual connection."
+                "Menyentuh kubah dengan lembut sambil sesekali menatap kamera (Gently touching the mosque's dome, occasionally shifting gaze to look warmly at the camera)",
+                "Menatap tajam detail lalu mendongak tersenyum (Holding a focused gaze on the details, then briefly looking up at the camera with a subtle smile)",
+                "Mata berkaca-kaca menatap kamera dengan tulus (Looking directly at the camera with glistening eyes and a deeply soulful, hopeful expression)",
+                "Tangan bersedekap di pangkuan menatap penuh doa (Hands resting on the lap in a prayerful pose, looking at the camera with silent devotion)",
+                "Tersenyum tipis ke arah kamera sambil memegang miniatur (A peaceful smile while looking directly at the camera, hands gently supporting the model)",
+                "Mengusap debu lalu menatap puas ke kamera (Gently wiping a speck of dust, then looking at the camera with a satisfied and contented expression)",
+                "Memejamkan mata bersyukur lalu membukanya menatap kamera (Closing eyes in gratitude, then opening them to look warmly at the camera)",
+                "Menunduk khusyuk merakit sesekali melirik kamera (Looking down with intense focus on the craft, occasionally glancing at the camera with a confident smile)"
             ]
         }
         # --- UI LAYOUT ---        
