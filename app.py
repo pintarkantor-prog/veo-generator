@@ -3650,7 +3650,7 @@ def tampilkan_area_staf():
     # --- 1. PAPAN PENGUMUMAN ---
     st.info("""
     📢 **PENGUMUMAN TERBARU:**
-    - Libur Hari Raya Idul Fitri Mulai Tanggal 18 - 23 maret (Tanggal 24 masuk normal).
+    - Libur Hari Raya Idul Fitri Mulai Tanggal 19 - 24 maret (Tanggal 25 masuk normal).
     - Pastikan semua file di Google Drive sudah diberi nama sesuai SOP terbaru.
     - Sistem masih tahap pengembangan jika ada selisih atau error system, segera lapor Owner! 🚀
     """)
