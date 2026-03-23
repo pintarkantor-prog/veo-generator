@@ -4867,7 +4867,7 @@ def tampilkan_database_channel():
                                             # TENTUKAN MAKSIMAL SLOT:
                                             # Masukin nomor HP yang mau lo jatah 3 di dalam kurung [ ]
                                             # Kalau mau balikin 2 semua, kosongin aja isinya jadi: if h in []:
-                                            if h in [1, 3, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]:
+                                            if h in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]:
                                                 max_slot = 3
                                             else:
                                                 max_slot = 2
@@ -4913,7 +4913,7 @@ def tampilkan_database_channel():
         if not is_pro:
             st.warning("🔒 Akses Terbatas!")
         else:
-            st.markdown("#### 🚀 MONITORING PROSES (MAX 2 SLOT HP)")
+            st.markdown("#### 🚀 MONITORING PROSES (MAX 3 SLOT HP)")
             # --- TAMBAHAN: ST INFO UNTUK INSTRUKSI STAFF ---
             st.info("""
                 💡 **PENGINGAT KHUSUS:**
