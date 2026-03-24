@@ -4917,8 +4917,8 @@ def tampilkan_database_channel():
             # --- TAMBAHAN: ST INFO UNTUK INSTRUKSI STAFF ---
             st.info("""
                 💡 **PENGINGAT KHUSUS:**
-                1. HP 1-10 isi Konten Sakura
-                2. HP 11-23 isi Konten Masjid
+                1. HP 1-10 Konten Sakura
+                2. HP 11-23 Konten Masjid
                 3. HP 1-10 isi 3 channel, HP 11-23 isi 4 channel (login hapus dan stock video disesuaikan)
             """)
 
