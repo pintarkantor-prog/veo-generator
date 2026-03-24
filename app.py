@@ -5117,7 +5117,7 @@ def tampilkan_database_channel():
                 if not list_hp_unik: continue
                 
                 # Loop per 11 HP (sama kayak kode awal lo)
-                for start_idx in range(0, len(list_hp_unik), 7):
+                for start_idx in range(0, len(list_hp_unik), 8):
                     hp_halaman_ini = list_hp_unik[start_idx : start_idx + 7]
                     df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     
