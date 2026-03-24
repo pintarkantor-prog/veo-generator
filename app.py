@@ -5200,7 +5200,7 @@ def tampilkan_database_channel():
                         color: #1E3A8A !important;
                         padding: 10px; 
                         border: 1px solid #CCC;
-                        font-size: 13px;
+                        font-size: 11px;
                         font-weight: bold;
                         -webkit-print-color-adjust: exact;
                     }}
@@ -5208,7 +5208,7 @@ def tampilkan_database_channel():
                     td {{ 
                         border: 1px solid #CCC; /* SEMUA GARIS DALAM ABU-ABU */
                         padding: 8px 10px; 
-                        font-size: 14px; 
+                        font-size: 12px; 
                         color: #111;
                         line-height: 1.3;
                     }}
