@@ -5116,16 +5116,18 @@ def tampilkan_database_channel():
                 list_hp_unik = tim["list"]
                 if not list_hp_unik: continue
                 
-                # --- REVISI LOGIKA PEMBAGIAN HALAMAN ---
+                # Urutin list HP-nya biar gak lompat-lompat
+                list_hp_unik = sorted(list_hp_unik, key=lambda x: pd.to_numeric(x, errors='coerce'))
+                
                 current_idx = 0
                 page_number = 1
                 
                 while current_idx < len(list_hp_unik):
-                    # Tentukan limit: Halaman 1 = 8 HP, Halaman selanjutnya = 7 HP
-                    limit_halaman = 7 if page_number == 1 else 6
+                    # Tentukan limit: Halaman 1 wajib 8, halaman lain cuma 6
+                    limit = 8 if page_number == 1 else 6
                     
-                    # Ambil batch HP untuk halaman ini
-                    hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit_halaman]
+                    # Ambil HP untuk halaman ini
+                    hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit]
                     df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     # Tambahkan div dengan class page-break
                     html_all_pages += f"""
@@ -5165,7 +5167,7 @@ def tampilkan_database_channel():
                         """
                     html_all_pages += "</tbody></table></div>"
                     # UPDATE INDEX DAN NOMOR HALAMAN
-                    current_idx += limit_halaman
+                    current_idx += limit
                     page_number += 1
 
             # --- 3. MONITORING VIEW (WEB) ---
