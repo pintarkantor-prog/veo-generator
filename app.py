@@ -5106,8 +5106,8 @@ def tampilkan_database_channel():
             # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
             # Ini biar kodenya mirip struktur awal lo yang pake loop
             kelompok_tim = [
-                {"nama": "LISA (HP 1-14)", "list": list_hp_tim1},
-                {"nama": "INGGI (HP 15-23)", "list": list_hp_tim2}
+                {"nama": "LISA (HP 1-12)", "list": list_hp_tim1},
+                {"nama": "INGGI (HP 13-23)", "list": list_hp_tim2}
             ]
 
             html_all_pages = "" 
