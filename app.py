@@ -5095,16 +5095,13 @@ def tampilkan_database_channel():
 
             st.divider()
 
-            # --- 2. LOGIKA GENERATE TABEL (GAYA KODE AWAL + TIM BREAK) ---
+            # --- 2. LOGIKA GENERATE TABEL (VERSI FIX ANTI LUBER) ---
             df_j['HP_N'] = pd.to_numeric(df_j['HP'], errors='coerce').fillna(999)
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
-            # PISAHKAN LIST HP JADI 2 KELOMPOK
             list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') <= 13]
             list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') > 13]
             
-            # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
-            # Ini biar kodenya mirip struktur awal lo yang pake loop
             kelompok_tim = [
                 {"nama": "LISA (HP 1-13)", "list": list_hp_tim1},
                 {"nama": "INGGI (HP 14-23)", "list": list_hp_tim2}
@@ -5113,34 +5110,30 @@ def tampilkan_database_channel():
             html_all_pages = "" 
 
             for tim in kelompok_tim:
-                list_hp_unik = tim["list"]
+                list_hp_unik = sorted(tim["list"], key=lambda x: pd.to_numeric(x, errors='coerce'))
                 if not list_hp_unik: continue
                 
-                list_hp_unik = sorted(list_hp_unik, key=lambda x: pd.to_numeric(x, errors='coerce'))
-                
-                # --- PAKAI WHILE BIAR BISA DINAMIS (8 LALU 6) ---
                 current_idx = 0
                 page_number = 1
                 
                 while current_idx < len(list_hp_unik):
-                    # Tentukan limit saklek: Hal 1 = 8, sisanya = 6
+                    # KUNCI: Halaman 1 jatah 8, Halaman berikut jatah 6 biar ada napas
                     limit = 8 if page_number == 1 else 6
                     
-                    # Potong list HP
                     hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit]
-                    df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
-                    # Tambahkan div dengan class page-break
+                    df_page = df_display[df_display['HP'].isin(hp_halaman_ini)].copy()
+                    
                     html_all_pages += f"""
                     <div class="print-container page-break">
                         <div class="header-box">
                             <h2>📋 JADWAL UPLOAD PINTAR MEDIA</h2>
-                            <p class="sub">Unit: <b>{tim['nama']}</b> | Periode: <b>{tgl_str}</b></p>
+                            <p class="sub">Unit: <b>{tim['nama']}</b> | Hal: {page_number} | Periode: <b>{tgl_str}</b></p>
                         </div>
                         <table>
                             <thead>
                                 <tr>
                                     <th style="width: 10%;">📱 HP</th>
-                                    <th style="width: 45%;">📺 CHANNEL YOUTUBE</th>
+                                    <th style="width: 45%;">📺 CHANNEL</th>
                                     <th style="width: 15%;">🌅 PAGI</th>
                                     <th style="width: 15%;">☀️ SIANG</th>
                                     <th style="width: 15%;">🌆 SORE</th>
@@ -5153,8 +5146,12 @@ def tampilkan_database_channel():
                         p = r.PAGI if pd.notna(r.PAGI) and str(r.PAGI).strip() != "" else "-"
                         s = r.SIANG if pd.notna(r.SIANG) and str(r.SIANG).strip() != "" else "-"
                         o = r.SORE if pd.notna(r.SORE) and str(r.SORE).strip() != "" else "-"
-                        hp_view = str(r.HP) if i == 0 or str(r.HP) != str(df_page.iloc[i-1]['HP']) else ""
-                        bg_color = "#FFFFFF" if i % 2 == 0 else "#F4F4F4"
+                        
+                        # Cek baris sebelumnya di df_page buat grouping nomor HP
+                        prev_hp = str(df_page.iloc[i-1]['HP']) if i > 0 else None
+                        hp_view = str(r.HP) if i == 0 or str(r.HP) != prev_hp else ""
+                        
+                        bg_color = "#FFFFFF" if i % 2 == 0 else "#F8F8F8"
                         
                         html_all_pages += f"""
                             <tr style="background-color: {bg_color} !important;">
@@ -5165,70 +5162,53 @@ def tampilkan_database_channel():
                                 <td class="col-jam">{o}</td>
                             </tr>
                         """
+                    
                     html_all_pages += "</tbody></table></div>"
-                    # UPDATE INDEX DAN NOMOR HALAMAN
                     current_idx += limit
                     page_number += 1
 
-            # --- 3. MONITORING VIEW (WEB) ---
-            st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
-            st.dataframe(
-                df_display[["HP", "NAMA_CHANNEL", "PAGI", "SIANG", "SORE"]],
-                column_config={
-                    "HP": st.column_config.TextColumn("📱 HP", width=50),
-                    "NAMA_CHANNEL": st.column_config.TextColumn("📺 CHANNEL", width=250),
-                    "PAGI": st.column_config.TextColumn("🌅 PAGI", width=120),
-                    "SIANG": st.column_config.TextColumn("☀️ SIANG", width=120),
-                    "SORE": st.column_config.TextColumn("🌆 SORE", width=120),
-                }, hide_index=True, use_container_width=True
-            )
-
-            # --- 4. STYLE SULTAN AESTHETIC V2 (FULL ABU-ABU + HEADER HITAM) ---
+            # --- 4. STYLE CSS (DIET KETAT BIAR GAK TUMPAH) ---
             html_masterpiece = f"""
             <style>
                 @media print {{
-                    @page {{ size: A4 portrait; margin: 1cm; }}
-                    * {{ box-sizing: border-box; }}
-                    body {{ font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background: white; }}
+                    @page {{ size: A4 portrait; margin: 0.8cm; }}
+                    body {{ font-family: 'Segoe UI', sans-serif; background: white; }}
                     
-                    .print-container {{ width: 100%; max-width: 690px; margin: 0 auto; }}
-                    .page-break {{ page-break-after: always; }}
+                    .print-container {{ width: 100%; margin: 0 auto; }}
+                    .page-break {{ page-break-after: always; display: block; }}
 
-                    .header-box {{ text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 5px; }}
-                    h2 {{ font-size: 20px; margin: 5px 0; color: #000; }}
-                    .sub {{ font-size: 12px; color: #666; }}
-
+                    .header-box {{ text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; }}
+                    h2 {{ font-size: 18px; margin: 5px 0; }}
+                    
                     table {{ 
                         width: 100%; 
                         border-collapse: collapse; 
-                        border: 1px solid #CCC; /* SEMUA GARIS LUAR ABU-ABU */
+                        border: 1px solid #CCC; 
                         table-layout: fixed;
+                        page-break-inside: auto; 
                     }}
                     
-                    /* HEADER HITAM SOLID */
                     th {{ 
-                        background-color: #FFFFFF !important;
-                        color: #1E3A8A !important;
-                        padding: 10px; 
-                        border: 1px solid #CCC;
-                        font-size: 12px;
-                        font-weight: bold;
+                        background-color: #f0f0f0 !important; 
+                        color: #1E3A8A !important; 
+                        padding: 6px; 
+                        border: 1px solid #CCC; 
+                        font-size: 11px;
                         -webkit-print-color-adjust: exact;
                     }}
                     
                     td {{ 
-                        border: 1px solid #CCC; /* SEMUA GARIS DALAM ABU-ABU */
-                        padding: 8px 10px; 
-                        font-size: 14px; 
-                        color: #111;
-                        line-height: 1.3;
+                        border: 1px solid #CCC; 
+                        padding: 4px 8px; /* DIET PADDING: Dari 8px jadi 4px */
+                        font-size: 12px; /* DIET FONT: Dari 14px jadi 12px */
+                        line-height: 1.2;
+                        word-wrap: break-word;
                     }}
                     
-                    .col-hp {{ width: 10%; text-align: center; font-weight: bold; background-color: #F8F8F8 !important; }}
-                    .col-ch {{ text-align: left; font-weight: 500; padding-left: 12px; }}
+                    tr {{ page-break-inside: avoid; page-break-after: auto; }}
+
+                    .col-hp {{ text-align: center; font-weight: bold; }}
                     .col-jam {{ text-align: center; font-weight: bold; color: #C00 !important; }}
-                    
-                    .footer-note {{ margin-top: 10px; text-align: right; font-size: 9px; color: #999; }}
                 }}
             </style>
             {html_all_pages}
