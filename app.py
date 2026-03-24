@@ -5116,17 +5116,17 @@ def tampilkan_database_channel():
                 list_hp_unik = tim["list"]
                 if not list_hp_unik: continue
                 
-                # Urutin list HP-nya biar gak lompat-lompat
                 list_hp_unik = sorted(list_hp_unik, key=lambda x: pd.to_numeric(x, errors='coerce'))
                 
+                # --- PAKAI WHILE BIAR BISA DINAMIS (8 LALU 6) ---
                 current_idx = 0
                 page_number = 1
                 
                 while current_idx < len(list_hp_unik):
-                    # Tentukan limit: Halaman 1 wajib 8, halaman lain cuma 6
+                    # Tentukan limit saklek: Hal 1 = 8, sisanya = 6
                     limit = 8 if page_number == 1 else 6
                     
-                    # Ambil HP untuk halaman ini
+                    # Potong list HP
                     hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit]
                     df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     # Tambahkan div dengan class page-break
