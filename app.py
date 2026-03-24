@@ -5106,8 +5106,8 @@ def tampilkan_database_channel():
             # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
             # Ini biar kodenya mirip struktur awal lo yang pake loop
             kelompok_tim = [
-                {"nama": "LISA (HP 1-13)", "list": list_hp_tim1},
-                {"nama": "INGGI (HP 14-23)", "list": list_hp_tim2}
+                {"nama": "LISA (HP 1-14)", "list": list_hp_tim1},
+                {"nama": "INGGI (HP 15-23)", "list": list_hp_tim2}
             ]
 
             html_all_pages = "" 
@@ -5117,7 +5117,7 @@ def tampilkan_database_channel():
                 if not list_hp_unik: continue
                 
                 # Loop per 11 HP (sama kayak kode awal lo)
-                for start_idx in range(0, len(list_hp_unik), 7):
+                for start_idx in range(0, len(list_hp_unik), 8):
                     hp_halaman_ini = list_hp_unik[start_idx : start_idx + 6]
                     df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     
