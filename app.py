@@ -5122,7 +5122,7 @@ def tampilkan_database_channel():
                 
                 while current_idx < len(list_hp_unik):
                     # Tentukan limit: Halaman 1 = 8 HP, Halaman selanjutnya = 7 HP
-                    limit_halaman = 8 if page_number == 1 else 6
+                    limit_halaman = 7 if page_number == 1 else 6
                     
                     # Ambil batch HP untuk halaman ini
                     hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit_halaman]
