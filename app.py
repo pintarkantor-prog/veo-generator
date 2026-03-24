@@ -5116,11 +5116,17 @@ def tampilkan_database_channel():
                 list_hp_unik = tim["list"]
                 if not list_hp_unik: continue
                 
-                # Loop per 11 HP (sama kayak kode awal lo)
-                for start_idx in range(0, len(list_hp_unik), 8):
-                    hp_halaman_ini = list_hp_unik[start_idx : start_idx + 8]
-                    df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
+                # --- REVISI LOGIKA PEMBAGIAN HALAMAN ---
+                current_idx = 0
+                page_number = 1
+                
+                while current_idx < len(list_hp_unik):
+                    # Tentukan limit: Halaman 1 = 8 HP, Halaman selanjutnya = 7 HP
+                    limit_halaman = 8 if page_number == 1 else 7
                     
+                    # Ambil batch HP untuk halaman ini
+                    hp_halaman_ini = list_hp_unik[current_idx : current_idx + limit_halaman]
+                    df_page = df_display[df_display['HP'].isin(hp_halaman_ini)]
                     # Tambahkan div dengan class page-break
                     html_all_pages += f"""
                     <div class="print-container page-break">
@@ -5158,6 +5164,9 @@ def tampilkan_database_channel():
                             </tr>
                         """
                     html_all_pages += "</tbody></table></div>"
+                    # UPDATE INDEX DAN NOMOR HALAMAN
+                    current_idx += limit_halaman
+                    page_number += 1
 
             # --- 3. MONITORING VIEW (WEB) ---
             st.markdown("#### 📱 MONITORING JADWAL UPLOAD")
