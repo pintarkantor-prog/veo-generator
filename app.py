@@ -5100,14 +5100,14 @@ def tampilkan_database_channel():
             df_display = df_j.sort_values(['HP_N', 'PAGI'])
             
             # PISAHKAN LIST HP JADI 2 KELOMPOK
-            list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') <= 15]
-            list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') > 15]
+            list_hp_tim1 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') <= 13]
+            list_hp_tim2 = [h for h in df_display['HP'].unique() if pd.to_numeric(h, errors='coerce') > 13]
             
             # Gabungkan jadi satu list besar tapi kita kasih pembatas (marker)
             # Ini biar kodenya mirip struktur awal lo yang pake loop
             kelompok_tim = [
-                {"nama": "LISA (HP 1-15)", "list": list_hp_tim1},
-                {"nama": "INGGI (HP 16-23)", "list": list_hp_tim2}
+                {"nama": "LISA (HP 1-13)", "list": list_hp_tim1},
+                {"nama": "INGGI (HP 14-23)", "list": list_hp_tim2}
             ]
 
             html_all_pages = "" 
@@ -5200,7 +5200,7 @@ def tampilkan_database_channel():
                         color: #1E3A8A !important;
                         padding: 10px; 
                         border: 1px solid #CCC;
-                        font-size: 11px;
+                        font-size: 12px;
                         font-weight: bold;
                         -webkit-print-color-adjust: exact;
                     }}
@@ -5208,7 +5208,7 @@ def tampilkan_database_channel():
                     td {{ 
                         border: 1px solid #CCC; /* SEMUA GARIS DALAM ABU-ABU */
                         padding: 8px 10px; 
-                        font-size: 12px; 
+                        font-size: 14px; 
                         color: #111;
                         line-height: 1.3;
                     }}
