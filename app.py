@@ -2453,7 +2453,7 @@ def tampilkan_tugas_kerja():
                 df_item.columns = [str(c).strip().upper() for c in df_item.columns]
 
         # --- PROSES KOLOM DEADLINE ---
-        df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce')
+        df_all_tugas['DEADLINE_DT'] = pd.to_datetime(df_all_tugas['DEADLINE'], errors='coerce', format='mixed')
         df_all_tugas['DEADLINE'] = df_all_tugas['DEADLINE_DT'].dt.strftime('%Y-%m-%d')
         
         # Variabel bantu agar kartu tugas nggak NameError
@@ -3250,7 +3250,7 @@ def tampilkan_kendali_tim():
                                 "Tanggal": sekarang.strftime('%Y-%m-%d'),
                                 "Tipe": f_tipe,
                                 "Kategori": f_kat,
-                                "Nominal": str(int(f_nom)),
+                                "Nominal": int(f_nom),
                                 "Keterangan": f_ket,
                                 "Pencatat": user_sekarang.upper()
                             }
@@ -3261,7 +3261,7 @@ def tampilkan_kendali_tim():
                                 sekarang.strftime('%Y-%m-%d'), 
                                 f_tipe, 
                                 f_kat, 
-                                str(int(f_nom)),
+                                int(f_nom),
                                 f_ket, 
                                 user_sekarang.upper()
                             ])
