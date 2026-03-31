@@ -2490,7 +2490,8 @@ def tampilkan_tugas_kerja():
                 df_u_absen = df_absen_all[df_absen_all['NAMA'] == target_user].copy()
 
             # --- 1. AMBIL DATA REAL DARI ARUS KAS SUPABASE ---
-            df_kas_all.columns = [str(c).strip().upper() for c in df_kas_all.columns]
+            # Pas narik data Arus Kas buat ditampilin
+            df_kas['Tanggal'] = pd.to_datetime(df_kas['Tanggal'], errors='coerce', format='mixed')
             
             # Cari baris yang kategorinya ' Tim', ada nama staf, DAN di periode bulan/tahun yang dipilih
             mask_bonus_real = (df_kas_all['KATEGORI'].str.upper() == 'GAJI TIM') & \
